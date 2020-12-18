@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -49,18 +50,18 @@ namespace Nop.Services.Messages
         /// <param name="subscription">The newsletter subscription.</param>
         /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        private void PublishSubscriptionEvent(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
+        private async Task PublishSubscriptionEventAsync(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
         {
             if (!publishSubscriptionEvents) 
                 return;
 
             if (isSubscribe)
             {
-                _eventPublisher.PublishNewsletterSubscribe(subscription);
+                await _eventPublisher.PublishNewsletterSubscribeAsync(subscription);
             }
             else
             {
-                _eventPublisher.PublishNewsletterUnsubscribe(subscription);
+                await _eventPublisher.PublishNewsletterUnsubscribeAsync(subscription);
             }
         }
 
@@ -73,7 +74,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
+        public virtual async Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
             {
@@ -84,16 +85,14 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Persist
-            _subscriptionRepository.Insert(newsLetterSubscription);
+            await _subscriptionRepository.InsertAsync(newsLetterSubscription);
 
             //Publish event
-            _eventPublisher.EntityInserted(newsLetterSubscription);
+            await _eventPublisher.EntityInsertedAsync(newsLetterSubscription);
 
             //Publish the subscription event 
-            if (newsLetterSubscription.Active)
-            {
-                PublishSubscriptionEvent(newsLetterSubscription, true, publishSubscriptionEvents);
-            }
+            if (newsLetterSubscription.Active) 
+                await PublishSubscriptionEventAsync(newsLetterSubscription, true, publishSubscriptionEvents);
         }
 
         /// <summary>
@@ -101,7 +100,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
+        public virtual async Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
             {
@@ -112,34 +111,32 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Get original subscription record
-            var originalSubscription = _subscriptionRepository.LoadOriginalCopy(newsLetterSubscription);
+            var originalSubscription = await _subscriptionRepository.LoadOriginalCopyAsync(newsLetterSubscription);
 
             //Persist
-            _subscriptionRepository.Update(newsLetterSubscription);
+            await _subscriptionRepository.UpdateAsync(newsLetterSubscription);
             
             //Publish event
-            _eventPublisher.EntityUpdated(newsLetterSubscription);
+            await _eventPublisher.EntityUpdatedAsync(newsLetterSubscription);
 
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
                 (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email))
             {
                 //If the previous entry was false, but this one is true, publish a subscribe.
-                PublishSubscriptionEvent(newsLetterSubscription, true, publishSubscriptionEvents);
+                await PublishSubscriptionEventAsync(newsLetterSubscription, true, publishSubscriptionEvents);
             }
 
             if (originalSubscription.Active && newsLetterSubscription.Active &&
                 originalSubscription.Email != newsLetterSubscription.Email)
             {
                 //If the two emails are different publish an unsubscribe.
-                PublishSubscriptionEvent(originalSubscription, false, publishSubscriptionEvents);
+                await PublishSubscriptionEventAsync(originalSubscription, false, publishSubscriptionEvents);
             }
 
             if (originalSubscription.Active && !newsLetterSubscription.Active)
-            {
                 //If the previous entry was true, but this one is false
-                PublishSubscriptionEvent(originalSubscription, false, publishSubscriptionEvents);
-            }
+                await PublishSubscriptionEventAsync(originalSubscription, false, publishSubscriptionEvents);
         }
 
         /// <summary>
@@ -147,18 +144,18 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
+        public virtual async Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null) 
                 throw new ArgumentNullException(nameof(newsLetterSubscription));
 
-            _subscriptionRepository.Delete(newsLetterSubscription);
+            await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
             
             //event notification
-            _eventPublisher.EntityDeleted(newsLetterSubscription);
+            await _eventPublisher.EntityDeletedAsync(newsLetterSubscription);
 
             //Publish the unsubscribe event 
-            PublishSubscriptionEvent(newsLetterSubscription, false, publishSubscriptionEvents);
+            await PublishSubscriptionEventAsync(newsLetterSubscription, false, publishSubscriptionEvents);
         }
 
         /// <summary>
@@ -166,9 +163,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
+        public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId)
         {
-            return _subscriptionRepository.GetById(newsLetterSubscriptionId, cache => default);
+            return await _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default);
         }
 
         /// <summary>
@@ -176,7 +173,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
+        public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid)
         {
             if (newsLetterSubscriptionGuid == Guid.Empty) return null;
 
@@ -185,7 +182,7 @@ namespace Nop.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return newsLetterSubscriptions.FirstOrDefault();
+            return await newsLetterSubscriptions.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -194,7 +191,7 @@ namespace Nop.Services.Messages
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, int storeId)
+        public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreIdAsync(string email, int storeId)
         {
             if (!CommonHelper.IsValidEmail(email))
                 return null;
@@ -206,7 +203,7 @@ namespace Nop.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return newsLetterSubscriptions.FirstOrDefault();
+            return await newsLetterSubscriptions.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -221,7 +218,7 @@ namespace Nop.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
-        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
+        public virtual async Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptionsAsync(string email = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int storeId = 0, bool? isActive = null, int customerRoleId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -229,7 +226,7 @@ namespace Nop.Services.Messages
             if (customerRoleId == 0)
             {
                 //do not filter by customer role
-                var subscriptions = _subscriptionRepository.GetAllPaged(query =>
+                var subscriptions = await _subscriptionRepository.GetAllPagedAsync(query =>
                 {
                     if (!string.IsNullOrEmpty(email))
                         query = query.Where(nls => nls.Email.Contains(email));
@@ -250,14 +247,14 @@ namespace Nop.Services.Messages
             }
 
             //filter by customer role
-            var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+            var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
 
             if (guestRole.Id == customerRoleId)
             {
                 //guests
-                var subscriptions = _subscriptionRepository.GetAllPaged(query =>
+                var subscriptions = await _subscriptionRepository.GetAllPagedAsync(query =>
                 {
                     if (!string.IsNullOrEmpty(email))
                         query = query.Where(nls => nls.Email.Contains(email));
@@ -279,7 +276,7 @@ namespace Nop.Services.Messages
             }
             else
             {
-                var subscriptions = _subscriptionRepository.GetAllPaged(query =>
+                var subscriptions = await _subscriptionRepository.GetAllPagedAsync(query =>
                 {
                     //other customer roles (not guests)
                     var joindQuery = query.Join(_customerRepository.Table,

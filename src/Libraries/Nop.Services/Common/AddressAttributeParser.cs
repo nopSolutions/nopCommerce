@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -81,7 +82,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attributes</returns>
-        public virtual IList<AddressAttribute> ParseAddressAttributes(string attributesXml)
+        public virtual async Task<IList<AddressAttribute>> ParseAddressAttributesAsync(string attributesXml)
         {
             var result = new List<AddressAttribute>();
             if (string.IsNullOrEmpty(attributesXml))
@@ -90,11 +91,9 @@ namespace Nop.Services.Common
             var ids = ParseAddressAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = _addressAttributeService.GetAddressAttributeById(id);
-                if (attribute != null)
-                {
+                var attribute = await _addressAttributeService.GetAddressAttributeByIdAsync(id);
+                if (attribute != null) 
                     result.Add(attribute);
-                }
             }
 
             return result;
@@ -105,13 +104,13 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Address attribute values</returns>
-        public virtual IList<AddressAttributeValue> ParseAddressAttributeValues(string attributesXml)
+        public virtual async Task<IList<AddressAttributeValue>> ParseAddressAttributeValuesAsync(string attributesXml)
         {
             var values = new List<AddressAttributeValue>();
             if (string.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = ParseAddressAttributes(attributesXml);
+            var attributes = await ParseAddressAttributesAsync(attributesXml);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
@@ -126,7 +125,7 @@ namespace Nop.Services.Common
                     if (!int.TryParse(valueStr, out var id))
                         continue;
 
-                    var value = _addressAttributeService.GetAddressAttributeValueById(id);
+                    var value = await _addressAttributeService.GetAddressAttributeValueByIdAsync(id);
                     if (value != null)
                         values.Add(value);
                 }
@@ -255,15 +254,15 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetAttributeWarnings(string attributesXml)
+        public virtual async Task<IList<string>> GetAttributeWarningsAsync(string attributesXml)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = ParseAddressAttributes(attributesXml);
+            var attributes1 = await ParseAddressAttributesAsync(attributesXml);
 
             //validate required address attributes (whether they're chosen/selected/entered)
-            var attributes2 = _addressAttributeService.GetAllAddressAttributes();
+            var attributes2 = await _addressAttributeService.GetAllAddressAttributesAsync();
             foreach (var a2 in attributes2)
             {
                 if (!a2.IsRequired) 
@@ -285,7 +284,7 @@ namespace Nop.Services.Common
                     continue;
 
                 //if not found
-                var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2, a => a.Name));
+                var notFoundWarning = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalizedAsync(a2, a => a.Name));
 
                 warnings.Add(notFoundWarning);
             }
@@ -298,14 +297,14 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="form">Form values</param>
         /// <returns>Attributes in XML format</returns>
-        public virtual string ParseCustomAddressAttributes(IFormCollection form)
+        public virtual async Task<string> ParseCustomAddressAttributesAsync(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
             var attributesXml = string.Empty;
 
-            foreach (var attribute in _addressAttributeService.GetAllAddressAttributes())
+            foreach (var attribute in await _addressAttributeService.GetAllAddressAttributesAsync())
             {
                 var controlId = string.Format(NopCommonDefaults.AddressAttributeControlName, attribute.Id);
                 var attributeValues = form[controlId];
@@ -328,7 +327,7 @@ namespace Nop.Services.Common
 
                     case AttributeControlType.ReadonlyCheckboxes:
                         //load read-only (already server-side selected) values
-                        var addressAttributeValues = _addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                        var addressAttributeValues = await _addressAttributeService.GetAddressAttributeValuesAsync(attribute.Id);
                         foreach (var addressAttributeValue in addressAttributeValues)
                         {
                             if (addressAttributeValue.IsPreSelected)

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Infrastructure;
+﻿using System.Threading.Tasks;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Models.Common
@@ -34,12 +35,6 @@ namespace Nop.Web.Models.Common
         private bool? showPagerItems;
         private bool? showPrevious;
         private bool? showTotalSummary;
-
-        private string firstButtonText;
-        private string lastButtonText;
-        private string nextButtonText;
-        private string previousButtonText;
-        private string currentPageText;
 
         #endregion Fields
 
@@ -179,58 +174,43 @@ namespace Nop.Web.Models.Common
         public int TotalRecords { get; set; }
 
         /// <summary>
-        /// Gets or sets the first button text
+        /// Gets the first button text
         /// </summary>
-        public string FirstButtonText
+        public async Task<string> GetFirstButtonTextAsync()
         {
-            get => (!string.IsNullOrEmpty(firstButtonText)) ?
-                    firstButtonText :
-                    _localizationService.GetResource("Pager.First");
-            set => firstButtonText = value;
+           return await _localizationService.GetResourceAsync("Pager.First");
         }
 
         /// <summary>
-        /// Gets or sets the last button text
+        /// Gets the last button text
         /// </summary>
-        public string LastButtonText
+        public async Task<string> GetLastButtonTextAsync()
         {
-            get => (!string.IsNullOrEmpty(lastButtonText)) ?
-                    lastButtonText :
-                    _localizationService.GetResource("Pager.Last");
-            set => lastButtonText = value;
+            return await _localizationService.GetResourceAsync("Pager.Last");
         }
 
         /// <summary>
-        /// Gets or sets the next button text
+        /// Gets the next button text
         /// </summary>
-        public string NextButtonText
+        public async Task<string> GetNextButtonTextAsync()
         {
-            get => (!string.IsNullOrEmpty(nextButtonText)) ?
-                    nextButtonText :
-                    _localizationService.GetResource("Pager.Next");
-            set => nextButtonText = value;
+            return await _localizationService.GetResourceAsync("Pager.Next");
         }
 
         /// <summary>
-        /// Gets or sets the previous button text
+        /// Gets the previous button text
         /// </summary>
-        public string PreviousButtonText
+        public async Task<string> GetPreviousButtonTextAsync()
         {
-            get => (!string.IsNullOrEmpty(previousButtonText)) ?
-                    previousButtonText :
-                    _localizationService.GetResource("Pager.Previous");
-            set => previousButtonText = value;
+           return await _localizationService.GetResourceAsync("Pager.Previous");
         }
 
         /// <summary>
         /// Gets or sets the current page text
         /// </summary>
-        public string CurrentPageText
+        public async Task<string> GetCurrentPageTextAsync()
         {
-            get => (!string.IsNullOrEmpty(currentPageText)) ?
-                    currentPageText :
-                    _localizationService.GetResource("Pager.CurrentPage");
-            set => currentPageText = value;
+            return await _localizationService.GetResourceAsync("Pager.CurrentPage");
         }
 
         /// <summary>

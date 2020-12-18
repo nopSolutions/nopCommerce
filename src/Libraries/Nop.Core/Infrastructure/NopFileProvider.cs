@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
@@ -491,9 +492,23 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="filePath">The file for reading</param>
         /// <returns>A byte array containing the contents of the file</returns>
-        public virtual byte[] ReadAllBytes(string filePath)
+        public virtual async Task<byte[]> ReadAllBytesAsync(string filePath)
         {
-            return File.Exists(filePath) ? File.ReadAllBytes(filePath) : Array.Empty<byte>();
+            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
+        }
+
+        /// <summary>
+        /// Opens a file, reads all lines of the file with the specified encoding, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading</param>
+        /// <param name="encoding">The encoding applied to the contents of the file</param>
+        /// <returns>A string containing all lines of the file</returns>
+        public virtual async Task<string> ReadAllTextAsync(string path, Encoding encoding)
+        {
+            await using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var streamReader = new StreamReader(fileStream, encoding);
+            
+            return await streamReader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -506,9 +521,11 @@ namespace Nop.Core.Infrastructure
         {
             using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var streamReader = new StreamReader(fileStream, encoding);
+
             return streamReader.ReadToEnd();
         }
 
+        //TODO: Delete unused method
         /// <summary>
         /// Sets the date and time, in coordinated universal time (UTC), that the specified file was last written to
         /// </summary>
@@ -527,9 +544,21 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="filePath">The file to write to</param>
         /// <param name="bytes">The bytes to write to the file</param>
-        public virtual void WriteAllBytes(string filePath, byte[] bytes)
+        public virtual async Task WriteAllBytesAsync(string filePath, byte[] bytes)
         {
-            File.WriteAllBytes(filePath, bytes);
+            await File.WriteAllBytesAsync(filePath, bytes);
+        }
+
+        /// <summary>
+        /// Creates a new file, writes the specified string to the file using the specified encoding,
+        /// and then closes the file. If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="path">The file to write to</param>
+        /// <param name="contents">The string to write to the file</param>
+        /// <param name="encoding">The encoding to apply to the string</param>
+        public virtual async Task WriteAllTextAsync(string path, string contents, Encoding encoding)
+        {
+            await File.WriteAllTextAsync(path, contents, encoding);
         }
 
         /// <summary>

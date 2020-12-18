@@ -1,7 +1,7 @@
 @model CountryModel
 
 <div class="card-body">
-    @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
+    @(await Html.LocalizedEditorAsync<CountryModel, CountryLocalizedModel>("country-info-localized",
     @<div>
         <div class="form-group row">
             <div class="col-md-3">

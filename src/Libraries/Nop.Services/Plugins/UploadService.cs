@@ -236,7 +236,7 @@ namespace Nop.Services.Plugins
                         var fileName = entry.FullName[itemPath.Length..];
                         if (string.IsNullOrEmpty(fileName))
                             continue;
-                        
+
                         var filePath = _fileProvider.Combine(pathToUpload, fileName);
 
                         //if it's a folder, we need to create it
@@ -353,7 +353,7 @@ namespace Nop.Services.Plugins
                     throw new Exception("Only zip archives are supported (*.zip)");
 
                 //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
-                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
+                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
 
                 CreateDirectory(storeIconsPath);
 
@@ -385,7 +385,7 @@ namespace Nop.Services.Plugins
                 throw new Exception("Only icons are supported (*.ico)");
 
             //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
-            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
+            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
 
             CreateDirectory(storeFaviconPath);
 
@@ -409,7 +409,7 @@ namespace Nop.Services.Plugins
             {
                 return _fileProvider.DirectoryExists(getPath(dirPath, dirName));
             }
-            
+
             var tempFolder = "temp";
             try
             {
@@ -421,7 +421,7 @@ namespace Nop.Services.Plugins
                 var currentCulture = (cultureInfo is CultureInfo) ? cultureInfo : CultureInfo.CurrentCulture;
 
                 //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
-                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) || 
+                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) ||
                     checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.TwoLetterISOLanguageName)))
                 {
                     var cultureToUse = string.Empty;

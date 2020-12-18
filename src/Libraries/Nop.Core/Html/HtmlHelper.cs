@@ -205,6 +205,7 @@ namespace Nop.Core.Html
             return text;
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Converts text to paragraph
         /// </summary>

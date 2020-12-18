@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Orders;
 using Nop.Web.Areas.Admin.Models.Orders;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Gift card search model</param>
         /// <returns>Gift card search model</returns>
-        GiftCardSearchModel PrepareGiftCardSearchModel(GiftCardSearchModel searchModel);
+        Task<GiftCardSearchModel> PrepareGiftCardSearchModelAsync(GiftCardSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged gift card list model
         /// </summary>
         /// <param name="searchModel">Gift card search model</param>
         /// <returns>Gift card list model</returns>
-        GiftCardListModel PrepareGiftCardListModel(GiftCardSearchModel searchModel);
+        Task<GiftCardListModel> PrepareGiftCardListModelAsync(GiftCardSearchModel searchModel);
 
         /// <summary>
         /// Prepare gift card model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="giftCard">Gift card</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Gift card model</returns>
-        GiftCardModel PrepareGiftCardModel(GiftCardModel model, GiftCard giftCard, bool excludeProperties = false);
+        Task<GiftCardModel> PrepareGiftCardModelAsync(GiftCardModel model, GiftCard giftCard, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged gift usage history card list model
@@ -37,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Gift card usage history search model</param>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Gift card usage history list model</returns>
-        GiftCardUsageHistoryListModel PrepareGiftCardUsageHistoryListModel(GiftCardUsageHistorySearchModel searchModel,
+        Task<GiftCardUsageHistoryListModel> PrepareGiftCardUsageHistoryListModelAsync(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard);
     }
 }

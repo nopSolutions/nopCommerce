@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -51,24 +52,22 @@ namespace Nop.Services.Catalog
         /// Deletes a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public virtual void DeleteProductAttribute(ProductAttribute productAttribute)
+        public virtual async Task DeleteProductAttributeAsync(ProductAttribute productAttribute)
         {
-            _productAttributeRepository.Delete(productAttribute);
+            await _productAttributeRepository.DeleteAsync(productAttribute);
         }
 
         /// <summary>
         /// Deletes product attributes
         /// </summary>
         /// <param name="productAttributes">Product attributes</param>
-        public virtual void DeleteProductAttributes(IList<ProductAttribute> productAttributes)
+        public virtual async Task DeleteProductAttributesAsync(IList<ProductAttribute> productAttributes)
         {
             if (productAttributes == null)
                 throw new ArgumentNullException(nameof(productAttributes));
 
-            foreach (var productAttribute in productAttributes)
-            {
-                DeleteProductAttribute(productAttribute);
-            }
+            foreach (var productAttribute in productAttributes) 
+                await DeleteProductAttributeAsync(productAttribute);
         }
 
         /// <summary>
@@ -77,10 +76,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Product attributes</returns>
-        public virtual IPagedList<ProductAttribute> GetAllProductAttributes(int pageIndex = 0,
+        public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributesAsync(int pageIndex = 0,
             int pageSize = int.MaxValue)
         {
-            var productAttributes = _productAttributeRepository.GetAllPaged(query =>
+            var productAttributes = await _productAttributeRepository.GetAllPagedAsync(query =>
             {
                 return from pa in query
                     orderby pa.Name
@@ -95,9 +94,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <returns>Product attribute </returns>
-        public virtual ProductAttribute GetProductAttributeById(int productAttributeId)
+        public virtual async Task<ProductAttribute> GetProductAttributeByIdAsync(int productAttributeId)
         {
-            return _productAttributeRepository.GetById(productAttributeId, cache => default);
+            return await _productAttributeRepository.GetByIdAsync(productAttributeId, cache => default);
         }
 
         /// <summary>
@@ -105,27 +104,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeIds">Product attribute identifiers</param>
         /// <returns>Product attributes </returns>
-        public virtual IList<ProductAttribute> GetProductAttributeByIds(int[] productAttributeIds)
+        public virtual async Task<IList<ProductAttribute>> GetProductAttributeByIdsAsync(int[] productAttributeIds)
         {
-            return _productAttributeRepository.GetByIds(productAttributeIds);
+            return await _productAttributeRepository.GetByIdsAsync(productAttributeIds);
         }
 
         /// <summary>
         /// Inserts a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public virtual void InsertProductAttribute(ProductAttribute productAttribute)
+        public virtual async Task InsertProductAttributeAsync(ProductAttribute productAttribute)
         {
-            _productAttributeRepository.Insert(productAttribute);
+            await _productAttributeRepository.InsertAsync(productAttribute);
         }
 
         /// <summary>
         /// Updates the product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public virtual void UpdateProductAttribute(ProductAttribute productAttribute)
+        public virtual async Task UpdateProductAttributeAsync(ProductAttribute productAttribute)
         {
-            _productAttributeRepository.Update(productAttribute);
+            await _productAttributeRepository.UpdateAsync(productAttribute);
         }
 
         /// <summary>
@@ -133,14 +132,17 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributeId">The IDs of the attributes to check</param>
         /// <returns>List of IDs not existing attributes</returns>
-        public virtual int[] GetNotExistingAttributes(int[] attributeId)
+        public virtual async Task<int[]> GetNotExistingAttributesAsync(int[] attributeId)
         {
             if (attributeId == null)
                 throw new ArgumentNullException(nameof(attributeId));
 
             var query = _productAttributeRepository.Table;
             var queryFilter = attributeId.Distinct().ToArray();
-            var filter = query.Select(a => a.Id).Where(m => queryFilter.Contains(m)).ToList();
+            var filter = await query.Select(a => a.Id)
+                .Where(m => queryFilter.Contains(m))
+                .ToListAsync();
+            
             return queryFilter.Except(filter).ToArray();
         }
 
@@ -152,9 +154,9 @@ namespace Nop.Services.Catalog
         /// Deletes a product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
-        public virtual void DeleteProductAttributeMapping(ProductAttributeMapping productAttributeMapping)
+        public virtual async Task DeleteProductAttributeMappingAsync(ProductAttributeMapping productAttributeMapping)
         {
-            _productAttributeMappingRepository.Delete(productAttributeMapping);
+            await _productAttributeMappingRepository.DeleteAsync(productAttributeMapping);
         }
 
         /// <summary>
@@ -162,7 +164,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>Product attribute mapping collection</returns>
-        public virtual IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId)
+        public virtual async Task<IList<ProductAttributeMapping>> GetProductAttributeMappingsByProductIdAsync(int productId)
         {
             var allCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, productId);
 
@@ -171,7 +173,7 @@ namespace Nop.Services.Catalog
                 where pam.ProductId == productId
                 select pam;
 
-            var attributes = _staticCacheManager.Get(allCacheKey, query.ToList) ?? new List<ProductAttributeMapping>();
+            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
 
             return attributes;
         }
@@ -181,27 +183,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
         /// <returns>Product attribute mapping</returns>
-        public virtual ProductAttributeMapping GetProductAttributeMappingById(int productAttributeMappingId)
+        public virtual async Task<ProductAttributeMapping> GetProductAttributeMappingByIdAsync(int productAttributeMappingId)
         {
-            return _productAttributeMappingRepository.GetById(productAttributeMappingId, cache => default);
+            return await _productAttributeMappingRepository.GetByIdAsync(productAttributeMappingId, cache => default);
         }
 
         /// <summary>
         /// Inserts a product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        public virtual void InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping)
+        public virtual async Task InsertProductAttributeMappingAsync(ProductAttributeMapping productAttributeMapping)
         {
-            _productAttributeMappingRepository.Insert(productAttributeMapping);
+            await _productAttributeMappingRepository.InsertAsync(productAttributeMapping);
         }
 
         /// <summary>
         /// Updates the product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        public virtual void UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping)
+        public virtual async Task UpdateProductAttributeMappingAsync(ProductAttributeMapping productAttributeMapping)
         {
-            _productAttributeMappingRepository.Update(productAttributeMapping);
+            await _productAttributeMappingRepository.UpdateAsync(productAttributeMapping);
         }
 
         #endregion
@@ -212,9 +214,9 @@ namespace Nop.Services.Catalog
         /// Deletes a product attribute value
         /// </summary>
         /// <param name="productAttributeValue">Product attribute value</param>
-        public virtual void DeleteProductAttributeValue(ProductAttributeValue productAttributeValue)
+        public virtual async Task DeleteProductAttributeValueAsync(ProductAttributeValue productAttributeValue)
         {
-            _productAttributeValueRepository.Delete(productAttributeValue);
+            await _productAttributeValueRepository.DeleteAsync(productAttributeValue);
         }
 
         /// <summary>
@@ -222,7 +224,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeMappingId">The product attribute mapping identifier</param>
         /// <returns>Product attribute mapping collection</returns>
-        public virtual IList<ProductAttributeValue> GetProductAttributeValues(int productAttributeMappingId)
+        public virtual async Task<IList<ProductAttributeValue>> GetProductAttributeValuesAsync(int productAttributeMappingId)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, productAttributeMappingId);
 
@@ -230,7 +232,7 @@ namespace Nop.Services.Catalog
                 orderby pav.DisplayOrder, pav.Id
                 where pav.ProductAttributeMappingId == productAttributeMappingId
                 select pav;
-            var productAttributeValues = _staticCacheManager.Get(key, query.ToList);
+            var productAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return productAttributeValues;
         }
@@ -240,27 +242,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeValueId">Product attribute value identifier</param>
         /// <returns>Product attribute value</returns>
-        public virtual ProductAttributeValue GetProductAttributeValueById(int productAttributeValueId)
+        public virtual async Task<ProductAttributeValue> GetProductAttributeValueByIdAsync(int productAttributeValueId)
         {
-            return _productAttributeValueRepository.GetById(productAttributeValueId, cache => default);
+            return await _productAttributeValueRepository.GetByIdAsync(productAttributeValueId, cache => default);
         }
 
         /// <summary>
         /// Inserts a product attribute value
         /// </summary>
         /// <param name="productAttributeValue">The product attribute value</param>
-        public virtual void InsertProductAttributeValue(ProductAttributeValue productAttributeValue)
+        public virtual async Task InsertProductAttributeValueAsync(ProductAttributeValue productAttributeValue)
         {
-            _productAttributeValueRepository.Insert(productAttributeValue);
+            await _productAttributeValueRepository.InsertAsync(productAttributeValue);
         }
 
         /// <summary>
         /// Updates the product attribute value
         /// </summary>
         /// <param name="productAttributeValue">The product attribute value</param>
-        public virtual void UpdateProductAttributeValue(ProductAttributeValue productAttributeValue)
+        public virtual async Task UpdateProductAttributeValueAsync(ProductAttributeValue productAttributeValue)
         {
-            _productAttributeValueRepository.Update(productAttributeValue);
+            await _productAttributeValueRepository.UpdateAsync(productAttributeValue);
         }
 
         #endregion
@@ -271,9 +273,9 @@ namespace Nop.Services.Catalog
         /// Deletes a predefined product attribute value
         /// </summary>
         /// <param name="ppav">Predefined product attribute value</param>
-        public virtual void DeletePredefinedProductAttributeValue(PredefinedProductAttributeValue ppav)
+        public virtual async Task DeletePredefinedProductAttributeValueAsync(PredefinedProductAttributeValue ppav)
         {
-            _predefinedProductAttributeValueRepository.Delete(ppav);
+            await _predefinedProductAttributeValueRepository.DeleteAsync(ppav);
         }
 
         /// <summary>
@@ -281,7 +283,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeId">The product attribute identifier</param>
         /// <returns>Product attribute mapping collection</returns>
-        public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId)
+        public virtual async Task<IList<PredefinedProductAttributeValue>> GetPredefinedProductAttributeValuesAsync(int productAttributeId)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.PredefinedProductAttributeValuesByAttributeCacheKey, productAttributeId);
 
@@ -290,7 +292,7 @@ namespace Nop.Services.Catalog
                         where ppav.ProductAttributeId == productAttributeId
                         select ppav;
 
-            var values = _staticCacheManager.Get(key, query.ToList);
+            var values = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return values;
         }
@@ -300,27 +302,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="id">Predefined product attribute value identifier</param>
         /// <returns>Predefined product attribute value</returns>
-        public virtual PredefinedProductAttributeValue GetPredefinedProductAttributeValueById(int id)
+        public virtual async Task<PredefinedProductAttributeValue> GetPredefinedProductAttributeValueByIdAsync(int id)
         {
-            return _predefinedProductAttributeValueRepository.GetById(id, cache => default);
+            return await _predefinedProductAttributeValueRepository.GetByIdAsync(id, cache => default);
         }
 
         /// <summary>
         /// Inserts a predefined product attribute value
         /// </summary>
         /// <param name="ppav">The predefined product attribute value</param>
-        public virtual void InsertPredefinedProductAttributeValue(PredefinedProductAttributeValue ppav)
+        public virtual async Task InsertPredefinedProductAttributeValueAsync(PredefinedProductAttributeValue ppav)
         {
-            _predefinedProductAttributeValueRepository.Insert(ppav);
+            await _predefinedProductAttributeValueRepository.InsertAsync(ppav);
         }
 
         /// <summary>
         /// Updates the predefined product attribute value
         /// </summary>
         /// <param name="ppav">The predefined product attribute value</param>
-        public virtual void UpdatePredefinedProductAttributeValue(PredefinedProductAttributeValue ppav)
+        public virtual async Task UpdatePredefinedProductAttributeValueAsync(PredefinedProductAttributeValue ppav)
         {
-            _predefinedProductAttributeValueRepository.Update(ppav);
+            await _predefinedProductAttributeValueRepository.UpdateAsync(ppav);
         }
 
         #endregion
@@ -331,9 +333,9 @@ namespace Nop.Services.Catalog
         /// Deletes a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        public virtual void DeleteProductAttributeCombination(ProductAttributeCombination combination)
+        public virtual async Task DeleteProductAttributeCombinationAsync(ProductAttributeCombination combination)
         {
-            _productAttributeCombinationRepository.Delete(combination);
+            await _productAttributeCombinationRepository.DeleteAsync(combination);
         }
 
         /// <summary>
@@ -341,12 +343,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product attribute combinations</returns>
-        public virtual IList<ProductAttributeCombination> GetAllProductAttributeCombinations(int productId)
+        public virtual async Task<IList<ProductAttributeCombination>> GetAllProductAttributeCombinationsAsync(int productId)
         {
             if (productId == 0)
                 return new List<ProductAttributeCombination>();
 
-            var combinations = _productAttributeCombinationRepository.GetAll(query =>
+            var combinations = await _productAttributeCombinationRepository.GetAllAsync(query =>
             {
                 return from c in query
                        orderby c.Id
@@ -362,9 +364,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeCombinationId">Product attribute combination identifier</param>
         /// <returns>Product attribute combination</returns>
-        public virtual ProductAttributeCombination GetProductAttributeCombinationById(int productAttributeCombinationId)
+        public virtual async Task<ProductAttributeCombination> GetProductAttributeCombinationByIdAsync(int productAttributeCombinationId)
         {
-            return _productAttributeCombinationRepository.GetById(productAttributeCombinationId, cache => default);
+            return await _productAttributeCombinationRepository.GetByIdAsync(productAttributeCombinationId, cache => default);
         }
 
         /// <summary>
@@ -372,7 +374,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="sku">SKU</param>
         /// <returns>Product attribute combination</returns>
-        public virtual ProductAttributeCombination GetProductAttributeCombinationBySku(string sku)
+        public virtual async Task<ProductAttributeCombination> GetProductAttributeCombinationBySkuAsync(string sku)
         {
             if (string.IsNullOrEmpty(sku))
                 return null;
@@ -383,7 +385,8 @@ namespace Nop.Services.Catalog
                         orderby pac.Id
                         where pac.Sku == sku
                         select pac;
-            var combination = query.FirstOrDefault();
+            var combination = await query.FirstOrDefaultAsync();
+
             return combination;
         }
 
@@ -391,18 +394,18 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        public virtual void InsertProductAttributeCombination(ProductAttributeCombination combination)
+        public virtual async Task InsertProductAttributeCombinationAsync(ProductAttributeCombination combination)
         {
-            _productAttributeCombinationRepository.Insert(combination);
+            await _productAttributeCombinationRepository.InsertAsync(combination);
         }
 
         /// <summary>
         /// Updates a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        public virtual void UpdateProductAttributeCombination(ProductAttributeCombination combination)
+        public virtual async Task UpdateProductAttributeCombinationAsync(ProductAttributeCombination combination)
         {
-            _productAttributeCombinationRepository.Update(combination);
+            await _productAttributeCombinationRepository.UpdateAsync(combination);
         }
 
         #endregion

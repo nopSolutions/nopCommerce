@@ -11,16 +11,16 @@
 
 @{
     const string hideCategoryBlockAttributeName = "Templates.HideCategoryBlock";
-    var hideCategoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCategoryBlockAttributeName);
+    var hideCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCategoryBlockAttributeName);
 
     const string hideManufacturerBlockAttributeName = "Templates.HideManufacturerBlock";
-    var hideManufacturerBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideManufacturerBlockAttributeName);
+    var hideManufacturerBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideManufacturerBlockAttributeName);
 
     const string hideProductBlockAttributeName = "Templates.HideProductBlock";
-    var hideProductBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductBlockAttributeName);
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductBlockAttributeName);
 
     const string hideTopicBlockAttributeName = "Templates.HideTopicBlock";
-    var hideTopicBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTopicBlockAttributeName);
+    var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTopicBlockAttributeName);
 }
 
 <section class="content">

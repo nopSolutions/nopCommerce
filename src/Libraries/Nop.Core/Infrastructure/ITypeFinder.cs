@@ -27,6 +27,7 @@ namespace Nop.Core.Infrastructure
         /// <returns></returns>
         IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true);
 
+        //TODO: may be deleted//TODO: may be deleted from interface
         /// <summary>
         /// Find classes of type
         /// </summary>
@@ -36,6 +37,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Result</returns>
         IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Find classes of type
         /// </summary>

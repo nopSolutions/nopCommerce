@@ -24,7 +24,7 @@ namespace Nop.Core.Caching
         #region Fields
 
         private bool _disposed;
-        private readonly IDatabase _db;
+        private IDatabase _db;
         private readonly IRedisConnectionWrapper _connectionWrapper;
         private readonly PerRequestCache _perRequestCache;
 
@@ -41,9 +41,7 @@ namespace Nop.Core.Caching
 
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             _connectionWrapper = connectionWrapper;
-
-            _db = _connectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Cache);
-
+            
             _perRequestCache = new PerRequestCache(httpContextAccessor);
         }
 
@@ -57,14 +55,14 @@ namespace Nop.Core.Caching
         /// <param name="endPoint">Network address</param>
         /// <param name="prefix">String key pattern</param>
         /// <returns>List of cache keys</returns>
-        protected virtual IEnumerable<RedisKey> GetKeys(EndPoint endPoint, string prefix = null)
+        protected virtual async Task<IEnumerable<RedisKey>> GetKeysAsync(EndPoint endPoint, string prefix = null)
         {
-            var server = _connectionWrapper.GetServer(endPoint);
+            var server = await _connectionWrapper.GetServerAsync(endPoint);
 
             //we can use the code below (commented), but it requires administration permission - ",allowAdmin=true"
             //server.FlushDatabase();
 
-            var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
+            var keys = server.Keys((await GetDatabaseAsync()).Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
 
             //we should always persist the data protection key list
             keys = keys.Where(key => !key.ToString().Equals(NopDataProtectionDefaults.RedisDataProtectionKey,
@@ -88,7 +86,7 @@ namespace Nop.Core.Caching
                 return _perRequestCache.Get(key.Key, () => default(T));
 
             //get serialized item from cache
-            var serializedItem = await _db.StringGetAsync(key.Key);
+            var serializedItem = await (await GetDatabaseAsync()).StringGetAsync(key.Key);
             if (!serializedItem.HasValue)
                 return default;
 
@@ -121,23 +119,7 @@ namespace Nop.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            await _db.StringSetAsync(key, serializedItem, expiresIn);
-        }
-
-        /// <summary>
-        /// Get a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        protected virtual async Task<bool> IsSetAsync(CacheKey key)
-        {
-            //little performance workaround here:
-            //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
-            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCache.IsSet(key.Key))
-                return true;
-
-            return await _db.KeyExistsAsync(key.Key);
+            await (await GetDatabaseAsync()).StringSetAsync(key, serializedItem, expiresIn);
         }
 
         /// <summary>
@@ -146,12 +128,12 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of item which returned by the action</typeparam>
         /// <param name="action">The function to be tried to perform</param>
         /// <returns>(flag indicates whether the action was executed without error, action result or default value)</returns>
-        protected virtual (bool, T) TryPerformAction<T>(Func<T> action)
+        protected virtual async Task<(bool, T)> TryPerformActionAsync<T>(Func<Task<T>> action)
         {
             try
             {
                 //attempts to execute the passed function
-                var rez = action();
+                var rez = await action();
 
                 return (true, rez);
             }
@@ -164,6 +146,16 @@ namespace Nop.Core.Caching
                 //or rethrow the exception
                 throw;
             }
+        }
+
+        private async Task<IDatabase> GetDatabaseAsync()
+        {
+            if (_db != null)
+                return _db;
+
+            _db = await _connectionWrapper.GetDatabaseAsync(_appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Cache);
+
+            return _db;
         }
 
         #endregion
@@ -194,64 +186,24 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Get or sets the value associated with the specified key.
-        /// </summary>
-        /// <typeparam name="T">Type of cached item</typeparam>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>The cached value associated with the specified key</returns>
-        public virtual T Get<T>(CacheKey key)
-        {
-            //little performance workaround here:
-            //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
-            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCache.IsSet(key.Key))
-                return _perRequestCache.Get(key.Key, () => default(T));
-
-            var (_, rez) = TryPerformAction(() =>
-            {
-                //get serialized item from cache
-                var serializedItem = _db.StringGet(key.Key);
-                if (!serializedItem.HasValue)
-                    return default;
-
-                //deserialize item
-                var item = JsonConvert.DeserializeObject<T>(serializedItem);
-                if (item == null)
-                    return default;
-
-                //set item in the per-request cache
-                _perRequestCache.Set(key.Key, item);
-
-                return item;
-            });
-
-            return rez;
-        }
-
-        /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public virtual T Get<T>(CacheKey key, Func<T> acquire)
+        public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
         {
             //item already is in cache, so return it
-            if (IsSet(key))
-            {
-                var rez = Get<T>(key);
-
-                if (rez != null && !rez.Equals(default(T)))
-                    return rez;
-            }
+            if (await IsSetAsync(key))
+                return await GetAsync<T>(key);
 
             //or create it using passed function
             var result = acquire();
 
             //and set in cache (if cache time is defined)
             if (key.CacheTime > 0)
-                Set(key, result);
+                await SetAsync(key.Key, result, key.CacheTime);
 
             return result;
         }
@@ -261,7 +213,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        public virtual void Set(CacheKey key, object data)
+        public virtual async Task SetAsync(CacheKey key, object data)
         {
             if (data == null)
                 return;
@@ -273,7 +225,7 @@ namespace Nop.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            TryPerformAction(() => _db.StringSet(key.Key, serializedItem, expiresIn));
+            await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).StringSetAsync(key.Key, serializedItem, expiresIn));
             _perRequestCache.Set(key.Key, data);
         }
 
@@ -282,7 +234,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
-        public virtual bool IsSet(CacheKey key)
+        public virtual async Task<bool> IsSetAsync(CacheKey key)
         {
             //little performance workaround here:
             //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
@@ -290,7 +242,7 @@ namespace Nop.Core.Caching
             if (_perRequestCache.IsSet(key.Key))
                 return true;
 
-            var (flag, rez) = TryPerformAction(() => _db.KeyExists(key.Key));
+            var (flag, rez) = await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyExistsAsync(key.Key));
 
             return flag && rez;
         }
@@ -300,7 +252,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        public void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
+        public async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
 
@@ -309,7 +261,7 @@ namespace Nop.Core.Caching
                 return;
 
             //remove item from caches
-            TryPerformAction(() => _db.KeyDelete(cacheKey.Key));
+            await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyDeleteAsync(cacheKey.Key));
             _perRequestCache.Remove(cacheKey.Key);
         }
 
@@ -318,35 +270,35 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-        public void RemoveByPrefix(string prefix, params object[] prefixParameters)
+        public async Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
             prefix = PrepareKeyPrefix(prefix, prefixParameters);
 
             _perRequestCache.RemoveByPrefix(prefix);
 
-            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            foreach (var endPoint in await _connectionWrapper.GetEndPointsAsync())
             {
-                var keys = GetKeys(endPoint, prefix);
+                var keys = await GetKeysAsync(endPoint, prefix);
 
-                TryPerformAction(() => _db.KeyDelete(keys.ToArray()));
+                await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyDeleteAsync(keys.ToArray()));
             }
         }
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public virtual void Clear()
+        public virtual async Task ClearAsync()
         {
-            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            foreach (var endPoint in await _connectionWrapper.GetEndPointsAsync())
             {
-                var keys = GetKeys(endPoint).ToArray();
+                var keys = (await GetKeysAsync(endPoint)).ToArray();
 
                 //we can't use _perRequestCache.Clear(),
                 //because HttpContext stores some server data that we should not delete
                 foreach (var redisKey in keys)
                     _perRequestCache.Remove(redisKey.ToString());
 
-                TryPerformAction(() => _db.KeyDelete(keys.ToArray()));
+                await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyDeleteAsync(keys.ToArray()));
             }
         }
 

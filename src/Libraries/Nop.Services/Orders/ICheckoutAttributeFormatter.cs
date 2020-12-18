@@ -1,3 +1,4 @@
+﻿using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Orders
@@ -7,12 +8,13 @@ namespace Nop.Services.Orders
     /// </summary>
     public partial interface ICheckoutAttributeFormatter
     {
+        //TODO: may be deleted
         /// <summary>
         /// Formats attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributesXml);
+        Task<string> FormatAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Formats attributes
@@ -24,7 +26,7 @@ namespace Nop.Services.Orders
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperlink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributesXml,
+        Task<string> FormatAttributesAsync(string attributesXml,
             Customer customer, 
             string separator = "<br />", 
             bool htmlEncode = true,

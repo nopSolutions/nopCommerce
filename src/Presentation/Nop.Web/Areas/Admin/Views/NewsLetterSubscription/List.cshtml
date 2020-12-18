@@ -4,7 +4,7 @@
 @inject IStoreService storeService
 
 @{
-    var stores = storeService.GetAllStores();
+    var stores = await storeService.GetAllStoresAsync();
 
     //page title
     ViewBag.PageTitle = T("Admin.Promotions.newsLetterSubscriptions").Text;
@@ -14,7 +14,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "NewsletterSubscriptionPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="NewsLetterSubscription" asp-action="List" method="post">
@@ -156,7 +156,7 @@
                                     {
                                         Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store").Text,
                                         Width = "150",
-                                        Visible = storeService.GetAllStores().Count > 1
+                                        Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                     },
                                     new ColumnProperty(nameof(NewsletterSubscriptionModel.CreatedOn))
                                     {

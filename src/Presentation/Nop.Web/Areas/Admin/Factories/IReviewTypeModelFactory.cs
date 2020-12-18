@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Review type search model</param>
         /// <returns>Review type search model</returns>
-        ReviewTypeSearchModel PrepareReviewTypeSearchModel(ReviewTypeSearchModel searchModel);
+        Task<ReviewTypeSearchModel> PrepareReviewTypeSearchModelAsync(ReviewTypeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged review type list model
         /// </summary>
         /// <param name="searchModel">Review type search model</param>
         /// <returns>Review type list model</returns>
-        ReviewTypeListModel PrepareReviewTypeListModel(ReviewTypeSearchModel searchModel);
+        Task<ReviewTypeListModel> PrepareReviewTypeListModelAsync(ReviewTypeSearchModel searchModel);
 
         /// <summary>
         /// Prepare review type model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="reviewType">Review type</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Review type model</returns>
-        ReviewTypeModel PrepareReviewTypeModel(ReviewTypeModel model,
+        Task<ReviewTypeModel> PrepareReviewTypeModelAsync(ReviewTypeModel model,
             ReviewType reviewType, bool excludeProperties = false);
     }
 }

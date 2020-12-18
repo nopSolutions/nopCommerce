@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Plugins
+﻿using System.Threading.Tasks;
+
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Base plugin
@@ -21,15 +23,17 @@
         /// <summary>
         /// Install plugin
         /// </summary>
-        public virtual void Install() 
+        public virtual Task InstallAsync() 
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public virtual void Uninstall() 
+        public virtual Task UninstallAsync() 
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -37,18 +41,20 @@
         /// </summary>
         /// <param name="currentVersion">Current version of plugin</param>
         /// <param name="targetVersion">New version of plugin</param>
-        public virtual void Update(string currentVersion, string targetVersion)
+        public virtual Task UpdateAsync(string currentVersion, string targetVersion)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
-        public virtual void PreparePluginToUninstall()
+        public virtual Task PreparePluginToUninstallAsync()
         {
             //any can put any custom validation logic here
             //throw an exception if this plugin cannot be uninstalled
             //for example, requires some other certain plugins to be uninstalled first
+            return Task.CompletedTask;
         }
     }
 }

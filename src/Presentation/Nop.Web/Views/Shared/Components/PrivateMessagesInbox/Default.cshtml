@@ -70,13 +70,13 @@
                 </table>
             </div>
             @{
-                var pager = Html.Pager(Model.PagerModel);
+                var pager = await Html.PagerAsync(Model.PagerModel);
             }
-            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
             {
-            <div class="pager">
-                @pager
-            </div>
+                <div class="pager">
+                    @pager
+                </div>
             }
             <div class="buttons">
                 <input class="button-1 delete-selected-pm-button" name="delete-inbox" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />

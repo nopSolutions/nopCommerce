@@ -7,10 +7,11 @@
     //page title
     ViewBag.PageTitle = T("Admin.Dashboard").Text;
 
-    var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
-    var canManageReturnRequests = permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests);
+    var canManageOrders = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
+    var canManageReturnRequests = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests);
+
      //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Dashboard");
 }

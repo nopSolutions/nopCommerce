@@ -51,22 +51,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var engine = EngineContext.Current;
 
             //further actions are performed only when the database is installed
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
                 //initialize and start schedule tasks
                 Services.Tasks.TaskManager.Instance.Initialize();
                 Services.Tasks.TaskManager.Instance.Start();
-
                 //log application start
-                engine.Resolve<ILogger>().Information("Application started");
+                engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
 
                 var pluginService = engine.Resolve<IPluginService>();
 
                 //install plugins
-                pluginService.InstallPlugins();
+                pluginService.InstallPluginsAsync().Wait();
 
                 //update plugins
-                pluginService.UpdatePlugins();
+                pluginService.UpdatePluginsAsync().Wait();
 
                 //update nopCommerce core
                 var migrationManager = engine.Resolve<IMigrationManager>();
@@ -78,12 +77,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
 #if DEBUG
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 //prevent save the update migrations into the DB during the developing process  
                 var versions = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
-                versions.Delete(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
+                versions.DeleteAsync(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
 
 #endif
             }
@@ -112,22 +111,22 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //log errors
             application.UseExceptionHandler(handler =>
             {
-                handler.Run(context =>
+                handler.Run(async context =>
                 {
                     var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
                     if (exception == null)
-                        return Task.CompletedTask;
+                        return;
 
                     try
                     {
                         //check whether database is installed
-                        if (DataSettingsManager.DatabaseIsInstalled)
+                        if (await DataSettingsManager.IsDatabaseInstalledAsync())
                         {
                             //get current customer
-                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+                            var currentCustomer = await EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
 
                             //log error
-                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            await EngineContext.Current.Resolve<ILogger>().ErrorAsync(exception.Message, exception, currentCustomer);
                         }
                     }
                     finally
@@ -135,8 +134,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         //rethrow the exception to show the error page
                         ExceptionDispatchInfo.Throw(exception);
                     }
-
-                    return Task.CompletedTask;
                 });
             });
         }
@@ -159,7 +156,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var originalPath = context.HttpContext.Request.Path;
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
-                        if (DataSettingsManager.DatabaseIsInstalled)
+                        if (await DataSettingsManager.IsDatabaseInstalledAsync())
                         {
                             var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
 
@@ -168,8 +165,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                 var logger = EngineContext.Current.Resolve<ILogger>();
                                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
 
-                                logger.Error($"Error 404. The requested page ({originalPath}) was not found",
-                                    customer: workContext.CurrentCustomer);
+                                await logger.ErrorAsync($"Error 404. The requested page ({originalPath}) was not found",
+                                    customer: await workContext.GetCurrentCustomerAsync());
                             }
                         }
 
@@ -187,8 +184,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             context.HttpContext.Request.Path = originalPath;
                         }
                     }
-
-                    await Task.CompletedTask;
                 }
             });
         }
@@ -199,17 +194,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseBadRequestResult(this IApplicationBuilder application)
         {
-            application.UseStatusCodePages(context =>
+            application.UseStatusCodePages(async context =>
             {
                 //handle 404 (Bad request)
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
+                    await logger.ErrorAsync("Error 400. Bad request", null, customer: await workContext.GetCurrentCustomerAsync());
                 }
-
-                return Task.CompletedTask;
             });
         }
 
@@ -220,7 +213,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopResponseCompression(this IApplicationBuilder application)
         {
             //whether to use compression (gzip by default)
-            if (DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
+            if (DataSettingsManager.IsDatabaseInstalled() && EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
                 application.UseResponseCompression();
         }
 
@@ -232,7 +225,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             static void staticFileResponse(StaticFileResponseContext context)
             {
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!DataSettingsManager.IsDatabaseInstalled())
                     return;
 
                 var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
@@ -261,7 +254,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 OnPrepareResponse = staticFileResponse
             };
 
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
                 var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
                 if (!string.IsNullOrEmpty(securitySettings.PluginStaticFileExtensionsBlacklist))
@@ -306,7 +299,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ContentTypeProvider = provider
             });
 
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
                 application.UseStaticFiles(new StaticFileOptions
                 {
@@ -342,7 +335,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopAuthentication(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
@@ -354,13 +347,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopRequestLocalization(this IApplicationBuilder application)
         {
-            application.UseRequestLocalization(options =>
+            application.UseRequestLocalization(async options =>
             {
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //prepare supported cultures
-                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
+                var cultures = (await EngineContext.Current.Resolve<ILanguageService>().GetAllLanguagesAsync())
                     .OrderBy(language => language.DisplayOrder)
                     .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
                 options.SupportedCultures = cultures;
@@ -375,7 +368,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseCulture(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             application.UseMiddleware<CultureMiddleware>();
@@ -405,7 +398,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopWebMarkupMin(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             application.UseWebMarkupMin();

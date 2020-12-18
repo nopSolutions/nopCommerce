@@ -221,7 +221,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerLifetimeScope();
             builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
             builder.RegisterType<UploadService>().As<IUploadService>().InstancePerLifetimeScope();
-            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().SingleInstance();
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
@@ -259,14 +259,14 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 var pictureService = context.Resolve<IPictureService>();
 
-                return EngineContext.Current.ResolveUnregistered(pictureService.StoreInDb
+                return EngineContext.Current.ResolveUnregistered(pictureService.IsStoreInDbAsync().Result
                     ? typeof(DatabaseRoxyFilemanService)
                     : typeof(FileRoxyFilemanService));
 
             }).As<IRoxyFilemanService>().InstancePerLifetimeScope();
 
             //installation service
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
 
             //event consumers
@@ -324,11 +324,11 @@ namespace Nop.Web.Framework.Infrastructure
 
                     try
                     {
-                        store = c.Resolve<IStoreContext>().CurrentStore;
+                        store = c.Resolve<IStoreContext>().GetCurrentStoreAsync().Result;
                     }
                     catch
                     {
-                        if (!DataSettingsManager.DatabaseIsInstalled)
+                        if (!DataSettingsManager.IsDatabaseInstalled())
                             store = null;
                         else
                             throw;
@@ -344,11 +344,11 @@ namespace Nop.Web.Framework.Infrastructure
                     //DELETE FROM [Setting] WHERE [StoreId] > 0
                     try
                     {
-                        return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                        return c.Resolve<ISettingService>().LoadSettingAsync<TSettings>(currentStoreId).Result;
                     }
                     catch
                     {
-                        if (DataSettingsManager.DatabaseIsInstalled)
+                        if (DataSettingsManager.IsDatabaseInstalled())
                             throw;
                     }
 

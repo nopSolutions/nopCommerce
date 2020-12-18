@@ -42,7 +42,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         #region Utilities
 
-        protected virtual void ProcessRecurringPayment(string invoiceId, PaymentStatus newPaymentStatus, string transactionId, string ipnInfo)
+        protected virtual async Task ProcessRecurringPaymentAsync(string invoiceId, PaymentStatus newPaymentStatus, string transactionId, string ipnInfo)
         {
             Guid orderNumberGuid;
 
@@ -55,14 +55,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 orderNumberGuid = Guid.Empty;
             }
 
-            var order = _orderService.GetOrderByGuid(orderNumberGuid);
+            var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
             if (order == null)
             {
-                _logger.Error("PayPal IPN. Order is not found", new NopException(ipnInfo));
+                await _logger.ErrorAsync("PayPal IPN. Order is not found", new NopException(ipnInfo));
                 return;
             }
 
-            var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: order.Id);
+            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
 
             foreach (var rp in recurringPayments)
             {
@@ -71,10 +71,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     case PaymentStatus.Authorized:
                     case PaymentStatus.Paid:
                         {
-                            var recurringPaymentHistory = _orderService.GetRecurringPaymentHistory(rp);
+                            var recurringPaymentHistory = await _orderService.GetRecurringPaymentHistoryAsync(rp);
                             if (!recurringPaymentHistory.Any())
                             {
-                                _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory
+                                await _orderService.InsertRecurringPaymentHistoryAsync(new RecurringPaymentHistory
                                 {
                                     RecurringPaymentId = rp.Id,
                                     OrderId = order.Id,
@@ -93,7 +93,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                 else
                                     processPaymentResult.CaptureTransactionId = transactionId;
 
-                                _orderProcessingService.ProcessNextRecurringPayment(rp,
+                                await _orderProcessingService.ProcessNextRecurringPaymentAsync(rp,
                                     processPaymentResult);
                             }
                         }
@@ -106,16 +106,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             Errors = new[] { $"PayPal IPN. Recurring payment is {nameof(PaymentStatus.Voided).ToLower()} ." },
                             RecurringPaymentFailed = true
                         };
-                        _orderProcessingService.ProcessNextRecurringPayment(rp, failedPaymentResult);
+                        await _orderProcessingService.ProcessNextRecurringPaymentAsync(rp, failedPaymentResult);
                         break;
                 }
             }
 
             //OrderService.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
-            _logger.Information("PayPal IPN. Recurring info", new NopException(ipnInfo));
+            await _logger.InformationAsync("PayPal IPN. Recurring info", new NopException(ipnInfo));
         }
 
-        protected virtual void ProcessPayment(string orderNumber, string ipnInfo, PaymentStatus newPaymentStatus, decimal mcGross, string transactionId)
+        protected virtual async Task ProcessPaymentAsync(string orderNumber, string ipnInfo, PaymentStatus newPaymentStatus, decimal mcGross, string transactionId)
         {
             Guid orderNumberGuid;
 
@@ -128,16 +128,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 orderNumberGuid = Guid.Empty;
             }
 
-            var order = _orderService.GetOrderByGuid(orderNumberGuid);
+            var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
 
             if (order == null)
             {
-                _logger.Error("PayPal IPN. Order is not found", new NopException(ipnInfo));
+                await _logger.ErrorAsync("PayPal IPN. Order is not found", new NopException(ipnInfo));
                 return;
             }
 
             //order note
-            _orderService.InsertOrderNote(new OrderNote
+            await _orderService.InsertOrderNoteAsync(new OrderNote
             {
                 OrderId = order.Id,
                 Note = ipnInfo,
@@ -150,9 +150,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             {
                 var errorStr = $"PayPal IPN. Returned order total {mcGross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                 //log
-                _logger.Error(errorStr);
+                await _logger.ErrorAsync(errorStr);
                 //order note
-                _orderService.InsertOrderNote(new OrderNote
+                await _orderService.InsertOrderNoteAsync(new OrderNote
                 {
                     OrderId = order.Id,
                     Note = errorStr,
@@ -167,15 +167,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             {
                 case PaymentStatus.Authorized:
                     if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
-                        _orderProcessingService.MarkAsAuthorized(order);
+                        await _orderProcessingService.MarkAsAuthorizedAsync(order);
                     break;
                 case PaymentStatus.Paid:
                     if (_orderProcessingService.CanMarkOrderAsPaid(order))
                     {
                         order.AuthorizationTransactionId = transactionId;
-                        _orderService.UpdateOrder(order);
+                        await _orderService.UpdateOrderAsync(order);
 
-                        _orderProcessingService.MarkOrderAsPaid(order);
+                        await _orderProcessingService.MarkOrderAsPaidAsync(order);
                     }
 
                     break;
@@ -185,19 +185,19 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     {
                         //refund
                         if (_orderProcessingService.CanRefundOffline(order))
-                            _orderProcessingService.RefundOffline(order);
+                            await _orderProcessingService.RefundOfflineAsync(order);
                     }
                     else
                     {
                         //partial refund
                         if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
-                            _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
+                            await _orderProcessingService.PartiallyRefundOfflineAsync(order, totalToRefund);
                     }
 
                     break;
                 case PaymentStatus.Voided:
                     if (_orderProcessingService.CanVoidOffline(order))
-                        _orderProcessingService.VoidOffline(order);
+                        await _orderProcessingService.VoidOfflineAsync(order);
 
                     break;
             }
@@ -213,12 +213,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             await Request.Body.CopyToAsync(stream);
             var strRequest = Encoding.ASCII.GetString(stream.ToArray());
 
-            if (!(_paymentPluginManager.LoadPluginBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
+            if (!(await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (!processor.VerifyIpn(strRequest, out var values))
+            var (result, values) = await processor.VerifyIpnAsync(strRequest);
+
+            if (!result)
             {
-                _logger.Error("PayPal IPN failed.", new NopException(strRequest));
+                await _logger.ErrorAsync("PayPal IPN failed.", new NopException(strRequest));
 
                 //nothing should be rendered to visitor
                 return Ok();
@@ -256,19 +258,19 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             switch (txnType)
             {
                 case "recurring_payment":
-                    ProcessRecurringPayment(rpInvoiceId, newPaymentStatus, txnId, ipnInfo);
+                    await ProcessRecurringPaymentAsync(rpInvoiceId, newPaymentStatus, txnId, ipnInfo);
                     break;
                 case "recurring_payment_failed":
                     if (Guid.TryParse(rpInvoiceId, out var orderGuid))
                     {
-                        var order = _orderService.GetOrderByGuid(orderGuid);
+                        var order = await _orderService.GetOrderByGuidAsync(orderGuid);
                         if (order != null)
                         {
-                            var recurringPayment = _orderService.SearchRecurringPayments(initialOrderId: order.Id)
+                            var recurringPayment = (await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id))
                                 .FirstOrDefault();
                             //failed payment
                             if (recurringPayment != null)
-                                _orderProcessingService.ProcessNextRecurringPayment(recurringPayment,
+                                await _orderProcessingService.ProcessNextRecurringPaymentAsync(recurringPayment,
                                     new ProcessPaymentResult
                                     {
                                         Errors = new[] { txnType },
@@ -280,7 +282,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     break;
                 default:
                     values.TryGetValue("custom", out var orderNumber);
-                    ProcessPayment(orderNumber, ipnInfo, newPaymentStatus, mcGross, txnId);
+                    await ProcessPaymentAsync(orderNumber, ipnInfo, newPaymentStatus, mcGross, txnId);
 
                     break;
             }

@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name.Required"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name.Required"));
         }
     }
 }

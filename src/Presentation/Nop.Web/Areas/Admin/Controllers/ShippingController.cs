@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -87,28 +88,28 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
+        protected virtual async Task UpdateLocalesAsync(ShippingMethod shippingMethod, ShippingMethodModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(shippingMethod, x => x.Name, localized.Name, localized.LanguageId);
-                _localizedEntityService.SaveLocalizedValue(shippingMethod, x => x.Description, localized.Description, localized.LanguageId);
+                await _localizedEntityService.SaveLocalizedValueAsync(shippingMethod, x => x.Name, localized.Name, localized.LanguageId);
+                await _localizedEntityService.SaveLocalizedValueAsync(shippingMethod, x => x.Description, localized.Description, localized.LanguageId);
             }
         }
 
-        protected virtual void UpdateLocales(DeliveryDate deliveryDate, DeliveryDateModel model)
+        protected virtual async Task UpdateLocalesAsync(DeliveryDate deliveryDate, DeliveryDateModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(deliveryDate, x => x.Name, localized.Name, localized.LanguageId);
+                await _localizedEntityService.SaveLocalizedValueAsync(deliveryDate, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
-        protected virtual void UpdateLocales(ProductAvailabilityRange productAvailabilityRange, ProductAvailabilityRangeModel model)
+        protected virtual async Task UpdateLocalesAsync(ProductAvailabilityRange productAvailabilityRange, ProductAvailabilityRangeModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(productAvailabilityRange, x => x.Name, localized.Name, localized.LanguageId);
+                await _localizedEntityService.SaveLocalizedValueAsync(productAvailabilityRange, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
@@ -116,43 +117,43 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Shipping rate computation methods
 
-        public virtual IActionResult Providers()
+        public virtual async Task<IActionResult> Providers()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareShippingProviderSearchModel(new ShippingProviderSearchModel());
+            var model = await _shippingModelFactory.PrepareShippingProviderSearchModelAsync(new ShippingProviderSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Providers(ShippingProviderSearchModel searchModel)
+        public virtual async Task<IActionResult> Providers(ShippingProviderSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareShippingProviderListModel(searchModel);
+            var model = await _shippingModelFactory.PrepareShippingProviderListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ProviderUpdate(ShippingProviderModel model)
+        public virtual async Task<IActionResult> ProviderUpdate(ShippingProviderModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var srcm = _shippingPluginManager.LoadPluginBySystemName(model.SystemName);
+            var srcm = await _shippingPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_shippingPluginManager.IsPluginActive(srcm))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
                     _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(srcm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_shippingSettings);
+                    await _settingService.SaveSettingAsync(_shippingSettings);
                 }
             }
             else
@@ -161,7 +162,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_shippingSettings);
+                    await _settingService.SaveSettingAsync(_shippingSettings);
                 }
             }
 
@@ -174,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -183,43 +184,43 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Pickup point providers
 
-        public virtual IActionResult PickupPointProviders()
+        public virtual async Task<IActionResult> PickupPointProviders()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PreparePickupPointProviderSearchModel(new PickupPointProviderSearchModel());
+            var model = await _shippingModelFactory.PreparePickupPointProviderSearchModelAsync(new PickupPointProviderSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult PickupPointProviders(PickupPointProviderSearchModel searchModel)
+        public virtual async Task<IActionResult> PickupPointProviders(PickupPointProviderSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _shippingModelFactory.PreparePickupPointProviderListModel(searchModel);
+            var model = await _shippingModelFactory.PreparePickupPointProviderListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult PickupPointProviderUpdate(PickupPointProviderModel model)
+        public virtual async Task<IActionResult> PickupPointProviderUpdate(PickupPointProviderModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var pickupPointProvider = _pickupPluginManager.LoadPluginBySystemName(model.SystemName);
+            var pickupPointProvider = await _pickupPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_pickupPluginManager.IsPluginActive(pickupPointProvider))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
                     _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pickupPointProvider.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_shippingSettings);
+                    await _settingService.SaveSettingAsync(_shippingSettings);
                 }
             }
             else
@@ -228,7 +229,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _shippingSettings.ActivePickupPointProviderSystemNames.Add(pickupPointProvider.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_shippingSettings);
+                    await _settingService.SaveSettingAsync(_shippingSettings);
                 }
             }
 
@@ -239,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -248,126 +249,126 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Shipping methods
 
-        public virtual IActionResult Methods()
+        public virtual async Task<IActionResult> Methods()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareShippingMethodSearchModel(new ShippingMethodSearchModel());
+            var model = await _shippingModelFactory.PrepareShippingMethodSearchModelAsync(new ShippingMethodSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Methods(ShippingMethodSearchModel searchModel)
+        public virtual async Task<IActionResult> Methods(ShippingMethodSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareShippingMethodListModel(searchModel);
+            var model = await _shippingModelFactory.PrepareShippingMethodListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult CreateMethod()
+        public virtual async Task<IActionResult> CreateMethod()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareShippingMethodModel(new ShippingMethodModel(), null);
+            var model = await _shippingModelFactory.PrepareShippingMethodModelAsync(new ShippingMethodModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult CreateMethod(ShippingMethodModel model, bool continueEditing)
+        public virtual async Task<IActionResult> CreateMethod(ShippingMethodModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var sm = model.ToEntity<ShippingMethod>();
-                _shippingService.InsertShippingMethod(sm);
+                await _shippingService.InsertShippingMethodAsync(sm);
 
                 //locales
-                UpdateLocales(sm, model);
+                await UpdateLocalesAsync(sm, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Added"));
                 return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareShippingMethodModel(model, null, true);
+            model = await _shippingModelFactory.PrepareShippingMethodModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult EditMethod(int id)
+        public virtual async Task<IActionResult> EditMethod(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a shipping method with the specified id
-            var shippingMethod = _shippingService.GetShippingMethodById(id);
+            var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(id);
             if (shippingMethod == null)
                 return RedirectToAction("Methods");
 
             //prepare model
-            var model = _shippingModelFactory.PrepareShippingMethodModel(null, shippingMethod);
+            var model = await _shippingModelFactory.PrepareShippingMethodModelAsync(null, shippingMethod);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult EditMethod(ShippingMethodModel model, bool continueEditing)
+        public virtual async Task<IActionResult> EditMethod(ShippingMethodModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a shipping method with the specified id
-            var shippingMethod = _shippingService.GetShippingMethodById(model.Id);
+            var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(model.Id);
             if (shippingMethod == null)
                 return RedirectToAction("Methods");
 
             if (ModelState.IsValid)
             {
                 shippingMethod = model.ToEntity(shippingMethod);
-                _shippingService.UpdateShippingMethod(shippingMethod);
+                await _shippingService.UpdateShippingMethodAsync(shippingMethod);
 
                 //locales
-                UpdateLocales(shippingMethod, model);
+                await UpdateLocalesAsync(shippingMethod, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Updated"));
 
                 return continueEditing ? RedirectToAction("EditMethod", shippingMethod.Id) : RedirectToAction("Methods");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareShippingMethodModel(model, shippingMethod, true);
+            model = await _shippingModelFactory.PrepareShippingMethodModelAsync(model, shippingMethod, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteMethod(int id)
+        public virtual async Task<IActionResult> DeleteMethod(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a shipping method with the specified id
-            var shippingMethod = _shippingService.GetShippingMethodById(id);
+            var shippingMethod = await _shippingService.GetShippingMethodByIdAsync(id);
             if (shippingMethod == null)
                 return RedirectToAction("Methods");
 
-            _shippingService.DeleteShippingMethod(shippingMethod);
+            await _shippingService.DeleteShippingMethodAsync(shippingMethod);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Methods.Deleted"));
 
             return RedirectToAction("Methods");
         }
@@ -376,13 +377,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Dates and ranges
 
-        public virtual IActionResult DatesAndRanges()
+        public virtual async Task<IActionResult> DatesAndRanges()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareDatesRangesSearchModel(new DatesRangesSearchModel());
+            var model = await _shippingModelFactory.PrepareDatesRangesSearchModelAsync(new DatesRangesSearchModel());
 
             return View(model);
         }
@@ -392,115 +393,115 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Delivery dates
 
         [HttpPost]
-        public virtual IActionResult DeliveryDates(DeliveryDateSearchModel searchModel)
+        public virtual async Task<IActionResult> DeliveryDates(DeliveryDateSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareDeliveryDateListModel(searchModel);
+            var model = await _shippingModelFactory.PrepareDeliveryDateListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult CreateDeliveryDate()
+        public virtual async Task<IActionResult> CreateDeliveryDate()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareDeliveryDateModel(new DeliveryDateModel(), null);
+            var model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(new DeliveryDateModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        public virtual async Task<IActionResult> CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var deliveryDate = model.ToEntity<DeliveryDate>();
-                _dateRangeService.InsertDeliveryDate(deliveryDate);
+                await _dateRangeService.InsertDeliveryDateAsync(deliveryDate);
 
                 //locales
-                UpdateLocales(deliveryDate, model);
+                await UpdateLocalesAsync(deliveryDate, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Added"));
 
                 return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareDeliveryDateModel(model, null, true);
+            model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult EditDeliveryDate(int id)
+        public virtual async Task<IActionResult> EditDeliveryDate(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a delivery date with the specified id
-            var deliveryDate = _dateRangeService.GetDeliveryDateById(id);
+            var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(id);
             if (deliveryDate == null)
                 return RedirectToAction("DatesAndRanges");
 
             //prepare model
-            var model = _shippingModelFactory.PrepareDeliveryDateModel(null, deliveryDate);
+            var model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(null, deliveryDate);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        public virtual async Task<IActionResult> EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a delivery date with the specified id
-            var deliveryDate = _dateRangeService.GetDeliveryDateById(model.Id);
+            var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(model.Id);
             if (deliveryDate == null)
                 return RedirectToAction("DatesAndRanges");
 
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);
-                _dateRangeService.UpdateDeliveryDate(deliveryDate);
+                await _dateRangeService.UpdateDeliveryDateAsync(deliveryDate);
 
                 //locales
-                UpdateLocales(deliveryDate, model);
+                await UpdateLocalesAsync(deliveryDate, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Updated"));
 
                 return continueEditing ? RedirectToAction("EditDeliveryDate", deliveryDate.Id) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareDeliveryDateModel(model, deliveryDate, true);
+            model = await _shippingModelFactory.PrepareDeliveryDateModelAsync(model, deliveryDate, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteDeliveryDate(int id)
+        public virtual async Task<IActionResult> DeleteDeliveryDate(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a delivery date with the specified id
-            var deliveryDate = _dateRangeService.GetDeliveryDateById(id);
+            var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(id);
             if (deliveryDate == null)
                 return RedirectToAction("DatesAndRanges");
 
-            _dateRangeService.DeleteDeliveryDate(deliveryDate);
+            await _dateRangeService.DeleteDeliveryDateAsync(deliveryDate);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
 
             return RedirectToAction("DatesAndRanges");
         }
@@ -510,115 +511,115 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Product availability ranges
 
         [HttpPost]
-        public virtual IActionResult ProductAvailabilityRanges(ProductAvailabilityRangeSearchModel searchModel)
+        public virtual async Task<IActionResult> ProductAvailabilityRanges(ProductAvailabilityRangeSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareProductAvailabilityRangeListModel(searchModel);
+            var model = await _shippingModelFactory.PrepareProductAvailabilityRangeListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult CreateProductAvailabilityRange()
+        public virtual async Task<IActionResult> CreateProductAvailabilityRange()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareProductAvailabilityRangeModel(new ProductAvailabilityRangeModel(), null);
+            var model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(new ProductAvailabilityRangeModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult CreateProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
+        public virtual async Task<IActionResult> CreateProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var productAvailabilityRange = model.ToEntity<ProductAvailabilityRange>();
-                _dateRangeService.InsertProductAvailabilityRange(productAvailabilityRange);
+                await _dateRangeService.InsertProductAvailabilityRangeAsync(productAvailabilityRange);
 
                 //locales
-                UpdateLocales(productAvailabilityRange, model);
+                await UpdateLocalesAsync(productAvailabilityRange, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Added"));
 
                 return continueEditing ? RedirectToAction("EditProductAvailabilityRange", new { id = productAvailabilityRange.Id }) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareProductAvailabilityRangeModel(model, null, true);
+            model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult EditProductAvailabilityRange(int id)
+        public virtual async Task<IActionResult> EditProductAvailabilityRange(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a product availability range with the specified id
-            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(id);
+            var productAvailabilityRange = await _dateRangeService.GetProductAvailabilityRangeByIdAsync(id);
             if (productAvailabilityRange == null)
                 return RedirectToAction("DatesAndRanges");
 
             //prepare model
-            var model = _shippingModelFactory.PrepareProductAvailabilityRangeModel(null, productAvailabilityRange);
+            var model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(null, productAvailabilityRange);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult EditProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
+        public virtual async Task<IActionResult> EditProductAvailabilityRange(ProductAvailabilityRangeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a product availability range with the specified id
-            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(model.Id);
+            var productAvailabilityRange = await _dateRangeService.GetProductAvailabilityRangeByIdAsync(model.Id);
             if (productAvailabilityRange == null)
                 return RedirectToAction("DatesAndRanges");
 
             if (ModelState.IsValid)
             {
                 productAvailabilityRange = model.ToEntity(productAvailabilityRange);
-                _dateRangeService.UpdateProductAvailabilityRange(productAvailabilityRange);
+                await _dateRangeService.UpdateProductAvailabilityRangeAsync(productAvailabilityRange);
 
                 //locales
-                UpdateLocales(productAvailabilityRange, model);
+                await UpdateLocalesAsync(productAvailabilityRange, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Updated"));
 
                 return continueEditing ? RedirectToAction("EditProductAvailabilityRange", productAvailabilityRange.Id) : RedirectToAction("DatesAndRanges");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareProductAvailabilityRangeModel(model, productAvailabilityRange, true);
+            model = await _shippingModelFactory.PrepareProductAvailabilityRangeModelAsync(model, productAvailabilityRange, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteProductAvailabilityRange(int id)
+        public virtual async Task<IActionResult> DeleteProductAvailabilityRange(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a product availability range with the specified id
-            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(id);
+            var productAvailabilityRange = await _dateRangeService.GetProductAvailabilityRangeByIdAsync(id);
             if (productAvailabilityRange == null)
                 return RedirectToAction("DatesAndRanges");
 
-            _dateRangeService.DeleteProductAvailabilityRange(productAvailabilityRange);
+            await _dateRangeService.DeleteProductAvailabilityRangeAsync(productAvailabilityRange);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Deleted"));
 
             return RedirectToAction("DatesAndRanges");
         }
@@ -627,155 +628,155 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Warehouses
 
-        public virtual IActionResult Warehouses()
+        public virtual async Task<IActionResult> Warehouses()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareWarehouseSearchModel(new WarehouseSearchModel());
+            var model = await _shippingModelFactory.PrepareWarehouseSearchModelAsync(new WarehouseSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Warehouses(WarehouseSearchModel searchModel)
+        public virtual async Task<IActionResult> Warehouses(WarehouseSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareWarehouseListModel(searchModel);
+            var model = await _shippingModelFactory.PrepareWarehouseListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult CreateWarehouse()
+        public virtual async Task<IActionResult> CreateWarehouse()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareWarehouseModel(new WarehouseModel(), null);
+            var model = await _shippingModelFactory.PrepareWarehouseModelAsync(new WarehouseModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult CreateWarehouse(WarehouseModel model, bool continueEditing)
+        public virtual async Task<IActionResult> CreateWarehouse(WarehouseModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity<Address>();
                 address.CreatedOnUtc = DateTime.UtcNow;
-                _addressService.InsertAddress(address);
+                await _addressService.InsertAddressAsync(address);
 
                 //fill entity from model
                 var warehouse = model.ToEntity<Warehouse>();
                 warehouse.AddressId = address.Id;
 
-                _shippingService.InsertWarehouse(warehouse);
+                await _shippingService.InsertWarehouseAsync(warehouse);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewWarehouse",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewWarehouse"), warehouse.Id), warehouse);
+                await _customerActivityService.InsertActivityAsync("AddNewWarehouse",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewWarehouse"), warehouse.Id), warehouse);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Added"));
 
                 return continueEditing ? RedirectToAction("EditWarehouse", new { id = warehouse.Id }) : RedirectToAction("Warehouses");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareWarehouseModel(model, null, true);
+            model = await _shippingModelFactory.PrepareWarehouseModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult EditWarehouse(int id)
+        public virtual async Task<IActionResult> EditWarehouse(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a warehouse with the specified id
-            var warehouse = _shippingService.GetWarehouseById(id);
+            var warehouse = await _shippingService.GetWarehouseByIdAsync(id);
             if (warehouse == null)
                 return RedirectToAction("Warehouses");
 
             //prepare model
-            var model = _shippingModelFactory.PrepareWarehouseModel(null, warehouse);
+            var model = await _shippingModelFactory.PrepareWarehouseModelAsync(null, warehouse);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult EditWarehouse(WarehouseModel model, bool continueEditing)
+        public virtual async Task<IActionResult> EditWarehouse(WarehouseModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a warehouse with the specified id
-            var warehouse = _shippingService.GetWarehouseById(model.Id);
+            var warehouse = await _shippingService.GetWarehouseByIdAsync(model.Id);
             if (warehouse == null)
                 return RedirectToAction("Warehouses");
 
             if (ModelState.IsValid)
             {
-                var address = _addressService.GetAddressById(warehouse.AddressId) ??
+                var address = await _addressService.GetAddressByIdAsync(warehouse.AddressId) ??
                     new Address
                     {
                         CreatedOnUtc = DateTime.UtcNow
                     };
                 address = model.Address.ToEntity(address);
                 if (address.Id > 0)
-                    _addressService.UpdateAddress(address);
+                    await _addressService.UpdateAddressAsync(address);
                 else
-                    _addressService.InsertAddress(address);
+                    await _addressService.InsertAddressAsync(address);
 
                 //fill entity from model
                 warehouse = model.ToEntity(warehouse);
 
                 warehouse.AddressId = address.Id;
 
-                _shippingService.UpdateWarehouse(warehouse);
+                await _shippingService.UpdateWarehouseAsync(warehouse);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditWarehouse",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditWarehouse"), warehouse.Id), warehouse);
+                await _customerActivityService.InsertActivityAsync("EditWarehouse",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditWarehouse"), warehouse.Id), warehouse);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Updated"));
 
                 return continueEditing ? RedirectToAction("EditWarehouse", warehouse.Id) : RedirectToAction("Warehouses");
             }
 
             //prepare model
-            model = _shippingModelFactory.PrepareWarehouseModel(model, warehouse, true);
+            model = await _shippingModelFactory.PrepareWarehouseModelAsync(model, warehouse, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteWarehouse(int id)
+        public virtual async Task<IActionResult> DeleteWarehouse(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //try to get a warehouse with the specified id
-            var warehouse = _shippingService.GetWarehouseById(id);
+            var warehouse = await _shippingService.GetWarehouseByIdAsync(id);
             if (warehouse == null)
                 return RedirectToAction("Warehouses");
 
-            _shippingService.DeleteWarehouse(warehouse);
+            await _shippingService.DeleteWarehouseAsync(warehouse);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteWarehouse",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteWarehouse"), warehouse.Id), warehouse);
+            await _customerActivityService.InsertActivityAsync("DeleteWarehouse",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteWarehouse"), warehouse.Id), warehouse);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.warehouses.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.warehouses.Deleted"));
 
             return RedirectToAction("Warehouses");
         }
@@ -784,13 +785,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Restrictions
 
-        public virtual IActionResult Restrictions()
+        public virtual async Task<IActionResult> Restrictions()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shippingModelFactory.PrepareShippingMethodRestrictionModel(new ShippingMethodRestrictionModel());
+            var model = await _shippingModelFactory.PrepareShippingMethodRestrictionModelAsync(new ShippingMethodRestrictionModel());
 
             return View(model);
         }
@@ -800,13 +801,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         //we use 2048 value because in some cases default value (1024) is too small for this action
         [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("Restrictions")]
-        public virtual IActionResult RestrictionSave(ShippingMethodRestrictionModel model, IFormCollection form)
+        public virtual async Task<IActionResult> RestrictionSave(ShippingMethodRestrictionModel model, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var countries = _countryService.GetAllCountries(showHidden: true);
-            var shippingMethods = _shippingService.GetAllShippingMethods();
+            var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
+            var shippingMethods = await _shippingService.GetAllShippingMethodsAsync();
 
             foreach (var shippingMethod in shippingMethods)
             {
@@ -821,28 +822,28 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var restrict = countryIdsToRestrict.Contains(country.Id);
                     var shippingMethodCountryMappings =
-                        _shippingService.GetShippingMethodCountryMapping(shippingMethod.Id, country.Id);
+                        await _shippingService.GetShippingMethodCountryMappingAsync(shippingMethod.Id, country.Id);
 
                     if (restrict)
                     {
                         if (shippingMethodCountryMappings.Any())
                             continue;
 
-                        _shippingService.InsertShippingMethodCountryMapping(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id});
-                        _shippingService.UpdateShippingMethod(shippingMethod);
+                        await _shippingService.InsertShippingMethodCountryMappingAsync(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id});
+                        await _shippingService.UpdateShippingMethodAsync(shippingMethod);
                     }
                     else
                     {
                         if (!shippingMethodCountryMappings.Any())
                             continue;
 
-                        _shippingService.DeleteShippingMethodCountryMapping(shippingMethodCountryMappings.FirstOrDefault());
-                        _shippingService.UpdateShippingMethod(shippingMethod);
+                        await _shippingService.DeleteShippingMethodCountryMappingAsync(shippingMethodCountryMappings.FirstOrDefault());
+                        await _shippingService.UpdateShippingMethodAsync(shippingMethod);
                     }
                 }
             }
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Restrictions.Updated"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Shipping.Restrictions.Updated"));
 
             return RedirectToAction("Restrictions");
         }

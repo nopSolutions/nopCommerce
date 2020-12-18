@@ -34,13 +34,13 @@ namespace Nop.Services.Installation
         /// <param name="context">HTTP context</param>
         /// <param name="webHelper">Web helper</param>
         /// <returns>Task</returns>
-        public async Task Invoke(HttpContext context, IWebHelper webHelper)
+        public async Task InvokeAsync(HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!await DataSettingsManager.IsDatabaseInstalledAsync())
             {
                 var installUrl = $"{webHelper.GetStoreLocation()}{NopInstallationDefaults.InstallPath}";
-                if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
+                if (!(webHelper.GetThisPageUrl(false)).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //redirect
                     context.Response.Redirect(installUrl);

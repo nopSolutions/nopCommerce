@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -13,9 +14,9 @@ namespace Nop.Web.Components
             _commonModelFactory = commonModelFactory;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _commonModelFactory.PrepareHeaderLinksModel();
+            var model = await _commonModelFactory.PrepareHeaderLinksModelAsync();
             return View(model);
         }
     }

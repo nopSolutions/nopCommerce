@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -78,14 +79,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var payPalStandardPaymentSettings = await _settingService.LoadSettingAsync<PayPalStandardPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
             {
@@ -101,12 +102,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             if (storeScope <= 0)
                 return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
 
-            model.UseSandbox_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
-            model.BusinessEmail_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
-            model.PdtToken_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
-            model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-            model.AdditionalFee_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
-            model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+            model.UseSandbox_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
+            model.BusinessEmail_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
+            model.PdtToken_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
+            model.PassProductNamesAndTotals_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
+            model.AdditionalFee_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
+            model.AdditionalFeePercentage_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
             return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
         }
@@ -115,17 +116,17 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Configure(ConfigurationModel model)
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var payPalStandardPaymentSettings = await _settingService.LoadSettingAsync<PayPalStandardPaymentSettings>(storeScope);
 
             //save settings
             payPalStandardPaymentSettings.UseSandbox = model.UseSandbox;
@@ -138,44 +139,46 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
 
             //now clear settings cache
-            _settingService.ClearCache();
+            await _settingService.ClearCacheAsync();
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         //action displaying notification (warning) to a store owner about inaccurate PayPal rounding
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public IActionResult RoundingWarning(bool passProductNamesAndTotals)
+        public async Task<IActionResult> RoundingWarning(bool passProductNamesAndTotals)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //prices and total aren't rounded, so display warning
             if (passProductNamesAndTotals && !_shoppingCartSettings.RoundPricesDuringCalculation)
-                return Json(new { Result = _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") });
+                return Json(new { Result = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalStandard.RoundingWarning") });
 
             return Json(new { Result = string.Empty });
         }
 
-        public IActionResult PDTHandler()
+        public async Task<IActionResult> PDTHandler()
         {
             var tx = _webHelper.QueryString<string>("tx");
 
-            if (!(_paymentPluginManager.LoadPluginBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
+            if (!(await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (processor.GetPdtDetails(tx, out var values, out var response))
+            var (result, values, response) = await processor.GetPdtDetailsAsync(tx);
+
+            if (result)
             {
                 values.TryGetValue("custom", out var orderNumber);
                 var orderNumberGuid = Guid.Empty;
@@ -188,7 +191,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     // ignored
                 }
 
-                var order = _orderService.GetOrderByGuid(orderNumberGuid);
+                var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
 
                 if (order == null)
                     return RedirectToAction("Index", "Home", new { area = string.Empty });
@@ -201,7 +204,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 }
                 catch (Exception exc)
                 {
-                    _logger.Error("PayPal PDT. Error getting mc_gross", exc);
+                    await _logger.ErrorAsync("PayPal PDT. Error getting mc_gross", exc);
                 }
 
                 values.TryGetValue("payer_status", out var payerStatus);
@@ -233,7 +236,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 sb.AppendLine("New payment status: " + newPaymentStatus);
 
                 //order note
-                _orderService.InsertOrderNote(new OrderNote
+                await _orderService.InsertOrderNoteAsync(new OrderNote
                 {
                     OrderId = order.Id,
                     Note = sb.ToString(),
@@ -242,14 +245,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 });
 
                 //validate order total
-                var orderTotalSentToPayPal = _genericAttributeService.GetAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal);
+                var orderTotalSentToPayPal = await _genericAttributeService.GetAttributeAsync<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal);
                 if (orderTotalSentToPayPal.HasValue && mcGross != orderTotalSentToPayPal.Value)
                 {
                     var errorStr = $"PayPal PDT. Returned order total {mcGross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                     //log
-                    _logger.Error(errorStr);
+                    await _logger.ErrorAsync(errorStr);
                     //order note
-                    _orderService.InsertOrderNote(new OrderNote
+                    await _orderService.InsertOrderNoteAsync(new OrderNote
                     {
                         OrderId = order.Id,
                         Note = errorStr,
@@ -262,7 +265,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                 //clear attribute
                 if (orderTotalSentToPayPal.HasValue)
-                    _genericAttributeService.SaveAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal, null);
+                    await _genericAttributeService.SaveAttributeAsync<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal, null);
 
                 if (newPaymentStatus != PaymentStatus.Paid)
                     return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
@@ -272,8 +275,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                 //mark order as paid
                 order.AuthorizationTransactionId = txnId;
-                _orderService.UpdateOrder(order);
-                _orderProcessingService.MarkOrderAsPaid(order);
+                await _orderService.UpdateOrderAsync(order);
+                await _orderProcessingService.MarkOrderAsPaidAsync(order);
 
                 return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             }
@@ -293,12 +296,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     // ignored
                 }
 
-                var order = _orderService.GetOrderByGuid(orderNumberGuid);
+                var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
                 if (order == null)
                     return RedirectToAction("Index", "Home", new { area = string.Empty });
 
                 //order note
-                _orderService.InsertOrderNote(new OrderNote
+                await _orderService.InsertOrderNoteAsync(new OrderNote
                 {
                     OrderId = order.Id,
                     Note = "PayPal PDT failed. " + response,
@@ -310,10 +313,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
         }
 
-        public IActionResult CancelOrder()
+        public async Task<IActionResult> CancelOrder()
         {
-            var order = _orderService.SearchOrders(_storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
+            var order = (await _orderService.SearchOrdersAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                customerId: (await _workContext.GetCurrentCustomerAsync()).Id, pageSize: 1)).FirstOrDefault();
 
             if (order != null)
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });

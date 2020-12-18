@@ -7,12 +7,12 @@
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
-    var stores = storeService.GetAllStores();
+    var stores = await storeService.GetAllStoresAsync();
 }
 
 @{
     const string hideSearchBlockAttributeName = "FixedByWeightByTotalPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <script type="text/javascript">

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
@@ -32,7 +33,16 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Save plugins info to the redis
         /// </summary>
-        public override void Save()
+        public override async Task SaveAsync()
+        {
+            var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+            await _db.StringSetAsync(nameof(RedisPluginsInfo), text);
+        }
+
+        /// <summary>
+        /// Save plugins info to the redis
+        /// </summary>
+        public override  void Save()
         {
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
             _db.StringSet(nameof(RedisPluginsInfo), text);
@@ -42,10 +52,10 @@ namespace Nop.Services.Plugins
         /// Get plugins info
         /// </summary>
         /// <returns>True if data are loaded, otherwise False</returns>
-        public override bool LoadPluginInfo()
+        public override async Task<bool> LoadPluginInfoAsync()
         {
             //try to get plugin info from the JSON file
-            var serializedItem = _db.StringGet(nameof(RedisPluginsInfo));
+            var serializedItem = await _db.StringGetAsync(nameof(RedisPluginsInfo));
 
             var loaded = false;
 
@@ -55,9 +65,9 @@ namespace Nop.Services.Plugins
             if (loaded)
                 return true;
 
-            if (base.LoadPluginInfo())
+            if (await base.LoadPluginInfoAsync())
             {
-                Save();
+                await SaveAsync();
                 loaded = true;
             }
 

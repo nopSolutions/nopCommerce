@@ -27,6 +27,7 @@ namespace Nop.Services.Authentication
         /// </summary>
         public static PathString LoginPath => new PathString("/login");
 
+        //TODO: may be deleted
         /// <summary>
         /// The default value used for the logout path
         /// </summary>

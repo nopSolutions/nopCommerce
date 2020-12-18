@@ -124,7 +124,7 @@
                                     @T("Admin.Orders.Fields.OrderStatus.Change")
                                 </button>
                                 <div id="pnlChangeOrderStatus">
-                                    <nop-select asp-for="OrderStatusId" asp-items="@(((OrderStatus) Model.OrderStatusId).ToSelectList())" />
+                                    <nop-select asp-for="OrderStatusId" asp-items="@await (((OrderStatus) Model.OrderStatusId).ToSelectListAsync())" />
                                     <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary my-1" >
                                         @T("Admin.Common.Save")
                                     </button>

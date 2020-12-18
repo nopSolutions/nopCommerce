@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
@@ -56,9 +57,9 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Affiliate</returns>
-        public virtual Affiliate GetAffiliateById(int affiliateId)
+        public virtual async Task<Affiliate> GetAffiliateByIdAsync(int affiliateId)
         {
-            return _affiliateRepository.GetById(affiliateId, cache => default);
+            return await _affiliateRepository.GetByIdAsync(affiliateId, cache => default);
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Affiliate</returns>
-        public virtual Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName)
+        public virtual async Task<Affiliate> GetAffiliateByFriendlyUrlNameAsync(string friendlyUrlName)
         {
             if (string.IsNullOrWhiteSpace(friendlyUrlName))
                 return null;
@@ -75,7 +76,8 @@ namespace Nop.Services.Affiliates
                         orderby a.Id
                         where a.FriendlyUrlName == friendlyUrlName
                         select a;
-            var affiliate = query.FirstOrDefault();
+            var affiliate = await query.FirstOrDefaultAsync();
+
             return affiliate;
         }
 
@@ -83,9 +85,9 @@ namespace Nop.Services.Affiliates
         /// Marks affiliate as deleted 
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public virtual void DeleteAffiliate(Affiliate affiliate)
+        public virtual async Task DeleteAffiliateAsync(Affiliate affiliate)
         {
-            _affiliateRepository.Delete(affiliate);
+            await _affiliateRepository.DeleteAsync(affiliate);
         }
 
         /// <summary>
@@ -101,14 +103,14 @@ namespace Nop.Services.Affiliates
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Affiliates</returns>
-        public virtual IPagedList<Affiliate> GetAllAffiliates(string friendlyUrlName = null,
+        public virtual async Task<IPagedList<Affiliate>> GetAllAffiliatesAsync(string friendlyUrlName = null,
             string firstName = null, string lastName = null,
             bool loadOnlyWithOrders = false,
             DateTime? ordersCreatedFromUtc = null, DateTime? ordersCreatedToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
-            return _affiliateRepository.GetAllPaged(query =>
+            return await _affiliateRepository.GetAllPagedAsync(query =>
             {
                 if (!string.IsNullOrWhiteSpace(friendlyUrlName))
                     query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
@@ -153,18 +155,18 @@ namespace Nop.Services.Affiliates
         /// Inserts an affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public virtual void InsertAffiliate(Affiliate affiliate)
+        public virtual async Task InsertAffiliateAsync(Affiliate affiliate)
         {
-            _affiliateRepository.Insert(affiliate);
+            await _affiliateRepository.InsertAsync(affiliate);
         }
 
         /// <summary>
         /// Updates the affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public virtual void UpdateAffiliate(Affiliate affiliate)
+        public virtual async Task UpdateAffiliateAsync(Affiliate affiliate)
         {
-            _affiliateRepository.Update(affiliate);
+            await _affiliateRepository.UpdateAsync(affiliate);
         }
 
         /// <summary>
@@ -172,12 +174,12 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliate full name</returns>
-        public virtual string GetAffiliateFullName(Affiliate affiliate)
+        public virtual async Task<string> GetAffiliateFullNameAsync(Affiliate affiliate)
         {
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
+            var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
 
             if (affiliateAddress == null)
                 return string.Empty;
@@ -192,7 +194,7 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Generated affiliate URL</returns>
-        public virtual string GenerateUrl(Affiliate affiliate)
+        public virtual Task<string> GenerateUrlAsync(Affiliate affiliate)
         {
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
@@ -204,7 +206,7 @@ namespace Nop.Services.Affiliates
                 //use ID
                 _webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateIdQueryParameter, affiliate.Id.ToString());
 
-            return url;
+            return Task.FromResult(url);
         }
 
         /// <summary>
@@ -213,13 +215,13 @@ namespace Nop.Services.Affiliates
         /// <param name="affiliate">Affiliate</param>
         /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Valid friendly name</returns>
-        public virtual string ValidateFriendlyUrlName(Affiliate affiliate, string friendlyUrlName)
+        public virtual async Task<string> ValidateFriendlyUrlNameAsync(Affiliate affiliate, string friendlyUrlName)
         {
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
             //ensure we have only valid chars
-            friendlyUrlName = _urlRecordService.GetSeName(friendlyUrlName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            friendlyUrlName = await _urlRecordService.GetSeNameAsync(friendlyUrlName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 
             //max length
             //(consider a store URL + probably added {0}-{1} below)
@@ -234,7 +236,7 @@ namespace Nop.Services.Affiliates
             var tempName = friendlyUrlName;
             while (true)
             {
-                var affiliateByFriendlyUrlName = GetAffiliateByFriendlyUrlName(tempName);
+                var affiliateByFriendlyUrlName = await GetAffiliateByFriendlyUrlNameAsync(tempName);
                 var reserved = affiliateByFriendlyUrlName != null && affiliateByFriendlyUrlName.Id != affiliate.Id;
                 if (!reserved)
                     break;

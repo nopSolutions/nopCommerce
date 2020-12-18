@@ -78,7 +78,7 @@
             <span asp-validation-for="ProductAttributeId"></span>
         </div>
     </div>
-    @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("productattribute-localized",
+    @(await Html.LocalizedEditorAsync<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("productattribute-localized",
     @<div>
         <div class="form-group row">
             <div class="col-md-3">
@@ -118,11 +118,11 @@
             <nop-label asp-for="AttributeControlTypeId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="AttributeControlTypeId" asp-items="@(((AttributeControlType)Model.AttributeControlTypeId).ToSelectList())" />
+            <nop-select asp-for="AttributeControlTypeId" asp-items="@await (((AttributeControlType)Model.AttributeControlTypeId).ToSelectListAsync())" />
             <span asp-validation-for="AttributeControlTypeId"></span>
         </div>
     </div>
-    @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("pnlDefaultValueLocalized",
+    @(await Html.LocalizedEditorAsync<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("pnlDefaultValueLocalized",
     @<div>
         <div class="form-group row advanced-setting">
             <div class="col-md-3">

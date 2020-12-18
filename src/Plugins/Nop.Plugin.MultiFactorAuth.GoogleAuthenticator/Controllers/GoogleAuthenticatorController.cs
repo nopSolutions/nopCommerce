@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
@@ -62,9 +63,9 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
 
         #region Methods
 
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
             //prepare model
@@ -73,39 +74,39 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 QRPixelsPerModule = _googleAuthenticatorSettings.QRPixelsPerModule,
                 BusinessPrefix = _googleAuthenticatorSettings.BusinessPrefix                
             };
-            model.GoogleAuthenticatorSearchModel.HideSearchBlock = _genericAttributeService
-                .GetAttribute<bool>(_workContext.CurrentCustomer, GoogleAuthenticatorDefaults.HideSearchBlockAttribute);
+            model.GoogleAuthenticatorSearchModel.HideSearchBlock = await _genericAttributeService
+                .GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), GoogleAuthenticatorDefaults.HideSearchBlockAttribute);
 
             return View("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Configure.cshtml", model);
         }
 
         [HttpPost]        
-        public IActionResult Configure(ConfigurationModel model)
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //set new settings values
             _googleAuthenticatorSettings.QRPixelsPerModule = model.QRPixelsPerModule;
             _googleAuthenticatorSettings.BusinessPrefix = model.BusinessPrefix;
-            _settingService.SaveSetting(_googleAuthenticatorSettings);
+            await _settingService.SaveSettingAsync(_googleAuthenticatorSettings);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         [HttpPost]
-        public IActionResult GoogleAuthenticatorList(GoogleAuthenticatorSearchModel searchModel)
+        public async Task<IActionResult> GoogleAuthenticatorList(GoogleAuthenticatorSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
             //get GoogleAuthenticator configuration records
-            var configurations = _googleAuthenticatorService.GetPagedConfigurations(searchModel.SearchEmail,
+            var configurations = await _googleAuthenticatorService.GetPagedConfigurationsAsync(searchModel.SearchEmail,
                 searchModel.Page - 1, searchModel.PageSize);
             var model = new GoogleAuthenticatorListModel().PrepareToGrid(searchModel, configurations, () =>
             {
@@ -122,16 +123,16 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         [HttpPost]
-        public IActionResult GoogleAuthenticatorDelete (GoogleAuthenticatorModel model)
+        public async Task<IActionResult> GoogleAuthenticatorDelete (GoogleAuthenticatorModel model)
         {
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //delete configuration
-            var configuration = _googleAuthenticatorService.GetConfigurationById(model.Id);
+            var configuration = await _googleAuthenticatorService.GetConfigurationByIdAsync(model.Id);
             if (configuration != null)
             {
-                _googleAuthenticatorService.DeleteConfiguration(configuration);
+                await _googleAuthenticatorService.DeleteConfigurationAsync(configuration);
             }
 
             return new NullJsonResult();

@@ -3,7 +3,7 @@
 @{
     const string cardId = "latest-orders-card";
     const string hideCardAttributeName = "Reports.HideLatestOrdersCard";
-    var hideCard = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCardAttributeName);
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
     var gridPageSize = 5;
 }
 

@@ -5,7 +5,7 @@
 @{
     const string cardId = "nopcommerce-common-statistics-card";
     const string hideCardAttributeName = "HideCommonStatisticsCard";
-    var hideCard = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCardAttributeName);
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
 }
 
     <div class="card card-primary card-outline @if(hideCard){<text>collapsed-card</text>}" id="@cardId">

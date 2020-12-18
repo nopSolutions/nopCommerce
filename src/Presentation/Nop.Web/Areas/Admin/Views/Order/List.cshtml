@@ -12,7 +12,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "OrdersPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Order" asp-action="List" method="post">
@@ -356,7 +356,7 @@
                                 {
                                     Title = T("Admin.Orders.Fields.Store").Text,
                                     Width = "100",
-                                    Visible = storeService.GetAllStores().Count > 1
+                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                 });
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
                                 {

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Directory;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Directory;
 using Nop.Web.Areas.Admin.Models.Directory;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -14,14 +15,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Currency search model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
         /// <returns>Currency search model</returns>
-        CurrencySearchModel PrepareCurrencySearchModel(CurrencySearchModel searchModel, bool prepareExchangeRates = false);
+        Task<CurrencySearchModel> PrepareCurrencySearchModelAsync(CurrencySearchModel searchModel, bool prepareExchangeRates = false);
 
         /// <summary>
         /// Prepare paged currency list model
         /// </summary>
         /// <param name="searchModel">Currency search model</param>
         /// <returns>Currency list model</returns>
-        CurrencyListModel PrepareCurrencyListModel(CurrencySearchModel searchModel);
+        Task<CurrencyListModel> PrepareCurrencyListModelAsync(CurrencySearchModel searchModel);
 
         /// <summary>
         /// Prepare currency model
@@ -30,6 +31,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="currency">Currency</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Currency model</returns>
-        CurrencyModel PrepareCurrencyModel(CurrencyModel model, Currency currency, bool excludeProperties = false);
+        Task<CurrencyModel> PrepareCurrencyModelAsync(CurrencyModel model, Currency currency, bool excludeProperties = false);
     }
 }

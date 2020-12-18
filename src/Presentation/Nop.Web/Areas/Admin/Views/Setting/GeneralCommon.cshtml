@@ -9,43 +9,43 @@
 
 @{
     const string hideCommonBlockAttributeName = "GeneralCommonSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
-    var hideFaviconBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFaviconBlockAttributeName);
+    var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFaviconBlockAttributeName);
 
     const string hideTopMenuItemsBlockAttributeName = "GeneralCommonSettingsPage.HideTopMenuItemsBlock";
-    var hideTopMenuItemsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTopMenuItemsBlockAttributeName);
+    var hideTopMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTopMenuItemsBlockAttributeName);
 
     const string hideFooterItemsBlockAttributeName = "GeneralCommonSettingsPage.HideFooterItemsBlock";
-    var hideFooterItemsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFooterItemsBlockAttributeName);
+    var hideFooterItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFooterItemsBlockAttributeName);
 
     const string hideSocialMediaBlockAttributeName = "GeneralCommonSettingsPage.HideSocialMediaBlock";
-    var hideSocialMediaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSocialMediaBlockAttributeName);
+    var hideSocialMediaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSocialMediaBlockAttributeName);
 
     const string hideSitemapBlockAttributeName = "GeneralCommonSettingsPage.HideSitemapBlock";
-    var hideSitemapBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSitemapBlockAttributeName);
+    var hideSitemapBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSitemapBlockAttributeName);
 
     const string hideSEOBlockAttributeName = "GeneralCommonSettingsPage.HideSEOBlock";
-    var hideSEOBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSEOBlockAttributeName);
+    var hideSEOBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSEOBlockAttributeName);
 
     const string hideMinificationBlockAttributeName = "GeneralCommonSettingsPage.HideMinificationBlock";
-    var hideMinificationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMinificationBlockAttributeName);
+    var hideMinificationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideMinificationBlockAttributeName);
 
     const string hideSecurityBlockAttributeName = "GeneralCommonSettingsPage.HideSecurityBlock";
-    var hideSecurityBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSecurityBlockAttributeName);
+    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSecurityBlockAttributeName);
 
     const string hideCaptchaBlockAttributeName = "GeneralCommonSettingsPage.HideCaptchaBlock";
-    var hideCaptchaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCaptchaBlockAttributeName);
+    var hideCaptchaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCaptchaBlockAttributeName);
 
     const string hidePDFBlockAttributeName = "GeneralCommonSettingsPage.HidePDFBlock";
-    var hidePDFBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePDFBlockAttributeName);
+    var hidePDFBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePDFBlockAttributeName);
 
     const string hideLocalizationBlockAttributeName = "GeneralCommonSettingsPage.HideLocalizationBlock";
-    var hideLocalizationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideLocalizationBlockAttributeName);
+    var hideLocalizationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideLocalizationBlockAttributeName);
 
     const string hideAdminAreaBlockAttributeName = "GeneralCommonSettingsPage.HideAdminAreaBlock";
-    var hideAdminAreaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAdminAreaBlockAttributeName);
+    var hideAdminAreaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAdminAreaBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="GeneralCommon" method="post">

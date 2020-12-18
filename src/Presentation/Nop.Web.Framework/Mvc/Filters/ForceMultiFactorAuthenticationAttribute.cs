@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
@@ -13,7 +13,7 @@ using Nop.Services.Customers;
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
-    /// Represents filter attribute that validates force multiFactor authentication
+    /// Represents filter attribute that validates force of the multi-factor authentication
     /// </summary>
     public sealed class ForceMultiFactorAuthenticationAttribute : TypeFilterAttribute
     {
@@ -31,14 +31,13 @@ namespace Nop.Web.Framework.Mvc.Filters
 
         #region Nested filter
 
-        private class ForceMultiFactorAuthenticationFilter : IActionFilter
+        private class ForceMultiFactorAuthenticationFilter : IAsyncActionFilter
         {
             #region Fields
 
             private readonly ICustomerService _customerService;
             private readonly IGenericAttributeService _genericAttributeService;
             private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
-            private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly IWorkContext _workContext;
             private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
 
@@ -46,31 +45,29 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public ForceMultiFactorAuthenticationFilter(
-                ICustomerService customerService,
+            public ForceMultiFactorAuthenticationFilter(ICustomerService customerService,
                 IGenericAttributeService genericAttributeService,
                 IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
-                IUrlHelperFactory urlHelperFactory,
                 IWorkContext workContext,
                 MultiFactorAuthenticationSettings multiFactorAuthenticationSettings)
             {
                 _customerService = customerService;
                 _genericAttributeService = genericAttributeService;
                 _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
-                _urlHelperFactory = urlHelperFactory;
                 _workContext = workContext;
                 _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             }
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
+            private async Task ValidateAuthenticationForceAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -78,43 +75,59 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
-                //get action and controller names
+                //validate only for registered customers
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (!await _customerService.IsRegisteredAsync(customer))
+                    return;
+
+                //don't validate on the 'Multi-factor authentication settings' page
                 var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
                 var actionName = actionDescriptor?.ActionName;
                 var controllerName = actionDescriptor?.ControllerName;
-                var customer = _workContext.CurrentCustomer;
-
-                if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName) || _customerService.IsGuest(customer))
+                if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
 
-                //don't validate on MultiFactorAuthentication page
-                if (!(controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
-                    actionName.Equals("MultiFactorAuthentication", StringComparison.InvariantCultureIgnoreCase)))
+                if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("MultiFactorAuthentication", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    //check selected provider of MFA
-                    if (_multiFactorAuthenticationSettings.ForceMultifactorAuthentication && _multiFactorAuthenticationPluginManager.HasActivePlugins())
-                    {
-                        var selectedProvider = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
-                        if (string.IsNullOrEmpty(selectedProvider))
-                        {
-                            //redirect to MultiFactorAuthenticationSettings page if provider is not selected
-                            var redirectUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("MultiFactorAuthenticationSettings");
-                            context.Result = new RedirectResult(redirectUrl);
-                        }
-                    }
+                    return;
                 }
+
+                //whether the feature is enabled
+                if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication ||
+                    !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
+                {
+                    return;
+                }
+
+                //check selected provider of MFA
+                var selectedProvider = await _genericAttributeService
+                    .GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+                if (!string.IsNullOrEmpty(selectedProvider))
+                    return;
+
+                //redirect to MultiFactorAuthenticationSettings page if force is enabled
+                context.Result = new RedirectToRouteResult("MultiFactorAuthenticationSettings", null);
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that on completion indicates the filter has executed</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await ValidateAuthenticationForceAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

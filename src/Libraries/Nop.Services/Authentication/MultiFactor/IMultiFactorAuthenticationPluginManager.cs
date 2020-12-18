@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Plugins;
 
@@ -9,13 +10,13 @@ namespace Nop.Services.Authentication.MultiFactor
     /// </summary>
     public partial interface IMultiFactorAuthenticationPluginManager : IPluginManager<IMultiFactorAuthenticationMethod>
     {
-        // <summary>
+        /// <summary>
         /// Check is active multi-factor authentication methods
         /// </summary>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>True - if active multi-factor authentication methods</returns>
-        bool HasActivePlugins(Customer customer = null, int storeId = 0);
+        Task<bool> HasActivePluginsAsync(Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load active multi-factor authentication methods
@@ -23,7 +24,7 @@ namespace Nop.Services.Authentication.MultiFactor
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>List of active multi-factor authentication methods</returns>
-        IList<IMultiFactorAuthenticationMethod> LoadActivePlugins(Customer customer = null, int storeId = 0);
+        Task<IList<IMultiFactorAuthenticationMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Check whether the passed multi-factor authentication method is active
@@ -39,6 +40,6 @@ namespace Nop.Services.Authentication.MultiFactor
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Result</returns>
-        bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0);
+        Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -6,45 +7,58 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Nop.Web.Framework.TagHelpers.Public
 {
     /// <summary>
-    /// input tag helper
+    /// "input" tag helper
     /// </summary>
-    [HtmlTargetElement("input", Attributes = ForAttributeName)]
+    [HtmlTargetElement("input", Attributes = FOR_ATTRIBUTE_NAME)]
     public class InputTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
     {
-        private const string ForAttributeName = "asp-for";
-        private const string DisabledAttributeName = "asp-disabled";
+        #region Constants
+
+        private const string FOR_ATTRIBUTE_NAME = "asp-for";
+        private const string DISABLED_ATTRIBUTE_NAME = "asp-disabled";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Indicates whether the input is disabled
         /// </summary>
-        [HtmlAttributeName(DisabledAttributeName)]
+        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
         public string IsDisabled { set; get; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="generator">IHTML generator</param>
+        #endregion
+
+        #region Ctor
+
         public InputTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
             //add disabled attribute
-            bool.TryParse(IsDisabled, out var disabled);
-            if (disabled)
-            {
-                var d = new TagHelperAttribute("disabled", "disabled");
-                output.Attributes.Add(d);
-            }
+            if (bool.TryParse(IsDisabled, out var disabled) && disabled)
+                output.Attributes.Add(new TagHelperAttribute("disabled", "disabled"));
+
             try
             {
-                base.Process(context, output);
+                await base.ProcessAsync(context, output);
             }
             catch
             {
@@ -53,7 +67,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                 try
                 {
                     ViewContext.ModelState[For.Name].RawValue = Activator.CreateInstance(For.ModelExplorer.ModelType);
-                    base.Process(context, output);
+                    await base.ProcessAsync(context, output);
                 }
                 catch
                 {
@@ -61,5 +75,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                 }
             }
         }
+
+        #endregion
     }
 }

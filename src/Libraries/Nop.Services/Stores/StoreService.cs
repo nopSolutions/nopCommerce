@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 
@@ -32,25 +33,25 @@ namespace Nop.Services.Stores
         /// Deletes a store
         /// </summary>
         /// <param name="store">Store</param>
-        public virtual void DeleteStore(Store store)
+        public virtual async Task DeleteStoreAsync(Store store)
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            var allStores = GetAllStores();
+            var allStores = await GetAllStoresAsync();
             if (allStores.Count == 1)
                 throw new Exception("You cannot delete the only configured store");
 
-            _storeRepository.Delete(store);
+            await _storeRepository.DeleteAsync(store);
         }
 
         /// <summary>
         /// Gets all stores
         /// </summary>
         /// <returns>Stores</returns>
-        public virtual IList<Store> GetAllStores()
+        public virtual async Task<IList<Store>> GetAllStoresAsync()
         {
-            var result = _storeRepository.GetAll(query =>
+            var result = await _storeRepository.GetAllAsync(query =>
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
             }, cache => default);
@@ -63,27 +64,27 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Store</returns>
-        public virtual Store GetStoreById(int storeId)
+        public virtual async Task<Store> GetStoreByIdAsync(int storeId)
         {
-            return _storeRepository.GetById(storeId, cache => default);
+            return await _storeRepository.GetByIdAsync(storeId, cache => default);
         }
 
         /// <summary>
         /// Inserts a store
         /// </summary>
         /// <param name="store">Store</param>
-        public virtual void InsertStore(Store store)
+        public virtual async Task InsertStoreAsync(Store store)
         {
-            _storeRepository.Insert(store);
+            await _storeRepository.InsertAsync(store);
         }
 
         /// <summary>
         /// Updates the store
         /// </summary>
         /// <param name="store">Store</param>
-        public virtual void UpdateStore(Store store)
+        public virtual async Task UpdateStoreAsync(Store store)
         {
-            _storeRepository.Update(store);
+            await _storeRepository.UpdateAsync(store);
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
         /// <returns>List of names and/or IDs not existing stores</returns>
-        public string[] GetNotExistingStores(string[] storeIdsNames)
+        public async Task<string[]> GetNotExistingStoresAsync(string[] storeIdsNames)
         {
             if (storeIdsNames == null)
                 throw new ArgumentNullException(nameof(storeIdsNames));
@@ -143,7 +144,9 @@ namespace Nop.Services.Stores
             var query = _storeRepository.Table;
             var queryFilter = storeIdsNames.Distinct().ToArray();
             //filtering by name
-            var filter = query.Select(store => store.Name).Where(store => queryFilter.Contains(store)).ToList();
+            var filter = await query.Select(store => store.Name)
+                .Where(store => queryFilter.Contains(store))
+                .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
@@ -151,7 +154,9 @@ namespace Nop.Services.Stores
                 return queryFilter.ToArray();
 
             //filtering by IDs
-            filter = query.Select(store => store.Id.ToString()).Where(store => queryFilter.Contains(store)).ToList();
+            filter = await query.Select(store => store.Id.ToString())
+                .Where(store => queryFilter.Contains(store))
+                .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             return queryFilter.ToArray();

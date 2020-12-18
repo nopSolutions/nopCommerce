@@ -1,3 +1,4 @@
+﻿using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 
@@ -8,18 +9,20 @@ namespace Nop.Services.Common
     /// </summary>
     public partial interface ISearchTermService
     {
+        //TODO: may be deleted
         /// <summary>
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void DeleteSearchTerm(SearchTerm searchTerm);
+        Task DeleteSearchTermAsync(SearchTerm searchTerm);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a search term record by identifier
         /// </summary>
         /// <param name="searchTermId">Search term identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermById(int searchTermId);
+        Task<SearchTerm> GetSearchTermByIdAsync(int searchTermId);
 
         /// <summary>
         /// Gets a search term record by keyword
@@ -27,7 +30,7 @@ namespace Nop.Services.Common
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermByKeyword(string keyword, int storeId);
+        Task<SearchTerm> GetSearchTermByKeywordAsync(string keyword, int storeId);
 
         /// <summary>
         /// Gets a search term statistics
@@ -35,18 +38,18 @@ namespace Nop.Services.Common
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>A list search term report lines</returns>
-        IPagedList<SearchTermReportLine> GetStats(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<SearchTermReportLine>> GetStatsAsync(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void InsertSearchTerm(SearchTerm searchTerm);
+        Task InsertSearchTermAsync(SearchTerm searchTerm);
 
         /// <summary>
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-         void UpdateSearchTerm(SearchTerm searchTerm);
+        Task UpdateSearchTermAsync(SearchTerm searchTerm);
     }
 }

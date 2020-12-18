@@ -3,7 +3,7 @@
 @model CheckoutAttributeModel
 
 <div class="card-body">
-    @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+    @(await Html.LocalizedEditorAsync<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
     @<div>
         <div class="form-group row">
             <div class="col-md-3">
@@ -45,15 +45,15 @@
                 <span asp-validation-for="TextPrompt"></span>
             </div>
         </div>
-    </div>))    
+    </div>))
     <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AttributeControlTypeId" />
         </div>
         <div class="col-md-9">
             @{
-                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
-                    .ToSelectList(valuesToExclude:
+                var attributeControlTypes = await ((AttributeControlType)Model.AttributeControlTypeId)
+                    .ToSelectListAsync(valuesToExclude:
                         //these attributes don't support some control types
                         new[] { (int)AttributeControlType.ImageSquares });
             }
@@ -106,8 +106,8 @@
             <span asp-validation-for="TaxCategoryId"></span>
         </div>
     </div>
-    
-    @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("pnlDefaultValueLocalized",
+
+    @(await Html.LocalizedEditorAsync<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("pnlDefaultValueLocalized",
     @<div>
         <div class="form-group row advanced-setting">
             <div class="col-md-3">
@@ -132,7 +132,7 @@
             </div>
         </div>
     </div>, cssClass: "advanced-setting"))
-    
+
     <div class="form-group row advanced-setting" id="pnlValidationMinLength">
         <div class="col-md-3">
             <nop-label asp-for="ValidationMinLength" />

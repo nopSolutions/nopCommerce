@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -19,12 +20,13 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">String</param>
         /// <returns>Encoded string</returns>
-        public static string XmlEncode(string str)
+        public static async Task<string> XmlEncodeAsync(string str)
         {
             if (str == null)
                 return null;
             str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
-            return XmlEncodeAsIs(str);
+            
+            return await XmlEncodeAsIsAsync(str);
         }
 
         /// <summary>
@@ -32,27 +34,40 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">String</param>
         /// <returns>Encoded string</returns>
-        public static string XmlEncodeAsIs(string str)
+        public static async Task<string> XmlEncodeAsIsAsync(string str)
         {
             if (str == null)
                 return null;
-            using var sw = new StringWriter();
-            using var xwr = new XmlTextWriter(sw);
-            xwr.WriteString(str);
+
+            var settings = new XmlWriterSettings
+            {
+                Async = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
+
+            await using var sw = new StringWriter();
+            using (var xwr = XmlWriter.Create(sw, settings))
+            {
+                await xwr.WriteStringAsync(str);
+                await xwr.FlushAsync();
+            }
+
             return sw.ToString();
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Encodes an attribute
         /// </summary>
         /// <param name="str">Attribute</param>
         /// <returns>Encoded attribute</returns>
-        public static string XmlEncodeAttribute(string str)
+        public static async Task<string> XmlEncodeAttributeAsync(string str)
         {
             if (str == null)
                 return null;
             str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
-            return XmlEncodeAttributeAsIs(str);
+            
+            return await XmlEncodeAttributeAsIsAsync(str);
         }
 
         /// <summary>
@@ -60,9 +75,11 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">Attribute</param>
         /// <returns>Encoded attribute</returns>
-        public static string XmlEncodeAttributeAsIs(string str)
+        public static async Task<string> XmlEncodeAttributeAsIsAsync(string str)
         {
-            return XmlEncodeAsIs(str).Replace("\"", "&quot;");
+            var rez = await XmlEncodeAsIsAsync(str);
+
+            return rez.Replace("\"", "&quot;");
         }
 
         /// <summary>
@@ -73,7 +90,10 @@ namespace Nop.Core
         public static string XmlDecode(string str)
         {
             var sb = new StringBuilder(str);
-            return sb.Replace("&quot;", "\"").Replace("&apos;", "'").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&").ToString();
+            
+            var rez = sb.Replace("&quot;", "\"").Replace("&apos;", "'").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&").ToString();
+
+            return rez;
         }
 
         /// <summary>
@@ -81,15 +101,17 @@ namespace Nop.Core
         /// </summary>
         /// <param name="dateTime">Datetime</param>
         /// <returns>Serialized datetime</returns>
-        public static string SerializeDateTime(DateTime dateTime)
+        public static async Task<string> SerializeDateTimeAsync(DateTime dateTime)
         {
             var xmlS = new XmlSerializer(typeof(DateTime));
             var sb = new StringBuilder();
-            using var sw = new StringWriter(sb);
+            await using var sw = new StringWriter(sb);
             xmlS.Serialize(sw, dateTime);
+
             return sb.ToString();
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Deserializes a datetime
         /// </summary>
@@ -100,6 +122,7 @@ namespace Nop.Core
             var xmlS = new XmlSerializer(typeof(DateTime));
             using var sr = new StringReader(dateTime);
             var test = xmlS.Deserialize(sr);
+
             return (DateTime)test;
         }
 

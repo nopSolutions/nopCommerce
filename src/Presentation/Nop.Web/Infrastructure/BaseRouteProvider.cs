@@ -11,13 +11,13 @@ namespace Nop.Web.Infrastructure
     {
         protected string GetRouterPattern(IEndpointRouteBuilder endpointRouteBuilder, string seoCode = "")
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
                 var localizationSettings = endpointRouteBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     var langservice = endpointRouteBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                    var languages = langservice.GetAllLanguages().ToList();
+                    var languages = langservice.GetAllLanguagesAsync().Result;
                     return "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + $"}}/{seoCode}";
                 }
             }

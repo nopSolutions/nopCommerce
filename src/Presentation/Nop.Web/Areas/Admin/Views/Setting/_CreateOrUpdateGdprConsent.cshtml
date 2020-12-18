@@ -10,7 +10,7 @@
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprConsentDetailsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
-                        @(Html.LocalizedEditor<GdprConsentModel, GdprConsentLocalizedModel>("gdpr-consent-localized",
+                        @(await Html.LocalizedEditorAsync<GdprConsentModel, GdprConsentLocalizedModel>("gdpr-consent-localized",
                                     @<div>
                                         <div class="form-group row">
                                             <div class="col-md-3">
@@ -64,7 +64,7 @@
                         else
                         {
                             <div id="pnlRequiredMessage">
-                                @(Html.LocalizedEditor<GdprConsentModel, GdprConsentLocalizedModel>("gdpr-consent-required-localized",
+                                @(await Html.LocalizedEditorAsync<GdprConsentModel, GdprConsentLocalizedModel>("gdpr-consent-required-localized",
                                             @<div>
                                                 <div class="form-group row">
                                                     <div class="col-md-3">

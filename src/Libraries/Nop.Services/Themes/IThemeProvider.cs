@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Themes
 {
@@ -18,20 +19,20 @@ namespace Nop.Services.Themes
         /// Get all themes
         /// </summary>
         /// <returns>List of the theme descriptor</returns>
-        IList<ThemeDescriptor> GetThemes();
+        Task<IList<ThemeDescriptor>> GetThemesAsync();
 
         /// <summary>
         /// Get a theme by the system name
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>Theme descriptor</returns>
-        ThemeDescriptor GetThemeBySystemName(string systemName);
+        Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName);
 
         /// <summary>
         /// Check whether the theme with specified system name exists
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>True if the theme exists; otherwise false</returns>
-        bool ThemeExists(string systemName);
+        Task<bool> ThemeExistsAsync(string systemName);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -9,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Helpers;
 using Nop.Services.Stores;
 
@@ -165,7 +167,7 @@ namespace Nop.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        public virtual IList<OrderByCountryReportLine> GetCountryReport(int storeId, OrderStatus? os,
+        public virtual async Task<IList<OrderByCountryReportLine>> GetCountryReportAsync(int storeId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
         {
             int? orderStatusId = null;
@@ -195,7 +197,7 @@ namespace Nop.Services.Orders
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
-            var report = (from oq in query
+            var report = await (from oq in query
                           join a in _addressRepository.Table on oq.BillingAddressId equals a.Id
                           group oq by a.CountryId
                           into result
@@ -211,7 +213,8 @@ namespace Nop.Services.Orders
                     CountryId = r.CountryId,
                     TotalOrders = r.TotalOrders,
                     SumOrders = r.SumOrders
-                }).ToList();
+                })
+                .ToListAsync();
 
             return report;
         }
@@ -236,7 +239,7 @@ namespace Nop.Services.Orders
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
+        public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLineAsync(int storeId = 0,
             int vendorId = 0, int productId = 0, int warehouseId = 0, int billingCountryId = 0,
             int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
@@ -315,7 +318,7 @@ namespace Nop.Services.Orders
                     where n.Note.Contains(orderNotes)
                     select o;
 
-            var item = (from oq in query
+            var item = await (from oq in query
                 group oq by 1
                 into result
                 select new
@@ -327,14 +330,15 @@ namespace Nop.Services.Orders
                     OrderTotalSum = result.Sum(o => o.OrderTotal),
                     OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
                 }).Select(r => new OrderAverageReportLine
-                    {
-                        CountOrders = r.OrderCount,
-                        SumShippingExclTax = r.OrderShippingExclTaxSum,
-                        OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
-                        SumTax = r.OrderTaxSum,
-                        SumOrders = r.OrderTotalSum,
-                        SumRefundedAmount = r.OrederRefundedAmountSum
-                }).FirstOrDefault();
+                {
+                    CountOrders = r.OrderCount,
+                    SumShippingExclTax = r.OrderShippingExclTaxSum,
+                    OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
+                    SumTax = r.OrderTaxSum,
+                    SumOrders = r.OrderTotalSum,
+                    SumRefundedAmount = r.OrederRefundedAmountSum
+                })
+                .FirstOrDefaultAsync();
 
             item ??= new OrderAverageReportLine
             {
@@ -353,7 +357,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLineSummary OrderAverageReport(int storeId, OrderStatus os)
+        public virtual async Task<OrderAverageReportLineSummary> OrderAverageReportAsync(int storeId, OrderStatus os)
         {
             var item = new OrderAverageReportLineSummary
             {
@@ -361,13 +365,13 @@ namespace Nop.Services.Orders
             };
             var orderStatuses = new List<int> { (int)os };
 
-            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var nowDt = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var timeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
 
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
-            var todayResult = GetOrderAverageReportLine(storeId,
+            var todayResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime1);
             item.SumTodayOrders = todayResult.SumOrders;
@@ -378,7 +382,7 @@ namespace Nop.Services.Orders
             var today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             var t2 = today.AddDays(-(today.DayOfWeek - fdow));
             DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
-            var weekResult = GetOrderAverageReportLine(storeId,
+            var weekResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime2);
             item.SumThisWeekOrders = weekResult.SumOrders;
@@ -387,7 +391,7 @@ namespace Nop.Services.Orders
             //month
             var t3 = new DateTime(nowDt.Year, nowDt.Month, 1);
             DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
-            var monthResult = GetOrderAverageReportLine(storeId,
+            var monthResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime3);
             item.SumThisMonthOrders = monthResult.SumOrders;
@@ -396,14 +400,14 @@ namespace Nop.Services.Orders
             //year
             var t4 = new DateTime(nowDt.Year, 1, 1);
             DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
-            var yearResult = GetOrderAverageReportLine(storeId,
+            var yearResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime4);
             item.SumThisYearOrders = yearResult.SumOrders;
             item.CountThisYearOrders = yearResult.CountOrders;
 
             //all time
-            var allTimeResult = GetOrderAverageReportLine(storeId, osIds: orderStatuses);
+            var allTimeResult = await GetOrderAverageReportLineAsync(storeId, osIds: orderStatuses);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
@@ -428,7 +432,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        public virtual IPagedList<BestsellersReportLine> BestSellersReport(
+        public virtual async Task<IPagedList<BestsellersReportLine>> BestSellersReportAsync(
             int categoryId = 0,
             int manufacturerId = 0,
             int storeId = 0,
@@ -464,7 +468,9 @@ namespace Nop.Services.Orders
                 OrderByEnum.OrderByTotalAmount => bsReport.OrderByDescending(x => x.TotalAmount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
-            var result = new PagedList<BestsellersReportLine>(bsReport, pageIndex, pageSize);
+
+            var result = await bsReport.ToPagedListAsync(pageIndex, pageSize);
+
             return result;
         }
 
@@ -483,7 +489,7 @@ namespace Nop.Services.Orders
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        public virtual decimal BestSellersReportTotalAmount(
+        public virtual async Task<decimal> BestSellersReportTotalAmountAsync(
             int categoryId = 0,
             int manufacturerId = 0,
             int storeId = 0,
@@ -496,8 +502,8 @@ namespace Nop.Services.Orders
             int billingCountryId = 0,
             bool showHidden = false)
         {            
-            return SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden: showHidden)
-                .Sum(bestseller => bestseller.Quantity * bestseller.PriceExclTax);
+            return await SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden: showHidden)
+                .SumAsync(bestseller => bestseller.Quantity * bestseller.PriceExclTax);
         }
 
         /// <summary>
@@ -509,7 +515,7 @@ namespace Nop.Services.Orders
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
+        public virtual async Task<int[]> GetAlsoPurchasedProductsIdsAsync(int storeId, int productId,
             int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false)
         {
             if (productId == 0)
@@ -544,7 +550,7 @@ namespace Nop.Services.Orders
             if (recordsToReturn > 0)
                 query3 = query3.Take(recordsToReturn);
 
-            var report = query3.ToList();
+            var report = await query3.ToListAsync();
 
             var ids = new List<int>();
             foreach (var reportLine in report)
@@ -566,7 +572,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> ProductsNeverSold(int vendorId = 0, int storeId = 0,
+        public virtual async Task<IPagedList<Product>> ProductsNeverSoldAsync(int vendorId = 0, int storeId = 0,
             int categoryId = 0, int manufacturerId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
@@ -613,14 +619,12 @@ namespace Nop.Services.Orders
                         select p;
             }
 
-            if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
-            {
+            if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Product>(storeId))
                 query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
-            }
 
             query = query.OrderBy(p => p.Name);
 
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
+            var products = await query.ToPagedListAsync(pageIndex, pageSize);
             return products;
         }
 
@@ -644,7 +648,7 @@ namespace Nop.Services.Orders
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0, int productId = 0,
+        public virtual async Task<decimal> ProfitReportAsync(int storeId = 0, int vendorId = 0, int productId = 0,
             int warehouseId = 0, int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -703,9 +707,9 @@ namespace Nop.Services.Orders
                            oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
                 select orderItem;
 
-            var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
+            var productCost = Convert.ToDecimal(await query.SumAsync(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 
-            var reportSummary = GetOrderAverageReportLine(
+            var reportSummary = await GetOrderAverageReportLineAsync(
                 storeId,
                 vendorId,
                 productId,

@@ -105,9 +105,9 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public virtual IActionResult Index()
+        public virtual async Task<IActionResult> Index()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             var model = new InstallModel
@@ -132,7 +132,7 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Index(InstallModel model)
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             model.DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData;
@@ -177,13 +177,13 @@ namespace Nop.Web.Controllers
                 if (string.IsNullOrEmpty(connectionString))
                     throw new Exception(_locService.GetResource("ConnectionStringWrongFormat"));
 
-                DataSettingsManager.SaveSettings(new DataSettings
+                await DataSettingsManager.SaveSettingsAsync(new DataSettings
                 {
                     DataProvider = model.DataProvider,
                     ConnectionString = connectionString
                 }, _fileProvider);
 
-                DataSettingsManager.LoadSettings(reloadSettings: true);
+                await DataSettingsManager.LoadSettingsAsync(reloadSettings: true);
 
                 if (model.CreateDatabaseIfNotExists)
                 {
@@ -199,7 +199,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //check whether database exists
-                    if (!dataProvider.DatabaseExists())
+                    if (!await dataProvider.DatabaseExistsAsync())
                         throw new Exception(_locService.GetResource("DatabaseNotExists"));
                 }
 
@@ -241,10 +241,10 @@ namespace Nop.Web.Controllers
 
                 //now resolve installation service
                 var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                installationService.InstallRequiredData(model.AdminEmail, model.AdminPassword, downloadUrl, regionInfo, cultureInfo);
+                await installationService.InstallRequiredDataAsync(model.AdminEmail, model.AdminPassword, downloadUrl, regionInfo, cultureInfo);
 
                 if (model.InstallSampleData)
-                    installationService.InstallSampleData(model.AdminEmail);
+                    await installationService.InstallSampleDataAsync(model.AdminEmail);
 
                 //prepare plugins to install
                 var pluginService = EngineContext.Current.Resolve<IPluginService>();
@@ -257,14 +257,14 @@ namespace Nop.Web.Controllers
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 
-                var plugins = pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.All)
+                var plugins = (await pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                     .Where(pluginDescriptor => !pluginsIgnoredDuringInstallation.Contains(pluginDescriptor.SystemName))
                     .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
                     .ToList();
 
                 foreach (var plugin in plugins)
                 {
-                    pluginService.PreparePluginToInstall(plugin.SystemName, checkDependencies: false);
+                    await pluginService.PreparePluginToInstallAsync(plugin.SystemName, checkDependencies: false);
                 }
 
                 //register default permissions
@@ -273,7 +273,7 @@ namespace Nop.Web.Controllers
                 foreach (var providerType in permissionProviders)
                 {
                     var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                    EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                    await EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider);
                 }
 
                 return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
@@ -285,10 +285,10 @@ namespace Nop.Web.Controllers
                 DataSettingsManager.ResetCache();
 
                 var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-                staticCacheManager.Clear();
+                await staticCacheManager.ClearAsync();
 
                 //clear provider settings if something got wrong
-                DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);
+                await DataSettingsManager.SaveSettingsAsync(new DataSettings(), _fileProvider);
 
                 ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
             }
@@ -296,9 +296,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult ChangeLanguage(string language)
+        public virtual async Task<IActionResult> ChangeLanguage(string language)
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             _locService.SaveCurrentLanguage(language);
@@ -309,17 +309,17 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult RestartInstall()
+        public virtual async Task<IActionResult> RestartInstall()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
         }
 
-        public virtual IActionResult RestartApplication()
+        public virtual async Task<IActionResult> RestartApplication()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             //restart application

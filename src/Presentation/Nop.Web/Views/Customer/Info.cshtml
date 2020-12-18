@@ -411,7 +411,7 @@
                     @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
                     {
                         //we can add more external records
-                        var loginUrl = Url.RouteUrl("Login", null, webHelper.CurrentRequestProtocol);
+                        var loginUrl = Url.RouteUrl("Login", null, webHelper.GetCurrentRequestProtocol());
                         <div class="form-fields add-more-external-records">
                             @T("Account.AssociatedExternalAuth.AddMoreRecords")
                             <a href="@loginUrl">@loginUrl</a>

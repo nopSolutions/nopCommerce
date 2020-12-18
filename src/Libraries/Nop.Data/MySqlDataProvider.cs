@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -32,9 +31,9 @@ namespace Nop.Data
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected override DataConnection CreateDataConnection()
+        protected override async Task<DataConnection> CreateDataConnectionAsync()
         {
-            var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
 
             dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
@@ -42,10 +41,17 @@ namespace Nop.Data
             return dataContext;
         }
 
+        //TODO: may be deleted
+        protected async Task<MySqlConnectionStringBuilder> GetConnectionStringBuilderAsync()
+        {
+            return new MySqlConnectionStringBuilder(await GetCurrentConnectionStringAsync());
+        }
+
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
-            return new MySqlConnectionStringBuilder(CurrentConnectionString);
+            return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
+
 
         #endregion
 
@@ -119,15 +125,35 @@ namespace Nop.Data
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool DatabaseExists()
+        public async Task<bool> DatabaseExistsAsync()
         {
             try
             {
-                using (var connection = CreateDbConnection())
+                using (var connection = await CreateDbConnectionAsync())
                 {
                     //just try to connect
                     connection.Open();
                 }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>Returns true if the database exists.</returns>
+        public bool DatabaseExists()
+        {
+            try
+            {
+                using var connection = CreateDbConnection();
+                //just try to connect
+                connection.Open();
 
                 return true;
             }
@@ -151,44 +177,42 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        public virtual int? GetTableIdent<T>() where T : BaseEntity
+        public virtual async Task<int?> GetTableIdentAsync<T>() where T : BaseEntity
         {
-            using (var currentConnection = CreateDataConnection())
+            using var currentConnection = await CreateDataConnectionAsync();
+            var tableName = currentConnection.GetTable<T>().TableName;
+            var databaseName = currentConnection.Connection.Database;
+
+            //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
+            //with DataContext we could be used KeepConnectionAlive option
+            await using var dbConnection = (DbConnection)(await CreateDbConnectionAsync());
+
+            dbConnection.StateChange += (sender, e) =>
             {
-                var tableName = currentConnection.GetTable<T>().TableName;
-                var databaseName = currentConnection.Connection.Database;
-
-                //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
-                //with DataContext we could be used KeepConnectionAlive option
-                using var dbConnerction = (DbConnection)CreateDbConnection();
-
-                dbConnerction.StateChange += (sender, e) =>
+                try
                 {
-                    try
-                    {
-                        if (e.CurrentState != ConnectionState.Open)
-                            return;
+                    if (e.CurrentState != ConnectionState.Open)
+                        return;
 
-                        var connection = (IDbConnection)sender;
-                        using var command = connection.CreateCommand();
-                        command.Connection = connection;
-                        command.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
-                        command.ExecuteNonQuery();
-                    }
-                    //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
-                    catch (MySqlException ex) when (ex.Number == 1193)
-                    {
-                        //ignore
-                    }
-                };
+                    var connection = (IDbConnection)sender;
+                    using var internalCommand = connection.CreateCommand();
+                    internalCommand.Connection = connection;
+                    internalCommand.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
+                    internalCommand.ExecuteNonQuery();
+                }
+                //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
+                catch (MySqlException ex) when (ex.Number == 1193)
+                {
+                    //ignore
+                }
+            };
 
-                using var command = dbConnerction.CreateCommand();
-                command.Connection = dbConnerction;
-                command.CommandText = $"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'";
-                dbConnerction.Open();
+            await using var command = dbConnection.CreateCommand();
+            command.Connection = dbConnection;
+            command.CommandText = $"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'";
+            await dbConnection.OpenAsync();
 
-                return Convert.ToInt32(command.ExecuteScalar() ?? 1);
-            }
+            return Convert.ToInt32((await command.ExecuteScalarAsync()) ?? 1);
         }
 
         /// <summary>
@@ -196,22 +220,22 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual void SetTableIdent<TEntity>(int ident) where TEntity : BaseEntity
+        public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
-            var currentIdent = GetTableIdent<TEntity>();
+            var currentIdent = await GetTableIdentAsync<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var tableName = currentConnection.GetTable<TEntity>().TableName;
 
-            currentConnection.Execute($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
+            await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
         }
 
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual void BackupDatabase(string fileName)
+        public virtual Task BackupDatabaseAsync(string fileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -220,7 +244,7 @@ namespace Nop.Data
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual void RestoreDatabase(string backupFileName)
+        public virtual Task RestoreDatabaseAsync(string backupFileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -228,15 +252,13 @@ namespace Nop.Data
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public virtual void ReIndexTables()
+        public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
             if (tables.Count > 0)
-            {
-                currentConnection.Execute($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
-            }
+                await currentConnection.ExecuteAsync($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
         }
 
         /// <summary>

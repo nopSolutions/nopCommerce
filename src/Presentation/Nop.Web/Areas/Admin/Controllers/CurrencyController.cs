@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -68,35 +69,35 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void UpdateLocales(Currency currency, CurrencyModel model)
+        protected virtual async Task UpdateLocalesAsync(Currency currency, CurrencyModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(currency, x => x.Name, localized.Name, localized.LanguageId);
+                await _localizedEntityService.SaveLocalizedValueAsync(currency, x => x.Name, localized.Name, localized.LanguageId);
             }
         }
 
-        protected virtual void SaveStoreMappings(Currency currency, CurrencyModel model)
+        protected virtual async Task SaveStoreMappingsAsync(Currency currency, CurrencyModel model)
         {
             currency.LimitedToStores = model.SelectedStoreIds.Any();
-            _currencyService.UpdateCurrency(currency);
+            await _currencyService.UpdateCurrencyAsync(currency);
 
-            var existingStoreMappings = _storeMappingService.GetStoreMappings(currency);
-            var allStores = _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(currency);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        _storeMappingService.InsertStoreMapping(currency, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(currency, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -110,9 +111,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List(bool liveRates = false)
+        public virtual async Task<IActionResult> List(bool liveRates = false)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             var model = new CurrencySearchModel();
@@ -120,11 +121,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 //prepare model
-                model = _currencyModelFactory.PrepareCurrencySearchModel(model, liveRates);
+                model = await _currencyModelFactory.PrepareCurrencySearchModelAsync(model, liveRates);
             }
             catch (Exception e)
             {
-                _notificationService.ErrorNotification(e);
+                await _notificationService.ErrorNotificationAsync(e);
             }
 
             return View(model);
@@ -132,70 +133,70 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult List(CurrencySearchModel model)
+        public virtual async Task<IActionResult> List(CurrencySearchModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             _currencySettings.ActiveExchangeRateProviderSystemName = model.ExchangeRateProviderModel.ExchangeRateProvider;
             _currencySettings.AutoUpdateEnabled = model.ExchangeRateProviderModel.AutoUpdateEnabled;
-            _settingService.SaveSetting(_currencySettings);
+            await _settingService.SaveSettingAsync(_currencySettings);
 
             return RedirectToAction("List", "Currency");
         }
 
         [HttpPost]
-        public virtual IActionResult ListGrid(CurrencySearchModel searchModel)
+        public virtual async Task<IActionResult> ListGrid(CurrencySearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _currencyModelFactory.PrepareCurrencyListModel(searchModel);
+            var model = await _currencyModelFactory.PrepareCurrencyListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ApplyRates(IEnumerable<CurrencyExchangeRateModel> rateModels)
+        public virtual async Task<IActionResult> ApplyRates(IEnumerable<CurrencyExchangeRateModel> rateModels)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             foreach (var rate in rateModels)
             {
-                var currency = _currencyService.GetCurrencyByCode(rate.CurrencyCode);
+                var currency = await _currencyService.GetCurrencyByCodeAsync(rate.CurrencyCode);
                 if (currency == null)
                     continue;
 
                 currency.Rate = rate.Rate;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
-                _currencyService.UpdateCurrency(currency);
+                await _currencyService.UpdateCurrencyAsync(currency);
             }
 
             return Json(new { result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult MarkAsPrimaryExchangeRateCurrency(int id)
+        public virtual async Task<IActionResult> MarkAsPrimaryExchangeRateCurrency(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
-            _settingService.SaveSetting(_currencySettings);
+            await _settingService.SaveSettingAsync(_currencySettings);
 
             return Json(new { result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult MarkAsPrimaryStoreCurrency(int id)
+        public virtual async Task<IActionResult> MarkAsPrimaryStoreCurrency(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             _currencySettings.PrimaryStoreCurrencyId = id;
-            _settingService.SaveSetting(_currencySettings);
+            await _settingService.SaveSettingAsync(_currencySettings);
 
             return Json(new { result = true });
         }
@@ -204,21 +205,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Create / Edit / Delete
 
-        public virtual IActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _currencyModelFactory.PrepareCurrencyModel(new CurrencyModel(), null);
+            var model = await _currencyModelFactory.PrepareCurrencyModelAsync(new CurrencyModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(CurrencyModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(CurrencyModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -226,19 +227,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var currency = model.ToEntity<Currency>();
                 currency.CreatedOnUtc = DateTime.UtcNow;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
-                _currencyService.InsertCurrency(currency);
+                await _currencyService.InsertCurrencyAsync(currency);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCurrency",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCurrency"), currency.Id), currency);
+                await _customerActivityService.InsertActivityAsync("AddNewCurrency",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewCurrency"), currency.Id), currency);
 
                 //locales
-                UpdateLocales(currency, model);
+                await UpdateLocalesAsync(currency, model);
 
                 //stores
-                SaveStoreMappings(currency, model);
+                await SaveStoreMappingsAsync(currency, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -247,64 +248,64 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _currencyModelFactory.PrepareCurrencyModel(model, null, true);
+            model = await _currencyModelFactory.PrepareCurrencyModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             //try to get a currency with the specified id
-            var currency = _currencyService.GetCurrencyById(id);
+            var currency = await _currencyService.GetCurrencyByIdAsync(id);
             if (currency == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _currencyModelFactory.PrepareCurrencyModel(null, currency);
+            var model = await _currencyModelFactory.PrepareCurrencyModelAsync(null, currency);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(CurrencyModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(CurrencyModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             //try to get a currency with the specified id
-            var currency = _currencyService.GetCurrencyById(model.Id);
+            var currency = await _currencyService.GetCurrencyByIdAsync(model.Id);
             if (currency == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 //ensure we have at least one published currency
-                var allCurrencies = _currencyService.GetAllCurrencies();
+                var allCurrencies = await _currencyService.GetAllCurrenciesAsync();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id && !model.Published)
                 {
-                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
-                _currencyService.UpdateCurrency(currency);
+                await _currencyService.UpdateCurrencyAsync(currency);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCurrency",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditCurrency"), currency.Id), currency);
+                await _customerActivityService.InsertActivityAsync("EditCurrency",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditCurrency"), currency.Id), currency);
 
                 //locales
-                UpdateLocales(currency, model);
+                await UpdateLocalesAsync(currency, model);
 
                 //stores
-                SaveStoreMappings(currency, model);
+                await SaveStoreMappingsAsync(currency, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -313,52 +314,52 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _currencyModelFactory.PrepareCurrencyModel(model, currency, true);
+            model = await _currencyModelFactory.PrepareCurrencyModelAsync(model, currency, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
             //try to get a currency with the specified id
-            var currency = _currencyService.GetCurrencyById(id);
+            var currency = await _currencyService.GetCurrencyByIdAsync(id);
             if (currency == null)
                 return RedirectToAction("List");
 
             try
             {
                 if (currency.Id == _currencySettings.PrimaryStoreCurrencyId)
-                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeletePrimary"));
+                    throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.CantDeletePrimary"));
 
                 if (currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId)
-                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
+                    throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.CantDeleteExchange"));
 
                 //ensure we have at least one published currency
-                var allCurrencies = _currencyService.GetAllCurrencies();
+                var allCurrencies = await _currencyService.GetAllCurrenciesAsync();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
                 {
-                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
 
-                _currencyService.DeleteCurrency(currency);
+                await _currencyService.DeleteCurrencyAsync(currency);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCurrency",
-                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCurrency"), currency.Id), currency);
+                await _customerActivityService.InsertActivityAsync("DeleteCurrency",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteCurrency"), currency.Id), currency);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Currencies.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = currency.Id });
             }
         }

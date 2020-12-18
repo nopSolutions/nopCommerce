@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -8,11 +9,13 @@ using Nop.Web.Framework.Extensions;
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// "nop-card tag helper
+    /// "nop-card" tag helper
     /// </summary>
     [HtmlTargetElement("nop-card", Attributes = NAME_ATTRIBUTE_NAME)]
     public class NopCardTagHelper : TagHelper
     {
+        #region Constants
+
         private const string NAME_ATTRIBUTE_NAME = "asp-name";
         private const string TITLE_ATTRIBUTE_NAME = "asp-title";
         private const string HIDE_BLOCK_ATTRIBUTE_NAME_ATTRIBUTE_NAME = "asp-hide-block-attribute-name";
@@ -20,7 +23,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string IS_ADVANCED_ATTRIBUTE_NAME = "asp-advanced";
         private const string CARD_ICON_ATTRIBUTE_NAME = "asp-icon";
 
-        private readonly IHtmlHelper _htmlHelper;
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Title of the card
@@ -65,31 +70,37 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="htmlHelper">HTML helper</param>
+        #endregion
+
+        #region Fields
+
+        private readonly IHtmlHelper _htmlHelper;
+
+        #endregion
+
+        #region Ctor
+
         public NopCardTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             if (output == null)
-            {
                 throw new ArgumentNullException(nameof(output));
-            }
 
             //contextualize IHtmlHelper
             var viewContextAware = _htmlHelper as IViewContextAware;
@@ -105,7 +116,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 }
             };
             card.AddCssClass("card card-secondary card-outline");
-            if (context.AllAttributes.ContainsName(IS_ADVANCED_ATTRIBUTE_NAME) && context.AllAttributes[IS_ADVANCED_ATTRIBUTE_NAME].Value.Equals(true))
+            if (context.AllAttributes.ContainsName(IS_ADVANCED_ATTRIBUTE_NAME)
+                && context.AllAttributes[IS_ADVANCED_ATTRIBUTE_NAME].Value.Equals(true))
             {
                 card.AddCssClass("advanced-setting");
             }
@@ -150,8 +162,11 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //add heading and container to card
             card.InnerHtml.AppendHtml(cardHeading);
-            card.InnerHtml.AppendHtml(output.GetChildContentAsync().Result.GetContent());
-            output.Content.AppendHtml(card.RenderHtmlContent());
+            var childContent = await output.GetChildContentAsync();
+            card.InnerHtml.AppendHtml(childContent.GetContent());
+            output.Content.AppendHtml(await card.RenderHtmlContentAsync());
         }
+
+        #endregion
     }
 }

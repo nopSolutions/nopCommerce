@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -39,7 +40,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="componentName">Component name</param>
         /// <param name="arguments">Arguments</param>
         /// <returns>Result</returns>
-        protected virtual string RenderViewComponentToString(string componentName, object arguments = null)
+        protected virtual async Task<string> RenderViewComponentToStringAsync(string componentName, object arguments = null)
         {
             //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
             //we customized it to allow running from controllers
@@ -47,8 +48,7 @@ namespace Nop.Web.Framework.Controllers
             if (string.IsNullOrEmpty(componentName))
                 throw new ArgumentNullException(nameof(componentName));
 
-            var actionContextAccessor = HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) as IActionContextAccessor;
-            if (actionContextAccessor == null)
+            if (!(HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) is IActionContextAccessor actionContextAccessor))
                 throw new Exception("IActionContextAccessor cannot be resolved");
 
             var context = actionContextAccessor.ActionContext;
@@ -57,73 +57,66 @@ namespace Nop.Web.Framework.Controllers
 
             var viewData = ViewData;
             if (viewData == null)
-            {
                 throw new NotImplementedException();
-            }
 
             var tempData = TempData;
             if (tempData == null)
-            {
                 throw new NotImplementedException();
-            }
 
-            using var writer = new StringWriter();
-            var viewContext = new ViewContext(
-                context,
-                NullView.Instance,
-                viewData,
-                tempData,
-                writer,
-                new HtmlHelperOptions());
+            await using var writer = new StringWriter();
+            var viewContext = new ViewContext(context, NullView.Instance, viewData, tempData, writer, new HtmlHelperOptions());
 
             // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
             var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
             (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
-            var result = viewComponentResult.ViewComponentType == null ? 
-                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
-                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
+            var result = viewComponentResult.ViewComponentType == null ?
+                await viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments) :
+                await viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
 
-            result.Result.WriteTo(writer, HtmlEncoder.Default);
+            result.WriteTo(writer, HtmlEncoder.Default);
             return writer.ToString();
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Render partial view to string
         /// </summary>
         /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString()
+        protected virtual async Task<string> RenderPartialViewToStringAsync()
         {
-            return RenderPartialViewToString(null, null);
+            return await RenderPartialViewToStringAsync(null, null);
+        }
+
+        //TODO: may be deleted
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <param name="viewName">View name</param>
+        /// <returns>Result</returns>
+        protected virtual async Task<string> RenderPartialViewToStringAsync(string viewName)
+        {
+            return await RenderPartialViewToStringAsync(viewName, null);
+        }
+
+        //TODO: may be deleted
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <param name="model">Model</param>
+        /// <returns>Result</returns>
+        protected virtual async Task<string> RenderPartialViewToStringAsync(object model)
+        {
+            return await RenderPartialViewToStringAsync(null, model);
         }
 
         /// <summary>
         /// Render partial view to string
         /// </summary>
         /// <param name="viewName">View name</param>
-        /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString(string viewName)
-        {
-            return RenderPartialViewToString(viewName, null);
-        }
-
-        /// <summary>
-        /// Render partial view to string
-        /// </summary>
         /// <param name="model">Model</param>
         /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString(object model)
-        {
-            return RenderPartialViewToString(null, model);
-        }
-
-        /// <summary>
-        /// Render partial view to string
-        /// </summary>
-        /// <param name="viewName">View name</param>
-        /// <param name="model">Model</param>
-        /// <returns>Result</returns>
-        protected virtual string RenderPartialViewToString(string viewName, object model)
+        protected virtual async Task<string> RenderPartialViewToStringAsync(string viewName, object model)
         {
             //get Razor view engine
             var razorViewEngine = EngineContext.Current.Resolve<IRazorViewEngine>();
@@ -147,11 +140,10 @@ namespace Nop.Web.Framework.Controllers
                 if (viewResult.View == null)
                     throw new ArgumentNullException($"{viewName} view was not found");
             }
-            using var stringWriter = new StringWriter();
+            await using var stringWriter = new StringWriter();
             var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
 
-            var t = viewResult.View.RenderAsync(viewContext);
-            t.Wait();
+            await viewResult.View.RenderAsync(viewContext);
             return stringWriter.GetStringBuilder().ToString();
         }
 
@@ -168,7 +160,7 @@ namespace Nop.Web.Framework.Controllers
         {
             return Json(new
             {
-                error = error
+                error
             });
         }
 
@@ -205,10 +197,10 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
-            AddLocales(languageService, locales, null);
+            await AddLocalesAsync(languageService, locales, null);
         }
 
         /// <summary>
@@ -218,10 +210,10 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
-            foreach (var language in languageService.GetAllLanguages(true))
+            foreach (var language in await languageService.GetAllLanguagesAsync(true))
             {
                 var locale = Activator.CreateInstance<TLocalizedModelLocal>();
                 locale.LanguageId = language.Id;
@@ -254,10 +246,11 @@ namespace Nop.Web.Framework.Controllers
         /// Access denied JSON data for DataTables
         /// </summary>
         /// <returns>Access denied JSON data</returns>
-        protected JsonResult AccessDeniedDataTablesJson()
+        protected async Task<JsonResult> AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            return ErrorJson(localizationService.GetResource("Admin.AccessDenied.Description"));
+
+            return ErrorJson(await localizationService.GetResourceAsync("Admin.AccessDenied.Description"));
         }
 
         #endregion
@@ -360,7 +353,7 @@ namespace Nop.Web.Framework.Controllers
                 draw = model.Draw,
                 recordsTotal = model.RecordsTotal,
                 recordsFiltered = model.RecordsFiltered,
-                Data = model.Data
+                model.Data
             });
         }
 

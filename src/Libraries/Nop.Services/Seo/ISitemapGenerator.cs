@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Seo
 {
@@ -13,17 +14,17 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        string Generate(int? id);
+        Task<string> GenerateAsync(int? id);
 
         /// <summary>
-        /// Get localized URLs
+        /// Return localized urls
         /// </summary>
         /// <param name="routeName">Route name</param>
-        /// <param name="routeParams">Lambda for route params object</param>
+        /// <param name="getRouteParamsAwait">Lambda for route params object</param>
         /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
         /// <param name="updateFreq">How often to update url</param>
-        SitemapUrl GetLocalizedSitemapUrl(string routeName,
-            Func<int?, object> routeParams = null,
+        Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
+            Func<int?, Task<object>> getRouteParamsAwait = null,
             DateTime? dateTimeUpdatedOn = null,
             UpdateFrequency updateFreq = UpdateFrequency.Weekly);
     }

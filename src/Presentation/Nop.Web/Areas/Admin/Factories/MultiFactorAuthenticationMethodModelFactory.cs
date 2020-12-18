@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
@@ -51,14 +52,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Multi-factor authentication method search model</param>
         /// <returns>Multi-factor authentication method list model</returns>
-        public virtual MultiFactorAuthenticationMethodListModel PrepareMultiFactorAuthenticationMethodListModel(
-            MultiFactorAuthenticationMethodSearchModel searchModel)
+        public virtual async Task<MultiFactorAuthenticationMethodListModel>
+            PrepareMultiFactorAuthenticationMethodListModelAsync(MultiFactorAuthenticationMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get multi-factor authentication methods
-            var multiFactorAuthenticationMethods = _multiFactorAuthenticationPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var multiFactorAuthenticationMethods = (await _multiFactorAuthenticationPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new MultiFactorAuthenticationMethodListModel().PrepareToGrid(searchModel, multiFactorAuthenticationMethods, () =>
