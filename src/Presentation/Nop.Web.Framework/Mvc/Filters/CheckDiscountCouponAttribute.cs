@@ -104,7 +104,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 var validCouponCodes = new List<string>();
                 var discounts = await couponCodes
-                    .SelectManyAwait(async couponCode => (await _discountService.GetAllDiscountsAsync(couponCode: couponCode)).ToAsyncEnumerable())
+                    .SelectManyAwait(async couponCode => await _discountService.GetAllDiscountsAsync(couponCode: couponCode))
                     .Distinct()
                     .ToListAsync();
 

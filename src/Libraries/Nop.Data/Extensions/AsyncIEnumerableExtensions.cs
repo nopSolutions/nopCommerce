@@ -75,9 +75,40 @@ namespace System.Linq
         /// transform function on each element of the source sequence and awaiting the result
         /// </returns>
         public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
-            Func<TSource, Task<IAsyncEnumerable<TResult>>> predicate)
+            Func<TSource, Task<IList<TResult>>> predicate)
         {
-            return source.ToAsyncEnumerable().SelectManyAwait(items => new ValueTask<IAsyncEnumerable<TResult>>(predicate(items)));
+            async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
+            {
+                var rez = await predicate(items);
+                return rez.ToAsyncEnumerable();
+            }
+
+            return source.ToAsyncEnumerable().SelectManyAwait(getAsyncEnumerable);
+        }
+
+        /// <summary>
+        /// Projects each element of an async-enumerable sequence into an async-enumerable
+        /// sequence and merges the resulting async-enumerable sequences into one async-enumerable
+        /// sequence
+        /// </summary>
+        /// <typeparam name="TSource">The type of elements in the source sequence</typeparam>
+        /// <typeparam name="TResult">The type of elements in the projected inner sequences and the merged result sequence</typeparam>
+        /// <param name="source">An async-enumerable sequence of elements to project</param>
+        /// <param name="predicate">An asynchronous selector function to apply to each element of the source sequence</param>
+        /// <returns>
+        /// An async-enumerable sequence whose elements are the result of invoking the one-to-many
+        /// transform function on each element of the source sequence and awaiting the result
+        /// </returns>
+        public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
+            Func<TSource, Task<IEnumerable<TResult>>> predicate)
+        {
+            async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
+            {
+                var rez = await predicate(items);
+                return rez.ToAsyncEnumerable();
+            }
+
+            return source.ToAsyncEnumerable().SelectManyAwait(getAsyncEnumerable);
         }
 
         /// <summary>

@@ -527,7 +527,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         {
             return await HandleFunctionAsync(async () =>
             {
-                var customEvents = await (await GetConfigurationsAsync()).SelectManyAwait(async configuration => (await GetCustomEventsAsync(configuration.Id, widgetZone)).ToAsyncEnumerable()).ToListAsync();
+                var customEvents = await (await GetConfigurationsAsync()).SelectManyAwait(async configuration => await GetCustomEventsAsync(configuration.Id, widgetZone)).ToListAsync();
                 foreach (var customEvent in customEvents) 
                     await PrepareTrackedEventScriptAsync(customEvent.EventName, string.Empty, isCustomEvent: true);
 
@@ -893,7 +893,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             {
                 //load custom events and their widget zones
                 var configurations = await GetConfigurationsAsync();
-                var customEvents = await configurations.SelectManyAwait(async configuration => (await GetCustomEventsAsync(configuration.Id)).ToAsyncEnumerable()).ToListAsync();
+                var customEvents = await configurations.SelectManyAwait(async configuration => await GetCustomEventsAsync(configuration.Id)).ToListAsync();
                 var widgetZones = await customEvents.SelectMany(customEvent => customEvent.WidgetZones).Distinct().ToListAsync();
 
                 return widgetZones;

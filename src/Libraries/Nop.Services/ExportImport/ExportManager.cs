@@ -515,7 +515,6 @@ namespace Nop.Services.ExportImport
                     var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
 
                     if (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id) is IList<ProductAttributeValue> values)
-                    {
                         return values.Select(pav =>
                             new ExportProductAttribute
                             {
@@ -540,10 +539,9 @@ namespace Nop.Services.ExportImport
                                 IsPreSelected = pav.IsPreSelected,
                                 DisplayOrder = pav.DisplayOrder,
                                 PictureId = pav.PictureId
-                            }).ToAsyncEnumerable();
-                    }
+                            });
 
-                    return (new List<ExportProductAttribute>
+                    return new List<ExportProductAttribute>
                     {
                         new ExportProductAttribute
                         {
@@ -553,7 +551,7 @@ namespace Nop.Services.ExportImport
                             AttributeIsRequired = pam.IsRequired,
                             AttributeControlTypeId = pam.AttributeControlTypeId
                         }
-                    }).ToAsyncEnumerable();
+                    };
                 }).ToListAsync();
 
             //attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(

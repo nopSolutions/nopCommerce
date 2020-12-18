@@ -292,8 +292,7 @@ namespace Nop.Services.Catalog
                     return ids;
 
                 ids.AddRange(await ids.SelectManyAwait(async categoryId =>
-                        (await GetChildCategoryIdsAsync(categoryId, (await _storeContext.GetCurrentStoreAsync()).Id)).ToAsyncEnumerable()
-                        )
+                        await GetChildCategoryIdsAsync(categoryId, (await _storeContext.GetCurrentStoreAsync()).Id))
                     .ToListAsync());
 
                 return ids.Distinct().ToList();
@@ -328,7 +327,7 @@ namespace Nop.Services.Catalog
                     .Select(c => c.Id)
                     .ToList();
                 categoriesIds.AddRange(categories);
-                categoriesIds.AddRange(await categories.SelectManyAwait(async cId => (await GetChildCategoryIdsAsync(cId, storeId, showHidden)).ToAsyncEnumerable()).ToListAsync());
+                categoriesIds.AddRange(await categories.SelectManyAwait(async cId => await GetChildCategoryIdsAsync(cId, storeId, showHidden)).ToListAsync());
 
                 return categoriesIds;
             });

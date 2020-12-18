@@ -544,7 +544,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 //create packages according to item quantity
                 var package = await CreatePackageAsync(width, length, height, weight, insuranceAmount);
 
-                return Enumerable.Repeat(package, packageItem.GetQuantity()).ToAsyncEnumerable();
+                return Enumerable.Repeat(package, packageItem.GetQuantity());
             }).ToListAsync();
         }
 

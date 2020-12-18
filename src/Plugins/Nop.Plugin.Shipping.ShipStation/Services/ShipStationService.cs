@@ -288,9 +288,9 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 if (!data.Any())
                     await _staticCacheManager.RemoveAsync(cacheKey);
 
-                var serviceList = JsonConvert.DeserializeObject<List<Service>>(data);
+                var serviceList = JsonConvert.DeserializeObject<IList<Service>>(data);
                 
-                return serviceList.ToAsyncEnumerable();
+                return serviceList;
             }).ToListAsync();
 
             return services.ToList();
@@ -413,7 +413,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             var carriers = (await GetCarriersAsync()).Where(c => carrierFilter.Contains(c.Code));
 
             return await carriers.SelectManyAwait(async carrier =>
-                (await GetRatesAsync(shippingOptionRequest, carrier.Code)).Where(r => serviceFilter.Contains(r.ServiceCode)).ToAsyncEnumerable()).ToListAsync();
+                (await GetRatesAsync(shippingOptionRequest, carrier.Code)).Where(r => serviceFilter.Contains(r.ServiceCode))).ToListAsync();
         }
         
         /// <summary>
