@@ -1286,7 +1286,7 @@ namespace Nop.Services.Orders
             if (customer == null || await _customerService.IsGuestAsync(customer))
                 return 0;
 
-            var points = (int)Math.Truncate(amount / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
+            var points = (int)Math.Truncate(amount / _rewardPointsSettings.PointsForPurchases_Amount) * _rewardPointsSettings.PointsForPurchases_Points;
             return points;
         }
 
