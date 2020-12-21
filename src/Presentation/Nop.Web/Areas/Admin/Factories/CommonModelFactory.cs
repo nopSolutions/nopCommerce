@@ -686,7 +686,7 @@ namespace Nop.Web.Areas.Admin.Factories
             try
             {
                 model.OperatingSystem = Environment.OSVersion.VersionString;
-                model.AspNetInfo = RuntimeEnvironment.GetSystemVersion();
+                model.AspNetInfo = RuntimeInformation.FrameworkDescription;
                 model.IsFullTrust = AppDomain.CurrentDomain.IsFullyTrusted;
             }
             catch
