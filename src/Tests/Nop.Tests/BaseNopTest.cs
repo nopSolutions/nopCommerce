@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
+using System.Threading.Tasks;
+using FluentAssertions;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
@@ -22,6 +25,7 @@ using Microsoft.Net.Http.Headers;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
@@ -65,9 +69,15 @@ using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Themes;
+using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Installation;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
+using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Tests
 {
@@ -75,9 +85,43 @@ namespace Nop.Tests
     {
         private static readonly ServiceProvider _serviceProvider;
 
+        protected static T PropertiesShouldEqual<T, Tm>(T entity, Tm model, params string[] filter) where T : BaseEntity
+        where Tm : BaseNopModel
+        {
+            var objectProperties = typeof(T).GetProperties();
+            var modelProperties = typeof(Tm).GetProperties();
+            
+            foreach (var objectProperty in objectProperties)
+            {
+                var name = objectProperty.Name;
+
+                if (filter.Contains(name))
+                    continue;
+
+                var modelProperty = modelProperties.FirstOrDefault(p => p.Name == name);
+
+                if (modelProperty == null)
+                    continue;
+
+                var objectPropertyValue = objectProperty.GetValue(entity);
+                var modelPropertyValue = modelProperty.GetValue(model);
+                
+                objectPropertyValue.Should().Be(modelPropertyValue, $"The property \"{typeof(T).Name}.{objectProperty.Name}\" of these objects is not equal");
+            }
+
+            return entity;
+        }
+
         static BaseNopTest()
         {
+            TypeDescriptor.AddAttributes(typeof(List<int>),
+                new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
+            TypeDescriptor.AddAttributes(typeof(List<string>),
+                new TypeConverterAttribute(typeof(GenericListTypeConverter<string>)));
+
             var services = new ServiceCollection();
+
+            services.AddHttpClient();
 
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
             var typeFinder = new AppDomainTypeFinder();
@@ -100,7 +144,10 @@ namespace Nop.Tests
             var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
             services.AddSingleton(hostApplicationLifetime.Object);
 
-            var rootPath = new DirectoryInfo($@"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}").FullName;
+            var rootPath =
+                new DirectoryInfo(
+                        $@"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}")
+                    .FullName;
 
             //Presentation\Nop.Web\wwwroot
             var webHostEnvironment = new Mock<IWebHostEnvironment>();
@@ -109,8 +156,11 @@ namespace Nop.Tests
             webHostEnvironment.Setup(p => p.EnvironmentName).Returns("test");
             webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
             services.AddSingleton(webHostEnvironment.Object);
-
-            var httpContext = new DefaultHttpContext { Request = { Headers = { { HeaderNames.Host, NopTestsDefaults.HostIpAddress } } } };
+            
+            var httpContext = new DefaultHttpContext
+            {
+                Request = {Headers = {{HeaderNames.Host, NopTestsDefaults.HostIpAddress}}}
+            };
 
             var httpContextAccessor = new Mock<IHttpContextAccessor>();
             httpContextAccessor.Setup(p => p.HttpContext).Returns(httpContext);
@@ -118,23 +168,24 @@ namespace Nop.Tests
             services.AddSingleton(httpContextAccessor.Object);
 
             var actionContextAccessor = new Mock<IActionContextAccessor>();
-            actionContextAccessor.Setup(x => x.ActionContext).Returns(new ActionContext(httpContext, new RouteData(), new ActionDescriptor()));
+            actionContextAccessor.Setup(x => x.ActionContext)
+                .Returns(new ActionContext(httpContext, httpContext.GetRouteData(), new ActionDescriptor()));
 
             services.AddSingleton(actionContextAccessor.Object);
 
             var urlHelperFactory = new Mock<IUrlHelperFactory>();
+            var urlHelper = new NopTestUrlHelper(actionContextAccessor.Object.ActionContext);
 
             urlHelperFactory.Setup(x => x.GetUrlHelper(It.IsAny<ActionContext>()))
-                .Returns(new UrlHelper(actionContextAccessor.Object.ActionContext));
+                .Returns(urlHelper);
+
+            services.AddTransient(provider => actionContextAccessor.Object);
 
             services.AddSingleton(urlHelperFactory.Object);
 
-            var httpClientFactory = new Mock<IHttpClientFactory>();
-            httpClientFactory.Setup(x => x.CreateClient("default")).Returns(new HttpClient());
-            services.AddSingleton(httpClientFactory.Object);
-
             var tempDataDictionaryFactory = new Mock<ITempDataDictionaryFactory>();
-            var dataDictionary = new TempDataDictionary(httpContextAccessor.Object.HttpContext, new Mock<ITempDataProvider>().Object);
+            var dataDictionary = new TempDataDictionary(httpContextAccessor.Object.HttpContext,
+                new Mock<ITempDataProvider>().Object);
             tempDataDictionaryFactory.Setup(f => f.GetTempData(It.IsAny<HttpContext>())).Returns(dataDictionary);
             services.AddSingleton(tempDataDictionaryFactory.Object);
 
@@ -151,7 +202,7 @@ namespace Nop.Tests
 
             //data layer
             services.AddTransient<IDataProviderManager, TestDataProviderManager>();
-            services.AddSingleton<INopDataProvider, SqLiteNopDataProvider>();
+            services.AddTransient<INopDataProvider, SqLiteNopDataProvider>();
 
             //repositories
             services.AddTransient(typeof(IRepository<>), typeof(EntityRepository<>));
@@ -259,7 +310,7 @@ namespace Nop.Tests
             services.AddTransient<ISitemapGenerator, SitemapGenerator>();
             services.AddTransient<IScheduleTaskService, ScheduleTaskService>();
             services.AddTransient<IExportManager, ExportManager>();
-            services.AddTransient<IImportManager, ImportManager>();            
+            services.AddTransient<IImportManager, ImportManager>();
             services.AddTransient<IPdfService, PdfService>();
             services.AddTransient<IUploadService, UploadService>();
             services.AddTransient<IThemeProvider, ThemeProvider>();
@@ -281,13 +332,14 @@ namespace Nop.Tests
             services.AddTransient<IPickupPluginManager, PickupPluginManager>();
             services.AddTransient<IShippingPluginManager, ShippingPluginManager>();
             services.AddTransient<ITaxPluginManager, TaxPluginManager>();
-            services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
+
             services.AddTransient<IPictureService, PictureService>();
 
             //register all settings
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
             foreach (var setting in settings)
-                services.AddTransient(setting, context => context.GetRequiredService<ISettingService>().LoadSetting(setting));
+                services.AddTransient(setting,
+                    context => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result);
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
@@ -316,6 +368,96 @@ namespace Nop.Tests
 
             services.AddTransient<IStoreContext, WebStoreContext>();
             services.AddTransient<IWorkContext, WebWorkContext>();
+            services.AddTransient<IThemeContext, ThemeContext>();
+
+            services.AddTransient<IPageHeadBuilder, PageHeadBuilder>();
+
+            //common factories
+            services.AddTransient<IAclSupportedModelFactory, AclSupportedModelFactory>();
+            services.AddTransient<IDiscountSupportedModelFactory, DiscountSupportedModelFactory>();
+            services.AddTransient<ILocalizedModelFactory, LocalizedModelFactory>();
+            services.AddTransient<IStoreMappingSupportedModelFactory, StoreMappingSupportedModelFactory>();
+
+            //admin factories
+            services.AddTransient<IBaseAdminModelFactory, BaseAdminModelFactory>();
+            services.AddTransient<IActivityLogModelFactory, ActivityLogModelFactory>();
+            services.AddTransient<IAddressAttributeModelFactory, AddressAttributeModelFactory>();
+            services.AddTransient<IAffiliateModelFactory, AffiliateModelFactory>();
+            services.AddTransient<IBlogModelFactory, BlogModelFactory>();
+            services.AddTransient<ICampaignModelFactory, CampaignModelFactory>();
+            services.AddTransient<ICategoryModelFactory, CategoryModelFactory>();
+            services.AddTransient<ICheckoutAttributeModelFactory, CheckoutAttributeModelFactory>();
+            services.AddTransient<ICommonModelFactory, CommonModelFactory>();
+            services.AddTransient<ICountryModelFactory, CountryModelFactory>();
+            services.AddTransient<ICurrencyModelFactory, CurrencyModelFactory>();
+            services.AddTransient<ICustomerAttributeModelFactory, CustomerAttributeModelFactory>();
+            services.AddTransient<ICustomerModelFactory, CustomerModelFactory>();
+            services.AddTransient<ICustomerRoleModelFactory, CustomerRoleModelFactory>();
+            services.AddTransient<IDiscountModelFactory, DiscountModelFactory>();
+            services.AddTransient<IEmailAccountModelFactory, EmailAccountModelFactory>();
+            services
+                .AddTransient<IExternalAuthenticationMethodModelFactory, ExternalAuthenticationMethodModelFactory>();
+            services.AddTransient<IForumModelFactory, ForumModelFactory>();
+            services.AddTransient<IGiftCardModelFactory, GiftCardModelFactory>();
+            services.AddTransient<IHomeModelFactory, HomeModelFactory>();
+            services.AddTransient<ILanguageModelFactory, LanguageModelFactory>();
+            services.AddTransient<ILogModelFactory, LogModelFactory>();
+            services.AddTransient<IManufacturerModelFactory, ManufacturerModelFactory>();
+            services.AddTransient<IMeasureModelFactory, MeasureModelFactory>();
+            services.AddTransient<IMessageTemplateModelFactory, MessageTemplateModelFactory>();
+            services.AddTransient<INewsletterSubscriptionModelFactory, NewsletterSubscriptionModelFactory>();
+            services.AddTransient<INewsModelFactory, NewsModelFactory>();
+            services.AddTransient<IOrderModelFactory, OrderModelFactory>();
+            services.AddTransient<IPaymentModelFactory, PaymentModelFactory>();
+            services.AddTransient<IPluginModelFactory, PluginModelFactory>();
+            services.AddTransient<IPollModelFactory, PollModelFactory>();
+            services.AddTransient<IProductModelFactory, ProductModelFactory>();
+            services.AddTransient<IProductAttributeModelFactory, ProductAttributeModelFactory>();
+            services.AddTransient<IProductReviewModelFactory, ProductReviewModelFactory>();
+            services.AddTransient<IReportModelFactory, ReportModelFactory>();
+            services.AddTransient<IQueuedEmailModelFactory, QueuedEmailModelFactory>();
+            services.AddTransient<IRecurringPaymentModelFactory, RecurringPaymentModelFactory>();
+            services.AddTransient<IReturnRequestModelFactory, ReturnRequestModelFactory>();
+            services.AddTransient<IReviewTypeModelFactory, ReviewTypeModelFactory>();
+            services.AddTransient<IScheduleTaskModelFactory, ScheduleTaskModelFactory>();
+            services.AddTransient<ISecurityModelFactory, SecurityModelFactory>();
+            services.AddTransient<ISettingModelFactory, SettingModelFactory>();
+            services.AddTransient<IShippingModelFactory, ShippingModelFactory>();
+            services.AddTransient<IShoppingCartModelFactory, ShoppingCartModelFactory>();
+            services.AddTransient<ISpecificationAttributeModelFactory, SpecificationAttributeModelFactory>();
+            services.AddTransient<IStoreModelFactory, StoreModelFactory>();
+            services.AddTransient<ITaxModelFactory, TaxModelFactory>();
+            services.AddTransient<ITemplateModelFactory, TemplateModelFactory>();
+            services.AddTransient<ITopicModelFactory, TopicModelFactory>();
+            services.AddTransient<IVendorAttributeModelFactory, VendorAttributeModelFactory>();
+            services.AddTransient<IVendorModelFactory, VendorModelFactory>();
+            services.AddTransient<IWidgetModelFactory, WidgetModelFactory>();
+
+            //factories
+            services.AddTransient<Web.Factories.IAddressModelFactory, Web.Factories.AddressModelFactory>();
+            services.AddTransient<Web.Factories.IBlogModelFactory, Web.Factories.BlogModelFactory>();
+            services.AddTransient<Web.Factories.ICatalogModelFactory, Web.Factories.CatalogModelFactory>();
+            services.AddTransient<Web.Factories.ICheckoutModelFactory, Web.Factories.CheckoutModelFactory>();
+            services.AddTransient<Web.Factories.ICommonModelFactory, Web.Factories.CommonModelFactory>();
+            services.AddTransient<Web.Factories.ICountryModelFactory, Web.Factories.CountryModelFactory>();
+            services.AddTransient<Web.Factories.ICustomerModelFactory, Web.Factories.CustomerModelFactory>();
+            services.AddTransient<Web.Factories.IForumModelFactory, Web.Factories.ForumModelFactory>();
+            services
+                .AddTransient<Web.Factories.IExternalAuthenticationModelFactory,
+                    Web.Factories.ExternalAuthenticationModelFactory>();
+            services.AddTransient<Web.Factories.INewsModelFactory, Web.Factories.NewsModelFactory>();
+            services.AddTransient<Web.Factories.INewsletterModelFactory, Web.Factories.NewsletterModelFactory>();
+            services.AddTransient<Web.Factories.IOrderModelFactory, Web.Factories.OrderModelFactory>();
+            services.AddTransient<Web.Factories.IPollModelFactory, Web.Factories.PollModelFactory>();
+            services
+                .AddTransient<Web.Factories.IPrivateMessagesModelFactory, Web.Factories.PrivateMessagesModelFactory>();
+            services.AddTransient<Web.Factories.IProductModelFactory, Web.Factories.ProductModelFactory>();
+            services.AddTransient<Web.Factories.IProfileModelFactory, Web.Factories.ProfileModelFactory>();
+            services.AddTransient<Web.Factories.IReturnRequestModelFactory, Web.Factories.ReturnRequestModelFactory>();
+            services.AddTransient<Web.Factories.IShoppingCartModelFactory, Web.Factories.ShoppingCartModelFactory>();
+            services.AddTransient<Web.Factories.ITopicModelFactory, Web.Factories.TopicModelFactory>();
+            services.AddTransient<Web.Factories.IVendorModelFactory, Web.Factories.VendorModelFactory>();
+            services.AddTransient<Web.Factories.IWidgetModelFactory, Web.Factories.WidgetModelFactory>();
 
             _serviceProvider = services.BuildServiceProvider();
 
@@ -324,8 +466,12 @@ namespace Nop.Tests
             _serviceProvider.GetService<INopDataProvider>().CreateDatabase(null);
             _serviceProvider.GetService<INopDataProvider>().InitializeDatabase();
 
-            _serviceProvider.GetService<IInstallationService>().InstallRequiredData(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, "", null, null);
-            _serviceProvider.GetService<IInstallationService>().InstallSampleData(NopTestsDefaults.AdminEmail);
+            _serviceProvider.GetService<IInstallationService>()
+                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, null, null, null).Wait();
+            _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
+
+            var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
         }
 
         public T GetService<T>()
@@ -341,6 +487,23 @@ namespace Nop.Tests
         }
 
         #region Nested classes
+
+        protected class NopTestUrlHelper : UrlHelperBase
+        {
+            public NopTestUrlHelper(ActionContext actionContext) : base(actionContext)
+            {
+            }
+
+            public override string Action(UrlActionContext actionContext)
+            {
+                return string.Empty;
+            }
+
+            public override string RouteUrl(UrlRouteContext routeContext)
+            {
+                return string.Empty;
+            }
+        }
 
         protected class NopTestConventionSet : NopConventionSet
         {
@@ -363,17 +526,19 @@ namespace Nop.Tests
 
         public class TestAuthenticationService : IAuthenticationService
         {
-            public void SignIn(Customer customer, bool isPersistent)
+            public Task SignInAsync(Customer customer, bool isPersistent)
             {
+                return Task.CompletedTask;
             }
 
-            public void SignOut()
+            public Task SignOutAsync()
             {
+                return Task.CompletedTask;
             }
 
-            public Customer GetAuthenticatedCustomer()
+            public async Task<Customer> GetAuthenticatedCustomerAsync()
             {
-                return _serviceProvider.GetService<ICustomerService>().GetCustomerByEmail(NopTestsDefaults.AdminEmail);
+                return await _serviceProvider.GetService<ICustomerService>().GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
             }
         }
 
