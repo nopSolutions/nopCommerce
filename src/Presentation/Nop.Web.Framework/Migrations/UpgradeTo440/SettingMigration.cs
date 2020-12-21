@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Seo;
@@ -7,6 +8,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
@@ -89,6 +91,74 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 shippingSettings.RequestDelay = 300;
                 settingService.SaveSettingAsync(shippingSettings).Wait();
+            }
+
+            //#276 AJAX filters
+            var catalogSettings = settingService.LoadSettingAsync<CatalogSettings>().Result;
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.UseAjaxCatalogProductsLoading).Result)
+            {
+                catalogSettings.UseAjaxCatalogProductsLoading = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnableManufacturerFiltering).Result)
+            {
+                catalogSettings.EnableManufacturerFiltering = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnablePriceRangeFiltering).Result)
+            {
+                catalogSettings.EnablePriceRangeFiltering = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPagePriceRangeFiltering).Result)
+            {
+                catalogSettings.SearchPagePriceRangeFiltering = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPagePriceFrom).Result)
+            {
+                catalogSettings.SearchPagePriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPagePriceTo).Result)
+            {
+                catalogSettings.SearchPagePriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPageAutomaticallyCalculatePriceRange).Result)
+            {
+                catalogSettings.SearchPageAutomaticallyCalculatePriceRange = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagPriceRangeFiltering).Result)
+            {
+                catalogSettings.ProductsByTagPriceRangeFiltering = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagPriceFrom).Result)
+            {
+                catalogSettings.ProductsByTagPriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagPriceTo).Result)
+            {
+                catalogSettings.ProductsByTagPriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagAutomaticallyCalculatePriceRange).Result)
+            {
+                catalogSettings.ProductsByTagAutomaticallyCalculatePriceRange = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
             }
         }
 

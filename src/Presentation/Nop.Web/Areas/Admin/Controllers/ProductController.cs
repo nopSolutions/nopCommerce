@@ -2141,7 +2141,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var products = await _productService.SearchProductsAsync(0,
                 categoryIds: categoryIds,
-                manufacturerId: model.SearchManufacturerId,
+                manufacturerIds: new List<int> { model.SearchManufacturerId },
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
                 warehouseId: model.SearchWarehouseId,
@@ -2197,7 +2197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var products = await _productService.SearchProductsAsync(0,
                 categoryIds: categoryIds,
-                manufacturerId: model.SearchManufacturerId,
+                manufacturerIds: new List<int> { model.SearchManufacturerId },
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
                 warehouseId: model.SearchWarehouseId,
@@ -2281,7 +2281,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var products = await _productService.SearchProductsAsync(0,
                 categoryIds: categoryIds,
-                manufacturerId: model.SearchManufacturerId,
+                manufacturerIds: new List<int> { model.SearchManufacturerId },
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
                 warehouseId: model.SearchWarehouseId,

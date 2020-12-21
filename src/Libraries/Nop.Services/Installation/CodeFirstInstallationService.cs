@@ -40,6 +40,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Blogs;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -3024,6 +3025,9 @@ namespace Nop.Services.Installation
                 SearchPageProductsPerPage = 6,
                 SearchPageAllowCustomersToSelectPageSize = true,
                 SearchPagePageSizeOptions = "6, 3, 9, 18",
+                SearchPagePriceRangeFiltering = true,
+                SearchPagePriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                SearchPagePriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 ProductsAlsoPurchasedEnabled = true,
                 ProductsAlsoPurchasedNumber = 4,
                 AjaxProcessAttributeChange = true,
@@ -3041,6 +3045,9 @@ namespace Nop.Services.Installation
                 CacheProductPrices = false,
                 ProductsByTagAllowCustomersToSelectPageSize = true,
                 ProductsByTagPageSizeOptions = "6, 3, 9, 18",
+                ProductsByTagPriceRangeFiltering = true,
+                ProductsByTagPriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                ProductsByTagPriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 MaximumBackInStockSubscriptions = 200,
                 ManufacturersBlockItemsToDisplay = 2,
                 DisplayTaxShippingInfoFooter = isGermany,
@@ -3063,7 +3070,10 @@ namespace Nop.Services.Installation
                 ExportImportSplitProductsFile = false,
                 ExportImportRelatedEntitiesByName = true,
                 CountDisplayedYearsDatePicker = 1,
-                UseAjaxLoadMenu = false
+                UseAjaxLoadMenu = false,
+                UseAjaxCatalogProductsLoading = true,
+                EnableManufacturerFiltering = true,
+                EnablePriceRangeFiltering = true
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings
@@ -3840,7 +3850,9 @@ namespace Nop.Services.Installation
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_desktops.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Desktops"))).Id,
-                PriceRanges = "-1000;1000-1200;1200-;",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -3917,7 +3929,9 @@ namespace Nop.Services.Installation
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_camera_photo.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Camera, photo"))).Id,
-                PriceRanges = "-500;500-;",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -3957,7 +3971,9 @@ namespace Nop.Services.Installation
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Accessories"))).Id,
                 IncludeInTopMenu = true,
-                PriceRanges = "-100;100-;",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 Published = true,
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -3995,7 +4011,9 @@ namespace Nop.Services.Installation
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_shoes.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Shoes"))).Id,
-                PriceRanges = "-500;500-;",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -4035,7 +4053,9 @@ namespace Nop.Services.Installation
                 ParentCategoryId = categoryApparel.Id,
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_apparel_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Apparel Accessories"))).Id,
                 IncludeInTopMenu = true,
-                PriceRanges = "-100;100-;",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 Published = true,
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -4074,7 +4094,9 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_book.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Book"))).Id,
-                PriceRanges = "-25;25-50;50-;",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 5,
@@ -4093,7 +4115,9 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_jewelry.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Jewelry"))).Id,
-                PriceRanges = "0-500;500-700;700-3000;",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 6,
@@ -4152,6 +4176,9 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 Published = true,
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "manufacturer_apple.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Apple"))).Id,
                 DisplayOrder = 1,
@@ -4170,6 +4197,9 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
+                PriceRangeFiltering = true,
+                PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 Published = true,
                 PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "manufacturer_hp.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Hp"))).Id,
                 DisplayOrder = 5,
@@ -9251,7 +9281,10 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1,
                     PageSize = 6,
                     AllowCustomersToSelectPageSize = true,
-                    PageSizeOptions = "6, 3, 9, 18"
+                    PageSizeOptions = "6, 3, 9, 18",
+                    PriceRangeFiltering = true,
+                    PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom,
+                    PriceTo = NopCatalogDefaults.DefaultPriceRangeTo,
                 },
                 new Vendor
                 {

@@ -98,7 +98,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="manufacturerIds">Manufacturer identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
@@ -127,7 +127,7 @@ namespace Nop.Services.Catalog
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
-            int manufacturerId = 0,
+            IList<int> manufacturerIds = null,
             int storeId = 0,
             int vendorId = 0,
             int warehouseId = 0,
@@ -155,7 +155,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="manufacturerIds">Manufacturer identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
@@ -185,7 +185,7 @@ namespace Nop.Services.Catalog
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
-            int manufacturerId = 0,
+            IList<int> manufacturerIds = null,
             int storeId = 0,
             int vendorId = 0,
             int warehouseId = 0,

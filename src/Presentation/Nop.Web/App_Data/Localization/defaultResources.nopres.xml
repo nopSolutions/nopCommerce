@@ -2082,6 +2082,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange">
+    <Value>Calculate price range automatically</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint">
+    <Value>Check to enable automatically price range calculation.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
     <Value>Category template</Value>
   </LocaleResource>
@@ -2184,11 +2190,29 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Picture.Hint">
     <Value>The category picture.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceRanges">
-    <Value>Price ranges</Value>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceFrom">
+    <Value>Price 'from'</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceRanges.Hint">
-    <Value>Define the price ranges for the store price range filter. Separate ranges with a semicolon e.g. '0-199;200-300;301-;' (301- means 301 and over).</Value>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceFrom.GreaterThanOrEqualZero">
+    <Value>The price 'from' should be greater than or equal '0'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceFrom.Hint">
+    <Value>Enter the price 'from'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceRangeFiltering">
+    <Value>Price range filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceRangeFiltering.Hint">
+    <Value>Check to enable the price range filtering.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceTo">
+    <Value>Price 'to'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceTo.GreaterThanZeroOrPriceFrom">
+    <Value>The price 'to' should be greater than '{0}'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PriceTo.Hint">
+    <Value>Enter the price 'to'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Published">
     <Value>Published</Value>
@@ -2304,6 +2328,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange">
+    <Value>Calculate price range automatically</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint">
+    <Value>Check to enable automatically price range calculation.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Deleted">
     <Value>Deleted</Value>
   </LocaleResource>
@@ -2391,11 +2421,29 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Picture.Hint">
     <Value>The manufacturer picture.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceRanges">
-    <Value>Price ranges</Value>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceFrom">
+    <Value>Price 'from'</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceRanges.Hint">
-    <Value>Define the price ranges for the store price range filter. Separate ranges with a semicolon e.g. '0-199;200-300;301-;' (301- means 301 and over).</Value>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceFrom.GreaterThanOrEqualZero">
+    <Value>The price 'from' should be greater than or equal '0'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceFrom.Hint">
+    <Value>Enter the price 'from'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering">
+    <Value>Price range filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering.Hint">
+    <Value>Check to enable the price range filtering.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceTo">
+    <Value>Price 'to'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceTo.GreaterThanZeroOrPriceFrom">
+    <Value>The price 'to' should be greater than '{0}'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PriceTo.Hint">
+    <Value>Enter the price 'to'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Published">
     <Value>Published</Value>
@@ -5652,6 +5700,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EmailAFriendEnabled.Hint">
     <Value>Check to allow customers to use the 'Email a friend' option in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering">
+    <Value>Enable manufacturer filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering.Hint">
+    <Value>Check to enable the manufacturer filtering on catalog pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering">
+    <Value>Enable price range filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering.Hint">
+    <Value>Check to enable the price range filtering on catalog pages.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages">
     <Value>Export/Import products. Allow download images</Value>
   </LocaleResource>
@@ -5832,6 +5892,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the 'Products by tag' page size from a predefined list of options.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange">
+    <Value>'Products by tag' page. Calculate price range automatically</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint">
+    <Value>Check to enable automatically price range calculation on 'Products by tag' page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize">
     <Value>'Products by tag' page. Products per page</Value>
   </LocaleResource>
@@ -5843,6 +5909,30 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom">
+    <Value>'Products by tag' page. Price 'from'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom.GreaterThanOrEqualZero">
+    <Value>The price 'from' should be greater than or equal '0'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom.Hint">
+    <Value>Enter the price 'from' on 'Products by tag' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering">
+    <Value>'Products by tag' page. Price range filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering.Hint">
+    <Value>Check to enable the price range filtering on 'Products by tag' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo">
+    <Value>'Products by tag' page. Price 'to'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.GreaterThanZeroOrPriceFrom">
+    <Value>The price 'to' should be greater than '{0}'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.Hint">
+    <Value>Enter the price 'to' on 'Products by tag' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled">
     <Value>Search autocomplete enabled</Value>
@@ -5892,11 +5982,41 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize.Hint">
     <Value>Search page. Check to allow customers to select the page size from a predefined list of options.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange">
+    <Value>Search page. Calculate price range automatically</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint">
+    <Value>Check to enable automatically price range calculation on 'Search' page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions.Hint">
     <Value>Search page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceFrom">
+    <Value>Search page. Price 'from'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceFrom.GreaterThanOrEqualZero">
+    <Value>The price 'from' should be greater than or equal '0'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceFrom.Hint">
+    <Value>Enter the price 'from' on 'Search' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering">
+    <Value>Search page. Price range filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering.Hint">
+    <Value>Check to enable the price range filtering on 'Search' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceTo">
+    <Value>Search page. Price 'to'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceTo.GreaterThanZeroOrPriceFrom">
+    <Value>The price 'to' should be greater than '{0}'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePriceTo.Hint">
+    <Value>Enter the price 'to' on 'Search' page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageProductsPerPage">
     <Value>Search page. Products per page</Value>
@@ -5996,6 +6116,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
     <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.UseAjaxCatalogProductsLoading">
+    <Value>Use AJAX products loading</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.UseAjaxCatalogProductsLoading.Hint">
+    <Value>Check to load products asynchronously (applicable to 'paging', 'filtering', 'view modes') on catalog pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error">
     <Value>The regular expression for phone number validation is incorrect</Value>
@@ -15390,6 +15516,12 @@
   <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails.None">
     <Value>No customer account associated to this vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange">
+    <Value>Calculate price range automatically</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint">
+    <Value>Check to enable automatically price range calculation.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Description">
     <Value>Description</Value>
   </LocaleResource>
@@ -15461,6 +15593,30 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Picture.Hint">
     <Value>The vendor picture.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceFrom">
+    <Value>Price 'from'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceFrom.GreaterThanOrEqualZero">
+    <Value>The price 'from' should be greater than or equal '0'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceFrom.Hint">
+    <Value>Enter the price 'from'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceRangeFiltering">
+    <Value>Price range filtering</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceRangeFiltering.Hint">
+    <Value>Check to enable the price range filtering.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceTo">
+    <Value>Price 'to'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom">
+    <Value>The price 'to' should be greater than '{0}'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PriceTo.Hint">
+    <Value>Enter the price 'to'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.SeName">
     <Value>Search engine friendly page name</Value>
@@ -16644,29 +16800,14 @@
   <LocaleResource Name="EUCookieLaw.LearnMore">
     <Value>Learn more</Value>
   </LocaleResource>
+  <LocaleResource Name="Filtering.ManufacturerFilter">
+    <Value>Filter by manufacturer</Value>
+  </LocaleResource>
   <LocaleResource Name="Filtering.PriceRangeFilter">
     <Value>Filter by price</Value>
   </LocaleResource>
-  <LocaleResource Name="Filtering.PriceRangeFilter.Over">
-    <Value>Over {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="Filtering.PriceRangeFilter.Remove">
-    <Value>Remove Filter</Value>
-  </LocaleResource>
-  <LocaleResource Name="Filtering.PriceRangeFilter.Under">
-    <Value>Under {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Filtering.SpecificationFilter">
     <Value>Filter by attributes</Value>
-  </LocaleResource>
-  <LocaleResource Name="Filtering.SpecificationFilter.CurrentlyFilteredBy">
-    <Value>Currently shopping by:</Value>
-  </LocaleResource>
-  <LocaleResource Name="Filtering.SpecificationFilter.Remove">
-    <Value>Remove Filter</Value>
-  </LocaleResource>
-  <LocaleResource Name="Filtering.SpecificationFilter.Separator">
-    <Value>or</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.CustomerService">
     <Value>Customer service</Value>
@@ -18614,15 +18755,6 @@
   </LocaleResource>
   <LocaleResource Name="Search.NoResultsText">
     <Value>No products were found that matched your criteria.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Search.PriceRange">
-    <Value>Price range</Value>
-  </LocaleResource>
-  <LocaleResource Name="Search.PriceRange.From">
-    <Value>From</Value>
-  </LocaleResource>
-  <LocaleResource Name="Search.PriceRange.To">
-    <Value>to</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchBox.SearchPageLink">
     <Value>View all results...</Value>

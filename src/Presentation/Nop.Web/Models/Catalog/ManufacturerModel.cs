@@ -10,8 +10,7 @@ namespace Nop.Web.Models.Catalog
         {
             PictureModel = new PictureModel();
             FeaturedProducts = new List<ProductOverviewModel>();
-            Products = new List<ProductOverviewModel>();
-            PagingFilteringContext = new CatalogPagingFilteringModel();
+            CatalogProductsModel = new CatalogProductsModel();
         }
 
         public string Name { get; set; }
@@ -23,9 +22,8 @@ namespace Nop.Web.Models.Catalog
 
         public PictureModel PictureModel { get; set; }
 
-        public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
-
         public IList<ProductOverviewModel> FeaturedProducts { get; set; }
-        public IList<ProductOverviewModel> Products { get; set; }
+
+        public CatalogProductsModel CatalogProductsModel { get; set; }
     }
 }
