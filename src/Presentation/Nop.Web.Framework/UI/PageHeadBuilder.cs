@@ -376,6 +376,7 @@ namespace Nop.Web.Framework.UI
                     //output file
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => debugModel ? x.DebugSrc : x.Src).ToArray());
                     bundle.OutputFileName = _fileProvider.Combine(_webHostEnvironment.WebRootPath, "bundles", outputFileName + ".js");
+
                     //save
                     var configFilePath = _fileProvider.MapPath($"/{outputFileName}.json");
                     bundle.FileName = configFilePath;
@@ -403,9 +404,21 @@ namespace Nop.Web.Framework.UI
 
                         _staticCacheManager.SetAsync(cacheKey, false);
                     }
-
+                    
+                    // restart application then getting new hash code if having any changes of js files.
+                    var cacheKeyHash = new CacheKey($"Nop.minification.shouldrebuild.js.hashed-{outputFileName}")
+                    {
+                        CacheTime = _cachingSettings.BundledFilesCacheTime
+                    };
+                    var fileHash = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKeyHash), () =>
+                    {
+                        using var md5CheckSum = MD5.Create();
+                        var fileHashed = md5CheckSum.ComputeHash(_fileProvider.ReadAllBytes(bundle.OutputFileName));
+                        var fileHashEncode = WebEncoders.Base64UrlEncode(fileHashed);
+                        return fileHashEncode;
+                    });
                     //render
-                    result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"));
+                    result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js?v=" + fileHash));
                     result.Append(Environment.NewLine);
                 }
 
