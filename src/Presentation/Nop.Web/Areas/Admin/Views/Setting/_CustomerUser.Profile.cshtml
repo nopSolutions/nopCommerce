@@ -54,7 +54,7 @@ function toggleUsername() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
         $('#pnlAllowUsersToChangeUsernames').showField();
         $('#pnlCheckUsernameAvailability').showField();
-        $('#pnlUsernameValidationEnabled').showField();
+        $('#pnlUsernameValidationEnabled').show();
     } else {
         $('#pnlAllowUsersToChangeUsernames').hide();
         $('#pnlCheckUsernameAvailability').hide();
