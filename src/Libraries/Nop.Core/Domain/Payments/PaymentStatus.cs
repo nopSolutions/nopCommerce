@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Payments
+﻿namespace Nop.Core.Domain.Payments
 {
     /// <summary>
     /// Represents a payment status enumeration
@@ -33,6 +33,11 @@ namespace Nop.Core.Domain.Payments
         /// <summary>
         /// Voided
         /// </summary>
-        Voided = 50
+        Voided = 50,
+
+        /// <summary>
+        /// Errored
+        /// </summary>
+        Errored = 60
     }
 }

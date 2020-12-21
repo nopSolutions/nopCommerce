@@ -127,7 +127,7 @@ namespace Nop.Services.Payments
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;  //do not allow for cancelled orders
 
-            if (order.PaymentStatus != PaymentStatus.Pending)
+            if (order.PaymentStatus != PaymentStatus.Pending || order.PaymentStatus != PaymentStatus.Errored)
                 return false;  //payment status should be Pending
 
             return await paymentMethod.CanRePostProcessPaymentAsync(order);

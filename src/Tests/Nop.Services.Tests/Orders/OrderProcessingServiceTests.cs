@@ -64,7 +64,7 @@ namespace Nop.Services.Tests.Orders
                         order.OrderStatus = os;
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
-                        if (os != OrderStatus.Cancelled && ps == PaymentStatus.Pending)
+                        if (os != OrderStatus.Cancelled && (ps == PaymentStatus.Pending || ps == PaymentStatus.Errored))
                             _orderProcessingService.CanMarkOrderAsAuthorized(order).Should().BeTrue();
                         else
                             _orderProcessingService.CanMarkOrderAsAuthorized(order).Should().BeFalse();
