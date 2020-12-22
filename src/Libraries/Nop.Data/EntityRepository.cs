@@ -10,7 +10,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Events;
-using Nop.Data.Extensions;
 
 namespace Nop.Data
 {
@@ -25,8 +24,6 @@ namespace Nop.Data
         private readonly IEventPublisher _eventPublisher;
         private readonly INopDataProvider _dataProvider;
         private readonly IStaticCacheManager _staticCacheManager;
-
-        private ITable<TEntity> _entities;
 
         #endregion
 
@@ -96,7 +93,7 @@ namespace Nop.Data
 
             async Task<TEntity> getEntityAsync()
             {
-                return await (await GetEntitiesAsync()).FirstOrDefaultAsync(entity => entity.Id == Convert.ToInt32(id));
+                return await Table.FirstOrDefaultAsync(entity => entity.Id == Convert.ToInt32(id));
             }
 
             if (getCacheKey == null)
@@ -124,7 +121,7 @@ namespace Nop.Data
             {
                 var query = Table;
                 if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) != null)
-                    query = (await GetEntitiesAsync()).OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
+                    query = Table.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
 
                 //get entries
                 var entries = await query.Where(entry => ids.Contains(entry.Id)).ToListAsync();
@@ -363,13 +360,11 @@ namespace Nop.Data
             if (entities.OfType<ISoftDeletedEntity>().Any())
             {
                 foreach (var entity in entities)
-                {
                     if (entity is ISoftDeletedEntity softDeletedEntity)
                     {
                         softDeletedEntity.Deleted = true;
                         await _dataProvider.UpdateEntityAsync(entity);
                     }
-                }
             }
             else
                 await _dataProvider.BulkDeleteEntitiesAsync(entities);
@@ -422,24 +417,8 @@ namespace Nop.Data
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IQueryable<TEntity> Table => GetEntities();
-
-        /// <summary>
-        /// Gets an entity set
-        /// </summary>
-        protected virtual async Task<ITable<TEntity>> GetEntitiesAsync()
-        {
-            return _entities ??= await _dataProvider.GetTableAsync<TEntity>();
-        }
-
-        /// <summary>
-        /// Gets an entity set
-        /// </summary>
-        protected virtual  ITable<TEntity> GetEntities()
-        {
-            return _entities ??= _dataProvider.GetTable<TEntity>();
-        }
-
+        public virtual IQueryable<TEntity> Table => _dataProvider.GetTable<TEntity>();
+        
         #endregion
     }
 }
