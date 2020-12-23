@@ -452,10 +452,10 @@ namespace Nop.Services.Localization
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            if (!(keySelector.Body is MemberExpression member))
+            if (keySelector.Body is not MemberExpression member)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
 
-            if (!(member.Member is PropertyInfo propInfo))
+            if (member.Member is not PropertyInfo propInfo)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
             var result = default(TPropType);

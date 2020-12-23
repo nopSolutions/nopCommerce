@@ -1401,7 +1401,7 @@ namespace Nop.Services.Catalog
                 if (limitedToStoresIds.Contains(store.Id))
                 {
                     //new store
-                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                    if (!existingStoreMappings.Any(sm => sm.StoreId == store.Id))
                         await _storeMappingService.InsertStoreMappingAsync(product, store.Id);
                 }
                 else

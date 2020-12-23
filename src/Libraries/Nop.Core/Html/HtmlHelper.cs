@@ -44,11 +44,11 @@ namespace Nop.Core.Html
         private static bool IsValidTag(string tag, string tags)
         {
             var allowedTags = tags.Split(',');
-            if (tag.IndexOf("javascript", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            if (tag.Contains("javascript", StringComparison.InvariantCultureIgnoreCase))
                 return false;
-            if (tag.IndexOf("vbscript", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            if (tag.Contains("vbscript", StringComparison.InvariantCultureIgnoreCase))
                 return false;
-            if (tag.IndexOf("onclick", StringComparison.InvariantCultureIgnoreCase) >= 0)
+            if (tag.Contains("onclick", StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
             var endchars = new[] { ' ', '>', '/', '\t' };
@@ -219,7 +219,7 @@ namespace Nop.Core.Html
             text = _paragraphStartRegex.Replace(text, string.Empty);
             text = _paragraphEndRegex.Replace(text, "\n");
             text = text.Replace("\r\n", "\n").Replace("\r", "\n");
-            text = text + "\n\n";
+            text += "\n\n";
             text = text.Replace("\n\n", "\n");
             var strArray = text.Split('\n');
             var builder = new StringBuilder();

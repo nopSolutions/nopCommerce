@@ -17,15 +17,12 @@ namespace Nop.Data
         /// <returns></returns>
         public static INopDataProvider GetDataProvider(DataProviderType dataProviderType)
         {
-            switch (dataProviderType)
+            return dataProviderType switch
             {
-                case DataProviderType.SqlServer:
-                    return new MsSqlNopDataProvider();
-                case DataProviderType.MySql:
-                    return new MySqlNopDataProvider();
-                default:
-                    throw new NopException($"Not supported data provider name: '{dataProviderType}'");
-            }
+                DataProviderType.SqlServer => new MsSqlNopDataProvider(),
+                DataProviderType.MySql => new MySqlNopDataProvider(),
+                _ => throw new NopException($"Not supported data provider name: '{dataProviderType}'"),
+            };
         }
 
         #endregion

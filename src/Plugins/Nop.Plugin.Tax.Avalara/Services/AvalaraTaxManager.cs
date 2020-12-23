@@ -180,7 +180,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="args">Event args</param>
         private async void OnCallCompleted(object sender, EventArgs args)
         {
-            if (!(args is AvaTaxCallEventArgs avaTaxCallEventArgs))
+            if (args is not AvaTaxCallEventArgs avaTaxCallEventArgs)
                 return;
 
             //log request results

@@ -213,7 +213,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             await Request.Body.CopyToAsync(stream);
             var strRequest = Encoding.ASCII.GetString(stream.ToArray());
 
-            if (!(await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
+            if (await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is not PayPalStandardPaymentProcessor processor || !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("PayPal Standard module cannot be loaded");
 
             var (result, values) = await processor.VerifyIpnAsync(strRequest);

@@ -201,7 +201,7 @@ namespace Nop.Services.Directory
             var exchangeRate = sourceCurrencyCode.Rate;
             if (exchangeRate == decimal.Zero)
                 throw new NopException($"Exchange rate not found for currency [{sourceCurrencyCode.Name}]");
-            result = result / exchangeRate;
+            result /= exchangeRate;
 
             return result;
         }
@@ -228,7 +228,7 @@ namespace Nop.Services.Directory
             var exchangeRate = targetCurrencyCode.Rate;
             if (exchangeRate == decimal.Zero)
                 throw new NopException($"Exchange rate not found for currency [{targetCurrencyCode.Name}]");
-            result = result * exchangeRate;
+            result *= exchangeRate;
 
             return result;
         }

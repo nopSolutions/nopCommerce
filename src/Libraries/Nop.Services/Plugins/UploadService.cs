@@ -390,8 +390,8 @@ namespace Nop.Services.Plugins
             CreateDirectory(storeFaviconPath);
 
             var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
-            using (var fileStream = new FileStream(faviconPath, FileMode.Create))
-                favicon.CopyTo(fileStream);
+            using var fileStream = new FileStream(faviconPath, FileMode.Create);
+            favicon.CopyTo(fileStream);
         }
 
         /// <summary>

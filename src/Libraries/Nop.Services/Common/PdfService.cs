@@ -952,7 +952,7 @@ namespace Nop.Services.Common
 
                 if (!order.PickupInStore)
                 {
-                    if (order.ShippingAddressId == null || !(await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value) is Address shippingAddress))
+                    if (order.ShippingAddressId == null || await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value) is not Address shippingAddress)
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
 
                     shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.ShippingInformation", lang, titleFont));
@@ -1341,7 +1341,7 @@ namespace Nop.Services.Common
 
                 if (!order.PickupInStore)
                 {
-                    if (order.ShippingAddressId == null || !(await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value) is Address shippingAddress))
+                    if (order.ShippingAddressId == null || await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value) is not Address shippingAddress)
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
 
                     if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(shippingAddress.Company))

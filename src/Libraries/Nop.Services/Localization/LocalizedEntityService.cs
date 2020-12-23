@@ -187,7 +187,7 @@ namespace Nop.Services.Localization
             if (languageId == 0)
                 throw new ArgumentOutOfRangeException(nameof(languageId), "Language ID should not be 0");
 
-            if (!(keySelector.Body is MemberExpression member))
+            if (keySelector.Body is not MemberExpression member)
             {
                 throw new ArgumentException(string.Format(
                     "Expression '{0}' refers to a method, not a property.",

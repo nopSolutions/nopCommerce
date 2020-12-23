@@ -153,7 +153,7 @@ namespace Nop.Services.Helpers
             //https://blogs.msdn.microsoft.com/ie/2009/01/09/the-internet-explorer-8-user-agent-string-updated-edition/
 
             var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
-            return !string.IsNullOrEmpty(userAgent) && userAgent.IndexOf("MSIE 8.0", StringComparison.InvariantCultureIgnoreCase) >= 0;
+            return !string.IsNullOrEmpty(userAgent) && userAgent.Contains("MSIE 8.0", StringComparison.InvariantCultureIgnoreCase);
         }
 
         #endregion
