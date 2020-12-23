@@ -20,6 +20,9 @@ namespace Nop.Core
         /// <param name="totalCount">Total count</param>
         public PagedList(IList<T> source, int pageIndex, int pageSize, int? totalCount = null)
         {
+            if (pageSize <= 0)
+                throw new ArgumentException("pageSize must be greater than zero");
+
             TotalCount = totalCount ?? source.Count;
             TotalPages = TotalCount / pageSize;
 
