@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer shopping cart search model
     /// </summary>
-    public partial class CustomerShoppingCartSearchModel : BaseSearchModel
+    public partial record CustomerShoppingCartSearchModel : BaseSearchModel
     {
         #region Ctor
 

@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a dates and ranges search model
     /// </summary>
-    public partial class DatesRangesSearchModel : BaseSearchModel
+    public partial record DatesRangesSearchModel : BaseSearchModel
     {
         #region Ctor
 

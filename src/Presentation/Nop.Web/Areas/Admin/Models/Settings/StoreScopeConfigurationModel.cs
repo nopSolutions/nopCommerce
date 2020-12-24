@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a store scope configuration model
     /// </summary>
-    public partial class StoreScopeConfigurationModel : BaseNopModel
+    public partial record StoreScopeConfigurationModel : BaseNopModel
     {
         #region Ctor
 

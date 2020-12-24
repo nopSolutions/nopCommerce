@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.PrivateMessages
 {
-    public partial class SendPrivateMessageModel : BaseNopEntityModel
+    public partial record SendPrivateMessageModel : BaseNopEntityModel
     {
         public int ToCustomerId { get; set; }
         public string CustomerToName { get; set; }

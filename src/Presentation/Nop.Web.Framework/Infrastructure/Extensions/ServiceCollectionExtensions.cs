@@ -298,7 +298,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
 
             //add custom model binder provider (to the top of the provider list)
-            mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
+            //mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
 
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration =>

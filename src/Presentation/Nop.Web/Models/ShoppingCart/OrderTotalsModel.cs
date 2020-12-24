@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.ShoppingCart
 {
-    public partial class OrderTotalsModel : BaseNopModel
+    public partial record OrderTotalsModel : BaseNopModel
     {
         public OrderTotalsModel()
         {
@@ -40,13 +40,13 @@ namespace Nop.Web.Models.ShoppingCart
 
         #region Nested classes
 
-        public partial class TaxRate: BaseNopModel
+        public partial record TaxRate: BaseNopModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseNopEntityModel
+        public partial record GiftCard : BaseNopEntityModel
         {
             public string CouponCode { get; set; }
             public string Amount { get; set; }

@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a newsletter subscription model
     /// </summary>
-    public partial class NewsletterSubscriptionModel : BaseNopEntityModel
+    public partial record NewsletterSubscriptionModel : BaseNopEntityModel
     {
         #region Properties
 

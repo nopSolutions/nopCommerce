@@ -5,7 +5,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class ProductOverviewModel : BaseNopEntityModel
+    public partial record ProductOverviewModel : BaseNopEntityModel
     {
         public ProductOverviewModel()
         {
@@ -38,7 +38,7 @@ namespace Nop.Web.Models.Catalog
 
 		#region Nested Classes
 
-        public partial class ProductPriceModel : BaseNopModel
+        public partial record ProductPriceModel : BaseNopModel
         {
             public string OldPrice { get; set; }
             public string Price { get; set; }

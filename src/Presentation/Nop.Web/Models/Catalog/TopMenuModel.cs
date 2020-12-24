@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class TopMenuModel : BaseNopModel
+    public partial record TopMenuModel : BaseNopModel
     {
         public TopMenuModel()
         {
@@ -41,13 +41,13 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public class TopicModel : BaseNopEntityModel
+        public record TopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
         }
 
-        public class CategoryLineModel : BaseNopModel
+        public record CategoryLineModel : BaseNopModel
         {
             public int Level { get; set; }
             public bool ResponsiveMobileMenu { get; set; }

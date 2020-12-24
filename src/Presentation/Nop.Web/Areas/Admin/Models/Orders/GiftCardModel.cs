@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a gift card model
     /// </summary>
-    public partial class GiftCardModel: BaseNopEntityModel
+    public partial record GiftCardModel: BaseNopEntityModel
     {
         #region Ctor
 

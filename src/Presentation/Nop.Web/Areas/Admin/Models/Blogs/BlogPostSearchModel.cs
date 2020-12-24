@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
     /// <summary>
     /// Represents a blog post search model
     /// </summary>
-    public partial class BlogPostSearchModel : BaseSearchModel
+    public partial record BlogPostSearchModel : BaseSearchModel
     {
         #region Ctor
 

@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Checkout
 {
-    public partial class CheckoutPaymentInfoModel : BaseNopModel
+    public partial record CheckoutPaymentInfoModel : BaseNopModel
     {
         public string PaymentViewComponentName { get; set; }
 

@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer activity log search model
     /// </summary>
-    public partial class CustomerActivityLogSearchModel : BaseSearchModel
+    public partial record CustomerActivityLogSearchModel : BaseSearchModel
     {
         #region Properties
 

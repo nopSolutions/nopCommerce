@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a SEO settings model
     /// </summary>
-    public partial class SeoSettingsModel : BaseNopModel, ISettingsModel
+    public partial record SeoSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

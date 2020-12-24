@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class PasswordRecoveryModel : BaseNopModel
+    public partial record PasswordRecoveryModel : BaseNopModel
     {
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.PasswordRecovery.Email")]

@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer list model
     /// </summary>
-    public partial class CustomerListModel : BasePagedListModel<CustomerModel>
+    public partial record CustomerListModel : BasePagedListModel<CustomerModel>
     {
     }
 }

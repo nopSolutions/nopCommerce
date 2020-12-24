@@ -186,7 +186,7 @@ namespace Nop.Web.Factories
             //"Comments" property of "NewsItemModel" object depends on the current customer.
             //Furthermore, we just don't need it for home page news. So let's reset it.
             //But first we need to clone the cached model (the updated one should not be cached)
-            var model = (HomepageNewsItemsModel)cachedModel.Clone();
+            var model = cachedModel with { };
             foreach (var newsItemModel in model.NewsItems)
                 newsItemModel.Comments.Clear();
 

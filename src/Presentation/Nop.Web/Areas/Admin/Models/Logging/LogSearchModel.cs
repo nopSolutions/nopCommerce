@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
     /// <summary>
     /// Represents a log search model
     /// </summary>
-    public partial class LogSearchModel : BaseSearchModel
+    public partial record LogSearchModel : BaseSearchModel
     {
         #region Ctor
 

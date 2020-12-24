@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a product editor settings model
     /// </summary>
-    public partial class ProductEditorSettingsModel : BaseNopModel, ISettingsModel
+    public partial record ProductEditorSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

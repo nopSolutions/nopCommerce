@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a country report search model
     /// </summary>
-    public partial class CountryReportSearchModel : BaseSearchModel
+    public partial record CountryReportSearchModel : BaseSearchModel
     {
         #region Ctor
 

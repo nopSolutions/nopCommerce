@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Vendors
 {
-    public partial class ApplyVendorModel : BaseNopModel
+    public partial record ApplyVendorModel : BaseNopModel
     {
         public ApplyVendorModel()
         {

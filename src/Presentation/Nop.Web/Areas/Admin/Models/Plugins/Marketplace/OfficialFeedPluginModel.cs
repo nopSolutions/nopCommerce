@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins.Marketplace
     /// <summary>
     /// Represents an official feed plugin model
     /// </summary>
-    public partial class OfficialFeedPluginModel : BaseNopModel
+    public partial record OfficialFeedPluginModel : BaseNopModel
     {
         #region Properties
 

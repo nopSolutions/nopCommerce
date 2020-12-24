@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class MultiFactorAuthenticationModel : BaseNopModel
+    public partial record MultiFactorAuthenticationModel : BaseNopModel
     {
         public MultiFactorAuthenticationModel()
         {

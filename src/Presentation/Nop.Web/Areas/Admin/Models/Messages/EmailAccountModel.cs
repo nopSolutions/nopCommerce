@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents an email account model
     /// </summary>
-    public partial class EmailAccountModel : BaseNopEntityModel
+    public partial record EmailAccountModel : BaseNopEntityModel
     {
         #region Properties
 

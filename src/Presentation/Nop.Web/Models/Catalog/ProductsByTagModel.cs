@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class ProductsByTagModel : BaseNopEntityModel
+    public partial record ProductsByTagModel : BaseNopEntityModel
     {
         public ProductsByTagModel()
         {

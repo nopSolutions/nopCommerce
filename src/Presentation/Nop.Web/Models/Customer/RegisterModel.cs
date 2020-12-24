@@ -7,7 +7,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class RegisterModel : BaseNopModel
+    public partial record RegisterModel : BaseNopModel
     {
         public RegisterModel()
         {

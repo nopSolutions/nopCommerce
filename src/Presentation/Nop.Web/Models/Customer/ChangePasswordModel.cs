@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class ChangePasswordModel : BaseNopModel
+    public partial record ChangePasswordModel : BaseNopModel
     {
         [NoTrim]
         [DataType(DataType.Password)]

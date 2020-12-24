@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
-    public partial class FooterModel : BaseNopModel
+    public partial record FooterModel : BaseNopModel
     {
         public FooterModel()
         {
@@ -47,7 +47,7 @@ namespace Nop.Web.Models.Common
 
         #region Nested classes
 
-        public class FooterTopicModel : BaseNopEntityModel
+        public record FooterTopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }

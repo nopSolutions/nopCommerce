@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a PDF settings model
     /// </summary>
-    public partial class PdfSettingsModel : BaseNopModel, ISettingsModel
+    public partial record PdfSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

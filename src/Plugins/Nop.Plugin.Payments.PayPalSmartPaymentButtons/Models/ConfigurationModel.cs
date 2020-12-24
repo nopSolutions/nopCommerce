@@ -9,7 +9,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models
     /// <summary>
     /// Represents configuration model
     /// </summary>
-    public class ConfigurationModel : BaseNopModel
+    public record ConfigurationModel : BaseNopModel
     {
         #region Ctor
 

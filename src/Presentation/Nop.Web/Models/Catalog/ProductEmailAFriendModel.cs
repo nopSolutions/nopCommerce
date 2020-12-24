@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class ProductEmailAFriendModel : BaseNopModel
+    public partial record ProductEmailAFriendModel : BaseNopModel
     {
         public int ProductId { get; set; }
 

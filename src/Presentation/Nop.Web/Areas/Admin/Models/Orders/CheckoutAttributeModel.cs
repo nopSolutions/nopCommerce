@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a checkout attribute model
     /// </summary>
-    public partial class CheckoutAttributeModel : BaseNopEntityModel, 
+    public partial record CheckoutAttributeModel : BaseNopEntityModel, 
         ILocalizedModel<CheckoutAttributeLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         #endregion
     }
 
-    public partial class ConditionModel : BaseNopEntityModel
+    public partial record ConditionModel : BaseNopEntityModel
     {
         public ConditionModel()
         {
@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public IList<AttributeConditionModel> ConditionAttributes { get; set; }
     }
 
-    public partial class AttributeConditionModel : BaseNopEntityModel
+    public partial record AttributeConditionModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 
@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public string SelectedValueId { get; set; }
     }
 
-    public partial class CheckoutAttributeLocalizedModel : ILocalizedLocaleModel
+    public partial record CheckoutAttributeLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

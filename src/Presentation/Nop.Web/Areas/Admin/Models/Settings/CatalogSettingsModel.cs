@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a catalog settings model
     /// </summary>
-    public partial class CatalogSettingsModel : BaseNopModel, ISettingsModel
+    public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

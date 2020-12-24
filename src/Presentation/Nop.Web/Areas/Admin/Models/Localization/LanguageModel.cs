@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
     /// <summary>
     /// Represents a language model
     /// </summary>
-    public partial class LanguageModel : BaseNopEntityModel, IStoreMappingSupportedModel
+    public partial record LanguageModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
         #region Ctor
 

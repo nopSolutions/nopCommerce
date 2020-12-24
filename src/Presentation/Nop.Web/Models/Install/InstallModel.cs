@@ -6,7 +6,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Install
 {
-    public partial class InstallModel : INopConnectionStringInfo
+    public partial record InstallModel : INopConnectionStringInfo
     {
         public InstallModel()
         {

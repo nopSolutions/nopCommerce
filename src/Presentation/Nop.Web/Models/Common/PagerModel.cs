@@ -4,7 +4,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Models.Common
 {
-    public partial class PagerModel
+    public partial record PagerModel
     {
         #region Ctor
 
@@ -288,10 +288,10 @@ namespace Nop.Web.Models.Common
     }
 
     /// <summary>
-    /// Class that has a slug and page for route values. Used for Topic (posts) and 
+    /// record that has a slug and page for route values. Used for Topic (posts) and 
     /// Forum (topics) pagination
     /// </summary>
-    public partial class RouteValues : IRouteValues
+    public partial record RouteValues : IRouteValues
     {
         public int id { get; set; }
         public string slug { get; set; }
@@ -299,9 +299,9 @@ namespace Nop.Web.Models.Common
     }
 
     /// <summary>
-    /// Class that has search options for route values. Used for Search result pagination
+    /// record that has search options for route values. Used for Search result pagination
     /// </summary>
-    public partial class ForumSearchRouteValues : IRouteValues
+    public partial record ForumSearchRouteValues : IRouteValues
     {
         public string searchterms { get; set; }
         public string adv { get; set; }
@@ -312,42 +312,42 @@ namespace Nop.Web.Models.Common
     }
 
     /// <summary>
-    /// Class that has a slug and page for route values. Used for Private Messages pagination
+    /// record that has a slug and page for route values. Used for Private Messages pagination
     /// </summary>
-    public partial class PrivateMessageRouteValues : IRouteValues
+    public partial record PrivateMessageRouteValues : IRouteValues
     {
         public string tab { get; set; }
         public int pageNumber { get; set; }
     }
 
     /// <summary>
-    /// Class that has only page for route value. Used for Active Discussions (forums) pagination
+    /// record that has only page for route value. Used for Active Discussions (forums) pagination
     /// </summary>
-    public partial class ForumActiveDiscussionsRouteValues : IRouteValues
+    public partial record ForumActiveDiscussionsRouteValues : IRouteValues
     {
         public int pageNumber { get; set; }
     }
 
     /// <summary>
-    /// Class that has only page for route value. Used for (My Account) Forum Subscriptions pagination
+    /// record that has only page for route value. Used for (My Account) Forum Subscriptions pagination
     /// </summary>
-    public partial class ForumSubscriptionsRouteValues : IRouteValues
+    public partial record ForumSubscriptionsRouteValues : IRouteValues
     {        
         public int pageNumber { get; set; }
     }
 
     /// <summary>
-    /// Class that has only page for route value. Used for (My Account) Back in stock subscriptions pagination
+    /// record that has only page for route value. Used for (My Account) Back in stock subscriptions pagination
     /// </summary>
-    public partial class BackInStockSubscriptionsRouteValues : IRouteValues
+    public partial record BackInStockSubscriptionsRouteValues : IRouteValues
     {
         public int pageNumber { get; set; }
     }
 
     /// <summary>
-    /// Class that has only page for route value. Used for (My Account) Reward Points pagination
+    /// record that has only page for route value. Used for (My Account) Reward Points pagination
     /// </summary>
-    public partial class RewardPointsRouteValues : IRouteValues
+    public partial record RewardPointsRouteValues : IRouteValues
     {
         public int pageNumber { get; set; }
     }

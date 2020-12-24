@@ -18,7 +18,7 @@ namespace Nop.Web.Models.Catalog
     /// <summary>
     /// Filtering and paging model for catalog
     /// </summary>
-    public partial class CatalogPagingFilteringModel : BasePageableModel
+    public partial record CatalogPagingFilteringModel : BasePageableModel
     {
         #region Ctor
 
@@ -94,7 +94,7 @@ namespace Nop.Web.Models.Catalog
         /// <summary>
         /// Price range filter model
         /// </summary>
-        public partial class PriceRangeFilterModel : BaseNopModel
+        public partial record PriceRangeFilterModel : BaseNopModel
         {
             #region Const
 
@@ -280,7 +280,7 @@ namespace Nop.Web.Models.Catalog
         /// <summary>
         /// Price range filter item
         /// </summary>
-        public partial class PriceRangeFilterItem : BaseNopModel
+        public partial record PriceRangeFilterItem : BaseNopModel
         {
             /// <summary>
             /// From
@@ -303,7 +303,7 @@ namespace Nop.Web.Models.Catalog
         /// <summary>
         /// Specification filter model
         /// </summary>
-        public partial class SpecificationFilterModel : BaseNopModel
+        public partial record SpecificationFilterModel : BaseNopModel
         {
             #region Const
 
@@ -474,7 +474,7 @@ namespace Nop.Web.Models.Catalog
         /// <summary>
         /// Specification filter item
         /// </summary>
-        public partial class SpecificationFilterItem : BaseNopModel
+        public partial record SpecificationFilterItem : BaseNopModel
         {
             /// <summary>
             /// Specification attribute name

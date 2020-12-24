@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CustomerNavigationModel : BaseNopModel
+    public partial record CustomerNavigationModel : BaseNopModel
     {
         public CustomerNavigationModel()
         {
@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Customer
         public CustomerNavigationEnum SelectedTab { get; set; }
     }
 
-    public class CustomerNavigationItemModel : BaseNopModel
+    public record CustomerNavigationItemModel : BaseNopModel
     {
         public string RouteName { get; set; }
         public string Title { get; set; }

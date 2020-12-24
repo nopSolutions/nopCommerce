@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a reward points settings model
     /// </summary>
-    public partial class RewardPointsSettingsModel : BaseNopModel, ISettingsModel
+    public partial record RewardPointsSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

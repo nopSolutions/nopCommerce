@@ -4,7 +4,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CategoryModel : BaseNopEntityModel
+    public partial record CategoryModel : BaseNopEntityModel
     {
         public CategoryModel()
         {
@@ -37,7 +37,7 @@ namespace Nop.Web.Models.Catalog
 
 		#region Nested Classes
 
-        public partial class SubCategoryModel : BaseNopEntityModel
+        public partial record SubCategoryModel : BaseNopEntityModel
         {
             public SubCategoryModel()
             {
