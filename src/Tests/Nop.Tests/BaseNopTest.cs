@@ -27,7 +27,9 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -76,6 +78,9 @@ using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Installation;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
 using Task = System.Threading.Tasks.Task;
 
@@ -333,7 +338,7 @@ namespace Nop.Tests
             services.AddTransient<IShippingPluginManager, ShippingPluginManager>();
             services.AddTransient<ITaxPluginManager, TaxPluginManager>();
 
-            services.AddTransient<IPictureService, PictureService>();
+            services.AddTransient<IPictureService, TestPictureService>();
 
             //register all settings
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
@@ -539,6 +544,106 @@ namespace Nop.Tests
             public async Task<Customer> GetAuthenticatedCustomerAsync()
             {
                 return await _serviceProvider.GetService<ICustomerService>().GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
+            }
+        }
+
+        protected class TestPictureService : PictureService
+        {
+            public TestPictureService(INopDataProvider dataProvider, IDownloadService downloadService,
+                IHttpContextAccessor httpContextAccessor, INopFileProvider fileProvider,
+                IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
+                IRepository<PictureBinary> pictureBinaryRepository,
+                IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
+                IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
+                dataProvider, downloadService, httpContextAccessor, fileProvider, productAttributeParser,
+                pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
+                webHelper, mediaSettings)
+            {
+            }
+
+            // Travis doesn't support named semaphore, that's why we use implementation without it 
+            public override async Task<(string Url, Picture Picture)> GetPictureUrlAsync(Picture picture,
+                int targetSize = 0,
+                bool showDefaultPicture = true,
+                string storeLocation = null,
+                PictureType defaultPictureType = PictureType.Entity)
+            {
+                if (picture == null)
+                    return showDefaultPicture
+                        ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), null)
+                        : (string.Empty, (Picture)null);
+
+                byte[] pictureBinary = null;
+                if (picture.IsNew)
+                {
+                    await DeletePictureThumbsAsync(picture);
+                    pictureBinary = await LoadPictureBinaryAsync(picture);
+
+                    if ((pictureBinary?.Length ?? 0) == 0)
+                        return showDefaultPicture
+                            ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), picture)
+                            : (string.Empty, picture);
+
+                    //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
+                    picture = await UpdatePictureAsync(picture.Id,
+                        pictureBinary,
+                        picture.MimeType,
+                        picture.SeoFilename,
+                        picture.AltAttribute,
+                        picture.TitleAttribute,
+                        false,
+                        false);
+                }
+
+                var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
+
+                var lastPart = await GetFileExtensionFromMimeTypeAsync(picture.MimeType);
+                string thumbFileName;
+                if (targetSize == 0)
+                    thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                        ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
+                        : $"{picture.Id:0000000}.{lastPart}";
+                else
+                    thumbFileName = !string.IsNullOrEmpty(seoFileName)
+                        ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
+                        : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
+
+                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
+
+                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+
+                //check, if the file was created, while we were waiting for the release of the mutex.
+                if (!await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                {
+                    pictureBinary ??= await LoadPictureBinaryAsync(picture);
+
+                    if ((pictureBinary?.Length ?? 0) == 0)
+                        return showDefaultPicture
+                            ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation),
+                                picture)
+                            : (string.Empty, picture);
+
+                    byte[] pictureBinaryResized;
+                    if (targetSize != 0)
+                    {
+                        //resizing required
+                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
+                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                        {
+                            Mode = ResizeMode.Max, Size = CalculateDimensions(image.Size(), targetSize)
+                        }));
+
+                        pictureBinaryResized = await EncodeImageAsync(image, imageFormat);
+                    }
+                    else
+                        //create a copy of pictureBinary
+                        pictureBinaryResized = pictureBinary.ToArray();
+
+                    await SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
+                }
+
+                return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
             }
         }
 
