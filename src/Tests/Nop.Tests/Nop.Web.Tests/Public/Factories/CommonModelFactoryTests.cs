@@ -257,7 +257,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         }
 
         [Test]
-        [Ignore("Need to add checking in to the method")]
         public void PrepareSitemapModelShouldRaiseExceptionIfModelIsNull()
         {
             Assert.Throws<AggregateException>(() =>

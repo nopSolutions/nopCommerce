@@ -529,6 +529,9 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         public virtual async Task<SitemapModel> PrepareSitemapModelAsync(SitemapPageModel pageModel)
         {
+            if (pageModel == null)
+                throw new ArgumentNullException(nameof(pageModel));
+
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
                 await _workContext.GetWorkingLanguageAsync(),
                 _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
