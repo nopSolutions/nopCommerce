@@ -12,7 +12,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "FixedByWeightByTotalPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <script type="text/javascript">
