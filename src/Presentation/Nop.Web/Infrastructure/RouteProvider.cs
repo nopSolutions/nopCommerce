@@ -206,8 +206,7 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("CheckoutConfirm", $"{pattern}checkout/confirm",
                 new { controller = "Checkout", action = "Confirm" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutCompleted",
-                pattern + "checkout/completed/{orderId:int}",
+            endpointRouteBuilder.MapControllerRoute("CheckoutCompleted", pattern + "checkout/completed/{orderId:int?}",
                 new { controller = "Checkout", action = "Completed" });
 
             //subscribe newsletters
