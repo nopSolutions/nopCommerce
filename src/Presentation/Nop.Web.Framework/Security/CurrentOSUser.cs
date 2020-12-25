@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.Principal;
 
 namespace Nop.Web.Framework.Security
@@ -41,6 +42,7 @@ namespace Nop.Web.Framework.Security
         /// <summary>
         /// Populate information about windows user
         /// </summary>
+        [SupportedOSPlatform("windows")]
         public static void PopulateWindowsUser()
         {
             Groups = WindowsIdentity.GetCurrent().Groups?.Select(p => p.Value).ToList();
