@@ -71,34 +71,6 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         decimal ConvertCurrency(decimal amount, decimal exchangeRate);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Converts currency
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <param name="sourceCurrencyCode">Source currency code</param>
-        /// <param name="targetCurrencyCode">Target currency code</param>
-        /// <returns>Converted value</returns>
-        Task<decimal> ConvertCurrencyAsync(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Converts to primary exchange rate currency 
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <param name="sourceCurrencyCode">Source currency code</param>
-        /// <returns>Converted value</returns>
-        Task<decimal> ConvertToPrimaryExchangeRateCurrencyAsync(decimal amount, Currency sourceCurrencyCode);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Converts from primary exchange rate currency
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <param name="targetCurrencyCode">Target currency code</param>
-        /// <returns>Converted value</returns>
-        Task<decimal> ConvertFromPrimaryExchangeRateCurrencyAsync(decimal amount, Currency targetCurrencyCode);
-
         /// <summary>
         /// Converts to primary store currency 
         /// </summary>

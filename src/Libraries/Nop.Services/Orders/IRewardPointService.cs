@@ -61,13 +61,6 @@ namespace Nop.Services.Orders
         /// <returns>Reward point history entry</returns>
         Task<RewardPointsHistory> GetRewardPointsHistoryEntryByIdAsync(int rewardPointsHistoryId);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Insert the reward point history entry
-        /// </summary>
-        /// <param name="rewardPointsHistory">Reward point history entry</param>
-        Task InsertRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory);
-
         /// <summary>
         /// Updates the reward point history entry
         /// </summary>

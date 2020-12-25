@@ -78,14 +78,6 @@ namespace Nop.Tests.Nop.Services.Tests.Helpers
         }
 
         [Test]
-        public void CanFindSystemTimeZoneById()
-        {
-            var timeZones = _dateTimeHelper.FindTimeZoneById(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
-            timeZones.Should().NotBeNull();
-            timeZones.Id.Should().Be(_gmtPlus2MinskTimeZoneId);
-        }
-
-        [Test]
         public void CanGetAllSystemTimeZones()
         {
             var systemTimeZones = _dateTimeHelper.GetSystemTimeZones();

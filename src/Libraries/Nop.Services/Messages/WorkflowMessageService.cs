@@ -164,6 +164,75 @@ namespace Nop.Services.Messages
             return language.Id;
         }
 
+        /// <summary>
+        /// Send notification
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="emailAccount">Email account</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="tokens">Tokens</param>
+        /// <param name="toEmailAddress">Recipient email address</param>
+        /// <param name="toName">Recipient name</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name</param>
+        /// <param name="replyToEmailAddress">"Reply to" email</param>
+        /// <param name="replyToName">"Reply to" name</param>
+        /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
+        /// <returns>Queued email identifier</returns>
+        protected virtual async Task<int> SendNotificationAsync(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, int languageId, IList<Token> tokens,
+            string toEmailAddress, string toName,
+            string attachmentFilePath = null, string attachmentFileName = null,
+            string replyToEmailAddress = null, string replyToName = null,
+            string fromEmail = null, string fromName = null, string subject = null)
+        {
+            if (messageTemplate == null)
+                throw new ArgumentNullException(nameof(messageTemplate));
+
+            if (emailAccount == null)
+                throw new ArgumentNullException(nameof(emailAccount));
+
+            //retrieve localized message template data
+            var bcc = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.BccEmailAddresses, languageId);
+            if (string.IsNullOrEmpty(subject))
+                subject = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Subject, languageId);
+            var body = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Body, languageId);
+
+            //Replace subject and body tokens 
+            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
+            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+
+            //limit name length
+            toName = CommonHelper.EnsureMaximumLength(toName, 300);
+
+            var email = new QueuedEmail
+            {
+                Priority = QueuedEmailPriority.High,
+                From = !string.IsNullOrEmpty(fromEmail) ? fromEmail : emailAccount.Email,
+                FromName = !string.IsNullOrEmpty(fromName) ? fromName : emailAccount.DisplayName,
+                To = toEmailAddress,
+                ToName = toName,
+                ReplyTo = replyToEmailAddress,
+                ReplyToName = replyToName,
+                CC = string.Empty,
+                Bcc = bcc,
+                Subject = subjectReplaced,
+                Body = bodyReplaced,
+                AttachmentFilePath = attachmentFilePath,
+                AttachmentFileName = attachmentFileName,
+                AttachedDownloadId = messageTemplate.AttachedDownloadId,
+                CreatedOnUtc = DateTime.UtcNow,
+                EmailAccountId = emailAccount.Id,
+                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
+                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
+            };
+
+            await _queuedEmailService.InsertQueuedEmailAsync(email);
+            return email.Id;
+        }
+
         #endregion
 
         #region Methods
@@ -2311,75 +2380,6 @@ namespace Nop.Services.Messages
             messageTemplate.DelayBeforeSend = null;
 
             return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
-        }
-
-        /// <summary>
-        /// Send notification
-        /// </summary>
-        /// <param name="messageTemplate">Message template</param>
-        /// <param name="emailAccount">Email account</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="tokens">Tokens</param>
-        /// <param name="toEmailAddress">Recipient email address</param>
-        /// <param name="toName">Recipient name</param>
-        /// <param name="attachmentFilePath">Attachment file path</param>
-        /// <param name="attachmentFileName">Attachment file name</param>
-        /// <param name="replyToEmailAddress">"Reply to" email</param>
-        /// <param name="replyToName">"Reply to" name</param>
-        /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
-        /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
-        /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual async Task<int> SendNotificationAsync(MessageTemplate messageTemplate,
-            EmailAccount emailAccount, int languageId, IList<Token> tokens,
-            string toEmailAddress, string toName,
-            string attachmentFilePath = null, string attachmentFileName = null,
-            string replyToEmailAddress = null, string replyToName = null,
-            string fromEmail = null, string fromName = null, string subject = null)
-        {
-            if (messageTemplate == null)
-                throw new ArgumentNullException(nameof(messageTemplate));
-
-            if (emailAccount == null)
-                throw new ArgumentNullException(nameof(emailAccount));
-
-            //retrieve localized message template data
-            var bcc = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.BccEmailAddresses, languageId);
-            if (string.IsNullOrEmpty(subject))
-                subject = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Subject, languageId);
-            var body = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Body, languageId);
-
-            //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
-
-            //limit name length
-            toName = CommonHelper.EnsureMaximumLength(toName, 300);
-
-            var email = new QueuedEmail
-            {
-                Priority = QueuedEmailPriority.High,
-                From = !string.IsNullOrEmpty(fromEmail) ? fromEmail : emailAccount.Email,
-                FromName = !string.IsNullOrEmpty(fromName) ? fromName : emailAccount.DisplayName,
-                To = toEmailAddress,
-                ToName = toName,
-                ReplyTo = replyToEmailAddress,
-                ReplyToName = replyToName,
-                CC = string.Empty,
-                Bcc = bcc,
-                Subject = subjectReplaced,
-                Body = bodyReplaced,
-                AttachmentFilePath = attachmentFilePath,
-                AttachmentFileName = attachmentFileName,
-                AttachedDownloadId = messageTemplate.AttachedDownloadId,
-                CreatedOnUtc = DateTime.UtcNow,
-                EmailAccountId = emailAccount.Id,
-                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
-                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
-            };
-
-            await _queuedEmailService.InsertQueuedEmailAsync(email);
-            return email.Id;
         }
 
         #endregion

@@ -30,14 +30,6 @@ namespace Nop.Services.Orders
         Task<(decimal adjustedShippingRate, List<Discount> appliedDiscounts)> AdjustShippingRateAsync(decimal shippingRate,
             IList<ShoppingCartItem> cart, bool applyToPickupInStore = false);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets shopping cart additional shipping charge
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>Additional shipping charge</returns>
-        Task<decimal> GetShoppingCartAdditionalShippingChargeAsync(IList<ShoppingCartItem> cart);
-
         /// <summary>
         /// Gets a value indicating whether shipping is free
         /// </summary>
@@ -93,15 +85,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPoints">Reward points</param>
         /// <returns>Converted value</returns>
         Task<decimal> ConvertRewardPointsToAmountAsync(int rewardPoints);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Converts an amount to reward points
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <returns>Converted value</returns>
-        int ConvertAmountToRewardPoints(decimal amount);
-
+        
         /// <summary>
         /// Gets a value indicating whether a customer has minimum amount of reward points to use (if enabled)
         /// </summary>

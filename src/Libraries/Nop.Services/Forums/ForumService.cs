@@ -216,6 +216,28 @@ namespace Nop.Services.Forums
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ForumPostCountAttribute, numPosts);
         }
 
+        /// <summary>
+        /// Gets a forum topic
+        /// </summary>
+        /// <param name="forumTopicId">The forum topic identifier</param>
+        /// <param name="increaseViews">The value indicating whether to increase forum topic views</param>
+        /// <returns>Forum Topic</returns>
+        protected virtual async Task<ForumTopic> GetTopicByIdAsync(int forumTopicId, bool increaseViews)
+        {
+            var forumTopic = await _forumTopicRepository.GetByIdAsync(forumTopicId, cache => default);
+
+            if (forumTopic == null)
+                return null;
+
+            if (!increaseViews)
+                return forumTopic;
+
+            forumTopic.Views = ++forumTopic.Views;
+            await UpdateTopicAsync(forumTopic);
+
+            return forumTopic;
+        }
+
         #endregion
 
         #region Methods
@@ -389,29 +411,7 @@ namespace Nop.Services.Forums
         {
             return await GetTopicByIdAsync(forumTopicId, false);
         }
-
-        /// <summary>
-        /// Gets a forum topic
-        /// </summary>
-        /// <param name="forumTopicId">The forum topic identifier</param>
-        /// <param name="increaseViews">The value indicating whether to increase forum topic views</param>
-        /// <returns>Forum Topic</returns>
-        public virtual async Task<ForumTopic> GetTopicByIdAsync(int forumTopicId, bool increaseViews)
-        {
-            var forumTopic = await _forumTopicRepository.GetByIdAsync(forumTopicId, cache => default);
-
-            if (forumTopic == null)
-                return null;
-
-            if (!increaseViews) 
-                return forumTopic;
-
-            forumTopic.Views = ++forumTopic.Views;
-            await UpdateTopicAsync(forumTopic);
-
-            return forumTopic;
-        }
-
+        
         /// <summary>
         /// Gets all forum topics
         /// </summary>

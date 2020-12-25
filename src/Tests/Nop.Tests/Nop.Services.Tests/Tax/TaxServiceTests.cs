@@ -81,65 +81,6 @@ namespace Nop.Tests.Nop.Services.Tests.Tax
         }
 
         [Test]
-        public async Task CanCheckTaxExemptProduct()
-        {
-            var product = new Product
-            {
-                IsTaxExempt = true
-            };
-            var isTaxExempt = await _taxService.IsTaxExemptAsync(product, null);
-            isTaxExempt.Should().BeTrue();
-            product.IsTaxExempt = false;
-            isTaxExempt = await _taxService.IsTaxExemptAsync(product, null);
-            isTaxExempt.Should().BeFalse();
-        }
-
-        [Test]
-        public async Task CanCheckTaxExemptCustomer()
-        {
-            var customer = new Customer
-            {
-                IsTaxExempt = true
-            };
-            var isTaxExempt = await _taxService.IsTaxExemptAsync(null, customer);
-            isTaxExempt.Should().BeTrue();
-            customer.IsTaxExempt = false;
-            isTaxExempt = await _taxService.IsTaxExemptAsync(null, customer);
-            isTaxExempt.Should().BeFalse();
-        }
-
-        [Test]
-        public async Task CanCheckTaxExemptCustomerInTaxExemptCustomerRole()
-        {
-            var customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
-            customer.IsTaxExempt = false;
-            await _customerService.UpdateCustomerAsync(customer);
-
-            var isTaxExempt = await GetService<ITaxService>().IsTaxExemptAsync(null, customer);
-            isTaxExempt.Should().BeFalse();
-
-            var customerRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName);
-            customerRole.Should().NotBeNull();
-
-            customerRole.TaxExempt = true;
-            await _customerService.UpdateCustomerRoleAsync(customerRole);
-            isTaxExempt = await GetService<ITaxService>().IsTaxExemptAsync(null, customer);
-            isTaxExempt.Should().BeTrue();
-
-            customerRole.TaxExempt = false;
-            await _customerService.UpdateCustomerRoleAsync(customerRole);
-            isTaxExempt = await GetService<ITaxService>().IsTaxExemptAsync(null, customer);
-            isTaxExempt.Should().BeFalse();
-
-            //if role is not active, we should ignore 'TaxExempt' property
-            customerRole.TaxExempt = true;
-            customerRole.Active = false;
-            await _customerService.UpdateCustomerRoleAsync(customerRole);
-            isTaxExempt = await GetService<ITaxService>().IsTaxExemptAsync(null, customer);
-            isTaxExempt.Should().BeFalse();
-        }
-
-        [Test]
         public async Task CanGetProductPricePriceIncludesTaxIncludingTaxTaxable()
         {
             var customer = new Customer();
@@ -184,42 +125,6 @@ namespace Nop.Tests.Nop.Services.Tests.Tax
             price.Should().Be(909.0909090909090909090909091M);
             (price, _) = await _taxService.GetProductPriceAsync(product, 0, 1000M, false, customer, false);
             price.Should().Be(1000);
-        }
-
-        [Test]
-        public async Task CanDoVatCheck()
-        {
-            var (vatNumberStatus1, _, _, exception) = await _taxService.DoVatCheckAsync("GB", "523 2392 69");
-
-            if (exception != null)
-            {
-                TestContext.WriteLine($"Can't run the \"Can_do_VAT_check\":\r\n{exception.Message}");
-                return;
-            }
-
-            vatNumberStatus1.Should().Be(VatNumberStatus.Valid);
-
-            VatNumberStatus vatNumberStatus2;
-
-            (vatNumberStatus2, _, _, exception) = await _taxService.DoVatCheckAsync("GB", "000 0000 00");
-
-            if (exception != null)
-            {
-                TestContext.WriteLine($"Can't run the \"Can_do_VAT_check\":\r\n{exception.Message}");
-                return;
-            }
-
-            vatNumberStatus2.Should().Be(VatNumberStatus.Invalid);
-        }
-
-        [Test]
-        public async Task ShouldAssumeValidVatNumberIfEuVatAssumeValidSettingIsTrue()
-        {
-            _taxSettings.EuVatAssumeValid = true;
-            await _settingService.SaveSettingAsync(_taxSettings);
-
-            var (vatNumberStatus, _, _) = await GetService<ITaxService>().GetVatNumberStatusAsync("GB", "000 0000 00");
-            vatNumberStatus.Should().Be(VatNumberStatus.Valid);
         }
     }
 }

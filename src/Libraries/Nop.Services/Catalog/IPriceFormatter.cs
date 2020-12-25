@@ -111,20 +111,6 @@ namespace Nop.Services.Catalog
         Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Formats the shipping price
-        /// </summary>
-        /// <param name="price">Price</param>
-        /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <param name="targetCurrency">Target currency</param>
-        /// <param name="languageId">Language</param>
-        /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
-        Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
-            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax);
-
         /// <summary>
         /// Formats the shipping price
         /// </summary>
@@ -156,20 +142,6 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Formats the payment method additional fee
-        /// </summary>
-        /// <param name="price">Price</param>
-        /// <param name="showCurrency">A value indicating whether to show a currency</param>
-        /// <param name="targetCurrency">Target currency</param>
-        /// <param name="languageId">Language</param>
-        /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
-        /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <returns>Price</returns>
-        Task<string> FormatPaymentMethodAdditionalFeeAsync(decimal price, bool showCurrency,
-            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax);
 
         /// <summary>
         /// Formats the payment method additional fee

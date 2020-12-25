@@ -1117,8 +1117,17 @@ namespace Nop.Services.Seo
             return returnChar;
         }
 
+        /// <summary>
+        /// Updates the URL record
+        /// </summary>
+        /// <param name="urlRecord">URL record</param>
+        protected virtual async Task UpdateUrlRecordAsync(UrlRecord urlRecord)
+        {
+            await _urlRecordRepository.UpdateAsync(urlRecord);
+        }
+
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -1166,15 +1175,6 @@ namespace Nop.Services.Seo
         public virtual async Task InsertUrlRecordAsync(UrlRecord urlRecord)
         {
             await _urlRecordRepository.InsertAsync(urlRecord);
-        }
-
-        /// <summary>
-        /// Updates the URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        public virtual async Task UpdateUrlRecordAsync(UrlRecord urlRecord)
-        {
-            await _urlRecordRepository.UpdateAsync(urlRecord);
         }
 
         /// <summary>

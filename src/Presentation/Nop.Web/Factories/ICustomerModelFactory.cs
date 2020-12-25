@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -12,15 +11,6 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface ICustomerModelFactory
     {
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare the custom customer attribute models
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
-        /// <returns>List of the customer attribute model</returns>
-        Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "");
-
         /// <summary>
         /// Prepare the customer info model
         /// </summary>

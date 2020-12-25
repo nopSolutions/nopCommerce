@@ -82,21 +82,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.AvailableVendors.Any().Should().BeTrue();
             model.AvailableVendors.Count.Should().Be(3);
         }
-
-        [Test]
-        public async Task PrepareViewModesShouldDependOnSettings()
-        {
-            var model = new CatalogPagingFilteringModel();
-            await _catalogModelFactory.PrepareViewModesAsync(model, new CatalogPagingFilteringModel
-            {
-                ViewMode = "list"
-            });
-            
-            model.AllowProductViewModeChanging.Should().BeFalse();
-            model.AvailableViewModes.Count.Should().Be(0);
-            model.ViewMode.Should().Be("list");
-        }
-
+        
         [Test]
         public async Task PrepareCategoryModelShouldDependOnSettings()
         {
@@ -107,17 +93,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.Products.Count.Should().Be(6);
         }
         
-        [Test]
-        public async Task PrepareCategorySimpleModelsShouldDependOnSettings()
-        {
-            var model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
-
-            var numberOfProducts = model
-                .FirstOrDefault(p => p.Id == _category.Id)?.NumberOfProducts;
-
-            numberOfProducts.Should().Be(12);
-        }
-
         [Test]
         public async Task CanPreparePopularProductTagsModel()
         {

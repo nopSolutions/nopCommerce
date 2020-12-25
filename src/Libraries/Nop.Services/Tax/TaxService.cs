@@ -27,22 +27,22 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly AddressSettings _addressSettings;
-        private readonly CustomerSettings _customerSettings;
-        private readonly IAddressService _addressService;
-        private readonly ICountryService _countryService;
-        private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IGeoLookupService _geoLookupService;
-        private readonly ILogger _logger;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
-        private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWebHelper _webHelper;
-        private readonly IWorkContext _workContext;
-        private readonly ShippingSettings _shippingSettings;
-        private readonly TaxSettings _taxSettings;
+        protected readonly AddressSettings _addressSettings;
+        protected readonly CustomerSettings _customerSettings;
+        protected readonly IAddressService _addressService;
+        protected readonly ICountryService _countryService;
+        protected readonly ICustomerService _customerService;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly IGenericAttributeService _genericAttributeService;
+        protected readonly IGeoLookupService _geoLookupService;
+        protected readonly ILogger _logger;
+        protected readonly IStateProvinceService _stateProvinceService;
+        protected readonly IStoreContext _storeContext;
+        protected readonly ITaxPluginManager _taxPluginManager;
+        protected readonly IWebHelper _webHelper;
+        protected readonly IWorkContext _workContext;
+        protected readonly ShippingSettings _shippingSettings;
+        protected readonly TaxSettings _taxSettings;
 
         #endregion
 
@@ -318,6 +318,136 @@ namespace Nop.Services.Tax
                     await _logger.ErrorAsync($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
 
             return (taxRate, isTaxable);
+        }
+
+        /// <summary>
+        /// Gets VAT Number status
+        /// </summary>
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
+        /// <param name="vatNumber">VAT number</param>
+        /// <returns>VAT Number status. Name (if received). Address (if received)</returns>
+        protected virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatusAsync(string twoLetterIsoCode, string vatNumber)
+        {
+            var name = string.Empty;
+            var address = string.Empty;
+
+            if (string.IsNullOrEmpty(twoLetterIsoCode))
+                return (VatNumberStatus.Empty, name, address);
+
+            if (string.IsNullOrEmpty(vatNumber))
+                return (VatNumberStatus.Empty, name, address);
+
+            if (_taxSettings.EuVatAssumeValid)
+                return (VatNumberStatus.Valid, name, address);
+
+            if (!_taxSettings.EuVatUseWebService)
+                return (VatNumberStatus.Unknown, name, address);
+
+            var rez = await DoVatCheckAsync(twoLetterIsoCode, vatNumber);
+
+            return (rez.vatNumberStatus, rez.name, rez.address);
+        }
+
+        /// <summary>
+        /// Performs a basic check of a VAT number for validity
+        /// </summary>
+        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
+        /// <param name="vatNumber">VAT number</param>
+        /// <returns>VAT number status. Company name. Address. Exception</returns>
+        protected virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheckAsync(string twoLetterIsoCode, string vatNumber)
+        {
+            if (vatNumber == null)
+                vatNumber = string.Empty;
+            vatNumber = vatNumber.Trim().Replace(" ", string.Empty);
+
+            if (twoLetterIsoCode == null)
+                twoLetterIsoCode = string.Empty;
+            if (!string.IsNullOrEmpty(twoLetterIsoCode))
+                //The service returns INVALID_INPUT for country codes that are not uppercase.
+                twoLetterIsoCode = twoLetterIsoCode.ToUpper();
+
+            string name;
+            string address;
+
+            try
+            {
+                var s = new EuropaCheckVatService.checkVatPortTypeClient();
+                var result = await s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
+                {
+                    vatNumber = vatNumber,
+                    countryCode = twoLetterIsoCode
+                });
+
+                var valid = result.valid;
+                name = result.name;
+                address = result.address;
+
+                return (valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid, name, address, null);
+            }
+            catch (Exception ex)
+            {
+                name = address = string.Empty;
+                var exception = ex;
+
+                return (VatNumberStatus.Unknown, name, address, exception);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a product is tax exempt
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>A value indicating whether a product is tax exempt</returns>
+        protected virtual async Task<bool> IsTaxExemptAsync(Product product, Customer customer)
+        {
+            if (customer != null)
+            {
+                if (customer.IsTaxExempt)
+                    return true;
+
+                if ((await _customerService.GetCustomerRolesAsync(customer)).Any(cr => cr.TaxExempt))
+                    return true;
+            }
+
+            if (product == null)
+                return false;
+
+            if (product.IsTaxExempt)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        protected virtual async Task<bool> IsVatExemptAsync(Address address, Customer customer)
+        {
+            if (!_taxSettings.EuVatEnabled)
+                return false;
+
+            if (customer == null || address == null)
+                return false;
+
+            var country = await _countryService.GetCountryByIdAsync(address.CountryId ?? 0);
+            if (country == null)
+                return false;
+
+            if (!country.SubjectToVat)
+                // VAT not chargeable if shipping outside VAT zone
+                return true;
+
+            // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
+            // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
+            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+
+            return country.Id != _taxSettings.EuVatShopCountryId &&
+                   customerVatStatus == VatNumberStatus.Valid &&
+                   _taxSettings.EuVatAllowVatExemption;
         }
 
         #endregion
@@ -603,143 +733,9 @@ namespace Nop.Services.Tax
 
             return await GetVatNumberStatusAsync(twoLetterIsoCode, vatNumber);
         }
+
+        #endregion
         
-        /// <summary>
-        /// Gets VAT Number status
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <returns>VAT Number status. Name (if received). Address (if received)</returns>
-        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatusAsync(string twoLetterIsoCode, string vatNumber)
-        {
-            var name = string.Empty;
-            var address = string.Empty;
-
-            if (string.IsNullOrEmpty(twoLetterIsoCode))
-                return (VatNumberStatus.Empty, name, address);
-
-            if (string.IsNullOrEmpty(vatNumber))
-                return (VatNumberStatus.Empty, name, address);
-
-            if (_taxSettings.EuVatAssumeValid)
-                return (VatNumberStatus.Valid, name, address);
-
-            if (!_taxSettings.EuVatUseWebService)
-                return (VatNumberStatus.Unknown, name, address);
-
-            var rez = await DoVatCheckAsync(twoLetterIsoCode, vatNumber);
-
-            return (rez.vatNumberStatus, rez.name, rez.address);
-        }
-
-        /// <summary>
-        /// Performs a basic check of a VAT number for validity
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <returns>VAT number status. Company name. Address. Exception</returns>
-        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheckAsync(string twoLetterIsoCode, string vatNumber)
-        {
-            if (vatNumber == null)
-                vatNumber = string.Empty;
-            vatNumber = vatNumber.Trim().Replace(" ", string.Empty);
-
-            if (twoLetterIsoCode == null)
-                twoLetterIsoCode = string.Empty;
-            if (!string.IsNullOrEmpty(twoLetterIsoCode))
-                //The service returns INVALID_INPUT for country codes that are not uppercase.
-                twoLetterIsoCode = twoLetterIsoCode.ToUpper();
-
-            string name;
-            string address;
-
-            try
-            {
-                var s = new EuropaCheckVatService.checkVatPortTypeClient();
-                var result = await s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
-                {
-                    vatNumber = vatNumber,
-                    countryCode = twoLetterIsoCode
-                });
-
-                var valid = result.valid;
-                name = result.name;
-                address = result.address;
-
-                return (valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid, name, address, null);
-            }
-            catch (Exception ex)
-            {
-                name = address = string.Empty;
-                var exception = ex;
-
-                return (VatNumberStatus.Unknown, name, address, exception);
-            }
-        }
-
-        #endregion
-
-        #region Exempts
-
-        /// <summary>
-        /// Gets a value indicating whether a product is tax exempt
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>A value indicating whether a product is tax exempt</returns>
-        public virtual async Task<bool> IsTaxExemptAsync(Product product, Customer customer)
-        {
-            if (customer != null)
-            {
-                if (customer.IsTaxExempt)
-                    return true;
-
-                if ((await _customerService.GetCustomerRolesAsync(customer)).Any(cr => cr.TaxExempt))
-                    return true;
-            }
-
-            if (product == null) 
-                return false;
-
-            if (product.IsTaxExempt) 
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
-        /// </summary>
-        /// <param name="address">Address</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
-        public virtual async Task<bool> IsVatExemptAsync(Address address, Customer customer)
-        {
-            if (!_taxSettings.EuVatEnabled)
-                return false;
-
-            if (customer == null || address == null)
-                return false;
-
-            var country = await _countryService.GetCountryByIdAsync(address.CountryId ?? 0);
-            if (country == null)
-                return false;
-
-            if (!country.SubjectToVat)
-                // VAT not chargeable if shipping outside VAT zone
-                return true;
-
-            // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
-            // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
-            
-            return country.Id != _taxSettings.EuVatShopCountryId &&
-                   customerVatStatus == VatNumberStatus.Valid &&
-                   _taxSettings.EuVatAllowVatExemption;
-        }
-
-        #endregion
-
         #region Tax total
 
         /// <summary>

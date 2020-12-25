@@ -712,6 +712,37 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the cart item picture model
+        /// </summary>
+        /// <param name="sci">Shopping cart item</param>
+        /// <param name="pictureSize">Picture size</param>
+        /// <param name="showDefaultPicture">Whether to show the default picture</param>
+        /// <param name="productName">Product name</param>
+        /// <returns>Picture model</returns>
+        protected virtual async Task<PictureModel> PrepareCartItemPictureModelAsync(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
+        {
+            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
+                , sci, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+
+            var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
+            {
+                var product = await _productService.GetProductByIdAsync(sci.ProductId);
+
+                //shopping cart item picture
+                var sciPicture = await _pictureService.GetProductPictureAsync(product, sci.AttributesXml);
+
+                return new PictureModel
+                {
+                    ImageUrl = (await _pictureService.GetPictureUrlAsync(sciPicture, pictureSize, showDefaultPicture)).Url,
+                    Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"), productName),
+                    AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"), productName),
+                };
+            });
+
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -791,37 +822,6 @@ namespace Nop.Web.Factories
                 if (setEstimateShippingDefaultAddress && shippingAddress != null)
                     model.ZipPostalCode = shippingAddress.ZipPostalCode;
             }
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare the cart item picture model
-        /// </summary>
-        /// <param name="sci">Shopping cart item</param>
-        /// <param name="pictureSize">Picture size</param>
-        /// <param name="showDefaultPicture">Whether to show the default picture</param>
-        /// <param name="productName">Product name</param>
-        /// <returns>Picture model</returns>
-        public virtual async Task<PictureModel> PrepareCartItemPictureModelAsync(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
-        {
-            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
-                , sci, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
-
-            var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
-            {
-                var product = await _productService.GetProductByIdAsync(sci.ProductId);
-
-                //shopping cart item picture
-                var sciPicture = await _pictureService.GetProductPictureAsync(product, sci.AttributesXml);
-
-                return new PictureModel
-                {
-                    ImageUrl = (await _pictureService.GetPictureUrlAsync(sciPicture, pictureSize, showDefaultPicture)).Url,
-                    Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"), productName),
-                    AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"), productName),
-                };
-            });
 
             return model;
         }

@@ -10,14 +10,6 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface IBlogModelFactory
     {
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare blog comment model
-        /// </summary>
-        /// <param name="blogComment">Blog comment entity</param>
-        /// <returns>Blog comment model</returns>
-        Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment);
-
         /// <summary>
         /// Prepare blog post model
         /// </summary>

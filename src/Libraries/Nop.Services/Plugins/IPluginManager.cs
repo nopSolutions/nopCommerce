@@ -27,17 +27,6 @@ namespace Nop.Services.Plugins
         /// <returns>Plugin</returns>
         Task<TPlugin> LoadPluginBySystemNameAsync(string systemName, Customer customer = null, int storeId = 0);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Load primary active plugin
-        /// </summary>
-        /// <param name="systemName">System name of primary active plugin</param>
-        /// <param name="customer">Filter by customer; pass null to load all plugins</param>
-        /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Plugin</returns>
-        Task<TPlugin> LoadPrimaryPluginAsync(string systemName, Customer customer = null, int storeId = 0);
-
-        //TODO: may be deleted from interface
         /// <summary>
         /// Load active plugins
         /// </summary>

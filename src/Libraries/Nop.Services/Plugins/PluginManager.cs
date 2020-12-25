@@ -47,6 +47,22 @@ namespace Nop.Services.Plugins
             return $"{storeId}-{(customer != null ? string.Join(',', await _customerService.GetCustomerRoleIdsAsync(customer)) : null)}-{systemName}";
         }
 
+        /// <summary>
+        /// Load primary active plugin
+        /// </summary>
+        /// <param name="systemName">System name of primary active plugin</param>
+        /// <param name="customer">Filter by customer; pass null to load all plugins</param>
+        /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
+        /// <returns>Plugin</returns>
+        protected virtual async Task<TPlugin> LoadPrimaryPluginAsync(string systemName, Customer customer = null, int storeId = 0)
+        {
+            //try to get a plugin by system name or return the first loaded one (it's necessary to have a primary active plugin)
+            var plugin = await LoadPluginBySystemNameAsync(systemName, customer, storeId)
+                         ?? (await LoadAllPluginsAsync(customer, storeId)).FirstOrDefault();
+
+            return plugin;
+        }
+
         #endregion
 
         #region Methods
@@ -95,23 +111,7 @@ namespace Nop.Services.Plugins
 
             return pluginBySystemName;
         }
-
-        /// <summary>
-        /// Load primary active plugin
-        /// </summary>
-        /// <param name="systemName">System name of primary active plugin</param>
-        /// <param name="customer">Filter by customer; pass null to load all plugins</param>
-        /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Plugin</returns>
-        public virtual async Task<TPlugin> LoadPrimaryPluginAsync(string systemName, Customer customer = null, int storeId = 0)
-        {
-            //try to get a plugin by system name or return the first loaded one (it's necessary to have a primary active plugin)
-            var plugin = await LoadPluginBySystemNameAsync(systemName, customer, storeId)
-                ?? (await LoadAllPluginsAsync(customer, storeId)).FirstOrDefault();
-
-            return plugin;
-        }
-
+        
         /// <summary>
         /// Load active plugins
         /// </summary>

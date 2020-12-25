@@ -132,16 +132,12 @@ namespace Nop.Web.Factories
             return forumsList;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Prepare the forum topic row model
         /// </summary>
         /// <param name="topic">Forum topic</param>
         /// <returns>Forum topic row model</returns>
-        public virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
+        protected virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException(nameof(topic));
@@ -168,7 +164,7 @@ namespace Nop.Web.Factories
 
             var firstPost = await _forumService.GetFirstPostAsync(topic);
             topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
-            
+
             return topicModel;
         }
 
@@ -177,7 +173,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="forum">Forum</param>
         /// <returns>Forum row model</returns>
-        public virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
+        protected virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
         {
             if (forum == null)
                 throw new ArgumentNullException(nameof(forum));
@@ -195,6 +191,10 @@ namespace Nop.Web.Factories
 
             return forumModel;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare the forum group model

@@ -200,30 +200,6 @@ namespace Nop.Services.Orders
         /// <returns>Total number of already delivered items which can be added to new shipments</returns>
         Task<int> GetTotalNumberOfItemsCanBeAddedToShipmentAsync(OrderItem orderItem);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a total number of not yet shipped items (but added to shipments)
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
-        Task<int> GetTotalNumberOfNotYetShippedItemsAsync(OrderItem orderItem);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a total number of already shipped items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already shipped items</returns>
-        Task<int> GetTotalNumberOfShippedItemsAsync(OrderItem orderItem);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a total number of already delivered items
-        /// </summary>
-        /// <param name="orderItem">Order  item</param>
-        /// <returns>Total number of already delivered items</returns>
-        Task<int> GetTotalNumberOfDeliveredItemsAsync(OrderItem orderItem);
-
         /// <summary>
         /// Gets a value indicating whether download is allowed
         /// </summary>

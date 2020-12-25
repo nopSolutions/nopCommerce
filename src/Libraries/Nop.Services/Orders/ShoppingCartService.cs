@@ -193,136 +193,6 @@ namespace Nop.Services.Orders
             return !_sciRepository.Table.Any(sci => sci.CustomerId == customer.Id);
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Delete shopping cart item
-        /// </summary>
-        /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
-        /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        public virtual async Task DeleteShoppingCartItemAsync(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
-            bool ensureOnlyActiveCheckoutAttributes = false)
-        {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
-
-            var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItem.CustomerId);
-            var storeId = shoppingCartItem.StoreId;
-
-            //reset checkout data
-            if (resetCheckoutData) 
-                await _customerService.ResetCheckoutDataAsync(customer, shoppingCartItem.StoreId);
-
-            //delete item
-            await _sciRepository.DeleteAsync(shoppingCartItem);
-
-            //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
-            await _customerService.UpdateCustomerAsync(customer);
-
-            //validate checkout attributes
-            if (ensureOnlyActiveCheckoutAttributes &&
-                //only for shopping cart items (ignore wishlist)
-                shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-            {
-                var cart = await GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, storeId);
-
-                var checkoutAttributesXml =
-                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes,
-                        storeId);
-                checkoutAttributesXml =
-                    await _checkoutAttributeParser.EnsureOnlyActiveAttributesAsync(checkoutAttributesXml, cart);
-                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CheckoutAttributes,
-                    checkoutAttributesXml, storeId);
-            }
-
-            if (!_catalogSettings.RemoveRequiredProducts)
-                return;
-
-            var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
-            if (!product?.RequireOtherProducts ?? true)
-                return;
-
-            var requiredProductIds = _productService.ParseRequiredProductIds(product);
-            var requiredShoppingCartItems =
-                (await GetShoppingCartAsync(customer, shoppingCartType: shoppingCartItem.ShoppingCartType))
-                    .Where(item => requiredProductIds.Any(id => id == item.ProductId))
-                    .ToList();
-
-            //update quantity of required products in the cart if the main one is removed
-            foreach (var cartItem in requiredShoppingCartItems)
-            {
-                //at now we ignore quantities of required products and use 1
-                var requiredProductQuantity = 1;
-
-                await UpdateShoppingCartItemAsync(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
-                    quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity,
-                    resetCheckoutData: false);
-            }
-        }
-
-        /// <summary>
-        /// Delete shopping cart item
-        /// </summary>
-        /// <param name="shoppingCartItemId">Shopping cart item ID</param>
-        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
-        /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        public virtual async Task DeleteShoppingCartItemAsync(int shoppingCartItemId, bool resetCheckoutData = true,
-            bool ensureOnlyActiveCheckoutAttributes = false)
-        {
-            var shoppingCartItem = await _sciRepository.Table.FirstOrDefaultAsync(sci => sci.Id == shoppingCartItemId);
-            if (shoppingCartItem != null)
-                await DeleteShoppingCartItemAsync(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes);
-        }
-
-        /// <summary>
-        /// Deletes expired shopping cart items
-        /// </summary>
-        /// <param name="olderThanUtc">Older than date and time</param>
-        /// <returns>Number of deleted items</returns>
-        public virtual async Task<int> DeleteExpiredShoppingCartItemsAsync(DateTime olderThanUtc)
-        {
-            var query = from sci in _sciRepository.Table
-                        where sci.UpdatedOnUtc < olderThanUtc
-                        select sci;
-
-            var cartItems = await query.ToListAsync();
-            
-            foreach (var cartItem in cartItems)
-                await DeleteShoppingCartItemAsync(cartItem);
-
-            return cartItems.Count;
-        }
-
-        /// <summary>
-        /// Get products from shopping cart whether requiring specific product
-        /// </summary>
-        /// <param name="cart">Shopping cart </param>
-        /// <param name="product">Product</param>
-        /// <returns>Result</returns>
-        public virtual async Task<IList<Product>> GetProductsRequiringProductAsync(IList<ShoppingCartItem> cart, Product product)
-        {
-            if (cart is null)
-                throw new ArgumentNullException(nameof(cart));
-
-            if (product is null)
-                throw new ArgumentNullException(nameof(product));
-
-            if (cart.Count == 0)
-                return new List<Product>();
-
-            var productIds = cart.Select(ci => ci.ProductId).ToArray();
-
-            var cartProducts = await _productService.GetProductsByIdsAsync(productIds);
-
-            return cartProducts.Where(cartProduct =>
-                !cartProduct.RequireOtherProducts &&
-                _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id)).ToList();
-        }
-
         /// <summary>
         /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>
@@ -334,7 +204,7 @@ namespace Nop.Services.Orders
         /// <param name="addRequiredProducts">Whether to add required products</param>
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <returns>Warnings</returns>
-        public virtual async Task<IList<string>> GetRequiredProductWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
+        protected virtual async Task<IList<string>> GetRequiredProductWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
             int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId)
         {
             if (customer == null)
@@ -375,7 +245,7 @@ namespace Nop.Services.Orders
             foreach (var requiredProduct in requiredProducts)
             {
                 var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
-                
+
                 //get the required quantity of the required product
                 var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
                     cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
@@ -423,7 +293,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Warnings</returns>
-        public virtual async Task<IList<string>> GetStandardWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product, 
+        protected virtual async Task<IList<string>> GetStandardWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
             string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId)
         {
             if (customer == null)
@@ -656,6 +526,136 @@ namespace Nop.Services.Orders
             }
 
             return warnings;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Delete shopping cart item
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
+        public virtual async Task DeleteShoppingCartItemAsync(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
+            bool ensureOnlyActiveCheckoutAttributes = false)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException(nameof(shoppingCartItem));
+
+            var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItem.CustomerId);
+            var storeId = shoppingCartItem.StoreId;
+
+            //reset checkout data
+            if (resetCheckoutData) 
+                await _customerService.ResetCheckoutDataAsync(customer, shoppingCartItem.StoreId);
+
+            //delete item
+            await _sciRepository.DeleteAsync(shoppingCartItem);
+
+            //reset "HasShoppingCartItems" property used for performance optimization
+            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+            await _customerService.UpdateCustomerAsync(customer);
+
+            //validate checkout attributes
+            if (ensureOnlyActiveCheckoutAttributes &&
+                //only for shopping cart items (ignore wishlist)
+                shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
+            {
+                var cart = await GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, storeId);
+
+                var checkoutAttributesXml =
+                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes,
+                        storeId);
+                checkoutAttributesXml =
+                    await _checkoutAttributeParser.EnsureOnlyActiveAttributesAsync(checkoutAttributesXml, cart);
+                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CheckoutAttributes,
+                    checkoutAttributesXml, storeId);
+            }
+
+            if (!_catalogSettings.RemoveRequiredProducts)
+                return;
+
+            var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
+            if (!product?.RequireOtherProducts ?? true)
+                return;
+
+            var requiredProductIds = _productService.ParseRequiredProductIds(product);
+            var requiredShoppingCartItems =
+                (await GetShoppingCartAsync(customer, shoppingCartType: shoppingCartItem.ShoppingCartType))
+                    .Where(item => requiredProductIds.Any(id => id == item.ProductId))
+                    .ToList();
+
+            //update quantity of required products in the cart if the main one is removed
+            foreach (var cartItem in requiredShoppingCartItems)
+            {
+                //at now we ignore quantities of required products and use 1
+                var requiredProductQuantity = 1;
+
+                await UpdateShoppingCartItemAsync(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
+                    quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity,
+                    resetCheckoutData: false);
+            }
+        }
+
+        /// <summary>
+        /// Delete shopping cart item
+        /// </summary>
+        /// <param name="shoppingCartItemId">Shopping cart item ID</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
+        public virtual async Task DeleteShoppingCartItemAsync(int shoppingCartItemId, bool resetCheckoutData = true,
+            bool ensureOnlyActiveCheckoutAttributes = false)
+        {
+            var shoppingCartItem = await _sciRepository.Table.FirstOrDefaultAsync(sci => sci.Id == shoppingCartItemId);
+            if (shoppingCartItem != null)
+                await DeleteShoppingCartItemAsync(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes);
+        }
+
+        /// <summary>
+        /// Deletes expired shopping cart items
+        /// </summary>
+        /// <param name="olderThanUtc">Older than date and time</param>
+        /// <returns>Number of deleted items</returns>
+        public virtual async Task<int> DeleteExpiredShoppingCartItemsAsync(DateTime olderThanUtc)
+        {
+            var query = from sci in _sciRepository.Table
+                        where sci.UpdatedOnUtc < olderThanUtc
+                        select sci;
+
+            var cartItems = await query.ToListAsync();
+            
+            foreach (var cartItem in cartItems)
+                await DeleteShoppingCartItemAsync(cartItem);
+
+            return cartItems.Count;
+        }
+
+        /// <summary>
+        /// Get products from shopping cart whether requiring specific product
+        /// </summary>
+        /// <param name="cart">Shopping cart </param>
+        /// <param name="product">Product</param>
+        /// <returns>Result</returns>
+        public virtual async Task<IList<Product>> GetProductsRequiringProductAsync(IList<ShoppingCartItem> cart, Product product)
+        {
+            if (cart is null)
+                throw new ArgumentNullException(nameof(cart));
+
+            if (product is null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (cart.Count == 0)
+                return new List<Product>();
+
+            var productIds = cart.Select(ci => ci.ProductId).ToArray();
+
+            var cartProducts = await _productService.GetProductsByIdsAsync(productIds);
+
+            return cartProducts.Where(cartProduct =>
+                !cartProduct.RequireOtherProducts &&
+                _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id)).ToList();
         }
 
         /// <summary>

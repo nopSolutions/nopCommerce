@@ -40,14 +40,6 @@ namespace Nop.Services.Stores
         /// <param name="store">Store</param>
         Task UpdateStoreAsync(Store store);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Parse comma-separated Hosts
-        /// </summary>
-        /// <param name="store">Store</param>
-        /// <returns>Comma-separated hosts</returns>
-        string[] ParseHostValues(Store store);
-
         /// <summary>
         /// Indicates whether a store contains a specified host
         /// </summary>

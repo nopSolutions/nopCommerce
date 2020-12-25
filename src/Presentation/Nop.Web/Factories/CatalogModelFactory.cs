@@ -144,14 +144,36 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Common
+        #region Utilities
+
+        protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
+        {
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
+            var model = new CategorySimpleModel
+            {
+                Id = int.Parse(elem.XPathSelectElement("Id").Value),
+                Name = elem.XPathSelectElement("Name").Value,
+                SeName = elem.XPathSelectElement("SeName").Value,
+
+                NumberOfProducts = !string.IsNullOrEmpty(elem.XPathSelectElement("NumberOfProducts").Value)
+                    ? int.Parse(elem.XPathSelectElement("NumberOfProducts").Value)
+                    : (int?)null,
+
+                IncludeInTopMenu = bool.Parse(elem.XPathSelectElement("IncludeInTopMenu").Value),
+                HaveSubCategories = bool.Parse(elem.XPathSelectElement("HaveSubCategories").Value),
+                Route = urlHelper.RouteUrl("Category", new { SeName = elem.XPathSelectElement("SeName").Value })
+            };
+
+            return model;
+        }
 
         /// <summary>
         /// Prepare sorting options
         /// </summary>
         /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
         /// <param name="command">Catalog paging filtering command</param>
-        public virtual async Task PrepareSortingOptionsAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        protected virtual async Task PrepareSortingOptionsAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException(nameof(pagingFilteringModel));
@@ -199,7 +221,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
         /// <param name="command">Catalog paging filtering command</param>
-        public virtual async Task PrepareViewModesAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        protected virtual async Task PrepareViewModesAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException(nameof(pagingFilteringModel));
@@ -241,7 +263,7 @@ namespace Nop.Web.Factories
         /// <param name="allowCustomersToSelectPageSize">Are customers allowed to select page size?</param>
         /// <param name="pageSizeOptions">Page size options</param>
         /// <param name="fixedPageSize">Fixed page size</param>
-        public virtual Task PreparePageSizeOptionsAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
+        protected virtual Task PreparePageSizeOptionsAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
             if (pagingFilteringModel == null)
@@ -316,6 +338,102 @@ namespace Nop.Web.Factories
             }
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <returns>List of category (simple) models</returns>
+        protected virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync()
+        {
+            //load and cache them
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey,
+                await _workContext.GetWorkingLanguageAsync(),
+                _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
+                await _storeContext.GetCurrentStoreAsync());
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () => await PrepareCategorySimpleModelsAsync(0));
+        }
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <param name="rootCategoryId">Root category identifier</param>
+        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
+        /// <returns>List of category (simple) models</returns>
+        protected virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true)
+        {
+            var result = new List<CategorySimpleModel>();
+
+            //little hack for performance optimization
+            //we know that this method is used to load top and left menu for categories.
+            //it'll load all categories anyway.
+            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
+            //so we load all categories at once (we know they are cached)
+            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
+            foreach (var category in categories)
+            {
+                var categoryModel = new CategorySimpleModel
+                {
+                    Id = category.Id,
+                    Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
+                    SeName = await _urlRecordService.GetSeNameAsync(category),
+                    IncludeInTopMenu = category.IncludeInTopMenu
+                };
+
+                //number of products in each category
+                if (_catalogSettings.ShowCategoryProductNumber)
+                {
+                    var categoryIds = new List<int> { category.Id };
+                    //include subcategories
+                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                        categoryIds.AddRange(
+                            await _categoryService.GetChildCategoryIdsAsync(category.Id, (await _storeContext.GetCurrentStoreAsync()).Id));
+
+                    categoryModel.NumberOfProducts =
+                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, (await _storeContext.GetCurrentStoreAsync()).Id);
+                }
+
+                if (loadSubCategories)
+                {
+                    var subCategories = await PrepareCategorySimpleModelsAsync(category.Id);
+                    categoryModel.SubCategories.AddRange(subCategories);
+                }
+
+                categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
+                    categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
+
+                result.Add(categoryModel);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Prepare category (simple) xml document
+        /// </summary>
+        /// <returns>Xml document of category (simple) models</returns>
+        protected virtual async Task<XDocument> PrepareCategoryXmlDocumentAsync()
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey,
+                await _workContext.GetWorkingLanguageAsync(),
+                _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
+                await _storeContext.GetCurrentStoreAsync());
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var categories = await PrepareCategorySimpleModelsAsync();
+
+                var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
+
+                await using var strWriter = new StringWriter();
+                using var writer = XmlWriter.Create(strWriter);
+                xsSubmit.Serialize(writer, categories);
+                var xml = strWriter.ToString();
+
+                return XDocument.Parse(xml);
+            });
         }
 
         #endregion
@@ -613,103 +731,7 @@ namespace Nop.Web.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <returns>List of category (simple) models</returns>
-        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync()
-        {
-            //load and cache them
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey,
-                await _workContext.GetWorkingLanguageAsync(),
-                _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-                await _storeContext.GetCurrentStoreAsync());
-
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await PrepareCategorySimpleModelsAsync(0));
-        }
-
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <param name="rootCategoryId">Root category identifier</param>
-        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-        /// <returns>List of category (simple) models</returns>
-        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true)
-        {
-            var result = new List<CategorySimpleModel>();
-
-            //little hack for performance optimization
-            //we know that this method is used to load top and left menu for categories.
-            //it'll load all categories anyway.
-            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
-            //so we load all categories at once (we know they are cached)
-            var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
-            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
-            foreach (var category in categories)
-            {
-                var categoryModel = new CategorySimpleModel
-                {
-                    Id = category.Id,
-                    Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
-                    SeName = await _urlRecordService.GetSeNameAsync(category),
-                    IncludeInTopMenu = category.IncludeInTopMenu
-                };
-
-                //number of products in each category
-                if (_catalogSettings.ShowCategoryProductNumber)
-                {
-                    var categoryIds = new List<int> { category.Id };
-                    //include subcategories
-                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                        categoryIds.AddRange(
-                            await _categoryService.GetChildCategoryIdsAsync(category.Id, (await _storeContext.GetCurrentStoreAsync()).Id));
-
-                    categoryModel.NumberOfProducts =
-                        await _productService.GetNumberOfProductsInCategoryAsync(categoryIds, (await _storeContext.GetCurrentStoreAsync()).Id);
-                }
-
-                if (loadSubCategories)
-                {
-                    var subCategories = await PrepareCategorySimpleModelsAsync(category.Id);
-                    categoryModel.SubCategories.AddRange(subCategories);
-                }
-
-                categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
-                    categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
-
-                result.Add(categoryModel);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Prepare category (simple) xml document
-        /// </summary>
-        /// <returns>Xml document of category (simple) models</returns>
-        public virtual async Task<XDocument> PrepareCategoryXmlDocumentAsync()
-        {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey,
-                await _workContext.GetWorkingLanguageAsync(),
-                _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-                await _storeContext.GetCurrentStoreAsync());
-
-            return await _staticCacheManager.GetAsync(cacheKey, async () =>
-            {
-                var categories = await PrepareCategorySimpleModelsAsync();
-
-                var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
-
-                await using var strWriter = new StringWriter();
-                using var writer = XmlWriter.Create(strWriter);
-                xsSubmit.Serialize(writer, categories);
-                var xml = strWriter.ToString();
-
-                return XDocument.Parse(xml);
-            });
-        }
-
+        
         /// <summary>
         /// Prepare root categories for menu
         /// </summary>
@@ -1414,32 +1436,6 @@ namespace Nop.Web.Factories
             };
 
             return Task.FromResult(model);
-        }
-
-        #endregion
-
-        #region Utilities
-
-        protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
-        {
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-
-            var model = new CategorySimpleModel
-            {
-                Id = int.Parse(elem.XPathSelectElement("Id").Value),
-                Name = elem.XPathSelectElement("Name").Value,
-                SeName = elem.XPathSelectElement("SeName").Value,
-
-                NumberOfProducts = !string.IsNullOrEmpty(elem.XPathSelectElement("NumberOfProducts").Value)
-                    ? int.Parse(elem.XPathSelectElement("NumberOfProducts").Value)
-                    : (int?)null,
-
-                IncludeInTopMenu = bool.Parse(elem.XPathSelectElement("IncludeInTopMenu").Value),
-                HaveSubCategories = bool.Parse(elem.XPathSelectElement("HaveSubCategories").Value),
-                Route = urlHelper.RouteUrl("Category", new { SeName = elem.XPathSelectElement("SeName").Value })
-            };
-
-            return model;
         }
 
         #endregion

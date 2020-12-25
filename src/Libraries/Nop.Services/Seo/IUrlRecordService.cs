@@ -44,13 +44,6 @@ namespace Nop.Services.Seo
         /// <param name="urlRecord">URL record</param>
         Task InsertUrlRecordAsync(UrlRecord urlRecord);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Updates the URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        Task UpdateUrlRecordAsync(UrlRecord urlRecord);
-
         /// <summary>
         /// Find URL record
         /// </summary>

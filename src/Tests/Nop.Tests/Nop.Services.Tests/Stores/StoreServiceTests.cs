@@ -17,20 +17,6 @@ namespace Nop.Tests.Nop.Services.Tests.Stores
         }
 
         [Test]
-        public void CanParseHostValues()
-        {
-            var store = new Store
-            {
-                Hosts = "yourstore.com, www.yourstore.com, "
-            };
-
-            var hosts = _storeService.ParseHostValues(store);
-            hosts.Length.Should().Be(2);
-            hosts[0].Should().Be("yourstore.com");
-            hosts[1].Should().Be("www.yourstore.com");
-        }
-
-        [Test]
         public void CanFindHostValue()
         {
             var store = new Store

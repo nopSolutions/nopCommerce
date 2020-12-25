@@ -9,22 +9,6 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface IForumModelFactory
     {
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare the forum topic row model
-        /// </summary>
-        /// <param name="topic">Forum topic</param>
-        /// <returns>Forum topic row model</returns>
-        Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare the forum row model
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum row model</returns>
-        Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum);
-
         /// <summary>
         /// Prepare the forum group model
         /// </summary>

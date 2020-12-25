@@ -74,14 +74,14 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         /// <summary>
         /// Prepare the news comment model
         /// </summary>
         /// <param name="newsComment">News comment</param>
         /// <returns>News comment model</returns>
-        public virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
+        protected virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
         {
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
@@ -108,6 +108,10 @@ namespace Nop.Web.Factories
 
             return model;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare the news item model

@@ -719,6 +719,32 @@ namespace Nop.Services.Orders
             return resultTemp;
         }
 
+        /// <summary>
+        /// Gets shopping cart additional shipping charge
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>Additional shipping charge</returns>
+        protected virtual async Task<decimal> GetShoppingCartAdditionalShippingChargeAsync(IList<ShoppingCartItem> cart)
+        {
+            return await cart.SumAwaitAsync(async shoppingCartItem => await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem));
+        }
+
+        /// <summary>
+        /// Converts an amount to reward points
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <returns>Converted value</returns>
+        protected virtual int ConvertAmountToRewardPoints(decimal amount)
+        {
+            var result = 0;
+            if (amount <= 0)
+                return 0;
+
+            if (_rewardPointsSettings.ExchangeRate > 0)
+                result = (int)Math.Ceiling(amount / _rewardPointsSettings.ExchangeRate);
+            return result;
+        }
+
         #endregion
 
         #region Methods
@@ -896,17 +922,7 @@ namespace Nop.Services.Orders
             //total
             await UpdateTotalAsync(updateOrderParameters, subTotalExclTax, discountAmountExclTax, shippingTotalExclTax, taxTotal);
         }
-
-        /// <summary>
-        /// Gets shopping cart additional shipping charge
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>Additional shipping charge</returns>
-        public virtual async Task<decimal> GetShoppingCartAdditionalShippingChargeAsync(IList<ShoppingCartItem> cart)
-        {
-            return await cart.SumAwaitAsync(async shoppingCartItem => await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem));
-        }
-
+        
         /// <summary>
         /// Gets a value indicating whether shipping is free
         /// </summary>
@@ -1216,22 +1232,6 @@ namespace Nop.Services.Orders
             var result = rewardPoints * _rewardPointsSettings.ExchangeRate;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 result = await _priceCalculationService.RoundPriceAsync(result);
-            return result;
-        }
-
-        /// <summary>
-        /// Converts an amount to reward points
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <returns>Converted value</returns>
-        public virtual int ConvertAmountToRewardPoints(decimal amount)
-        {
-            var result = 0;
-            if (amount <= 0)
-                return 0;
-
-            if (_rewardPointsSettings.ExchangeRate > 0)
-                result = (int)Math.Ceiling(amount / _rewardPointsSettings.ExchangeRate);
             return result;
         }
 

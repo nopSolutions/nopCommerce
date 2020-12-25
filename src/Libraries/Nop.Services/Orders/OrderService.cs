@@ -68,6 +68,101 @@ namespace Nop.Services.Orders
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Gets a total number of not yet shipped items (but added to shipments)
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
+        protected virtual async Task<int> GetTotalNumberOfNotYetShippedItemsAsync(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (shipment.ShippedDateUtc.HasValue)
+                    //already shipped
+                    continue;
+
+                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a total number of already shipped items
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of already shipped items</returns>
+        protected virtual async Task<int> GetTotalNumberOfShippedItemsAsync(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (!shipment.ShippedDateUtc.HasValue)
+                    //not shipped yet
+                    continue;
+
+                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a total number of already delivered items
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Total number of already delivered items</returns>
+        protected virtual async Task<int> GetTotalNumberOfDeliveredItemsAsync(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var result = 0;
+            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
+
+            for (var i = 0; i < shipments.Count; i++)
+            {
+                var shipment = shipments[i];
+                if (!shipment.DeliveryDateUtc.HasValue)
+                    //not delivered yet
+                    continue;
+
+                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
+                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
+                if (si != null)
+                {
+                    result += si.Quantity;
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
+
         #region Methods
 
         #region Orders
@@ -566,97 +661,6 @@ namespace Nop.Services.Orders
                 qtyCanBeAddedToShipmentTotal = 0;
 
             return qtyCanBeAddedToShipmentTotal;
-        }
-
-        /// <summary>
-        /// Gets a total number of not yet shipped items (but added to shipments)
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
-        public virtual async Task<int> GetTotalNumberOfNotYetShippedItemsAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-            for (var i = 0; i < shipments.Count; i++)
-            {
-                var shipment = shipments[i];
-                if (shipment.ShippedDateUtc.HasValue)
-                    //already shipped
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
-                {
-                    result += si.Quantity;
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a total number of already shipped items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already shipped items</returns>
-        public virtual async Task<int> GetTotalNumberOfShippedItemsAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-            for (var i = 0; i < shipments.Count; i++)
-            {
-                var shipment = shipments[i];
-                if (!shipment.ShippedDateUtc.HasValue)
-                    //not shipped yet
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
-                {
-                    result += si.Quantity;
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a total number of already delivered items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already delivered items</returns>
-        public virtual async Task<int> GetTotalNumberOfDeliveredItemsAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var result = 0;
-            var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(orderItem.OrderId);
-
-            for (var i = 0; i < shipments.Count; i++)
-            {
-                var shipment = shipments[i];
-                if (!shipment.DeliveryDateUtc.HasValue)
-                    //not delivered yet
-                    continue;
-
-                var si = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
-                    .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
-                if (si != null)
-                {
-                    result += si.Quantity;
-                }
-            }
-
-            return result;
         }
 
         /// <summary>

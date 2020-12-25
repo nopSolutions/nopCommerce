@@ -68,14 +68,14 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         /// <summary>
         /// Prepare the order item model
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <returns>Order item model</returns>
-        public virtual async Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem)
+        protected virtual async Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
@@ -111,6 +111,10 @@ namespace Nop.Web.Factories
 
             return model;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare the submit return request model

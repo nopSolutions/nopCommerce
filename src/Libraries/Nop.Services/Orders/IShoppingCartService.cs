@@ -46,36 +46,6 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         Task<IList<Product>> GetProductsRequiringProductAsync(IList<ShoppingCartItem> cart, Product product);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Validates required products (products which require some other products to be added to the cart)
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="product">Product</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="addRequiredProducts">Whether to add required products</param>
-        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
-        /// <returns>Warnings</returns>
-        Task<IList<string>> GetRequiredProductWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
-            int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId);
-
-        /// <summary>
-        /// Validates a product for standard properties
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="customerEnteredPrice">Customer entered price</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>Warnings</returns>
-        Task<IList<string>> GetStandardWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product, 
-            string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId);
-
         /// <summary>
         /// Gets shopping cart
         /// </summary>

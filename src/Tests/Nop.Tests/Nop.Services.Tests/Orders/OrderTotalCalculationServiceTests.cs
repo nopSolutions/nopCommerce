@@ -221,21 +221,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
             taxRates.ContainsKey(10).Should().BeTrue();
             taxRates[10].Should().Be(20.4M);
         }
-
-        [Test]
-        public async Task CanGetShoppingCartItemAdditionalShippingCharge()
-        {
-            var product = await _productService.GetProductBySkuAsync("FR_451_RB");
-            product.AdditionalShippingCharge = 21.25M;
-            product.IsFreeShipping = false;
-            await _productService.UpdateProductAsync(product);
-            var additionalShippingCharge = await _orderTotalCalcService.GetShoppingCartAdditionalShippingChargeAsync(await GetShoppingCartAsync());
-            product.AdditionalShippingCharge = 0M;
-            product.IsFreeShipping = true;
-            await _productService.UpdateProductAsync(product);
-            additionalShippingCharge.Should().Be(42.5M);
-        }
-
+        
         [Test]
         public async Task ShippingShouldBeFreeWhenAllShoppingCartItemsAreMarkedAsFreeShipping()
         {
@@ -499,7 +485,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
         }
 
         [Test]
-        public async Task CanGetShoppingCartItemUnitprice()
+        public async Task CanGetShoppingCartItemUnitPrice()
         {
             var items = await GetShoppingCartAsync();
             var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(items[0], true);
@@ -603,18 +589,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders
 
             rewardPointsToAmount.Should().Be(1500);
         }
-
-        [Test]
-        public async Task CanConvertAmountToRewardPoints()
-        {
-            _rewardPointsSettings.Enabled = true;
-            _rewardPointsSettings.ExchangeRate = 15M;
-
-            await _settingService.SaveSettingAsync(_rewardPointsSettings);
-            //we calculate ceiling for reward points
-            GetService<IOrderTotalCalculationService>().ConvertAmountToRewardPoints(100).Should().Be(7);
-        }
-
+        
         [Test]
         public async Task CanCheckMinimumRewardPointsToUseRequirement()
         {

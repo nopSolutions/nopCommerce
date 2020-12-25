@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
@@ -9,38 +8,6 @@ namespace Nop.Web.Factories
 {
     public partial interface ICatalogModelFactory
     {
-        #region Common
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare sorting options
-        /// </summary>
-        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
-        /// <param name="command">Catalog paging filtering command</param>
-        Task PrepareSortingOptionsAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare view modes
-        /// </summary>
-        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
-        /// <param name="command">Catalog paging filtering command</param>
-        Task PrepareViewModesAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare page size options
-        /// </summary>
-        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
-        /// <param name="command">Catalog paging filtering command</param>
-        /// <param name="allowCustomersToSelectPageSize">Are customers allowed to select page size?</param>
-        /// <param name="pageSizeOptions">Page size options</param>
-        /// <param name="fixedPageSize">Fixed page size</param>
-        Task PreparePageSizeOptionsAsync(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
-            bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize);
-
-        #endregion
-
         #region Categories
 
         /// <summary>
@@ -78,29 +45,6 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>List of homepage category models</returns>
         Task<List<CategoryModel>> PrepareHomepageCategoryModelsAsync();
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <returns>List of category (simple) models</returns>
-        Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync();
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare category (simple) models
-        /// </summary>
-        /// <param name="rootCategoryId">Root category identifier</param>
-        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
-        /// <returns>List of category (simple) models</returns>
-        Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare category (simple) xml document
-        /// </summary>
-        /// <returns>Xml document of category (simple) models</returns>
-        Task<XDocument> PrepareCategoryXmlDocumentAsync();
 
         /// <summary>
         /// Prepare root categories for menu

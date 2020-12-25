@@ -75,14 +75,14 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         /// <summary>
         /// Prepare blog comment model
         /// </summary>
         /// <param name="blogComment">Blog comment entity</param>
         /// <returns>Blog comment model</returns>
-        public virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
+        protected virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
         {
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
@@ -108,6 +108,10 @@ namespace Nop.Web.Factories
 
             return model;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare blog post model

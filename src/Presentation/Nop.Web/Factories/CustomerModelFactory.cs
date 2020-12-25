@@ -179,17 +179,13 @@ namespace Nop.Web.Factories
             };
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Prepare the custom customer attribute models
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <returns>List of the customer attribute model</returns>
-        public virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
+        protected virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -279,6 +275,10 @@ namespace Nop.Web.Factories
 
             return result;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare the customer info model

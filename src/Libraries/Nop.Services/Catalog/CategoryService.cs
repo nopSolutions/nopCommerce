@@ -95,6 +95,71 @@ namespace Nop.Services.Catalog
 
             return query;
         }
+        
+        /// <summary>
+        /// Gets a product category mapping collection
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
+        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
+        /// <returns>Product category mapping collection</returns>
+        protected virtual async Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, int storeId,
+            bool showHidden = false)
+        {
+            if (productId == 0)
+                return new List<ProductCategory>();
+
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+
+            return await _productCategoryRepository.GetAllAsync(async query =>
+            {
+                if (!showHidden)
+                {
+                    var categoriesQuery = await FilterHiddenEntriesAsync(_categoryRepository.Table, storeId, customerRolesIds);
+                    query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
+                }
+
+                return query
+                    .Where(pc => pc.ProductId == productId)
+                    .OrderBy(pc => pc.DisplayOrder)
+                    .ThenBy(pc => pc.Id);
+
+            }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
+                productId, showHidden, customer, storeId));
+        }
+
+        /// <summary>
+        /// Sort categories for tree representation
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="parentId">Parent category identifier</param>
+        /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
+        /// <returns>Sorted categories</returns>
+        protected virtual async Task<IList<Category>> SortCategoriesForTreeAsync(IList<Category> source, int parentId = 0,
+            bool ignoreCategoriesWithoutExistingParent = false)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var result = new List<Category>();
+
+            foreach (var cat in source.Where(c => c.ParentCategoryId == parentId).ToList())
+            {
+                result.Add(cat);
+                result.AddRange(await SortCategoriesForTreeAsync(source, cat.Id, true));
+            }
+
+            if (ignoreCategoriesWithoutExistingParent || result.Count == source.Count)
+                return result;
+
+            //find categories without parent in provided category source and insert them into result
+            foreach (var cat in source)
+                if (result.FirstOrDefault(x => x.Id == cat.Id) == null)
+                    result.Add(cat);
+
+            return result;
+        }
 
         #endregion
 
@@ -487,39 +552,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Gets a product category mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
-        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns>Product category mapping collection</returns>
-        public virtual async Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, int storeId,
-            bool showHidden = false)
-        {
-            if (productId == 0)
-                return new List<ProductCategory>();
-
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-
-            return await _productCategoryRepository.GetAllAsync(async query =>
-            {
-                if (!showHidden)
-                {
-                    var categoriesQuery = await FilterHiddenEntriesAsync(_categoryRepository.Table, storeId, customerRolesIds);
-                    query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
-                }
-
-                return query
-                    .Where(pc => pc.ProductId == productId)
-                    .OrderBy(pc => pc.DisplayOrder)
-                    .ThenBy(pc => pc.Id);
-                
-            }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
-                productId, showHidden, customer, storeId));
-        }
-
-        /// <summary>
         /// Gets a product category mapping 
         /// </summary>
         /// <param name="productCategoryId">Product category mapping identifier</param>
@@ -601,39 +633,7 @@ namespace Nop.Services.Catalog
         {
             return await _categoryRepository.GetByIdsAsync(categoryIds);
         }
-
-        /// <summary>
-        /// Sort categories for tree representation
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="parentId">Parent category identifier</param>
-        /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
-        /// <returns>Sorted categories</returns>
-        public virtual async Task<IList<Category>> SortCategoriesForTreeAsync(IList<Category> source, int parentId = 0,
-            bool ignoreCategoriesWithoutExistingParent = false)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            var result = new List<Category>();
-
-            foreach (var cat in source.Where(c => c.ParentCategoryId == parentId).ToList())
-            {
-                result.Add(cat);
-                result.AddRange(await SortCategoriesForTreeAsync(source, cat.Id, true));
-            }
-
-            if (ignoreCategoriesWithoutExistingParent || result.Count == source.Count)
-                return result;
-
-            //find categories without parent in provided category source and insert them into result
-            foreach (var cat in source)
-                if (result.FirstOrDefault(x => x.Id == cat.Id) == null)
-                    result.Add(cat);
-
-            return result;
-        }
-
+        
         /// <summary>
         /// Returns a ProductCategory that has the specified values
         /// </summary>

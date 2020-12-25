@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
@@ -142,46 +140,6 @@ namespace Nop.Services.Tax
         /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
         /// <returns>VAT Number status</returns>
         Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatusAsync(string fullVatNumber);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets VAT Number status
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <returns>VAT Number status. Name (if received). Address (if received)</returns>
-        Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatusAsync(string twoLetterIsoCode, string vatNumber);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Performs a basic check of a VAT number for validity
-        /// </summary>
-        /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
-        /// <param name="vatNumber">VAT number</param>
-        /// <returns>VAT number status. Company name. Address. Exception</returns>
-        Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheckAsync(string twoLetterIsoCode, string vatNumber);
-
-        #endregion
-
-        #region Exempts
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a value indicating whether a product is tax exempt
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>A value indicating whether a product is tax exempt</returns>
-        Task<bool> IsTaxExemptAsync(Product product, Customer customer);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
-        /// </summary>
-        /// <param name="address">Address</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
-        Task<bool> IsVatExemptAsync(Address address, Customer customer);
 
         #endregion
 

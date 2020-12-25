@@ -38,17 +38,21 @@ namespace Nop.Services.Helpers
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         /// <summary>
         /// Retrieves a System.TimeZoneInfo object from the registry based on its identifier.
         /// </summary>
         /// <param name="id">The time zone identifier, which corresponds to the System.TimeZoneInfo.Id property.</param>
         /// <returns>A System.TimeZoneInfo object whose identifier is the value of the id parameter.</returns>
-        public virtual TimeZoneInfo FindTimeZoneById(string id)
+        protected virtual TimeZoneInfo FindTimeZoneById(string id)
         {
             return TimeZoneInfo.FindSystemTimeZoneById(id);
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Returns a sorted collection of all the time zones

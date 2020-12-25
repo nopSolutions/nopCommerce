@@ -84,14 +84,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         }
 
         [Test]
-        public async Task CanPrepareCustomCustomerAttributes()
-        {
-            var model = await _customerModelFactory.PrepareCustomCustomerAttributesAsync(_customer);
-            model.Any().Should().BeTrue();
-            model.Count.Should().Be(10);
-        }
-
-        [Test]
         public async Task CanPrepareCustomerInfoModel()
         {
             var model = await _customerModelFactory.PrepareCustomerInfoModelAsync(new CustomerInfoModel(), _customer, false);
@@ -154,42 +146,50 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         }
 
         [Test]
-        public async Task CanPrepareCustomerNavigationModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareCustomerNavigationModel()
         {
         }
 
         [Test]
-        public async Task CanPrepareCustomerAddressListModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareCustomerAddressListModel()
         {
         }
 
         [Test]
-        public async Task CanPrepareCustomerDownloadableProductsModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareCustomerDownloadableProductsModel()
         {
         }
 
         [Test]
-        public async Task CanPrepareUserAgreementModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareUserAgreementModel()
         {
         }
 
         [Test]
-        public async Task CanPrepareChangePasswordModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareChangePasswordModel()
         {
         }
 
         [Test]
-        public async Task CanPrepareCustomerAvatarModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareCustomerAvatarModel()
         {
         }
 
         [Test]
-        public async Task CanPrepareGdprToolsModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareGdprToolsModel()
         {
         }
 
         [Test]
-        public async Task CanPrepareCheckGiftCardBalanceModel()
+        [Ignore("not implemented yet")]
+        public void CanPrepareCheckGiftCardBalanceModel()
         {
         }
     }

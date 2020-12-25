@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 
@@ -121,6 +120,15 @@ namespace Nop.Services.Orders
                 historyEntry.PointsBalance = currentPointsBalance;
                 await UpdateRewardPointsHistoryEntryAsync(historyEntry);
             }
+        }
+
+        /// <summary>
+        /// Insert the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        protected virtual async Task InsertRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
+        {
+            await _rewardPointsHistoryRepository.InsertAsync(rewardPointsHistory);
         }
 
         #endregion
@@ -249,15 +257,6 @@ namespace Nop.Services.Orders
         public virtual async Task<RewardPointsHistory> GetRewardPointsHistoryEntryByIdAsync(int rewardPointsHistoryId)
         {
             return await _rewardPointsHistoryRepository.GetByIdAsync(rewardPointsHistoryId);
-        }
-
-        /// <summary>
-        /// Insert the reward point history entry
-        /// </summary>
-        /// <param name="rewardPointsHistory">Reward point history entry</param>
-        public virtual async Task InsertRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
-        {
-            await _rewardPointsHistoryRepository.InsertAsync(rewardPointsHistory);
         }
 
         /// <summary>

@@ -15,27 +15,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Payment methods model</returns>
         Task<PaymentMethodsModel> PreparePaymentMethodsModelAsync(PaymentMethodsModel methodsModel);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare payment method search model
-        /// </summary>
-        /// <param name="searchModel">Payment method search model</param>
-        /// <returns>Payment method search model</returns>
-        Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel);
-
         /// <summary>
         /// Prepare paged payment method list model
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method list model</returns>
         Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare payment method restriction model
-        /// </summary>
-        /// <param name="model">Payment method restriction model</param>
-        /// <returns>Payment method restriction model</returns>
-        Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model);
     }
 }

@@ -38,6 +38,74 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Prepare category template search model
+        /// </summary>
+        /// <param name="searchModel">Category template search model</param>
+        /// <returns>Category template search model</returns>
+        protected virtual Task<CategoryTemplateSearchModel> PrepareCategoryTemplateSearchModelAsync(CategoryTemplateSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return Task.FromResult(searchModel);
+        }
+
+        /// <summary>
+        /// Prepare manufacturer template search model
+        /// </summary>
+        /// <param name="searchModel">Manufacturer template search model</param>
+        /// <returns>Manufacturer template search model</returns>
+        protected virtual Task<ManufacturerTemplateSearchModel> PrepareManufacturerTemplateSearchModelAsync(ManufacturerTemplateSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return Task.FromResult(searchModel);
+        }
+
+        /// <summary>
+        /// Prepare product template search model
+        /// </summary>
+        /// <param name="searchModel">Product template search model</param>
+        /// <returns>Product template search model</returns>
+        protected virtual Task<ProductTemplateSearchModel> PrepareProductTemplateSearchModelAsync(ProductTemplateSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return Task.FromResult(searchModel);
+        }
+
+        /// <summary>
+        /// Prepare topic template search model
+        /// </summary>
+        /// <param name="searchModel">Topic template search model</param>
+        /// <returns>Topic template search model</returns>
+        protected virtual Task<TopicTemplateSearchModel> PrepareTopicTemplateSearchModelAsync(TopicTemplateSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return Task.FromResult(searchModel);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -58,23 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare category template search model
-        /// </summary>
-        /// <param name="searchModel">Category template search model</param>
-        /// <returns>Category template search model</returns>
-        public virtual Task<CategoryTemplateSearchModel> PrepareCategoryTemplateSearchModelAsync(CategoryTemplateSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return Task.FromResult(searchModel);
-        }
-
+        
         /// <summary>
         /// Prepare paged category template list model
         /// </summary>
@@ -94,23 +146,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare manufacturer template search model
-        /// </summary>
-        /// <param name="searchModel">Manufacturer template search model</param>
-        /// <returns>Manufacturer template search model</returns>
-        public virtual Task<ManufacturerTemplateSearchModel> PrepareManufacturerTemplateSearchModelAsync(ManufacturerTemplateSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return Task.FromResult(searchModel);
-        }
-
+        
         /// <summary>
         /// Prepare paged manufacturer template list model
         /// </summary>
@@ -130,23 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
             
             return model;
         }
-
-        /// <summary>
-        /// Prepare product template search model
-        /// </summary>
-        /// <param name="searchModel">Product template search model</param>
-        /// <returns>Product template search model</returns>
-        public virtual Task<ProductTemplateSearchModel> PrepareProductTemplateSearchModelAsync(ProductTemplateSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return Task.FromResult(searchModel);
-        }
-
+        
         /// <summary>
         /// Prepare paged product template list model
         /// </summary>
@@ -165,22 +185,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 () => productTemplates.Select(template => template.ToModel<ProductTemplateModel>()));
 
             return model;
-        }
-
-        /// <summary>
-        /// Prepare topic template search model
-        /// </summary>
-        /// <param name="searchModel">Topic template search model</param>
-        /// <returns>Topic template search model</returns>
-        public virtual Task<TopicTemplateSearchModel> PrepareTopicTemplateSearchModelAsync(TopicTemplateSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return Task.FromResult(searchModel);
         }
 
         /// <summary>

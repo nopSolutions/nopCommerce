@@ -26,18 +26,6 @@ namespace Nop.Services.Catalog
         Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerIdAsync(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets all subscriptions
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Subscriptions</returns>
-        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductIdAsync(int productId,
-            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
-
         /// <summary>
         /// Gets all subscriptions
         /// </summary>

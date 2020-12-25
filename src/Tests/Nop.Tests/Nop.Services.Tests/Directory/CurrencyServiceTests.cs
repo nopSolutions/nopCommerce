@@ -49,21 +49,34 @@ namespace Nop.Tests.Nop.Services.Tests.Directory
         }
 
         [Test]
-        public async Task CanConvertCurrency()
+        public void CanConvertCurrency()
         {
             _currencyService.ConvertCurrency(10.1M, 1.5M).Should().Be(15.15M);
             _currencyService.ConvertCurrency(10.1M, 1).Should().Be(10.1M);
             _currencyService.ConvertCurrency(10.1M, 0).Should().Be(0);
             _currencyService.ConvertCurrency(0, 5).Should().Be(0);
+        }
 
-            var newCurrency = await _currencyService.ConvertCurrencyAsync(10.1M, _currencyEur, _currencyEur);
+        [Test]
+        public async Task CanConvertToPrimaryStoreCurrency()
+        {
+            var newCurrency = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(8.686M, _currencyEur);
             newCurrency.Should().Be(10.1M);
-            newCurrency = await _currencyService.ConvertCurrencyAsync(10.1M, _currencyRur, _currencyRur);
+            newCurrency = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(638.825M, _currencyRur);
             newCurrency.Should().Be(10.1M);
-            newCurrency = await _currencyService.ConvertCurrencyAsync(12M, _currencyUsd, _currencyRur);
+            newCurrency = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(759M, _currencyUsd);
             newCurrency.Should().Be(759M);
-            newCurrency = await _currencyService.ConvertCurrencyAsync(759M, _currencyRur, _currencyUsd);
-            newCurrency.Should().Be(12M);
+        }
+
+        [Test]
+        public async Task CanConvertFromPrimaryStoreCurrency()
+        {
+            var newCurrency = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(10.1M, _currencyEur);
+            newCurrency.Should().Be(8.686M);
+            newCurrency = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(10.1M, _currencyRur);
+            newCurrency.Should().Be(638.825M);
+            newCurrency = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(759M, _currencyUsd);
+            newCurrency.Should().Be(759M);
         }
     }
 }

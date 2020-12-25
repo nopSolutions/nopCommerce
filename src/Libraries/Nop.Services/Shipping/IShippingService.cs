@@ -142,15 +142,6 @@ namespace Nop.Services.Shipping
         /// <returns>Total weight</returns>
         Task<decimal> GetTotalWeightAsync(GetShippingOptionRequest request, bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Get dimensions of associated products (for quantity 1)
-        /// </summary>
-        /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
-        /// <returns>Width. Length. Height</returns>
-        Task<(decimal width, decimal length, decimal height)> GetAssociatedProductDimensionsAsync(ShoppingCartItem shoppingCartItem, bool ignoreFreeShippedItems = false);
-
         /// <summary>
         /// Get total dimensions
         /// </summary>
@@ -158,15 +149,6 @@ namespace Nop.Services.Shipping
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Width. Length. Height</returns>
         Task<(decimal width, decimal length, decimal height)> GetDimensionsAsync(IList<GetShippingOptionRequest.PackageItem> packageItems, bool ignoreFreeShippedItems = false);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Get the nearest warehouse for the specified address
-        /// </summary>
-        /// <param name="address">Address</param>
-        /// <param name="warehouses">List of warehouses, if null all warehouses are used.</param>
-        /// <returns></returns>
-        Task<Warehouse> GetNearestWarehouseAsync(Address address, IList<Warehouse> warehouses = null);
 
         /// <summary>
         /// Create shipment packages (requests) from shopping cart

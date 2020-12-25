@@ -45,6 +45,19 @@ namespace Nop.Services.Security
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Inserts an ACL record
+        /// </summary>
+        /// <param name="aclRecord">ACL record</param>
+        protected virtual async Task InsertAclRecordAsync(AclRecord aclRecord)
+        {
+            await _aclRecordRepository.InsertAsync(aclRecord);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -102,15 +115,6 @@ namespace Nop.Services.Security
             var aclRecords = await query.ToListAsync();
 
             return aclRecords;
-        }
-
-        /// <summary>
-        /// Inserts an ACL record
-        /// </summary>
-        /// <param name="aclRecord">ACL record</param>
-        public virtual async Task InsertAclRecordAsync(AclRecord aclRecord)
-        {
-            await _aclRecordRepository.InsertAsync(aclRecord);
         }
 
         /// <summary>

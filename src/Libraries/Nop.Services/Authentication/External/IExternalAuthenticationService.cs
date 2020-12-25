@@ -18,14 +18,6 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result of an authentication</returns>
         Task<IActionResult> AuthenticateAsync(ExternalAuthenticationParameters parameters, string returnUrl = null);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Associate external account with customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="parameters">External authentication parameters</param>
-        Task AssociateExternalAccountWithUserAsync(Customer customer, ExternalAuthenticationParameters parameters);
-
         /// <summary>
         /// Get the external authentication records by identifier
         /// </summary>
@@ -39,21 +31,6 @@ namespace Nop.Services.Authentication.External
         /// <param name="customer">Customer</param>
         /// <returns>Customer</returns>
         Task<IList<ExternalAuthenticationRecord>> GetCustomerExternalAuthenticationRecordsAsync(Customer customer);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Get the particular user with specified parameters
-        /// </summary>
-        /// <param name="parameters">External authentication parameters</param>
-        /// <returns>Customer</returns>
-        Task<Customer> GetUserByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Remove the association
-        /// </summary>
-        /// <param name="parameters">External authentication parameters</param>
-        Task RemoveAssociationAsync(ExternalAuthenticationParameters parameters);
 
         /// <summary>
         /// Delete the external authentication record

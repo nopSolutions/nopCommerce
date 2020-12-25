@@ -77,14 +77,7 @@ namespace Nop.Services.Gdpr
         Task<IPagedList<GdprLog>> GetAllLogAsync(int customerId = 0, int consentId = 0,
             string customerInfo = "", GdprRequestType? requestType = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Insert a GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        Task InsertLogAsync(GdprLog gdprLog);
-
+        
         /// <summary>
         /// Insert a GDPR log
         /// </summary>

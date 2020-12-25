@@ -140,6 +140,45 @@ namespace Nop.Services.Catalog
             });
         }
 
+        /// <summary>
+        /// Indicates whether a product tag exists
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <returns>Result</returns>
+        protected virtual async Task<bool> ProductTagExistsAsync(Product product, int productTagId)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            return await _productProductTagMappingRepository.Table
+                .AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
+        }
+
+        /// <summary>
+        /// Gets product tag by name
+        /// </summary>
+        /// <param name="name">Product tag name</param>
+        /// <returns>Product tag</returns>
+        protected virtual async Task<ProductTag> GetProductTagByNameAsync(string name)
+        {
+            var query = from pt in _productTagRepository.Table
+                where pt.Name == name
+                select pt;
+
+            var productTag = await query.FirstOrDefaultAsync();
+            return productTag;
+        }
+
+        /// <summary>
+        /// Inserts a product tag
+        /// </summary>
+        /// <param name="productTag">Product tag</param>
+        protected virtual async Task InsertProductTagAsync(ProductTag productTag)
+        {
+            await _productTagRepository.InsertAsync(productTag);
+        }
+
         #endregion
 
         #region Methods
@@ -219,22 +258,7 @@ namespace Nop.Services.Catalog
         {
             return await _productTagRepository.GetByIdsAsync(productTagIds);
         }
-
-        /// <summary>
-        /// Gets product tag by name
-        /// </summary>
-        /// <param name="name">Product tag name</param>
-        /// <returns>Product tag</returns>
-        public virtual async Task<ProductTag> GetProductTagByNameAsync(string name)
-        {
-            var query = from pt in _productTagRepository.Table
-                        where pt.Name == name
-                        select pt;
-
-            var productTag = await query.FirstOrDefaultAsync();
-            return productTag;
-        }
-
+        
         /// <summary>
         /// Inserts a product-product tag mapping
         /// </summary>
@@ -243,31 +267,7 @@ namespace Nop.Services.Catalog
         {
             await _productProductTagMappingRepository.InsertAsync(tagMapping);
         }
-
-        /// <summary>
-        /// Inserts a product tag
-        /// </summary>
-        /// <param name="productTag">Product tag</param>
-        public virtual async Task InsertProductTagAsync(ProductTag productTag)
-        {
-            await _productTagRepository.InsertAsync(productTag);
-        }
-
-        /// <summary>
-        /// Indicates whether a product tag exists
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="productTagId">Product tag identifier</param>
-        /// <returns>Result</returns>
-        public virtual async Task<bool> ProductTagExistsAsync(Product product, int productTagId)
-        {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            return await _productProductTagMappingRepository.Table
-                .AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
-        }
-
+        
         /// <summary>
         /// Updates the product tag
         /// </summary>

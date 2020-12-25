@@ -10,14 +10,6 @@ namespace Nop.Services.Helpers
     /// </summary>
     public partial interface IDateTimeHelper
     {
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Retrieves a System.TimeZoneInfo object from the registry based on its identifier.
-        /// </summary>
-        /// <param name="id">The time zone identifier, which corresponds to the System.TimeZoneInfo.Id property.</param>
-        /// <returns>A System.TimeZoneInfo object whose identifier is the value of the id parameter.</returns>
-        TimeZoneInfo FindTimeZoneById(string id);
-
         /// <summary>
         /// Returns a sorted collection of all the time zones
         /// </summary>

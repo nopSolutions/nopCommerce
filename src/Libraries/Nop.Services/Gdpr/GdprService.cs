@@ -82,6 +82,19 @@ namespace Nop.Services.Gdpr
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Insert a GDPR log
+        /// </summary>
+        /// <param name="gdprLog">GDPR log</param>
+        protected virtual async Task InsertLogAsync(GdprLog gdprLog)
+        {
+            await _gdprLogRepository.InsertAsync(gdprLog);
+        }
+
+        #endregion
+
         #region Methods
 
         #region GDPR consent
@@ -209,15 +222,6 @@ namespace Nop.Services.Gdpr
 
                 return query;
             }, pageIndex, pageSize);
-        }
-
-        /// <summary>
-        /// Insert a GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        public virtual async Task InsertLogAsync(GdprLog gdprLog)
-        {
-            await _gdprLogRepository.InsertAsync(gdprLog);
         }
 
         /// <summary>

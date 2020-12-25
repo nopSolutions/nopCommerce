@@ -43,13 +43,6 @@ namespace Nop.Services.Security
         /// <returns>ACL records</returns>
         Task<IList<AclRecord>> GetAclRecordsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported;
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Inserts an ACL record
-        /// </summary>
-        /// <param name="aclRecord">ACL record</param>
-        Task InsertAclRecordAsync(AclRecord aclRecord);
-
         /// <summary>
         /// Inserts an ACL record
         /// </summary>

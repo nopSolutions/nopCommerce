@@ -17,14 +17,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Blog content model</returns>
         Task<BlogContentModel> PrepareBlogContentModelAsync(BlogContentModel blogContentModel, int? filterByBlogPostId);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare blog post search model
-        /// </summary>
-        /// <param name="searchModel">Blog post search model</param>
-        /// <returns>Blog post search model</returns>
-        Task<BlogPostSearchModel> PrepareBlogPostSearchModelAsync(BlogPostSearchModel searchModel);
-
         /// <summary>
         /// Prepare paged blog post list model
         /// </summary>

@@ -9,14 +9,6 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface IReturnRequestModelFactory
     {
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Prepare the order item model
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Order item model</returns>
-        Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem);
-
         /// <summary>
         /// Prepare the submit return request model
         /// </summary>

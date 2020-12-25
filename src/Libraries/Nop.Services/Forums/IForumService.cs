@@ -88,15 +88,6 @@ namespace Nop.Services.Forums
         /// <returns>Forum Topic</returns>
         Task<ForumTopic> GetTopicByIdAsync(int forumTopicId);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a forum topic
-        /// </summary>
-        /// <param name="forumTopicId">The forum topic identifier</param>
-        /// <param name="increaseViews">The value indicating whether to increase forum topic views</param>
-        /// <returns>Forum Topic</returns>
-        Task<ForumTopic> GetTopicByIdAsync(int forumTopicId, bool increaseViews);
-
         /// <summary>
         /// Gets all forum topics
         /// </summary>

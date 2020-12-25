@@ -28,15 +28,6 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         Task<IList<ProductTag>> GetProductTagsByIdsAsync(int[] productTagIds);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Indicates whether a product tag exists
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="productTagId">Product tag identifier</param>
-        /// <returns>Result</returns>
-        Task<bool> ProductTagExistsAsync(Product product, int productTagId);
-
         /// <summary>
         /// Gets all product tags
         /// </summary>
@@ -58,27 +49,12 @@ namespace Nop.Services.Catalog
         /// <returns>Product tag</returns>
         Task<ProductTag> GetProductTagByIdAsync(int productTagId);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets product tag by name
-        /// </summary>
-        /// <param name="name">Product tag name</param>
-        /// <returns>Product tag</returns>
-        Task<ProductTag> GetProductTagByNameAsync(string name);
-
         /// <summary>
         /// Inserts a product-product tag mapping
         /// </summary>
         /// <param name="tagMapping">Product-product tag mapping</param>
         Task InsertProductProductTagMappingAsync(ProductProductTagMapping tagMapping);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Inserts a product tag
-        /// </summary>
-        /// <param name="productTag">Product tag</param>
-        Task InsertProductTagAsync(ProductTag productTag);
-
+        
         /// <summary>
         /// Updates the product tag
         /// </summary>

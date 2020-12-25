@@ -162,16 +162,6 @@ namespace Nop.Services.Catalog
         /// <returns>Product category mapping collection</returns>
         Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, bool showHidden = false);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a product category mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
-        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns> Product category mapping collection</returns>
-        Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, int storeId, bool showHidden = false);
-
         /// <summary>
         /// Gets a product category mapping 
         /// </summary>
@@ -211,17 +201,6 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <returns>Categories</returns>
         Task<IList<Category>> GetCategoriesByIdsAsync(int[] categoryIds);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Sort categories for tree representation
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="parentId">Parent category identifier</param>
-        /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
-        /// <returns>Sorted categories</returns>
-        Task<IList<Category>> SortCategoriesForTreeAsync(IList<Category> source, int parentId = 0,
-            bool ignoreCategoriesWithoutExistingParent = false);
 
         //TODO: migrate to an extension method
         /// <summary>

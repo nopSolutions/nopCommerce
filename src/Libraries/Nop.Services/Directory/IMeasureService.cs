@@ -58,16 +58,6 @@ namespace Nop.Services.Directory
         Task<decimal> ConvertDimensionAsync(decimal value,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Converts to primary measure dimension
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureDimension">Source dimension</param>
-        /// <returns>Converted value</returns>
-        Task<decimal> ConvertToPrimaryMeasureDimensionAsync(decimal value,
-            MeasureDimension sourceMeasureDimension);
-
         /// <summary>
         /// Converts from primary dimension
         /// </summary>
@@ -125,15 +115,6 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         Task<decimal> ConvertWeightAsync(decimal value,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Converts to primary measure weight
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureWeight">Source weight</param>
-        /// <returns>Converted value</returns>
-        Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight);
 
         /// <summary>
         /// Converts from primary weight

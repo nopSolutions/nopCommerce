@@ -10,13 +10,6 @@ namespace Nop.Services.Security
     /// </summary>
     public partial interface IPermissionService
     {
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Delete a permission
-        /// </summary>
-        /// <param name="permission">Permission</param>
-        Task DeletePermissionRecordAsync(PermissionRecord permission);
-
         //TODO: may be deleted
         /// <summary>
         /// Gets a permission
@@ -25,26 +18,11 @@ namespace Nop.Services.Security
         /// <returns>Permission</returns>
         Task<PermissionRecord> GetPermissionRecordByIdAsync(int permissionId);
 
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Gets a permission
-        /// </summary>
-        /// <param name="systemName">Permission system name</param>
-        /// <returns>Permission</returns>
-        Task<PermissionRecord> GetPermissionRecordBySystemNameAsync(string systemName);
-
         /// <summary>
         /// Gets all permissions
         /// </summary>
         /// <returns>Permissions</returns>
         Task<IList<PermissionRecord>> GetAllPermissionRecordsAsync();
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Inserts a permission
-        /// </summary>
-        /// <param name="permission">Permission</param>
-        Task InsertPermissionRecordAsync(PermissionRecord permission);
 
         /// <summary>
         /// Updates the permission

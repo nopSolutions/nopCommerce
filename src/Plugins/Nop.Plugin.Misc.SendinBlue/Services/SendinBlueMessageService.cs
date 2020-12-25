@@ -210,10 +210,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             return email.Id;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Send notification
         /// </summary>
@@ -231,7 +227,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
-        public override async Task<int> SendNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, int languageId, IList<Token> tokens,
+        protected override async Task<int> SendNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, int languageId, IList<Token> tokens,
             string toEmailAddress, string toName, string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null, string fromEmail = null, string fromName = null,
             string subject = null)
