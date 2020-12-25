@@ -41,6 +41,7 @@ namespace Nop.Data.Migrations
                 {
                     DataProviderType.SqlServer => FindGenerator(processors, "SqlServer"),
                     DataProviderType.MySql => FindGenerator(processors, "MySQL"),
+					DataProviderType.PostgreSQL => FindGenerator(processors, "Postgres"),
                     _ => throw new ProcessorFactoryNotFoundException(
                         $@"A migration generator for Data provider type {dataSettings.DataProvider} couldn't be found.")
                 };
