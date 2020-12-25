@@ -380,28 +380,6 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Get an order by authorization transaction ID and payment method system name
-        /// </summary>
-        /// <param name="authorizationTransactionId">Authorization transaction ID</param>
-        /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>Order</returns>
-        public virtual async Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethodAsync(string authorizationTransactionId,
-            string paymentMethodSystemName)
-        {
-            var query = _orderRepository.Table;
-            if (!string.IsNullOrWhiteSpace(authorizationTransactionId))
-                query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
-
-            if (!string.IsNullOrWhiteSpace(paymentMethodSystemName))
-                query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
-
-            query = query.OrderByDescending(o => o.CreatedOnUtc);
-            var order = await query.FirstOrDefaultAsync();
-
-            return order;
-        }
-
-        /// <summary>
         /// Parse tax rates
         /// </summary>
         /// <param name="order">Order</param>

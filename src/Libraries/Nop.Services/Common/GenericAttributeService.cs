@@ -51,17 +51,7 @@ namespace Nop.Services.Common
         {
             await _genericAttributeRepository.DeleteAsync(attributes);
         }
-
-        /// <summary>
-        /// Gets an attribute
-        /// </summary>
-        /// <param name="attributeId">Attribute identifier</param>
-        /// <returns>An attribute</returns>
-        public virtual async Task<GenericAttribute> GetAttributeByIdAsync(int attributeId)
-        {
-            return await _genericAttributeRepository.GetByIdAsync(attributeId);
-        }
-
+        
         /// <summary>
         /// Inserts an attribute
         /// </summary>

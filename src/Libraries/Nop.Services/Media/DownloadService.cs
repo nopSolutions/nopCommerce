@@ -76,15 +76,6 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Updates the download
-        /// </summary>
-        /// <param name="download">Download</param>
-        public virtual async Task UpdateDownloadAsync(Download download)
-        {
-            await _downloadRepository.UpdateAsync(download);
-        }
-
-        /// <summary>
         /// Gets the download binary array
         /// </summary>
         /// <param name="file">File</param>

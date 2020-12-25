@@ -158,16 +158,7 @@ namespace Nop.Services.Catalog
         {
             await _backInStockSubscriptionRepository.InsertAsync(subscription);
         }
-
-        /// <summary>
-        /// Updates subscription
-        /// </summary>
-        /// <param name="subscription">Subscription</param>
-        public virtual async Task UpdateSubscriptionAsync(BackInStockSubscription subscription)
-        {
-            await _backInStockSubscriptionRepository.UpdateAsync(subscription);
-        }
-
+        
         /// <summary>
         /// Send notification to subscribers
         /// </summary>

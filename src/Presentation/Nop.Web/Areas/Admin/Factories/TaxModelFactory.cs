@@ -33,24 +33,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Prepare tax configuration model
-        /// </summary>
-        /// <param name="taxConfigurationModel">Tax configuration model</param>
-        /// <returns>Tax configuration model</returns>
-        public virtual async Task<TaxConfigurationModel> PrepareTaxConfigurationModelAsync(TaxConfigurationModel taxConfigurationModel)
-        {
-            if (taxConfigurationModel == null)
-                throw new ArgumentNullException(nameof(taxConfigurationModel));
-
-            //prepare nested search models
-            await PrepareTaxProviderSearchModelAsync(taxConfigurationModel.TaxProviders);
-            await PrepareTaxCategorySearchModelAsync(taxConfigurationModel.TaxCategories);
-
-            return taxConfigurationModel;
-        }
-
+        
         /// <summary>
         /// Prepare tax provider search model
         /// </summary>

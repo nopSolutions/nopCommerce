@@ -169,22 +169,7 @@ namespace Nop.Core.Redis
 
             return connection.GetEndPoints();
         }
-
-        /// <summary>
-        /// Delete all the keys of the database
-        /// </summary>
-        /// <param name="db">Database number</param>
-        public async Task FlushDatabaseAsync(RedisDatabaseNumber db)
-        {
-            var endPoints = await GetEndPointsAsync();
-
-            foreach (var endPoint in endPoints)
-            {
-                var server = await GetServerAsync(endPoint);
-                await server.FlushDatabaseAsync((int)db);
-            }
-        }
-
+        
         /// <summary>
         /// Perform some action with Redis distributed lock
         /// </summary>

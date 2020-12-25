@@ -1129,16 +1129,7 @@ namespace Nop.Services.Seo
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Deletes an URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        public virtual async Task DeleteUrlRecordAsync(UrlRecord urlRecord)
-        {
-            await _urlRecordRepository.DeleteAsync(urlRecord);
-        }
-
+        
         /// <summary>
         /// Deletes an URL records
         /// </summary>
@@ -1156,16 +1147,6 @@ namespace Nop.Services.Seo
         public virtual async Task<IList<UrlRecord>> GetUrlRecordsByIdsAsync(int[] urlRecordIds)
         {
             return await _urlRecordRepository.GetByIdsAsync(urlRecordIds, cache => default);
-        }
-
-        /// <summary>
-        /// Gets an URL record
-        /// </summary>
-        /// <param name="urlRecordId">URL record identifier</param>
-        /// <returns>URL record</returns>
-        public virtual async Task<UrlRecord> GetUrlRecordByIdAsync(int urlRecordId)
-        {
-            return await _urlRecordRepository.GetByIdAsync(urlRecordId, cache => default);
         }
 
         /// <summary>

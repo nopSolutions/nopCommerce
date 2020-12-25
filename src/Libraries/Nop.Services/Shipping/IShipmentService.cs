@@ -84,13 +84,6 @@ namespace Nop.Services.Shipping
         /// <param name="shipment">Shipment</param>
         Task UpdateShipmentAsync(Shipment shipment);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Deletes a shipment item
-        /// </summary>
-        /// <param name="shipmentItem">Shipment item</param>
-        Task DeleteShipmentItemAsync(ShipmentItem shipmentItem);
-
         /// <summary>
         /// Gets a shipment items of shipment
         /// </summary>
@@ -98,26 +91,11 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment items</returns>
         Task<IList<ShipmentItem>> GetShipmentItemsByShipmentIdAsync(int shipmentId);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a shipment item
-        /// </summary>
-        /// <param name="shipmentItemId">Shipment item identifier</param>
-        /// <returns>Shipment item</returns>
-        Task<ShipmentItem> GetShipmentItemByIdAsync(int shipmentItemId);
-
         /// <summary>
         /// Inserts a shipment item
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
         Task InsertShipmentItemAsync(ShipmentItem shipmentItem);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Updates the shipment item
-        /// </summary>
-        /// <param name="shipmentItem">Shipment item</param>
-        Task UpdateShipmentItemAsync(ShipmentItem shipmentItem);
 
         /// <summary>
         /// Get quantity in shipments. For example, get planned quantity to be shipped

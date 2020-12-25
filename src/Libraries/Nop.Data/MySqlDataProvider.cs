@@ -41,17 +41,10 @@ namespace Nop.Data
             return dataContext;
         }
 
-        //TODO: may be deleted
-        protected async Task<MySqlConnectionStringBuilder> GetConnectionStringBuilderAsync()
-        {
-            return new MySqlConnectionStringBuilder(await GetCurrentConnectionStringAsync());
-        }
-
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
-
 
         #endregion
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Nop.Core.Html
@@ -10,14 +9,6 @@ namespace Nop.Core.Html
     /// </summary>
     public partial class HtmlHelper
     {
-        #region Fields
-
-        private static readonly Regex _paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
-        private static readonly Regex _paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
-        //private static Regex ampRegex = new Regex("&(?!(?:#[0-9]{2,4};|[a-z0-9]+;))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        #endregion
-
         #region Utilities
 
         private static string EnsureOnlyAllowedHtml(string text)
@@ -203,35 +194,6 @@ namespace Nop.Core.Html
                 text = ReplaceAnchorTags(text);
 
             return text;
-        }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Converts text to paragraph
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public static string ConvertPlainTextToParagraph(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = _paragraphStartRegex.Replace(text, string.Empty);
-            text = _paragraphEndRegex.Replace(text, "\n");
-            text = text.Replace("\r\n", "\n").Replace("\r", "\n");
-            text = text + "\n\n";
-            text = text.Replace("\n\n", "\n");
-            var strArray = text.Split('\n');
-            var builder = new StringBuilder();
-            foreach (var str in strArray)
-            {
-                if (str != null && str.Trim().Length > 0)
-                {
-                    builder.AppendFormat("<p>{0}</p>\n", str);
-                }
-            }
-
-            return builder.ToString();
         }
 
         #endregion

@@ -9,12 +9,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial interface IShippingRateComputationMethod : IPlugin
     {
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a shipping rate computation method type
-        /// </summary>
-        ShippingRateComputationMethodType ShippingRateComputationMethodType { get; }
-
         /// <summary>
         ///  Gets available shipping options
         /// </summary>

@@ -56,14 +56,6 @@ namespace Nop.Services.Gdpr
 
         #region GDPR log
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Get a GDPR log
-        /// </summary>
-        /// <param name="gdprLogId">The GDPR log identifier</param>
-        /// <returns>GDPR log</returns>
-        Task<GdprLog> GetLogByIdAsync(int gdprLogId);
-
         /// <summary>
         /// Get all GDPR log records
         /// </summary>
@@ -86,20 +78,6 @@ namespace Nop.Services.Gdpr
         /// <param name="requestType">Request type</param>
         /// <param name="requestDetails">Request details</param>
         Task InsertLogAsync(Customer customer, int consentId, GdprRequestType requestType, string requestDetails);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Update the GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        Task UpdateLogAsync(GdprLog gdprLog);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Delete a GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        Task DeleteLogAsync(GdprLog gdprLog);
 
         #endregion
 

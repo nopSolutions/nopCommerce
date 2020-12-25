@@ -868,16 +868,7 @@ namespace Nop.Services.Forums
         {
             await _forumSubscriptionRepository.InsertAsync(forumSubscription);
         }
-
-        /// <summary>
-        /// Updates the forum subscription
-        /// </summary>
-        /// <param name="forumSubscription">Forum subscription</param>
-        public virtual async Task UpdateSubscriptionAsync(ForumSubscription forumSubscription)
-        {
-            await _forumSubscriptionRepository.UpdateAsync(forumSubscription);
-        }
-
+        
         /// <summary>
         /// Check whether customer is allowed to create new topics
         /// </summary>
@@ -1149,16 +1140,7 @@ namespace Nop.Services.Forums
 
             await UpdatePostAsync(post);
         }
-
-        /// <summary>
-        /// Update a post vote
-        /// </summary>
-        /// <param name="postVote">Post vote</param>
-        public virtual async Task UpdatePostVoteAsync(ForumPostVote postVote)
-        {
-            await _forumPostVoteRepository.UpdateAsync(postVote);
-        }
-
+        
         /// <summary>
         /// Delete a post vote
         /// </summary>
@@ -1268,33 +1250,7 @@ namespace Nop.Services.Forums
 
             return text;
         }
-
-        /// <summary>
-        /// Get forum last topic
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum topic</returns>
-        public virtual async Task<ForumTopic> GetLastTopicAsync(Forum forum)
-        {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
-
-            return await GetTopicByIdAsync(forum.LastTopicId);
-        }
-
-        /// <summary>
-        /// Get forum last post
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum topic</returns>
-        public virtual async Task<ForumPost> GetLastPostAsync(Forum forum)
-        {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
-
-            return await GetPostByIdAsync(forum.LastPostId);
-        }
-
+        
         /// <summary>
         /// Get first post
         /// </summary>
@@ -1311,20 +1267,7 @@ namespace Nop.Services.Forums
 
             return null;
         }
-
-        /// <summary>
-        /// Get last post
-        /// </summary>
-        /// <param name="forumTopic">Forum topic</param>
-        /// <returns>Forum post</returns>
-        public virtual async Task<ForumPost> GetLastPostAsync(ForumTopic forumTopic)
-        {
-            if (forumTopic == null)
-                throw new ArgumentNullException(nameof(forumTopic));
-
-            return await GetPostByIdAsync(forumTopic.LastPostId);
-        }
-
+        
         /// <summary>
         /// Gets ForumGroup SE (search engine) name
         /// </summary>

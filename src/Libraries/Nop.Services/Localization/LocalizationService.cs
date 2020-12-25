@@ -160,22 +160,7 @@ namespace Nop.Services.Localization
         {
             return await _lsrRepository.GetByIdAsync(localeStringResourceId, cache => default);
         }
-
-        /// <summary>
-        /// Gets a locale string resource
-        /// </summary>
-        /// <param name="resourceName">A string representing a resource name</param>
-        /// <returns>Locale string resource</returns>
-        public virtual async Task<LocaleStringResource> GetLocaleStringResourceByNameAsync(string resourceName)
-        {
-            var workingLanguage = await _workContext.GetWorkingLanguageAsync();
-
-            if (workingLanguage != null)
-                return await GetLocaleStringResourceByNameAsync(resourceName, workingLanguage.Id);
-
-            return null;
-        }
-
+        
         /// <summary>
         /// Gets a locale string resource
         /// </summary>

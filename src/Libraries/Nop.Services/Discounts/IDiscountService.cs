@@ -187,13 +187,6 @@ namespace Nop.Services.Discounts
         /// <param name="discountUsageHistory">Discount usage history record</param>
         Task InsertDiscountUsageHistoryAsync(DiscountUsageHistory discountUsageHistory);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Update discount usage history record
-        /// </summary>
-        /// <param name="discountUsageHistory">Discount usage history record</param>
-        Task UpdateDiscountUsageHistoryAsync(DiscountUsageHistory discountUsageHistory);
-
         /// <summary>
         /// Delete discount usage history record
         /// </summary>

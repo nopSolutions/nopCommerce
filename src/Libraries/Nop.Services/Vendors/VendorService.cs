@@ -122,16 +122,6 @@ namespace Nop.Services.Vendors
         }
 
         /// <summary>
-        /// Gets vendors
-        /// </summary>
-        /// <param name="vendorIds">Vendor identifiers</param>
-        /// <returns>Vendors</returns>
-        public virtual async Task<IList<Vendor>> GetVendorsByIdsAsync(int[] vendorIds)
-        {
-            return await _vendorRepository.GetByIdsAsync(vendorIds);
-        }
-
-        /// <summary>
         /// Inserts a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>

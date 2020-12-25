@@ -36,13 +36,6 @@ namespace Nop.Services.Media
         /// <param name="download">Download</param>
         Task InsertDownloadAsync(Download download);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Updates the download
-        /// </summary>
-        /// <param name="download">Download</param>
-        Task UpdateDownloadAsync(Download download);
-
         /// <summary>
         /// Gets the download binary array
         /// </summary>

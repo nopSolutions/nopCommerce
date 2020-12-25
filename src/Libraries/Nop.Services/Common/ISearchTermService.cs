@@ -9,21 +9,6 @@ namespace Nop.Services.Common
     /// </summary>
     public partial interface ISearchTermService
     {
-        //TODO: may be deleted
-        /// <summary>
-        /// Deletes a search term record
-        /// </summary>
-        /// <param name="searchTerm">Search term</param>
-        Task DeleteSearchTermAsync(SearchTerm searchTerm);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a search term record by identifier
-        /// </summary>
-        /// <param name="searchTermId">Search term identifier</param>
-        /// <returns>Search term</returns>
-        Task<SearchTerm> GetSearchTermByIdAsync(int searchTermId);
-
         /// <summary>
         /// Gets a search term record by keyword
         /// </summary>

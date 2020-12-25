@@ -21,7 +21,8 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
         public async Task CanSetAndGetObjectFromCache()
         {
             await _staticCacheManager.SetAsync(new CacheKey("some_key_1"), 3);
-            _staticCacheManager.Get(new CacheKey("some_key_1"), () => 0).Should().Be(3);
+            var rez = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), () => 0);
+            rez.Should().Be(3);
         }
 
         [Test]

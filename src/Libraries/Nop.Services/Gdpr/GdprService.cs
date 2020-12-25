@@ -176,17 +176,7 @@ namespace Nop.Services.Gdpr
         #endregion
 
         #region GDPR log
-
-        /// <summary>
-        /// Get a GDPR log
-        /// </summary>
-        /// <param name="gdprLogId">The GDPR log identifier</param>
-        /// <returns>GDPR log</returns>
-        public virtual async Task<GdprLog> GetLogByIdAsync(int gdprLogId)
-        {
-            return await _gdprLogRepository.GetByIdAsync(gdprLogId);
-        }
-
+        
         /// <summary>
         /// Get all GDPR log records
         /// </summary>
@@ -248,25 +238,7 @@ namespace Nop.Services.Gdpr
 
             await InsertLogAsync(gdprLog);
         }
-
-        /// <summary>
-        /// Update the GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        public virtual async Task UpdateLogAsync(GdprLog gdprLog)
-        {
-            await _gdprLogRepository.UpdateAsync(gdprLog);
-        }
-
-        /// <summary>
-        /// Delete a GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        public virtual async Task DeleteLogAsync(GdprLog gdprLog)
-        {
-            await _gdprLogRepository.DeleteAsync(gdprLog);
-        }
-
+        
         #endregion
 
         #region Customer

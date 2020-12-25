@@ -915,12 +915,6 @@ namespace Nop.Plugin.Shipping.UPS.Services
                     .SelectMany(shipment => shipment.Package?
                         .SelectMany(package => package?.Activity)).Where(activity => activity != null)
                     .SelectAwait(async activity => await PrepareShipmentStatusEventAsync(activity)).ToListAsync();
-
-                //TODO: test end delete
-                //return response.Shipment?
-                //    .SelectMany(shipment => shipment.Package?
-                //        .SelectMany(package => package.Activity?
-                //            .Select(activity => PrepareShipmentStatusEventAsync(activity).Result)));
             }
             catch (Exception exception)
             {

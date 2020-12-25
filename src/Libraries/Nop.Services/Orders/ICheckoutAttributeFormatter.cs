@@ -8,14 +8,6 @@ namespace Nop.Services.Orders
     /// </summary>
     public partial interface ICheckoutAttributeFormatter
     {
-        //TODO: may be deleted
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Attributes</returns>
-        Task<string> FormatAttributesAsync(string attributesXml);
-
         /// <summary>
         /// Formats attributes
         /// </summary>

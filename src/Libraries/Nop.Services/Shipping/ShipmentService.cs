@@ -244,16 +244,7 @@ namespace Nop.Services.Shipping
         {
             await _shipmentRepository.UpdateAsync(shipment);
         }
-
-        /// <summary>
-        /// Deletes a shipment item
-        /// </summary>
-        /// <param name="shipmentItem">Shipment item</param>
-        public virtual async Task DeleteShipmentItemAsync(ShipmentItem shipmentItem)
-        {
-            await _siRepository.DeleteAsync(shipmentItem);
-        }
-
+        
         /// <summary>
         /// Gets a shipment items of shipment
         /// </summary>
@@ -268,31 +259,12 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Gets a shipment item
-        /// </summary>
-        /// <param name="shipmentItemId">Shipment item identifier</param>
-        /// <returns>Shipment item</returns>
-        public virtual async Task<ShipmentItem> GetShipmentItemByIdAsync(int shipmentItemId)
-        {
-            return await _siRepository.GetByIdAsync(shipmentItemId);
-        }
-
-        /// <summary>
         /// Inserts a shipment item
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
         public virtual async Task InsertShipmentItemAsync(ShipmentItem shipmentItem)
         {
             await _siRepository.InsertAsync(shipmentItem);
-        }
-
-        /// <summary>
-        /// Updates the shipment item
-        /// </summary>
-        /// <param name="shipmentItem">Shipment item</param>
-        public virtual async Task UpdateShipmentItemAsync(ShipmentItem shipmentItem)
-        {
-            await _siRepository.UpdateAsync(shipmentItem);
         }
 
         /// <summary>

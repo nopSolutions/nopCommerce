@@ -107,16 +107,6 @@ namespace Nop.Services.Localization
         #region Methods
 
         /// <summary>
-        /// Gets a localized property
-        /// </summary>
-        /// <param name="localizedPropertyId">Localized property identifier</param>
-        /// <returns>Localized property</returns>
-        public virtual async Task<LocalizedProperty> GetLocalizedPropertyByIdAsync(int localizedPropertyId)
-        {
-            return await _localizedPropertyRepository.GetByIdAsync(localizedPropertyId);
-        }
-
-        /// <summary>
         /// Find localized value
         /// </summary>
         /// <param name="languageId">Language identifier</param>

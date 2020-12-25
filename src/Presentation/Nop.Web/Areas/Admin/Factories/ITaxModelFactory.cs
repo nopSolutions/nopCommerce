@@ -35,13 +35,5 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category list model</returns>
         Task<TaxCategoryListModel> PrepareTaxCategoryListModelAsync(TaxCategorySearchModel searchModel);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Prepare tax configuration model
-        /// </summary>
-        /// <param name="searchModel">Tax configuration model</param>
-        /// <returns>Tax configuration model</returns>
-        Task<TaxConfigurationModel> PrepareTaxConfigurationModelAsync(TaxConfigurationModel searchModel);
     }
 }

@@ -26,14 +26,6 @@ namespace Nop.Services.News
         /// <returns>News</returns>
         Task<NewsItem> GetNewsByIdAsync(int newsId);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets news
-        /// </summary>
-        /// <param name="newsIds">The news identifiers</param>
-        /// <returns>News</returns>
-        Task<IList<NewsItem>> GetNewsByIdsAsync(int[] newsIds);
-
         /// <summary>
         /// Gets all news
         /// </summary>

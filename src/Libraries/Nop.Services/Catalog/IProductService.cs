@@ -84,13 +84,6 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         Task UpdateProductAsync(Product product);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Updates the products
-        /// </summary>
-        /// <param name="products">Product</param>
-        Task UpdateProductsAsync(IList<Product> products);
-
         /// <summary>
         /// Get number of product (published and visible) in certain category
         /// </summary>
@@ -529,13 +522,6 @@ namespace Nop.Services.Catalog
         /// <param name="crossSellProduct">Cross-sell product</param>
         Task InsertCrossSellProductAsync(CrossSellProduct crossSellProduct);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Updates a cross-sell product
-        /// </summary>
-        /// <param name="crossSellProduct">Cross-sell product</param>
-        Task UpdateCrossSellProductAsync(CrossSellProduct crossSellProduct);
-
         /// <summary>
         /// Gets a cross-sells
         /// </summary>
@@ -761,14 +747,6 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Result</returns>
         Task<Warehouse> GetWarehousesByIdAsync(int warehouseId);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a warehouses by product identifier
-        /// </summary>
-        /// <param name="productId">The product identifier</param>
-        /// <returns>List of warehouses</returns>
-        Task<IList<Warehouse>> GetWarehousesByProductIdAsync(int productId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory

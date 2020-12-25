@@ -29,14 +29,6 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resource</returns>
         Task<LocaleStringResource> GetLocaleStringResourceByIdAsync(int localeStringResourceId);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a locale string resource
-        /// </summary>
-        /// <param name="resourceName">A string representing a resource name</param>
-        /// <returns>Locale string resource</returns>
-        Task<LocaleStringResource> GetLocaleStringResourceByNameAsync(string resourceName);
-
         /// <summary>
         /// Gets a locale string resource
         /// </summary>

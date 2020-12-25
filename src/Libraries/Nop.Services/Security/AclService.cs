@@ -85,16 +85,6 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
-        /// Gets an ACL record
-        /// </summary>
-        /// <param name="aclRecordId">ACL record identifier</param>
-        /// <returns>ACL record</returns>
-        public virtual async Task<AclRecord> GetAclRecordByIdAsync(int aclRecordId)
-        {
-            return await _aclRecordRepository.GetByIdAsync(aclRecordId, cache => default);
-        }
-
-        /// <summary>
         /// Gets ACL records
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
@@ -142,15 +132,6 @@ namespace Nop.Services.Security
             };
 
             await InsertAclRecordAsync(aclRecord);
-        }
-
-        /// <summary>
-        /// Updates the ACL record
-        /// </summary>
-        /// <param name="aclRecord">ACL record</param>
-        public virtual async Task UpdateAclRecordAsync(AclRecord aclRecord)
-        {
-            await _aclRecordRepository.UpdateAsync(aclRecord);
         }
 
         /// <summary>

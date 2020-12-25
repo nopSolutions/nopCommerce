@@ -45,20 +45,7 @@ namespace Nop.Services.ExportImport
         {
             await xmlWriter.WriteAttributeStringAsync(null, nodeName, null, nodeValue?.ToString() ?? defaulValue);
         }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Write attribute string with prefix async
-        /// </summary>
-        /// <param name="xmlWriter">XML writer</param>
-        /// <param name="nodeName">Node name</param>
-        /// <param name="nodeValue">Node value</param>
-        /// <param name="defaulValue">Default value</param>
-        public static async Task WriteAttributeStringPrefixAsync(this XmlWriter xmlWriter, string pefix, string nodeName, object nodeValue, string defaulValue = "")
-        {
-            await xmlWriter.WriteAttributeStringAsync(pefix, nodeName, null, nodeValue?.ToString() ?? defaulValue);
-        }
-
+        
         /// <summary>
         /// Write element string async
         /// </summary>

@@ -47,18 +47,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Utilities
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets currency string
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <returns>Currency string without exchange rate</returns>
-        protected virtual async Task<string> GetCurrencyStringAsync(decimal amount)
-        {
-            return GetCurrencyString(amount, true, await _workContext.GetWorkingCurrencyAsync());
-        }
-
+        
         /// <summary>
         /// Gets currency string
         /// </summary>

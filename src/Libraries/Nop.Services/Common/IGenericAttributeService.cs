@@ -22,14 +22,6 @@ namespace Nop.Services.Common
         /// <param name="attributes">Attributes</param>
         Task DeleteAttributesAsync(IList<GenericAttribute> attributes);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets an attribute
-        /// </summary>
-        /// <param name="attributeId">Attribute identifier</param>
-        /// <returns>An attribute</returns>
-        Task<GenericAttribute> GetAttributeByIdAsync(int attributeId);
-
         /// <summary>
         /// Inserts an attribute
         /// </summary>

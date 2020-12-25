@@ -175,11 +175,6 @@ namespace Nop.Plugin.Shipping.UPS
         #region Properties
 
         /// <summary>
-        /// Gets a shipping rate computation method type
-        /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType => ShippingRateComputationMethodType.Realtime;
-
-        /// <summary>
         /// Gets a shipment tracker
         /// </summary>
         public IShipmentTracker ShipmentTracker => new UPSShipmentTracker(_upsService);

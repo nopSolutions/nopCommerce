@@ -16,12 +16,5 @@
         /// </summary>
         /// <returns></returns>
         bool IsMobileDevice();
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Get a value indicating whether the request is made by IE8 browser
-        /// </summary>
-        /// <returns></returns>
-        bool IsIe8();
     }
 }

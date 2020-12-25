@@ -27,14 +27,6 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         Task DeleteAclRecordAsync(AclRecord aclRecord);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets an ACL record
-        /// </summary>
-        /// <param name="aclRecordId">ACL record identifier</param>
-        /// <returns>ACL record</returns>
-        Task<AclRecord> GetAclRecordByIdAsync(int aclRecordId);
-
         /// <summary>
         /// Gets ACL records
         /// </summary>
@@ -58,13 +50,6 @@ namespace Nop.Services.Security
         /// <param name="customerRoleIds">Customer's role identifiers</param>
         /// <returns>True if exist; otherwise false</returns>
         Task<bool> IsEntityAclMappingExistAsync<TEntity>(int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported;
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Updates the ACL record
-        /// </summary>
-        /// <param name="aclRecord">ACL record</param>
-        Task UpdateAclRecordAsync(AclRecord aclRecord);
 
         /// <summary>
         /// Find customer role identifiers with granted access

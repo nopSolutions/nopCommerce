@@ -31,15 +31,6 @@ namespace Nop.Services.Helpers
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         Task<DateTime> ConvertToUserTimeAsync(DateTime dt, DateTimeKind sourceDateTimeKind);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Converts the date and time to current user date and time
-        /// </summary>
-        /// <param name="dt">The date and time to convert.</param>
-        /// <param name="sourceTimeZone">The time zone of dateTime.</param>
-        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
-        Task<DateTime> ConvertToUserTimeAsync(DateTime dt, TimeZoneInfo sourceTimeZone);
-
         /// <summary>
         /// Converts the date and time to current user date and time
         /// </summary>
@@ -91,8 +82,6 @@ namespace Nop.Services.Helpers
         TimeZoneInfo DefaultStoreTimeZone 
         { 
             get;
-            //TODO: may be deleted
-            set;
         }
     }
 }

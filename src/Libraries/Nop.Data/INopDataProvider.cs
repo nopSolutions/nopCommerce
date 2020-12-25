@@ -202,36 +202,6 @@ namespace Nop.Data
         /// <returns>Returns collection of query result records</returns>
         Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Executes command and returns number of affected records.
-        /// </summary>
-        /// <param name="sqlStatement">Command text</param>
-        /// <param name="dataParameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        Task<int> ExecuteNonQueryAsync(string sqlStatement, params DataParameter[] dataParameters);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// single value
-        /// </summary>
-        /// <typeparam name="T">Result record type</typeparam>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Resulting value</returns>
-        Task<T> ExecuteStoredProcedureAsync<T>(string procedureName, params DataParameter[] parameters);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// number of affected records.
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Returns collection of query result records</returns>
-        Task<int> ExecuteStoredProcedureAsync(string procedureName, params DataParameter[] parameters);
-
         #endregion
 
         #region Properties

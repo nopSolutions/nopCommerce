@@ -54,34 +54,7 @@ namespace Nop.Core
 
             return sw.ToString();
         }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Encodes an attribute
-        /// </summary>
-        /// <param name="str">Attribute</param>
-        /// <returns>Encoded attribute</returns>
-        public static async Task<string> XmlEncodeAttributeAsync(string str)
-        {
-            if (str == null)
-                return null;
-            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
-            
-            return await XmlEncodeAttributeAsIsAsync(str);
-        }
-
-        /// <summary>
-        /// Encodes an attribute as is
-        /// </summary>
-        /// <param name="str">Attribute</param>
-        /// <returns>Encoded attribute</returns>
-        public static async Task<string> XmlEncodeAttributeAsIsAsync(string str)
-        {
-            var rez = await XmlEncodeAsIsAsync(str);
-
-            return rez.Replace("\"", "&quot;");
-        }
-
+        
         /// <summary>
         /// Decodes an attribute
         /// </summary>
@@ -109,21 +82,6 @@ namespace Nop.Core
             xmlS.Serialize(sw, dateTime);
 
             return sb.ToString();
-        }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Deserializes a datetime
-        /// </summary>
-        /// <param name="dateTime">Datetime</param>
-        /// <returns>Deserialized datetime</returns>
-        public static DateTime DeserializeDateTime(string dateTime)
-        {
-            var xmlS = new XmlSerializer(typeof(DateTime));
-            using var sr = new StringReader(dateTime);
-            var test = xmlS.Deserialize(sr);
-
-            return (DateTime)test;
         }
 
         #endregion

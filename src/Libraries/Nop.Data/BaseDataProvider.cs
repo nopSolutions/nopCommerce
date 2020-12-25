@@ -303,63 +303,9 @@ namespace Nop.Data
         public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
-            dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
+            await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
-
-        /// <summary>
-        /// Executes command returns number of affected records.
-        /// </summary>
-        /// <param name="sqlStatement">Command text</param>
-        /// <param name="dataParameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        public virtual async Task<int> ExecuteNonQueryAsync(string sqlStatement, params DataParameter[] dataParameters)
-        {
-            using var dataContext = await CreateDataConnectionAsync();
-            var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
-            var affectedRecords = await command.ExecuteAsync();
-
-            UpdateOutputParameters(dataContext, dataParameters);
-
-            return affectedRecords;
-        }
-
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// single value
-        /// </summary>
-        /// <typeparam name="T">Result record type</typeparam>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Resulting value</returns>
-        public virtual async Task<T> ExecuteStoredProcedureAsync<T>(string procedureName, params DataParameter[] parameters)
-        {
-            using var dataContext = await CreateDataConnectionAsync();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
-
-            var result = await command.ExecuteProcAsync<T>();
-            UpdateOutputParameters(dataContext, parameters);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// number of affected records.
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        public virtual async Task<int> ExecuteStoredProcedureAsync(string procedureName, params DataParameter[] parameters)
-        {
-            using var dataContext = await CreateDataConnectionAsync();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
-
-            var affectedRecords = await command.ExecuteProcAsync();
-            UpdateOutputParameters(dataContext, parameters);
-
-            return affectedRecords;
-        }
-
+        
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type

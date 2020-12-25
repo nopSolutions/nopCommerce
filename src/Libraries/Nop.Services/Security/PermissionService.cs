@@ -110,16 +110,6 @@ namespace Nop.Services.Security
         #region Methods
 
         /// <summary>
-        /// Gets a permission
-        /// </summary>
-        /// <param name="permissionId">Permission identifier</param>
-        /// <returns>Permission</returns>
-        public virtual async Task<PermissionRecord> GetPermissionRecordByIdAsync(int permissionId)
-        {
-            return await _permissionRecordRepository.GetByIdAsync(permissionId, cache => default);
-        }
-
-        /// <summary>
         /// Gets all permissions
         /// </summary>
         /// <returns>Permissions</returns>
@@ -197,26 +187,6 @@ namespace Nop.Services.Security
 
                 //save localization
                 await _localizationService.SaveLocalizedPermissionNameAsync(permission1);
-            }
-        }
-
-        /// <summary>
-        /// Uninstall permissions
-        /// </summary>
-        /// <param name="permissionProvider">Permission provider</param>
-        public virtual async Task UninstallPermissionsAsync(IPermissionProvider permissionProvider)
-        {
-            var permissions = permissionProvider.GetPermissions();
-            foreach (var permission in permissions)
-            {
-                var permission1 = await GetPermissionRecordBySystemNameAsync(permission.SystemName);
-                if (permission1 == null)
-                    continue;
-
-                await DeletePermissionRecordAsync(permission1);
-
-                //delete permission locales
-                await _localizationService.DeleteLocalizedPermissionNameAsync(permission1);
             }
         }
 

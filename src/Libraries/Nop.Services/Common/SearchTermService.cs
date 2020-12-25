@@ -30,25 +30,6 @@ namespace Nop.Services.Common
         #region Methods
 
         /// <summary>
-        /// Deletes a search term record
-        /// </summary>
-        /// <param name="searchTerm">Search term</param>
-        public virtual async Task DeleteSearchTermAsync(SearchTerm searchTerm)
-        {
-            await _searchTermRepository.DeleteAsync(searchTerm);
-        }
-
-        /// <summary>
-        /// Gets a search term record by identifier
-        /// </summary>
-        /// <param name="searchTermId">Search term identifier</param>
-        /// <returns>Search term</returns>
-        public virtual async Task<SearchTerm> GetSearchTermByIdAsync(int searchTermId)
-        {
-            return await _searchTermRepository.GetByIdAsync(searchTermId, cache => default);
-        }
-
-        /// <summary>
         /// Gets a search term record by keyword
         /// </summary>
         /// <param name="keyword">Search term keyword</param>

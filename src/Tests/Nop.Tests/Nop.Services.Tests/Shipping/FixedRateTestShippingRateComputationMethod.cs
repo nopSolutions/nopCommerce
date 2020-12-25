@@ -58,14 +58,10 @@ namespace Nop.Tests.Nop.Services.Tests.Shipping
         #region Properties
         
         /// <summary>
-        /// Gets a shipping rate computation method type
-        /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType => ShippingRateComputationMethodType.Offline;
-
-        /// <summary>
         /// Gets a shipment tracker
         /// </summary>
         public IShipmentTracker ShipmentTracker => null;
+
         #endregion
     }
 }

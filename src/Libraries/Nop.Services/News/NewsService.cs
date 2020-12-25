@@ -68,16 +68,6 @@ namespace Nop.Services.News
         }
 
         /// <summary>
-        /// Gets news
-        /// </summary>
-        /// <param name="newsIds">The news identifiers</param>
-        /// <returns>News</returns>
-        public virtual async Task<IList<NewsItem>> GetNewsByIdsAsync(int[] newsIds)
-        {
-            return await _newsItemRepository.GetByIdsAsync(newsIds);
-        }
-
-        /// <summary>
         /// Gets all news
         /// </summary>
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>

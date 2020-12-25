@@ -77,39 +77,7 @@ namespace Nop.Web.Framework.Controllers
             result.WriteTo(writer, HtmlEncoder.Default);
             return writer.ToString();
         }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Render partial view to string
-        /// </summary>
-        /// <returns>Result</returns>
-        protected virtual async Task<string> RenderPartialViewToStringAsync()
-        {
-            return await RenderPartialViewToStringAsync(null, null);
-        }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Render partial view to string
-        /// </summary>
-        /// <param name="viewName">View name</param>
-        /// <returns>Result</returns>
-        protected virtual async Task<string> RenderPartialViewToStringAsync(string viewName)
-        {
-            return await RenderPartialViewToStringAsync(viewName, null);
-        }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Render partial view to string
-        /// </summary>
-        /// <param name="model">Model</param>
-        /// <returns>Result</returns>
-        protected virtual async Task<string> RenderPartialViewToStringAsync(object model)
-        {
-            return await RenderPartialViewToStringAsync(null, model);
-        }
-
+        
         /// <summary>
         /// Render partial view to string
         /// </summary>

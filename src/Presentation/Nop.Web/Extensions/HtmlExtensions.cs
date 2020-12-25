@@ -291,29 +291,5 @@ namespace Nop.Web.Extensions
 
             return await urlRecordService.GetSeNameAsync(topic);
         }
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Get topic title by system name
-        /// </summary>
-        /// <typeparam name="TModel">Model type</typeparam>
-        /// <param name="html">HTML helper</param>
-        /// <param name="systemName">System name</param>
-        /// <returns>Topic title</returns>
-        public static async Task<string> GetTopicTitleAsync<TModel>(this IHtmlHelper<TModel> html, string systemName)
-        {
-            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            var store = await storeContext.GetCurrentStoreAsync();
-            var topicService = EngineContext.Current.Resolve<ITopicService>();
-
-            var topic = await topicService.GetTopicBySystemNameAsync(systemName, store.Id);
-
-            if (topic == null)
-                return string.Empty;
-
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
-            return await localizationService.GetLocalizedAsync(topic, x => x.Title);
-        }
     }
 }

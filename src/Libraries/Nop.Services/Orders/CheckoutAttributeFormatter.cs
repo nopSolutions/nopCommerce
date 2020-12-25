@@ -59,18 +59,7 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Formats attributes
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributesAsync(string attributesXml)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            return await FormatAttributesAsync(attributesXml, customer);
-        }
-
+        
         /// <summary>
         /// Formats attributes
         /// </summary>

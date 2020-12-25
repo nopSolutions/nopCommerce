@@ -362,24 +362,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
-        /// <summary>
-        /// Prepare plugins configuration model
-        /// </summary>
-        /// <param name="pluginsConfigurationModel">Plugins configuration model</param>
-        /// <returns>Plugins configuration model</returns>
-        public virtual async Task<PluginsConfigurationModel> PreparePluginsConfigurationModelAsync(PluginsConfigurationModel pluginsConfigurationModel)
-        {
-            if (pluginsConfigurationModel == null)
-                throw new ArgumentNullException(nameof(pluginsConfigurationModel));
-
-            //prepare nested search models
-            await PreparePluginSearchModelAsync(pluginsConfigurationModel.PluginsLocal);
-            await PrepareOfficialFeedPluginSearchModelAsync(pluginsConfigurationModel.AllPluginsAndThemes);
-
-            return pluginsConfigurationModel;
-        }
-
+        
         /// <summary>
         /// Prepare plugin models for admin navigation
         /// </summary>

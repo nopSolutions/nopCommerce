@@ -41,30 +41,12 @@ namespace Nop.Services.Logging
         #region Methods
 
         /// <summary>
-        /// Inserts an activity log type item
-        /// </summary>
-        /// <param name="activityLogType">Activity log type item</param>
-        public virtual async Task InsertActivityTypeAsync(ActivityLogType activityLogType)
-        {
-            await _activityLogTypeRepository.InsertAsync(activityLogType);
-        }
-
-        /// <summary>
         /// Updates an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
         public virtual async Task UpdateActivityTypeAsync(ActivityLogType activityLogType)
         {
             await _activityLogTypeRepository.UpdateAsync(activityLogType);
-        }
-
-        /// <summary>
-        /// Deletes an activity log type item
-        /// </summary>
-        /// <param name="activityLogType">Activity log type</param>
-        public virtual async Task DeleteActivityTypeAsync(ActivityLogType activityLogType)
-        {
-            await _activityLogTypeRepository.DeleteAsync(activityLogType);
         }
 
         /// <summary>

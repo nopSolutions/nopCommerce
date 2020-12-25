@@ -40,6 +40,19 @@ namespace Nop.Services.Stores
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Inserts a store mapping record
+        /// </summary>
+        /// <param name="storeMapping">Store mapping</param>
+        protected virtual async Task InsertStoreMappingAsync(StoreMapping storeMapping)
+        {
+            await _storeMappingRepository.InsertAsync(storeMapping);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -67,16 +80,6 @@ namespace Nop.Services.Stores
         }
 
         /// <summary>
-        /// Gets a store mapping record
-        /// </summary>
-        /// <param name="storeMappingId">Store mapping record identifier</param>
-        /// <returns>Store mapping record</returns>
-        public virtual async Task<StoreMapping> GetStoreMappingByIdAsync(int storeMappingId)
-        {
-            return await _storeMappingRepository.GetByIdAsync(storeMappingId);
-        }
-
-        /// <summary>
         /// Gets store mapping records
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
@@ -100,15 +103,6 @@ namespace Nop.Services.Stores
             var storeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return storeMappings;
-        }
-
-        /// <summary>
-        /// Inserts a store mapping record
-        /// </summary>
-        /// <param name="storeMapping">Store mapping</param>
-        public virtual async Task InsertStoreMappingAsync(StoreMapping storeMapping)
-        {
-            await _storeMappingRepository.InsertAsync(storeMapping);
         }
 
         /// <summary>

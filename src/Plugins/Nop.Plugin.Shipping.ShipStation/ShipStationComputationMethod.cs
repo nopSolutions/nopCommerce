@@ -169,11 +169,6 @@ namespace Nop.Plugin.Shipping.ShipStation
         #region Properties
 
         /// <summary>
-        /// Gets a shipping rate computation method type
-        /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType => ShippingRateComputationMethodType.Realtime;
-
-        /// <summary>
         /// Gets a shipment tracker
         /// </summary>
         public IShipmentTracker ShipmentTracker => null;

@@ -561,16 +561,7 @@ namespace Nop.Services.Catalog
         {
             await _productRepository.UpdateAsync(product);
         }
-
-        /// <summary>
-        /// Update products
-        /// </summary>
-        /// <param name="products">Products</param>
-        public virtual async Task UpdateProductsAsync(IList<Product> products)
-        {
-            await _productRepository.UpdateAsync(products);
-        }
-
+        
         /// <summary>
         /// Gets featured products by a category identifier
         /// </summary>
@@ -1875,16 +1866,7 @@ namespace Nop.Services.Catalog
         {
             await _crossSellProductRepository.InsertAsync(crossSellProduct);
         }
-
-        /// <summary>
-        /// Updates a cross-sell product
-        /// </summary>
-        /// <param name="crossSellProduct">Cross-sell product</param>
-        public virtual async Task UpdateCrossSellProductAsync(CrossSellProduct crossSellProduct)
-        {
-            await _crossSellProductRepository.UpdateAsync(crossSellProduct);
-        }
-
+        
         /// <summary>
         /// Gets a cross-sells
         /// </summary>
@@ -2355,19 +2337,6 @@ namespace Nop.Services.Catalog
         public virtual async Task<Warehouse> GetWarehousesByIdAsync(int warehouseId)
         {
             return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
-        }
-
-        /// <summary>
-        /// Gets a warehouses by product identifier
-        /// </summary>
-        /// <param name="productId">The product identifier</param>
-        /// <returns>List of warehouses</returns>
-        public virtual async Task<IList<Warehouse>> GetWarehousesByProductIdAsync(int productId)
-        {
-            return await (from w in _warehouseRepository.Table
-                          join pwi in _productWarehouseInventoryRepository.Table on w.Id equals pwi.WarehouseId
-                          where pwi.ProductId == productId
-                          select w).ToListAsync();
         }
 
         /// <summary>

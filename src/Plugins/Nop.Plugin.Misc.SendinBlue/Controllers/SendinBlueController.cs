@@ -480,9 +480,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         {
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
 
-            //TODO: may be deleted
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>(storeId);
-
             //get message templates which are sending in SMS
             var allMessageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(storeId);
             var messageTemplates = await allMessageTemplates

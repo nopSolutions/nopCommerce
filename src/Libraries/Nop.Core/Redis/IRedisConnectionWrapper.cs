@@ -36,12 +36,5 @@ namespace Nop.Core.Redis
         /// </summary>
         /// <returns>Array of endpoints</returns>
         Task<EndPoint[]> GetEndPointsAsync();
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Delete all the keys of the database
-        /// </summary>
-        /// <param name="db">Database number</param>
-        Task FlushDatabaseAsync(RedisDatabaseNumber db);
     }
 }

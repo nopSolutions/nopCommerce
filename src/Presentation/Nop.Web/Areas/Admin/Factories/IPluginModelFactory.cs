@@ -48,14 +48,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>List model of plugins of the official feed</returns>
         Task<OfficialFeedPluginListModel> PrepareOfficialFeedPluginListModelAsync(OfficialFeedPluginSearchModel searchModel);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Prepare plugins configuration model
-        /// </summary>
-        /// <param name="configModel">Plugins configuration model</param>
-        /// <returns>Plugins configuration model</returns>
-        Task<PluginsConfigurationModel> PreparePluginsConfigurationModelAsync(PluginsConfigurationModel configModel);
-
         /// <summary>
         /// Prepare plugin models for admin navigation
         /// </summary>

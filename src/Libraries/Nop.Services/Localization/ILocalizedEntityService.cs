@@ -11,14 +11,6 @@ namespace Nop.Services.Localization
     /// </summary>
     public partial interface ILocalizedEntityService
     {
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a localized property
-        /// </summary>
-        /// <param name="localizedPropertyId">Localized property identifier</param>
-        /// <returns>Localized property</returns>
-        Task<LocalizedProperty> GetLocalizedPropertyByIdAsync(int localizedPropertyId);
-
         /// <summary>
         /// Find localized value
         /// </summary>

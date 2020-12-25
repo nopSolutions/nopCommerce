@@ -268,18 +268,6 @@ namespace Nop.Core.Infrastructure
         {
             return FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
         }
-
-        /// <summary>
-        /// Find classes of type
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="assemblies">Assemblies</param>
-        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes</param>
-        /// <returns>Result</returns>
-        public IEnumerable<Type> FindClassesOfType<T>(IEnumerable<Assembly> assemblies, bool onlyConcreteClasses = true)
-        {
-            return FindClassesOfType(typeof(T), assemblies, onlyConcreteClasses);
-        }
         
         /// <summary>
         /// Gets the assemblies related to the current implementation.

@@ -10,26 +10,11 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial interface IUrlRecordService
     {
-        //TODO: may be deleted
-        /// <summary>
-        /// Deletes an URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        Task DeleteUrlRecordAsync(UrlRecord urlRecord);
-
         /// <summary>
         /// Deletes an URL records
         /// </summary>
         /// <param name="urlRecords">URL records</param>
         Task DeleteUrlRecordsAsync(IList<UrlRecord> urlRecords);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets an URL record
-        /// </summary>
-        /// <param name="urlRecordId">URL record identifier</param>
-        /// <returns>URL record</returns>
-        Task<UrlRecord> GetUrlRecordByIdAsync(int urlRecordId);
 
         /// <summary>
         /// Gets an URL records

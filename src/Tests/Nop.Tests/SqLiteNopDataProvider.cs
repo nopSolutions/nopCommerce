@@ -372,47 +372,6 @@ namespace Nop.Tests
             }
         }
 
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// single value
-        /// </summary>
-        /// <typeparam name="T">Result record type</typeparam>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Resulting value</returns>
-        public Task<T> ExecuteStoredProcedureAsync<T>(string procedureName, params DataParameter[] parameters)
-        {
-            using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-            {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
-
-                var result = command.ExecuteProc<T>();
-                UpdateOutputParameters(DataContext, parameters);
-
-                return Task.FromResult(result);
-            }
-        }
-
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// number of affected records.
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        public Task<int> ExecuteStoredProcedureAsync(string procedureName, params DataParameter[] parameters)
-        {
-            using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-            {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
-
-                var affectedRecords = command.ExecuteProc();
-                UpdateOutputParameters(DataContext, parameters);
-
-                return Task.FromResult(affectedRecords);
-            }
-        }
-
         public Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storageKey, IQueryable<TItem> query) where TItem : class
         {
             return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storageKey, query, DataContext));
@@ -431,11 +390,6 @@ namespace Nop.Tests
         public Task<bool> DatabaseExistsAsync()
         {
             return Task.FromResult(DatabaseExists());
-        }
-
-        public Task<int> ExecuteNonQueryAsync(string sqlStatement, params DataParameter[] dataParameters)
-        {
-            return Task.FromResult(ExecuteNonQuery(sqlStatement, dataParameters));
         }
 
         #endregion

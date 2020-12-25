@@ -10,14 +10,6 @@ namespace Nop.Services.Security
     /// </summary>
     public partial interface IPermissionService
     {
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a permission
-        /// </summary>
-        /// <param name="permissionId">Permission identifier</param>
-        /// <returns>Permission</returns>
-        Task<PermissionRecord> GetPermissionRecordByIdAsync(int permissionId);
-
         /// <summary>
         /// Gets all permissions
         /// </summary>
@@ -35,13 +27,6 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
         Task InstallPermissionsAsync(IPermissionProvider permissionProvider);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Uninstall permissions
-        /// </summary>
-        /// <param name="permissionProvider">Permission provider</param>
-        Task UninstallPermissionsAsync(IPermissionProvider permissionProvider);
 
         /// <summary>
         /// Authorize permission

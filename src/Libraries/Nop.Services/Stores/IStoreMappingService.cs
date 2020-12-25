@@ -26,14 +26,6 @@ namespace Nop.Services.Stores
         /// <param name="storeMapping">Store mapping record</param>
         Task DeleteStoreMappingAsync(StoreMapping storeMapping);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Gets a store mapping record
-        /// </summary>
-        /// <param name="storeMappingId">Store mapping record identifier</param>
-        /// <returns>Store mapping record</returns>
-        Task<StoreMapping> GetStoreMappingByIdAsync(int storeMappingId);
-
         /// <summary>
         /// Gets store mapping records
         /// </summary>
@@ -41,13 +33,6 @@ namespace Nop.Services.Stores
         /// <param name="entity">Entity</param>
         /// <returns>Store mapping records</returns>
         Task<IList<StoreMapping>> GetStoreMappingsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported;
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Inserts a store mapping record
-        /// </summary>
-        /// <param name="storeMapping">Store mapping</param>
-        Task InsertStoreMappingAsync(StoreMapping storeMapping);
 
         /// <summary>
         /// Inserts a store mapping record

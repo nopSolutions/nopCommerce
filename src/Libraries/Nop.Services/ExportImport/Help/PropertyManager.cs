@@ -45,19 +45,6 @@ namespace Nop.Services.ExportImport.Help
             }
         }
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Add new property
-        /// </summary>
-        /// <param name="property">Property to add</param>
-        public void AddProperty(PropertyByName<T> property)
-        {
-            if (_properties.ContainsKey(property.PropertyName))
-                return;
-            
-            _properties.Add(property.PropertyName, property);
-        }
-
         /// <summary>
         /// Export objects to XLSX
         /// </summary>

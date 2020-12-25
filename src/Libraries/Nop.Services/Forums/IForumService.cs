@@ -260,13 +260,6 @@ namespace Nop.Services.Forums
         /// <param name="forumSubscription">Forum subscription</param>
         Task InsertSubscriptionAsync(ForumSubscription forumSubscription);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Updates the forum subscription
-        /// </summary>
-        /// <param name="forumSubscription">Forum subscription</param>
-        Task UpdateSubscriptionAsync(ForumSubscription forumSubscription);
-
         /// <summary>
         /// Check whether customer is allowed to create new topics
         /// </summary>
@@ -368,13 +361,6 @@ namespace Nop.Services.Forums
         /// <param name="postVote">Post vote</param>
         Task InsertPostVoteAsync(ForumPostVote postVote);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Update a post vote
-        /// </summary>
-        /// <param name="postVote">Post vote</param>
-        Task UpdatePostVoteAsync(ForumPostVote postVote);
-
         /// <summary>
         /// Delete a post vote
         /// </summary>
@@ -413,36 +399,12 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         string FormatPrivateMessageText(PrivateMessage pm);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Get forum last topic
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum topic</returns>
-        Task<ForumTopic> GetLastTopicAsync(Forum forum);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Get forum last post
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum topic</returns>
-        Task<ForumPost> GetLastPostAsync(Forum forum);
-
         /// <summary>
         /// Get first post
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>Forum post</returns>
         Task<ForumPost> GetFirstPostAsync(ForumTopic forumTopic);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Get last post
-        /// </summary>
-        /// <param name="forumTopic">Forum topic</param>
-        /// <returns>Forum post</returns>
-        Task<ForumPost> GetLastPostAsync(ForumTopic forumTopic);
 
         /// <summary>
         /// Gets ForumGroup SE (search engine) name

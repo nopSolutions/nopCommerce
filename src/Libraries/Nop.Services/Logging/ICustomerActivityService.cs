@@ -12,25 +12,11 @@ namespace Nop.Services.Logging
     /// </summary>
     public partial interface ICustomerActivityService
     {
-        //TODO: may be deleted
-        /// <summary>
-        /// Inserts an activity log type item
-        /// </summary>
-        /// <param name="activityLogType">Activity log type item</param>
-        Task InsertActivityTypeAsync(ActivityLogType activityLogType);
-
         /// <summary>
         /// Updates an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
         Task UpdateActivityTypeAsync(ActivityLogType activityLogType);
-
-        //TODO: may be deleted
-        /// <summary>
-        /// Deletes an activity log type item
-        /// </summary>
-        /// <param name="activityLogType">Activity log type</param>
-        Task DeleteActivityTypeAsync(ActivityLogType activityLogType);
 
         /// <summary>
         /// Gets all activity log type items

@@ -100,15 +100,6 @@ namespace Nop.Services.Orders
         /// <param name="order">The order</param>
         Task UpdateOrderAsync(Order order);
 
-        //TODO: may be deleted
-        /// <summary>
-        /// Get an order by authorization transaction ID and payment method system name
-        /// </summary>
-        /// <param name="authorizationTransactionId">Authorization transaction ID</param>
-        /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>Order</returns>
-        Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethodAsync(string authorizationTransactionId, string paymentMethodSystemName);
-
         /// <summary>
         /// Parse tax rates
         /// </summary>

@@ -233,7 +233,6 @@ namespace Nop.Web.Framework.Extensions
 
         #region Form fields
 
-        //TODO: may be deleted
         /// <summary>
         /// Generate hint control
         /// </summary>

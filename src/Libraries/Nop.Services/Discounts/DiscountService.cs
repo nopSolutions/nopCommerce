@@ -650,15 +650,6 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
-        /// Update discount usage history record
-        /// </summary>
-        /// <param name="discountUsageHistory">Discount usage history record</param>
-        public virtual async Task UpdateDiscountUsageHistoryAsync(DiscountUsageHistory discountUsageHistory)
-        {
-            await _discountUsageHistoryRepository.UpdateAsync(discountUsageHistory);
-        }
-
-        /// <summary>
         /// Delete discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
