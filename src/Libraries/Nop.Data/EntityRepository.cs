@@ -262,7 +262,7 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            using var transaction = new TransactionScope();
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             await _dataProvider.BulkInsertEntitiesAsync(entities);
             transaction.Complete();
 
