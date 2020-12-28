@@ -27,7 +27,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Models.Polls
                                });
 
             //clone
-            var model2 = (PollModel)model1.Clone();
+            var model2 = model1 with { };
             model2.Id.Should().Be(1);
             model2.Name.Should().Be("Name 1");
             model2.AlreadyVoted.Should().BeTrue();

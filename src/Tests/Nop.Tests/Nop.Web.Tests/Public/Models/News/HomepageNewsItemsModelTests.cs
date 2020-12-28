@@ -47,7 +47,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Models.News
             model1.NewsItems.Add(newsItemModel1);
 
             //clone
-            var model2 = (HomepageNewsItemsModel)model1.Clone();
+            var model2 = model1 with { };
             model2.WorkingLanguageId.Should().Be(1);
             model2.NewsItems.Should().NotBeNull();
             model2.NewsItems.Count.Should().Be(1);
