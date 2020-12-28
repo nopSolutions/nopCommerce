@@ -211,7 +211,7 @@ namespace Nop.Services.Directory
             var exchangeRatio = targetMeasureDimension.Ratio;
             if (exchangeRatio == decimal.Zero)
                 throw new NopException($"Exchange ratio not set for dimension [{targetMeasureDimension.Name}]");
-            result = result * exchangeRatio;
+            result *= exchangeRatio;
 
             return result;
         }
@@ -340,7 +340,7 @@ namespace Nop.Services.Directory
             var exchangeRatio = targetMeasureWeight.Ratio;
             if (exchangeRatio == decimal.Zero)
                 throw new NopException($"Exchange ratio not set for weight [{targetMeasureWeight.Name}]");
-            result = result * exchangeRatio;
+            result *= exchangeRatio;
 
             return result;
         }

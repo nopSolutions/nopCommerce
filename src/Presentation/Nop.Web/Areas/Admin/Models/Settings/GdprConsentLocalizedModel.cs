@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a GDPR consent localized model
     /// </summary>
-    public partial class GdprConsentLocalizedModel : ILocalizedLocaleModel
+    public partial record GdprConsentLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

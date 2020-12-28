@@ -1,4 +1,4 @@
-#region Copyright � 2001-2003 Jean-Claude Manoli [jc@manoli.net]
+﻿#region Copyright © 2001-2003 Jean-Claude Manoli [jc@manoli.net]
 /*
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the author(s) be held liable for any damages arising from
@@ -99,7 +99,7 @@ namespace Nop.Core.Html.CodeFormatter
 
             //build a master regex with capturing groups
             var regAll = new StringBuilder();
-            regAll.Append("(");
+            regAll.Append('(');
             regAll.Append(CommentRegex);
             regAll.Append(")|(");
             regAll.Append(StringRegex);
@@ -110,7 +110,7 @@ namespace Nop.Core.Html.CodeFormatter
             //}
             regAll.Append(")|(");
             regAll.Append(regKeyword);
-            regAll.Append(")");
+            regAll.Append(')');
 
             var caseInsensitive = CaseSensitive ? 0 : RegexOptions.IgnoreCase;
             CodeRegex = new Regex(regAll.ToString(), RegexOptions.Singleline | caseInsensitive);
@@ -134,7 +134,7 @@ namespace Nop.Core.Html.CodeFormatter
                 {
                     if (sb.Length > 0)
                     {
-                        sb.Append("\n");
+                        sb.Append('\n');
                     }
 
                     sb.Append("<span class=\"rem\">");

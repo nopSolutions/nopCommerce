@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Models
     /// <summary>
     /// Represents SMS model
     /// </summary>
-    public class SmsModel : BaseNopEntityModel
+    public record SmsModel : BaseNopEntityModel
     {
         #region Ctor
 

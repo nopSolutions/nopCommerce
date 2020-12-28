@@ -48,7 +48,7 @@ namespace Nop.Web.Framework.Controllers
             if (string.IsNullOrEmpty(componentName))
                 throw new ArgumentNullException(nameof(componentName));
 
-            if (!(HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) is IActionContextAccessor actionContextAccessor))
+            if (HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) is not IActionContextAccessor actionContextAccessor)
                 throw new Exception("IActionContextAccessor cannot be resolved");
 
             var context = actionContextAccessor.ActionContext;

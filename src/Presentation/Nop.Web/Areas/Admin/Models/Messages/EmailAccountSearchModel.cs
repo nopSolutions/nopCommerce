@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents an email account search model
     /// </summary>
-    public partial class EmailAccountSearchModel : BaseSearchModel
+    public partial record EmailAccountSearchModel : BaseSearchModel
     {
     }
 }

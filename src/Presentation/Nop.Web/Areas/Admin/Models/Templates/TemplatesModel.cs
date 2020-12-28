@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Templates
     /// <summary>
     /// Represents a templates model
     /// </summary>
-    public partial class TemplatesModel : BaseNopModel
+    public partial record TemplatesModel : BaseNopModel
     {
         #region Ctor
 

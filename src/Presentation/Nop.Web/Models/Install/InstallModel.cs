@@ -6,7 +6,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Install
 {
-    public partial class InstallModel : INopConnectionStringInfo
+    public partial record InstallModel : INopConnectionStringInfo
     {
         public InstallModel()
         {
@@ -17,10 +17,8 @@ namespace Nop.Web.Models.Install
 
         [DataType(DataType.EmailAddress)]
         public string AdminEmail { get; set; }
-        [NoTrim]
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }
-        [NoTrim]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
         public bool UseCustomCollation { get; set; }
@@ -40,7 +38,6 @@ namespace Nop.Web.Models.Install
         public bool IntegratedSecurity { get; set; }
 
         public string Username { get; set; }
-        [NoTrim]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public string ConnectionString { get; set; }

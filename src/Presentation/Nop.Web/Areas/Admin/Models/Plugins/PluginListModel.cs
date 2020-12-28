@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
     /// <summary>
     /// Represents a plugin list model
     /// </summary>
-    public partial class PluginListModel : BasePagedListModel<PluginModel>
+    public partial record PluginListModel : BasePagedListModel<PluginModel>
     {
     }
 }

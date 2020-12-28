@@ -6,7 +6,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
-    public partial class AddressModel : BaseNopEntityModel
+    public partial record AddressModel : BaseNopEntityModel
     {
         public AddressModel()
         {

@@ -378,7 +378,7 @@ namespace Nop.Services.Configuration
             Expression<Func<T, TPropType>> keySelector,
             int storeId = 0, bool clearCache = true) where T : ISettings, new()
         {
-            if (!(keySelector.Body is MemberExpression member)) 
+            if (keySelector.Body is not MemberExpression member) 
                 throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
 
             var propInfo = member.Member as PropertyInfo;
@@ -474,10 +474,10 @@ namespace Nop.Services.Configuration
         public virtual string GetSettingKey<TSettings, T>(TSettings settings, Expression<Func<TSettings, T>> keySelector)
             where TSettings : ISettings, new()
         {
-            if (!(keySelector.Body is MemberExpression member))
+            if (keySelector.Body is not MemberExpression member)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
 
-            if (!(member.Member is PropertyInfo propInfo))
+            if (member.Member is not PropertyInfo propInfo)
                 throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
             var key = $"{typeof(TSettings).Name}.{propInfo.Name}";

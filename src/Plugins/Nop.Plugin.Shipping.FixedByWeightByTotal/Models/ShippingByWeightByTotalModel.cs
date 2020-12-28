@@ -6,7 +6,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 {
-    public class ShippingByWeightByTotalModel : BaseNopEntityModel
+    public record ShippingByWeightByTotalModel : BaseNopEntityModel
     {
         public ShippingByWeightByTotalModel()
         {

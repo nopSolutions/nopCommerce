@@ -362,19 +362,14 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
         protected virtual string GetOrderStatus(Order order)
         {
-            switch (order.OrderStatus)
+            return order.OrderStatus switch
             {
-                case OrderStatus.Pending:
-                    return "unpaid";
-                case OrderStatus.Processing:
-                    return "paid";
-                case OrderStatus.Complete:
-                    return "shipped";
-                case OrderStatus.Cancelled:
-                    return "cancelled";
-                default:
-                    return "on_hold";
-            }
+                OrderStatus.Pending => "unpaid",
+                OrderStatus.Processing => "paid",
+                OrderStatus.Complete => "shipped",
+                OrderStatus.Cancelled => "cancelled",
+                _ => "on_hold",
+            };
         }
 
         protected virtual async Task WriteOrderToXmlAsync(XmlWriter writer, Order order)

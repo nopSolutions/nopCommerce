@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents an installation configuration model
     /// </summary>
-    public partial class InstallationConfigModel : BaseNopModel, IConfigModel
+    public partial record InstallationConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
 

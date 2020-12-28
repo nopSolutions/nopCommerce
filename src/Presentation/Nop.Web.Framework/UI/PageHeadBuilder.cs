@@ -361,7 +361,7 @@ namespace Nop.Web.Framework.UI
                     foreach (var item in partsToBundle)
                     {
                         new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out var path);
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory
@@ -593,7 +593,7 @@ namespace Nop.Web.Framework.UI
                     foreach (var item in partsToBundle)
                     {
                         new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out var path);
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists 

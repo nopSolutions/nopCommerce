@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a shipping method restriction model
     /// </summary>
-    public partial class ShippingMethodRestrictionModel : BaseNopModel
+    public partial record ShippingMethodRestrictionModel : BaseNopModel
     {
         #region Ctor
 

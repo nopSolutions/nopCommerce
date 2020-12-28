@@ -6,7 +6,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Models
 {
-    public class StorePickupPointModel : BaseNopEntityModel
+    public record StorePickupPointModel : BaseNopEntityModel
     {
         public StorePickupPointModel()
         {

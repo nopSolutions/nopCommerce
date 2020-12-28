@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a copy product model
     /// </summary>
-    public partial class CopyProductModel : BaseNopEntityModel
+    public partial record CopyProductModel : BaseNopEntityModel
     {
         #region Properties
 

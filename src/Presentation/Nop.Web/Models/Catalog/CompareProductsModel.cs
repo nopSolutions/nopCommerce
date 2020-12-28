@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CompareProductsModel : BaseNopEntityModel
+    public partial record CompareProductsModel : BaseNopEntityModel
     {
         public CompareProductsModel()
         {

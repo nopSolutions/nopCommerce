@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Topics
     /// <summary>
     /// Represents a topic model
     /// </summary>
-    public partial class TopicModel : BaseNopEntityModel, IAclSupportedModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingSupportedModel
+    public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Models.Topics
         #endregion
     }
 
-    public partial class TopicLocalizedModel : ILocalizedLocaleModel
+    public partial record TopicLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

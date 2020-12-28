@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
     /// <summary>
     /// Represents an affiliated order search model
     /// </summary>
-    public partial class AffiliatedOrderSearchModel : BaseSearchModel
+    public partial record AffiliatedOrderSearchModel : BaseSearchModel
     {
         #region Ctor
 

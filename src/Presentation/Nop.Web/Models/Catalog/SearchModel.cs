@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class SearchModel : BaseNopModel
+    public partial record SearchModel : BaseNopModel
     {
         public SearchModel()
         {
@@ -85,7 +85,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public class CategoryModel : BaseNopEntityModel
+        public record CategoryModel : BaseNopEntityModel
         {
             public string Breadcrumb { get; set; }
         }

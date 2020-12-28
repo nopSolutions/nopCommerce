@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a tax settings model
     /// </summary>
-    public partial class TaxSettingsModel : BaseNopModel, ISettingsModel
+    public partial record TaxSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Vendors
 {
-    public partial class VendorAttributeModel : BaseNopEntityModel
+    public partial record VendorAttributeModel : BaseNopEntityModel
     {
         public VendorAttributeModel()
         {
@@ -26,7 +26,7 @@ namespace Nop.Web.Models.Vendors
 
     }
 
-    public partial class VendorAttributeValueModel : BaseNopEntityModel
+    public partial record VendorAttributeValueModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

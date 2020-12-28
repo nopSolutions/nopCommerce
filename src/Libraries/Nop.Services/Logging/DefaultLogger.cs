@@ -54,7 +54,7 @@ namespace Nop.Services.Logging
 
             return _commonSettings
                 .IgnoreLogWordlist
-                .Any(x => message.IndexOf(x, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                .Any(x => message.Contains(x, StringComparison.InvariantCultureIgnoreCase));
         }
 
         #endregion

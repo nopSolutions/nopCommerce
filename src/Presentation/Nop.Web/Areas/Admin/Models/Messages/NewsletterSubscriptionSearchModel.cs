@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a newsletter subscription search model
     /// </summary>
-    public partial class NewsletterSubscriptionSearchModel : BaseSearchModel
+    public partial record NewsletterSubscriptionSearchModel : BaseSearchModel
     {
         #region Ctor
 

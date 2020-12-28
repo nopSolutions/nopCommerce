@@ -4,7 +4,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class CustomerProductReviewModel : BaseNopModel
+    public record CustomerProductReviewModel : BaseNopModel
     {
         public CustomerProductReviewModel()
         {
@@ -22,7 +22,7 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductReviewReviewTypeMappingModel> AdditionalProductReviewList { get; set; }
     }
 
-    public class CustomerProductReviewsModel : BaseNopModel
+    public record CustomerProductReviewsModel : BaseNopModel
     {
         public CustomerProductReviewsModel()
         {
@@ -35,9 +35,9 @@ namespace Nop.Web.Models.Catalog
         #region Nested class
 
         /// <summary>
-        /// Class that has only page for route value. Used for (My Account) My Product Reviews pagination
+        /// record that has only page for route value. Used for (My Account) My Product Reviews pagination
         /// </summary>
-        public partial class CustomerProductReviewsRouteValues : IRouteValues
+        public partial record CustomerProductReviewsRouteValues : IRouteValues
         {
             public int pageNumber { get; set; }
         }

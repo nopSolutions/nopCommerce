@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class MultiFactorAuthenticationProviderModel : BaseNopEntityModel
+    public partial record MultiFactorAuthenticationProviderModel : BaseNopEntityModel
     {
         public bool Selected { get; set; }
 

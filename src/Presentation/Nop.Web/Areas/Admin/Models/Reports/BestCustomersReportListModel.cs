@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a best customers report list model
     /// </summary>
-    public partial class BestCustomersReportListModel : BasePagedListModel<BestCustomersReportModel>
+    public partial record BestCustomersReportListModel : BasePagedListModel<BestCustomersReportModel>
     {
     }
 }

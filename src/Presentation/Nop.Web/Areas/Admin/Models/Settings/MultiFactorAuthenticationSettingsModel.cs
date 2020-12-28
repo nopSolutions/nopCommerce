@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a multi-factor authentication settings model
     /// </summary>
-    public partial class MultiFactorAuthenticationSettingsModel : BaseNopModel, ISettingsModel
+    public partial record MultiFactorAuthenticationSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

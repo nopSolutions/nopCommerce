@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents Redis configuration model
     /// </summary>
-    public partial class RedisConfigModel : BaseNopModel, IConfigModel
+    public partial record RedisConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
 

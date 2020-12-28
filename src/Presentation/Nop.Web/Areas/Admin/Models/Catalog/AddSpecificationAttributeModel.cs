@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a model for adding or editing a specification attribute
     /// </summary>
-    public partial class AddSpecificationAttributeModel : BaseNopEntityModel, ILocalizedModel<AddSpecificationAttributeLocalizedModel>
+    public partial record AddSpecificationAttributeModel : BaseNopEntityModel, ILocalizedModel<AddSpecificationAttributeLocalizedModel>
     {
         #region Ctor
 

@@ -1265,7 +1265,7 @@ namespace Nop.Services.Installation
 
         protected virtual async Task InstallOrdersAsync()
         {
-            Address cloneAddress(Address address)
+            static Address cloneAddress(Address address)
             {
                 var addr = new Address
                 {

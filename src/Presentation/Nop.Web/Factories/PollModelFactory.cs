@@ -108,7 +108,7 @@ namespace Nop.Web.Factories
 
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.
             //But first we need to clone the cached model (the updated one should not be cached)
-            var model = (PollModel)cachedModel.Clone();
+            var model = cachedModel with { };
             model.AlreadyVoted = await _pollService.AlreadyVotedAsync(model.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
 
             return model;
@@ -132,7 +132,7 @@ namespace Nop.Web.Factories
             var model = new List<PollModel>();
             foreach (var poll in cachedPolls)
             {
-                var pollModel = (PollModel)poll.Clone();
+                var pollModel = poll with { };
                 pollModel.AlreadyVoted = await _pollService.AlreadyVotedAsync(pollModel.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
                 model.Add(pollModel);
             }

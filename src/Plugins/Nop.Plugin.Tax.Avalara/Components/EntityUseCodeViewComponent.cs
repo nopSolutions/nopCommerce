@@ -80,7 +80,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             //ensure that model is passed
-            if (!(additionalData is BaseNopEntityModel entityModel))
+            if (additionalData is not BaseNopEntityModel entityModel)
                 return Content(string.Empty);
 
             //ensure that Avalara tax provider is active

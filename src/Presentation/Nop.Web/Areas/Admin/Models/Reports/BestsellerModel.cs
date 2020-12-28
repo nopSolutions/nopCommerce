@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a bestseller model
     /// </summary>
-    public partial class BestsellerModel : BaseNopModel
+    public partial record BestsellerModel : BaseNopModel
     {
         #region Properties
 

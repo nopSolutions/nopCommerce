@@ -67,8 +67,7 @@ namespace Nop.Services.Tasks
                 //not resolved
                 instance = EngineContext.Current.ResolveUnregistered(type);
 
-            var task = instance as IScheduleTask;
-            if (task == null)
+            if (instance is not IScheduleTask task)
                 return;
 
             ScheduleTask.LastStartUtc = DateTime.UtcNow;

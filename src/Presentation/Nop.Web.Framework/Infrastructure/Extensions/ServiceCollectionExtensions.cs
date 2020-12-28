@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using Azure.Identity;
+using Azure.Storage.Blobs;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -9,10 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -29,13 +27,12 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
-using Nop.Services.Tasks;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNetCore3;
+using WebMarkupMin.AspNetCore5;
 using WebMarkupMin.NUglify;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -186,20 +183,20 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
             else if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
             {
-                var cloudStorageAccount = CloudStorageAccount.Parse(appSettings.AzureBlobConfig.ConnectionString);
+                var blobServiceClient = new BlobServiceClient(appSettings.AzureBlobConfig.ConnectionString);
+                var blobContainerClient = blobServiceClient.GetBlobContainerClient(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);
+                var blobClient = blobContainerClient.GetBlobClient(NopDataProtectionDefaults.AzureDataProtectionKeyFile);
 
-                var client = cloudStorageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);
-
-                var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(container, NopDataProtectionDefaults.AzureDataProtectionKeyFile);
+                var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(blobClient);
 
                 if (!appSettings.AzureBlobConfig.DataProtectionKeysEncryptWithVault)
                     return;
 
-                var tokenProvider = new AzureServiceTokenProvider();
-                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
+                var keyIdentifier = appSettings.AzureBlobConfig.DataProtectionKeysVaultId;
+                var credentialOptions = new DefaultAzureCredentialOptions();
+                var tokenCredential = new DefaultAzureCredential(credentialOptions);
 
-                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, appSettings.AzureBlobConfig.DataProtectionKeysVaultId);
+                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(new Uri(keyIdentifier), tokenCredential);
             }
             else
             {
@@ -299,9 +296,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
-
-            //add custom model binder provider (to the top of the provider list)
-            mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
 
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration =>

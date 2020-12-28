@@ -85,21 +85,12 @@ namespace Nop.Web.Framework.Security.Captcha
 
             //prepare theme
             var theme = (captchaSettings.ReCaptchaTheme ?? string.Empty).ToLower();
-            switch (theme)
+            theme = theme switch
             {
-                case "blackglass":
-                case "dark":
-                    theme = "dark";
-                    break;
-
-                case "clean":
-                case "red":
-                case "white":
-                case "light":
-                default:
-                    theme = "light";
-                    break;
-            }
+                "blackglass" or "dark" => "dark",
+                "clean" or "red" or "white" or "light" => "light",
+                _ => "light",
+            };
 
             //prepare identifier
             var id = $"captcha_{CommonHelper.GenerateRandomInteger()}";

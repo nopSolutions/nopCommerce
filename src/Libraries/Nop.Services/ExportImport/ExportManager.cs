@@ -1750,7 +1750,7 @@ namespace Nop.Services.ExportImport
             if (subscriptions == null)
                 throw new ArgumentNullException(nameof(subscriptions));
 
-            const string separator = ",";
+            const char separator = ',';
             var sb = new StringBuilder();
 
             sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email"));
@@ -1783,7 +1783,7 @@ namespace Nop.Services.ExportImport
             if (states == null)
                 throw new ArgumentNullException(nameof(states));
 
-            const string separator = ",";
+            const char separator = ',';
             var sb = new StringBuilder();
             foreach (var state in states)
             {

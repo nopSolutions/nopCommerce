@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a registered customers report search model
     /// </summary>
-    public partial class RegisteredCustomersReportSearchModel : BaseSearchModel
+    public partial record RegisteredCustomersReportSearchModel : BaseSearchModel
     {
     }
 }

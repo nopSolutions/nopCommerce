@@ -173,7 +173,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         {
             var tx = _webHelper.QueryString<string>("tx");
 
-            if (!(await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
+            if (await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is not PayPalStandardPaymentProcessor processor || !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("PayPal Standard module cannot be loaded");
 
             var (result, values, response) = await processor.GetPdtDetailsAsync(tx);

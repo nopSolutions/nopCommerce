@@ -1478,107 +1478,67 @@ namespace Nop.Services.Messages
         public virtual IEnumerable<string> GetTokenGroups(MessageTemplate messageTemplate)
         {
             //groups depend on which tokens are added at the appropriate methods in IWorkflowMessageService
-            switch (messageTemplate.Name)
+            return messageTemplate.Name switch
             {
-                case MessageTemplateSystemNames.CustomerRegisteredNotification:
-                case MessageTemplateSystemNames.CustomerWelcomeMessage:
-                case MessageTemplateSystemNames.CustomerEmailValidationMessage:
-                case MessageTemplateSystemNames.CustomerEmailRevalidationMessage:
-                case MessageTemplateSystemNames.CustomerPasswordRecoveryMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens };
+                MessageTemplateSystemNames.CustomerRegisteredNotification or 
+                MessageTemplateSystemNames.CustomerWelcomeMessage or 
+                MessageTemplateSystemNames.CustomerEmailValidationMessage or 
+                MessageTemplateSystemNames.CustomerEmailRevalidationMessage or 
+                MessageTemplateSystemNames.CustomerPasswordRecoveryMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens },
 
-                case MessageTemplateSystemNames.OrderPlacedVendorNotification:
-                case MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification:
-                case MessageTemplateSystemNames.OrderPlacedAffiliateNotification:
-                case MessageTemplateSystemNames.OrderPaidStoreOwnerNotification:
-                case MessageTemplateSystemNames.OrderPaidCustomerNotification:
-                case MessageTemplateSystemNames.OrderPaidVendorNotification:
-                case MessageTemplateSystemNames.OrderPaidAffiliateNotification:
-                case MessageTemplateSystemNames.OrderPlacedCustomerNotification:
-                case MessageTemplateSystemNames.OrderCompletedCustomerNotification:
-                case MessageTemplateSystemNames.OrderCancelledCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens };
+                MessageTemplateSystemNames.OrderPlacedVendorNotification or 
+                MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification or 
+                MessageTemplateSystemNames.OrderPlacedAffiliateNotification or 
+                MessageTemplateSystemNames.OrderPaidStoreOwnerNotification or 
+                MessageTemplateSystemNames.OrderPaidCustomerNotification or 
+                MessageTemplateSystemNames.OrderPaidVendorNotification or 
+                MessageTemplateSystemNames.OrderPaidAffiliateNotification or 
+                MessageTemplateSystemNames.OrderPlacedCustomerNotification or 
+                MessageTemplateSystemNames.OrderCompletedCustomerNotification or 
+                MessageTemplateSystemNames.OrderCancelledCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                case MessageTemplateSystemNames.ShipmentSentCustomerNotification:
-                case MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens };
+                MessageTemplateSystemNames.ShipmentSentCustomerNotification or 
+                MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ShipmentTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                case MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification:
-                case MessageTemplateSystemNames.OrderRefundedCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens };
+                MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification or 
+                MessageTemplateSystemNames.OrderRefundedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.RefundedOrderTokens, TokenGroupNames.CustomerTokens },
 
-                case MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens };
+                MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderNoteTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens },
 
-                case MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification:
-                case MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification:
-                case MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens };
+                MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification or 
+                MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification or 
+                MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.RecurringPaymentTokens },
 
-                case MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage:
-                case MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens };
+                MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage or 
+                MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.SubscriptionTokens },
 
-                case MessageTemplateSystemNames.EmailAFriendMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens };
+                MessageTemplateSystemNames.EmailAFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductTokens, TokenGroupNames.EmailAFriendTokens },
+                MessageTemplateSystemNames.WishlistToFriendMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens },
 
-                case MessageTemplateSystemNames.WishlistToFriendMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.WishlistToFriendTokens };
+                MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification or 
+                MessageTemplateSystemNames.NewReturnRequestCustomerNotification or 
+                MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens },
 
-                case MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification:
-                case MessageTemplateSystemNames.NewReturnRequestCustomerNotification:
-                case MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens };
+                MessageTemplateSystemNames.NewForumTopicMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.NewForumPostMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumPostTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.PrivateMessageNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens },
+                MessageTemplateSystemNames.VendorInformationChangeNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens },
+                MessageTemplateSystemNames.GiftCardNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens },
 
-                case MessageTemplateSystemNames.NewForumTopicMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens };
+                MessageTemplateSystemNames.ProductReviewStoreOwnerNotification or 
+                MessageTemplateSystemNames.ProductReviewReplyCustomerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens },
 
-                case MessageTemplateSystemNames.NewForumPostMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumPostTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens };
-
-                case MessageTemplateSystemNames.PrivateMessageNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.PrivateMessageTokens, TokenGroupNames.CustomerTokens };
-
-                case MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VendorTokens };
-
-                case MessageTemplateSystemNames.VendorInformationChangeNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.VendorTokens };
-
-                case MessageTemplateSystemNames.GiftCardNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.GiftCardTokens };
-
-                case MessageTemplateSystemNames.ProductReviewStoreOwnerNotification:
-                case MessageTemplateSystemNames.ProductReviewReplyCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductReviewTokens, TokenGroupNames.CustomerTokens };
-
-                case MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens };
-
-                case MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens };
-
-                case MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation };
-
-                case MessageTemplateSystemNames.BlogCommentNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens };
-
-                case MessageTemplateSystemNames.NewsCommentNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens };
-
-                case MessageTemplateSystemNames.BackInStockNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens };
-
-                case MessageTemplateSystemNames.ContactUsMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs };
-
-                case MessageTemplateSystemNames.ContactVendorMessage:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor };
-
-                default:
-                    return Array.Empty<string>();
-            }
+                MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens },
+                MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ProductTokens, TokenGroupNames.AttributeCombinationTokens },
+                MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.VatValidation },
+                MessageTemplateSystemNames.BlogCommentNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.BlogCommentTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.NewsCommentNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.NewsCommentTokens, TokenGroupNames.CustomerTokens },
+                MessageTemplateSystemNames.BackInStockNotification => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens },
+                MessageTemplateSystemNames.ContactUsMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs },
+                MessageTemplateSystemNames.ContactVendorMessage => new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor },
+                _ => Array.Empty<string>(),
+            };
         }
 
         #endregion

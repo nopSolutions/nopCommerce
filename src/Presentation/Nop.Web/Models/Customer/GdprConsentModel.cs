@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class GdprConsentModel : BaseNopEntityModel
+    public partial record GdprConsentModel : BaseNopEntityModel
     {
         public string Message { get; set; }
 
