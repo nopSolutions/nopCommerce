@@ -15,7 +15,7 @@ using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 
-namespace Nop.Data
+namespace Nop.Data.DataProviders
 {
     public class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
@@ -55,7 +55,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected override IDbConnection GetInternalDbConnection(string connectionString)
+        protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
@@ -81,7 +81,7 @@ namespace Nop.Data
             //now create connection string to 'master' database. It always exists.
             builder.Database = null;
 
-            using (var connection = CreateDbConnection(builder.ConnectionString))
+            using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
                 var query = $"CREATE DATABASE IF NOT EXISTS {databaseName};";
                 if (!string.IsNullOrWhiteSpace(collation))
@@ -122,11 +122,10 @@ namespace Nop.Data
         {
             try
             {
-                using (var connection = await CreateDbConnectionAsync())
-                {
-                    //just try to connect
-                    connection.Open();
-                }
+                using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+
+                //just try to connect
+                await connection.OpenAsync();
 
                 return true;
             }
@@ -168,17 +167,17 @@ namespace Nop.Data
         /// <summary>
         /// Get the current identity value
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        public virtual async Task<int?> GetTableIdentAsync<T>() where T : BaseEntity
+        public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
             using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = currentConnection.GetTable<T>().TableName;
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
             var databaseName = currentConnection.Connection.Database;
 
             //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
             //with DataContext we could be used KeepConnectionAlive option
-            await using var dbConnection = (DbConnection)(await CreateDbConnectionAsync());
+            await using var dbConnection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
 
             dbConnection.StateChange += (sender, e) =>
             {
@@ -211,7 +210,7 @@ namespace Nop.Data
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="TEntity">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="ident">Identity value</param>
         public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
@@ -220,7 +219,7 @@ namespace Nop.Data
                 return;
 
             using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = currentConnection.GetTable<TEntity>().TableName;
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
             await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
         }

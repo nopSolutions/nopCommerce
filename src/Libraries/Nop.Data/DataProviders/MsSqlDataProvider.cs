@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
@@ -11,7 +11,7 @@ using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 
-namespace Nop.Data
+namespace Nop.Data.DataProviders
 {
     /// <summary>
     /// Represents the MS SQL Server data provider
@@ -44,7 +44,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected override IDbConnection GetInternalDbConnection(string connectionString)
+        protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
@@ -74,13 +74,14 @@ namespace Nop.Data
             //now create connection string to 'master' dabatase. It always exists.
             builder.InitialCatalog = "master";
 
-            using (var connection = new SqlConnection(builder.ConnectionString))
+            using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
                 var query = $"CREATE DATABASE [{databaseName}]";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
-                var command = new SqlCommand(query, connection);
+                var command = connection.CreateCommand();
+                command.CommandText = query;
                 command.Connection.Open();
 
                 command.ExecuteNonQuery();
@@ -114,11 +115,10 @@ namespace Nop.Data
         {
             try
             {
-                using (var connection = new SqlConnection((await GetConnectionStringBuilderAsync()).ConnectionString))
-                {
-                    //just try to connect
-                    await connection.OpenAsync();
-                }
+                using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+                
+                //just try to connect
+                await connection.OpenAsync();
 
                 return true;
             }
@@ -136,7 +136,7 @@ namespace Nop.Data
         {
             try
             {
-                using var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString);
+                using var connection = GetInternalDbConnection(GetCurrentConnectionString());
                 //just try to connect
                 connection.Open();
 
@@ -160,12 +160,12 @@ namespace Nop.Data
         /// <summary>
         /// Get the current identity value
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        public virtual async Task<int?> GetTableIdentAsync<T>() where T : BaseEntity
+        public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
             using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = currentConnection.GetTable<T>().TableName;
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
             var result = currentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
                 .FirstOrDefault();
@@ -176,7 +176,7 @@ namespace Nop.Data
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="TEntity">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="ident">Identity value</param>
         public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
@@ -185,7 +185,7 @@ namespace Nop.Data
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            var tableName = currentConnection.GetTable<TEntity>().TableName;
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
             await currentConnection.ExecuteAsync($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }

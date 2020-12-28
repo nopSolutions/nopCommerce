@@ -17,7 +17,7 @@ using Nop.Data.Mapping;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Data;
 
-namespace Nop.Data
+namespace Nop.Data.DataProviders
 {
     public abstract class BaseDataProvider
     {
@@ -85,7 +85,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected abstract IDbConnection GetInternalDbConnection(string connectionString);
+        protected abstract DbConnection GetInternalDbConnection(string connectionString);
 
         /// <summary>
         /// Creates the database connection
