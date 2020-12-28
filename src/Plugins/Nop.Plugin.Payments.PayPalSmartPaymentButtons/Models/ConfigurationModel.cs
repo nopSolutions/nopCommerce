@@ -30,7 +30,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models
 
         [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey")]
         [DataType(DataType.Password)]
-        [NoTrim]
         public string SecretKey { get; set; }
         public bool SecretKey_OverrideForStore { get; set; }
 

@@ -29,7 +29,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Password")]
         [DataType(DataType.Password)]
-        [NoTrim]
         public string Password { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.EnableSsl")]

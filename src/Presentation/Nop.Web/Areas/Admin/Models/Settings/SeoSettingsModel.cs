@@ -14,7 +14,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
-        [NoTrim]
         public string PageTitleSeparator { get; set; }
         public bool PageTitleSeparator_OverrideForStore { get; set; }
 
