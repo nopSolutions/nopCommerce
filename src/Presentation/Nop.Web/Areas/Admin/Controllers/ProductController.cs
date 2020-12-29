@@ -1873,7 +1873,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         _localizedEntityService.SaveLocalizedValue(psa,
                             x => x.CustomValue,
-                            localized.ValueRaw,
+                            localized.Value,
                             localized.LanguageId);
                     }
 
