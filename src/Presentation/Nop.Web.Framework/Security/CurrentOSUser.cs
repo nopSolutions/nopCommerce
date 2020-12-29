@@ -23,7 +23,8 @@ namespace Nop.Web.Framework.Security
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32NT:
-                    PopulateWindowsUser();
+                    if (OperatingSystem.IsWindows())
+                        PopulateWindowsUser();
                     break;
                 case PlatformID.Unix:
                     PopulateLinuxUser();

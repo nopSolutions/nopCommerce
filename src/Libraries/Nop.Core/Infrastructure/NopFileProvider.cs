@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
@@ -272,6 +273,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="path">The path to a directory containing a System.Security.AccessControl.DirectorySecurity object that describes the file's access control list (ACL) information</param>
         /// <returns>An object that encapsulates the access control rules for the file described by the path parameter</returns>
+        [SupportedOSPlatform("windows")]
         public virtual DirectorySecurity GetAccessControl(string path)
         {
             return new DirectoryInfo(path).GetAccessControl();

@@ -241,7 +241,8 @@ namespace Nop.Web.Framework.Security
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32NT:
-                    result = CheckPermissionsInWindows(path, checkRead, checkWrite, checkModify, checkDelete);
+                    if (OperatingSystem.IsWindows())
+                        result = CheckPermissionsInWindows(path, checkRead, checkWrite, checkModify, checkDelete);
                     break;
                 case PlatformID.Unix:
                     result = CheckPermissionsInUnix(path, checkRead, checkWrite, checkModify, checkDelete);
