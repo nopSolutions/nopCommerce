@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Nop.Services.Installation;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
@@ -566,7 +567,7 @@ namespace Nop.Web.Infrastructure
                 new { controller = "Common", action = "StoreClosed" });
 
             //install
-            endpointRouteBuilder.MapControllerRoute("Installation", $"{pattern}install",
+            endpointRouteBuilder.MapControllerRoute("Installation", $"{pattern}{NopInstallationDefaults.InstallPath}",
                 new { controller = "Install", action = "Index" });
 
             //error page
