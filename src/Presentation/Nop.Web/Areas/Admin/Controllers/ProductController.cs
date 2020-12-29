@@ -1875,7 +1875,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         await _localizedEntityService.SaveLocalizedValueAsync(psa,
                             x => x.CustomValue,
-                            localized.ValueRaw,
+                            localized.Value,
                             localized.LanguageId);
                     }
 
