@@ -9,7 +9,7 @@ namespace Nop.Core
     /// </summary>
     /// <typeparam name="T">T</typeparam>
     [Serializable]
-    public class PagedList<T> : List<T>, IPagedList<T> 
+    public class PagedList<T> : List<T>, IPagedList<T>
     {
         /// <summary>
         /// Ctor
@@ -20,6 +20,9 @@ namespace Nop.Core
         /// <param name="totalCount">Total count</param>
         public PagedList(IList<T> source, int pageIndex, int pageSize, int? totalCount = null)
         {
+            //min allowed page size is 1
+            pageSize = Math.Max(pageSize, 1);
+
             TotalCount = totalCount ?? source.Count;
             TotalPages = TotalCount / pageSize;
 

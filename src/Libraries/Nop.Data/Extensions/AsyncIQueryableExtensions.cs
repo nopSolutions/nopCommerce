@@ -34,13 +34,13 @@ namespace System.Linq
         /// true if any elements in the source sequence pass the test in the specified predicate;
         /// otherwise, false
         /// </returns>
-        public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate=null)
+        public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate = null)
         {
             return predicate == null ? AsyncExtensions.AnyAsync(source) : AsyncExtensions.AnyAsync(source, predicate);
         }
 
         #region Average
-        
+
         /// <summary>
         /// Computes the average of a sequence that is obtained by
         /// invoking a projection function on each element of the input sequence
@@ -182,7 +182,7 @@ namespace System.Linq
         }
 
         #endregion
-        
+
         /// <summary>
         /// Determines whether a sequence contains a specified element by using the default
         /// equality comparer
@@ -214,7 +214,7 @@ namespace System.Linq
         {
             return predicate == null ? AsyncExtensions.CountAsync(source) : AsyncExtensions.CountAsync(source, predicate);
         }
-        
+
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition
         /// </summary>
@@ -253,11 +253,11 @@ namespace System.Linq
         /// function
         /// </returns>
         public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source,
-            Expression<Func<TSource, bool>> predicate=null)
+            Expression<Func<TSource, bool>> predicate = null)
         {
             return predicate == null ? AsyncExtensions.LongCountAsync(source) : AsyncExtensions.LongCountAsync(source, predicate);
         }
-        
+
         /// <summary>
         /// Returns the maximum value in a generic sequence
         /// </summary>
@@ -319,7 +319,7 @@ namespace System.Linq
         /// <param name="predicate">A function to test an element for a condition</param>
         /// <returns>The single element of the input sequence that satisfies the condition in predicate</returns>
         public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source,
-            Expression<Func<TSource, bool>> predicate=null)
+            Expression<Func<TSource, bool>> predicate = null)
         {
             return predicate == null ? AsyncExtensions.SingleAsync(source) : AsyncExtensions.SingleAsync(source, predicate);
         }
@@ -337,13 +337,13 @@ namespace System.Linq
         /// or default(TSource) if no such element is found
         /// </returns>
         public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source,
-            Expression<Func<TSource, bool>> predicate=null)
+            Expression<Func<TSource, bool>> predicate = null)
         {
             return predicate == null ? AsyncExtensions.SingleOrDefaultAsync(source) : AsyncExtensions.SingleOrDefaultAsync(source, predicate);
         }
 
         #region Sum
-        
+
         /// <summary>
         /// Computes the sum of the sequence that is obtained
         /// by invoking a projection function on each element of the input sequence
@@ -485,7 +485,7 @@ namespace System.Linq
         }
 
         #endregion
-        
+
         /// <summary>
         /// Asynchronously loads data from query to a dictionary
         /// </summary>
@@ -545,6 +545,9 @@ namespace System.Linq
         {
             if (source == null)
                 return new PagedList<T>(new List<T>(), pageIndex, pageSize);
+
+            //min allowed page size is 1
+            pageSize = Math.Max(pageSize, 1);
 
             var count = await source.CountAsync();
 
