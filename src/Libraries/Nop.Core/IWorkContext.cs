@@ -63,11 +63,6 @@ namespace Nop.Core
         /// <summary>
         /// Sets current tax display type
         /// </summary>
-        Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType);
-
-        /// <summary>
-        /// Gets or sets value indicating whether we're in admin area
-        /// </summary>
-        bool IsAdmin { get; set; }
+        Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType);        
     }
 }

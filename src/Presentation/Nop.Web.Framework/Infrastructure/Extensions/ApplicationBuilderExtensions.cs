@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -358,20 +357,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
                 options.SupportedCultures = cultures;
                 options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
+
+                options.AddInitialRequestCultureProvider(new NopRequestCultureProvider(options));
             });
-        }
-
-        /// <summary>
-        /// Set current culture info
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseCulture(this IApplicationBuilder application)
-        {
-            //check whether database is installed
-            if (!DataSettingsManager.IsDatabaseInstalled())
-                return;
-
-            application.UseMiddleware<CultureMiddleware>();
         }
 
         /// <summary>
