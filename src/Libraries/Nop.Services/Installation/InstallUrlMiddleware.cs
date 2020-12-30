@@ -40,7 +40,7 @@ namespace Nop.Services.Installation
             if (!await DataSettingsManager.IsDatabaseInstalledAsync())
             {
                 var installUrl = $"{webHelper.GetStoreLocation()}{NopInstallationDefaults.InstallPath}";
-                if (!webHelper.GetThisPageUrl(false).Equals(installUrl, StringComparison.InvariantCultureIgnoreCase))
+                if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //redirect
                     context.Response.Redirect(installUrl);
