@@ -9,12 +9,12 @@
     <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Misc.SendinBlue</OutputPath>
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Misc.Sendinblue</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project. 
     You need to set this parameter to true if your plugin has a nuget package 
     to ensure that the dlls copied from the NuGet cache to the output of your project-->
-    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,26 +51,24 @@
     <None Update="RestSharp.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="SendinBlue.ClientV3.45.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SendinBlueMarketingAutomation.dll">
+    <None Update="SendinblueMarketingAutomation.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  
   <ItemGroup>
-    <Reference Include="SendinBlue.ClientV3.45">
-      <HintPath>SendinBlue.ClientV3.45.dll</HintPath>
-    </Reference>
-    <Reference Include="SendinBlueMarketingAutomation">
-      <HintPath>SendinBlueMarketingAutomation.dll</HintPath>
+    <Reference Include="SendinblueMarketingAutomation">
+      <HintPath>SendinblueMarketingAutomation.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
     <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="sib_api_v3_sdk" Version="3.1.0" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

@@ -1,9 +1,9 @@
-﻿namespace Nop.Plugin.Misc.SendinBlue.Domain
+﻿namespace Nop.Plugin.Misc.Sendinblue.Domain
 {
     /// <summary>
-    /// Represents SendinBlue account language enumeration
+    /// Represents Sendinblue account language enumeration
     /// </summary>
-    public enum SendinBlueAccountLanguage
+    public enum SendinblueAccountLanguage
     {
         /// <summary>
         /// English (default)

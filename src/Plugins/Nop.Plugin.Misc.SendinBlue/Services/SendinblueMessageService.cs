@@ -16,12 +16,12 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
 
-namespace Nop.Plugin.Misc.SendinBlue.Services
+namespace Nop.Plugin.Misc.Sendinblue.Services
 {
     /// <summary>
     /// Represents overridden workflow message service
     /// </summary>
-    public class SendinBlueMessageService : WorkflowMessageService
+    public class SendinblueMessageService : WorkflowMessageService
     {
         #region Fields
 
@@ -30,13 +30,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ISettingService _settingService;
         private readonly ITokenizer _tokenizer;
-        private readonly SendinBlueManager _sendinBlueEmailManager;
+        private readonly SendinblueManager _sendinBlueEmailManager;
 
         #endregion
 
         #region Ctor
 
-        public SendinBlueMessageService(CommonSettings commonSettings,
+        public SendinblueMessageService(CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
             IAddressService addressService,
             IAffiliateService affiliateService,
@@ -55,7 +55,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             IStoreService storeService,
             IQueuedEmailService queuedEmailService,
             ITokenizer tokenizer,
-            SendinBlueManager sendinBlueEmailManager)
+            SendinblueManager sendinBlueEmailManager)
             : base(commonSettings,
                 emailAccountSettings,
                 addressService,
@@ -95,7 +95,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         {
             //get plugin settings
             var storeId = (int?)tokens.FirstOrDefault(token => token.Key == "Store.Id")?.Value;
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>(storeId ?? 0);
+            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId ?? 0);
 
             //ensure SMS notifications enabled
             if (!sendinBlueSettings.UseSmsNotifications)
@@ -103,18 +103,18 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
             //whether to send SMS by the passed message template
             var sendSmsForThisMessageTemplate = await _genericAttributeService
-                .GetAttributeAsync<bool>(messageTemplate, SendinBlueDefaults.UseSmsAttribute);
+                .GetAttributeAsync<bool>(messageTemplate, SendinblueDefaults.UseSmsAttribute);
             if (!sendSmsForThisMessageTemplate)
                 return;
 
             //get text with replaced tokens
-            var text = await _genericAttributeService.GetAttributeAsync<string>(messageTemplate, SendinBlueDefaults.SmsTextAttribute);
+            var text = await _genericAttributeService.GetAttributeAsync<string>(messageTemplate, SendinblueDefaults.SmsTextAttribute);
             if (!string.IsNullOrEmpty(text))
                 text = _tokenizer.Replace(text, tokens, false);
 
             //get phone number send to
             var phoneNumberTo = string.Empty;
-            var phoneType = await _genericAttributeService.GetAttributeAsync<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute);
+            var phoneType = await _genericAttributeService.GetAttributeAsync<int>(messageTemplate, SendinblueDefaults.PhoneTypeAttribute);
             switch (phoneType)
             {
                 case 0:
@@ -159,14 +159,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         {
             //get plugin settings
             var storeId = (int?)tokens.FirstOrDefault(token => token.Key == "Store.Id")?.Value;
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>(storeId ?? 0);
+            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId ?? 0);
 
             //ensure email notifications enabled
             if (!sendinBlueSettings.UseSmtp)
                 return null;
 
             //whether to send email by the passed message template
-            var templateId = await _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
+            var templateId = await _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, SendinblueDefaults.TemplateIdAttribute);
             var sendEmailForThisMessageTemplate = templateId.HasValue;
             if (!sendEmailForThisMessageTemplate)
                 return null;

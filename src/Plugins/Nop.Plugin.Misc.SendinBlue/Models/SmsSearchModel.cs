@@ -1,6 +1,6 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Plugin.Misc.SendinBlue.Models
+namespace Nop.Plugin.Misc.Sendinblue.Models
 {
     /// <summary>
     /// Represents SMS search model

@@ -8,7 +8,7 @@ using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 
-namespace Nop.Plugin.Misc.SendinBlue.Services
+namespace Nop.Plugin.Misc.Sendinblue.Services
 {
     /// <summary>
     /// Represents event consumer
@@ -27,16 +27,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         #region Fields
 
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly SendinBlueManager _sendinBlueEmailManager;
-        private readonly SendinBlueMarketingAutomationManager _sendinBlueMarketingAutomationManager;
+        private readonly SendinblueManager _sendinBlueEmailManager;
+        private readonly SendinblueMarketingAutomationManager _sendinBlueMarketingAutomationManager;
 
         #endregion
 
         #region Ctor
 
         public EventConsumer(IGenericAttributeService genericAttributeService,
-            SendinBlueManager sendinBlueEmailManager,
-            SendinBlueMarketingAutomationManager sendinBlueMarketingAutomationManager)
+            SendinblueManager sendinBlueEmailManager,
+            SendinblueMarketingAutomationManager sendinBlueMarketingAutomationManager)
         {
             _genericAttributeService = genericAttributeService;
             _sendinBlueEmailManager = sendinBlueEmailManager;

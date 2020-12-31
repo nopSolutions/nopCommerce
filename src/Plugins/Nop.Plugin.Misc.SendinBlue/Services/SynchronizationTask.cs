@@ -1,7 +1,7 @@
 ﻿using Nop.Services.Tasks;
 using Task = System.Threading.Tasks.Task;
 
-namespace Nop.Plugin.Misc.SendinBlue.Services
+namespace Nop.Plugin.Misc.Sendinblue.Services
 {
     /// <summary>
     /// Represents a schedule task to synchronize contacts
@@ -10,13 +10,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
     {
         #region Fields
 
-        private readonly SendinBlueManager _sendinBlueEmailManager;
+        private readonly SendinblueManager _sendinBlueEmailManager;
 
         #endregion
 
         #region Ctor
 
-        public SynchronizationTask(SendinBlueManager sendinBlueEmailManager)
+        public SynchronizationTask(SendinblueManager sendinBlueEmailManager)
         {
             _sendinBlueEmailManager = sendinBlueEmailManager;
         }

@@ -2,10 +2,10 @@
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Plugin.Misc.SendinBlue.Services;
+using Nop.Plugin.Misc.Sendinblue.Services;
 using Nop.Services.Messages;
 
-namespace Nop.Plugin.Misc.SendinBlue.Infrastructure
+namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
 {
     /// <summary>
     /// Represents a plugin dependency registrar
@@ -21,12 +21,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Infrastructure
         public void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
         {
             //register custom services
-            services.AddScoped<SendinBlueManager>();
-            services.AddScoped<SendinBlueMarketingAutomationManager>();
+            services.AddScoped<SendinblueManager>();
+            services.AddScoped<SendinblueMarketingAutomationManager>();
 
             //override services
-            services.AddScoped<IWorkflowMessageService, SendinBlueMessageService>();
-            services.AddScoped<IEmailSender, SendinBlueEmailSender>();
+            services.AddScoped<IWorkflowMessageService, SendinblueMessageService>();
+            services.AddScoped<IEmailSender, SendinblueEmailSender>();
         }
 
         /// <summary>

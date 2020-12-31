@@ -1,11 +1,11 @@
 ﻿using Nop.Core.Configuration;
 
-namespace Nop.Plugin.Misc.SendinBlue
+namespace Nop.Plugin.Misc.Sendinblue
 {
     /// <summary>
     /// Represents a plugin settings
     /// </summary>
-    public class SendinBlueSettings : ISettings
+    public class SendinblueSettings : ISettings
     {
         /// <summary>
         /// Gets or sets the API key
@@ -20,12 +20,7 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// <summary>
         /// Gets or sets the identifier of unsubscribe event webhook
         /// </summary>
-        public int UnsubscribeWebhookId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether partner value already set
-        /// </summary>
-        public bool PartnerValueSet { get; set; }
+        public int UnsubscribeWebhookId { get; set; }        
 
         /// <summary>
         /// Gets or sets the SMTP key (Master password)

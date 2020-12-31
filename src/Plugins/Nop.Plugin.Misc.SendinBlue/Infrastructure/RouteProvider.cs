@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.Routing;
 
-namespace Nop.Plugin.Misc.SendinBlue.Infrastructure
+namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
 {
     /// <summary>
     /// Represents plugin route provider
@@ -15,11 +15,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            endpointRouteBuilder.MapControllerRoute(SendinBlueDefaults.ImportContactsRoute, "Plugins/SendinBlue/ImportContacts",
-                new { controller = "SendinBlue", action = "ImportContacts" });
+            endpointRouteBuilder.MapControllerRoute(SendinblueDefaults.ImportContactsRoute, "Plugins/Sendinblue/ImportContacts",
+                new { controller = "Sendinblue", action = "ImportContacts" });
 
-            endpointRouteBuilder.MapControllerRoute(SendinBlueDefaults.UnsubscribeContactRoute, "Plugins/SendinBlue/UnsubscribeWebHook",
-                new { controller = "SendinBlue", action = "UnsubscribeWebHook" });
+            endpointRouteBuilder.MapControllerRoute(SendinblueDefaults.UnsubscribeContactRoute, "Plugins/Sendinblue/UnsubscribeWebHook",
+                new { controller = "Sendinblue", action = "UnsubscribeWebHook" });
         }
 
         /// <summary>

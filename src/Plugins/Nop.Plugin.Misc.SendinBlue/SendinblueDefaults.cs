@@ -1,22 +1,22 @@
 ﻿using Nop.Core;
 using Nop.Core.Caching;
 
-namespace Nop.Plugin.Misc.SendinBlue
+namespace Nop.Plugin.Misc.Sendinblue
 {
     /// <summary>
     /// Represents plugin constants
     /// </summary>
-    public static class SendinBlueDefaults
+    public static class SendinblueDefaults
     {
         /// <summary>
         /// Gets a name of the view component to embed tracking script on pages
         /// </summary>
-        public const string TRACKING_VIEW_COMPONENT_NAME = "WidgetsSendinBlue";
+        public const string TRACKING_VIEW_COMPONENT_NAME = "WidgetsSendinblue";
 
         /// <summary>
         /// Gets a plugin system name
         /// </summary>
-        public static string SystemName => "Misc.SendinBlue";
+        public static string SystemName => "Misc.Sendinblue";
 
         /// <summary>
         /// Gets a plugin partner name
@@ -24,34 +24,34 @@ namespace Nop.Plugin.Misc.SendinBlue
         public static string PartnerName => "NOPCOMMERCE";
 
         /// <summary>
-        /// Gets a user agent used to request SendinBlue services
+        /// Gets a user agent used to request Sendinblue services
         /// </summary>
         public static string UserAgent => $"nopCommerce-{NopVersion.CURRENT_VERSION}";
 
         /// <summary>
-        /// Gets a URL to edit message template on SendinBlue account
+        /// Gets a URL to edit message template on Sendinblue account
         /// </summary>
         public static string EditMessageTemplateUrl = "https://my.sendinblue.com/camp/template/{0}/message-setup?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link";
 
         /// <summary>
         /// Gets a name of the route to the import contacts callback
         /// </summary>
-        public static string ImportContactsRoute => "Plugin.Misc.SendinBlue.ImportContacts";
+        public static string ImportContactsRoute => "Plugin.Misc.Sendinblue.ImportContacts";
 
         /// <summary>
         /// Gets a name of the route to the unsubscribe contact callback
         /// </summary>
-        public static string UnsubscribeContactRoute => "Plugin.Misc.SendinBlue.Unsubscribe";
+        public static string UnsubscribeContactRoute => "Plugin.Misc.Sendinblue.Unsubscribe";
 
         /// <summary>
         /// Gets a name of the synchronization schedule task
         /// </summary>
-        public static string SynchronizationTaskName => "Synchronization (SendinBlue plugin)";
+        public static string SynchronizationTaskName => "Synchronization (Sendinblue plugin)";
 
         /// <summary>
         /// Gets a type of the synchronization schedule task
         /// </summary>
-        public static string SynchronizationTask => "Nop.Plugin.Misc.SendinBlue.Services.SynchronizationTask";
+        public static string SynchronizationTask => "Nop.Plugin.Misc.Sendinblue.Services.SynchronizationTask";
 
         /// <summary>
         /// Gets a default synchronization period in hours
@@ -64,9 +64,14 @@ namespace Nop.Plugin.Misc.SendinBlue
         public static int DefaultSynchronizationListsLimit => 50;
 
         /// <summary>
-        /// Gets a header of the API authentication key
+        /// Gets a header of the API key authorization: api-key
         /// </summary>
         public static string ApiKeyHeader => "api-key";
+
+        /// <summary>
+        /// Gets a header of the API key authorization: partner-key
+        /// </summary>
+        public static string PartnerKeyHeader => "partner-key";
 
         /// <summary>
         /// Gets a name of attribute to store an email
@@ -331,26 +336,26 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// <summary>
         /// Generic attribute name to hide general settings block on the plugin configuration page
         /// </summary>
-        public static string HideGeneralBlock = "SendinBluePage.HideGeneralBlock";
+        public static string HideGeneralBlock = "SendinbluePage.HideGeneralBlock";
 
         /// <summary>
         /// Generic attribute name to hide synchronization block on the plugin configuration page
         /// </summary>
-        public static string HideSynchronizationBlock = "SendinBluePage.HideSynchronizationBlock";
+        public static string HideSynchronizationBlock = "SendinbluePage.HideSynchronizationBlock";
 
         /// <summary>
         /// Generic attribute name to hide transactional block on the plugin configuration page
         /// </summary>
-        public static string HideTransactionalBlock = "SendinBluePage.HideTransactionalBlock";
+        public static string HideTransactionalBlock = "SendinbluePage.HideTransactionalBlock";
 
         /// <summary>
         /// Generic attribute name to hide SMS block on the plugin configuration page
         /// </summary>
-        public static string HideSmsBlock = "SendinBluePage.HideSmsBlock";
+        public static string HideSmsBlock = "SendinbluePage.HideSmsBlock";
 
         /// <summary>
         /// Generic attribute name to hide marketing automation block on the plugin configuration page
         /// </summary>
-        public static string HideMarketingAutomationBlock = "SendinBluePage.HideMarketingAutomationBlock";
+        public static string HideMarketingAutomationBlock = "SendinbluePage.HideMarketingAutomationBlock";
     }
 }
