@@ -196,13 +196,13 @@ ordering: @Model.Ordering.ToString().ToLower(),
                 @if (Model.ServerSide)
                 {
                     <text>
-                    updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
+                    updateTable('#@Model.Name');
                     </text>
                 }
                 else
                 {
                     <text>
-                    updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
+                    updateTableSrc('#@Model.Name');
                     </text>
                 }
             }
