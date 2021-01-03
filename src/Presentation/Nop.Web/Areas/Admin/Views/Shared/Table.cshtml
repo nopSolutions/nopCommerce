@@ -262,12 +262,19 @@
             updateRowData_@(tableName)(dataId, origData, nameData);
         }
 
-        function updateRowData_@(tableName)(currentCells, data, nameData) {
+        function updateRowData_@(tableName)(row, data, nameData) {
             var updateRowData = [];
             updateRowData.push({ 'pname': nameData, 'pvalue': data });
             $.each(columnData_@(tableName), function (index, element) {
                 if (element.Editable == true) {
-                    var value = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val();
+                    var value = $($($(row).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val();
+                    if (value === undefined) {
+                        var dtVal = getValueFromDataTable('#@Model.Name', row, element.Data);
+                        if (dtVal !== undefined) {
+
+                            value = dtVal;
+                        }
+                    }
                     if (element.Type == 'number') {
                         value = new Intl.NumberFormat('@currentCulture', { useGrouping: false }).format(value);
                     }
@@ -326,11 +333,22 @@
             }
         }
 
-        function saveRowIntoArray_@(tableName)(cureentCells) {
+        function saveRowIntoArray_@(tableName)(row) {
             $.each(columnData_@(tableName), function (index, element) {
                 if (element.Editable == true) {
-                    var htmlVal = $($(cureentCells).children("[data-columnname='" + element.Data + "']")[0]).html();                    
-                    editRowData_@(tableName)[element.Data] = htmlVal;
+                    var htmlVal = $($(row).children("[data-columnname='" + element.Data + "']")[0]).html();
+                    if (htmlVal === undefined) {
+                        var val=getValueFromDataTable('#@Model.Name',row,element.Data);
+                        if (val !== undefined) {
+
+                            editRowData_@(tableName)[element.Data] = val;
+                        }
+
+                    }
+                    else {
+                        editRowData_@(tableName)[element.Data] = htmlVal;
+
+                    }
                 }
             });
         }

@@ -63,3 +63,15 @@ function updateTableWidth(tableSelector) {
     $(tableSelector).DataTable().columns.adjust();
   }
 }
+function getValueFromDataTable(tableSelector, row, columnName) {
+  var val = $.grep($(tableSelector).DataTable().settings()[0].aoColumns,
+    function (c, i) {
+      return (!c.bVisible && c.data === columnName);
+    });
+  if (val !== undefined) {
+    var rowData = $(tableSelector).DataTable().row(row[0]).data()[columnName];
+
+    return rowData;
+  }
+  return undefined;
+}
