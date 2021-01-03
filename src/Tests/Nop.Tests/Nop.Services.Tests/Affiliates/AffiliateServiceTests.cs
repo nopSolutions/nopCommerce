@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Nop.Core.Domain.Affiliates;
 using Nop.Services.Affiliates;
 using Nop.Services.Common;
@@ -77,6 +79,16 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
         }
 
         [Test]
+        public async Task CanGetAffiliateById()
+        {
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(_activeAffiliate1.Id);
+
+            affiliate.Should().NotBeNull();
+            affiliate.Id.Should().Be(_activeAffiliate1.Id);
+            affiliate.AddressId.Should().Be(_activeAffiliate1.AddressId);
+        }
+
+        [Test]
         public async Task CanGetAffiliateByFriendlyUrlName()
         {
             var affiliate = await _affiliateService.GetAffiliateByFriendlyUrlNameAsync(_activeAffiliate1.FriendlyUrlName);
@@ -84,6 +96,9 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
             affiliate.Should().NotBeNull();
             affiliate.Active.Should().BeTrue();
             affiliate.FriendlyUrlName.Should().Be(_activeAffiliate1.FriendlyUrlName);
+
+            affiliate = await _affiliateService.GetAffiliateByFriendlyUrlNameAsync(null);
+            affiliate.Should().BeNull();
         }
 
         [Test]
@@ -100,12 +115,32 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
 
             var address = await _addressService.GetAddressByIdAsync(1);
 
-            affiliates = await _affiliateService.GetAllAffiliatesAsync(firstName: address.FirstName ,showHidden: true);
+            affiliates = await _affiliateService.GetAllAffiliatesAsync(firstName: address.FirstName, showHidden: true);
             affiliates.TotalCount.Should().Be(3);
-            affiliates = await _affiliateService.GetAllAffiliatesAsync(firstName: address.FirstName);
+            affiliates = await _affiliateService.GetAllAffiliatesAsync(firstName: address.FirstName, lastName: address.LastName);
             affiliates.TotalCount.Should().Be(2);
+            affiliates = await _affiliateService.GetAllAffiliatesAsync(loadOnlyWithOrders: true, ordersCreatedFromUtc: address.CreatedOnUtc, ordersCreatedToUtc: It.IsAny<DateTime>());
+            affiliates.TotalCount.Should().Be(0);
             affiliates = await _affiliateService.GetAllAffiliatesAsync(loadOnlyWithOrders:true, showHidden: true);
             affiliates.TotalCount.Should().Be(0);
+        }
+
+        [Test]
+        public async Task CanUpdateAffiliateAsync()
+        {
+            var newlyAffiliate = new Affiliate() { AddressId = 1 };
+
+            await _affiliateService.InsertAffiliateAsync(newlyAffiliate);
+
+            newlyAffiliate.AdminComment = _activeAffiliate1.AdminComment;
+            newlyAffiliate.FriendlyUrlName = _activeAffiliate1.FriendlyUrlName;
+
+            await _affiliateService.UpdateAffiliateAsync(newlyAffiliate);
+
+            newlyAffiliate.AdminComment.Should().BeEquivalentTo(_activeAffiliate1.AdminComment);
+            newlyAffiliate.FriendlyUrlName.Should().BeEquivalentTo(_activeAffiliate1.FriendlyUrlName);
+
+            await _affiliateService.DeleteAffiliateAsync(newlyAffiliate);
         }
 
         [Test]
@@ -115,6 +150,13 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
             var address = await _addressService.GetAddressByIdAsync(1);
 
             fullName.Should().Be($"{address.FirstName} {address.LastName}");
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _affiliateService.GetAffiliateFullNameAsync(null));
+
+            // Passing an unexisting address id
+            _activeAffiliate1.AddressId = 101;
+            fullName = await _affiliateService.GetAffiliateFullNameAsync(_activeAffiliate1);
+            fullName.Should().BeEmpty();
         }
 
         [Test]
@@ -126,6 +168,8 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
             _notActiveDeletedAffiliate.FriendlyUrlName = string.Empty;
             url = await _affiliateService.GenerateUrlAsync(_notActiveDeletedAffiliate);
             url.Should().Be($"http://{NopTestsDefaults.HostIpAddress}/?{NopAffiliateDefaults.AffiliateIdQueryParameter}={_notActiveDeletedAffiliate.Id}");
+
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await _affiliateService.GenerateUrlAsync(null));
         }
 
         [Test]
@@ -136,6 +180,15 @@ namespace Nop.Tests.Nop.Services.Tests.Affiliates
 
             friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(_activeAffiliate1, "not/valid/url*name");
             friendlyUrlName.Should().Be("notvalidurlname");
+
+            friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(_activeAffiliate1, null);
+            friendlyUrlName.Should().BeNull();
+
+            friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(_activeAffiliate2, _activeAffiliate1.FriendlyUrlName);
+            friendlyUrlName.Should().NotBeEquivalentTo(_activeAffiliate1.FriendlyUrlName.ToLower());
+            friendlyUrlName.Should().StartWith(_activeAffiliate1.FriendlyUrlName.ToLower());
+
+            var error = Assert.ThrowsAsync<ArgumentNullException>(async () => await _affiliateService.ValidateFriendlyUrlNameAsync(null, _activeAffiliate2.FriendlyUrlName));
         }
     }
 }

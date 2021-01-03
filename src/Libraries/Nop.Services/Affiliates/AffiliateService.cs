@@ -74,7 +74,7 @@ namespace Nop.Services.Affiliates
 
             var query = from a in _affiliateRepository.Table
                         orderby a.Id
-                        where a.FriendlyUrlName == friendlyUrlName
+                        where a.FriendlyUrlName.ToLower() == friendlyUrlName.ToLower()
                         select a;
             var affiliate = await query.FirstOrDefaultAsync();
 
