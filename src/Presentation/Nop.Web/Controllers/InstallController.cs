@@ -52,19 +52,51 @@ namespace Nop.Web.Controllers
                 return model;
 
             var browserCulture = _locService.GetBrowserCulture();
+            var selectedLangCode = _locService.GetCurrentLanguage().Code;
             var countries = new List<SelectListItem>
             {
                 //This item was added in case it was not possible to automatically determine the country by culture
-                new SelectListItem { Value = string.Empty, Text = _locService.GetResource("CountrySelect") }
+                new SelectListItem { Value = string.Empty, Text = _locService.GetResource("Select country") }
             };
+
+            //Define how selected language is spoken
+            string getLang(string culture) => culture[..2] ?? "en";
+            string getRegion(string culture) => culture[^2..];
+            bool selectedLangIsSpokenHere(string culture) => 
+                (selectedLangCode.Length > 2 && string.Equals(culture, selectedLangCode, StringComparison.OrdinalIgnoreCase))
+                 || string.Equals(getLang(culture), selectedLangCode, StringComparison.OrdinalIgnoreCase);
+            var isSelectedLangSpokenInOneCountryOnly =
+                   ISO3166.GetCollection()
+                           .Select(c => c.LocalizationInfo.Any(l => selectedLangIsSpokenHere(l.Culture)))
+                           .Count(c => c) == 1;
+
+            List<RegionInfo> regions = new();
+            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
+            foreach (var culture in cultures)
+            {
+                var region = new RegionInfo(culture.LCID);
+                if (!regions.Where(p => p.Name == region.Name).Any())
+                    regions.Add(region);
+            }
+
             countries.AddRange(from country in ISO3166.GetCollection()
                                from localization in ISO3166.GetLocalizationInfo(country.Alpha2)
-                               let lang = ISO3166.GetLocalizationInfo(country.Alpha2).Count() > 1 ? $" [{localization.Language} language]" : string.Empty
+                               let langs = ISO3166.GetLocalizationInfo(country.Alpha2)
+                               let ifLaguageFromRegion = getRegion(localization.Culture) == country.Alpha2
+                               let explicitLz = langs.Where(l => getRegion(l.Culture) == country.Alpha2).FirstOrDefault()
+                               let ifExplicitLocalization = explicitLz != null
+                               let region = ifLaguageFromRegion
+                                                ? new RegionInfo(localization.Culture)
+                                                : ifExplicitLocalization
+                                                    ? new RegionInfo(explicitLz.Culture)
+                                                    : regions.FirstOrDefault(r => r.Name == country.Alpha2) 
+                               let countryName = region != null ? $"{region.NativeName}/{region.EnglishName}" : country.Name
+                               let lang = $"{new CultureInfo(getLang(localization.Culture)).NativeName}"
                                let item = new SelectListItem
                                {
                                    Value = $"{country.Alpha2}-{localization.Culture}",
-                                   Text = $"{country.Name}{lang}",
-                                   Selected = (localization.Culture == browserCulture) && browserCulture[^2..] == country.Alpha2
+                                   Text = $"{countryName} [{lang}]",
+                                   Selected = isSelectedLangSpokenInOneCountryOnly && selectedLangIsSpokenHere(localization.Culture)
                                }
                                select item);
             model.AvailableCountries.AddRange(countries);
