@@ -280,7 +280,7 @@ namespace Nop.Services.Installation
                 new ISO3166Country("Turks and Caicos Islands", "TC", "TCA", 796, new[] { "1 649" }),
                 new ISO3166Country("Tuvalu", "TV", "TUV", 798, new[] { "688" }),
                 new ISO3166Country("Uganda", "UG", "UGA", 800, new[] { "256" }),
-                new ISO3166Country("Ukraine", "UA", "UKR", 804, new[] { "380" }, localizationInfo: new[] { new LocalizationInfo("uk-UA", "Ukrainian"), new LocalizationInfo("ru-RU", "Russian") }),
+                new ISO3166Country("Ukraine", "UA", "UKR", 804, new[] { "380" }, localizationInfo: new[] { new LocalizationInfo("uk-UA", "Ukrainian"), new LocalizationInfo("ru-UA", "Russian") }),
                 new ISO3166Country("United Arab Emirates", "AE", "ARE", 784, new[] { "971" }, localizationInfo: new[] { new LocalizationInfo("ar-AE", "Arabic") }),
                 new ISO3166Country("United Kingdom of Great Britain and Northern Ireland", "GB", "GBR", 826, new[] { "44" }, true),
                 new ISO3166Country("United States Minor Outlying Islands", "UM", "UMI", 581),
