@@ -44,6 +44,8 @@
 
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
+    <None Remove="App_Data\Localization\Installation\installation.es.xml" />
+    <None Remove="App_Data\Localization\Installation\installation.uk.xml" />
 
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
