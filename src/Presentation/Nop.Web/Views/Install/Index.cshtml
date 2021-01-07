@@ -2,15 +2,18 @@
 
 @{
     Layout = null;
+    var currentLanguage = ILS.GetCurrentLanguage();
+    var lang = currentLanguage.Code[..2];
 }
 <!DOCTYPE html>
-<html>
+<html lang="@lang">
 <head>
     <title>@ILS.GetResource("Title")</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="google" content="notranslate">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="shortcut icon" href="/icons/icons_0/favicon.ico">
-    @if (ILS.GetCurrentLanguage().IsRightToLeft)
+    @if (currentLanguage.IsRightToLeft)
     {
         <link href="@Url.Content("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.rtl.css")" type="text/css" rel="stylesheet" />
