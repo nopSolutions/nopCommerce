@@ -150,4 +150,10 @@
   <LocaleResource Name="RestartProgress">
     <Value>Restarting...</Value>
   </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Select country">
+    <Value>Select country</Value>
+  </LocaleResource>
 </Language>

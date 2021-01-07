@@ -16,7 +16,7 @@
     <Value>У системного пользователя '{0}' нет прав записи на папку '{1}'. Пожалуйста, настройте данные разрешения.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>У системного пользователя '{0}' нет прав записи на файл '{1}'. Пожалуйста, настройте данные разрешения.</Value>
+    <Value>У системного пользователя '{0}' нет прав записи в файл '{1}'. Пожалуйста, настройте данные разрешения.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>Подтвердите пароль</Value>
@@ -142,5 +142,11 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Для того, что успешно установить nopCommerce, вам необходимо знать строку подключения к вашей базе данных. Если у вас нет этой информации, то вы можете узнать ее у вашего хостинг-провайдера. Если же вы устанавливаете nopCommerce на локальный компьютер, то вы можете узнать её у вашего системного администратора.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Страна</Value>
+  </LocaleResource>
+  <LocaleResource Name="Select country">
+    <Value>Выберите страну</Value>
   </LocaleResource>
 </Language>
