@@ -19,10 +19,10 @@
     <Value>Системний користувач '{0}' не має права запису до файлу '{1}'. Будь ласка, надайте необхідний дозвіл.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Підтвердіть пароль</Value>
+    <Value>Підтвердження пароля</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Підтвердіть пароль</Value>
+    <Value>Введіть пароль вдруге</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
     <Value>Рядок підключення</Value>
@@ -108,7 +108,7 @@
     <Value>Ім'я чи мережева адреса примірника SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Введіть ім'я чи мережева адресу примірника SQL Server</Value>
+    <Value>Введіть ім'я чи мережеву адресу примірника SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Помилка: {0}</Value>
@@ -129,7 +129,7 @@
     <Value>Обліковий запис SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>Введіть обліковий запис SQL Server</Value>
+    <Value>Введіть обліковий запис для підключення до SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Інформація про магазин</Value>
