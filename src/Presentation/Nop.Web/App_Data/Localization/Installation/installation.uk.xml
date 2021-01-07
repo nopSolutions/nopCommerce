@@ -76,7 +76,7 @@
     <Value>Приклад</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Все готово, вперед</Value>
+    <Value>Розгорнуть</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
     <Value>Розгортаєм nopCommerce...</Value>
