@@ -13,7 +13,7 @@
     <Value>Введіть пароль адміністратора</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Системний користувач '{0}' не має права запису до теки '{1}'. Будь ласка, надайте необхідний дозвіл.</Value>
+    <Value>Системний користувач '{0}' не має права модифікувати теку '{1}'. Будь ласка, надайте необхідний дозвіл.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
     <Value>Системний користувач '{0}' не має права запису до файлу '{1}'. Будь ласка, надайте необхідний дозвіл.</Value>
