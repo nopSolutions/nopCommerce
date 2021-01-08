@@ -79,6 +79,20 @@ namespace Nop.Web.Controllers
                     regions.Add(region);
             }
 
+            RegionInfo getRegionInfo(string specCulture, string countryAlpha2 = "US")
+            {
+                //.NET does not itself come up with culture settings - it takes the settings from the installed cultures on the OS.
+                try
+                {
+                    return new RegionInfo(specCulture);
+                }
+                catch 
+                {
+                    //Log somewhere??
+                    return regions.FirstOrDefault(r => r.Name == countryAlpha2);
+                }
+            }
+
             countries.AddRange(from country in ISO3166.GetCollection()
                                from localization in ISO3166.GetLocalizationInfo(country.Alpha2)
                                let langs = ISO3166.GetLocalizationInfo(country.Alpha2)
@@ -86,9 +100,9 @@ namespace Nop.Web.Controllers
                                let explicitLz = langs.Where(l => getRegion(l.Culture) == country.Alpha2).FirstOrDefault()
                                let ifExplicitLocalization = explicitLz != null
                                let region = ifLaguageFromRegion
-                                                ? new RegionInfo(localization.Culture)
+                                                ? getRegionInfo(localization.Culture, country.Alpha2)
                                                 : ifExplicitLocalization
-                                                    ? new RegionInfo(explicitLz.Culture)
+                                                    ? getRegionInfo(explicitLz.Culture, country.Alpha2)
                                                     : regions.FirstOrDefault(r => r.Name == country.Alpha2) 
                                let countryName = region != null ? $"{region.NativeName}/{region.EnglishName}" : country.Name
                                let lang = $"{new CultureInfo(getLang(localization.Culture)).NativeName}"
