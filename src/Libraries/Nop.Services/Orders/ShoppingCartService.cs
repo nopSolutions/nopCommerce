@@ -331,7 +331,7 @@ namespace Nop.Services.Orders
 
             foreach (var cartProduct in cartProducts)
             {
-                if (!cartProduct.RequireOtherProducts && _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id))
+                if (cartProduct.RequireOtherProducts && _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id))
                     yield return cartProduct;
             }
         }
