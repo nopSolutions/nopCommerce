@@ -60,7 +60,7 @@ namespace Nop.Web.Factories
                 Name = poll.Name
             };
             var answers = await _pollService.GetPollAnswerByPollAsync(poll.Id);
-            
+
             foreach (var answer in answers)
                 model.TotalVotes += answer.NumberOfVotes;
             foreach (var pa in answers)
@@ -87,7 +87,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey,
                 systemKeyword, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
 
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
@@ -120,12 +120,17 @@ namespace Nop.Web.Factories
         /// <returns>List of the poll model</returns>
         public virtual async Task<List<PollModel>> PrepareHomepagePollModelsAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepagePollsModelKey, 
-                await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepagePollsModelKey, language, store);
 
-            var cachedPolls = await (await _staticCacheManager.GetAsync(cacheKey, async () =>
-                (await _pollService.GetPollsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetWorkingLanguageAsync()).Id, loadShownOnHomepageOnly: true))
-                   .SelectAwait(async poll => await PreparePollModelAsync(poll, false)).ToListAsync()));
+            var cachedPolls = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var polls = await _pollService.GetPollsAsync(store.Id, language.Id, loadShownOnHomepageOnly: true);
+                var pollsModels = await polls.SelectAwait(async poll => await PreparePollModelAsync(poll, false)).ToListAsync();
+                return pollsModels;
+            });
 
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.
             //But first we need to clone the cached model (the updated one should not be cached)
@@ -133,10 +138,10 @@ namespace Nop.Web.Factories
             foreach (var poll in cachedPolls)
             {
                 var pollModel = poll with { };
-                pollModel.AlreadyVoted = await _pollService.AlreadyVotedAsync(pollModel.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+                pollModel.AlreadyVoted = await _pollService.AlreadyVotedAsync(pollModel.Id, customer.Id);
                 model.Add(pollModel);
             }
-            
+
             return model;
         }
 
