@@ -83,12 +83,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
-                return ErrorJson(ModelState.SerializeErrors());
-
             //try to get a schedule task with the specified id
             var scheduleTask = await _scheduleTaskService.GetTaskByIdAsync(model.Id)
                                ?? throw new ArgumentException("Schedule task cannot be loaded");
+
+            //To prevent inject the XSS payload in Schedule tasks ('Name' field), we must disable editing this field, 
+            //but since it is required, we need to get its value before updating the entity.
+            if (!string.IsNullOrEmpty(scheduleTask.Name))
+            {
+                model.Name = scheduleTask.Name;
+                ModelState.Remove(nameof(model.Name));
+            }
+
+            if (!ModelState.IsValid)
+                return ErrorJson(ModelState.SerializeErrors());            
 
             scheduleTask = model.ToEntity(scheduleTask);
 
