@@ -95,6 +95,6 @@ namespace Nop.Data.Mapping
         /// <summary>
         /// Additional name compatibility types
         /// </summary>
-        public static List<Type> AdditionalNameCompatibilities => new List<Type>();
+        public static List<Type> AdditionalNameCompatibilities { get; } = new List<Type>();
     }
 }
