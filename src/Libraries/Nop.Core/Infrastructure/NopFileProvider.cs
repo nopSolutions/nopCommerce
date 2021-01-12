@@ -526,21 +526,7 @@ namespace Nop.Core.Infrastructure
 
             return streamReader.ReadToEnd();
         }
-
-        //TODO: Delete unused method
-        /// <summary>
-        /// Sets the date and time, in coordinated universal time (UTC), that the specified file was last written to
-        /// </summary>
-        /// <param name="path">The file for which to set the date and time information</param>
-        /// <param name="lastWriteTimeUtc">
-        /// A System.DateTime containing the value to set for the last write date and time of path.
-        /// This value is expressed in UTC time
-        /// </param>
-        public virtual void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
-        {
-            File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
-        }
-
+        
         /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>

@@ -295,18 +295,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="encoding">The encoding applied to the contents of the file</param>
         /// <returns>A string containing all lines of the file</returns>
         string ReadAllText(string path, Encoding encoding);
-
-        //TODO: Delete unused method
-        /// <summary>
-        /// Sets the date and time, in coordinated universal time (UTC), that the specified file was last written to
-        /// </summary>
-        /// <param name="path">The file for which to set the date and time information</param>
-        /// <param name="lastWriteTimeUtc">
-        /// A System.DateTime containing the value to set for the last write date and time of path.
-        /// This value is expressed in UTC time
-        /// </param>
-        void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
-
+        
         /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>
