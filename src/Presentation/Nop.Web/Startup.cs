@@ -31,6 +31,18 @@ namespace Nop.Web
         {
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
+            try
+            {
+                if (!System.IO.Directory.Exists("logs"))
+                {
+                    System.IO.Directory.CreateDirectory("logs");
+                }
+                if (!System.IO.Directory.Exists("bin"))
+                {
+                    System.IO.Directory.CreateDirectory("bin");
+                }
+            }
+            catch { }
         }
 
         #endregion
