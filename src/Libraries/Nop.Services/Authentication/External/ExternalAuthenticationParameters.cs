@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Nop.Services.Authentication.External
@@ -38,6 +38,11 @@ namespace Nop.Services.Authentication.External
         /// Gets or sets user email
         /// </summary>
         public string Email { get; set; }
+
+        /// <summary>
+        /// Gets or sets user approved status
+        /// </summary>
+        public bool? IsApproved { get; set; }
 
         /// <summary>
         /// Gets or sets the additional user info as a list of a custom claims

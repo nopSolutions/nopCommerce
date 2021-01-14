@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 
 namespace Nop.Core.Infrastructure
 {
@@ -19,7 +20,7 @@ namespace Nop.Core.Infrastructure
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="webHostEnvironment">Hosting environment</param>
-        public NopFileProvider(IWebHostEnvironment webHostEnvironment)
+        public NopFileProvider(IWebHostEnvironment webHostEnvironment, ILogger logger = null)
             : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) : webHostEnvironment.ContentRootPath)
         {
             WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
@@ -483,7 +484,11 @@ namespace Nop.Core.Infrastructure
             //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
             var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
 
-            return Combine(Root ?? string.Empty, path) + pathEnd;
+            var result = Combine(Root ?? string.Empty, path) + pathEnd;
+
+            EngineContext.Current?.Resolve<ILogger>()?.LogInformation($"path = {path}, result = {result}");
+
+            return result;
         }
 
         /// <summary>

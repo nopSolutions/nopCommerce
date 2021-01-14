@@ -679,8 +679,9 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Register()
         {
             //check whether registration is allowed
-            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled ||
+                _customerSettings.UserRegistrationType == UserRegistrationType.OnlyExternalAuthentication)
+                return RedirectToRoute("RegisterResult", new { resultId = (int)_customerSettings.UserRegistrationType });
 
             var model = new RegisterModel();
             model = _customerModelFactory.PrepareRegisterModel(model, false, setDefaultValues: true);
@@ -696,8 +697,9 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
         {
             //check whether registration is allowed
-            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled || 
+                _customerSettings.UserRegistrationType == UserRegistrationType.OnlyExternalAuthentication)
+                return RedirectToRoute("RegisterResult", new { resultId = (int)_customerSettings.UserRegistrationType });
 
             if (_customerService.IsRegistered(_workContext.CurrentCustomer))
             {

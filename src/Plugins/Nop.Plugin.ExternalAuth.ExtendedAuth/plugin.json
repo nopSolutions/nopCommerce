@@ -1,0 +1,11 @@
+﻿{
+  "Group": "ExternalAuth methods",
+  "FriendlyName": "External authentication",
+  "SystemName": "ExternalAuth",
+  "Version": "1.1",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "Sangeet Shah",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.ExternalAuth.ExtendedAuth.dll",
+  "Description": "This plugin enables Facebook,Twitter,Google,LinkedIn authentication (login using Facebook,Twitter,Google account, LinkedIn)"
+}

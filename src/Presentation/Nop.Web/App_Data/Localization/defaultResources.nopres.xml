@@ -514,7 +514,7 @@
     <Value>By creating an account on our website, you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.ReturningCustomer">
-    <Value>Returning Customer</Value>
+    <Value>For Staff</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Login.Unsuccessful">
     <Value>Login was unsuccessful. Please correct the errors and try again.</Value>
@@ -612,6 +612,9 @@
   <LocaleResource Name="Account.Register">
     <Value>Register</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Register.UsingExternalAuthentication">
+    <Value>For Companies</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Register.Button">
     <Value>Register</Value>
   </LocaleResource>
@@ -644,6 +647,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.Register.Result.Standard">
     <Value>Your registration completed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Result.OnlyExternalAuthentication">
+    <Value>Standard registration is disabled. Only external authentication is possible (using your Gmail, Facebook, etc)</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Register.Unsuccessful">
     <Value>Registration was not complete. Please correct the errors and try again.</Value>

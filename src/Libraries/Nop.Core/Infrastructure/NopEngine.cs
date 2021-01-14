@@ -6,6 +6,7 @@ using Autofac;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
@@ -181,6 +182,11 @@ namespace Nop.Core.Infrastructure
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
             _serviceProvider = application.ApplicationServices;
+
+            application.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });
 
             //find startup configurations provided by other assemblies
             var typeFinder = Resolve<ITypeFinder>();

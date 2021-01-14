@@ -32,6 +32,17 @@
                     </div>
                 </div>
             }
+            else if (Model.RegistrationType == UserRegistrationType.OnlyExternalAuthentication)
+            {
+                <div class="new-wrapper">
+                    <div class="title">
+                        @T("Account.Register.UsingExternalAuthentication")
+                    </div>
+                    <div class="text">
+                        @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
+                    </div>
+                </div>
+            }
             else if (Model.CheckoutAsGuest)
             {
                 <div class="new-wrapper checkout-as-guest-or-register-block">
@@ -106,9 +117,6 @@
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="external-authentication">
-            @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
         </div>
         @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
     </div>

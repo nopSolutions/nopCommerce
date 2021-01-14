@@ -9,15 +9,17 @@
 *.suo
 *.user
 *.sln.docstates
+.git/
+.dockerignore
 
 # Build results
 
 .vs/
-[Dd]ebug/
-[Rr]elease/
-x64/
-[Bb]in/
-[Oo]bj/
+**/Debug/*
+**/Release/*
+**/x64/*
+**/bin/*
+**/obj/*
 
 # Build scripts folder
 [Aa]pp[Bb]uild/
