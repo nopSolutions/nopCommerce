@@ -822,22 +822,6 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            //search by keyword
-            var searchLocalizedValue = false;
-            if (languageId > 0)
-            {
-                if (showHidden)
-                {
-                    searchLocalizedValue = true;
-                }
-                else
-                {
-                    //ensure that we have at least two published languages
-                    var totalPublishedLanguages = (await _languageService.GetAllLanguagesAsync()).Count;
-                    searchLocalizedValue = totalPublishedLanguages >= 2;
-                }
-            }
-
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(0))
                 categoryIds.Remove(0);
@@ -884,6 +868,11 @@ namespace Nop.Services.Catalog
 
             if (!string.IsNullOrEmpty(keywords))
             {
+                var langs = await _languageService.GetAllLanguagesAsync(showHidden: true);
+
+                //Set a flag which will to points need to search in localized properties. If showHidden doesn't set to true should be at least two published languages.
+                var searchLocalizedValue = languageId > 0 && langs.Count() >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
+
                 IQueryable<int> productsByKeywords;
 
                 productsByKeywords =
@@ -904,33 +893,37 @@ namespace Nop.Services.Catalog
                         select pptm.ProductId
                     );
 
-                    productsByKeywords = productsByKeywords.Union(
+                    if (searchLocalizedValue)
+                    {
+                        productsByKeywords = productsByKeywords.Union(
                         from pptm in _productTagMappingRepository.Table
                         join lp in _localizedPropertyRepository.Table on pptm.ProductTagId equals lp.EntityId
                         where lp.LocaleKeyGroup == nameof(ProductTag) &&
                               lp.LocaleKey == nameof(ProductTag.Name) &&
                               lp.LocaleValue.Contains(keywords)
-                        select lp.EntityId
-                    );
+                        select lp.EntityId);
+                    }
                 }
 
-                productsByKeywords = productsByKeywords.Union(
-                            from lp in _localizedPropertyRepository.Table
-                            let checkName = lp.LocaleKey == nameof(Product.Name) &&
-                                            lp.LocaleValue.Contains(keywords)
-                            let checkShortDesc = searchDescriptions &&
-                                            lp.LocaleKey == nameof(Product.ShortDescription) &&
-                                            lp.LocaleValue.Contains(keywords)
-                            let checkProductTags = searchProductTags &&
-                                            lp.LocaleKeyGroup == nameof(ProductTag) &&
-                                            lp.LocaleKey == nameof(ProductTag.Name) &&
-                                            lp.LocaleValue.Contains(keywords)
-                            where
-                                (lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId) && (checkName || checkShortDesc) ||
-                                checkProductTags
+                if (searchLocalizedValue)
+                {
+                    productsByKeywords = productsByKeywords.Union(
+                                from lp in _localizedPropertyRepository.Table
+                                let checkName = lp.LocaleKey == nameof(Product.Name) &&
+                                                lp.LocaleValue.Contains(keywords)
+                                let checkShortDesc = searchDescriptions &&
+                                                lp.LocaleKey == nameof(Product.ShortDescription) &&
+                                                lp.LocaleValue.Contains(keywords)
+                                let checkProductTags = searchProductTags &&
+                                                lp.LocaleKeyGroup == nameof(ProductTag) &&
+                                                lp.LocaleKey == nameof(ProductTag.Name) &&
+                                                lp.LocaleValue.Contains(keywords)
+                                where
+                                    (lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId) && (checkName || checkShortDesc) ||
+                                    checkProductTags
 
-                            select lp.EntityId
-                        );
+                                select lp.EntityId);
+                }
 
                 productsQuery =
                     from p in productsQuery
