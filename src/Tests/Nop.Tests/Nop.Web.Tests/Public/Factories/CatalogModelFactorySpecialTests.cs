@@ -87,7 +87,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public async Task PrepareCategoryModelShouldDependOnSettings()
         {
             var model = await _catalogModelFactory.PrepareCategoryModelAsync(_category, new CatalogPagingFilteringModel());
-           
+
             model.CategoryBreadcrumb.Any().Should().BeFalse();
             model.SubCategories.Count.Should().Be(3);
             model.Products.Count.Should().Be(6);
@@ -96,7 +96,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPreparePopularProductTagsModel()
         {
-            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync(_catalogSettings.NumberOfProductTags);
 
             model.Tags.Count.Should().Be(16);
             model.TotalTags.Should().Be(16);

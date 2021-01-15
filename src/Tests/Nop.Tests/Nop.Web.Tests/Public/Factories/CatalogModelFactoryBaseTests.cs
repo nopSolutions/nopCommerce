@@ -320,7 +320,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareProductTagsAllModel()
         {
-            var model = await _catalogModelFactory.PrepareProductTagsAllModelAsync();
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
             model.Tags.Count.Should().Be(16);
         }
 
