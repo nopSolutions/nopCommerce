@@ -844,6 +844,7 @@ namespace Nop.Web.Factories
                     "/customer/checkusernameavailability",
                     "/customer/downloadableproducts",
                     "/customer/info",
+                    "/customer/productreviews",
                     "/deletepm",
                     "/emailwishlist",
                     "/eucookielawaccept",
@@ -870,6 +871,7 @@ namespace Nop.Web.Factories
                     "/uploadfileproductattribute",
                     "/uploadfilereturnrequest",
                     "/wishlist",
+                    "/recentlyviewedproducts",
                 };
 
                 const string newLine = "\r\n"; //Environment.NewLine
