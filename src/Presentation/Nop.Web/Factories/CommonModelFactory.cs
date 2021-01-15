@@ -533,7 +533,6 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(pageModel));
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
-                await _workContext.GetWorkingLanguageAsync(),
                 _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
                 await _storeContext.GetCurrentStoreAsync());
 
@@ -730,7 +729,6 @@ namespace Nop.Web.Factories
         public virtual async Task<string> PrepareSitemapXmlAsync(int? id)
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey, id,
-                await _workContext.GetWorkingLanguageAsync(),
                 _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
                 await _storeContext.GetCurrentStoreAsync());
 

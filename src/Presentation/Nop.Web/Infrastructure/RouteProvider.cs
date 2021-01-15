@@ -555,11 +555,12 @@ namespace Nop.Web.Infrastructure
                 new { controller = "Common", action = "RobotsTextFile" });
 
             //sitemap (XML)
-            endpointRouteBuilder.MapControllerRoute("sitemap.xml", $"{pattern}sitemap.xml",
+            endpointRouteBuilder.MapControllerRoute("sitemap.xml", 
+                $"sitemap.xml",
                 new { controller = "Common", action = "SitemapXml" });
 
             endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml",
-                pattern + "sitemap-{Id:min(0)}.xml",
+                "sitemap-{Id:min(0)}.xml",
                 new { controller = "Common", action = "SitemapXml" });
 
             //store closed

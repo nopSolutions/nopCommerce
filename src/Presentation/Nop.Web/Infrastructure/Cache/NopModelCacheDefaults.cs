@@ -262,21 +262,19 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for sitemap on the sitemap page
         /// </summary>
         /// <remarks>
-        /// {0} : language id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
+        /// {0} : roles of the current user
+        /// {1} : current store ID
         /// </remarks>
-        public static CacheKey SitemapPageModelKey => new CacheKey("Nop.pres.sitemap.page-{0}-{1}-{2}", SitemapPrefixCacheKey);
+        public static CacheKey SitemapPageModelKey => new CacheKey("Nop.pres.sitemap.page-{0}-{1}", SitemapPrefixCacheKey);
         /// <summary>
         /// Key for sitemap on the sitemap SEO page
         /// </summary>
         /// <remarks>
         /// {0} : sitemap identifier
-        /// {1} : language id
-        /// {2} : roles of the current user
-        /// {3} : current store ID
+        /// {1} : roles of the current user
+        /// {2} : current store ID
         /// </remarks>
-        public static CacheKey SitemapSeoModelKey => new CacheKey("Nop.pres.sitemap.seo-{0}-{1}-{2}-{3}", SitemapPrefixCacheKey);
+        public static CacheKey SitemapSeoModelKey => new CacheKey("Nop.pres.sitemap.seo-{0}-{1}-{2}", SitemapPrefixCacheKey);
         public static string SitemapPrefixCacheKey => "Nop.pres.sitemap";
 
         /// <summary>
