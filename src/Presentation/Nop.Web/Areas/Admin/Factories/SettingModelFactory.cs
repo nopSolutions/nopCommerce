@@ -735,19 +735,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare app settings model
         /// </summary>
         /// <returns>App settings model</returns>
-        public virtual AppSettingsModel PrepareAppSettingsModel()
+        public virtual async Task<AppSettingsModel> PrepareAppSettingsModel()
         {
             var model = new AppSettingsModel
             {
                 CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
                 HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
-                RedisConfigModel = _appSettings.RedisConfig.ToConfigModel<RedisConfigModel>(),
+                DistributedCacheConfigModel = _appSettings.DistributedCacheConfig.ToConfigModel<DistributedCacheConfigModel>(),
                 AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
                 InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
                 PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
                 CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
             };
 
+            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.DistributedCacheConfig.DistributedCacheType.ToSelectListAsync();
+            
             return model;
         }
 

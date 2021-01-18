@@ -187,9 +187,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<HostingConfig, HostingConfigModel>();
             CreateMap<HostingConfigModel, HostingConfig>();
-
-            CreateMap<RedisConfig, RedisConfigModel>();
-            CreateMap<RedisConfigModel, RedisConfig>();
+            
+            CreateMap<DistributedCacheConfig, DistributedCacheConfigModel>()
+                .ForMember(model => model.DistributedCacheTypeValues, options => options.Ignore());
+            CreateMap<DistributedCacheConfigModel, DistributedCacheConfig>();
 
             CreateMap<AzureBlobConfig, AzureBlobConfigModel>();
             CreateMap<AzureBlobConfigModel, AzureBlobConfig>()

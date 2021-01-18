@@ -19,7 +19,6 @@ using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
-using Nop.Core.Redis;
 using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Authentication;
@@ -161,27 +160,47 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Adds services required for distributed cache
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddDistributedCache(this IServiceCollection services)
+        {
+            var distributedCacheConfig = services.BuildServiceProvider().GetRequiredService<AppSettings>().DistributedCacheConfig;
+
+            if (!distributedCacheConfig.Enabled)
+                return;
+
+            switch (distributedCacheConfig.DistributedCacheType)
+            {
+                case DistributedCacheType.Memory:
+                    services.AddDistributedMemoryCache();
+                    break;
+                case DistributedCacheType.SqlServer:
+                    services.AddDistributedSqlServerCache(options =>
+                    {
+                        options.ConnectionString = distributedCacheConfig.ConnectionString;
+                        options.SchemaName = distributedCacheConfig.SchemaName;
+                        options.TableName = distributedCacheConfig.TableName;
+                    });
+                    break;
+                case DistributedCacheType.Redis:
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+                        options.Configuration = distributedCacheConfig.ConnectionString;
+                    });
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Adds data protection services
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopDataProtection(this IServiceCollection services)
         {
-            //check whether to persist data protection in Redis
             var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
-            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StoreDataProtectionKeys)
-            {
-                //store keys in Redis
-                services.AddDataProtection().PersistKeysToStackExchangeRedis(() =>
-                {
-                    //For some reason, data protection services are registered earlier. This configuration is called even before the request queue starts. 
-                    //Service provider has not yet been built and we cannot get the required service. 
-                    //So we create a new instance of RedisConnectionWrapper() bypassing the DI.
-                    var redisConnectionWrapper = new RedisConnectionWrapper(appSettings);
-                    return redisConnectionWrapper.GetDatabaseAsync(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys).Result;
-
-                }, NopDataProtectionDefaults.RedisDataProtectionKey);
-            }
-            else if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
+            
+            if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
             {
                 var blobServiceClient = new BlobServiceClient(appSettings.AzureBlobConfig.ConnectionString);
                 var blobContainerClient = blobServiceClient.GetBlobContainerClient(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);

@@ -13,7 +13,6 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Core.Redis;
 using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
@@ -94,27 +93,17 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
-            //redis connection wrapper
-            if (appSettings.RedisConfig.Enabled)
-            {
-                builder.RegisterType<RedisConnectionWrapper>()
-                    .As<ILocker>()
-                    .As<IRedisConnectionWrapper>()
-                    .SingleInstance();
-            }
-
             //static cache manager
-            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.UseCaching)
-            {
-                builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
-            }
+            if (appSettings.DistributedCacheConfig.Enabled)
+                builder.RegisterType<DistributedCacheManager>()
+                    .As<ILocker>()
+                    .As<IStaticCacheManager>()
+                    .InstancePerLifetimeScope();
             else
-            {
                 builder.RegisterType<MemoryCacheManager>()
                     .As<ILocker>()
                     .As<IStaticCacheManager>()
                     .SingleInstance();
-            }
 
             //work context
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();

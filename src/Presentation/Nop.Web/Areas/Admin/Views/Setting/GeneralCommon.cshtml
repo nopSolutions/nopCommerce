@@ -108,7 +108,7 @@
         }
 
         function toggleLoadAllLocaleRecordsOnStartup() {
-            warningValidation('@Url.Action("RedisCacheHighTrafficWarning", "Setting")',
+            warningValidation('@Url.Action("DistributedCacheHighTrafficWarning", "Setting")',
                 '@Html.NameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
                 {
                     loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
