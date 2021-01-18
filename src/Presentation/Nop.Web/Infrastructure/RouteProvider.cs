@@ -33,8 +33,8 @@ namespace Nop.Web.Infrastructure
                 new { controller = "Customer", action = "Login" });
 
             // multi-factor verification digit code page
-            endpointRouteBuilder.MapControllerRoute("MultiFactorVerification", "multi-factor-verification",
-                            new { controller = "Customer", action = "MultiFactorVerification" });
+            endpointRouteBuilder.MapControllerRoute("MultiFactorVerification", $"{pattern}multi-factor-verification/",
+                new { controller = "Customer", action = "MultiFactorVerification" });
 
             //register
             endpointRouteBuilder.MapControllerRoute("Register", $"{pattern}register/",
