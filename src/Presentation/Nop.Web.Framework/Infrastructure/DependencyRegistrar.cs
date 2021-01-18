@@ -326,7 +326,7 @@ namespace Nop.Web.Framework.Infrastructure
 
                     try
                     {
-                        store = c.Resolve<IStoreContext>().GetCurrentStoreAsync().Result;
+                        store = c.Resolve<IStoreContext>().GetCurrentStore();
                     }
                     catch
                     {
