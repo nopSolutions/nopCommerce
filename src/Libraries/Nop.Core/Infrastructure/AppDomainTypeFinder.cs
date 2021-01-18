@@ -241,7 +241,7 @@ namespace Nop.Core.Infrastructure
 
             return result;
         }
-        
+
         #endregion
 
         #region Methods
@@ -268,7 +268,7 @@ namespace Nop.Core.Infrastructure
         {
             return FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
         }
-        
+
         /// <summary>
         /// Gets the assemblies related to the current implementation.
         /// </summary>

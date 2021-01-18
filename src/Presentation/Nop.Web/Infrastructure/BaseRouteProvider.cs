@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Web.Framework.Mvc.Routing;
 
@@ -12,7 +12,7 @@ namespace Nop.Web.Infrastructure
         {
             if (DataSettingsManager.IsDatabaseInstalled())
             {
-                var localizationSettings = endpointRouteBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
+                var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     return $"{{{NopPathRouteDefaults.LanguageRouteValue}:maxlength(2):{NopPathRouteDefaults.LanguageParameterTransformer}=en}}/{seoCode}";
             }

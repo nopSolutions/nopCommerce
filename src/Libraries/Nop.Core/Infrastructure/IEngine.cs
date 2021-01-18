@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,8 +57,8 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Register dependencies
         /// </summary>
-        /// <param name="containerBuilder">Container builder</param>
+        /// <param name="services">Collection of service descriptors</param>
         /// <param name="appSettings">App settings</param>
-        void RegisterDependencies(ContainerBuilder containerBuilder, AppSettings appSettings);
+        void RegisterDependencies(IServiceCollection services, AppSettings appSettings);
     }
 }

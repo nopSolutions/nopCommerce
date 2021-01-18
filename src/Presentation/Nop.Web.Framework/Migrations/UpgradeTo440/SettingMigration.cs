@@ -44,6 +44,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 .DeleteAsync(setting => setting.Name == "commonsettings.usefulltextsearch" || setting.Name == "commonsettings.fulltextmode")
                 .Wait();
 
+            //#4196
+            settingRepository
+                .DeleteAsync(setting => setting.Name == "commonsettings.scheduletaskruntimeout" ||
+                    setting.Name == "commonsettings.staticfilescachecontrol" ||
+                    setting.Name == "commonsettings.supportpreviousnopcommerceversions" ||
+                    setting.Name == "securitysettings.pluginstaticfileextensionsBlacklist")
+                .Wait();
+
             var seoSettings = settingService.LoadSettingAsync<SeoSettings>().Result;
             var newUrlRecord = "products";
             if (!seoSettings.ReservedUrlRecordSlugs.Contains(newUrlRecord))
