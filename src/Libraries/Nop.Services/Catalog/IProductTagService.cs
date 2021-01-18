@@ -77,6 +77,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden = false);
+        
         /// <summary>
         /// Update product tags
         /// </summary>

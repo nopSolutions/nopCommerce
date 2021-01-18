@@ -299,8 +299,7 @@ namespace Nop.Services.Catalog
                 return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
-
-
+        
         /// <summary>
         /// Update product tags
         /// </summary>
