@@ -970,7 +970,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 return orders.Select(order =>
                 {
                     var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
-
+                    var customer = _customerService.GetCustomerById(order.CustomerId);
+                    var customerFullName = _customerService.GetCustomerFullName(customer);
                     //fill in model values from the entity
                     var orderModel = new OrderModel
                     {
@@ -979,7 +980,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         PaymentStatusId = order.PaymentStatusId,
                         ShippingStatusId = order.ShippingStatusId,
                         CustomerEmail = billingAddress.Email,
-                        CustomerFullName = $"{billingAddress.FirstName} {billingAddress.LastName}",
+                        CustomerFullName = customerFullName,
                         CustomerId = order.CustomerId,
                         CustomOrderNumber = order.CustomOrderNumber
                     };
