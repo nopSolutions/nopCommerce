@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
-using Nop.Services.Localization;
 
 namespace Nop.Web.Infrastructure
 {
@@ -15,12 +13,9 @@ namespace Nop.Web.Infrastructure
             {
                 var localizationSettings = endpointRouteBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                {
-                    var langservice = endpointRouteBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                    var languages = langservice.GetAllLanguagesAsync().Result;
-                    return "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + $"}}/{seoCode}";
-                }
+                    return $"{{language:maxlength(2):lang=en}}/{seoCode}";
             }
+
             return seoCode;
         }
     }

@@ -70,10 +70,6 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("ContactUs", $"{pattern}contactus",
                 new { controller = "Common", action = "ContactUs" });
 
-            //sitemap
-            endpointRouteBuilder.MapControllerRoute("Sitemap", $"{pattern}sitemap",
-                new { controller = "Common", action = "Sitemap" });
-
             //product search
             endpointRouteBuilder.MapControllerRoute("ProductSearch", $"{pattern}search/",
                 new { controller = "Catalog", action = "Search" });
@@ -554,12 +550,14 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("robots.txt", $"{pattern}robots.txt",
                 new { controller = "Common", action = "RobotsTextFile" });
 
-            //sitemap (XML)
-            endpointRouteBuilder.MapControllerRoute("sitemap.xml", $"{pattern}sitemap.xml",
+            //sitemap
+            endpointRouteBuilder.MapControllerRoute("Sitemap", $"{pattern}sitemap",
+                new { controller = "Common", action = "Sitemap" });
+
+            endpointRouteBuilder.MapControllerRoute("sitemap.xml", "sitemap.xml",
                 new { controller = "Common", action = "SitemapXml" });
 
-            endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml",
-                pattern + "sitemap-{Id:min(0)}.xml",
+            endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml", "sitemap-{Id:min(0)}.xml",
                 new { controller = "Common", action = "SitemapXml" });
 
             //store closed
