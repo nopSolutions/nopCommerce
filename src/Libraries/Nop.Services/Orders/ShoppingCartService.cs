@@ -654,7 +654,7 @@ namespace Nop.Services.Orders
             var cartProducts = await _productService.GetProductsByIdsAsync(productIds);
 
             return cartProducts.Where(cartProduct =>
-                !cartProduct.RequireOtherProducts &&
+                cartProduct.RequireOtherProducts &&
                 _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id)).ToList();
         }
 
