@@ -39,14 +39,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         Task SetAsync(CacheKey key, object data);
-
-        /// <summary>
-        /// Get a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        Task<bool> IsSetAsync(CacheKey key);
-
+        
         /// <summary>
         /// Remove items by cache key prefix
         /// </summary>

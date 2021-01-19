@@ -179,22 +179,6 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Get a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        public async Task<bool> IsSetAsync(CacheKey key)
-        {
-            // little performance workaround here:
-            //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
-            //this way we won't connect to distributed cache many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCache.IsSet(key.Key))
-                return true;
-
-            return !string.IsNullOrEmpty(await _distributedCache.GetStringAsync(key.Key));
-        }
-
-        /// <summary>
         /// Remove items by cache key prefix
         /// </summary>
         /// <param name="prefix">Cache key prefix</param>

@@ -213,9 +213,12 @@ namespace Nop.Services.Localization
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, languageId);
 
             //get all locale string resources by language identifier
-            if (!loadPublicLocales.HasValue || await _staticCacheManager.IsSetAsync(key))
+            var allLocales =
+                await _staticCacheManager.GetAsync(key, () => (Dictionary<string, KeyValuePair<int, string>>)null);
+
+            if (!loadPublicLocales.HasValue || allLocales != null)
             {
-                var rez = await _staticCacheManager.GetAsync(key, () =>
+                var rez = allLocales ?? await _staticCacheManager.GetAsync(key, () =>
                 {
                     //we use no tracking here for performance optimization
                     //anyway records are loaded only for read-only operations
