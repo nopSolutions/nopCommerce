@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,21 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        public CheckLanguageSeoCodeAttribute() : base(typeof(CheckLanguageSeoCodeFilter))
+        /// <param name="ignore">Whether to ignore the execution of filter actions</param>
+        public CheckLanguageSeoCodeAttribute(bool ignore = false) : base(typeof(CheckLanguageSeoCodeFilter))
         {
+            IgnoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the execution of filter actions
+        /// </summary>
+        public bool IgnoreFilter { get; }
 
         #endregion
 
@@ -35,6 +48,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
+            private readonly bool _ignoreFilter;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
             private readonly LocalizationSettings _localizationSettings;
@@ -43,10 +57,12 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public CheckLanguageSeoCodeFilter(IWebHelper webHelper,
+            public CheckLanguageSeoCodeFilter(bool ignoreFilter,
+                IWebHelper webHelper,
                 IWorkContext workContext,
                 LocalizationSettings localizationSettings)
             {
+                _ignoreFilter = ignoreFilter;
                 _webHelper = webHelper;
                 _workContext = workContext;
                 _localizationSettings = localizationSettings;
@@ -65,6 +81,17 @@ namespace Nop.Web.Framework.Mvc.Filters
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
+
+                //check whether this filter has been overridden for the Action
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
+                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                    .Select(filterDescriptor => filterDescriptor.Filter)
+                    .OfType<CheckLanguageSeoCodeAttribute>()
+                    .FirstOrDefault();
+
+                //ignore filter (an action doesn't need to be checked)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                    return;
 
                 if (context.HttpContext.Request == null)
                     return;

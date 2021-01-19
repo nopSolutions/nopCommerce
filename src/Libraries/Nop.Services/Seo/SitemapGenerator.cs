@@ -496,7 +496,9 @@ namespace Nop.Services.Seo
             var localizedUrls = await languages
                 .SelectAwait(async lang =>
                 {
-                    var currentUrl = urlHelper.RouteUrl(routeName, getRouteParamsAwait?.Invoke(lang.Id), await GetHttpProtocolAsync());
+                    var currentUrl = urlHelper.RouteUrl(routeName,
+                        getRouteParamsAwait != null ? await getRouteParamsAwait(lang.Id) : null,
+                        await GetHttpProtocolAsync());
 
                     if (string.IsNullOrEmpty(currentUrl))
                         return null;
