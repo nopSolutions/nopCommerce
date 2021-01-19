@@ -316,8 +316,7 @@ namespace Nop.Data
             if (!entities.Any())
                 return;
 
-            foreach (var entity in entities)
-                await UpdateAsync(entity, publishEvent);
+            await _dataProvider.UpdateEntitiesAsync(entities);
         }
 
         /// <summary>

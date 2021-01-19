@@ -253,6 +253,20 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
+        /// Updates records in table, using values from entity parameter. 
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public virtual async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            //we don't use the Merge API on this level, because this API not support all databases.
+            //you may see all supported databases by the following link: https://linq2db.github.io/articles/sql/merge/Merge-API.html#supported-databases
+            foreach (var entity in entities) 
+                await UpdateEntityAsync(entity);
+        }
+
+        /// <summary>
         /// Deletes record in table. Record to delete identified
         /// by match on primary key value from obj value.
         /// </summary>

@@ -137,6 +137,12 @@ namespace Nop.Tests
             return Task.CompletedTask;
         }
 
+        public async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            foreach (var entity in entities) 
+                await UpdateEntityAsync(entity);
+        }
+
         /// <summary>
         /// Deletes record in table. Record to delete identified
         /// by match on primary key value from obj value.
