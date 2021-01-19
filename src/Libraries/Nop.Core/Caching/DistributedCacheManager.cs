@@ -61,6 +61,27 @@ namespace Nop.Core.Caching
             return options;
         }
 
+        /// <summary>
+        /// Try to get the cached item
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <returns>Flag which indicate is the key exists in the cache, cached item or default value</returns>
+        private async Task<(bool isSet, T item)> TryGetItem<T>(CacheKey key)
+        {
+            var json = await _distributedCache.GetStringAsync(key.Key);
+
+            T item = default;
+
+            if (!string.IsNullOrEmpty(json))
+            {
+                item = JsonSerializer.Deserialize<T>(json);
+                _perRequestCache.Set(key.Key, item);
+            }
+
+            return (item != null, item);
+        }
+
         #endregion
 
         #region Methods
@@ -91,15 +112,10 @@ namespace Nop.Core.Caching
             if (key.CacheTime <= 0)
                 return await acquire();
 
-            var json = await _distributedCache.GetStringAsync(key.Key);
+            var (isSet, item) = await TryGetItem<T>(key);
 
-            if (!string.IsNullOrEmpty(json))
-            {
-                var rez = JsonSerializer.Deserialize<T>(json);
-                _perRequestCache.Set(key.Key, rez);
-                
-                return rez;
-            }
+            if (isSet)
+                return item;
 
             var result = await acquire();
 
@@ -127,15 +143,10 @@ namespace Nop.Core.Caching
             if (key.CacheTime <= 0)
                 return acquire();
 
-            var json = await _distributedCache.GetStringAsync(key.Key);
+            var (isSet, item) = await TryGetItem<T>(key);
 
-            if (!string.IsNullOrEmpty(json))
-            {
-                var rez = JsonSerializer.Deserialize<T>(json);
-                _perRequestCache.Set(key.Key, rez);
-
-                return rez;
-            }
+            if (isSet)
+                return item;
 
             var result = acquire();
 
