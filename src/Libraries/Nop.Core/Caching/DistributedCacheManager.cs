@@ -82,13 +82,24 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
-            if ((key?.CacheTime ?? 0) <= 0)
+            //little performance workaround here:
+            //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
+            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
+            if (_perRequestCache.IsSet(key.Key))
+                return _perRequestCache.Get(key.Key, () => default(T));
+
+            if (key.CacheTime <= 0)
                 return await acquire();
 
             var json = await _distributedCache.GetStringAsync(key.Key);
 
             if (!string.IsNullOrEmpty(json))
-                return JsonSerializer.Deserialize<T>(json);
+            {
+                var rez = JsonSerializer.Deserialize<T>(json);
+                _perRequestCache.Set(key.Key, rez);
+                
+                return rez;
+            }
 
             var result = await acquire();
 
@@ -107,13 +118,24 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
         {
-            if ((key?.CacheTime ?? 0) <= 0)
+            //little performance workaround here:
+            //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
+            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
+            if (_perRequestCache.IsSet(key.Key))
+                return _perRequestCache.Get(key.Key, () => default(T));
+
+            if (key.CacheTime <= 0)
                 return acquire();
 
             var json = await _distributedCache.GetStringAsync(key.Key);
 
             if (!string.IsNullOrEmpty(json))
-                return JsonSerializer.Deserialize<T>(json);
+            {
+                var rez = JsonSerializer.Deserialize<T>(json);
+                _perRequestCache.Set(key.Key, rez);
+
+                return rez;
+            }
 
             var result = acquire();
 
