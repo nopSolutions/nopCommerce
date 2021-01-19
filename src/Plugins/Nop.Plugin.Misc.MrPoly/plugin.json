@@ -1,0 +1,11 @@
+{
+  "Group": "Misc",
+  "FriendlyName": "Mr. Poly",
+  "SystemName": "Misc.MrPoly",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.20" ],
+  "Author": "PolyCommerce Team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.MrPoly.dll",
+  "Description": "This plugin allows user to scrape data from Amazon."
+}

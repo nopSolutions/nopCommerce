@@ -1,0 +1,87 @@
+﻿@{
+  Layout = "_AdminLayout";
+}
+
+<style>
+  form {
+    padding: 20px;
+  }
+
+  h1 {
+    margin-left: 20px;
+  }
+
+  .poly-loading {
+    display: none;
+    margin-top: 10px;
+    margin-left: 5px;
+    font-size: 1.1em;
+  }
+</style>
+
+<div class="row">
+  <div class="col-sm-12 col-lg-6">
+    <h1>Mr. Poly</h1>
+    <form id="mrPolyForm">
+
+      <div class="input-group">
+        <input type="text" class="form-control input-lg" id="barcode" placeholder="Enter barcode here" aria-label="Barcode">
+        <div class="input-group-btn">
+          <input id="barcode-submit-btn" type="submit" name="save" class="btn btn-primary btn-lg" value="Go" />
+        </div>
+      </div>
+
+      <div class="poly-loading">Calling Mrs. Poly, please wait...</div>
+    </form>
+  </div>
+</div>
+
+<script>
+  $(document).ready(() => {
+
+    function toggleLoading(mode, showMsg = true) {
+      $("#barcode").prop("disabled", mode);
+      $("#barcode-submit-btn").prop('disabled', mode);
+
+      if (mode && showMsg) {
+        $(".poly-loading").show();
+      }
+      else {
+        $(".poly-loading").hide();
+      }
+      
+    }
+
+    $("#barcode").focus();
+
+    $("#mrPolyForm").on("submit", (e) => {
+      e.preventDefault();
+
+      var barcode = $("#barcode").val();
+
+      toggleLoading(true);
+
+      $.ajax({
+        type: "POST",
+        url: `/api/mrpoly/save_product/${barcode}`,
+        success: function (data) {
+          console.log("Success data = ", data);
+
+          if (data.nextUrl) {
+            toggleLoading(true, false);
+            window.location.href = data.nextUrl;
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          console.log("XMLHTTPREQUEST", XMLHttpRequest);
+          console.log("textStatus", textStatus);
+          console.log("errorThrown", errorThrown);
+
+          toggleLoading(false);
+        }
+      });
+    });
+  });
+
+</script>
+
