@@ -97,8 +97,8 @@ namespace Nop.Data.DataProviders
             //gets database name
             var databaseName = builder.Database;
 
-            //now create connection string to 'master' database. It always exists.
-            builder.Database = null;
+            //now create connection string to 'postgres' - default administrative connection database.
+            builder.Database = "postgres";
 
             using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
