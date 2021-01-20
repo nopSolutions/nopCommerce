@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Validators
         public ValidateAttribute()
         {
             //specify rule set
-            RuleSet = NopValidatorDefaults.ValidationRuleSet;
+            RuleSet = NopValidationDefaults.ValidationRuleSet;
         }
     }
 }

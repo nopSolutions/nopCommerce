@@ -31,6 +31,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
+using Nop.Web.Framework.Validators;
 using StackExchange.Profiling.Storage;
 using WebMarkupMin.AspNetCore5;
 using WebMarkupMin.NUglify;
@@ -294,8 +295,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-            //add custom display metadata provider
-            mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
+            //set some options
+            mvcBuilder.AddMvcOptions(options =>
+            {
+                //add custom display metadata provider
+                options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
+
+                //in .NET model binding for a non-nullable property may fail with an error message "The value '' is invalid"
+                //here we set the locale name as the message, we'll replace it with the actual one later when not-null validation failed
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ => NopValidationDefaults.NotNullValidationLocaleName);
+            });
 
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration =>
