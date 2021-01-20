@@ -1026,8 +1026,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer activity log
-            var activityLog = _customerActivityService.GetAllActivities(customerId: customer.Id,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(customerId: customer.Id);
 
             var pageList = activityLog.Select(logItem =>
             {
