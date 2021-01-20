@@ -541,7 +541,7 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual async Task<IList<Product>> GetProductsByIdsAsync(int[] productIds)
         {
-            return await _productRepository.GetByIdsAsync(productIds, cache => default);
+            return await _productRepository.GetByIdsAsync(productIds, cache => default, false);
         }
 
         /// <summary>
@@ -595,7 +595,7 @@ namespace Nop.Services.Catalog
             });
 
             if (featuredProducts.Count == 0 && featuredProductIds.Count > 0)
-                featuredProducts = await _productRepository.GetByIdsAsync(featuredProductIds, cache => default);
+                featuredProducts = await _productRepository.GetByIdsAsync(featuredProductIds, cache => default, false);
 
             return featuredProducts;
         }
@@ -633,7 +633,7 @@ namespace Nop.Services.Catalog
             });
 
             if (featuredProducts.Count == 0 && featuredProductIds.Count > 0)
-                featuredProducts = await _productRepository.GetByIdsAsync(featuredProductIds, cache => default);
+                featuredProducts = await _productRepository.GetByIdsAsync(featuredProductIds, cache => default, false);
 
             return featuredProducts;
         }

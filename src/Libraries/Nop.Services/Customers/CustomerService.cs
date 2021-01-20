@@ -420,7 +420,7 @@ namespace Nop.Services.Customers
         /// <returns>Customers</returns>
         public virtual async Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds)
         {
-            return await _customerRepository.GetByIdsAsync(customerIds);
+            return await _customerRepository.GetByIdsAsync(customerIds, includeDeleted: false);
         }
 
         /// <summary>
