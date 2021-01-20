@@ -284,6 +284,7 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
+            term = term.Trim();
             if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
