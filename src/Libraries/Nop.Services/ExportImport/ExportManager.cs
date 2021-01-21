@@ -18,6 +18,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -51,6 +52,7 @@ namespace Nop.Services.ExportImport
         private readonly AddressSettings _addressSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly DateTimeSettings _dateTimeSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IAddressService _addressService;
         private readonly ICategoryService _categoryService;
@@ -94,6 +96,7 @@ namespace Nop.Services.ExportImport
         public ExportManager(AddressSettings addressSettings,
             CatalogSettings catalogSettings,
             CustomerSettings customerSettings,
+            DateTimeSettings dateTimeSettings,
             ForumSettings forumSettings,
             IAddressService addressService,
             ICategoryService categoryService,
@@ -133,6 +136,7 @@ namespace Nop.Services.ExportImport
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
             _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
             _addressService = addressService;
             _forumSettings = forumSettings;
             _categoryService = categoryService;
@@ -1603,6 +1607,62 @@ namespace Nop.Services.ExportImport
         /// <param name="customers">Customers</param>
         public virtual async Task<byte[]> ExportCustomersToXlsxAsync(IList<Customer> customers)
         {
+            async Task<object> getPasswordFormat(Customer customer)
+            {
+                var password = await _customerService.GetCurrentPasswordAsync(customer.Id);
+
+                var passwordFormatId = password?.PasswordFormatId ?? 0;
+
+                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
+                    return passwordFormatId;
+
+                return CommonHelper.ConvertEnum(((PasswordFormat)passwordFormatId).ToString());
+            }
+
+            var vendors = await _vendorService.GetVendorsByCustomerIdsAsync(customers.Select(c => c.Id).ToArray());
+
+            object getVendor(Customer customer)
+            {
+                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
+                    return customer.VendorId;
+
+                return vendors.FirstOrDefault(v => v.Id == customer.VendorId)?.Name ?? string.Empty;
+            }
+
+            async Task<object> getCountry(Customer customer)
+            {
+                var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+
+                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
+                    return countryId;
+
+                var country = await _countryService.GetCountryByIdAsync(countryId);
+
+                return country?.Name ?? string.Empty;
+            }
+
+            async Task<object> getStateProvince(Customer customer)
+            {
+                var stateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+
+                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
+                    return stateProvinceId;
+
+                var stateProvince = await _stateProvinceService.GetStateProvinceByIdAsync(stateProvinceId);
+
+                return stateProvince?.Name ?? string.Empty;
+            }
+
+            async Task<object> getVatNumberStatus(Customer customer)
+            {
+                var vatNumberStatusId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+
+                if (!_catalogSettings.ExportImportRelatedEntitiesByName)
+                    return vatNumberStatusId;
+
+                return CommonHelper.ConvertEnum(((VatNumberStatus)vatNumberStatusId).ToString());
+            }
+
             //property manager 
             var manager = new PropertyManager<Customer>(new[]
             {
@@ -1611,35 +1671,38 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("Email", p => p.Email),
                 new PropertyByName<Customer>("Username", p => p.Username),
                 new PropertyByName<Customer>("Password", async p => (await _customerService.GetCurrentPasswordAsync(p.Id))?.Password),
-                new PropertyByName<Customer>("PasswordFormatId", async p => (await _customerService.GetCurrentPasswordAsync(p.Id))?.PasswordFormatId ?? 0),
+                new PropertyByName<Customer>("PasswordFormat", getPasswordFormat),
                 new PropertyByName<Customer>("PasswordSalt", async p => (await _customerService.GetCurrentPasswordAsync(p.Id))?.PasswordSalt),
                 new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
                 new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
-                new PropertyByName<Customer>("VendorId", p => p.VendorId),
+                new PropertyByName<Customer>("Vendor", getVendor),
                 new PropertyByName<Customer>("Active", p => p.Active),
+                new PropertyByName<Customer>("CustomerRoles", async p=>string.Join(", ",
+                    (await _customerService.GetCustomerRolesAsync(p)).Select(role => _catalogSettings.ExportImportRelatedEntitiesByName ? role.Name : role.Id.ToString()))), 
                 new PropertyByName<Customer>("IsGuest", async p => await _customerService.IsGuestAsync(p)),
                 new PropertyByName<Customer>("IsRegistered", async p => await _customerService.IsRegisteredAsync(p)),
                 new PropertyByName<Customer>("IsAdministrator", async p => await _customerService.IsAdminAsync(p)),
                 new PropertyByName<Customer>("IsForumModerator", async p => await _customerService.IsForumModeratorAsync(p)),
+                new PropertyByName<Customer>("IsVendor", async p => await _customerService.IsVendorAsync(p)),
                 new PropertyByName<Customer>("CreatedOnUtc", p => p.CreatedOnUtc),
                 //attributes
-                new PropertyByName<Customer>("FirstName", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FirstNameAttribute)),
-                new PropertyByName<Customer>("LastName", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.LastNameAttribute)),
-                new PropertyByName<Customer>("Gender", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.GenderAttribute)),
-                new PropertyByName<Customer>("Company", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CompanyAttribute)),
-                new PropertyByName<Customer>("StreetAddress", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddressAttribute)),
-                new PropertyByName<Customer>("StreetAddress2", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddress2Attribute)),
-                new PropertyByName<Customer>("ZipPostalCode", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.ZipPostalCodeAttribute)),
-                new PropertyByName<Customer>("City", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CityAttribute)),
-                new PropertyByName<Customer>("County", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CountyAttribute)),
-                new PropertyByName<Customer>("CountryId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.CountryIdAttribute)),
-                new PropertyByName<Customer>("StateProvinceId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.StateProvinceIdAttribute)),
-                new PropertyByName<Customer>("Phone", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.PhoneAttribute)),
-                new PropertyByName<Customer>("Fax", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FaxAttribute)),
+                new PropertyByName<Customer>("FirstName", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FirstNameAttribute), !_customerSettings.FirstNameEnabled),
+                new PropertyByName<Customer>("LastName", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.LastNameAttribute), !_customerSettings.LastNameEnabled),
+                new PropertyByName<Customer>("Gender", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.GenderAttribute), !_customerSettings.GenderEnabled),
+                new PropertyByName<Customer>("Company", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CompanyAttribute), !_customerSettings.CompanyEnabled),
+                new PropertyByName<Customer>("StreetAddress", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddressAttribute), !_customerSettings.StreetAddressEnabled),
+                new PropertyByName<Customer>("StreetAddress2", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.StreetAddress2Attribute), !_customerSettings.StreetAddress2Enabled),
+                new PropertyByName<Customer>("ZipPostalCode", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.ZipPostalCodeAttribute), !_customerSettings.ZipPostalCodeEnabled),
+                new PropertyByName<Customer>("City", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CityAttribute), !_customerSettings.CityEnabled),
+                new PropertyByName<Customer>("County", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.CountyAttribute), !_customerSettings.CountyEnabled),
+                new PropertyByName<Customer>("Country", getCountry, !_customerSettings.CountryEnabled),
+                new PropertyByName<Customer>("StateProvince", getStateProvince, !_customerSettings.StateProvinceEnabled),
+                new PropertyByName<Customer>("Phone", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.PhoneAttribute), !_customerSettings.PhoneEnabled),
+                new PropertyByName<Customer>("Fax", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.FaxAttribute), !_customerSettings.FaxEnabled),
                 new PropertyByName<Customer>("VatNumber", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.VatNumberAttribute)),
-                new PropertyByName<Customer>("VatNumberStatusId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.VatNumberStatusIdAttribute)),
-                new PropertyByName<Customer>("TimeZoneId", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.TimeZoneIdAttribute)),
-                new PropertyByName<Customer>("AvatarPictureId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute)),
+                new PropertyByName<Customer>("VatNumberStatus", getVatNumberStatus),
+                new PropertyByName<Customer>("TimeZone", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.TimeZoneIdAttribute), !_dateTimeSettings.AllowCustomersToSetTimeZone),
+                new PropertyByName<Customer>("AvatarPictureId", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.AvatarPictureIdAttribute), !_customerSettings.AllowCustomersToUploadAvatars),
                 new PropertyByName<Customer>("ForumPostCount", async p => await _genericAttributeService.GetAttributeAsync<int>(p, NopCustomerDefaults.ForumPostCountAttribute)),
                 new PropertyByName<Customer>("Signature", async p => await _genericAttributeService.GetAttributeAsync<string>(p, NopCustomerDefaults.SignatureAttribute)),
                 new PropertyByName<Customer>("CustomCustomerAttributes",  GetCustomCustomerAttributesAsync)

@@ -300,7 +300,7 @@ namespace Nop.Tests.Nop.Services.Tests.ExportImport
                 "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
                 "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
                 "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId",
-                "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey" };
+                "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey", "VendorId" };
 
             AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
             PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
