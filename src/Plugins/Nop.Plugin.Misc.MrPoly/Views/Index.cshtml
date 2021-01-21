@@ -17,6 +17,14 @@
     margin-left: 5px;
     font-size: 1.1em;
   }
+
+  #poly-error {
+    display: none;
+    color: red;
+    font-size: 1.3em;
+    margin-top: 10px;
+    margin-left: 5px;
+  }
 </style>
 
 <div class="row">
@@ -32,6 +40,7 @@
       </div>
 
       <div class="poly-loading">Calling Mrs. Poly, please wait...</div>
+      <div id="poly-error"></div>
     </form>
   </div>
 </div>
@@ -57,6 +66,7 @@
     $("#mrPolyForm").on("submit", (e) => {
       e.preventDefault();
 
+      $("#poly-error").hide();
       var barcode = $("#barcode").val();
 
       toggleLoading(true);
@@ -73,6 +83,11 @@
           }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+          let errorMsg = XMLHttpRequest.responseText;
+
+          $("#poly-error").text(errorMsg);
+          $("#poly-error").show();
+
           console.log("XMLHTTPREQUEST", XMLHttpRequest);
           console.log("textStatus", textStatus);
           console.log("errorThrown", errorThrown);

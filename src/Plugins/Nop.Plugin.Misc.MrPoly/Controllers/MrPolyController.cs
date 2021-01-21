@@ -19,6 +19,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 
 namespace Nop.Plugin.Misc.MrPoly.Controllers
@@ -48,10 +49,10 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
         [Route("api/mrpoly/save_product/{barcode}")]
         public async Task<IActionResult> SaveProduct(string barcode)
         {
+            RemoteWebDriver driver = null; 
+
             try
             {
-                var driver = new ChromeDriver(@"C:\driver");
-
                 if (string.IsNullOrWhiteSpace(barcode))
                 {
                     return BadRequest("Invalid barcode");
@@ -62,31 +63,33 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
                     return BadRequest("Invalid barcode. Expecting numbers only.");
                 }
 
-                //var existingProduct = _productRepository.Table.FirstOrDefault(x => x.Gtin == barcode);
+                var existingProduct = _productRepository.Table.FirstOrDefault(x => x.Gtin == barcode);
 
-                //if (existingProduct != null)
-                //{
-                //    return BadRequest($"Product with GTIN {barcode} already exists ({existingProduct.Name})");
-                //}
+                if (existingProduct != null)
+                {
+                    return BadRequest($"Product with GTIN {barcode} already exists ({existingProduct.Name})");
+                }
+
+                driver = new ChromeDriver(@"C:\selenium");
 
                 driver.Navigate().GoToUrl($"https://www.amazon.com/s?k={barcode}&ref=nb_sb_noss");
 
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
 
                 var searchResults = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.ClassName("s-result-item")));
 
-                const string noProductMsg = "Sorry, no product could be found for this barcode. Try another product.";
+                const string noProductMsg = "Sorry, could not find a product with this barcode. Try another product.";
 
                 if (searchResults.Text.Contains("No results"))
                 {
-                    return Ok(new { message = noProductMsg });
+                    return BadRequest(noProductMsg);
                 }
 
                 var results = driver.FindElementsByCssSelector(".s-result-item a .a-text-normal");
 
                 if (!results.Any())
                 {
-                    return Ok(new { message = noProductMsg });
+                    return BadRequest(noProductMsg);
                 }
 
                 results[0].Click();
@@ -248,12 +251,18 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
 
                 var nextUrl = $"/Admin/Product/Edit/{product.Id}";
 
-                driver.Close();
                 return Ok(new { nextUrl });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.StackTrace);
+            }
+            finally
+            {
+                if (driver != null)
+                {
+                    driver.Close();
+                }         
             }
 
         }
