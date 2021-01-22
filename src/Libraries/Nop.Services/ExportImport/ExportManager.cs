@@ -1541,15 +1541,15 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("CustomerId", p => p.CustomerId, ignore),
                 new PropertyByName<Order>("OrderStatus", p => p.OrderStatusId, !_catalogSettings.ExportImportRelatedEntitiesByName)
                 {
-                    DropDownElements = OrderStatus.Pending.ToSelectList(useLocalization: false)
+                    DropDownElements = await OrderStatus.Pending.ToSelectListAsync(useLocalization: false)
                 },
                 new PropertyByName<Order>("PaymentStatus", p => p.PaymentStatusId, !_catalogSettings.ExportImportRelatedEntitiesByName)
                 {
-                    DropDownElements = PaymentStatus.Pending.ToSelectList(useLocalization: false)
+                    DropDownElements = await PaymentStatus.Pending.ToSelectListAsync(useLocalization: false)
                 },
                 new PropertyByName<Order>("ShippingStatus", p => p.ShippingStatusId, !_catalogSettings.ExportImportRelatedEntitiesByName)
                 {
-                    DropDownElements = ShippingStatus.ShippingNotRequired.ToSelectList(useLocalization: false)
+                    DropDownElements = await ShippingStatus.ShippingNotRequired.ToSelectListAsync(useLocalization: false)
                 },
                 new PropertyByName<Order>("OrderSubtotalInclTax", p => p.OrderSubtotalInclTax, ignore),
                 new PropertyByName<Order>("OrderSubtotalExclTax", p => p.OrderSubtotalExclTax, ignore),
