@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
     /// <summary>
     /// Represents a blog comment search model
     /// </summary>
-    public partial class BlogCommentSearchModel : BaseSearchModel
+    public partial record BlogCommentSearchModel : BaseSearchModel
     {
         #region Ctor
 

@@ -154,7 +154,7 @@
                                 Download download = null;
                                 if (!string.IsNullOrEmpty(attribute.DefaultValue))
                                 {
-                                    download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
+                                    download = await downloadService.GetDownloadByGuidAsync(new Guid(attribute.DefaultValue));
                                 }
 
                                 //register CSS and JS

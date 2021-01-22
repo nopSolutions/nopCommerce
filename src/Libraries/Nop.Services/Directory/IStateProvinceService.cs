@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 
@@ -13,14 +14,14 @@ namespace Nop.Services.Directory
         /// Deletes a state/province
         /// </summary>
         /// <param name="stateProvince">The state/province</param>
-        void DeleteStateProvince(StateProvince stateProvince);
+        Task DeleteStateProvinceAsync(StateProvince stateProvince);
 
         /// <summary>
         /// Gets a state/province
         /// </summary>
         /// <param name="stateProvinceId">The state/province identifier</param>
         /// <returns>State/province</returns>
-        StateProvince GetStateProvinceById(int stateProvinceId);
+        Task<StateProvince> GetStateProvinceByIdAsync(int stateProvinceId);
 
         /// <summary>
         /// Gets a state/province by abbreviation
@@ -28,14 +29,14 @@ namespace Nop.Services.Directory
         /// <param name="abbreviation">The state/province abbreviation</param>
         /// <param name="countryId">Country identifier; pass null to load the state regardless of a country</param>
         /// <returns>State/province</returns>
-        StateProvince GetStateProvinceByAbbreviation(string abbreviation, int? countryId = null);
+        Task<StateProvince> GetStateProvinceByAbbreviationAsync(string abbreviation, int? countryId = null);
 
         /// <summary>
         /// Gets a state/province by address 
         /// </summary>
         /// <param name="address">Address</param>
         /// <returns>Country</returns>
-        StateProvince GetStateProvinceByAddress(Address address);
+        Task<StateProvince> GetStateProvinceByAddressAsync(Address address);
 
         /// <summary>
         /// Gets a state/province collection by country identifier
@@ -44,25 +45,25 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort states by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>States</returns>
-        IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false);
+        Task<IList<StateProvince>> GetStateProvincesByCountryIdAsync(int countryId, int languageId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets all states/provinces
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>States</returns>
-        IList<StateProvince> GetStateProvinces(bool showHidden = false);
+        Task<IList<StateProvince>> GetStateProvincesAsync(bool showHidden = false);
 
         /// <summary>
         /// Inserts a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        void InsertStateProvince(StateProvince stateProvince);
+        Task InsertStateProvinceAsync(StateProvince stateProvince);
 
         /// <summary>
         /// Updates a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        void UpdateStateProvince(StateProvince stateProvince);
+        Task UpdateStateProvinceAsync(StateProvince stateProvince);
     }
 }

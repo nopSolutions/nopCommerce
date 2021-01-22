@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a campaign search model
     /// </summary>
-    public partial class CampaignSearchModel : BaseSearchModel
+    public partial record CampaignSearchModel : BaseSearchModel
     {
         #region Ctor
 

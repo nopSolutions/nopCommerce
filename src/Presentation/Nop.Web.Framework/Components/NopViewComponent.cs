@@ -26,7 +26,7 @@ namespace Nop.Web.Framework.Components
 
                 //we publish the ModelPrepared event for all models as the BaseNopModel, 
                 //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-                eventPublisher.ModelPrepared(model as BaseNopModel);
+                eventPublisher.ModelPreparedAsync(model as BaseNopModel).Wait();
             }
 
             if (model is IEnumerable<BaseNopModel> modelCollection)
@@ -35,7 +35,7 @@ namespace Nop.Web.Framework.Components
 
                 //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
                 //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-                eventPublisher.ModelPrepared(modelCollection);
+                eventPublisher.ModelPreparedAsync(modelCollection).Wait();
             }
         }
         /// <summary>

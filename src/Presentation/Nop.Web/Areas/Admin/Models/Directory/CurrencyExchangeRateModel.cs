@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a currency exchange rate model
     /// </summary>
-    public partial class CurrencyExchangeRateModel : BaseNopModel
+    public partial record CurrencyExchangeRateModel : BaseNopModel
     {
         #region Properties
 

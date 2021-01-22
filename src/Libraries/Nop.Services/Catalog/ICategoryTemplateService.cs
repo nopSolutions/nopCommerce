@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -12,31 +13,31 @@ namespace Nop.Services.Catalog
         /// Delete category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        void DeleteCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task DeleteCategoryTemplateAsync(CategoryTemplate categoryTemplate);
 
         /// <summary>
         /// Gets all category templates
         /// </summary>
         /// <returns>Category templates</returns>
-        IList<CategoryTemplate> GetAllCategoryTemplates();
+        Task<IList<CategoryTemplate>> GetAllCategoryTemplatesAsync();
 
         /// <summary>
         /// Gets a category template
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>Category template</returns>
-        CategoryTemplate GetCategoryTemplateById(int categoryTemplateId);
+        Task<CategoryTemplate> GetCategoryTemplateByIdAsync(int categoryTemplateId);
 
         /// <summary>
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        void InsertCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task InsertCategoryTemplateAsync(CategoryTemplate categoryTemplate);
 
         /// <summary>
         /// Updates the category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        void UpdateCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task UpdateCategoryTemplateAsync(CategoryTemplate categoryTemplate);
     }
 }

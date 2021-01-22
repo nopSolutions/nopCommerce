@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public partial class SocialModel : BaseNopModel
+    public partial record SocialModel : BaseNopModel
     {
         public string FacebookLink { get; set; }
         public string TwitterLink { get; set; }

@@ -33,7 +33,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Initialize()
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalledAsync().Result)
                 return;
 
             _taskThreads.Clear();
@@ -41,7 +41,7 @@ namespace Nop.Services.Tasks
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
             
             var scheduleTasks = taskService
-                .GetAllTasks()
+                .GetAllTasksAsync().Result
                 .OrderBy(x => x.Seconds)
                 .ToList();
             

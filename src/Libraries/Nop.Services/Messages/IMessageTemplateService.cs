@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
@@ -12,26 +13,26 @@ namespace Nop.Services.Messages
         /// Delete a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        void DeleteMessageTemplate(MessageTemplate messageTemplate);
+        Task DeleteMessageTemplateAsync(MessageTemplate messageTemplate);
 
         /// <summary>
         /// Inserts a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        void InsertMessageTemplate(MessageTemplate messageTemplate);
+        Task InsertMessageTemplateAsync(MessageTemplate messageTemplate);
 
         /// <summary>
         /// Updates a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        void UpdateMessageTemplate(MessageTemplate messageTemplate);
+        Task UpdateMessageTemplateAsync(MessageTemplate messageTemplate);
 
         /// <summary>
         /// Gets a message template by identifier
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <returns>Message template</returns>
-        MessageTemplate GetMessageTemplateById(int messageTemplateId);
+        Task<MessageTemplate> GetMessageTemplateByIdAsync(int messageTemplateId);
 
         /// <summary>
         /// Gets message templates by the name
@@ -39,20 +40,20 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <returns>List of message templates</returns>
-        IList<MessageTemplate> GetMessageTemplatesByName(string messageTemplateName, int? storeId = null);
+        Task<IList<MessageTemplate>> GetMessageTemplatesByNameAsync(string messageTemplateName, int? storeId = null);
 
         /// <summary>
         /// Gets all message templates
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Message template list</returns>
-        IList<MessageTemplate> GetAllMessageTemplates(int storeId);
+        Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId);
 
         /// <summary>
         /// Create a copy of message template with all depended data
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
         /// <returns>Message template copy</returns>
-        MessageTemplate CopyMessageTemplate(MessageTemplate messageTemplate);
+        Task<MessageTemplate> CopyMessageTemplateAsync(MessageTemplate messageTemplate);
     }
 }

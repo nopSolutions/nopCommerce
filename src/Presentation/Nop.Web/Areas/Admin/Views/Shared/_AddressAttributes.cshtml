@@ -4,10 +4,10 @@
 {
     var controlId = $"address_attribute_{attribute.Id}";
     var textPrompt = attribute.Name;
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <div class="label-wrapper">
-                <label class="control-label">
+                <label class="col-form-label">
                     @textPrompt
                 </label>
             </div>
@@ -33,9 +33,9 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            <div class="radio">
-                                <label>
-                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="@(controlId)" id="@(controlId)_@(attributeValue.Id)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" >
+                                <label class="form-check-label" for="@(controlId)_@(attributeValue.Id)">
                                     @attributeValue.Name
                                 </label>
                             </div>
@@ -47,9 +47,9 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            <div class="checkbox">
-                                <label>
-                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="@attributeValue.Id" id="@(controlId)_@(attributeValue.Id)" name="@(controlId)" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)>
+                                <label class="form-check-label" for="@(controlId)_@(attributeValue.Id)">
                                     @attributeValue.Name
                                 </label>
                             </div>

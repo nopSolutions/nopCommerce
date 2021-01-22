@@ -24,7 +24,7 @@ namespace Nop.Web.Framework.Themes
                 return;
 
             var themeContext = (IThemeContext)context.ActionContext.HttpContext.RequestServices.GetService(typeof(IThemeContext));
-            context.Values[THEME_KEY] = themeContext.WorkingThemeName;
+            context.Values[THEME_KEY] = themeContext.GetWorkingThemeNameAsync().Result;
         }
 
         /// <summary>

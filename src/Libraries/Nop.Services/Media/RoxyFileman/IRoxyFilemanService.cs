@@ -12,7 +12,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Initial service configuration
         /// </summary>
-        void Configure();
+        Task ConfigureAsync();
 
         /// <summary>
         /// Gets a configuration file path
@@ -22,7 +22,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Create configuration file for RoxyFileman
         /// </summary>
-        void CreateConfiguration();
+        Task CreateConfigurationAsync();
 
         #endregion
 
@@ -146,19 +146,19 @@ namespace Nop.Services.Media.RoxyFileman
         /// Create the thumbnail of the image and write it to the response
         /// </summary>
         /// <param name="path">Path to the image</param>
-        void CreateImageThumbnail(string path);
+        Task CreateImageThumbnailAsync(string path);
 
         /// <summary>
         /// Flush all images on disk
         /// </summary>
         /// <param name="removeOriginal">Specifies whether to delete original images</param>
-        void FlushAllImagesOnDisk(bool removeOriginal = true);
+        Task FlushAllImagesOnDiskAsync(bool removeOriginal = true);
 
         /// <summary>
         /// Flush images on disk
         /// </summary>
         /// <param name="directoryPath">Directory path to flush images</param>
-        void FlushImagesOnDisk(string directoryPath);
+        Task FlushImagesOnDiskAsync(string directoryPath);
 
         #endregion
 
@@ -176,7 +176,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="key">Language resource key</param>
         /// <returns>Language resource value</returns>
-        string GetLanguageResource(string key);
+        Task<string> GetLanguageResourceAsync(string key);
 
         /// <summary>
         /// Whether the request is made with ajax 

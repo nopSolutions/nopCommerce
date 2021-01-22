@@ -10,9 +10,13 @@
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Shipping.Methods")
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="Providers">@T("Admin.Configuration.Shipping.Providers.BackToList")</a>
+        </small>
     </h1>
     <div class="pull-right">
-        <a asp-action="CreateMethod" class="btn bg-blue">
+        <a asp-action="CreateMethod" class="btn btn-primary">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
@@ -20,11 +24,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                             <p>
@@ -34,8 +39,8 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "shippingmethod-grid",
@@ -74,3 +79,4 @@
         </div>
     </div>
 </div>
+</section>

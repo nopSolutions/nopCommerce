@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
@@ -45,7 +46,7 @@ namespace Nop.Services.Localization
         /// <param name="entityId">Entity identifier</param>
         /// <param name="localeKeyGroup">Locale key group</param>
         /// <returns>Localized properties</returns>
-        protected virtual IList<LocalizedProperty> GetLocalizedProperties(int entityId, string localeKeyGroup)
+        protected virtual async Task<IList<LocalizedProperty>> GetLocalizedPropertiesAsync(int entityId, string localeKeyGroup)
         {
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();
@@ -56,7 +57,7 @@ namespace Nop.Services.Localization
                               lp.LocaleKeyGroup == localeKeyGroup
                         select lp;
 
-            var props = query.ToList();
+            var props = await query.ToListAsync();
 
             return props;
         }
@@ -65,37 +66,45 @@ namespace Nop.Services.Localization
         /// Gets all cached localized properties
         /// </summary>
         /// <returns>Cached localized properties</returns>
-        protected virtual IList<LocalizedProperty> GetAllLocalizedProperties()
+        protected virtual async Task<IList<LocalizedProperty>> GetAllLocalizedPropertiesAsync()
         {
-            return _localizedPropertyRepository.GetAll(query =>
+            return await _localizedPropertyRepository.GetAllAsync(query =>
             {
                 return from lp in query
                     select lp;
             }, cache => default);
         }
 
-        #endregion
-        
-        #region Methods
-
         /// <summary>
         /// Deletes a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
-        public virtual void DeleteLocalizedProperty(LocalizedProperty localizedProperty)
+        protected virtual async Task DeleteLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
-            _localizedPropertyRepository.Delete(localizedProperty);
+            await _localizedPropertyRepository.DeleteAsync(localizedProperty);
         }
 
         /// <summary>
-        /// Gets a localized property
+        /// Inserts a localized property
         /// </summary>
-        /// <param name="localizedPropertyId">Localized property identifier</param>
-        /// <returns>Localized property</returns>
-        public virtual LocalizedProperty GetLocalizedPropertyById(int localizedPropertyId)
+        /// <param name="localizedProperty">Localized property</param>
+        protected virtual async Task InsertLocalizedPropertyAsync(LocalizedProperty localizedProperty)
         {
-            return _localizedPropertyRepository.GetById(localizedPropertyId);
+            await _localizedPropertyRepository.InsertAsync(localizedProperty);
         }
+
+        /// <summary>
+        /// Updates the localized property
+        /// </summary>
+        /// <param name="localizedProperty">Localized property</param>
+        protected virtual async Task UpdateLocalizedPropertyAsync(LocalizedProperty localizedProperty)
+        {
+            await _localizedPropertyRepository.UpdateAsync(localizedProperty);
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Find localized value
@@ -105,16 +114,16 @@ namespace Nop.Services.Localization
         /// <param name="localeKeyGroup">Locale key group</param>
         /// <param name="localeKey">Locale key</param>
         /// <returns>Found localized value</returns>
-        public virtual string GetLocalizedValue(int languageId, int entityId, string localeKeyGroup, string localeKey)
+        public virtual async Task<string> GetLocalizedValueAsync(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyCacheKey
                 , languageId, entityId, localeKeyGroup, localeKey);
 
-            return _staticCacheManager.Get(key, () =>
+            return await _staticCacheManager.GetAsync(key, async () =>
             {
                 var source = _localizationSettings.LoadAllLocalizedPropertiesOnStartup
                     //load all records (we know they are cached)
-                    ? GetAllLocalizedProperties().AsQueryable()
+                    ? (await GetAllLocalizedPropertiesAsync()).AsQueryable()
                     //gradual loading
                     : _localizedPropertyRepository.Table;
 
@@ -133,24 +142,6 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
-        /// Inserts a localized property
-        /// </summary>
-        /// <param name="localizedProperty">Localized property</param>
-        public virtual void InsertLocalizedProperty(LocalizedProperty localizedProperty)
-        {
-            _localizedPropertyRepository.Insert(localizedProperty);
-        }
-
-        /// <summary>
-        /// Updates the localized property
-        /// </summary>
-        /// <param name="localizedProperty">Localized property</param>
-        public virtual void UpdateLocalizedProperty(LocalizedProperty localizedProperty)
-        {
-            _localizedPropertyRepository.Update(localizedProperty);
-        }
-
-        /// <summary>
         /// Save localized value
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
@@ -158,12 +149,12 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
-        public virtual void SaveLocalizedValue<T>(T entity,
+        public virtual async Task SaveLocalizedValueAsync<T>(T entity,
             Expression<Func<T, string>> keySelector,
             string localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity
         {
-            SaveLocalizedValue<T, string>(entity, keySelector, localeValue, languageId);
+            await SaveLocalizedValueAsync<T, string>(entity, keySelector, localeValue, languageId);
         }
 
         /// <summary>
@@ -175,7 +166,7 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
-        public virtual void SaveLocalizedValue<T, TPropType>(T entity,
+        public virtual async Task SaveLocalizedValueAsync<T, TPropType>(T entity,
             Expression<Func<T, TPropType>> keySelector,
             TPropType localeValue,
             int languageId) where T : BaseEntity, ILocalizedEntity
@@ -186,7 +177,7 @@ namespace Nop.Services.Localization
             if (languageId == 0)
                 throw new ArgumentOutOfRangeException(nameof(languageId), "Language ID should not be 0");
 
-            if (!(keySelector.Body is MemberExpression member))
+            if (keySelector.Body is not MemberExpression member)
             {
                 throw new ArgumentException(string.Format(
                     "Expression '{0}' refers to a method, not a property.",
@@ -205,7 +196,7 @@ namespace Nop.Services.Localization
             var localeKeyGroup = entity.GetType().Name;
             var localeKey = propInfo.Name;
 
-            var props = GetLocalizedProperties(entity.Id, localeKeyGroup);
+            var props = await GetLocalizedPropertiesAsync(entity.Id, localeKeyGroup);
             var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
                 lp.LocaleKey.Equals(localeKey, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 
@@ -216,13 +207,13 @@ namespace Nop.Services.Localization
                 if (string.IsNullOrWhiteSpace(localeValueStr))
                 {
                     //delete
-                    DeleteLocalizedProperty(prop);
+                    await DeleteLocalizedPropertyAsync(prop);
                 }
                 else
                 {
                     //update
                     prop.LocaleValue = localeValueStr;
-                    UpdateLocalizedProperty(prop);
+                    await UpdateLocalizedPropertyAsync(prop);
                 }
             }
             else
@@ -239,7 +230,7 @@ namespace Nop.Services.Localization
                     LocaleKeyGroup = localeKeyGroup,
                     LocaleValue = localeValueStr
                 };
-                InsertLocalizedProperty(prop);
+                await InsertLocalizedPropertyAsync(prop);
             }
         }
 

@@ -1,9 +1,9 @@
 @model ProductModel
 
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "productattributemappings-grid",
@@ -65,8 +65,8 @@
             })
         </div>
 
-        <div class="panel-footer">
-            <a asp-action="ProductAttributeMappingCreate" asp-route-productId="@Model.Id" class="btn bg-blue">
+        <div class="card-footer">
+            <a asp-action="ProductAttributeMappingCreate" asp-route-productId="@Model.Id" class="btn btn-primary">
                 <i class="fa fa-plus-square"></i>
                 @T("Admin.Catalog.Products.ProductAttributes.Attributes.AddNew")
             </a>

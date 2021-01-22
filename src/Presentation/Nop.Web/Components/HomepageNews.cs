@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.News;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
@@ -16,12 +17,12 @@ namespace Nop.Web.Components
             _newsSettings = newsSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = _newsModelFactory.PrepareHomepageNewsItemsModel();
+            var model = await _newsModelFactory.PrepareHomepageNewsItemsModelAsync();
             return View(model);
         }
     }

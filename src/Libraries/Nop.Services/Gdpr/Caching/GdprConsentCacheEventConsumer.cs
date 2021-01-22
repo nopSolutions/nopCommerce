@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Gdpr;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Gdpr;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Gdpr.Caching

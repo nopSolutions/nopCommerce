@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
    {
        Name = "productattributevalues-grid",
@@ -80,7 +80,7 @@
             }
         </script>
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 750, true);return false;" class="btn btn-primary">
             @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")
         </button>
@@ -100,7 +100,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.SaveBeforeEdit")
     </div>
 }

@@ -13,12 +13,13 @@
     </h1>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
+        <div class="cards-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListTop, additionalData = Model })
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     <p>
                         @T("Admin.Configuration.Payment.Methods.DownloadMorePlugins")
                     </p>
@@ -34,14 +35,14 @@
                             {
                                 new ColumnProperty(nameof(PaymentMethodModel.FriendlyName))
                                 {
-                                    Title = T("Admin.Configuration.Payment.Methods.Fields.FriendlyName").Text,
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.FriendlyName").Text,                                    
                                     Editable = true,
                                     EditType = EditType.String
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SystemName))
                                 {
-                                    Title = T("Admin.Configuration.Payment.Methods.Fields.SystemName").Text,
-                                    Width = "100"
+                                    Title = T("Admin.Configuration.Payment.Methods.Fields.SystemName").Text,                                   
+                                    Width = "100"                                    
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SupportCapture))
                                 {
@@ -125,3 +126,4 @@
         </div>
     </div>
 </div>
+</section>

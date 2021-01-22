@@ -16,20 +16,20 @@
             </small>
         </h1>
         <div class="pull-right">
-            <span id="log-delete" class="btn bg-red">
+            <span id="log-delete" class="btn btn-danger">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
         </div>
     </div>
 
-    <div class="content">
+    <section class="content">
         <div class="form-horizontal">
-            <div class="panel-group">
-                <div class="panel panel-default">
+            <div class="cards-group">
+                <div class="card card-default">
                     <div asp-validation-summary="All"></div>
-                    <div class="panel-body">
-                        <div class="form-group">
+                    <div class="card-body">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="StatusCode" />
                             </div>
@@ -37,7 +37,7 @@
                                 <div class="form-text-row">@Html.Raw(Model.StatusCode)</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="Url" />
                             </div>
@@ -45,7 +45,7 @@
                                 <div class="form-text-row">@Html.Raw(Model.Url)</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="RequestMessage" />
                             </div>
@@ -53,7 +53,7 @@
                                 <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.RequestMessage)</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="ResponseMessage" />
                             </div>
@@ -61,7 +61,7 @@
                                 <div class="form-text-row" style="word-break: break-all">@Html.Raw(Model.ResponseMessage)</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="CustomerId" />
                             </div>
@@ -72,7 +72,7 @@
                                 }
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="CreatedDate" />
                             </div>
@@ -84,6 +84,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="log-delete" />

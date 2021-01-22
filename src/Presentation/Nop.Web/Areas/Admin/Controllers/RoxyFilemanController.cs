@@ -38,9 +38,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <summary>
         /// Create configuration file for RoxyFileman
         /// </summary>
-        public virtual void CreateConfiguration()
+        public virtual async Task CreateConfigurationAsync()
         {
-            _roxyFilemanService.CreateConfiguration();
+            await _roxyFilemanService.CreateConfigurationAsync();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var action = "DIRLIST";
             try
             {
-                if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
                 if (!StringValues.IsNullOrEmpty(HttpContext.Request.Query["a"]))
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         await _roxyFilemanService.RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        _roxyFilemanService.CreateImageThumbnail(HttpContext.Request.Query["f"]);
+                        await _roxyFilemanService.CreateImageThumbnailAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "UPLOAD":
                         await _roxyFilemanService.UploadFilesAsync(HttpContext.Request.Form["d"]);
@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 if (action == "UPLOAD" && !_roxyFilemanService.IsAjaxRequest())
-                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({_roxyFilemanService.GetErrorResponse(_roxyFilemanService.GetLanguageResource("E_UploadNoFiles"))});</script>");
+                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({_roxyFilemanService.GetErrorResponse(await _roxyFilemanService.GetLanguageResourceAsync("E_UploadNoFiles"))});</script>");
                 else
                     await HttpContext.Response.WriteAsync(_roxyFilemanService.GetErrorResponse(ex.Message));
             }

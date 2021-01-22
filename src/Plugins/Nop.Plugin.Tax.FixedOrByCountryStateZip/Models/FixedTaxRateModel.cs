@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
 {
-    public class FixedTaxRateModel: BaseNopModel
+    public record FixedTaxRateModel : BaseNopModel
     {
         public int TaxCategoryId { get; set; }
 

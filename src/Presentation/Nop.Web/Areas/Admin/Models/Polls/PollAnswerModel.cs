@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Polls
     /// <summary>
     /// Represents a poll answer model
     /// </summary>
-    public partial class PollAnswerModel : BaseNopEntityModel
+    public partial record PollAnswerModel : BaseNopEntityModel
     {
         #region Properties
 

@@ -1,4 +1,5 @@
 ﻿@model CheckoutBillingAddressModel
+
 <div class="checkout-data">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop })
     @if (Model.ShipToSameAddressAllowed)

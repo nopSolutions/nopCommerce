@@ -53,10 +53,8 @@ namespace Nop.Services.Common
         {
             var path = GetBackupDirectoryPath();
 
-            if (!_fileProvider.DirectoryExists(path))
-            {
+            if (!_fileProvider.DirectoryExists(path)) 
                 throw new NopException("Backup directory not exists");
-            }
 
             return _fileProvider.GetFiles(path, $"*.{NopCommonDefaults.DbBackupFileExtension}")
                 .OrderByDescending(p => _fileProvider.GetLastWriteTime(p)).ToList();

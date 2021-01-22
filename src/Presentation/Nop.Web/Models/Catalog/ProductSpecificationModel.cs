@@ -6,7 +6,7 @@ namespace Nop.Web.Models.Catalog
     /// <summary>
     /// Represents a product specification model
     /// </summary>
-    public partial class ProductSpecificationModel : BaseNopModel
+    public partial record ProductSpecificationModel : BaseNopModel
     {
         #region Properties
 

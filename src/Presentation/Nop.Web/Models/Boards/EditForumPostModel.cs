@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class EditForumPostModel : BaseNopModel
+    public partial record EditForumPostModel : BaseNopModel
     {
         #region Properties
 

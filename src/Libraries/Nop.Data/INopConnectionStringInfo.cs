@@ -11,7 +11,7 @@
         string DatabaseName { get; set; }
 
         /// <summary>
-        /// Server name or IP adress
+        /// Server name or IP address
         /// </summary>
         string ServerName { get; set; }
 

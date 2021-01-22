@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
     /// <summary>
     /// Represents a plugin model
     /// </summary>
-    public partial class PluginModel : BaseNopModel, IAclSupportedModel, ILocalizedModel<PluginLocalizedModel>, IPluginModel, IStoreMappingSupportedModel
+    public partial record PluginModel : BaseNopModel, IAclSupportedModel, ILocalizedModel<PluginLocalizedModel>, IPluginModel, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
         #endregion
     }
 
-    public partial class PluginLocalizedModel : ILocalizedLocaleModel
+    public partial record PluginLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

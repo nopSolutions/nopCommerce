@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a date time settings model
     /// </summary>
-    public partial class DateTimeSettingsModel : BaseNopModel, ISettingsModel
+    public partial record DateTimeSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

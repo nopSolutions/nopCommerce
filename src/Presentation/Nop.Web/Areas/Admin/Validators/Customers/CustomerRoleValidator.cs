@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
     {
         public CustomerRoleValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.CustomerRoles.Fields.Name.Required"));
 
             SetDatabaseValidationRules<CustomerRole>(dataProvider);
         }

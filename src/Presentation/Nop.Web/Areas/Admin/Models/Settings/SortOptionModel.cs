@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a sort option model
     /// </summary>
-    public partial class SortOptionModel : BaseNopEntityModel
+    public partial record SortOptionModel : BaseNopEntityModel
     {
         #region Properties
 

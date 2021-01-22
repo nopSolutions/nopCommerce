@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Nop.Data;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
@@ -19,7 +20,8 @@ namespace Nop.Web.Infrastructure
         {
             var pattern = GetRouterPattern(endpointRouteBuilder, seoCode: "{SeName}");
 
-            endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
+            if (DataSettingsManager.IsDatabaseInstalled())
+                endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
 
             //and default one
             endpointRouteBuilder.MapControllerRoute(

@@ -1,13 +1,13 @@
 ﻿@model ProductModel
-<div class="panel-body">
+<div class="card-body">
     <p>
         @T("Admin.Catalog.Products.CrossSells.Hint")
     </p>
     @if (Model.Id > 0)
     {
-    <div class="panel panel-default">
+    <div class="card card-default">
 
-        <div class="panel-body">
+        <div class="card-body">
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "crosssellproducts-grid",
@@ -38,7 +38,7 @@
                 }
             </script>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <button type="submit" id="btnAddNewCrossSellProduct" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form"}))', 800, 800, true); return false;" class="btn btn-primary">
                 @T("Admin.Catalog.Products.CrossSells.AddNew")
             </button>
@@ -59,8 +59,8 @@
     }
     else
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
             </div>
         </div>

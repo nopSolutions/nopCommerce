@@ -1,7 +1,7 @@
 @model AppSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="RedisConfigModel.Enabled" />
         </div>
@@ -11,7 +11,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="RedisConfigModel.Enabled">
-        <div class="form-group" id="redis-connection-string">
+        <div class="form-group row" id="redis-connection-string">
             <div class="col-md-3">
                 <nop-label asp-for="RedisConfigModel.ConnectionString" />
             </div>
@@ -20,7 +20,7 @@
                 <span asp-validation-for="RedisConfigModel.ConnectionString"></span>
             </div>
         </div>
-        <div class="form-group" id="redis-database">
+        <div class="form-group row" id="redis-database">
             <div class="col-md-3">
                 <nop-label asp-for="RedisConfigModel.DatabaseId" />
             </div>
@@ -29,7 +29,7 @@
                 <span asp-validation-for="RedisConfigModel.DatabaseId"></span>
             </div>
         </div>
-        <div class="form-group" id="redis-caching">
+        <div class="form-group row" id="redis-caching">
             <div class="col-md-3">
                 <nop-label asp-for="RedisConfigModel.UseCaching" />
             </div>
@@ -38,7 +38,7 @@
                 <span asp-validation-for="RedisConfigModel.UseCaching"></span>
             </div>
         </div>
-        <div class="form-group" id="redis-data-protection">
+        <div class="form-group row" id="redis-data-protection">
             <div class="col-md-3">
                 <nop-label asp-for="RedisConfigModel.StoreDataProtectionKeys" />
             </div>
@@ -47,7 +47,7 @@
                 <span asp-validation-for="RedisConfigModel.StoreDataProtectionKeys"></span>
             </div>
         </div>
-        <div class="form-group" id="redis-plugins">
+        <div class="form-group row" id="redis-plugins">
             <div class="col-md-3">
                 <nop-label asp-for="RedisConfigModel.StorePluginsInfo" />
             </div>
@@ -56,7 +56,7 @@
                 <span asp-validation-for="RedisConfigModel.StorePluginsInfo"></span>
             </div>
         </div>
-        <div class="form-group" id="redis-exception">
+        <div class="form-group row" id="redis-exception">
             <div class="col-md-3">
                 <nop-label asp-for="RedisConfigModel.IgnoreTimeoutException" />
             </div>
@@ -75,12 +75,12 @@
 
     function toggleRedis() {
         if ($('#@Html.IdFor(model => model.RedisConfigModel.Enabled)').is(':checked')) {
-            $('#redis-connection-string').show();
-            $('#redis-database').show();
-            $('#redis-caching').show();
-            $('#redis-data-protection').show();
-            $('#redis-plugins').show();
-            $('#redis-exception').show();
+            $('#redis-connection-string').showField();
+            $('#redis-database').showField();
+            $('#redis-caching').showField();
+            $('#redis-data-protection').showField();
+            $('#redis-plugins').showField();
+            $('#redis-exception').showField();
         } else {
             $('#redis-connection-string').hide();
             $('#redis-database').hide();

@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a catalog settings model
     /// </summary>
-    public partial class CatalogSettingsModel : BaseNopModel, ISettingsModel
+    public partial record CatalogSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 
@@ -94,6 +94,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved")]
         public bool ProductReviewsMustBeApproved { get; set; }
         public bool ProductReviewsMustBeApproved_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer")]
+        public bool OneReviewPerProductFromCustomer { get; set; }
+        public bool OneReviewPerProductFromCustomer_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToReviewProduct")]
         public bool AllowAnonymousUsersToReviewProduct { get; set; }

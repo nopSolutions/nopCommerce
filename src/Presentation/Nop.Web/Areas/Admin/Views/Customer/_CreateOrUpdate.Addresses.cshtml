@@ -1,6 +1,6 @@
 @model CustomerModel
 
-<div class="panel-body">
+<div class="card-body">
     @await Html.PartialAsync("Table", new DataTablesModel
     {
         Name = "customer-addresses-grid",
@@ -52,7 +52,7 @@
         }
     })
 </div>
-<div class="panel-body">
+<div class="card-body">
     <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("AddressCreate", new { customerId = Model.Id })'">
         @T("Admin.Customers.Customers.Addresses.AddButton")
     </button>

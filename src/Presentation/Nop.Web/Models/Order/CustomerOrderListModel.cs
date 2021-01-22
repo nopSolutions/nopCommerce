@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class CustomerOrderListModel : BaseNopModel
+    public partial record CustomerOrderListModel : BaseNopModel
     {
         public CustomerOrderListModel()
         {
@@ -20,7 +20,7 @@ namespace Nop.Web.Models.Order
 
         #region Nested classes
 
-        public partial class OrderDetailsModel : BaseNopEntityModel
+        public partial record OrderDetailsModel : BaseNopEntityModel
         {
             public string CustomOrderNumber { get; set; }
             public string OrderTotal { get; set; }
@@ -32,7 +32,7 @@ namespace Nop.Web.Models.Order
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class RecurringOrderModel : BaseNopEntityModel
+        public partial record RecurringOrderModel : BaseNopEntityModel
         {
             public string StartDate { get; set; }
             public string CycleInfo { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -63,10 +64,11 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        public async Task<IList<string>> GetWidgetZonesAsync()
         {
             var widgetZones = new List<string> { PublicWidgetZones.HeadHtmlTag };
-            widgetZones.AddRange(_facebookPixelService.GetCustomEventsWidgetZones());
+            widgetZones.AddRange(await _facebookPixelService.GetCustomEventsWidgetZonesAsync());
+            
             return widgetZones;
         }
 
@@ -86,9 +88,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task InstallAsync()
         {
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.FacebookPixel.Configuration"] = "Configuration",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.",
@@ -136,20 +138,20 @@ namespace Nop.Plugin.Widgets.FacebookPixel
                 ["Plugins.Widgets.FacebookPixel.Configuration.Search.Store.Hint"] = "Search configuration by the store."
             });
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task UninstallAsync()
         {
             _widgetSettings.ActiveWidgetSystemNames.Remove(FacebookPixelDefaults.SystemName);
-            _settingService.SaveSetting(_widgetSettings);
+            await _settingService.SaveSettingAsync(_widgetSettings);
 
-            _localizationService.DeleteLocaleResources("Plugins.Widgets.FacebookPixel");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.FacebookPixel");
 
-            base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

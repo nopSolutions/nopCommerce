@@ -1,7 +1,7 @@
 @model AppSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AzureBlobConfigModel.ConnectionString" />
         </div>
@@ -10,7 +10,7 @@
             <span asp-validation-for="AzureBlobConfigModel.ConnectionString"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AzureBlobConfigModel.ContainerName" />
         </div>
@@ -19,7 +19,7 @@
             <span asp-validation-for="AzureBlobConfigModel.ContainerName"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AzureBlobConfigModel.EndPoint" />
         </div>
@@ -28,7 +28,7 @@
             <span asp-validation-for="AzureBlobConfigModel.EndPoint"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AzureBlobConfigModel.AppendContainerName" />
         </div>
@@ -37,7 +37,7 @@
             <span asp-validation-for="AzureBlobConfigModel.AppendContainerName"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AzureBlobConfigModel.StoreDataProtectionKeys" />
         </div>
@@ -47,7 +47,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="AzureBlobConfigModel.StoreDataProtectionKeys">
-        <div class="form-group" id="azure-data-protection-container">
+        <div class="form-group row" id="azure-data-protection-container">
             <div class="col-md-3">
                 <nop-label asp-for="AzureBlobConfigModel.DataProtectionKeysContainerName" />
             </div>
@@ -56,7 +56,7 @@
                 <span asp-validation-for="AzureBlobConfigModel.DataProtectionKeysContainerName"></span>
             </div>
         </div>
-        <div class="form-group" id="azure-data-protection-vault">
+        <div class="form-group row" id="azure-data-protection-vault">
             <div class="col-md-3">
                 <nop-label asp-for="AzureBlobConfigModel.DataProtectionKeysVaultId" />
             </div>
@@ -75,8 +75,8 @@
 
     function toggleAzureDataProtection() {
         if ($('#@Html.IdFor(model => model.AzureBlobConfigModel.StoreDataProtectionKeys)').is(':checked')) {
-            $('#azure-data-protection-container').show();
-            $('#azure-data-protection-vault').show();
+            $('#azure-data-protection-container').showField();
+            $('#azure-data-protection-vault').showField();
         } else {
             $('#azure-data-protection-container').hide();
             $('#azure-data-protection-vault').hide();

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Orders;
 using Nop.Web.Areas.Admin.Models.Orders;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Recurring payment search model</param>
         /// <returns>Recurring payment search model</returns>
-        RecurringPaymentSearchModel PrepareRecurringPaymentSearchModel(RecurringPaymentSearchModel searchModel);
+        Task<RecurringPaymentSearchModel> PrepareRecurringPaymentSearchModelAsync(RecurringPaymentSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged recurring payment list model
         /// </summary>
         /// <param name="searchModel">Recurring payment search model</param>
         /// <returns>Recurring payment list model</returns>
-        RecurringPaymentListModel PrepareRecurringPaymentListModel(RecurringPaymentSearchModel searchModel);
+        Task<RecurringPaymentListModel> PrepareRecurringPaymentListModelAsync(RecurringPaymentSearchModel searchModel);
 
         /// <summary>
         /// Prepare recurring payment model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Recurring payment model</returns>
-        RecurringPaymentModel PrepareRecurringPaymentModel(RecurringPaymentModel model,
+        Task<RecurringPaymentModel> PrepareRecurringPaymentModelAsync(RecurringPaymentModel model,
             RecurringPayment recurringPayment, bool excludeProperties = false);
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Recurring payment history search model</param>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <returns>Recurring payment history list model</returns>
-        RecurringPaymentHistoryListModel PrepareRecurringPaymentHistoryListModel(RecurringPaymentHistorySearchModel searchModel,
+        Task<RecurringPaymentHistoryListModel> PrepareRecurringPaymentHistoryListModelAsync(RecurringPaymentHistorySearchModel searchModel,
             RecurringPayment recurringPayment);
     }
 }

@@ -113,10 +113,10 @@
     successHandler: function (address, response) {
       $('.shipping-options-body', $(this.settings.contentEl)).empty();
 
-      if (response.success) {
+      if (response.Success) {
         var activeOption;
 
-        var options = response.result.ShippingOptions;
+        var options = response.ShippingOptions;
         if (options && options.length > 0) {
           var self = this;
           var selectedShippingOption = this.params.selectedShippingOption;
@@ -124,9 +124,9 @@
           $.each(options, function (i, option) {
             // try select the shipping option with the same provider and address
             if (option.Selected ||
-                 (selectedShippingOption &&
-                  selectedShippingOption.provider === option.Name &&
-                  self.addressesAreEqual(selectedShippingOption.address, address))) {
+              (selectedShippingOption &&
+                selectedShippingOption.provider === option.Name &&
+                self.addressesAreEqual(selectedShippingOption.address, address))) {
               activeOption = {
                 provider: option.Name,
                 price: option.Price,
@@ -152,12 +152,14 @@
             this.selectShippingOption(activeOption);
 
           this.setActiveShippingOption(activeOption);
+        } else {
+          this.clearShippingOptions();
         }
       } else {
         this.params.displayErrors = true;
         this.clearErrorMessage();
         this.clearShippingOptions();
-        this.showErrorMessage(response.errors);
+        this.showErrorMessage(response.Errors);
       }
 
       if (this.settings.handlers.success)
@@ -178,7 +180,6 @@
     },
 
     showErrorMessage: function (errors) {
-      console.log(this.params.displayErrors);
       if (this.params.displayErrors) {
         var errorMessagesContainer = $('.' + this.settings.errorMessageBoxClass, $(this.settings.contentEl));
         $.each(errors, function (i, error) {

@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Vendors
@@ -14,32 +15,32 @@ namespace Nop.Services.Vendors
         /// Gets all vendor attributes
         /// </summary>
         /// <returns>Vendor attributes</returns>
-        IList<VendorAttribute> GetAllVendorAttributes();
+        Task<IList<VendorAttribute>> GetAllVendorAttributesAsync();
 
         /// <summary>
         /// Gets a vendor attribute 
         /// </summary>
         /// <param name="vendorAttributeId">Vendor attribute identifier</param>
         /// <returns>Vendor attribute</returns>
-        VendorAttribute GetVendorAttributeById(int vendorAttributeId);
+        Task<VendorAttribute> GetVendorAttributeByIdAsync(int vendorAttributeId);
 
         /// <summary>
         /// Inserts a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        void InsertVendorAttribute(VendorAttribute vendorAttribute);
+        Task InsertVendorAttributeAsync(VendorAttribute vendorAttribute);
 
         /// <summary>
         /// Updates a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        void UpdateVendorAttribute(VendorAttribute vendorAttribute);
+        Task UpdateVendorAttributeAsync(VendorAttribute vendorAttribute);
 
         /// <summary>
         /// Deletes a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        void DeleteVendorAttribute(VendorAttribute vendorAttribute);
+        Task DeleteVendorAttributeAsync(VendorAttribute vendorAttribute);
 
         #endregion
 
@@ -50,32 +51,32 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorAttributeId">The vendor attribute identifier</param>
         /// <returns>Vendor attribute values</returns>
-        IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId);
+        Task<IList<VendorAttributeValue>> GetVendorAttributeValuesAsync(int vendorAttributeId);
 
         /// <summary>
         /// Gets a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValueId">Vendor attribute value identifier</param>
         /// <returns>Vendor attribute value</returns>
-        VendorAttributeValue GetVendorAttributeValueById(int vendorAttributeValueId);
+        Task<VendorAttributeValue> GetVendorAttributeValueByIdAsync(int vendorAttributeValueId);
 
         /// <summary>
         /// Inserts a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue);
+        Task InsertVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue);
 
         /// <summary>
         /// Updates a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        void UpdateVendorAttributeValue(VendorAttributeValue vendorAttributeValue);
+        Task UpdateVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue);
 
         /// <summary>
         /// Deletes a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        void DeleteVendorAttributeValue(VendorAttributeValue vendorAttributeValue);
+        Task DeleteVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue);
 
         #endregion
     }

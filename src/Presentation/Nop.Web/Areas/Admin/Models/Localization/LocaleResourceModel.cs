@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
     /// <summary>
     /// Represents a locale resource model
     /// </summary>
-    public partial class LocaleResourceModel : BaseNopEntityModel
+    public partial record LocaleResourceModel : BaseNopEntityModel
     {
         #region Properties
 

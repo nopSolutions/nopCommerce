@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a warehouse model
     /// </summary>
-    public partial class WarehouseModel : BaseNopEntityModel
+    public partial record WarehouseModel : BaseNopEntityModel
     {
         #region Ctor
 

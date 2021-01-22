@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
         /// <returns>Shopping cart search model</returns>
-        ShoppingCartSearchModel PrepareShoppingCartSearchModel(ShoppingCartSearchModel searchModel);
+        Task<ShoppingCartSearchModel> PrepareShoppingCartSearchModelAsync(ShoppingCartSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shopping cart list model
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
         /// <returns>Shopping cart list model</returns>
-        ShoppingCartListModel PrepareShoppingCartListModel(ShoppingCartSearchModel searchModel);
+        Task<ShoppingCartListModel> PrepareShoppingCartListModelAsync(ShoppingCartSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged shopping cart item list model
@@ -28,6 +29,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Shopping cart item search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Shopping cart item list model</returns>
-        ShoppingCartItemListModel PrepareShoppingCartItemListModel(ShoppingCartItemSearchModel searchModel, Customer customer);
+        Task<ShoppingCartItemListModel> PrepareShoppingCartItemListModelAsync(ShoppingCartItemSearchModel searchModel, Customer customer);
     }
 }

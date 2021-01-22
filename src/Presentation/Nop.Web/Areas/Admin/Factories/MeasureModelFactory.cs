@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -74,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Measure search model</param>
         /// <returns>Measure search model</returns>
-        public virtual MeasureSearchModel PrepareMeasureSearchModel(MeasureSearchModel searchModel)
+        public virtual Task<MeasureSearchModel> PrepareMeasureSearchModelAsync(MeasureSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -83,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareMeasureDimensionSearchModel(searchModel.MeasureDimensionSearchModel);
             PrepareMeasureWeightSearchModel(searchModel.MeasureWeightSearchModel);
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -91,13 +92,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Measure dimension search model</param>
         /// <returns>Measure dimension list model</returns>
-        public virtual MeasureDimensionListModel PrepareMeasureDimensionListModel(MeasureDimensionSearchModel searchModel)
+        public virtual async Task<MeasureDimensionListModel> PrepareMeasureDimensionListModelAsync(MeasureDimensionSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get dimensions
-            var dimensions = _measureService.GetAllMeasureDimensions().ToPagedList(searchModel);
+            var dimensions = (await _measureService.GetAllMeasureDimensionsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureDimensionListModel().PrepareToGrid(searchModel, dimensions, () =>
@@ -122,13 +123,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Measure weight search model</param>
         /// <returns>Measure weight list model</returns>
-        public virtual MeasureWeightListModel PrepareMeasureWeightListModel(MeasureWeightSearchModel searchModel)
+        public virtual async Task<MeasureWeightListModel> PrepareMeasureWeightListModelAsync(MeasureWeightSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get weights
-            var weights = _measureService.GetAllMeasureWeights().ToPagedList(searchModel);
+            var weights = (await _measureService.GetAllMeasureWeightsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureWeightListModel().PrepareToGrid(searchModel, weights, () =>

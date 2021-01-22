@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Security
     /// <summary>
     /// Represents a permission mapping model
     /// </summary>
-    public partial class PermissionMappingModel : BaseNopModel
+    public partial record PermissionMappingModel : BaseNopModel
     {
         #region Ctor
 

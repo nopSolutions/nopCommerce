@@ -7,7 +7,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.Tax
     /// <summary>
     /// Represents a tax category search model
     /// </summary>
-    public class TaxCategorySearchModel : BaseSearchModel
+    public record TaxCategorySearchModel : BaseSearchModel
     {
         #region Ctor
 

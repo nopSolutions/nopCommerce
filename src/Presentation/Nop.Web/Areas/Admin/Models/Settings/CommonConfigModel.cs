@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a common configuration model
     /// </summary>
-    public partial class CommonConfigModel : BaseNopModel, IConfigModel
+    public partial record CommonConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
 

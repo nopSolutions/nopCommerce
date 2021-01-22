@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
@@ -13,14 +14,14 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected checkout attributes</returns>
-        IList<CheckoutAttribute> ParseCheckoutAttributes(string attributesXml);
+        Task<IList<CheckoutAttribute>> ParseCheckoutAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Get checkout attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Checkout attribute values</returns>
-        IEnumerable<(CheckoutAttribute attribute, IEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml);
+        IAsyncEnumerable<(CheckoutAttribute attribute, IAsyncEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml);
 
         /// <summary>
         /// Gets selected checkout attribute value
@@ -45,7 +46,7 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="cart">Shopping cart items</param>
         /// <returns>Updated attributes in XML format</returns>
-        string EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart);
+        Task<string> EnsureOnlyActiveAttributesAsync(string attributesXml, IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
@@ -53,7 +54,7 @@ namespace Nop.Services.Orders
         /// <param name="attribute">Checkout attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
         /// <returns>Result</returns>
-        bool? IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml);
+        Task<bool?> IsConditionMetAsync(CheckoutAttribute attribute, string selectedAttributesXml);
 
         /// <summary>
         /// Remove an attribute

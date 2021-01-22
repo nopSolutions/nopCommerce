@@ -1,5 +1,6 @@
 ﻿@model DataTablesModel
 @using System.Net;
+@using System.Globalization
 
 @{ 
     Html.AppendScriptParts("~/js/admin.table.js");
@@ -95,10 +96,7 @@
             </text>
         }
         $('#@Model.Name').DataTable().columns.adjust();
-
-        $('.panel').on('panel:toggle', function (e) {
-            updateTableWidth('#@Model.Name');
-        })
+                
     });
 </script>
 
@@ -156,6 +154,7 @@
 
 @if (Model.UrlUpdate != null || Model.ChildTable?.UrlUpdate != null)
 {
+    var currentCulture = CultureInfo.CurrentCulture.Name;
     foreach (var curModel in listOfTables)
     {
         var tableName = ReplaceName(curModel.Name);
@@ -220,7 +219,7 @@
                 });
 
                 if (columnType == 'number') {
-                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(tableName)[cellName] + '" class="userinput" type="number" min="@int.MinValue" max="@int.MaxValue"/>');
+                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(tableName)[cellName] + '" class="userinput" type="number" step="any" min="@int.MinValue" max="@int.MaxValue"/>');
                 }
                 if (columnType == 'checkbox') {
                     var cellValue = editRowData_@(tableName)[cellName];
@@ -268,8 +267,12 @@
             updateRowData.push({ 'pname': nameData, 'pvalue': data });
             $.each(columnData_@(tableName), function (index, element) {
                 if (element.Editable == true) {
+                    var value = $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val();
+                    if (element.Type == 'number') {
+                        value = new Intl.NumberFormat('@currentCulture', { useGrouping: false }).format(value);
+                    }
                     updateRowData.push({
-                        'pname': element.Data, 'pvalue': $($($(currentCells).children("[data-columnname='" + element.Data + "']")).children('input')[0]).val()
+                        'pname': element.Data, 'pvalue': value
                     });
                 }
             });
@@ -326,7 +329,7 @@
         function saveRowIntoArray_@(tableName)(cureentCells) {
             $.each(columnData_@(tableName), function (index, element) {
                 if (element.Editable == true) {
-                    var htmlVal = $($(cureentCells).children("[data-columnname='" + element.Data + "']")[0]).html();
+                    var htmlVal = $($(cureentCells).children("[data-columnname='" + element.Data + "']")[0]).html();                    
                     editRowData_@(tableName)[element.Data] = htmlVal;
                 }
             });

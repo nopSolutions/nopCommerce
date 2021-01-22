@@ -1,4 +1,5 @@
-﻿using Nop.Core.Caching;
+﻿using System.Threading.Tasks;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
@@ -14,12 +15,13 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Product entity)
+        protected override async Task ClearCacheAsync(Product entity)
         {
-            RemoveByPrefix(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity);
-            Remove(NopCatalogDefaults.ProductsHomepageCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.ProductPricePrefix, entity);
-            RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity);
+            await RemoveAsync(NopCatalogDefaults.ProductsHomepageCacheKey);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.FeaturedProductIdsPrefix);
         }
     }
 }

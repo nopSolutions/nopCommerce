@@ -3367,3 +3367,11 @@ BEGIN
 	END
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.requestdelay')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'shippingsettings.requestdelay', N'300', 0)
+END
+GO

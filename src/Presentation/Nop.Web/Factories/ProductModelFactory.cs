@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -75,7 +76,7 @@ namespace Nop.Web.Factories
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly VendorSettings _vendorSettings;
+        private readonly VendorSettings _vendorSettings;        
 
         #endregion
 
@@ -154,6 +155,7 @@ namespace Nop.Web.Factories
             _seoSettings = seoSettings;
             _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
+            
         }
 
         #endregion
@@ -166,28 +168,28 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="group">Specification attribute group</param>
         /// <returns>List of product specification model</returns>
-        protected virtual IList<ProductSpecificationAttributeModel> PrepareProductSpecificationAttributeModel(Product product, SpecificationAttributeGroup group)
+        protected virtual async Task<IList<ProductSpecificationAttributeModel>> PrepareProductSpecificationAttributeModelAsync(Product product, SpecificationAttributeGroup group)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productSpecificationAttributes = _specificationAttributeService.GetProductSpecificationAttributes(
+            var productSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync(
                     product.Id, specificationAttributeGroupId: group?.Id, showOnProductPage: true);
 
             var result = new List<ProductSpecificationAttributeModel>();
 
             foreach (var psa in productSpecificationAttributes)
             {
-                var option = _specificationAttributeService.GetSpecificationAttributeOptionById(psa.SpecificationAttributeOptionId);
+                var option = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
 
                 var model = result.FirstOrDefault(model => model.Id == option.SpecificationAttributeId);
                 if (model == null)
                 {
-                    var attribute = _specificationAttributeService.GetSpecificationAttributeById(option.SpecificationAttributeId);
+                    var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(option.SpecificationAttributeId);
                     model = new ProductSpecificationAttributeModel
                     {
                         Id = attribute.Id,
-                        Name = _localizationService.GetLocalized(attribute, x => x.Name)
+                        Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name)
                     };
                     result.Add(model);
                 }
@@ -198,9 +200,9 @@ namespace Nop.Web.Factories
                     ColorSquaresRgb = option.ColorSquaresRgb,
                     ValueRaw = psa.AttributeType switch
                     {
-                        SpecificationAttributeType.Option => WebUtility.HtmlEncode(_localizationService.GetLocalized(option, x => x.Name)),
-                        SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue)),
-                        SpecificationAttributeType.CustomHtmlText => _localizationService.GetLocalized(psa, x => x.CustomValue),
+                        SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
+                        SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
+                        SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
                         SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
                         _ => null
                     }
@@ -217,17 +219,17 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Product review overview model</returns>
-        protected virtual ProductReviewOverviewModel PrepareProductReviewOverviewModel(Product product)
+        protected virtual async Task<ProductReviewOverviewModel> PrepareProductReviewOverviewModelAsync(Product product)
         {
             ProductReviewOverviewModel productReview;
 
             if (_catalogSettings.ShowProductReviewsPerStore)
             {
-                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductReviewsModelKey, product, _storeContext.CurrentStore);
+                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductReviewsModelKey, product, await _storeContext.GetCurrentStoreAsync());
 
-                productReview = _staticCacheManager.Get(cacheKey, () =>
+                productReview = await _staticCacheManager.GetAsync(cacheKey, async () =>
                 {
-                    var productReviews = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id);
+                    var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
                     
                     return new ProductReviewOverviewModel
                     {
@@ -249,6 +251,7 @@ namespace Nop.Web.Factories
             {
                 productReview.ProductId = product.Id;
                 productReview.AllowCustomerReviews = product.AllowCustomerReviews;
+                productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
             }
 
             return productReview;
@@ -260,7 +263,7 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="forceRedirectionAfterAddingToCart">Whether to force redirection after adding to cart</param>
         /// <returns>Product overview price model</returns>
-        protected virtual ProductOverviewModel.ProductPriceModel PrepareProductOverviewPriceModel(Product product, bool forceRedirectionAfterAddingToCart = false)
+        protected virtual async Task<ProductOverviewModel.ProductPriceModel> PrepareProductOverviewPriceModelAsync(Product product, bool forceRedirectionAfterAddingToCart = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -274,13 +277,13 @@ namespace Nop.Web.Factories
             {
                 case ProductType.GroupedProduct:
                     //grouped product
-                    PrepareGroupedProductOverviewPriceModel(product, priceModel);
+                    await PrepareGroupedProductOverviewPriceModelAsync(product, priceModel);
 
                     break;
                 case ProductType.SimpleProduct:
                 default:
                     //simple product
-                    PrepareSimpleProductOverviewPriceModel(product, priceModel);
+                    await PrepareSimpleProductOverviewPriceModelAsync(product, priceModel);
 
                     break;
             }
@@ -288,17 +291,17 @@ namespace Nop.Web.Factories
             return priceModel;
         }
 
-        protected virtual void PrepareSimpleProductOverviewPriceModel(Product product, ProductOverviewModel.ProductPriceModel priceModel)
+        protected virtual async Task PrepareSimpleProductOverviewPriceModelAsync(Product product, ProductOverviewModel.ProductPriceModel priceModel)
         {
             //add to cart button
             priceModel.DisableBuyButton = product.DisableBuyButton ||
-                                          !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
-                                          !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                          !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
+                                          !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
 
             //add to wishlist button
             priceModel.DisableWishlistButton = product.DisableWishlistButton ||
-                                               !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
-                                               !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                               !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
+                                               !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
             //compare products
             priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
 
@@ -315,7 +318,7 @@ namespace Nop.Web.Factories
             }
 
             //prices
-            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
                 if (product.CustomerEntersPrice)
                     return;
@@ -327,43 +330,43 @@ namespace Nop.Web.Factories
                 {
                     //call for price
                     priceModel.OldPrice = null;
-                    priceModel.Price = _localizationService.GetResource("Products.CallForPrice");
+                    priceModel.Price = await _localizationService.GetResourceAsync("Products.CallForPrice");
                 }
                 else
                 {
                     //prices
-                    var minPossiblePriceWithoutDiscount = _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false);
-                    var minPossiblePriceWithDiscount = _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer);
+                    var (minPossiblePriceWithoutDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false);
+                    var (minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync());
 
                     if (product.HasTierPrices)
                     {
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
                         minPossiblePriceWithoutDiscount = Math.Min(minPossiblePriceWithoutDiscount,
-                            _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false, quantity: int.MaxValue));
+                            (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false, quantity: int.MaxValue)).Item1);
                         minPossiblePriceWithDiscount = Math.Min(minPossiblePriceWithDiscount,
-                            _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true, quantity: int.MaxValue));
+                            (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: true, quantity: int.MaxValue)).Item1);
                     }
 
-                    var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out var _);
-                    var finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, minPossiblePriceWithoutDiscount, out _);
-                    var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, minPossiblePriceWithDiscount, out _);
+                    var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
+                    var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, minPossiblePriceWithoutDiscount);
+                    var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, minPossiblePriceWithDiscount);
 
-                    var oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                    var finalPriceWithoutDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
-                    var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+                    var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, await _workContext.GetWorkingCurrencyAsync());
+                    var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, await _workContext.GetWorkingCurrencyAsync());
+                    var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, await _workContext.GetWorkingCurrencyAsync());
 
                     //do we have tier prices configured?
                     var tierPrices = new List<TierPrice>();
                     if (product.HasTierPrices)
                     {
-                        tierPrices.AddRange(_productService.GetTierPrices(product, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id));
+                        tierPrices.AddRange(await _productService.GetTierPricesAsync(product, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id));
                     }
                     //When there is just one tier price (with  qty 1), there are no actual savings in the list.
                     var displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
                     if (displayFromMessage)
                     {
                         priceModel.OldPrice = null;
-                        priceModel.Price = string.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(finalPriceWithDiscount));
+                        priceModel.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount));
                         priceModel.PriceValue = finalPriceWithDiscount;
                     }
                     else
@@ -377,17 +380,17 @@ namespace Nop.Web.Factories
                             strikeThroughPrice = finalPriceWithoutDiscount;
 
                         if (strikeThroughPrice > decimal.Zero)
-                            priceModel.OldPrice = _priceFormatter.FormatPrice(strikeThroughPrice);
+                            priceModel.OldPrice = await _priceFormatter.FormatPriceAsync(strikeThroughPrice);
 
-                        priceModel.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                        priceModel.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
                         priceModel.PriceValue = finalPriceWithDiscount;
                     }
 
                     if (product.IsRental)
                     {
                         //rental product
-                        priceModel.OldPrice = _priceFormatter.FormatRentalProductPeriod(product, priceModel.OldPrice);
-                        priceModel.Price = _priceFormatter.FormatRentalProductPeriod(product, priceModel.Price);
+                        priceModel.OldPrice = await _priceFormatter.FormatRentalProductPeriodAsync(product, priceModel.OldPrice);
+                        priceModel.Price = await _priceFormatter.FormatRentalProductPeriodAsync(product, priceModel.Price);
                     }
 
                     //property for German market
@@ -396,7 +399,7 @@ namespace Nop.Web.Factories
                     priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
 
                     //PAngV default baseprice (used in Germany)
-                    priceModel.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscount);
+                    priceModel.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscount);
                 }
             }
             else
@@ -407,20 +410,20 @@ namespace Nop.Web.Factories
             }
         }
 
-        protected virtual void PrepareGroupedProductOverviewPriceModel(Product product, ProductOverviewModel.ProductPriceModel priceModel)
+        protected virtual async Task PrepareGroupedProductOverviewPriceModelAsync(Product product, ProductOverviewModel.ProductPriceModel priceModel)
         {
-            var associatedProducts = _productService.GetAssociatedProducts(product.Id,
-                _storeContext.CurrentStore.Id);
+            var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id,
+                (await _storeContext.GetCurrentStoreAsync()).Id);
 
             //add to cart button (ignore "DisableBuyButton" property for grouped products)
             priceModel.DisableBuyButton =
-                !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
-                !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
 
             //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
             priceModel.DisableWishlistButton =
-                !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
-                !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
 
             //compare products
             priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
@@ -428,20 +431,20 @@ namespace Nop.Web.Factories
                 return;
 
             //we have at least one associated product
-            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
                 //find a minimum possible price
                 decimal? minPossiblePrice = null;
                 Product minPriceProduct = null;
                 foreach (var associatedProduct in associatedProducts)
                 {
-                    var tmpMinPossiblePrice = _priceCalculationService.GetFinalPrice(associatedProduct, _workContext.CurrentCustomer);
+                    var (tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync());
 
                     if (associatedProduct.HasTierPrices)
                     {
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
                         tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
-                            _priceCalculationService.GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, quantity: int.MaxValue));
+                            (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync(), quantity: int.MaxValue)).Item1);
                     }
 
                     if (minPossiblePrice.HasValue && tmpMinPossiblePrice >= minPossiblePrice.Value)
@@ -459,20 +462,20 @@ namespace Nop.Web.Factories
                      _workContext.OriginalCustomerIfImpersonated == null))
                 {
                     priceModel.OldPrice = null;
-                    priceModel.Price = _localizationService.GetResource("Products.CallForPrice");
+                    priceModel.Price = await _localizationService.GetResourceAsync("Products.CallForPrice");
                 }
                 else
                 {
                     //calculate prices
-                    var finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out var _);
-                    var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+                    var (finalPriceBase, _) = await _taxService.GetProductPriceAsync(minPriceProduct, minPossiblePrice.Value);
+                    var finalPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceBase, await _workContext.GetWorkingCurrencyAsync());
 
                     priceModel.OldPrice = null;
-                    priceModel.Price = string.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(finalPrice));
+                    priceModel.Price = string.Format(await _localizationService.GetResourceAsync("Products.PriceRangeFrom"), await _priceFormatter.FormatPriceAsync(finalPrice));
                     priceModel.PriceValue = finalPrice;
 
                     //PAngV default baseprice (used in Germany)
-                    priceModel.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceBase);
+                    priceModel.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceBase);
                 }
             }
             else
@@ -489,36 +492,40 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
         /// <returns>Picture model</returns>
-        protected virtual PictureModel PrepareProductOverviewPictureModel(Product product, int? productThumbPictureSize = null)
+        protected virtual async Task<PictureModel> PrepareProductOverviewPictureModelAsync(Product product, int? productThumbPictureSize = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productName = _localizationService.GetLocalized(product, x => x.Name);
+            var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             //If a size has been set in the view, we use it in priority
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
 
             //prepare picture model
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDefaultPictureModelKey, 
-                product, pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(),
-                _storeContext.CurrentStore);
+                product, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
+                await _storeContext.GetCurrentStoreAsync());
 
-            var defaultPictureModel = _staticCacheManager.Get(cacheKey, () =>
+            var defaultPictureModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                var picture = (await _pictureService.GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();
+                string fullSizeImageUrl, imageUrl;
+                (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
+                (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+
                 var pictureModel = new PictureModel
                 {
-                    ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
+                    ImageUrl = imageUrl,
+                    FullSizeImageUrl = fullSizeImageUrl,
                     //"title" attribute
                     Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute))
                         ? picture.TitleAttribute
-                        : string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"),
+                        : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat"),
                             productName),
                     //"alt" attribute
                     AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute))
                         ? picture.AltAttribute
-                        : string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"),
+                        : string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat"),
                             productName)
                 };
 
@@ -533,7 +540,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Product breadcrumb model</returns>
-        protected virtual ProductDetailsModel.ProductBreadcrumbModel PrepareProductBreadcrumbModel(Product product)
+        protected virtual async Task<ProductDetailsModel.ProductBreadcrumbModel> PrepareProductBreadcrumbModelAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -542,24 +549,24 @@ namespace Nop.Web.Factories
             {
                 Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
                 ProductId = product.Id,
-                ProductName = _localizationService.GetLocalized(product, x => x.Name),
-                ProductSeName = _urlRecordService.GetSeName(product)
+                ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                ProductSeName = await _urlRecordService.GetSeNameAsync(product)
             };
-            var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+            var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
             if (!productCategories.Any())
                 return breadcrumbModel;
 
-            var category = _categoryService.GetCategoryById(productCategories[0].CategoryId);
+            var category = await _categoryService.GetCategoryByIdAsync(productCategories[0].CategoryId);
             if (category == null)
                 return breadcrumbModel;
 
-            foreach (var catBr in _categoryService.GetCategoryBreadCrumb(category))
+            foreach (var catBr in await _categoryService.GetCategoryBreadCrumbAsync(category))
             {
                 breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
                 {
                     Id = catBr.Id,
-                    Name = _localizationService.GetLocalized(catBr, x => x.Name),
-                    SeName = _urlRecordService.GetSeName(catBr),
+                    Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
+                    SeName = await _urlRecordService.GetSeNameAsync(catBr),
                     IncludeInTopMenu = catBr.IncludeInTopMenu
                 });
             }
@@ -572,22 +579,22 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>List of product tag model</returns>
-        protected virtual IList<ProductTagModel> PrepareProductTagModels(Product product)
+        protected virtual async Task<IList<ProductTagModel>> PrepareProductTagModelsAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model =
-                _productTagService.GetAllProductTagsByProductId(product.Id)
+            var model = await 
+                (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id))
                     //filter by store
-                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
-                    .Select(x => new ProductTagModel
+                    .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
+                    .SelectAwait(async x => new ProductTagModel
                     {
                         Id = x.Id,
-                        Name = _localizationService.GetLocalized(x, y => y.Name),
-                        SeName = _urlRecordService.GetSeName(x),
-                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
-                    }).ToList();
+                        Name = await _localizationService.GetLocalizedAsync(x, y => y.Name),
+                        SeName = await _urlRecordService.GetSeNameAsync(x),
+                        ProductCount = await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id)
+                    }).ToListAsync();
 
             return model;
         }
@@ -597,7 +604,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Product price model</returns>
-        protected virtual ProductDetailsModel.ProductPriceModel PrepareProductPriceModel(Product product)
+        protected virtual async Task<ProductDetailsModel.ProductPriceModel> PrepareProductPriceModelAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -607,7 +614,7 @@ namespace Nop.Web.Factories
                 ProductId = product.Id
             };
 
-            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
                 model.HidePrices = false;
                 if (product.CustomerEntersPrice)
@@ -624,21 +631,21 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out var _);
-                        var finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false), out _);
-                        var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer), out _);
+                        var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
+                        var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false)).Item1);
+                        var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync())).Item1);
 
-                        var oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                        var finalPriceWithoutDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
-                        var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+                        var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, await _workContext.GetWorkingCurrencyAsync());
+                        var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, await _workContext.GetWorkingCurrencyAsync());
+                        var finalPriceWithDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithDiscountBase, await _workContext.GetWorkingCurrencyAsync());
 
                         if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
-                            model.OldPrice = _priceFormatter.FormatPrice(oldPrice);
+                            model.OldPrice = await _priceFormatter.FormatPriceAsync(oldPrice);
 
-                        model.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
+                        model.Price = await _priceFormatter.FormatPriceAsync(finalPriceWithoutDiscount);
 
                         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
-                            model.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                            model.PriceWithDiscount = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
 
                         model.PriceValue = finalPriceWithDiscount;
 
@@ -650,16 +657,16 @@ namespace Nop.Web.Factories
                             !product.IsFreeShipping;
 
                         //PAngV baseprice (used in Germany)
-                        model.BasePricePAngV = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscountBase);
+                        model.BasePricePAngV = await _priceFormatter.FormatBasePriceAsync(product, finalPriceWithDiscountBase);
                         //currency code
-                        model.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
+                        model.CurrencyCode = (await _workContext.GetWorkingCurrencyAsync()).CurrencyCode;
 
                         //rental
                         if (product.IsRental)
                         {
                             model.IsRental = true;
-                            var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-                            model.RentalPrice = _priceFormatter.FormatRentalProductPeriod(product, priceStr);
+                            var priceStr = await _priceFormatter.FormatPriceAsync(finalPriceWithDiscount);
+                            model.RentalPrice = await _priceFormatter.FormatRentalProductPeriodAsync(product, priceStr);
                         }
                     }
                 }
@@ -680,7 +687,7 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="updatecartitem">Updated shopping cart item</param>
         /// <returns>Product add to cart model</returns>
-        protected virtual ProductDetailsModel.AddToCartModel PrepareProductAddToCartModel(Product product, ShoppingCartItem updatecartitem)
+        protected virtual async Task<ProductDetailsModel.AddToCartModel> PrepareProductAddToCartModelAsync(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -712,13 +719,13 @@ namespace Nop.Web.Factories
             //minimum quantity notification
             if (product.OrderMinimumQuantity > 1)
             {
-                model.MinimumQuantityNotification = string.Format(_localizationService.GetResource("Products.MinimumQuantityNotification"), product.OrderMinimumQuantity);
+                model.MinimumQuantityNotification = string.Format(await _localizationService.GetResourceAsync("Products.MinimumQuantityNotification"), product.OrderMinimumQuantity);
             }
 
             //'add to cart', 'add to wishlist' buttons
-            model.DisableBuyButton = product.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
-            model.DisableWishlistButton = product.DisableWishlistButton || !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
-            if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            model.DisableBuyButton = product.DisableBuyButton || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart);
+            model.DisableWishlistButton = product.DisableWishlistButton || !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist);
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
                 model.DisableBuyButton = true;
                 model.DisableWishlistButton = true;
@@ -733,7 +740,7 @@ namespace Nop.Web.Factories
                 if (model.PreOrderAvailabilityStartDateTimeUtc.HasValue && _catalogSettings.DisplayDatePreOrderAvailability)
                 {
                     model.PreOrderAvailabilityStartDateTimeUserTime =
-                        _dateTimeHelper.ConvertToUserTime(model.PreOrderAvailabilityStartDateTimeUtc.Value).ToString("D");
+                        (await _dateTimeHelper.ConvertToUserTimeAsync(model.PreOrderAvailabilityStartDateTimeUtc.Value)).ToString("D");
                 }
             }
             //rental
@@ -744,13 +751,13 @@ namespace Nop.Web.Factories
             if (!model.CustomerEntersPrice)
                 return model;
 
-            var minimumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
-            var maximumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
+            var minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MinimumCustomerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
+            var maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(product.MaximumCustomerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
 
             model.CustomerEnteredPrice = updatecartitem != null ? updatecartitem.CustomerEnteredPrice : minimumCustomerEnteredPrice;
-            model.CustomerEnteredPriceRange = string.Format(_localizationService.GetResource("Products.EnterProductPrice.Range"),
-                _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
-                _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
+            model.CustomerEnteredPriceRange = string.Format(await _localizationService.GetResourceAsync("Products.EnterProductPrice.Range"),
+                await _priceFormatter.FormatPriceAsync(minimumCustomerEnteredPrice, false, false),
+                await _priceFormatter.FormatPriceAsync(maximumCustomerEnteredPrice, false, false));
 
             return model;
         }
@@ -761,29 +768,29 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="updatecartitem">Updated shopping cart item</param>
         /// <returns>List of product attribute model</returns>
-        protected virtual IList<ProductDetailsModel.ProductAttributeModel> PrepareProductAttributeModels(Product product, ShoppingCartItem updatecartitem)
+        protected virtual async Task<IList<ProductDetailsModel.ProductAttributeModel>> PrepareProductAttributeModelsAsync(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             var model = new List<ProductDetailsModel.ProductAttributeModel>();
 
-            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in productAttributeMapping)
             {
-                var productAttrubute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
+                var productAttrubute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
 
                 var attributeModel = new ProductDetailsModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
                     ProductId = product.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = _localizationService.GetLocalized(productAttrubute, x => x.Name),
-                    Description = _localizationService.GetLocalized(productAttrubute, x => x.Description),
-                    TextPrompt = _localizationService.GetLocalized(attribute, x => x.TextPrompt),
+                    Name = await _localizationService.GetLocalizedAsync(productAttrubute, x => x.Name),
+                    Description = await _localizationService.GetLocalizedAsync(productAttrubute, x => x.Description),
+                    TextPrompt = await _localizationService.GetLocalizedAsync(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
-                    DefaultValue = updatecartitem != null ? null : _localizationService.GetLocalized(attribute, x => x.DefaultValue),
+                    DefaultValue = updatecartitem != null ? null : await _localizationService.GetLocalizedAsync(attribute, x => x.DefaultValue),
                     HasCondition = !string.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
                 if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
@@ -796,13 +803,13 @@ namespace Nop.Web.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                    var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
+                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
                             IsPreSelected = attributeValue.IsPreSelected,
                             CustomerEntersQty = attributeValue.CustomerEntersQty,
@@ -811,13 +818,13 @@ namespace Nop.Web.Factories
                         attributeModel.Values.Add(valueModel);
 
                         //display price if allowed
-                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                        if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
                         {
-                            var customer = updatecartitem?.CustomerId is null ? _workContext.CurrentCustomer : _customerService.GetCustomerById(updatecartitem.CustomerId);
+                            var customer = updatecartitem?.CustomerId is null ? await _workContext.GetCurrentCustomerAsync() : await _customerService.GetCustomerByIdAsync(updatecartitem.CustomerId);
 
-                            var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(product, attributeValue, customer);
-                            var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out var _);
-                            var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                            var attributeValuePriceAdjustment = await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer);
+                            var (priceAdjustmentBase, _) = await _taxService.GetProductPriceAsync(product, attributeValuePriceAdjustment);
+                            var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await _workContext.GetWorkingCurrencyAsync());
 
                             if (attributeValue.PriceAdjustmentUsePercentage)
                             {
@@ -829,9 +836,9 @@ namespace Nop.Web.Factories
                             else
                             {
                                 if (priceAdjustmentBase > decimal.Zero)
-                                    valueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                                    valueModel.PriceAdjustment = "+" + await _priceFormatter.FormatPriceAsync(priceAdjustment, false, false);
                                 else if (priceAdjustmentBase < decimal.Zero)
-                                    valueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+                                    valueModel.PriceAdjustment = "-" + await _priceFormatter.FormatPriceAsync(-priceAdjustment, false, false);
                             }
 
                             valueModel.PriceAdjustmentValue = priceAdjustment;
@@ -843,17 +850,20 @@ namespace Nop.Web.Factories
                             var productAttributeImageSquarePictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributeImageSquarePictureModelKey
                                 , attributeValue.ImageSquaresPictureId,
                                     _webHelper.IsCurrentConnectionSecured(),
-                                    _storeContext.CurrentStore);
-                            valueModel.ImageSquaresPictureModel = _staticCacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
+                                    await _storeContext.GetCurrentStoreAsync());
+                            valueModel.ImageSquaresPictureModel = await _staticCacheManager.GetAsync(productAttributeImageSquarePictureCacheKey, async () =>
                             {
-                                var imageSquaresPicture = _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
+                                var imageSquaresPicture = await _pictureService.GetPictureByIdAsync(attributeValue.ImageSquaresPictureId);
+                                string fullSizeImageUrl, imageUrl;
+                                (imageUrl, imageSquaresPicture) = await _pictureService.GetPictureUrlAsync(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize);
+                                (fullSizeImageUrl, imageSquaresPicture) = await _pictureService.GetPictureUrlAsync(imageSquaresPicture);
 
                                 if (imageSquaresPicture != null)
                                 {
                                     return new PictureModel
                                     {
-                                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref imageSquaresPicture),
-                                        ImageUrl = _pictureService.GetPictureUrl(ref imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
+                                        FullSizeImageUrl = fullSizeImageUrl,
+                                        ImageUrl = imageUrl
                                     };
                                 }
 
@@ -884,7 +894,7 @@ namespace Nop.Web.Factories
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = _productAttributeParser.ParseProductAttributeValues(updatecartitem.AttributesXml);
+                                    var selectedValues = await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
@@ -906,7 +916,7 @@ namespace Nop.Web.Factories
                                 //set customer entered quantity
                                 if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
-                                    foreach (var attributeValue in _productAttributeParser.ParseProductAttributeValues(updatecartitem.AttributesXml)
+                                    foreach (var attributeValue in (await _productAttributeParser.ParseProductAttributeValuesAsync(updatecartitem.AttributesXml))
                                         .Where(value => value.CustomerEntersQty))
                                     {
                                         var item = attributeModel.Values.FirstOrDefault(value => value.Id == attributeValue.Id);
@@ -952,7 +962,7 @@ namespace Nop.Web.Factories
                                 {
                                     var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
                                     Guid.TryParse(downloadGuidStr, out var downloadGuid);
-                                    var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                                    var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                                     if (download != null)
                                         attributeModel.DefaultValue = download.DownloadGuid.ToString();
                                 }
@@ -975,26 +985,26 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>List of tier price model</returns>
-        protected virtual IList<ProductDetailsModel.TierPriceModel> PrepareProductTierPriceModels(Product product)
+        protected virtual async Task<IList<ProductDetailsModel.TierPriceModel>> PrepareProductTierPriceModelsAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = _productService.GetTierPrices(product, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
-                   .Select(tierPrice =>
+            var model = await (await _productService.GetTierPricesAsync(product, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+                .SelectAwait(async tierPrice =>
                 {
-                    var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
-                        _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
-                        tierPrice.Quantity), out var _);
+                    var priceBase = (await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product,
+                        await _workContext.GetCurrentCustomerAsync(), decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
+                        tierPrice.Quantity)).Item1)).price;
 
-                       var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+                       var price = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceBase, await _workContext.GetWorkingCurrencyAsync());
 
                        return new ProductDetailsModel.TierPriceModel
                        {
                            Quantity = tierPrice.Quantity,
-                           Price = _priceFormatter.FormatPrice(price, false, false)
+                           Price = await _priceFormatter.FormatPriceAsync(price, false, false)
                        };
-                   }).ToList();
+                   }).ToListAsync();
 
             return model;
         }
@@ -1004,24 +1014,24 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>List of manufacturer brief info model</returns>
-        protected virtual IList<ManufacturerBriefInfoModel> PrepareProductManufacturerModels(Product product)
+        protected virtual async Task<IList<ManufacturerBriefInfoModel>> PrepareProductManufacturerModelsAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = _manufacturerService.GetProductManufacturersByProductId(product.Id)
-                .Select(pm =>
+            var model = await (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id))
+                .SelectAwait(async pm =>
                 {
-                    var manufacturer = _manufacturerService.GetManufacturerById(pm.ManufacturerId);
+                    var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(pm.ManufacturerId);
                     var modelMan = new ManufacturerBriefInfoModel
                     {
                         Id = manufacturer.Id,
-                        Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                        SeName = _urlRecordService.GetSeName(manufacturer)
+                        Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
+                        SeName = await _urlRecordService.GetSeNameAsync(manufacturer)
                     };
 
                     return modelMan;
-                }).ToList();
+                }).ToListAsync();
 
             return model;
         }
@@ -1031,9 +1041,8 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="isAssociatedProduct">Whether the product is associated</param>
-        /// <param name="allPictureModels">All picture models</param>
-        /// <returns>Picture model for the default picture</returns>
-        protected virtual PictureModel PrepareProductDetailsPictureModel(Product product, bool isAssociatedProduct, out IList<PictureModel> allPictureModels)
+        /// <returns>Picture model for the default picture; All picture models</returns>
+        protected virtual async Task<(PictureModel pictureModel, IList<PictureModel> allPictureModels)> PrepareProductDetailsPictureModelAsync(Product product, bool isAssociatedProduct)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1046,48 +1055,58 @@ namespace Nop.Web.Factories
             //prepare picture models
             var productPicturesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDetailsPicturesModelKey
                 , product, defaultPictureSize, isAssociatedProduct, 
-                _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
-            var cachedPictures = _staticCacheManager.Get(productPicturesCacheKey, () =>
+                await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+            var cachedPictures = await _staticCacheManager.GetAsync(productPicturesCacheKey, async () =>
             {
-                var productName = _localizationService.GetLocalized(product, x => x.Name);
+                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
 
-                var pictures = _pictureService.GetPicturesByProductId(product.Id);
+                var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
                 var defaultPicture = pictures.FirstOrDefault();
+
+                string fullSizeImageUrl, imageUrl, thumbImageUrl;
+                (imageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, defaultPictureSize, !isAssociatedProduct);
+                (fullSizeImageUrl, defaultPicture) = await _pictureService.GetPictureUrlAsync(defaultPicture, 0, !isAssociatedProduct);
+
                 var defaultPictureModel = new PictureModel
                 {
-                    ImageUrl = _pictureService.GetPictureUrl(ref defaultPicture, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(ref defaultPicture, 0, !isAssociatedProduct)
+                    ImageUrl = imageUrl,
+                    FullSizeImageUrl = fullSizeImageUrl
                 };
                 //"title" attribute
                 defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
                     defaultPicture.TitleAttribute :
-                    string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), productName);
+                    string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName);
                 //"alt" attribute
                 defaultPictureModel.AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
                     defaultPicture.AltAttribute :
-                    string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), productName);
+                    string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName);
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
                 for (var i = 0; i < pictures.Count(); i++ )
                 {
                     var picture = pictures[i];
+
+                    (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, defaultPictureSize, !isAssociatedProduct);
+                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
+                    (thumbImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage);
+
                     var pictureModel = new PictureModel
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(ref picture, defaultPictureSize, !isAssociatedProduct),
-                        ThumbImageUrl = _pictureService.GetPictureUrl(ref picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), productName),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), productName),
+                        ImageUrl = imageUrl,
+                        ThumbImageUrl = thumbImageUrl,
+                        FullSizeImageUrl = fullSizeImageUrl,
+                        Title = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName),
+                        AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName),
                     };
                     //"title" attribute
                     pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
                         picture.TitleAttribute :
-                        string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), productName);
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageLinkTitleFormat.Details"), productName);
                     //"alt" attribute
                     pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
                         picture.AltAttribute :
-                        string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), productName);
+                        string.Format(await _localizationService.GetResourceAsync("Media.Product.ImageAlternateTextFormat.Details"), productName);
 
                     pictureModels.Add(pictureModel);
                 }
@@ -1095,8 +1114,8 @@ namespace Nop.Web.Factories
                 return new { DefaultPictureModel = defaultPictureModel, PictureModels = pictureModels };
             });
 
-            allPictureModels = cachedPictures.PictureModels;
-            return cachedPictures.DefaultPictureModel;
+            var allPictureModels = cachedPictures.PictureModels;
+            return (cachedPictures.DefaultPictureModel, allPictureModels);
         }
 
         #endregion
@@ -1108,13 +1127,13 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>View path</returns>
-        public virtual string PrepareProductTemplateViewPath(Product product)
+        public virtual async Task<string> PrepareProductTemplateViewPathAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId) ??
-                           _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+            var template = await _productTemplateService.GetProductTemplateByIdAsync(product.ProductTemplateId) ??
+                           (await _productTemplateService.GetAllProductTemplatesAsync()).FirstOrDefault();
 
             if (template == null)
                 throw new Exception("No default template could be loaded");
@@ -1132,7 +1151,7 @@ namespace Nop.Web.Factories
         /// <param name="prepareSpecificationAttributes">Whether to prepare the specification attribute models</param>
         /// <param name="forceRedirectionAfterAddingToCart">Whether to force redirection after adding to cart</param>
         /// <returns>Collection of product overview model</returns>
-        public virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products,
+        public virtual async Task<IEnumerable<ProductOverviewModel>> PrepareProductOverviewModelsAsync(IEnumerable<Product> products,
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
             bool forceRedirectionAfterAddingToCart = false)
@@ -1146,10 +1165,10 @@ namespace Nop.Web.Factories
                 var model = new ProductOverviewModel
                 {
                     Id = product.Id,
-                    Name = _localizationService.GetLocalized(product, x => x.Name),
-                    ShortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription),
-                    FullDescription = _localizationService.GetLocalized(product, x => x.FullDescription),
-                    SeName = _urlRecordService.GetSeName(product),
+                    Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                    ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
+                    FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
+                    SeName = await _urlRecordService.GetSeNameAsync(product),
                     Sku = product.Sku,
                     ProductType = product.ProductType,
                     MarkAsNew = product.MarkAsNew &&
@@ -1160,23 +1179,23 @@ namespace Nop.Web.Factories
                 //price
                 if (preparePriceModel)
                 {
-                    model.ProductPrice = PrepareProductOverviewPriceModel(product, forceRedirectionAfterAddingToCart);
+                    model.ProductPrice = await PrepareProductOverviewPriceModelAsync(product, forceRedirectionAfterAddingToCart);
                 }
 
                 //picture
                 if (preparePictureModel)
                 {
-                    model.DefaultPictureModel = PrepareProductOverviewPictureModel(product, productThumbPictureSize);
+                    model.DefaultPictureModel = await PrepareProductOverviewPictureModelAsync(product, productThumbPictureSize);
                 }
 
                 //specs
                 if (prepareSpecificationAttributes)
                 {
-                    model.ProductSpecificationModel = PrepareProductSpecificationModel(product);
+                    model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
                 }
 
                 //reviews
-                model.ReviewOverviewModel = PrepareProductReviewOverviewModel(product);
+                model.ReviewOverviewModel = await PrepareProductReviewOverviewModelAsync(product);
 
                 models.Add(model);
             }
@@ -1191,7 +1210,7 @@ namespace Nop.Web.Factories
         /// <param name="updatecartitem">Updated shopping cart item</param>
         /// <param name="isAssociatedProduct">Whether the product is associated</param>
         /// <returns>Product details model</returns>
-        public virtual ProductDetailsModel PrepareProductDetailsModel(Product product,
+        public virtual async Task<ProductDetailsModel> PrepareProductDetailsModelAsync(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
             if (product == null)
@@ -1201,13 +1220,13 @@ namespace Nop.Web.Factories
             var model = new ProductDetailsModel
             {
                 Id = product.Id,
-                Name = _localizationService.GetLocalized(product, x => x.Name),
-                ShortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription),
-                FullDescription = _localizationService.GetLocalized(product, x => x.FullDescription),
-                MetaKeywords = _localizationService.GetLocalized(product, x => x.MetaKeywords),
-                MetaDescription = _localizationService.GetLocalized(product, x => x.MetaDescription),
-                MetaTitle = _localizationService.GetLocalized(product, x => x.MetaTitle),
-                SeName = _urlRecordService.GetSeName(product),
+                Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
+                FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
+                MetaKeywords = await _localizationService.GetLocalizedAsync(product, x => x.MetaKeywords),
+                MetaDescription = await _localizationService.GetLocalizedAsync(product, x => x.MetaDescription),
+                MetaTitle = await _localizationService.GetLocalizedAsync(product, x => x.MetaTitle),
+                SeName = await _urlRecordService.GetSeNameAsync(product),
                 ProductType = product.ProductType,
                 ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
                 Sku = product.Sku,
@@ -1217,7 +1236,7 @@ namespace Nop.Web.Factories
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockAvailability = _productService.FormatStockMessage(product, string.Empty),
+                StockAvailability = await _productService.FormatStockMessageAsync(product, string.Empty),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
                 AvailableEndDate = product.AvailableEndDateTimeUtc
@@ -1236,10 +1255,10 @@ namespace Nop.Web.Factories
             {
                 model.IsFreeShipping = product.IsFreeShipping;
                 //delivery date
-                var deliveryDate = _dateRangeService.GetDeliveryDateById(product.DeliveryDateId);
+                var deliveryDate = await _dateRangeService.GetDeliveryDateByIdAsync(product.DeliveryDateId);
                 if (deliveryDate != null)
                 {
-                    model.DeliveryDate = _localizationService.GetLocalized(deliveryDate, dd => dd.Name);
+                    model.DeliveryDate = await _localizationService.GetLocalizedAsync(deliveryDate, dd => dd.Name);
                 }
             }
 
@@ -1248,12 +1267,12 @@ namespace Nop.Web.Factories
             //compare products
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
-            model.CurrentStoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name);
+            model.CurrentStoreName = await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name);
 
             //vendor details
             if (_vendorSettings.ShowVendorOnProductDetailsPage)
             {
-                var vendor = _vendorService.GetVendorById(product.VendorId);
+                var vendor = await _vendorService.GetVendorByIdAsync(product.VendorId);
                 if (vendor != null && !vendor.Deleted && vendor.Active)
                 {
                     model.ShowVendor = true;
@@ -1261,8 +1280,8 @@ namespace Nop.Web.Factories
                     model.VendorModel = new VendorBriefInfoModel
                     {
                         Id = vendor.Id,
-                        Name = _localizationService.GetLocalized(vendor, x => x.Name),
-                        SeName = _urlRecordService.GetSeName(vendor),
+                        Name = await _localizationService.GetLocalizedAsync(vendor, x => x.Name),
+                        SeName = await _urlRecordService.GetSeNameAsync(vendor),
                     };
                 }
             }
@@ -1280,40 +1299,47 @@ namespace Nop.Web.Factories
                 model.PageShareCode = shareCode;
             }
 
-            //back in stock subscriptions
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                product.BackorderMode == BackorderMode.NoBackorders &&
-                product.AllowBackInStockSubscriptions &&
-                _productService.GetTotalStockQuantity(product) <= 0)
+            switch (product.ManageInventoryMethod)
             {
-                //out of stock
-                model.DisplayBackInStockSubscription = true;
+                case ManageInventoryMethod.ManageStock:
+                    model.InStock = product.BackorderMode != BackorderMode.NoBackorders
+                        || await _productService.GetTotalStockQuantityAsync(product) > 0;
+                    model.DisplayBackInStockSubscription = !model.InStock && product.AllowBackInStockSubscriptions;
+                    break;
+
+                case ManageInventoryMethod.ManageStockByAttributes:
+                    model.InStock = (await _productAttributeService
+                        .GetAllProductAttributeCombinationsAsync(product.Id))
+                        ?.Any(c => c.StockQuantity > 0 || c.AllowOutOfStockOrders)
+                        ?? false;
+                    break;
             }
 
             //breadcrumb
             //do not prepare this model for the associated products. anyway it's not used
             if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
             {
-                model.Breadcrumb = PrepareProductBreadcrumbModel(product);
+                model.Breadcrumb = await PrepareProductBreadcrumbModelAsync(product);
             }
 
             //product tags
             //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
             {
-                model.ProductTags = PrepareProductTagModels(product);
+                model.ProductTags = await PrepareProductTagModelsAsync(product);
             }
 
             //pictures
             model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
-            model.DefaultPictureModel = PrepareProductDetailsPictureModel(product, isAssociatedProduct, out var allPictureModels);
+            IList<PictureModel> allPictureModels;
+            (model.DefaultPictureModel, allPictureModels) = await PrepareProductDetailsPictureModelAsync(product, isAssociatedProduct);
             model.PictureModels = allPictureModels;
 
             //price
-            model.ProductPrice = PrepareProductPriceModel(product);
+            model.ProductPrice = await PrepareProductPriceModelAsync(product);
 
             //'Add to cart' model
-            model.AddToCart = PrepareProductAddToCartModel(product, updatecartitem);
+            model.AddToCart = await PrepareProductAddToCartModelAsync(product, updatecartitem);
 
             //gift card
             if (product.IsGiftCard)
@@ -1323,8 +1349,8 @@ namespace Nop.Web.Factories
 
                 if (updatecartitem == null)
                 {
-                    model.GiftCard.SenderName = _customerService.GetCustomerFullName(_workContext.CurrentCustomer);
-                    model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
+                    model.GiftCard.SenderName = await _customerService.GetCustomerFullNameAsync(await _workContext.GetCurrentCustomerAsync());
+                    model.GiftCard.SenderEmail = (await _workContext.GetCurrentCustomerAsync()).Email;
                 }
                 else
                 {
@@ -1341,26 +1367,26 @@ namespace Nop.Web.Factories
             }
 
             //product attributes
-            model.ProductAttributes = PrepareProductAttributeModels(product, updatecartitem);
+            model.ProductAttributes = await PrepareProductAttributeModelsAsync(product, updatecartitem);
 
             //product specifications
             //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
             {
-                model.ProductSpecificationModel = PrepareProductSpecificationModel(product);
+                model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
             }
 
             //product review overview
-            model.ProductReviewOverview = PrepareProductReviewOverviewModel(product);
+            model.ProductReviewOverview = await PrepareProductReviewOverviewModelAsync(product);
 
             //tier prices
-            if (product.HasTierPrices && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (product.HasTierPrices && await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices))
             {
-                model.TierPrices = PrepareProductTierPriceModels(product);
+                model.TierPrices = await PrepareProductTierPriceModelsAsync(product);
             }
 
             //manufacturers
-            model.ProductManufacturers = PrepareProductManufacturerModels(product);
+            model.ProductManufacturers = await PrepareProductManufacturerModelsAsync(product);
 
             //rental products
             if (product.IsRental)
@@ -1377,18 +1403,19 @@ namespace Nop.Web.Factories
             //estimate shipping
             if (_shippingSettings.EstimateShippingProductPageEnabled && !model.IsFreeShipping)
             {
-                var wrappedProduct = new ShoppingCartItem()
+                var wrappedProduct = new ShoppingCartItem
                 {
-                    StoreId = _storeContext.CurrentStore.Id,
+                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                     ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart,
-                    CustomerId = _workContext.CurrentCustomer.Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     ProductId = product.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
 
-                var estimateShippingModel = _shoppingCartModelFactory.PrepareEstimateShippingModel(new[] { wrappedProduct });
+                var estimateShippingModel = await _shoppingCartModelFactory.PrepareEstimateShippingModelAsync(new[] { wrappedProduct });
 
                 model.ProductEstimateShipping.ProductId = product.Id;
+                model.ProductEstimateShipping.RequestDelay = estimateShippingModel.RequestDelay;
                 model.ProductEstimateShipping.Enabled = estimateShippingModel.Enabled;
                 model.ProductEstimateShipping.CountryId = estimateShippingModel.CountryId;
                 model.ProductEstimateShipping.StateProvinceId = estimateShippingModel.StateProvinceId;
@@ -1396,8 +1423,6 @@ namespace Nop.Web.Factories
                 model.ProductEstimateShipping.AvailableCountries = estimateShippingModel.AvailableCountries;
                 model.ProductEstimateShipping.AvailableStates = estimateShippingModel.AvailableStates;
             }
-            else
-                model.ProductEstimateShipping.Enabled = false;
 
             //associated products
             if (product.ProductType == ProductType.GroupedProduct)
@@ -1405,9 +1430,9 @@ namespace Nop.Web.Factories
                 //ensure no circular references
                 if (!isAssociatedProduct)
                 {
-                    var associatedProducts = _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
+                    var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
                     foreach (var associatedProduct in associatedProducts)
-                        model.AssociatedProducts.Add(PrepareProductDetailsModel(associatedProduct, null, true));
+                        model.AssociatedProducts.Add(await PrepareProductDetailsModelAsync(associatedProduct, null, true));
                 }
             }
 
@@ -1420,7 +1445,7 @@ namespace Nop.Web.Factories
         /// <param name="model">Product reviews model</param>
         /// <param name="product">Product</param>
         /// <returns>Product reviews model</returns>
-        public virtual ProductReviewsModel PrepareProductReviewsModel(ProductReviewsModel model, Product product)
+        public virtual async Task<ProductReviewsModel> PrepareProductReviewsModelAsync(ProductReviewsModel model, Product product)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -1429,26 +1454,26 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
-            model.ProductName = _localizationService.GetLocalized(product, x => x.Name);
-            model.ProductSeName = _urlRecordService.GetSeName(product);
+            model.ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
+            model.ProductSeName = await _urlRecordService.GetSeNameAsync(product);
 
-            var productReviews = _productService.GetAllProductReviews(
+            var productReviews = (await _productService.GetAllProductReviewsAsync(
                 approved: true, 
                 productId: product.Id,
-                storeId: _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : 0).AsEnumerable();
+                storeId: _catalogSettings.ShowProductReviewsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0)).AsEnumerable();
 
             productReviews = _catalogSettings.ProductReviewsSortByCreatedDateAscending
                 ? productReviews.OrderBy(pr => pr.CreatedOnUtc)
                 : productReviews.OrderByDescending(pr => pr.CreatedOnUtc);
 
             //get all review types
-            foreach (var reviewType in _reviewTypeService.GetAllReviewTypes())
+            foreach (var reviewType in await _reviewTypeService.GetAllReviewTypesAsync())
             {
                 model.ReviewTypeList.Add(new ReviewTypeModel
                 {
                     Id = reviewType.Id,
-                    Name = _localizationService.GetLocalized(reviewType, entity => entity.Name),
-                    Description = _localizationService.GetLocalized(reviewType, entity => entity.Description),
+                    Name = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Name),
+                    Description = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Description),
                     VisibleToAllCustomers = reviewType.VisibleToAllCustomers,
                     DisplayOrder = reviewType.DisplayOrder,
                     IsRequired = reviewType.IsRequired,
@@ -1458,14 +1483,14 @@ namespace Nop.Web.Factories
             //filling data from db
             foreach (var pr in productReviews)
             {
-                var customer = _customerService.GetCustomerById(pr.CustomerId);
+                var customer = await _customerService.GetCustomerByIdAsync(pr.CustomerId);
 
                 var productReviewModel = new ProductReviewModel
                 {
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
-                    CustomerName = _customerService.FormatUsername(customer),
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !_customerService.IsGuest(customer),
+                    CustomerName = await _customerService.FormatUsernameAsync(customer),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     ReplyText = pr.ReplyText,
@@ -1476,27 +1501,27 @@ namespace Nop.Web.Factories
                         HelpfulYesTotal = pr.HelpfulYesTotal,
                         HelpfulNoTotal = pr.HelpfulNoTotal,
                     },
-                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
+                    WrittenOnStr = (await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc)).ToString("g"),
                 };
 
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
-                    productReviewModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                        _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    productReviewModel.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                        await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
                 }
 
-                foreach (var q in _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(pr.Id))
+                foreach (var q in await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewIdAsync(pr.Id))
                 {
-                    var reviewType = _reviewTypeService.GetReviewTypeById(q.ReviewTypeId);
+                    var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(q.ReviewTypeId);
 
                     productReviewModel.AdditionalProductReviewList.Add(new ProductReviewReviewTypeMappingModel
                     {
                         ReviewTypeId = q.ReviewTypeId,
                         ProductReviewId = pr.Id,
                         Rating = q.Rating,
-                        Name = _localizationService.GetLocalized(reviewType, x => x.Name),
-                        VisibleToAllCustomers = reviewType.VisibleToAllCustomers || _workContext.CurrentCustomer.Id == pr.CustomerId,
+                        Name = await _localizationService.GetLocalizedAsync(reviewType, x => x.Name),
+                        VisibleToAllCustomers = reviewType.VisibleToAllCustomers || (await _workContext.GetCurrentCustomerAsync()).Id == pr.CustomerId,
                     });
                 }
 
@@ -1507,12 +1532,12 @@ namespace Nop.Web.Factories
             {
                 if (model.ReviewTypeList.Count <= model.AddAdditionalProductReviewList.Count)
                     continue;
-                var reviewType = _reviewTypeService.GetReviewTypeById(rt.Id);
+                var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(rt.Id);
                 var reviewTypeMappingModel = new AddProductReviewReviewTypeMappingModel
                 {
                     ReviewTypeId = rt.Id,
-                    Name = _localizationService.GetLocalized(reviewType, entity => entity.Name),
-                    Description = _localizationService.GetLocalized(reviewType, entity => entity.Description),
+                    Name = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Name),
+                    Description = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Description),
                     DisplayOrder = rt.DisplayOrder,
                     IsRequired = rt.IsRequired,
                 };
@@ -1537,7 +1562,7 @@ namespace Nop.Web.Factories
                 rtm.AverageRating = (double)totalRating / (totalCount > 0 ? totalCount : 1);
             }
 
-            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_customerService.IsGuest(_workContext.CurrentCustomer);
+            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync());
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
 
             return model;
@@ -1548,7 +1573,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
         /// <returns>Customer product reviews model</returns>
-        public virtual CustomerProductReviewsModel PrepareCustomerProductReviewsModel(int? page)
+        public virtual async Task<CustomerProductReviewsModel> PrepareCustomerProductReviewsModelAsync(int? page)
         {
             var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
             var pageIndex = 0;
@@ -1558,9 +1583,9 @@ namespace Nop.Web.Factories
                 pageIndex = page.Value - 1;
             }
 
-            var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id,
+            var list = await _productService.GetAllProductReviewsAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
                 approved: null,
-                storeId: _storeContext.CurrentStore.Id,
+                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 pageIndex: pageIndex,
                 pageSize: pageSize);
 
@@ -1568,37 +1593,37 @@ namespace Nop.Web.Factories
 
             foreach (var review in list)
             {
-                var product = _productService.GetProductById(review.ProductId);
+                var product = await _productService.GetProductByIdAsync(review.ProductId);
 
                 var productReviewModel = new CustomerProductReviewModel
                 {
                     Title = review.Title,
                     ProductId = product.Id,
-                    ProductName = _localizationService.GetLocalized(product, p => p.Name),
-                    ProductSeName = _urlRecordService.GetSeName(product),
+                    ProductName = await _localizationService.GetLocalizedAsync(product, p => p.Name),
+                    ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                     Rating = review.Rating,
                     ReviewText = review.ReviewText,
                     ReplyText = review.ReplyText,
-                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(review.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
+                    WrittenOnStr = (await _dateTimeHelper.ConvertToUserTimeAsync(review.CreatedOnUtc, DateTimeKind.Utc)).ToString("g")
                 };
 
                 if (_catalogSettings.ProductReviewsMustBeApproved)
                 {
                     productReviewModel.ApprovalStatus = review.IsApproved
-                        ? _localizationService.GetResource("Account.CustomerProductReviews.ApprovalStatus.Approved")
-                        : _localizationService.GetResource("Account.CustomerProductReviews.ApprovalStatus.Pending");
+                        ? await _localizationService.GetResourceAsync("Account.CustomerProductReviews.ApprovalStatus.Approved")
+                        : await _localizationService.GetResourceAsync("Account.CustomerProductReviews.ApprovalStatus.Pending");
                 }
 
-                foreach (var q in _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(review.Id))
+                foreach (var q in await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewIdAsync(review.Id))
                 {
-                    var reviewType = _reviewTypeService.GetReviewTypeById(q.ReviewTypeId);
+                    var reviewType = await _reviewTypeService.GetReviewTypeByIdAsync(q.ReviewTypeId);
 
                     productReviewModel.AdditionalProductReviewList.Add(new ProductReviewReviewTypeMappingModel
                     {
                         ReviewTypeId = q.ReviewTypeId,
                         ProductReviewId = review.Id,
                         Rating = q.Rating,
-                        Name = _localizationService.GetLocalized(reviewType, x => x.Name),
+                        Name = await _localizationService.GetLocalizedAsync(reviewType, x => x.Name),
                     });
                 }
 
@@ -1632,7 +1657,7 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <returns>product email a friend model</returns>
-        public virtual ProductEmailAFriendModel PrepareProductEmailAFriendModel(ProductEmailAFriendModel model, Product product, bool excludeProperties)
+        public virtual async Task<ProductEmailAFriendModel> PrepareProductEmailAFriendModelAsync(ProductEmailAFriendModel model, Product product, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -1641,12 +1666,12 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
-            model.ProductName = _localizationService.GetLocalized(product, x => x.Name);
-            model.ProductSeName = _urlRecordService.GetSeName(product);
+            model.ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
+            model.ProductSeName = await _urlRecordService.GetSeNameAsync(product);
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage;
             if (!excludeProperties)
             {
-                model.YourEmailAddress = _workContext.CurrentCustomer.Email;
+                model.YourEmailAddress = (await _workContext.GetCurrentCustomerAsync()).Email;
             }
 
             return model;
@@ -1657,7 +1682,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>The product specification model</returns>
-        public virtual ProductSpecificationModel PrepareProductSpecificationModel(Product product)
+        public virtual async Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1667,18 +1692,18 @@ namespace Nop.Web.Factories
             // Add non-grouped attributes first
             model.Groups.Add(new ProductSpecificationAttributeGroupModel
             {
-                Attributes = PrepareProductSpecificationAttributeModel(product, null)
+                Attributes = await PrepareProductSpecificationAttributeModelAsync(product, null)
             });
 
             // Add grouped attributes
-            var groups = _specificationAttributeService.GetProductSpecificationAttributeGroups(product.Id);
+            var groups = await _specificationAttributeService.GetProductSpecificationAttributeGroupsAsync(product.Id);
             foreach (var group in groups)
             {
                 model.Groups.Add(new ProductSpecificationAttributeGroupModel
                 {
                     Id = group.Id,
-                    Name = _localizationService.GetLocalized(group, x => x.Name),
-                    Attributes = PrepareProductSpecificationAttributeModel(product, group)
+                    Name = await _localizationService.GetLocalizedAsync(group, x => x.Name),
+                    Attributes = await PrepareProductSpecificationAttributeModelAsync(product, group)
                 });
             }
 

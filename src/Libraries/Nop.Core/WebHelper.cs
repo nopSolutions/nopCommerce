@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -81,7 +82,9 @@ namespace Nop.Core
         /// <returns>Result</returns>
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
-            return address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
+            var rez =  address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
+
+            return rez;
         }
 
         #endregion
@@ -250,7 +253,7 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(storeHost))
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
-                storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
+                storeLocation = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result?.Url
                     ?? throw new Exception("Current store cannot be loaded");
             }
 
@@ -406,6 +409,7 @@ namespace Nop.Core
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
+                
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }
@@ -429,7 +433,10 @@ namespace Nop.Core
         /// <summary>
         /// Gets current HTTP request protocol
         /// </summary>
-        public virtual string CurrentRequestProtocol => IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        public virtual string GetCurrentRequestProtocol()
+        {
+            return IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        }
 
         /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.

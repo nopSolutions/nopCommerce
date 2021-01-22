@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Events;
 using Nop.Services.Authentication.External;
@@ -56,9 +57,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region External Authentication
 
-        public virtual IActionResult ExternalMethods()
+        public virtual async Task<IActionResult> ExternalMethods()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             //prepare model
@@ -69,31 +70,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ExternalMethods(ExternalAuthenticationMethodSearchModel searchModel)
+        public virtual async Task<IActionResult> ExternalMethods(ExternalAuthenticationMethodSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModel(searchModel);
+            var model = await _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ExternalMethodUpdate(ExternalAuthenticationMethodModel model)
+        public virtual async Task<IActionResult> ExternalMethodUpdate(ExternalAuthenticationMethodModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            var method = _authenticationPluginManager.LoadPluginBySystemName(model.SystemName);
+            var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_authenticationPluginManager.IsPluginActive(method))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
                     _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(method.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_externalAuthenticationSettings);
+                    await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
                 }
             }
             else
@@ -102,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(method.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_externalAuthenticationSettings);
+                    await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
                 }
             }
 
@@ -113,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
@@ -122,9 +123,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Multi-factor Authentication
 
-        public virtual IActionResult MultiFactorMethods()
+        public virtual async Task<IActionResult> MultiFactorMethods()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
             //prepare model
@@ -135,31 +136,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult MultiFactorMethods(MultiFactorAuthenticationMethodSearchModel searchModel)
+        public virtual async Task<IActionResult> MultiFactorMethods(MultiFactorAuthenticationMethodSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _multiFactorAuthenticationMethodModelFactory.PrepareMultiFactorAuthenticationMethodListModel(searchModel);
+            var model = await _multiFactorAuthenticationMethodModelFactory.PrepareMultiFactorAuthenticationMethodListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult MultiFactorMethodUpdate(MultiFactorAuthenticationMethodModel model)
+        public virtual async Task<IActionResult> MultiFactorMethodUpdate(MultiFactorAuthenticationMethodModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
-            var method = _multiFactorAuthenticationPluginManager.LoadPluginBySystemName(model.SystemName);
+            var method = await _multiFactorAuthenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_multiFactorAuthenticationPluginManager.IsPluginActive(method))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
                     _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(method.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_multiFactorAuthenticationSettings);
+                    await _settingService.SaveSettingAsync(_multiFactorAuthenticationSettings);
                 }
             }
             else
@@ -168,7 +169,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(method.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_multiFactorAuthenticationSettings);
+                    await _settingService.SaveSettingAsync(_multiFactorAuthenticationSettings);
                 }
             }
 
@@ -179,7 +180,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.Tasks;
+﻿using System.Threading.Tasks;
+using Nop.Web.Areas.Admin.Models.Tasks;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -12,13 +13,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task search model</returns>
-        ScheduleTaskSearchModel PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel searchModel);
+        Task<ScheduleTaskSearchModel> PrepareScheduleTaskSearchModelAsync(ScheduleTaskSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged schedule task list model
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task list model</returns>
-        ScheduleTaskListModel PrepareScheduleTaskListModel(ScheduleTaskSearchModel searchModel);
+        Task<ScheduleTaskListModel> PrepareScheduleTaskListModelAsync(ScheduleTaskSearchModel searchModel);
     }
 }

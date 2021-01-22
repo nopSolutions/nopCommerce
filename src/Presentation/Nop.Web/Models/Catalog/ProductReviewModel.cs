@@ -4,18 +4,20 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class ProductReviewOverviewModel : BaseNopModel
+    public partial record ProductReviewOverviewModel : BaseNopModel
     {
         public int ProductId { get; set; }
 
         public int RatingSum { get; set; }
 
         public int TotalReviews { get; set; }
-
+        
         public bool AllowCustomerReviews { get; set; }
+
+        public bool CanAddNewReview { get; set; }
     }
 
-    public partial class ProductReviewsModel : BaseNopModel
+    public partial record ProductReviewsModel : BaseNopModel
     {
         public ProductReviewsModel()
         {
@@ -40,7 +42,7 @@ namespace Nop.Web.Models.Catalog
         public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }        
     }
 
-    public partial class ReviewTypeModel : BaseNopEntityModel
+    public partial record ReviewTypeModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 
@@ -55,7 +57,7 @@ namespace Nop.Web.Models.Catalog
         public double AverageRating { get; set; }
     }
 
-    public partial class ProductReviewModel : BaseNopEntityModel
+    public partial record ProductReviewModel : BaseNopEntityModel
     {
         public ProductReviewModel()
         {
@@ -85,7 +87,7 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductReviewReviewTypeMappingModel> AdditionalProductReviewList { get; set; }
     }
 
-    public partial class ProductReviewHelpfulnessModel : BaseNopModel
+    public partial record ProductReviewHelpfulnessModel : BaseNopModel
     {
         public int ProductReviewId { get; set; }
 
@@ -94,7 +96,7 @@ namespace Nop.Web.Models.Catalog
         public int HelpfulNoTotal { get; set; }
     }
 
-    public partial class AddProductReviewModel : BaseNopModel
+    public partial record AddProductReviewModel : BaseNopModel
     {
         [NopResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }
@@ -111,10 +113,12 @@ namespace Nop.Web.Models.Catalog
 
         public bool SuccessfullyAdded { get; set; }
 
+        public bool CanAddNewReview { get; set; }
+
         public string Result { get; set; }
     }
 
-    public partial class AddProductReviewReviewTypeMappingModel : BaseNopEntityModel
+    public partial record AddProductReviewReviewTypeMappingModel : BaseNopEntityModel
     {
         public int ProductReviewId { get; set; }
 
@@ -131,7 +135,7 @@ namespace Nop.Web.Models.Catalog
         public bool IsRequired { get; set; }
     }
 
-    public partial class ProductReviewReviewTypeMappingModel : BaseNopEntityModel
+    public partial record ProductReviewReviewTypeMappingModel : BaseNopEntityModel
     {
         public int ProductReviewId { get; set; }
 

@@ -33,7 +33,6 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
 
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.LicenseKey")]
         [DataType(DataType.Password)]
-        [NoTrim]
         public string LicenseKey { get; set; }
 
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.Company")]

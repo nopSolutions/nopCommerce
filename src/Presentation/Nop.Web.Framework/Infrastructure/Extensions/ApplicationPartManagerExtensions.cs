@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core;
 using Nop.Core.ComponentModel;
@@ -196,7 +197,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 // delete the .deps file
                 if (assemblyFile.EndsWith(".dll"))
                 {
-                    _fileProvider.DeleteFile(assemblyFile.Substring(0, assemblyFile.Length - 4) + ".deps.json");
+                    _fileProvider.DeleteFile(assemblyFile[0..^4] + ".deps.json");
                 }
 
                 return assembly;
@@ -300,7 +301,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    //compare assemblies by filenames
+                    //compare assemblies by file names
                     var assemblyName = assembly.FullName.Split(',').FirstOrDefault();
                     if (!fileNameWithoutExtension.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
                         continue;
@@ -362,12 +363,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ? new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings))
                 : new PluginsInfo(_fileProvider);
 
-            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !appSettings.RedisConfig.Enabled)
+            if (PluginsInfo.LoadPluginInfoAsync().Result || useRedisToStorePluginsInfo || !appSettings.RedisConfig.Enabled)
                 return;
 
             var redisPluginsInfo = new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings));
 
-            if (!redisPluginsInfo.LoadPluginInfo())
+            if (!redisPluginsInfo.LoadPluginInfoAsync().Result)
                 return;
 
             //copy plugins info data from redis 

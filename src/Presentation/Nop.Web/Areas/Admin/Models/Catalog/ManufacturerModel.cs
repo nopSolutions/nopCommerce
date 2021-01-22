@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a manufacturer model
     /// </summary>
-    public partial class ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
+    public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
         ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class ManufacturerLocalizedModel : ILocalizedLocaleModel
+    public partial record ManufacturerLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

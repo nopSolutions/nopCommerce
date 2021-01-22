@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Home
     /// <summary>
     /// Represents a nopCommerce news details model
     /// </summary>
-    public partial class NopCommerceNewsDetailsModel : BaseNopModel
+    public partial record NopCommerceNewsDetailsModel : BaseNopModel
     {
         #region Properties
 

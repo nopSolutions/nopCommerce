@@ -1,4 +1,5 @@
-﻿@inject LocalizationSettings localizationSettings
+﻿@inject IWorkContext workContext
+@inject LocalizationSettings localizationSettings
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject INopFileProvider fileProvider;
@@ -11,7 +12,7 @@
 @{
     //Kendo UI
     var kendoVersion = "2020.1.406";
-    var currentKendoCulture = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.LanguageCulture;
+    var currentKendoCulture = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).LanguageCulture;
     var currentCulture = CultureInfo.CurrentCulture;
 
     //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
@@ -28,16 +29,13 @@
         return cultureToUse;
     }
 
-    var jQueryUI = "1.10.3";
-
-    var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     //CSS resources
     if (supportRtl)
     {
-        Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.rtl.css");
-        Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.rtl.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/css/adminlte-rtl.min.css");
+        Html.AppendCssFileParts("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css");
     }
     else
     {
@@ -46,23 +44,21 @@
         Html.AppendCssFileParts("~/lib_npm/bootstrap/css/bootstrap.min.css");
     }
 
-    Html.AppendCssFileParts($"~/lib_npm/datatables.net-buttons-bs/css/buttons.bootstrap.css");
-    Html.AppendCssFileParts($"~/lib_npm/datatables.net-bs/css/dataTables.bootstrap.css");
+    Html.AppendCssFileParts($"~/lib_npm/overlayscrollbars/css/OverlayScrollbars.min.css");
+    Html.AppendCssFileParts($"~/lib_npm/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css");
+    Html.AppendCssFileParts($"~/lib_npm/datatables.net-bs4/css/dataTables.bootstrap4.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.common.min.css");
-    Html.AppendCssFileParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-themes/smoothness/jquery-ui-{jQueryUI}.custom.min.css");
     Html.AppendCssFileParts("~/lib_npm/font-awesome/css/font-awesome.min.css");
-    Html.AppendCssFileParts("~/lib/typeahead/typeahead.css");
     Html.AppendCssFileParts("~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
-    //AdminLTE Skins (choose a skin from the css/skins)
-    Html.AppendCssFileParts("~/lib_npm/admin-lte/css/skins/_all-skins.min.css");
+    Html.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
 
     //scripts
-    Html.AppendScriptParts($"~/lib_npm/datatables.net-buttons-bs/js/buttons.bootstrap.js");
+    Html.AppendScriptParts($"~/lib_npm/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js");
     Html.AppendScriptParts($"~/lib_npm/datatables.net-buttons/js/dataTables.buttons.min.js");
     Html.AppendScriptParts($"~/lib_npm/moment/min/moment-with-locales.min.js");
-    Html.AppendScriptParts($"~/lib_npm/datatables.net-bs/js/dataTables.bootstrap.js");
+    Html.AppendScriptParts($"~/lib_npm/datatables.net-bs4/js/dataTables.bootstrap4.min.js");
     Html.AppendScriptParts($"~/lib_npm/datatables.net/js/jquery.dataTables.min.js");
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{currentKendoCulture}.min.js");
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentKendoCulture}.min.js");
@@ -73,7 +69,6 @@
     Html.AppendScriptParts("~/js/admin.common.js");
     Html.AppendScriptParts("~/lib_npm/typeahead.js/typeahead.bundle.min.js");
     Html.AppendScriptParts("~/lib_npm/jquery-migrate/jquery-migrate.min.js");
-    Html.AppendScriptParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-{jQueryUI}.custom.min.js");
 
     // this file can be downloaded from :
     // https://github.com/johnnyreilly/jquery-validation-globalize
@@ -93,9 +88,11 @@
 
     Html.AppendScriptParts("~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/lib_npm/jquery-validation/jquery.validate.min.js");
-    Html.AppendScriptParts("~/lib_npm/admin-lte/js/adminlte.min.js");
-    Html.AppendScriptParts("~/lib_npm/bootstrap/js/bootstrap.min.js");
+    Html.AppendScriptParts("~/lib_npm/bootstrap/js/bootstrap.bundle.min.js");
     Html.AppendScriptParts("~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
+    Html.AppendScriptParts("~/lib_npm/overlayscrollbars/js/jquery.overlayScrollbars.min.js");
+    Html.AppendScriptParts("~/lib_npm/admin-lte/js/adminlte.min.js");
+    Html.AppendScriptParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
     Html.AppendScriptParts("~/lib_npm/jquery/jquery.min.js");
 
     //page title
@@ -103,10 +100,10 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //event
-    eventPublisher.Publish(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -119,7 +116,7 @@
     @Html.NopCssFiles(ResourceLocation.Head, false)
     @Html.NopScripts(ResourceLocation.Head, false)
 </head>
-<body class="hold-transition skin-blue sidebar-collapse">
+<body class="hold-transition skin-blue sidebar-collapse layout-fixed">
     <script type="text/javascript">
             var culture = "@GetDefaultLocale()";
 

@@ -5,17 +5,17 @@
 @inject IPluginManager<IAdminMenuPlugin> adminMenuPluginManager
 @inject IWorkContext workContext
 
-<ul class="sidebar-menu" data-widget="tree">
+<ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu">
     @{
         //load sitemap
         var siteMap = new XmlSiteMap();
-        siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
+        await siteMap.LoadFromAsync("~/Areas/Admin/sitemap.config");
 
         //standard (default) items
         var rootNode = siteMap.RootNode;
 
         //plugins
-        var adminMenuPlugins = adminMenuPluginManager.LoadAllPlugins(workContext.CurrentCustomer);
+        var adminMenuPlugins = await adminMenuPluginManager.LoadAllPluginsAsync(await workContext.GetCurrentCustomerAsync());
         foreach (var adminMenuPlugin in adminMenuPlugins)
         {
             adminMenuPlugin.ManageSiteMap(rootNode);
@@ -25,7 +25,7 @@
         var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
         if (pluginNode != null && pluginNode.Visible)
         {
-            var hasManagePluginsPermission = permissionService.Authorize(StandardPermissionProvider.ManagePlugins);
+            var hasManagePluginsPermission = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins);
             pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
         }
 

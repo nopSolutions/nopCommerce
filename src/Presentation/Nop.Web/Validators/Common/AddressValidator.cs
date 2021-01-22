@@ -18,32 +18,32 @@ namespace Nop.Web.Validators.Common
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Address.Fields.FirstName.Required"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.FirstName.Required"));
             RuleFor(x => x.LastName)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Address.Fields.LastName.Required"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.LastName.Required"));
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Address.Fields.Email.Required"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.Email.Required"));
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .WithMessage(localizationService.GetResource("Common.WrongEmail"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
             if (addressSettings.CountryEnabled)
             {
                 RuleFor(x => x.CountryId)
                     .NotNull()
-                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
+                    .WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.Country.Required"));
                 RuleFor(x => x.CountryId)
                     .NotEqual(0)
-                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
+                    .WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.Country.Required"));
             }
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
             {
-                RuleFor(x => x.StateProvinceId).Must((x, context) =>
+                RuleFor(x => x.StateProvinceId).MustAwait(async (x, context) =>
                 {
                     //does selected country has states?
                     var countryId = x.CountryId ?? 0;
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Any();
+                    var hasStates = (await stateProvinceService.GetStateProvincesByCountryIdAsync(countryId)).Any();
 
                     if (hasStates)
                     {
@@ -53,43 +53,43 @@ namespace Nop.Web.Validators.Common
                     }
 
                     return true;
-                }).WithMessage(localizationService.GetResource("Address.Fields.StateProvince.Required"));
+                }).WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.StateProvince.Required"));
             }
             if (addressSettings.CompanyRequired && addressSettings.CompanyEnabled)
             {
-                RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"));
+                RuleFor(x => x.Company).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Company.Required"));
             }
             if (addressSettings.StreetAddressRequired && addressSettings.StreetAddressEnabled)
             {
-                RuleFor(x => x.Address1).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress.Required"));
+                RuleFor(x => x.Address1).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.StreetAddress.Required"));
             }
             if (addressSettings.StreetAddress2Required && addressSettings.StreetAddress2Enabled)
             {
-                RuleFor(x => x.Address2).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress2.Required"));
+                RuleFor(x => x.Address2).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.StreetAddress2.Required"));
             }
             if (addressSettings.ZipPostalCodeRequired && addressSettings.ZipPostalCodeEnabled)
             {
-                RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+                RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.ZipPostalCode.Required"));
             }
             if (addressSettings.CountyEnabled && addressSettings.CountyRequired)
             {
-                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Address.Fields.County.Required"));
+                RuleFor(x => x.County).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Address.Fields.County.Required"));
             }
             if (addressSettings.CityRequired && addressSettings.CityEnabled)
             {
-                RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required"));
+                RuleFor(x => x.City).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.City.Required"));
             }
             if (addressSettings.PhoneRequired && addressSettings.PhoneEnabled)
             {
-                RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required"));
+                RuleFor(x => x.PhoneNumber).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Phone.Required"));
             }
             if (addressSettings.PhoneEnabled)
             {
-                RuleFor(x => x.PhoneNumber).IsPhoneNumber(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Phone.NotValid"));
+                RuleFor(x => x.PhoneNumber).IsPhoneNumber(customerSettings).WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Phone.NotValid"));
             }
             if (addressSettings.FaxRequired && addressSettings.FaxEnabled)
             {
-                RuleFor(x => x.FaxNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Fax.Required"));
+                RuleFor(x => x.FaxNumber).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Fax.Required"));
             }
         }
     }

@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents an order model
     /// </summary>
-    public partial class OrderModel : BaseNopEntityModel
+    public partial record OrderModel : BaseNopEntityModel
     {
         #region Ctor
 
@@ -245,20 +245,20 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Nested Classes
 
-        public partial class TaxRate : BaseNopModel
+        public partial record TaxRate : BaseNopModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseNopModel
+        public partial record GiftCard : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Orders.Fields.GiftCardInfo")]
             public string CouponCode { get; set; }
             public string Amount { get; set; }
         }               
         
-        public partial class UsedDiscountModel:BaseNopModel
+        public partial record UsedDiscountModel:BaseNopModel
         {
             public int DiscountId { get; set; }
             public string DiscountName { get; set; }
@@ -267,7 +267,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         #endregion
     }
 
-    public partial class OrderAggreratorModel : BaseNopModel
+    public partial record OrderAggreratorModel : BaseNopModel
     {
         //aggergator properties
         public string aggregatorprofit { get; set; }

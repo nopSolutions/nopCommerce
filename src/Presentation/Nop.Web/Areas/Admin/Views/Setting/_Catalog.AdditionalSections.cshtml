@@ -1,7 +1,7 @@
 @model CatalogSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="RemoveRequiredProducts_OverrideForStore" asp-input="RemoveRequiredProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="RemoveRequiredProducts" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="RemoveRequiredProducts"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowBestsellersOnHomepage_OverrideForStore" asp-input="ShowBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowBestsellersOnHomepage" />
@@ -22,7 +22,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowBestsellersOnHomepage">
-        <div class="form-group advanced-setting" id="pnlNumberOfBestsellersOnHomepage">
+        <div class="form-group row advanced-setting" id="pnlNumberOfBestsellersOnHomepage">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="NumberOfBestsellersOnHomepage_OverrideForStore" asp-input="NumberOfBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="NumberOfBestsellersOnHomepage" />
@@ -33,7 +33,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedEnabled_OverrideForStore" asp-input="ProductsAlsoPurchasedEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ProductsAlsoPurchasedEnabled" />
@@ -44,7 +44,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ProductsAlsoPurchasedEnabled">
-        <div class="form-group advanced-setting" id="pnlProductsAlsoPurchasedNumber">
+        <div class="form-group row advanced-setting" id="pnlProductsAlsoPurchasedNumber">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedNumber_OverrideForStore" asp-input="ProductsAlsoPurchasedNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ProductsAlsoPurchasedNumber" />
@@ -55,7 +55,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="RecentlyViewedProductsEnabled_OverrideForStore" asp-input="RecentlyViewedProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="RecentlyViewedProductsEnabled" />
@@ -66,7 +66,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="RecentlyViewedProductsEnabled">
-        <div class="form-group advanced-setting" id="pnlRecentlyViewedProductsNumber">
+        <div class="form-group row advanced-setting" id="pnlRecentlyViewedProductsNumber">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="RecentlyViewedProductsNumber_OverrideForStore" asp-input="RecentlyViewedProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="RecentlyViewedProductsNumber" />
@@ -77,7 +77,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="NewProductsEnabled_OverrideForStore" asp-input="NewProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="NewProductsEnabled" />
@@ -88,7 +88,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="NewProductsEnabled">
-        <div class="form-group" id="pnlNewProductsNumber">
+        <div class="form-group row" id="pnlNewProductsNumber">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="NewProductsNumber" />
@@ -99,7 +99,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="DisplayDatePreOrderAvailability_OverrideForStore" asp-input="DisplayDatePreOrderAvailability" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="DisplayDatePreOrderAvailability" />

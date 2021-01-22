@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents the app settings model
     /// </summary>
-    public partial class AppSettingsModel : BaseNopModel
+    public partial record AppSettingsModel : BaseNopModel
     {
         #region Ctor
 

@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
     /// <summary>
     /// Represents a plugins configuration model
     /// </summary>
-    public partial class PluginsConfigurationModel : BaseNopModel
+    public partial record PluginsConfigurationModel : BaseNopModel
     {
         #region Ctor
 

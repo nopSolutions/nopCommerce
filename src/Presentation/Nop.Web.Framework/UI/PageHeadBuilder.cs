@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -118,7 +119,7 @@ namespace Nop.Web.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = _urlRecordService.GetSeName(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            hash = _urlRecordService.GetSeNameAsync(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls).Result;
 
             return hash;
         }
@@ -360,7 +361,7 @@ namespace Nop.Web.Framework.UI
                     foreach (var item in partsToBundle)
                     {
                         new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out var path);
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory
@@ -386,7 +387,8 @@ namespace Nop.Web.Framework.UI
                     {
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => true);
+
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
 
                     if (shouldRebuild)
                     {
@@ -399,7 +401,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.Set(cacheKey, false);
+                        _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render
@@ -591,7 +593,7 @@ namespace Nop.Web.Framework.UI
                     foreach (var item in partsToBundle)
                     {
                         new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out var path);
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists 
@@ -615,7 +617,8 @@ namespace Nop.Web.Framework.UI
                     {
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => true);
+
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
 
                     if (shouldRebuild)
                     {
@@ -628,7 +631,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.Set(cacheKey, false);
+                        _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render
