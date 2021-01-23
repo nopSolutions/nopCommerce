@@ -17,7 +17,7 @@ namespace Nop.Web.Infrastructure
                     return $"{{{NopPathRouteDefaults.LanguageRouteValue}:maxlength(2):{NopPathRouteDefaults.LanguageParameterTransformer}=en}}/{seoCode}";
             }
 
-            return seoCode;
+            return seoCode ?? string.Empty;
         }
     }
 }
