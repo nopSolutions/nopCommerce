@@ -82,6 +82,16 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
+                if (context.HttpContext.Request == null)
+                    return;
+
+                //only in GET requests
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    return;
+
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
@@ -91,16 +101,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //ignore filter (an action doesn't need to be checked)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (context.HttpContext.Request == null)
-                    return;
-
-                //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
-                    return;
-
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //whether SEO friendly URLs are enabled

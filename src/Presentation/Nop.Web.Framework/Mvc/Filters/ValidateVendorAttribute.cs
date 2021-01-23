@@ -75,6 +75,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    return;
+
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
@@ -84,9 +87,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //ignore filter (the action is available even if the current customer isn't a vendor)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //whether current customer is vendor
