@@ -12,6 +12,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -55,6 +56,7 @@ namespace Nop.Services.Orders
         private readonly IShippingService _shippingService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
@@ -87,6 +89,7 @@ namespace Nop.Services.Orders
             IShippingService shippingService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IStoreService storeService,
             IStoreMappingService storeMappingService,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
@@ -115,6 +118,7 @@ namespace Nop.Services.Orders
             _shippingService = shippingService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
+            _storeService = storeService;
             _storeMappingService = storeMappingService;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
@@ -1269,9 +1273,11 @@ namespace Nop.Services.Orders
 
             var customer = await _customerService.GetCustomerByIdAsync(shoppingCartItem.CustomerId);
             var product = await _productService.GetProductByIdAsync(shoppingCartItem.ProductId);
+            var store = await _storeService.GetStoreByIdAsync(shoppingCartItem.StoreId);
 
             return await GetUnitPriceAsync(product,
                 customer,
+                store,
                 shoppingCartItem.ShoppingCartType,
                 shoppingCartItem.Quantity,
                 shoppingCartItem.AttributesXml,
@@ -1286,6 +1292,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
+        /// <param name="store">Store</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product attributes (XML format)</param>
@@ -1296,6 +1303,7 @@ namespace Nop.Services.Orders
         /// <returns>Shopping cart unit price (one item). Applied discount amount. Applied discounts</returns>
         public virtual async Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(Product product,
             Customer customer,
+            Store store,
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
@@ -1319,6 +1327,7 @@ namespace Nop.Services.Orders
             {
                 (finalPrice, discountAmount, appliedDiscounts) =  await _priceCalculationService.GetFinalPriceAsync(product,
                         customer,
+                        store,
                         combination.OverriddenPrice.Value,
                         decimal.Zero,
                         includeDiscounts,
@@ -1335,7 +1344,7 @@ namespace Nop.Services.Orders
                 {
                     foreach (var attributeValue in attributeValues)
                     {
-                        attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
+                        attributesTotalPrice += await _priceCalculationService.GetProductAttributeValuePriceAdjustmentAsync(product, attributeValue, customer, store, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
                     }
                 }
 
@@ -1366,6 +1375,7 @@ namespace Nop.Services.Orders
 
                     (finalPrice, discountAmount, appliedDiscounts) = await _priceCalculationService.GetFinalPriceAsync(product,
                         customer,
+                        store,
                         attributesTotalPrice,
                         includeDiscounts,
                         qty,

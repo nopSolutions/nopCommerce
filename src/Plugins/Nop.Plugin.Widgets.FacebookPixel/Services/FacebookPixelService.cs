@@ -20,6 +20,7 @@ using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
@@ -58,6 +59,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
@@ -82,6 +84,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             IStateProvinceService stateProvinceService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IStoreService storeService,
             ITaxService taxService,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext)
@@ -102,6 +105,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             _stateProvinceService = stateProvinceService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
+            _storeService = storeService;
             _taxService = taxService;
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
@@ -553,7 +557,11 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var categoryName = (await _categoryService.GetCategoryByIdAsync(categoryMapping?.CategoryId ?? 0))?.Name;
                 var sku = product != null ? await _productService.FormatSkuAsync(product, item.AttributesXml) : string.Empty;
                 var quantity = product != null ? (int?)item.Quantity : null;
-                var (productPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false);
+
+                var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+                var store = await _storeService.GetStoreByIdAsync(item.StoreId);
+                
+                var (productPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, currentCustomer, store, includeDiscounts: false);
                 var (price, _) = await _taxService.GetProductPriceAsync(product, productPrice);
                 var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, await _workContext.GetWorkingCurrencyAsync());
                 var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
