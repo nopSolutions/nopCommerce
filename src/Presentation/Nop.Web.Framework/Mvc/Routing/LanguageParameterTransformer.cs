@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.Mvc.Routing
 
         public string TransformOutbound(object value)
         {
-            var lang = _httpContextAccessor.HttpContext.Request.RouteValues["language"];
+            var lang = _httpContextAccessor.HttpContext.Request.RouteValues[NopPathRouteDefaults.LanguageRouteValue];
             //Validate SEO language only 2 letter
             return (lang != null && lang.ToString().Length == 2) ? lang.ToString() : value?.ToString();
         }
