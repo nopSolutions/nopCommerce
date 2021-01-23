@@ -197,18 +197,25 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
 
                 var product = new Product
                 {
-                    Name = title,
+                    Name = title.ToUpper(),
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
                     Gtin = barcode,
                     FullDescription = sb.ToString(),
-                    Price = 10,
+                    Price = 12,
                     StockQuantity = 1,
                     ManageInventoryMethodId = (int)ManageInventoryMethod.ManageStock,
                     MinStockQuantity = 1,
                     LowStockActivityId = (int)LowStockActivity.Unpublish,
                     DisplayStockQuantity = true,
-                    DisplayStockAvailability = true
+                    DisplayStockAvailability = true,
+                    Published = true,
+                    VisibleIndividually = true,
+                    AllowCustomerReviews = true,
+                    MarkAsNew = true,
+                    NotifyAdminForQuantityBelow = 1,
+                    OrderMinimumQuantity = 1,
+                    OrderMaximumQuantity = 10000
                 };
 
                 _productService.InsertProduct(product);
