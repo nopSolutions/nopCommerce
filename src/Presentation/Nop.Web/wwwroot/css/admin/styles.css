@@ -991,6 +991,14 @@ input[type="text"].k-input {
   display: inline;
 }
 
+.nav-sidebar .nav-link.active p {
+  color: #00C0EF;
+}
+
+.nav-sidebar .nav-link.active i.nav-icon.fa.fa-genderless:before {
+  content: "\f192";
+}
+
 .nav-sidebar, .main-sidebar {
   white-space: normal;
 }
