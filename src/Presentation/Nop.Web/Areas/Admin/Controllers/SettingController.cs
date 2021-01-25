@@ -1370,6 +1370,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var seoSettings = await _settingService.LoadSettingAsync<SeoSettings>(storeScope);
             seoSettings.PageTitleSeparator = model.SeoSettings.PageTitleSeparator;
             seoSettings.PageTitleSeoAdjustment = (PageTitleSeoAdjustment)model.SeoSettings.PageTitleSeoAdjustment;
+            seoSettings.HomepageTitle = model.SeoSettings.HomepageTitle;
+            seoSettings.HomepageDescription = model.SeoSettings.HomepageDescription;
             seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
             seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
             seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
@@ -1387,6 +1389,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //and loaded from database after each update
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.PageTitleSeparator, model.SeoSettings.PageTitleSeparator_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.PageTitleSeoAdjustment, model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.HomepageTitle, model.SeoSettings.HomepageTitle_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.HomepageDescription, model.SeoSettings.HomepageDescription_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultTitle, model.SeoSettings.DefaultTitle_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultMetaKeywords, model.SeoSettings.DefaultMetaKeywords_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultMetaDescription, model.SeoSettings.DefaultMetaDescription_OverrideForStore, storeScope, false);

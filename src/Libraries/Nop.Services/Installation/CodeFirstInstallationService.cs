@@ -2866,6 +2866,8 @@ namespace Nop.Services.Installation
             {
                 PageTitleSeparator = ". ",
                 PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
+                HomepageTitle = "Home page title",
+                HomepageDescription = "Home page description",
                 DefaultTitle = "Your store",
                 DefaultMetaKeywords = string.Empty,
                 DefaultMetaDescription = string.Empty,
