@@ -297,7 +297,7 @@ namespace Nop.Services.Seo
         {
             var urlHelper = GetUrlHelper();
 
-            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
+            await using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
                 Formatting = Formatting.Indented
             };
@@ -330,7 +330,7 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual async Task WriteSitemapAsync(Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
+            await using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
                 Formatting = Formatting.Indented
             };

@@ -200,7 +200,7 @@ namespace Nop.Services.Media
         protected override async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             var blobClient = _blobContainerClient.GetBlobClient(thumbFileName);
-            using var ms = new MemoryStream(binary);
+            await using var ms = new MemoryStream(binary);
 
             //set mime type
             BlobHttpHeaders headers = null;

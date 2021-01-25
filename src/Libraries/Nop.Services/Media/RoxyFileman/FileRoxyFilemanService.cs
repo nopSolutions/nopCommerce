@@ -627,10 +627,8 @@ namespace Nop.Services.Media.RoxyFileman
 
                         //A warning (SCS0018 - Path Traversal) from the "Security Code Scan" analyzer may appear at this point. 
                         //In this case, it is not relevant. The input is not supplied by user.
-                        using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
-                        {
+                        await using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate)) 
                             await formFile.CopyToAsync(stream);
-                        }
 
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
                             continue;

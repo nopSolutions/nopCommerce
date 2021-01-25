@@ -46,11 +46,9 @@ namespace Nop.Core
             };
 
             await using var sw = new StringWriter();
-            using (var xwr = XmlWriter.Create(sw, settings))
-            {
-                await xwr.WriteStringAsync(str);
-                await xwr.FlushAsync();
-            }
+            await using var xwr = XmlWriter.Create(sw, settings);
+            await xwr.WriteStringAsync(str);
+            await xwr.FlushAsync();
 
             return sw.ToString();
         }
