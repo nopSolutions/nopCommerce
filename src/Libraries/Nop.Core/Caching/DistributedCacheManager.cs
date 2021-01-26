@@ -71,15 +71,13 @@ namespace Nop.Core.Caching
         {
             var json = await _distributedCache.GetStringAsync(key.Key);
 
-            T item = default;
+            if (string.IsNullOrEmpty(json)) 
+                return (false, default);
 
-            if (!string.IsNullOrEmpty(json))
-            {
-                item = JsonSerializer.Deserialize<T>(json);
-                _perRequestCache.Set(key.Key, item);
-            }
+            var item = JsonSerializer.Deserialize<T>(json);
+            _perRequestCache.Set(key.Key, item);
 
-            return (item != null, item);
+            return (true, item);
         }
 
         #endregion
