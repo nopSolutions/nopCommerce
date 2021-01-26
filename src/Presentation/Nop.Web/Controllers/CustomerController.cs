@@ -861,13 +861,15 @@ namespace Nop.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
+
                         //save newsletter value
                         var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(model.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
                             {
-                                newsletter.Active = true;
+                                newsletter.Active = isNewsletterActive;
                                 await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
 
                                 //GDPR
@@ -890,7 +892,7 @@ namespace Nop.Web.Controllers
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
-                                    Active = true,
+                                    Active = isNewsletterActive,
                                     StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
@@ -1107,6 +1109,14 @@ namespace Nop.Web.Controllers
 
             //authenticate customer after activation
             await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
+
+            //activating newsletter if need
+            var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+            if (newsletter != null && !newsletter.Active)
+            {
+                newsletter.Active = true;
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
+            }
 
             model.Result = await _localizationService.GetResourceAsync("Account.AccountActivation.Activated");
             return View(model);
