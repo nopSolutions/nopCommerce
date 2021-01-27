@@ -434,27 +434,26 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_customerSettings.UsernamesEnabled && model.Username != null)
-                {
-                    model.Username = model.Username.Trim();
-                }
-                var loginResult = await _customerRegistrationService.ValidateCustomerAsync(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password);
+                var customerUserName = model.Username?.Trim();
+                var customerEmail = model.Email?.Trim();
+                var userNameOrEmail = _customerSettings.UsernamesEnabled ? customerUserName : customerEmail;
+
+                var loginResult = await _customerRegistrationService.ValidateCustomerAsync(userNameOrEmail, model.Password);
                 switch (loginResult)
                 {
                     case CustomerLoginResults.Successful:
                         {
                             var customer = _customerSettings.UsernamesEnabled
-                                ? await _customerService.GetCustomerByUsernameAsync(model.Username)
-                                : await _customerService.GetCustomerByEmailAsync(model.Email);
+                                ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
+                                : await _customerService.GetCustomerByEmailAsync(customerEmail);
 
                             return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, model.RememberMe);
                         }
                     case CustomerLoginResults.MultiFactorAuthenticationRequired:
                         {
-                            var userName = _customerSettings.UsernamesEnabled ? model.Username : model.Email;
                             var customerMultiFactorAuthenticationInfo = new CustomerMultiFactorAuthenticationInfo
                             {
-                                UserName = userName,
+                                UserName = userNameOrEmail,
                                 RememberMe = model.RememberMe,
                                 ReturnUrl = returnUrl
                             };
@@ -601,7 +600,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
+                var customer = await _customerService.GetCustomerByEmailAsync(model.Email.Trim());
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
                     //save token and current date
@@ -791,15 +790,13 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_customerSettings.UsernamesEnabled && model.Username != null)
-                {
-                    model.Username = model.Username.Trim();
-                }
+                var customerUserName = model.Username?.Trim();
+                var customerEmail = model.Email?.Trim();
 
                 var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer,
-                    model.Email,
-                    _customerSettings.UsernamesEnabled ? model.Username : model.Email,
+                    customerEmail,
+                    _customerSettings.UsernamesEnabled ? customerUserName : customerEmail,
                     model.Password,
                     _customerSettings.DefaultPasswordFormat,
                     (await _storeContext.GetCurrentStoreAsync()).Id,
@@ -864,7 +861,7 @@ namespace Nop.Web.Controllers
                         var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
 
                         //save newsletter value
-                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(model.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, (await _storeContext.GetCurrentStoreAsync()).Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -891,7 +888,7 @@ namespace Nop.Web.Controllers
                                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = model.Email,
+                                    Email = customerEmail,
                                     Active = isNewsletterActive,
                                     StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                                     CreatedOnUtc = DateTime.UtcNow
@@ -1175,10 +1172,11 @@ namespace Nop.Web.Controllers
                     //username 
                     if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
                     {
-                        if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        var userName = model.Username.Trim();
+                        if (!customer.Username.Equals(userName, StringComparison.InvariantCultureIgnoreCase))
                         {
                             //change username
-                            await _customerRegistrationService.SetUsernameAsync(customer, model.Username.Trim());
+                            await _customerRegistrationService.SetUsernameAsync(customer, userName);
 
                             //re-authenticate
                             //do not authenticate users in impersonation mode
@@ -1187,11 +1185,12 @@ namespace Nop.Web.Controllers
                         }
                     }
                     //email
-                    if (!customer.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                    var email = model.Email.Trim();
+                    if (!customer.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
                     {
                         //change email
                         var requireValidation = _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation;
-                        await _customerRegistrationService.SetEmailAsync(customer, model.Email.Trim(), requireValidation);
+                        await _customerRegistrationService.SetEmailAsync(customer, email, requireValidation);
 
                         //do not authenticate users in impersonation mode
                         if (_workContext.OriginalCustomerIfImpersonated == null)
