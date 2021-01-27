@@ -8,7 +8,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
 {
     [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
-    public class DataMigration : MigrationBase
+    public class DataMigration : Migration
     {
         private readonly INopDataProvider _dataProvider;
 
@@ -105,6 +105,21 @@ namespace Nop.Data.Migrations.UpgradeTo440
                 );
             }
             //</MFA #475>
+
+            //issue-3852
+            var tableName = nameof(RewardPointsHistory);
+            var rph = Schema.Table(tableName);
+            var columnName = "UsedWithOrder_Id";
+
+            if (rph.Column(columnName).Exists())
+            {
+                var constraintName = "RewardPointsHistory_UsedWithOrder";
+
+                if (rph.Constraint(constraintName).Exists())
+                    Delete.UniqueConstraint(constraintName).FromTable(tableName);
+
+                Delete.Column(columnName).FromTable(tableName);
+            }
         }
 
         public override void Down()
