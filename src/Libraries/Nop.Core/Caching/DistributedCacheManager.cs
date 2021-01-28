@@ -198,7 +198,8 @@ namespace Nop.Core.Caching
             _perRequestCache.RemoveByPrefix(prefix);
 
             using var _ = await _locker.LockAsync();
-            foreach (var key in _keys.Where(key => key.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)))
+            
+            foreach (var key in _keys.Where(key => key.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase)).ToList())
             {
                 await _distributedCache.RemoveAsync(key);
                 _keys.Remove(key);
