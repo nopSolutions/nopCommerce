@@ -47,13 +47,6 @@
 
     //'ShipStation shipping provider' step
     if (shipStationMethodExists) {
-      var shipStationStepButtons = [AdminTourBackButton];
-      if (manualMethodExists) {
-        shipStationStepButtons.push(AdminTourNextButton);
-      } else {
-        shipStationStepButtons.push(AdminTourNextPageButton);
-      }
-
       tour.addStep({
         title: AdminTourDataProvider.localized_data.ShippingProvidersShipStationTitle,
         text: AdminTourDataProvider.localized_data.ShippingProvidersShipStationText,
@@ -61,10 +54,17 @@
           element: '#' + shipStationMethodRowId,
           on: 'bottom'
         },
-        buttons: shipStationStepButtons,
+        buttons: [AdminTourBackButton, AdminTourNextButton],
       });
 
       //'Activate provider' step
+      var buttons = [AdminTourBackButton];
+      if (manualMethodExists) {
+        buttons.push(AdminTourNextButton);
+      } else {
+        buttons.push(AdminTourNextPageButton);
+      }
+
       tour.addStep({
         title: AdminTourDataProvider.localized_data.ShippingProvidersActivateTitle,
         text: AdminTourDataProvider.localized_data.ShippingProvidersActivateText,
@@ -72,7 +72,7 @@
           element: '#' + shipStationMethodRowId + ' .column-edit .btn-default',
           on: 'bottom'
         },
-        buttons: shipStationStepButtons,
+        buttons: buttons,
       });
     }
 
@@ -86,7 +86,7 @@
             element: '#' + manualMethodRowId + ' .column-edit .btn-default',
             on: 'bottom'
           },
-          buttons: shipStationStepButtons,
+          buttons: [AdminTourBackButton, AdminTourNextButton],
         });
       }
 
