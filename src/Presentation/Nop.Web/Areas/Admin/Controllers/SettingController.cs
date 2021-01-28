@@ -1272,7 +1272,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        public virtual async Task<IActionResult> GeneralCommon()
+        public virtual async Task<IActionResult> GeneralCommon(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1283,6 +1283,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             //notify admin that CSS bundling is not allowed in virtual directories
             if (model.MinificationSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
                 _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
+
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
 
             return View(model);
         }

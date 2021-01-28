@@ -38,6 +38,7 @@
     "magnific-popup": "1.1.0",
     "moment": "2.22.2",
     "overlayscrollbars": "1.13.0",
+    "shepherd.js": "^8.1.0",
     "tinymce": "5.4.2",
     "typeahead.js": "0.11.1"
   }

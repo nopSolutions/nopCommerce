@@ -8,8 +8,10 @@
 }
 
 @{
+    var showTour = ViewBag.ShowTour ?? false;
+
     const string hideCommonBlockAttributeName = "GeneralCommonSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var hideCommonBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
     var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFaviconBlockAttributeName);
@@ -90,7 +92,7 @@
         </div>
     </section>
 
-        <script>
+    <script>
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.SitemapSettings.SitemapEnabled)").click(toggleSitemapSettings);
             $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
@@ -114,7 +116,7 @@
                     loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
                 });
         }
-        </script>
+    </script>
 </form>
 
 @*upload favicon and app icons form*@

@@ -81,6 +81,20 @@
     serverSide: @Model.ServerSide.ToString().ToLower(),
     </text>
 }
+@if (!string.IsNullOrEmpty(Model.RowIdBasedOnField))
+{
+    <text>
+        rowId: function (item) {
+        var rowId = '';
+        if (item.hasOwnProperty('@(Model.RowIdBasedOnField)'))
+        {
+        var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        rowId = 'row_' + val;
+        }
+        return rowId;
+        },
+    </text>
+}
 @if (Model.Data != null)
 {
     <text>

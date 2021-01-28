@@ -1,11 +1,16 @@
 @model TopicModel
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Topics.EditTopicDetails").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.Topic;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Topics");
 }
+
+@await Html.PartialAsync("_AdminTour")
 
 <form asp-controller="Topic" asp-action="Edit" method="post">
     <div class="content-header clearfix">
@@ -17,7 +22,7 @@
             </small>
         </h1>
         <div class="pull-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Topic", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
+            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Topic", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info" id="preview-topic-button">
                 <i class="fa fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
