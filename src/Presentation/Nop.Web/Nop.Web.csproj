@@ -41,7 +41,6 @@
 
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml;Themes\**\*.json" />
     <Content Include="Themes\**\*.cshtml" />
-    <None Include="Themes\**" CopyToPublishDirectory="PreserveNewest" />
 
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
