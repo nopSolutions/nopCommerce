@@ -4935,6 +4935,9 @@
   <LocaleResource Name="Admin.Configuration.FaviconAndAppIcons.Uploaded">
     <Value>Favicon and app icons have been uploaded</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.LanguagePackProgressMessage">
+    <Value><![CDATA[The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href="https://www.nopcommerce.com/translations" target="_blank">translations page.</a> page]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages">
     <Value>Languages</Value>
   </LocaleResource>

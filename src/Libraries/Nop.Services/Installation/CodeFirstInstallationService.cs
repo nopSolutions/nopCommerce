@@ -398,7 +398,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(taxCategories);
         }
 
-        protected virtual async Task InstallLanguagesAsync(string languagePackDownloadLink, CultureInfo cultureInfo, RegionInfo regionInfo)
+        protected virtual async Task InstallLanguagesAsync((string languagePackDownloadLink, int languagePackProgress) languagePackInfo, CultureInfo cultureInfo, RegionInfo regionInfo)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
@@ -439,7 +439,7 @@ namespace Nop.Services.Installation
             };
             await InsertInstallationDataAsync(language);
 
-            if (string.IsNullOrEmpty(languagePackDownloadLink))
+            if (string.IsNullOrEmpty(languagePackInfo.languagePackDownloadLink))
                 return;
 
             //download and import language pack
@@ -447,13 +447,24 @@ namespace Nop.Services.Installation
             {
                 var httpClientFactory = EngineContext.Current.Resolve<IHttpClientFactory>();
                 var httpClient = httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                await using var stream = await httpClient.GetStreamAsync(languagePackDownloadLink);
+                await using var stream = await httpClient.GetStreamAsync(languagePackInfo.languagePackDownloadLink);
                 using var streamReader = new StreamReader(stream);
                 await localizationService.ImportResourcesFromXmlAsync(language, streamReader);
 
                 //set this language as default
                 language.DisplayOrder = 0;
                 await UpdateInstallationDataAsync(language);
+
+                //save progress for showing in admin panel (only for first start)
+                await InsertInstallationDataAsync(new GenericAttribute
+                {
+                    EntityId = language.Id,
+                    Key = NopCommonDefaults.LanguagePackProgressAttribute,
+                    KeyGroup = nameof(Language),
+                    Value = languagePackInfo.languagePackProgress.ToString(),
+                    StoreId = 0,
+                    CreatedOrUpdatedDateUTC = DateTime.UtcNow
+                });
             }
             catch { }
         }
@@ -9334,16 +9345,16 @@ namespace Nop.Services.Installation
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
         /// <param name="defaultUserPassword">Default user password</param>
-        /// <param name="languagePackDownloadLink">Language pack download link</param>
+        /// <param name="languagePackInfo">Language pack info</param>
         /// <param name="regionInfo">RegionInfo</param>
         /// <param name="cultureInfo">CultureInfo</param>
         public virtual async Task InstallRequiredDataAsync(string defaultUserEmail, string defaultUserPassword,
-            string languagePackDownloadLink, RegionInfo regionInfo, CultureInfo cultureInfo)
+            (string languagePackDownloadLink, int languagePackProgress) languagePackInfo, RegionInfo regionInfo, CultureInfo cultureInfo)
         {
             await InstallStoresAsync();
             await InstallMeasuresAsync(regionInfo);
             await InstallTaxCategoriesAsync();
-            await InstallLanguagesAsync(languagePackDownloadLink, cultureInfo, regionInfo);
+            await InstallLanguagesAsync(languagePackInfo, cultureInfo, regionInfo);
             await InstallCurrenciesAsync(cultureInfo, regionInfo);
             await InstallCountriesAndStatesAsync();
             await InstallShippingMethodsAsync();

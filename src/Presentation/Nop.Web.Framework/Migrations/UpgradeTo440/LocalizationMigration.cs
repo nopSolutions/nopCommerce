@@ -434,6 +434,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.ShippingProviders.Activate.Title"] = "Activate a provider",
                 ["Admin.ConfigurationSteps.PaymentMethods.Activate.Text"] = "To activate a payment method click the <b>Edit</b> button, then tick the <b>Is active</b> checkbox and save the changes.",
                 ["Admin.ConfigurationSteps.PaymentMethods.Activate.Title"] = "Activate a payment method",
+                ["Admin.Configuration.LanguagePackProgressMessage"] = "The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href=\"https://www.nopcommerce.com/translations\" target=\"_blank\">translations page.</a>",
             }).Wait();
 
             // rename locales
