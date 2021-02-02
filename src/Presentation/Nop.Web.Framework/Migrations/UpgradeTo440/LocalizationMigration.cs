@@ -199,7 +199,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Common.CrawlerOnlyUserAgentStringsPath.Hint"] = "Specify a path to the file with crawler only user agent strings. Leave empty to always use full version of user agent strings file.",
                 ["Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider"] = "Use session state for TempData",
                 ["Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider.Hint"] = "Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.",
-                ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["ActivityLog.AddNewSpecAttributeGroup"] = "Added a new specification attribute group (’{0}’)",
                 ["ActivityLog.EditSpecAttributeGroup"] = "Edited a specification attribute group (’{0}’)",
                 ["ActivityLog.DeleteSpecAttributeGroup"] = "Deleted a specification attribute group (’{0}’)",
@@ -224,7 +223,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Updated"] = "The attribute group has been updated successfully.",
                 ["Admin.Catalog.Products.SpecificationAttributes.NameFormat"] = "{0} >> {1}",
                 ["Admin.System.Warnings.PluginsOverrideSameService"] = "The \"{0}\" interface/class has been overridden in those assemblies: {1}. This situation may cause errors because there is only one of them will be used (Please contact the assembly(ies) developers to solve this problem.)",
-                ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
 
                 //<MFA #475>
                 ["Admin.Configuration.Authentication"] = "Authentication",
@@ -408,7 +406,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.TaxProviders.TaxProviders.Title"] = "Tax providers",
                 ["Admin.ConfigurationSteps.TaxProviders.TaxProviders.Text"] = "You can see all the tax providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href=\"https://www.nopcommerce.com/extensions?category=taxes&utm_source=admin-panel&utm_medium=tour&utm_campaign=marketplace&utm_content=tooltip\" target=\"_blank\">marketplace</a>.",
                 ["Admin.ConfigurationSteps.TaxProviders.Avalara.Title"] = "Avalara tax provider",
-                ["Admin.ConfigurationSteps.TaxProviders.Avalara.Text"] = "You can automate the tax compliance in your store. Set up the Avalara tax provider, and you won’t need to worry about taxes anymore. Avalara is an automated tax compliance software. Read how to configure it in <a href=\"https://docs.nopcommerce.com/getting-started/configure-taxes/tax-providers/avalara.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">this article</a>.",
                 ["Admin.ConfigurationSteps.TaxProviders.Avalara.Text"] = "You can automate the tax compliance in your store. Set up the Avalara tax provider, and you won’t need to worry about taxes anymore. Avalara is an automated tax compliance software. Read how to configure it in <a href=\"https://docs.nopcommerce.com/getting-started/configure-taxes/tax-providers/avalara.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">this article</a>.",
                 ["Admin.ConfigurationSteps.TaxProviders.Manual.Title"] = "Manual tax provider",
                 ["Admin.ConfigurationSteps.TaxProviders.Manual.Text"] = "Manual tax provider allows you to set up fixed tax rates depending on the country/state/zip.",
