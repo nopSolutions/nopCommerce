@@ -17,12 +17,16 @@
     <FileVersion>1.0.5.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="logo.png" />
     <None Remove="plugin.json" />
     <None Remove="Views\Dashboard.cshtml" />
     <None Remove="Views\Index.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
