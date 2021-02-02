@@ -37,6 +37,17 @@
         <div class="form-horizontal">
             @await Component.InvokeAsync("SettingMode")
             <div asp-validation-summary="All"></div>
+            <div class="container-fluid">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                @T("Admin.Configuration.AppSettings.Description")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <nop-cards id="app-settings-cards">
                 <nop-card asp-name="app-settings-cache" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Cache")" asp-hide-block-attribute-name="@hideCacheBlockAttributeName" asp-hide="@hideCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Cache", Model)</nop-card>
                 <nop-card asp-name="app-settings-hosting" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Hosting")" asp-hide-block-attribute-name="@hideHostingBlockAttributeName" asp-hide="@hideHostingBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Hosting", Model)</nop-card>

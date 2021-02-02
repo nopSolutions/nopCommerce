@@ -4359,6 +4359,9 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider.Hint">
     <Value>Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Description">
+      <Value><![CDATA[Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html\" target=\"_blank\">our documentation.</a>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
     <Value>Hosting configuration</Value>
   </LocaleResource>
