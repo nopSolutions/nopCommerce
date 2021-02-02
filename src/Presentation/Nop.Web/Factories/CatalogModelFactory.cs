@@ -427,8 +427,14 @@ namespace Nop.Web.Factories
 
                 var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
 
+                var settings = new XmlWriterSettings
+                {
+                    Async = true, 
+                    ConformanceLevel = ConformanceLevel.Auto
+                };
+
                 await using var strWriter = new StringWriter();
-                await using var writer = XmlWriter.Create(strWriter);
+                await using var writer = XmlWriter.Create(strWriter, settings);
                 xsSubmit.Serialize(writer, categories);
                 var xml = strWriter.ToString();
 
