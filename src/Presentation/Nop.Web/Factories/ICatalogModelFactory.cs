@@ -122,8 +122,9 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare popular product tags model
         /// </summary>
+        /// <param name="numberTagsToReturn">The number of tags to be returned; pass 0 to get all tags</param>
         /// <returns>Product tags model</returns>
-        Task<PopularProductTagsModel> PreparePopularProductTagsModelAsync();
+        Task<PopularProductTagsModel> PreparePopularProductTagsModelAsync(int numberTagsToReturn = 0);
 
         /// <summary>
         /// Prepare products by tag model
@@ -133,12 +134,6 @@ namespace Nop.Web.Factories
         /// <returns>Products by tag model</returns>
         Task<ProductsByTagModel> PrepareProductsByTagModelAsync(ProductTag productTag,
             CatalogPagingFilteringModel command);
-
-        /// <summary>
-        /// Prepare product tags all model
-        /// </summary>
-        /// <returns>Popular product tags model</returns>
-        Task<PopularProductTagsModel> PrepareProductTagsAllModelAsync();
 
         #endregion
 

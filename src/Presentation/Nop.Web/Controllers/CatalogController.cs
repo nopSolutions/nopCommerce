@@ -257,7 +257,7 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> ProductTagsAll()
         {
-            var model = await _catalogModelFactory.PrepareProductTagsAllModelAsync();
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
             
             return View(model);
         }

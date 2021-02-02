@@ -1087,32 +1087,36 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare popular product tags model
         /// </summary>
+        /// <param name="numberTagsToReturn">The number of tags to be returned; pass 0 to get all tags</param>
         /// <returns>Product tags model</returns>
-        public virtual async Task<PopularProductTagsModel> PreparePopularProductTagsModelAsync()
+        public virtual async Task<PopularProductTagsModel> PreparePopularProductTagsModelAsync(int numberTagsToReturn = 0)
         {
             var model = new PopularProductTagsModel();
 
-            //get all tags
-            var tags = await (await _productTagService.GetAllProductTagsAsync())
-                //filter by current store
-                .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
-                .ToListAsync();
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
 
-            model.TotalTags = tags.Count;
+            var tagStats = await _productTagService.GetProductCountAsync(currentStore.Id);
 
-            model.Tags.AddRange(await tags
-                //order by product count
-                .OrderByDescendingAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id))
-                .Take(_catalogSettings.NumberOfProductTags)
-                //sorting
-                .OrderByAwait(async x => await _localizationService.GetLocalizedAsync(x, y => y.Name))
-                .SelectAwait(async tag => new ProductTagModel
+            model.TotalTags = tagStats.Count;
+
+            model.Tags.AddRange(await tagStats
+                //Take the most popular tags if specified
+                .OrderByDescending(x => x.Value).Take(numberTagsToReturn > 0 ? numberTagsToReturn : tagStats.Count)
+                .SelectAwait(async tagStat =>
                 {
-                    Id = tag.Id,
-                    Name = await _localizationService.GetLocalizedAsync(tag, y => y.Name),
-                    SeName = await _urlRecordService.GetSeNameAsync(tag),
-                    ProductCount = await _productTagService.GetProductCountAsync(tag.Id, (await _storeContext.GetCurrentStoreAsync()).Id)
-                }).ToListAsync());
+                    var tag = await _productTagService.GetProductTagByIdAsync(tagStat.Key);
+
+                    return new ProductTagModel
+                    {
+                        Id = tag.Id,
+                        Name = await _localizationService.GetLocalizedAsync(tag, t => t.Name),
+                        SeName = await _urlRecordService.GetSeNameAsync(tag),
+                        ProductCount = tagStat.Value
+                    };
+                })
+                //sorting result
+                .OrderBy(x => x.Name)
+                .ToListAsync());
 
             return model;
         }
@@ -1156,35 +1160,6 @@ namespace Nop.Web.Factories
             model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare product tags all model
-        /// </summary>
-        /// <returns>Popular product tags model</returns>
-        public virtual async Task<PopularProductTagsModel> PrepareProductTagsAllModelAsync()
-        {
-            var model = new PopularProductTagsModel
-            {
-                Tags = await (await _productTagService.GetAllProductTagsAsync())
-                //filter by current store
-                .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
-                //sort by name
-                .OrderByAwait(async x => await _localizationService.GetLocalizedAsync(x, y => y.Name))
-                .SelectAwait(async x =>
-                {
-                    var ptModel = new ProductTagModel
-                    {
-                        Id = x.Id,
-                        Name = await _localizationService.GetLocalizedAsync(x, y => y.Name),
-                        SeName = await _urlRecordService.GetSeNameAsync(x),
-                        ProductCount = await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id)
-                    };
-                    return ptModel;
-                })
-                .ToListAsync()
-            };
             return model;
         }
 

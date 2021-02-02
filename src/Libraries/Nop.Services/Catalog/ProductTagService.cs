@@ -104,43 +104,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get product count for each of existing product tag
-        /// </summary>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Dictionary of "product tag ID : product count"</returns>
-        protected virtual async Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRolesIds, showHidden);
-
-            return await _staticCacheManager.GetAsync(key, async () =>
-            {
-                var query = _productProductTagMappingRepository.Table;
-
-                if (!showHidden)
-                {
-                    var productsQuery = await FilterHiddenEntriesAsync(_productRepository.Table, storeId, customerRolesIds);
-                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
-                }
-
-                var pTagCount = from pt in _productTagRepository.Table
-                                join ptm in query on pt.Id equals ptm.ProductTagId into ptmDefaults
-                                from ptm in ptmDefaults.DefaultIfEmpty()
-                                group pt by pt.Id into ptGrouped
-                                select new
-                                {
-                                    ProductTagId = ptGrouped.Key,
-                                    ProductCount = ptGrouped.Count()
-                                };
-
-                return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
-            });
-        }
-
-        /// <summary>
         /// Indicates whether a product tag exists
         /// </summary>
         /// <param name="product">Product</param>
@@ -227,16 +190,18 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual async Task<IList<ProductTag>> GetAllProductTagsByProductIdAsync(int productId)
         {
-            var productTags = await _productTagRepository.GetAllAsync(query =>
-            {
-                return from pt in query
-                       join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                       where ppt.ProductId == productId
-                       orderby pt.Id
-                       select pt;
-            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId));
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId);
 
-            return productTags;
+            return await _staticCacheManager.GetAsync(key, async () =>
+            {
+                var tagMapping = from ptm in _productProductTagMappingRepository.Table
+                                 join pt in _productTagRepository.Table on ptm.ProductTagId equals pt.Id
+                                 where ptm.ProductId == productId
+                                 orderby pt.Id
+                                 select pt;
+
+                return await tagMapping.ToListAsync();
+            });
         }
 
         /// <summary>
@@ -284,13 +249,13 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get number of products
+        /// Get products quantity linked to a passed tag identifier
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Number of products</returns>
-        public virtual async Task<int> GetProductCountAsync(int productTagId, int storeId, bool showHidden = false)
+        public virtual async Task<int> GetProductCountByProductTagIdAsync(int productTagId, int storeId, bool showHidden = false)
         {
             var dictionary = await GetProductCountAsync(storeId, showHidden);
             if (dictionary.ContainsKey(productTagId))
@@ -299,6 +264,42 @@ namespace Nop.Services.Catalog
             return 0;
         }
 
+        /// <summary>
+        /// Get product count for every linked tag
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Dictionary of "product tag ID : product count"</returns>
+        public virtual async Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden = false)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRolesIds, showHidden);
+
+            return await _staticCacheManager.GetAsync(key, async () =>
+            {
+                var query = _productProductTagMappingRepository.Table;
+
+                if (!showHidden)
+                {
+                    var productsQuery = await FilterHiddenEntriesAsync(_productRepository.Table, storeId, customerRolesIds);
+                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
+                }
+
+                var pTagCount = from pt in _productTagRepository.Table
+                                join ptm in query on pt.Id equals ptm.ProductTagId
+                                group ptm by ptm.ProductTagId into ptmGrouped
+                                select new
+                                {
+                                    ProductTagId = ptmGrouped.Key,
+                                    ProductCount = ptmGrouped.Count()
+                                };
+
+                return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+            });
+        }
+        
         /// <summary>
         /// Update product tags
         /// </summary>
