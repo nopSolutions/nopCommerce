@@ -431,6 +431,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.ShippingProviders.Activate.Title"] = "Activate a provider",
                 ["Admin.ConfigurationSteps.PaymentMethods.Activate.Text"] = "To activate a payment method click the <b>Edit</b> button, then tick the <b>Is active</b> checkbox and save the changes.",
                 ["Admin.ConfigurationSteps.PaymentMethods.Activate.Title"] = "Activate a payment method",
+                ["Admin.Configuration.AppSettings.EnvironmentVariablesWarning"] = "Warning! The current setting value is overridden in environment variables",
             }).Wait();
 
             // rename locales

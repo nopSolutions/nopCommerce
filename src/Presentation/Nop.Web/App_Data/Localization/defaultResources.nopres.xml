@@ -4359,6 +4359,9 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider.Hint">
     <Value>Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.EnvironmentVariablesWarning">
+    <Value>Warning! The current setting value is overridden in environment variables</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
     <Value>Hosting configuration</Value>
   </LocaleResource>

@@ -747,7 +747,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
                 CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
             };
-
+            model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
+                                                where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
+                                                from pp in property.PropertyType.GetProperties()
+                                                where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "")}__{pp.Name}")
+                                                select $"{property.Name}_{pp.Name}");
             return model;
         }
 

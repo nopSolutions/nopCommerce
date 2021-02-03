@@ -14,7 +14,12 @@ namespace Nop.Web
             await Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
-                    .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true))
+                    .ConfigureAppConfiguration(config =>
+                    {
+                        config
+                            .AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true)
+                            .AddEnvironmentVariables();
+                    })
                     .UseStartup<Startup>())
                 .Build()
                 .RunAsync();
