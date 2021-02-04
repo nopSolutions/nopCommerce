@@ -206,7 +206,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ShoppingCartItemListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.SelectAwait(async item =>
+                return items
+                .OrderByDescending(item => item.CreatedOnUtc)
+                .SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
