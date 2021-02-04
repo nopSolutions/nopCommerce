@@ -402,20 +402,20 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             {
                 //whether plugin is configured
                 var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>();
-                if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
-                    throw new NopException($"Plugin not configured");
+                if (!string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
+                {
+                    //use only passed store identifier for the manual synchronization
+                    //use all store ids for the synchronization task
+                    var storeIds = !synchronizationTask
+                        ? new List<int> { storeId }
+                        : new List<int> { 0 }.Union((await _storeService.GetAllStoresAsync()).Select(store => store.Id)).ToList();
 
-                //use only passed store identifier for the manual synchronization
-                //use all store ids for the synchronization task
-                var storeIds = !synchronizationTask
-                    ? new List<int> { storeId }
-                    : new List<int> { 0 }.Union((await _storeService.GetAllStoresAsync()).Select(store => store.Id)).ToList();
+                    var importMessages = await ImportContactsAsync(storeIds);
+                    messages.AddRange(importMessages);
 
-                var importMessages = await ImportContactsAsync(storeIds);
-                messages.AddRange(importMessages);
-
-                var exportMessages = await ExportContactsAsync(storeIds);
-                messages.AddRange(exportMessages);
+                    var exportMessages = await ExportContactsAsync(storeIds);
+                    messages.AddRange(exportMessages);
+                }
 
             }
             catch (Exception exception)
