@@ -8,6 +8,24 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial interface IReportModelFactory
     {
+        #region Sales summary
+
+        /// <summary>
+        /// Prepare sales summary search model
+        /// </summary>
+        /// <param name="searchModel">Sales summary search model</param>
+        /// <returns>Sales summary search model</returns>
+        Task<SalesSummarySearchModel> PrepareSalesSummarySearchModelAsync(SalesSummarySearchModel searchModel);
+
+        /// <summary>
+        /// Prepare sales summary list model
+        /// </summary>
+        /// <param name="searchModel">Sales summary search model</param>
+        /// <returns>Sales summary list model</returns>
+        Task<SalesSummaryListModel> PrepareSalesSummaryListModelAsync(SalesSummarySearchModel searchModel);
+
+        #endregion
+
         #region LowStockProduct
 
         /// <summary>

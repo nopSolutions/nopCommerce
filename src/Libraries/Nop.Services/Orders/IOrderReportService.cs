@@ -63,6 +63,38 @@ namespace Nop.Services.Orders
         Task<OrderAverageReportLineSummary> OrderAverageReportAsync(int storeId, OrderStatus os);
 
         /// <summary>
+        /// Get sales summary report
+        /// </summary>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="categoryId">Category identifier; 0 to load all records</param>
+        /// <param name="productId">Product identifier; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
+        /// <param name="groupBy">0 - group by day, 1 - group by week, 2 - group by total month</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Result</returns>
+        Task<IPagedList<SalesSummaryReportLine>> SalesSummaryReportAsync(
+            int categoryId = 0,
+            int productId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            int billingCountryId = 0,
+            GroupByOptions groupBy = GroupByOptions.Day,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue);
+
+        /// <summary>
         /// Get best sellers report
         /// </summary>
         /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>

@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -70,6 +71,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
+        protected virtual async Task<IPagedList<SalesSummaryReportLine>> GetSalesSummaryReportAsync(SalesSummarySearchModel searchModel)
+        {
+            //get parameters to filter orders
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+
+            //get sales summary
+            var salesSummary = await _orderReportService.SalesSummaryReportAsync(
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: searchModel.BillingCountryId,
+                groupBy: (GroupByOptions)searchModel.SearchGroupId,
+                categoryId: searchModel.CategoryId,
+                productId: searchModel.ProductId,
+                manufacturerId: searchModel.ManufacturerId,
+                storeId: searchModel.StoreId,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            return salesSummary;
+        }
+
         protected virtual async Task<IPagedList<BestsellersReportLine>> GetBestsellersReportAsync(BestsellerSearchModel searchModel)
         {
             //get parameters to filter bestsellers
@@ -97,11 +125,91 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             return bestsellers;
-        }
+        }        
 
         #endregion
 
         #region Methods
+
+        #region Sales summary
+
+        /// <summary>
+        /// Prepare sales summary search model
+        /// </summary>
+        /// <param name="searchModel">Sales summary search model</param>
+        /// <returns>Sales summary search model</returns>
+        public virtual async Task<SalesSummarySearchModel> PrepareSalesSummarySearchModelAsync(SalesSummarySearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+
+            //prepare available stores
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+
+            //prepare available order statuses
+            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
+
+            //prepare available payment statuses
+            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
+
+            //prepare available categories
+            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+
+            //prepare available manufacturers
+            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+
+            //prepare available billing countries
+            searchModel.AvailableCountries = (await _countryService.GetAllCountriesForBillingAsync(showHidden: true))
+                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
+
+            //prepare "group by" filter
+            searchModel.GroupByOptions = (await GroupByOptions.Day.ToSelectListAsync()).ToList();
+            
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare sales summary list model
+        /// </summary>
+        /// <param name="searchModel">Sales summary search model</param>
+        /// <returns>Sales summary list model</returns>
+        public virtual async Task<SalesSummaryListModel> PrepareSalesSummaryListModelAsync(SalesSummarySearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            var salesSummary = await GetSalesSummaryReportAsync(searchModel);
+
+            //prepare list model
+            var model = new SalesSummaryListModel().PrepareToGrid(searchModel, salesSummary, () =>
+            {
+                return salesSummary.Select(sale =>
+                {
+                    //fill in model values from the entity
+                    var salesSummaryModel = new SalesSummaryModel
+                    {
+                        Summary = sale.Summary,
+                        NumberOfOrders = sale.NumberOfOrders,
+                        ProfitStr = sale.ProfitStr,
+                        Shipping = sale.Shipping,
+                        Tax = sale.Tax,
+                        OrderTotal = sale.OrderTotal
+                    };
+
+                    return salesSummaryModel;
+                });
+            });
+
+            return model;
+        }
+
+        #endregion
 
         #region LowStock
 

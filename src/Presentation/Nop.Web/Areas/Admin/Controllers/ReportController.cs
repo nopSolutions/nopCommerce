@@ -29,6 +29,34 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
+        #region Sales summary
+
+        public virtual async Task<IActionResult> SalesSummary()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = await _reportModelFactory.PrepareSalesSummarySearchModelAsync(new SalesSummarySearchModel());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> SalesSummaryList(SalesSummarySearchModel searchModel)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return await AccessDeniedDataTablesJson();
+
+            //prepare model
+            var model = await _reportModelFactory.PrepareSalesSummaryListModelAsync(searchModel);
+
+            return Json(model);
+        }
+
+
+        #endregion
+
         #region Low stock
 
         public virtual async Task<IActionResult> LowStock()
