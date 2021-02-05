@@ -80,7 +80,7 @@
                     <script asp-location="Footer">
                         $('#confirm-order-form').on('submit',
                             function () {
-                                var button = $(this).find('input[type="submit"][name="nextstep"]');
+                                var button = $(this).find('button[type="submit"][name="nextstep"]');
                                 setTimeout(function () {
                                     button.prop('disabled', true);
                                 },

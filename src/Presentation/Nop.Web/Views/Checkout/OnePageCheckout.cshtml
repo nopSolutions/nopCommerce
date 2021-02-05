@@ -69,26 +69,14 @@
                         }
                     </script>
                     <div class="buttons" id="billing-buttons-container">
-                        <input id="edit-address-button"
-                               type="button"
-                               class="button-1"
-                               style="display: none"
-                               onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;"
-                               value="@T("Common.Edit")" />
-                        <input id="delete-address-button"
-                               type="button"
-                               class="button-1"
-                               style="display: none"
-                               onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditAddress/'); return false;"
-                               value="@T("Common.Delete")" />
-                        <input id="save-address-button"
-                               type="button"
-                               class="button-1"
-                               style="display: none"
-                               onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;"
-                               value="@T("Common.Save")" />
+                        <button id="edit-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
+
+                        <button id="delete-address-button" type="button" class="button-1" style="display: none" onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditAddress/'); return false;">@T("Common.Delete")</button>
+
+                        <button id="save-address-button" type="button" class="button-1" style="display: none" onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;">@T("Common.Save")</button>
 
                         <button type="button" name="save" class="button-1 new-address-next-step-button" onclick="Billing.save()">@T("Common.Continue")</button>
+
                         <span class="please-wait" id="billing-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
                     </div>
                 </div>

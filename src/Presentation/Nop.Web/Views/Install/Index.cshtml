@@ -59,7 +59,7 @@
                             if ($('#installation-form').valid()) {
                                 $("html, body").animate({ scrollTop: 0 }, 400);
                                 showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
-                                $('input[type=submit]', this).attr('disabled', 'disabled');
+                                $('button[type=submit]', this).attr('disabled', 'disabled');
                             }
                         });
                     });
@@ -68,7 +68,7 @@
                         $('#restart-form').submit(function () {
                             $("html, body").animate({ scrollTop: 0 }, 400);
                             showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
-                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                            $('button[type=submit]', this).attr('disabled', 'disabled');
                         });
                     });
 
