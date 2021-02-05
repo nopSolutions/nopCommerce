@@ -1,5 +1,5 @@
 /*!
- * Globalize v1.4.3
+ * Globalize v1.6.0
  *
  * http://github.com/jquery/globalize
  *
@@ -7,7 +7,7 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2020-03-19T12:34Z
+ * Date: 2020-09-08T11:54Z
  */
 (function( root, factory ) {
 
@@ -34,9 +34,12 @@
 }(this, function( Cldr, Globalize ) {
 
 var alwaysArray = Globalize._alwaysArray,
-	formatMessage = Globalize._formatMessage,
+	createError = Globalize._createError,
+	formatMessageToParts = Globalize._formatMessageToParts,
 	numberNumberingSystem = Globalize._numberNumberingSystem,
 	numberPattern = Globalize._numberPattern,
+	partsJoin = Globalize._partsJoin,
+	partsPush = Globalize._partsPush,
 	runtimeBind = Globalize._runtimeBind,
 	stringPad = Globalize._stringPad,
 	validateCldr = Globalize._validateCldr,
@@ -47,6 +50,13 @@ var alwaysArray = Globalize._alwaysArray,
 	validateParameterTypePlainObject = Globalize._validateParameterTypePlainObject;
 
 
+var createErrorPluralModulePresence = function() {
+	return createError( "E_MISSING_PLURAL_MODULE", "Plural module not loaded." );
+};
+
+
+
+
 var validateParameterTypeCurrency = function( value, name ) {
 	validateParameterType(
 		value,
@@ -54,6 +64,15 @@ var validateParameterTypeCurrency = function( value, name ) {
 		value === undefined || typeof value === "string" && ( /^[A-Za-z]{3}$/ ).test( value ),
 		"3-letter currency code string as defined by ISO 4217"
 	);
+};
+
+
+
+
+var currencyFormatterFn = function( currencyToPartsFormatter ) {
+	return function currencyFormatter( value ) {
+		return partsJoin( currencyToPartsFormatter( value ));
+	};
 };
 
 
@@ -109,11 +128,11 @@ var currencyUnitPatterns = function( cldr ) {
 
 
 /**
- * codeProperties( currency, cldr )
+ * nameProperties( currency, cldr )
  *
  * Return number pattern with the appropriate currency code in as literal.
  */
-var currencyCodeProperties = function( currency, cldr ) {
+var currencyNameProperties = function( currency, cldr ) {
 	var pattern = numberPattern( "decimal", cldr );
 
 	// The number of decimal places and the rounding for each currency is not locale-specific. Those
@@ -121,80 +140,13 @@ var currencyCodeProperties = function( currency, cldr ) {
 	pattern = currencySupplementalOverride( currency, pattern, cldr );
 
 	return {
-		currency: currency,
+		displayNames: objectFilter( cldr.main([
+			"numbers/currencies",
+			currency
+		]), /^displayName/ ),
 		pattern: pattern,
 		unitPatterns: currencyUnitPatterns( cldr )
 	};
-};
-
-
-
-
-/**
- * nameFormat( formattedNumber, pluralForm, properties )
- *
- * Return the appropriate name form currency format.
- */
-var currencyNameFormat = function( formattedNumber, pluralForm, properties ) {
-	var displayName, unitPattern,
-		displayNames = properties.displayNames || {},
-		unitPatterns = properties.unitPatterns;
-
-	displayName = displayNames[ "displayName-count-" + pluralForm ] ||
-		displayNames[ "displayName-count-other" ] ||
-		displayNames.displayName ||
-		properties.currency;
-	unitPattern = unitPatterns[ "unitPattern-count-" + pluralForm ] ||
-		unitPatterns[ "unitPattern-count-other" ];
-
-	return formatMessage( unitPattern, [ formattedNumber, displayName ]);
-};
-
-
-
-
-var currencyFormatterFn = function( numberFormatter, pluralGenerator, properties ) {
-	var fn;
-
-	// Return formatter when style is "code" or "name".
-	if ( pluralGenerator && properties ) {
-		fn = function currencyFormatter( value ) {
-			validateParameterPresence( value, "value" );
-			validateParameterTypeNumber( value, "value" );
-			return currencyNameFormat(
-				numberFormatter( value ),
-				pluralGenerator( value ),
-				properties
-			);
-		};
-
-	// Return formatter when style is "symbol" or "accounting".
-	} else {
-		fn = function currencyFormatter( value ) {
-			return numberFormatter( value );
-		};
-	}
-
-	return fn;
-};
-
-
-
-
-/**
- * nameProperties( currency, cldr )
- *
- * Return number pattern with the appropriate currency code in as literal.
- */
-var currencyNameProperties = function( currency, cldr ) {
-	var properties = currencyCodeProperties( currency, cldr );
-
-	properties.displayNames = objectFilter( cldr.main([
-		"numbers/currencies",
-		currency
-	]), /^displayName/ );
-
-	return properties;
 };
 
 
@@ -224,25 +176,30 @@ var regexpNotS = /[\0-#%-\*,-;\?-\]_a-\{\}\x7F-\xA1\xA7\xAA\xAB\xAD\xB2\xB3\xB5-
  * Return pattern replacing `¤` with the appropriate currency symbol literal.
  */
 var currencySymbolProperties = function( currency, cldr, options ) {
-	var currencySpacing, pattern, symbol,
-		symbolEntries = [ "symbol" ],
+	var currencySpacing, pattern, symbol, symbolEntries,
 		regexp = {
 			"[:digit:]": /\d/,
 			"[:^S:]": regexpNotS
 		};
 
-	// If options.symbolForm === "narrow" was passed, prepend it.
-	if ( options.symbolForm === "narrow" ) {
-		symbolEntries.unshift( "symbol-alt-narrow" );
-	}
+	if ( options.style === "code" ) {
+		symbol = currency;
+	} else {
+		symbolEntries = [ "symbol" ];
 
-	symbolEntries.some(function( symbolEntry ) {
-		return symbol = cldr.main([
-			"numbers/currencies",
-			currency,
-			symbolEntry
-		]);
-	});
+		// If options.symbolForm === "narrow" was passed, prepend it.
+		if ( options.symbolForm === "narrow" ) {
+			symbolEntries.unshift( "symbol-alt-narrow" );
+		}
+
+		symbolEntries.some(function( symbolEntry ) {
+			return symbol = cldr.main([
+				"numbers/currencies",
+				currency,
+				symbolEntry
+			]);
+		});
+	}
 
 	currencySpacing = [ "beforeCurrency", "afterCurrency" ].map(function( position ) {
 		return cldr.main([
@@ -286,12 +243,96 @@ var currencySymbolProperties = function( currency, cldr, options ) {
 				}
 
 				return ( i ? insertBetween : "" ) + part + ( i ? "" : insertBetween );
-			}).join( "'" + symbol + "'" );
+			}).join( "\u00A4" );
 		}).join( ";" );
 
 	return {
-		pattern: pattern
+		pattern: pattern,
+		symbol: symbol
 	};
+};
+
+
+
+
+/**
+ * nameFormat( formattedNumber, pluralForm, properties )
+ *
+ * Return the appropriate name form currency format.
+ */
+var currencyNameFormat = function( formattedNumber, pluralForm, properties ) {
+	var displayName, unitPattern,
+		parts = [],
+		displayNames = properties.displayNames || {},
+		unitPatterns = properties.unitPatterns;
+
+	displayName = displayNames[ "displayName-count-" + pluralForm ] ||
+		displayNames[ "displayName-count-other" ] ||
+		displayNames.displayName ||
+		properties.currency;
+	unitPattern = unitPatterns[ "unitPattern-count-" + pluralForm ] ||
+		unitPatterns[ "unitPattern-count-other" ];
+
+	formatMessageToParts( unitPattern, [ formattedNumber, displayName ]).forEach(function( part ) {
+		if ( part.type === "variable" && part.name === "0" ) {
+			part.value.forEach(function( part ) {
+				partsPush( parts, part.type, part.value );
+			});
+		} else if ( part.type === "variable" && part.name === "1" ) {
+			partsPush( parts, "currency", part.value );
+		} else {
+			partsPush( parts, "literal", part.value );
+		}
+	});
+
+	return parts;
+};
+
+
+
+
+/**
+ * symbolFormat( parts, symbol )
+ *
+ * Return the appropriate symbol/account form format.
+ */
+var currencySymbolFormat = function( parts, symbol ) {
+	parts.forEach(function( part ) {
+		if ( part.type === "currency" ) {
+			part.value = symbol;
+		}
+	});
+	return parts;
+};
+
+
+
+
+var currencyToPartsFormatterFn = function( numberToPartsFormatter, pluralGenerator, properties ) {
+	var fn;
+
+	// Return formatter when style is "name".
+	if ( pluralGenerator && properties ) {
+		fn = function currencyToPartsFormatter( value ) {
+			validateParameterPresence( value, "value" );
+			validateParameterTypeNumber( value, "value" );
+			return currencyNameFormat(
+				numberToPartsFormatter( value ),
+				pluralGenerator( value ),
+				properties
+			);
+		};
+
+	// Return formatter when style is "symbol", "accounting", or "code".
+	} else {
+		fn = function currencyToPartsFormatter( value ) {
+
+			// 1: Reusing pluralGenerator argument, but in this case it is actually `symbol`
+			return currencySymbolFormat( numberToPartsFormatter( value ), pluralGenerator /* 1 */ );
+		};
+	}
+
+	return fn;
 };
 
 
@@ -343,7 +384,45 @@ function validateRequiredCldr( path, value ) {
  */
 Globalize.currencyFormatter =
 Globalize.prototype.currencyFormatter = function( currency, options ) {
-	var args, cldr, numberFormatter, pluralGenerator, properties, returnFn, style;
+	var args, currencyToPartsFormatter, returnFn;
+
+	validateParameterPresence( currency, "currency" );
+	validateParameterTypeCurrency( currency, "currency" );
+
+	validateParameterTypePlainObject( options, "options" );
+
+	options = options || {};
+	args = [ currency, options ];
+
+	currencyToPartsFormatter = this.currencyToPartsFormatter( currency, options );
+	returnFn = currencyFormatterFn( currencyToPartsFormatter );
+	runtimeBind( args, this.cldr, returnFn, [ currencyToPartsFormatter ] );
+
+	return returnFn;
+};
+
+/**
+ * .currencyToPartsFormatter( currency [, options] )
+ *
+ * @currency [String] 3-letter currency code as defined by ISO 4217.
+ *
+ * @options [Object]:
+ * - style: [String] "symbol" (default), "accounting", "code" or "name".
+ * - see also number/format options.
+ *
+ * Return a currency formatter function (of the form below) according to the given options and the
+ * default/instance locale.
+ *
+ * fn( value )
+ *
+ * @value [Number]
+ *
+ * Return a function that formats a currency to parts according to the given options
+ * and the default/instance locale.
+ */
+Globalize.currencyToPartsFormatter =
+Globalize.prototype.currencyToPartsFormatter = function( currency, options ) {
+	var args, cldr, numberToPartsFormatter, pluralGenerator, properties, returnFn, style;
 
 	validateParameterPresence( currency, "currency" );
 	validateParameterTypeCurrency( currency, "currency" );
@@ -363,10 +442,10 @@ Globalize.prototype.currencyFormatter = function( currency, options ) {
 	try {
 		properties = ({
 			accounting: currencySymbolProperties,
-			code: currencyCodeProperties,
+			code: currencySymbolProperties,
 			name: currencyNameProperties,
 			symbol: currencySymbolProperties
-		}[ style] )( currency, cldr, options );
+		}[ style ] )( currency, cldr, options );
 	} finally {
 		cldr.off( "get", validateRequiredCldr );
 	}
@@ -375,22 +454,34 @@ Globalize.prototype.currencyFormatter = function( currency, options ) {
 	options = objectOmit( options, "style" );
 	options.raw = properties.pattern;
 
-	// Return formatter when style is "symbol" or "accounting".
-	if ( style === "symbol" || style === "accounting" ) {
-		numberFormatter = this.numberFormatter( options );
+	// Return formatter when style is "symbol", "accounting", or "code".
+	if ( style === "symbol" || style === "accounting" || style === "code" ) {
+		numberToPartsFormatter = this.numberToPartsFormatter( options );
 
-		returnFn = currencyFormatterFn( numberFormatter );
+		returnFn = currencyToPartsFormatterFn( numberToPartsFormatter, properties.symbol );
 
-		runtimeBind( args, cldr, returnFn, [ numberFormatter ] );
+		runtimeBind( args, cldr, returnFn, [ numberToPartsFormatter, properties.symbol ] );
 
-	// Return formatter when style is "code" or "name".
+	// Return formatter when style is "name".
 	} else {
-		numberFormatter = this.numberFormatter( options );
-		pluralGenerator = this.pluralGenerator();
+		numberToPartsFormatter = this.numberToPartsFormatter( options );
 
-		returnFn = currencyFormatterFn( numberFormatter, pluralGenerator, properties );
+		// Is plural module present? Yes, use its generator. Nope, use an error generator.
+		pluralGenerator = this.plural !== undefined ?
+			this.pluralGenerator() :
+			createErrorPluralModulePresence;
 
-		runtimeBind( args, cldr, returnFn, [ numberFormatter, pluralGenerator, properties ] );
+		returnFn = currencyToPartsFormatterFn(
+			numberToPartsFormatter,
+			pluralGenerator,
+			properties
+		);
+
+		runtimeBind( args, cldr, returnFn, [
+			numberToPartsFormatter,
+			pluralGenerator,
+			properties
+		]);
 	}
 
 	return returnFn;
@@ -427,8 +518,25 @@ Globalize.formatCurrency =
 Globalize.prototype.formatCurrency = function( value, currency, options ) {
 	validateParameterPresence( value, "value" );
 	validateParameterTypeNumber( value, "value" );
-
 	return this.currencyFormatter( currency, options )( value );
+};
+
+/**
+ * .formatCurrencyToParts( value, currency [, options] )
+ *
+ * @value [Number] number to be formatted.
+ *
+ * @currency [String] 3-letter currency code as defined by ISO 4217.
+ *
+ * @options [Object] see currencyFormatter.
+ *
+ * Format a currency to parts according to the given options and the default/instance locale.
+ */
+Globalize.formatCurrencyToParts =
+Globalize.prototype.formatCurrencyToParts = function( value, currency, options ) {
+	validateParameterPresence( value, "value" );
+	validateParameterTypeNumber( value, "value" );
+	return this.currencyToPartsFormatter( currency, options )( value );
 };
 
 /**
