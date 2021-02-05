@@ -933,11 +933,15 @@ namespace Nop.Services.Catalog
 
             if (categoryIds?.Count > 0)
             {
+                var productCategoryQuery = 
+                    from pc in _productCategoryRepository.Table
+                    where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
+                        categoryIds.Contains(pc.CategoryId)
+                    select pc;
+
                 productsQuery =
                     from p in productsQuery
-                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                    where categoryIds.Contains(pc.CategoryId) &&
-                        (!excludeFeaturedProducts || !pc.IsFeaturedProduct)
+                    where productCategoryQuery.Any(pc => pc.ProductId == p.Id)
                     select p;
             }
 
