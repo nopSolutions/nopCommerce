@@ -92,8 +92,8 @@ namespace Nop.Services.Customers
                          };
             query2 = orderBy switch
             {
-                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.OrderTotal),
-                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.OrderCount),
+                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.OrderCount),
+                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.OrderTotal),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
             var tmp = await query2.ToPagedListAsync(pageIndex, pageSize);
