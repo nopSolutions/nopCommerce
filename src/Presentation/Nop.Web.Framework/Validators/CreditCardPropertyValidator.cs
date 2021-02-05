@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using FluentValidation.Validators;
 
 namespace Nop.Web.Framework.Validators
@@ -8,14 +8,7 @@ namespace Nop.Web.Framework.Validators
     /// </summary>
     public class CreditCardPropertyValidator : PropertyValidator
     {
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public CreditCardPropertyValidator()
-            : base("Credit card number is not valid")
-        {
-
-        }
+        protected override string GetDefaultMessageTemplate() => "Credit card number is not valid";
 
         /// <summary>
         /// Is valid?
