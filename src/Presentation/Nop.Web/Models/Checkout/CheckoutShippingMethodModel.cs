@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Checkout
 {
-    public partial class CheckoutShippingMethodModel : BaseNopModel
+    public partial record CheckoutShippingMethodModel : BaseNopModel
     {
         public CheckoutShippingMethodModel()
         {
@@ -23,7 +23,7 @@ namespace Nop.Web.Models.Checkout
 
         #region Nested classes
 
-        public partial class ShippingMethodModel : BaseNopModel
+        public partial record ShippingMethodModel : BaseNopModel
         {
             public string ShippingRateComputationMethodSystemName { get; set; }
             public string Name { get; set; }

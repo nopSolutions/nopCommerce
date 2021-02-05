@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 using Nop.Services.Discounts;
 
@@ -13,9 +14,9 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Manufacturer entity)
+        protected override async Task ClearCacheAsync(Manufacturer entity)
         {
-            RemoveByPrefix(NopDiscountDefaults.ManufacturerIdsPrefix);
+            await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsPrefix);
         }
     }
 }

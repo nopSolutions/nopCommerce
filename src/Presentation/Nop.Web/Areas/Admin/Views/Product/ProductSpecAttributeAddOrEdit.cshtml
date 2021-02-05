@@ -84,7 +84,7 @@
                                     }
                                     else
                                     {
-                                        <nop-select asp-for="AttributeTypeId" asp-items="@(((SpecificationAttributeType) Model.AttributeTypeId).ToSelectList())" />
+                                        <nop-select asp-for="AttributeTypeId" asp-items="@await (((SpecificationAttributeType) Model.AttributeTypeId).ToSelectListAsync())" />
                                     }
                                     <span asp-validation-for="AttributeTypeId"></span>
                                 </div>
@@ -123,14 +123,14 @@
                                                 value.hide();
                                                 value.find("input").prop("disabled", true);
                                             });
-                                            valueContainers[attrTypeId].show();
+                                            valueContainers[attrTypeId].showField();
                                             valueContainers[attrTypeId].find("input").prop("disabled", false);
 
                                             var allowFilteringSection = $('#AllowFilteringSection');
                                             var allowFilteringField = $('#@Html.IdFor(model => model.AllowFiltering)');
 
                                             if (attrTypeId == '@((int) SpecificationAttributeType.Option)') {
-                                                allowFilteringSection.show();
+                                                allowFilteringSection.showField();
                                             } else {
                                                 allowFilteringField.prop('checked', false);
                                                 allowFilteringSection.hide();
@@ -185,7 +185,7 @@
                             </div>
                         
                             <div id="AttributeValueCustomHtmlTextSection">
-                                @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomHtmlTextSection-localized",
+                                @(await Html.LocalizedEditorAsync<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomHtmlTextSection-localized",
                                 @<div>
                                     <div class="form-group row">
                                         <div class="col-md-3">
@@ -212,7 +212,7 @@
                             </div>
 
                             <div id="AttributeValueCustomTextSection">
-                                @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomTextSection-localized",
+                                @(await Html.LocalizedEditorAsync<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomTextSection-localized",
                                 @<div>
                                     <div class="form-group row">
                                         <div class="col-md-3">

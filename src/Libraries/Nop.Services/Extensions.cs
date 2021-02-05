@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -22,16 +23,24 @@ namespace Nop.Services
         /// <param name="valuesToExclude">Values to exclude</param>
         /// <param name="useLocalization">Localize</param>
         /// <returns>SelectList</returns>
-        public static SelectList ToSelectList<TEnum>(this TEnum enumObj,
+        public static async Task<SelectList> ToSelectListAsync<TEnum>(this TEnum enumObj,
            bool markCurrentAsSelected = true, int[] valuesToExclude = null, bool useLocalization = true) where TEnum : struct
         {
             if (!typeof(TEnum).IsEnum)
                 throw new ArgumentException("An Enumeration type is required.", nameof(enumObj));
 
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
-                         where valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))
-                         select new { ID = Convert.ToInt32(enumValue), Name = useLocalization ? localizationService.GetLocalizedEnum(enumValue) : CommonHelper.ConvertEnum(enumValue.ToString()) };
+
+            var values = await Enum.GetValues(typeof(TEnum)).OfType<TEnum>().Where(enumValue =>
+                    valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue)))
+                .SelectAwait(async enumValue => new
+                {
+                    ID = Convert.ToInt32(enumValue),
+                    Name = useLocalization
+                        ? await localizationService.GetLocalizedEnumAsync(enumValue)
+                        : CommonHelper.ConvertEnum(enumValue.ToString())
+                }).ToListAsync();
+
             object selectedValue = null;
             if (markCurrentAsSelected)
                 selectedValue = Convert.ToInt32(enumObj);

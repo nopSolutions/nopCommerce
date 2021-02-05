@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Vendors
 {
@@ -42,9 +44,9 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
         /// <returns>Vendor</returns>
-        public virtual Vendor GetVendorById(int vendorId)
+        public virtual async Task<Vendor> GetVendorByIdAsync(int vendorId)
         {
-            return _vendorRepository.GetById(vendorId, cache => default);
+            return await _vendorRepository.GetByIdAsync(vendorId, cache => default);
         }
 
         /// <summary>
@@ -52,15 +54,15 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Vendor</returns>
-        public virtual Vendor GetVendorByProductId(int productId)
+        public virtual async Task<Vendor> GetVendorByProductIdAsync(int productId)
         {
             if (productId == 0)
                 return null;
 
-            return (from v in _vendorRepository.Table
+            return await (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
                     where p.Id == productId
-                    select v).FirstOrDefault();
+                    select v).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -68,24 +70,24 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="productIds">Array of product identifiers</param>
         /// <returns>Vendors</returns>
-        public virtual IList<Vendor> GetVendorsByProductIds(int[] productIds)
+        public virtual async Task<IList<Vendor>> GetVendorsByProductIdsAsync(int[] productIds)
         {
             if (productIds is null)
                 throw new ArgumentNullException(nameof(productIds));
 
-            return (from v in _vendorRepository.Table
+            return await (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
                     where productIds.Contains(p.Id) && !v.Deleted && v.Active
-                    select v).Distinct().ToList();
+                    select v).Distinct().ToListAsync();
         }
 
         /// <summary>
         /// Delete a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void DeleteVendor(Vendor vendor)
+        public virtual async Task DeleteVendorAsync(Vendor vendor)
         {
-            _vendorRepository.Delete(vendor);
+            await _vendorRepository.DeleteAsync(vendor);
         }
 
         /// <summary>
@@ -97,9 +99,9 @@ namespace Nop.Services.Vendors
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendors</returns>
-        public virtual IPagedList<Vendor> GetAllVendors(string name = "", string email = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        public virtual async Task<IPagedList<Vendor>> GetAllVendorsAsync(string name = "", string email = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            var vendors = _vendorRepository.GetAllPaged(query =>
+            var vendors = await _vendorRepository.GetAllPagedAsync(query =>
             {
                 if (!string.IsNullOrWhiteSpace(name))
                     query = query.Where(v => v.Name.Contains(name));
@@ -120,31 +122,21 @@ namespace Nop.Services.Vendors
         }
 
         /// <summary>
-        /// Gets vendors
-        /// </summary>
-        /// <param name="vendorIds">Vendor identifiers</param>
-        /// <returns>Vendors</returns>
-        public virtual IList<Vendor> GetVendorsByIds(int[] vendorIds)
-        {
-            return _vendorRepository.GetByIds(vendorIds);
-        }
-
-        /// <summary>
         /// Inserts a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void InsertVendor(Vendor vendor)
+        public virtual async Task InsertVendorAsync(Vendor vendor)
         {
-            _vendorRepository.Insert(vendor);
+            await _vendorRepository.InsertAsync(vendor);
         }
 
         /// <summary>
         /// Updates the vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void UpdateVendor(Vendor vendor)
+        public virtual async Task UpdateVendorAsync(Vendor vendor)
         {
-            _vendorRepository.Update(vendor);
+            await _vendorRepository.UpdateAsync(vendor);
         }
 
         /// <summary>
@@ -152,9 +144,9 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorNoteId">The vendor note identifier</param>
         /// <returns>Vendor note</returns>
-        public virtual VendorNote GetVendorNoteById(int vendorNoteId)
+        public virtual async Task<VendorNote> GetVendorNoteByIdAsync(int vendorNoteId)
         {
-            return _vendorNoteRepository.GetById(vendorNoteId, cache => default);
+            return await _vendorNoteRepository.GetByIdAsync(vendorNoteId, cache => default);
         }
 
         /// <summary>
@@ -164,31 +156,31 @@ namespace Nop.Services.Vendors
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Vendor notes</returns>
-        public virtual IPagedList<VendorNote> GetVendorNotesByVendor(int vendorId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<VendorNote>> GetVendorNotesByVendorAsync(int vendorId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _vendorNoteRepository.Table.Where(vn => vn.VendorId == vendorId);
 
             query = query.OrderBy(v => v.CreatedOnUtc).ThenBy(v => v.Id);
 
-            return new PagedList<VendorNote>(query, pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
         /// Deletes a vendor note
         /// </summary>
         /// <param name="vendorNote">The vendor note</param>
-        public virtual void DeleteVendorNote(VendorNote vendorNote)
+        public virtual async Task DeleteVendorNoteAsync(VendorNote vendorNote)
         {
-            _vendorNoteRepository.Delete(vendorNote);
+            await _vendorNoteRepository.DeleteAsync(vendorNote);
         }
 
         /// <summary>
         /// Inserts a vendor note
         /// </summary>
         /// <param name="vendorNote">Vendor note</param>
-        public virtual void InsertVendorNote(VendorNote vendorNote)
+        public virtual async Task InsertVendorNoteAsync(VendorNote vendorNote)
         {
-            _vendorNoteRepository.Insert(vendorNote);
+            await _vendorNoteRepository.InsertAsync(vendorNote);
         }
 
         /// <summary>

@@ -7,10 +7,15 @@
     //page title
     ViewBag.PageTitle = T("Admin.Dashboard").Text;
 
-    var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
-    var canManageReturnRequests = permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests);
+    var canManageOrders = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
+    var canManageReturnRequests = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests);
+
+    //close configuration steps value
+    const string closeCardAttributeName = "CloseConfigurationSteps";
+    var closeConfigurationStepsCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), closeCardAttributeName);
+
      //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Dashboard");
 }
@@ -25,6 +30,15 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
+                    @if (!closeConfigurationStepsCard)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @await Html.PartialAsync("_ConfigurationSteps")
+                            </div>
+                        </div>
+                    }
+
                     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DashboardTop })
                     @if (!Model.IsLoggedInAsVendor)
                     {
@@ -34,6 +48,7 @@
                             </div>
                         </div>
                     }
+
                     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DashboardNewsAfter })
                     @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageReturnRequests)
                     {

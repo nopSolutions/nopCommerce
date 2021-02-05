@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Blogs
 {
-    public partial class BlogPostModel : BaseNopEntityModel
+    public partial record BlogPostModel : BaseNopEntityModel
     {
         public BlogPostModel()
         {

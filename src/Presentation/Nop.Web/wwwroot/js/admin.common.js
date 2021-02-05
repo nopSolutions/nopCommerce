@@ -1,3 +1,7 @@
+$.fn.showField = function () {
+  this.css('display', 'flex');
+}
+
 function setLocation(url) {
     window.location.href = url;
 }
@@ -78,7 +82,7 @@ function checkOverriddenStoreValue(obj, selector) {
 }
 
 function bindBootstrapTabSelectEvent(tabsId, inputId) {
-    $('#' + tabsId + ' > ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('#' + tabsId + ' > div ul li a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
         var tabName = $(e.target).attr("data-tab-name");
         $("#" + inputId).val(tabName);
     });

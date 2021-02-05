@@ -40,7 +40,7 @@
             {
                 Title = T("Admin.Orders.Fields.Store").Text,
                 Width = "200",
-                Visible = storeService.GetAllStores().Count > 1
+                Visible = (await storeService.GetAllStoresAsync()).Count > 1
             },
             new ColumnProperty(nameof(CustomerOrderModel.CreatedOn))
             {

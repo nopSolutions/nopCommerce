@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Polls;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Polls;
 using Nop.Web.Areas.Admin.Models.Polls;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Poll search model</param>
         /// <returns>Poll search model</returns>
-        PollSearchModel PreparePollSearchModel(PollSearchModel searchModel);
+        Task<PollSearchModel> PreparePollSearchModelAsync(PollSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged poll list model
         /// </summary>
         /// <param name="searchModel">Poll search model</param>
         /// <returns>Poll list model</returns>
-        PollListModel PreparePollListModel(PollSearchModel searchModel);
+        Task<PollListModel> PreparePollListModelAsync(PollSearchModel searchModel);
 
         /// <summary>
         /// Prepare poll model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="poll">Poll</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Poll model</returns>
-        PollModel PreparePollModel(PollModel model, Poll poll, bool excludeProperties = false);
+        Task<PollModel> PreparePollModelAsync(PollModel model, Poll poll, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged poll answer list model
@@ -37,6 +38,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Poll answer search model</param>
         /// <param name="poll">Poll</param>
         /// <returns>Poll answer list model</returns>
-        PollAnswerListModel PreparePollAnswerListModel(PollAnswerSearchModel searchModel, Poll poll);
+        Task<PollAnswerListModel> PreparePollAnswerListModelAsync(PollAnswerSearchModel searchModel, Poll poll);
     }
 }

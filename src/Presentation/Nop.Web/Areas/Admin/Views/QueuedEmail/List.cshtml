@@ -9,7 +9,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "QueuedEmailsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="QueuedEmail" asp-action="List" method="post">

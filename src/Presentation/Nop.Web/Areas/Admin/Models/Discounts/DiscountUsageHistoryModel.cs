@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount usage history model
     /// </summary>
-    public partial class DiscountUsageHistoryModel : BaseNopEntityModel
+    public partial record DiscountUsageHistoryModel : BaseNopEntityModel
     {
         #region Properties
 

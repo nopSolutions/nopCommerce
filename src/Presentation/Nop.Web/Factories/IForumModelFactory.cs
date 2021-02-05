@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Forums;
 using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Factories
@@ -9,37 +10,23 @@ namespace Nop.Web.Factories
     public partial interface IForumModelFactory
     {
         /// <summary>
-        /// Prepare the forum topic row model
-        /// </summary>
-        /// <param name="topic">Forum topic</param>
-        /// <returns>Forum topic row model</returns>
-        ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic);
-
-        /// <summary>
-        /// Prepare the forum row model
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum row model</returns>
-        ForumRowModel PrepareForumRowModel(Forum forum);
-
-        /// <summary>
         /// Prepare the forum group model
         /// </summary>
-        /// <param name="forum">Forum group</param>
+        /// <param name="forumGroup">Forum group</param>
         /// <returns>Forum group model</returns>
-        ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup);
+        Task<ForumGroupModel> PrepareForumGroupModelAsync(ForumGroup forumGroup);
 
         /// <summary>
         /// Prepare the boards index model
         /// </summary>
         /// <returns>Boards index model</returns>
-        BoardsIndexModel PrepareBoardsIndexModel();
+        Task<BoardsIndexModel> PrepareBoardsIndexModelAsync();
 
         /// <summary>
         /// Prepare the active discussions model
         /// </summary>
         /// <returns>Active discussions model</returns>
-        ActiveDiscussionsModel PrepareActiveDiscussionsModel();
+        Task<ActiveDiscussionsModel> PrepareActiveDiscussionsModelAsync();
 
         /// <summary>
         /// Prepare the active discussions model
@@ -47,7 +34,7 @@ namespace Nop.Web.Factories
         /// <param name="forumId">Forum identifier</param>
         /// <param name="page">Number of forum topics page</param>
         /// <returns>Active discussions model</returns>
-        ActiveDiscussionsModel PrepareActiveDiscussionsModel(int forumId, int page);
+        Task<ActiveDiscussionsModel> PrepareActiveDiscussionsModelAsync(int forumId, int page);
 
         /// <summary>
         /// Prepare the forum page model
@@ -55,7 +42,7 @@ namespace Nop.Web.Factories
         /// <param name="forum">Forum</param>
         /// <param name="page">Number of forum topics page</param>
         /// <returns>Forum page model</returns>
-        ForumPageModel PrepareForumPageModel(Forum forum, int page);
+        Task<ForumPageModel> PrepareForumPageModelAsync(Forum forum, int page);
 
         /// <summary>
         /// Prepare the forum topic page model
@@ -63,21 +50,21 @@ namespace Nop.Web.Factories
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="page">Number of forum posts page</param>
         /// <returns>Forum topic page model</returns>
-        ForumTopicPageModel PrepareForumTopicPageModel(ForumTopic forumTopic, int page);
+        Task<ForumTopicPageModel> PrepareForumTopicPageModelAsync(ForumTopic forumTopic, int page);
 
         /// <summary>
         /// Prepare the topic move model
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>Topic move model</returns>
-        TopicMoveModel PrepareTopicMove(ForumTopic forumTopic);
+        Task<TopicMoveModel> PrepareTopicMoveAsync(ForumTopic forumTopic);
 
         /// <summary>
         /// Prepare the forum topic create model
         /// </summary>
         /// <param name="forum">Forum</param>
         /// <param name="model">Edit forum topic model</param>
-        void PrepareTopicCreateModel(Forum forum, EditForumTopicModel model);
+        Task PrepareTopicCreateModelAsync(Forum forum, EditForumTopicModel model);
 
         /// <summary>
         /// Prepare the forum topic edit model
@@ -85,7 +72,7 @@ namespace Nop.Web.Factories
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="model">Edit forum topic model</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        void PrepareTopicEditModel(ForumTopic forumTopic, EditForumTopicModel model,
+        Task PrepareTopicEditModelAsync(ForumTopic forumTopic, EditForumTopicModel model,
             bool excludeProperties);
 
         /// <summary>
@@ -95,7 +82,7 @@ namespace Nop.Web.Factories
         /// <param name="quote">Identifier of the quoted post; pass null to load the empty text</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <returns>Edit forum post model</returns>
-        EditForumPostModel PreparePostCreateModel(ForumTopic forumTopic, int? quote,
+        Task<EditForumPostModel> PreparePostCreateModelAsync(ForumTopic forumTopic, int? quote,
             bool excludeProperties);
 
         /// <summary>
@@ -104,7 +91,7 @@ namespace Nop.Web.Factories
         /// <param name="forumPost">Forum post</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <returns>Edit forum post model</returns>
-        EditForumPostModel PreparePostEditModel(ForumPost forumPost, bool excludeProperties);
+        Task<EditForumPostModel> PreparePostEditModelAsync(ForumPost forumPost, bool excludeProperties);
 
         /// <summary>
         /// Prepare the search model
@@ -116,7 +103,7 @@ namespace Nop.Web.Factories
         /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
         /// <param name="page">Number of items page</param>
         /// <returns>Search model</returns>
-        SearchModel PrepareSearchModel(string searchterms, bool? adv, string forumId,
+        Task<SearchModel> PrepareSearchModelAsync(string searchterms, bool? adv, string forumId,
             string within, string limitDays, int page);
 
         /// <summary>
@@ -125,7 +112,7 @@ namespace Nop.Web.Factories
         /// <param name="forumPost">Forum post</param>
         /// <param name="showTopic">Whether to show topic</param>
         /// <returns>Last post model</returns>
-        LastPostModel PrepareLastPostModel(ForumPost forumPost, bool showTopic);
+        Task<LastPostModel> PrepareLastPostModelAsync(ForumPost forumPost, bool showTopic);
 
         /// <summary>
         /// Prepare the forum breadcrumb model
@@ -134,7 +121,7 @@ namespace Nop.Web.Factories
         /// <param name="forumId">Forum identifier; pass null to load breadcrumbs up to forum group</param>
         /// <param name="forumTopicId">Forum topic identifier; pass null to load breadcrumbs up to forum</param>
         /// <returns>Forum breadcrumb model</returns>
-        ForumBreadcrumbModel PrepareForumBreadcrumbModel(int? forumGroupId, int? forumId,
+        Task<ForumBreadcrumbModel> PrepareForumBreadcrumbModelAsync(int? forumGroupId, int? forumId,
             int? forumTopicId);
 
         /// <summary>
@@ -142,6 +129,6 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
         /// <returns>customer forum subscriptions model</returns>
-        CustomerForumSubscriptionsModel PrepareCustomerForumSubscriptionsModel(int? page);
+        Task<CustomerForumSubscriptionsModel> PrepareCustomerForumSubscriptionsModelAsync(int? page);
     }
 }

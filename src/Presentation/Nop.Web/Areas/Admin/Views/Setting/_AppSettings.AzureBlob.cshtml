@@ -75,8 +75,8 @@
 
     function toggleAzureDataProtection() {
         if ($('#@Html.IdFor(model => model.AzureBlobConfigModel.StoreDataProtectionKeys)').is(':checked')) {
-            $('#azure-data-protection-container').show();
-            $('#azure-data-protection-vault').show();
+            $('#azure-data-protection-container').showField();
+            $('#azure-data-protection-vault').showField();
         } else {
             $('#azure-data-protection-container').hide();
             $('#azure-data-protection-vault').hide();

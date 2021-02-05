@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
     /// <summary>
     /// Represents a blog post model
     /// </summary>
-    public partial class BlogPostModel : BaseNopEntityModel, IStoreMappingSupportedModel
+    public partial record BlogPostModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
         #region Ctor
 

@@ -5,12 +5,18 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// nop-card tag helper
+    /// "nop-cards" tag helper
     /// </summary>
     [HtmlTargetElement("nop-cards", Attributes = ID_ATTRIBUTE_NAME)]
     public class NopCardsTagHelper : TagHelper
     {
+        #region Constants
+
         private const string ID_ATTRIBUTE_NAME = "id";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// ViewContext
@@ -18,5 +24,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [HtmlAttributeNotBound]
         [ViewContext]
         public ViewContext ViewContext { get; set; }
+
+        #endregion
     }
 }

@@ -12,7 +12,7 @@
     Html.AppendPageCssClassParts("html-login-page");
 
     //register URL with return URL (if specified)
-    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.CurrentRequestProtocol);
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
 }
 <div class="page login-page">
     <div class="page-title">

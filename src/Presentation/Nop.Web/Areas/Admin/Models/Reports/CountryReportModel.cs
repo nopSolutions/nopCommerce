@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a country report model
     /// </summary>
-    public partial class CountryReportModel : BaseNopModel
+    public partial record CountryReportModel : BaseNopModel
     {
         #region Properties
 

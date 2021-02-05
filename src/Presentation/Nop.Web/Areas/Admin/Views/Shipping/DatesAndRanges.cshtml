@@ -9,10 +9,10 @@
 
 @{
     const string hideDatesBlockAttributeName = "DatesAndRangesPage.HideDatesBlock";
-    var hideDatesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDatesBlockAttributeName);
+    var hideDatesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDatesBlockAttributeName);
 
     const string hideRangesBlockAttributeName = "DatesAndRangesPage.HideRangesBlock";
-    var hideRangesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRangesBlockAttributeName);
+    var hideRangesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideRangesBlockAttributeName);
 }
 
 <div class="content-header clearfix">

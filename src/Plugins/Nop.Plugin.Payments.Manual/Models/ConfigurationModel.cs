@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Payments.Manual.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public record ConfigurationModel : BaseNopModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 

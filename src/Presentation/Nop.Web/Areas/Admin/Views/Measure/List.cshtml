@@ -7,10 +7,10 @@
     Html.SetActiveMenuItemSystemName("Measures");
     
     const string hideDimensionsBlockAttributeName = "MeasuresPage.HideDimensionsBlock";
-    var hideDimensionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDimensionsBlockAttributeName);
+    var hideDimensionsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDimensionsBlockAttributeName);
 
     const string hideWeightsBlockAttributeName = "MeasuresPage.HideWeightBlock";
-    var hideWeightsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideWeightsBlockAttributeName);
+    var hideWeightsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideWeightsBlockAttributeName);
 }
 
 <div class="content-header clearfix">

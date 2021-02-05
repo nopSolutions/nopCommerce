@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount requirement rule model
     /// </summary>
-    public partial class DiscountRequirementRuleModel : BaseNopModel
+    public partial record DiscountRequirementRuleModel : BaseNopModel
     {
         #region Ctor
 

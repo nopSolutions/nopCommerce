@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Vendors;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Vendors;
 using Nop.Web.Areas.Admin.Models.Vendors;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor attribute search model</param>
         /// <returns>Vendor attribute search model</returns>
-        VendorAttributeSearchModel PrepareVendorAttributeSearchModel(VendorAttributeSearchModel searchModel);
+        Task<VendorAttributeSearchModel> PrepareVendorAttributeSearchModelAsync(VendorAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged vendor attribute list model
         /// </summary>
         /// <param name="searchModel">Vendor attribute search model</param>
         /// <returns>Vendor attribute list model</returns>
-        VendorAttributeListModel PrepareVendorAttributeListModel(VendorAttributeSearchModel searchModel);
+        Task<VendorAttributeListModel> PrepareVendorAttributeListModelAsync(VendorAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare vendor attribute model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="vendorAttribute">Vendor attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Vendor attribute model</returns>
-        VendorAttributeModel PrepareVendorAttributeModel(VendorAttributeModel model,
+        Task<VendorAttributeModel> PrepareVendorAttributeModelAsync(VendorAttributeModel model,
             VendorAttribute vendorAttribute, bool excludeProperties = false);
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Vendor attribute value search model</param>
         /// <param name="vendorAttribute">Vendor attribute</param>
         /// <returns>Vendor attribute value list model</returns>
-        VendorAttributeValueListModel PrepareVendorAttributeValueListModel(VendorAttributeValueSearchModel searchModel,
+        Task<VendorAttributeValueListModel> PrepareVendorAttributeValueListModelAsync(VendorAttributeValueSearchModel searchModel,
             VendorAttribute vendorAttribute);
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Vendor attribute value model</returns>
-        VendorAttributeValueModel PrepareVendorAttributeValueModel(VendorAttributeValueModel model,
+        Task<VendorAttributeValueModel> PrepareVendorAttributeValueModelAsync(VendorAttributeValueModel model,
             VendorAttribute vendorAttribute, VendorAttributeValue vendorAttributeValue, bool excludeProperties = false);
     }
 }

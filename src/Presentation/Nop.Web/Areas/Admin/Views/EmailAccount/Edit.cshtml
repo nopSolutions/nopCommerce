@@ -1,11 +1,16 @@
 @model EmailAccountModel
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.EmailAccounts.EditEmailAccountDetails").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.EmailAccount;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Email accounts");
 }
+
+@await Html.PartialAsync("_AdminTour")
 
 <form asp-controller="EmailAccount" asp-action="Edit" method="post">
     <div class="content-header clearfix">

@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public partial class SitemapPageModel : BasePageableModel
+    public partial record SitemapPageModel : BasePageableModel
     {
     }
 }

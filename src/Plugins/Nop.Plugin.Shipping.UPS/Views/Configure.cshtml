@@ -17,7 +17,7 @@
         function togglePackingType() {
             var selectedPackingTypeId = $("#PackingType").val();
             if (selectedPackingTypeId == @((int)PackingType.PackByDimensions)) {
-                $('#pnlPassDimensions').show();
+                $('#pnlPassDimensions').showField();
                 $('#pnlPackingPackageVolume').hide();
             }
             else if (selectedPackingTypeId == @((int)PackingType.PackByOneItemPerPackage)) {
@@ -26,7 +26,7 @@
             }
             else if (selectedPackingTypeId == @((int)PackingType.PackByVolume)) {
                 $('#pnlPassDimensions').hide();
-                $('#pnlPackingPackageVolume').show();
+                $('#pnlPackingPackageVolume').showField();
             }
         }
     </script>

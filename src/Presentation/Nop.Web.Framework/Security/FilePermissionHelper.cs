@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core.Infrastructure;
@@ -34,6 +35,7 @@ namespace Nop.Web.Framework.Security
             return (checkWrite || checkModify || checkDelete) & writePermissions.Contains(userFilePermission);
         }
 
+        [SupportedOSPlatform("windows")]
         private static void CheckAccessRule(FileSystemAccessRule rule,
             ref bool deleteIsDeny,
             ref bool modifyIsDeny,
@@ -76,6 +78,7 @@ namespace Nop.Web.Framework.Security
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private static bool CheckAccessRuleLocal(FileSystemAccessRule fileSystemAccessRule, FileSystemRights fileSystemRights)
         {
             return (fileSystemRights & fileSystemAccessRule.FileSystemRights) == fileSystemRights;
@@ -90,6 +93,7 @@ namespace Nop.Web.Framework.Security
         /// <param name="checkModify">Check modify</param>
         /// <param name="checkDelete">Check delete</param>
         /// <returns>Result</returns>
+        [SupportedOSPlatform("windows")]
         private static bool CheckPermissionsInWindows(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
             var permissionsAreGranted = true;
@@ -237,7 +241,8 @@ namespace Nop.Web.Framework.Security
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32NT:
-                    result = CheckPermissionsInWindows(path, checkRead, checkWrite, checkModify, checkDelete);
+                    if (OperatingSystem.IsWindows())
+                        result = CheckPermissionsInWindows(path, checkRead, checkWrite, checkModify, checkDelete);
                     break;
                 case PlatformID.Unix:
                     result = CheckPermissionsInUnix(path, checkRead, checkWrite, checkModify, checkDelete);

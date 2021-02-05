@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins.Marketplace
     /// <summary>
     /// Represents a search model of plugins of the official feed
     /// </summary>
-    public partial class OfficialFeedPluginSearchModel : BaseSearchModel
+    public partial record OfficialFeedPluginSearchModel : BaseSearchModel
     {
         #region Ctor
 

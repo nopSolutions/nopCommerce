@@ -13,7 +13,7 @@
     //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
-    var download = downloadService.GetDownloadById(Model);
+    var download = await downloadService.GetDownloadByIdAsync(Model);
 
     var disableUrl = Convert.ToBoolean(ViewData["nop.DownloadEditor.DisableUrl"] ?? false);
 }
@@ -56,11 +56,11 @@
 
     function toggleDownloadRecordType@(randomNumber)() {
         if ($('#cbUseDownloadURL@(randomNumber)').is(':checked')) {
-            $('#pnlDownloadURL@(randomNumber)').show();
+            $('#pnlDownloadURL@(randomNumber)').showField();
             $('#pnlDownloadFile@(randomNumber)').hide();
         } else {
             $('#pnlDownloadURL@(randomNumber)').hide();
-            $('#pnlDownloadFile@(randomNumber)').show();
+            $('#pnlDownloadFile@(randomNumber)').showField();
         }
     }
 

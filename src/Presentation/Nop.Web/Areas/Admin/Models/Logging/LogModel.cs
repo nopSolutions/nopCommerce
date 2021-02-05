@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
     /// <summary>
     /// Represents a log model
     /// </summary>
-    public partial class LogModel : BaseNopEntityModel
+    public partial record LogModel : BaseNopEntityModel
     {
         #region Properties
 

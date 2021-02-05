@@ -5,7 +5,7 @@
 
     const string prefix = "order-statistics";
     const string hideCardAttributeName = "Reports.HideOrderStatisticsCard";
-    var hideCard = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCardAttributeName);
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
     
 }
 

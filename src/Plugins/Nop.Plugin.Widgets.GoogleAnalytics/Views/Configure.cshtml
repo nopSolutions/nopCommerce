@@ -13,8 +13,8 @@
     
     function toggleEnableEcommerce() {
         if ($('#@Html.IdFor(model => model.EnableEcommerce)').is(':checked')) {
-            $('#pnlUseJsToSendEcommerceInfo').show();
-            $('#pnlIncludingTax').show();
+            $('#pnlUseJsToSendEcommerceInfo').showField();
+            $('#pnlIncludingTax').showField();
         }
         else {
             $('#pnlUseJsToSendEcommerceInfo').hide();

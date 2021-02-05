@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
@@ -105,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount product search model
         /// </summary>
@@ -127,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount category search model
         /// </summary>
@@ -149,7 +150,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
@@ -172,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -182,13 +183,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Discount search model</param>
         /// <returns>Discount search model</returns>
-        public virtual DiscountSearchModel PrepareDiscountSearchModel(DiscountSearchModel searchModel)
+        public virtual async Task<DiscountSearchModel> PrepareDiscountSearchModelAsync(DiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available discount types
-            _baseAdminModelFactory.PrepareDiscountTypes(searchModel.AvailableDiscountTypes);
+            await _baseAdminModelFactory.PrepareDiscountTypesAsync(searchModel.AvailableDiscountTypes);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -201,7 +202,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Discount search model</param>
         /// <returns>Discount list model</returns>
-        public virtual DiscountListModel PrepareDiscountListModel(DiscountSearchModel searchModel)
+        public virtual async Task<DiscountListModel> PrepareDiscountListModelAsync(DiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -209,31 +210,31 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter discounts
             var discountType = searchModel.SearchDiscountTypeId > 0 ? (DiscountType?)searchModel.SearchDiscountTypeId : null;
             var startDateUtc = searchModel.SearchStartDate.HasValue ?
-                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone) : null;
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()) : null;
             var endDateUtc = searchModel.SearchEndDate.HasValue ?
-                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1) : null;
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
 
             //get discounts
-            var discounts = _discountService.GetAllDiscounts(showHidden: true,
+            var discounts = (await _discountService.GetAllDiscountsAsync(showHidden: true,
                 discountType: discountType,
                 couponCode: searchModel.SearchDiscountCouponCode,
                 discountName: searchModel.SearchDiscountName,
                 startDateUtc: startDateUtc,
-                endDateUtc: endDateUtc).ToPagedList(searchModel);
+                endDateUtc: endDateUtc)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new DiscountListModel().PrepareToGrid(searchModel, discounts, () =>
+            var model = await new DiscountListModel().PrepareToGridAsync(searchModel, discounts, () =>
             {
-                return discounts.Select(discount =>
+                return discounts.SelectAwait(async discount =>
                 {
                     //fill in model values from the entity
                     var discountModel = discount.ToModel<DiscountModel>();
 
                     //fill in additional values (not existing in the entity)
-                    discountModel.DiscountTypeName = _localizationService.GetLocalizedEnum(discount.DiscountType);
-                    discountModel.PrimaryStoreCurrencyCode = _currencyService
-                        .GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
-                    discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1).TotalCount;
+                    discountModel.DiscountTypeName = await _localizationService.GetLocalizedEnumAsync(discount.DiscountType);
+                    discountModel.PrimaryStoreCurrencyCode = (await _currencyService
+                        .GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+                    discountModel.TimesUsed = (await _discountService.GetAllDiscountUsageHistoryAsync(discount.Id, pageSize: 1)).TotalCount;
 
                     return discountModel;
                 });
@@ -249,7 +250,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="discount">Discount</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Discount model</returns>
-        public virtual DiscountModel PrepareDiscountModel(DiscountModel model, Discount discount, bool excludeProperties = false)
+        public virtual async Task<DiscountModel> PrepareDiscountModelAsync(DiscountModel model, Discount discount, bool excludeProperties = false)
         {
             if (discount != null)
             {
@@ -257,7 +258,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= discount.ToModel<DiscountModel>();
 
                 //prepare available discount requirement rules
-                var discountRules = _discountPluginManager.LoadAllPlugins();
+                var discountRules = await _discountPluginManager.LoadAllPluginsAsync();
                 foreach (var discountRule in discountRules)
                 {
                     model.AvailableDiscountRequirementRules.Add(new SelectListItem
@@ -269,18 +270,18 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.AvailableDiscountRequirementRules.Insert(0, new SelectListItem
                 {
-                    Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup"),
+                    Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.AddGroup"),
                     Value = "AddGroup"
                 });
 
                 model.AvailableDiscountRequirementRules.Insert(0, new SelectListItem
                 {
-                    Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"),
+                    Text = await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"),
                     Value = string.Empty
                 });
 
                 //prepare available requirement groups
-                var requirementGroups = _discountService.GetAllDiscountRequirements(discount.Id).Where(requirement => requirement.IsGroup);
+                var requirementGroups = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id)).Where(requirement => requirement.IsGroup);
                 model.AvailableRequirementGroups = requirementGroups.Select(requirement =>
                     new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
@@ -291,12 +292,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareDiscountManufacturerSearchModel(model.DiscountManufacturerSearchModel, discount);
             }
 
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //get URL of discount with coupon code
             if (model.RequiresCouponCode && !string.IsNullOrEmpty(model.CouponCode))
             {
-                model.DiscountUrl = QueryHelpers.AddQueryString(_webHelper.GetStoreLocation().TrimEnd('/'),
+                model.DiscountUrl = QueryHelpers.AddQueryString((_webHelper.GetStoreLocation()).TrimEnd('/'),
                     NopDiscountDefaults.DiscountCouponQueryParameter, model.CouponCode);
             }
 
@@ -314,8 +315,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="discount">Discount</param>
         /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
         /// <returns>List of discount requirement rule models</returns>
-        public virtual IList<DiscountRequirementRuleModel> PrepareDiscountRequirementRuleModels(ICollection<DiscountRequirement> requirements,
-            Discount discount, RequirementGroupInteractionType groupInteractionType)
+        public virtual async Task<IList<DiscountRequirementRuleModel>> PrepareDiscountRequirementRuleModelsAsync
+            (ICollection<DiscountRequirement> requirements, Discount discount, RequirementGroupInteractionType groupInteractionType)
         {
             if (requirements == null)
                 throw new ArgumentNullException(nameof(requirements));
@@ -325,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var lastRequirement = requirements.LastOrDefault();
 
-            return requirements.Select(requirement =>
+            return await requirements.SelectAwait(async requirement =>
             {
                 //set common properties
                 var requirementModel = new DiscountRequirementRuleModel
@@ -339,21 +340,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
 
                 var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
-                requirementModel.AvailableInteractionTypes = interactionType.ToSelectList();
+                requirementModel.AvailableInteractionTypes = await interactionType.ToSelectListAsync();
 
                 if (requirement.IsGroup)
                 {
                     //get child requirements for the group
-                    var childRequirements = _discountService.GetDiscountRequirementsByParent(requirement);
+                    var childRequirements = await _discountService.GetDiscountRequirementsByParentAsync(requirement);
 
-                    requirementModel
-                        .ChildRequirements = PrepareDiscountRequirementRuleModels(childRequirements, discount, interactionType);
+                    requirementModel.ChildRequirements = await PrepareDiscountRequirementRuleModelsAsync(childRequirements, discount, interactionType);
 
                     return requirementModel;
                 }
 
                 //or try to get name and configuration URL for the requirement
-                var requirementRule = _discountPluginManager.LoadPluginBySystemName(requirement.DiscountRequirementRuleSystemName);
+                var requirementRule = await _discountPluginManager.LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName);
                 if (requirementRule == null)
                     return null;
 
@@ -362,7 +362,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     .ConfigurationUrl = requirementRule.GetConfigurationUrl(discount.Id, requirement.Id);
 
                 return requirementModel;
-            }).ToList();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -371,7 +371,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount usage history search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount usage history list model</returns>
-        public virtual DiscountUsageHistoryListModel PrepareDiscountUsageHistoryListModel(DiscountUsageHistorySearchModel searchModel,
+        public virtual async Task<DiscountUsageHistoryListModel> PrepareDiscountUsageHistoryListModelAsync(DiscountUsageHistorySearchModel searchModel,
             Discount discount)
         {
             if (searchModel == null)
@@ -381,25 +381,25 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get discount usage history
-            var history = _discountService.GetAllDiscountUsageHistory(discountId: discount.Id,
+            var history = await _discountService.GetAllDiscountUsageHistoryAsync(discountId: discount.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new DiscountUsageHistoryListModel().PrepareToGrid(searchModel, history, () =>
+            var model = await new DiscountUsageHistoryListModel().PrepareToGridAsync(searchModel, history, () =>
             {
-                return history.Select(historyEntry =>
+                return history.SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
 
                     //convert dates to the user time
-                    discountUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    discountUsageHistoryModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var order = _orderService.GetOrderById(historyEntry.OrderId);
+                    var order = await _orderService.GetOrderByIdAsync(historyEntry.OrderId);
                     if (order != null)
                     {
-                        discountUsageHistoryModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+                        discountUsageHistoryModel.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
                         discountUsageHistoryModel.CustomOrderNumber = order.CustomOrderNumber;
                     }
 
@@ -416,7 +416,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount product search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount product list model</returns>
-        public virtual DiscountProductListModel PrepareDiscountProductListModel(DiscountProductSearchModel searchModel, Discount discount)
+        public virtual async Task<DiscountProductListModel> PrepareDiscountProductListModelAsync(DiscountProductSearchModel searchModel, Discount discount)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -425,7 +425,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get products with applied discount
-            var discountProducts = _productService.GetProductsWithAppliedDiscount(discountId: discount.Id,
+            var discountProducts = await _productService.GetProductsWithAppliedDiscountAsync(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -451,25 +451,25 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the discount</param>
         /// <returns>Product search model to add to the discount</returns>
-        public virtual AddProductToDiscountSearchModel PrepareAddProductToDiscountSearchModel(AddProductToDiscountSearchModel searchModel)
+        public virtual async Task<AddProductToDiscountSearchModel> PrepareAddProductToDiscountSearchModelAsync(AddProductToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available categories
-            _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
+            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
+            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
+            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -482,13 +482,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the discount</param>
         /// <returns>Product list model to add to the discount</returns>
-        public virtual AddProductToDiscountListModel PrepareAddProductToDiscountListModel(AddProductToDiscountSearchModel searchModel)
+        public virtual async Task<AddProductToDiscountListModel> PrepareAddProductToDiscountListModelAsync(AddProductToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var products = _productService.SearchProducts(showHidden: true,
+            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerId: searchModel.SearchManufacturerId,
                 storeId: searchModel.SearchStoreId,
@@ -498,12 +498,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToDiscountListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddProductToDiscountListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -518,7 +518,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount category search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount category list model</returns>
-        public virtual DiscountCategoryListModel PrepareDiscountCategoryListModel(DiscountCategorySearchModel searchModel, Discount discount)
+        public virtual async Task<DiscountCategoryListModel> PrepareDiscountCategoryListModelAsync(DiscountCategorySearchModel searchModel, Discount discount)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -527,19 +527,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get categories with applied discount
-            var discountCategories = _categoryService.GetCategoriesByAppliedDiscount(discountId: discount.Id,
+            var discountCategories = await _categoryService.GetCategoriesByAppliedDiscountAsync(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountCategoryListModel().PrepareToGrid(searchModel, discountCategories, () =>
+            var model = await new DiscountCategoryListModel().PrepareToGridAsync(searchModel, discountCategories, () =>
             {
                 //fill in model values from the entity
-                return discountCategories.Select(category =>
+                return discountCategories.SelectAwait(async category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
-                    discountCategoryModel.CategoryName = _categoryService.GetFormattedBreadCrumb(category);
+                    discountCategoryModel.CategoryName = await _categoryService.GetFormattedBreadCrumbAsync(category);
                     discountCategoryModel.CategoryId = category.Id;
 
                     return discountCategoryModel;
@@ -554,7 +554,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Category search model to add to the discount</param>
         /// <returns>Category search model to add to the discount</returns>
-        public virtual AddCategoryToDiscountSearchModel PrepareAddCategoryToDiscountSearchModel(AddCategoryToDiscountSearchModel searchModel)
+        public virtual Task<AddCategoryToDiscountSearchModel> PrepareAddCategoryToDiscountSearchModelAsync(AddCategoryToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -562,7 +562,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -570,27 +570,27 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Category search model to add to the discount</param>
         /// <returns>Category list model to add to the discount</returns>
-        public virtual AddCategoryToDiscountListModel PrepareAddCategoryToDiscountListModel(AddCategoryToDiscountSearchModel searchModel)
+        public virtual async Task<AddCategoryToDiscountListModel> PrepareAddCategoryToDiscountListModelAsync(AddCategoryToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get categories
-            var categories = _categoryService.GetAllCategories(showHidden: true,
+            var categories = await _categoryService.GetAllCategoriesAsync(showHidden: true,
                 categoryName: searchModel.SearchCategoryName,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddCategoryToDiscountListModel().PrepareToGrid(searchModel, categories, () =>
+            var model = await new AddCategoryToDiscountListModel().PrepareToGridAsync(searchModel, categories, () =>
             {
-                return categories.Select(category =>
+                return categories.SelectAwait(async category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryModel.Breadcrumb = _categoryService.GetFormattedBreadCrumb(category);
-                    categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false);
+                    categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumbAsync(category);
+                    categoryModel.SeName = await _urlRecordService.GetSeNameAsync(category, 0, true, false);
 
                     return categoryModel;
                 });
@@ -605,7 +605,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount manufacturer search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount manufacturer list model</returns>
-        public virtual DiscountManufacturerListModel PrepareDiscountManufacturerListModel(DiscountManufacturerSearchModel searchModel,
+        public virtual async Task<DiscountManufacturerListModel> PrepareDiscountManufacturerListModelAsync(DiscountManufacturerSearchModel searchModel,
             Discount discount)
         {
             if (searchModel == null)
@@ -615,7 +615,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get manufacturers with applied discount
-            var discountManufacturers = _manufacturerService.GetManufacturersWithAppliedDiscount(discountId: discount.Id,
+            var discountManufacturers = await _manufacturerService.GetManufacturersWithAppliedDiscountAsync(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -641,7 +641,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Manufacturer search model to add to the discount</param>
         /// <returns>Manufacturer search model to add to the discount</returns>
-        public virtual AddManufacturerToDiscountSearchModel PrepareAddManufacturerToDiscountSearchModel(AddManufacturerToDiscountSearchModel searchModel)
+        public virtual Task<AddManufacturerToDiscountSearchModel> PrepareAddManufacturerToDiscountSearchModelAsync(AddManufacturerToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -649,7 +649,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -657,23 +657,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Manufacturer search model to add to the discount</param>
         /// <returns>Manufacturer list model to add to the discount</returns>
-        public virtual AddManufacturerToDiscountListModel PrepareAddManufacturerToDiscountListModel(AddManufacturerToDiscountSearchModel searchModel)
+        public virtual async Task<AddManufacturerToDiscountListModel> PrepareAddManufacturerToDiscountListModelAsync(AddManufacturerToDiscountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get manufacturers
-            var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true,
+            var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true,
                 manufacturerName: searchModel.SearchManufacturerName,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddManufacturerToDiscountListModel().PrepareToGrid(searchModel, manufacturers, () =>
+            var model = await new AddManufacturerToDiscountListModel().PrepareToGridAsync(searchModel, manufacturers, () =>
             {
-                return manufacturers.Select(manufacturer =>
+                return manufacturers.SelectAwait(async manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
-                    manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false);
+                    manufacturerModel.SeName = await _urlRecordService.GetSeNameAsync(manufacturer, 0, true, false);
 
                     return manufacturerModel;
                 });

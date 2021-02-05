@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a reward point model
     /// </summary>
-    public partial class CustomerRewardPointsModel : BaseNopEntityModel
+    public partial record CustomerRewardPointsModel : BaseNopEntityModel
     {
         #region Properties
 

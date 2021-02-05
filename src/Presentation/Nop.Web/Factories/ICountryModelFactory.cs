@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Web.Models.Directory;
 
 namespace Nop.Web.Factories
@@ -14,6 +15,6 @@ namespace Nop.Web.Factories
         /// <param name="countryId">Country identifier</param>
         /// <param name="addSelectStateItem">Whether to add "Select state" item to list of states</param>
         /// <returns>List of identifiers and names of states and provinces</returns>
-        IList<StateProvinceModel> GetStatesByCountryId(string countryId, bool addSelectStateItem);
+        Task<IList<StateProvinceModel>> GetStatesByCountryIdAsync(string countryId, bool addSelectStateItem);
     }
 }

@@ -39,12 +39,12 @@
                 </p>
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
-                   Name = "specificationattributegroups-grid",
-                   UrlRead = new DataUrl("SpecificationAttributeGroupList", "SpecificationAttribute", null),
-                   PrimaryKeyColumn = nameof(SpecificationAttributeGroupModel.Id),
-                   Length = Model.PageSize,
-                   LengthMenu = Model.AvailablePageSizes,
-                   ColumnCollection = new List<ColumnProperty>
+                    Name = "specificationattributegroups-grid",
+                    UrlRead = new DataUrl("SpecificationAttributeGroupList", "SpecificationAttribute", null),
+                    PrimaryKeyColumn = nameof(SpecificationAttributeGroupModel.Id),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
                     {
                         new ColumnProperty(null)
                         {
@@ -55,34 +55,28 @@
                         },
                         new ColumnProperty(nameof(SpecificationAttributeGroupModel.Name))
                         {
-                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name").Text
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name").Text,
+                            Render = new RenderCustom("renderColumnNameSpecificationAttributeGroup")
                         },
                         new ColumnProperty(nameof(SpecificationAttributeGroupModel.DisplayOrder))
                         {
                             Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.DisplayOrder").Text,
                             Width = "100",
                             ClassName =  NopColumnClassDefaults.CenterAll
-                        },
-                        new ColumnProperty(nameof(SpecificationAttributeGroupModel.Id))
-                        {
-                            Title = T("Admin.Common.Edit").Text,
-                            Width = "100",
-                            ClassName =  NopColumnClassDefaults.Button,
-                            Render = new RenderButtonEdit(new DataUrl("EditSpecificationAttributeGroup"))
                         }
                     },
-                   ChildTable = new DataTablesModel
-                   {
-                       Name = "specificationattributes-grid",
-                       UrlRead = new DataUrl("SpecificationAttributeList", "SpecificationAttribute", null),
-                       IsChildTable = true,
-                       Length = Model.PageSize,
-                       LengthMenu = Model.AvailablePageSizes,
-                       Filters = new List<FilterParameter>
-                            {
-                                new FilterParameter(nameof(SpecificationAttributeModel.SpecificationAttributeGroupId), nameof(SpecificationAttributeGroupModel.Id), true)
-                            },
-                       ColumnCollection = new List<ColumnProperty>
+                    ChildTable = new DataTablesModel
+                    {
+                        Name = "specificationattributes-grid",
+                        UrlRead = new DataUrl("SpecificationAttributeList", "SpecificationAttribute", null),
+                        IsChildTable = true,
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(SpecificationAttributeModel.SpecificationAttributeGroupId), nameof(SpecificationAttributeGroupModel.Id), true)
+                        },
+                        ColumnCollection = new List<ColumnProperty>
                         {
                             new ColumnProperty(nameof(SpecificationAttributeModel.Id))
                             {
@@ -106,38 +100,42 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "50",
-                                    ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonEdit(new DataUrl("EditSpecificationAttribute"))
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("EditSpecificationAttribute"))
                             }
                         }
-                   }
-               })
+                    }
+                })
 
-                <script>
-                    $(document).ready(function () {
-                        $('#delete-selected-specification-attributes-action-confirmation-submit-button').bind('click', function () {
-                            var postData = {
-                                selectedIds: selectedIds
-                            };
-                            addAntiForgeryToken(postData);
-                            $.ajax({
-                                cache: false,
-                                type: "POST",
-                                url: "@(Url.Action("DeleteSelectedSpecificationAttributes", "SpecificationAttribute"))",
-                                data: postData,
-                                error: function (jqXHR, textStatus, errorThrown) {
-                                    $('#delete-selected-specification-attributes-alert-info').text(errorThrown);
-                                    $('#delete-selected-specification-attributes-alert').click();
-                                },
-                                complete: function (jqXHR, textStatus) {
-                                    updateTable('#specificationattributegroups-grid');
-                                }
-                            });
-                            $('#delete-selected-specification-attributes-action-confirmation').modal('toggle');
-                            return false;
+            <script>
+                function renderColumnNameSpecificationAttributeGroup(name, type, row, meta) {
+                    return row.Id ? '<a href="@Url.Action("EditSpecificationAttributeGroup", "SpecificationAttribute")/' + row.Id +'">' + name + '</a>' : name;
+                }
+
+                $(document).ready(function () {
+                    $('#delete-selected-specification-attributes-action-confirmation-submit-button').bind('click', function () {
+                        var postData = {
+                            selectedIds: selectedIds
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("DeleteSelectedSpecificationAttributes", "SpecificationAttribute"))",
+                            data: postData,
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $('#delete-selected-specification-attributes-alert-info').text(errorThrown);
+                                $('#delete-selected-specification-attributes-alert').click();
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                updateTable('#specificationattributegroups-grid');
+                            }
                         });
+                        $('#delete-selected-specification-attributes-action-confirmation').modal('toggle');
+                        return false;
                     });
-                </script>
+                });
+            </script>
                 <nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
             </div>
         </div>

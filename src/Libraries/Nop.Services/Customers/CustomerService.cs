@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -132,14 +132,14 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Customers</returns>
-        public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+        public virtual async Task<IPagedList<Customer>> GetAllCustomersAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
             string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            var customers = _customerRepository.GetAllPaged(query =>
+            var customers = await _customerRepository.GetAllPagedAsync(query =>
             {
                 if (createdFromUtc.HasValue)
                     query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
@@ -292,7 +292,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
-        public virtual IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
+        public virtual async Task<IPagedList<Customer>> GetOnlineCustomersAsync(DateTime lastActivityFromUtc,
             int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _customerRepository.Table;
@@ -303,7 +303,7 @@ namespace Nop.Services.Customers
                 query = query.Where(c => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == c.Id && customerRoleIds.Contains(ccrm.CustomerRoleId)));
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
-            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+            var customers = await query.ToPagedListAsync(pageIndex, pageSize);
 
             return customers;
         }
@@ -320,7 +320,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
-        public virtual IPagedList<Customer> GetCustomersWithShoppingCarts(ShoppingCartType? shoppingCartType = null,
+        public virtual async Task<IPagedList<Customer>> GetCustomersWithShoppingCartsAsync(ShoppingCartType? shoppingCartType = null,
             int storeId = 0, int? productId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? countryId = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -358,10 +358,10 @@ namespace Nop.Services.Customers
 
             var customersWithCarts = from c in customers
                                      join item in items on c.Id equals item.CustomerId
-                                     orderby c.Id
+                                     orderby item.CreatedOnUtc descending
                                      select c;
 
-            return new PagedList<Customer>(customersWithCarts.Distinct(), pageIndex, pageSize);
+            return await customersWithCarts.Distinct().ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -369,18 +369,18 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <returns>Result</returns>
-        public virtual Customer GetShoppingCartCustomer(IList<ShoppingCartItem> shoppingCart)
+        public virtual async Task<Customer> GetShoppingCartCustomerAsync(IList<ShoppingCartItem> shoppingCart)
         {
             var customerId = shoppingCart.FirstOrDefault()?.CustomerId;
 
-            return customerId.HasValue && customerId != 0 ? GetCustomerById(customerId.Value) : null;
+            return customerId.HasValue && customerId != 0 ? await GetCustomerByIdAsync(customerId.Value) : null;
         }
 
         /// <summary>
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual void DeleteCustomer(Customer customer)
+        public virtual async Task DeleteCustomerAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -398,8 +398,8 @@ namespace Nop.Services.Customers
                     customer.Username += "-DELETED";
             }
 
-            _customerRepository.Update(customer, false);
-            _customerRepository.Delete(customer);
+            await _customerRepository.UpdateAsync(customer, false);
+            await _customerRepository.DeleteAsync(customer);
         }
 
         /// <summary>
@@ -407,9 +407,9 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>A customer</returns>
-        public virtual Customer GetCustomerById(int customerId)
+        public virtual async Task<Customer> GetCustomerByIdAsync(int customerId)
         {
-            return _customerRepository.GetById(customerId,
+            return await _customerRepository.GetByIdAsync(customerId,
                 cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Customer>.ByIdCacheKey, customerId));
         }
 
@@ -418,9 +418,9 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerIds">Customer identifiers</param>
         /// <returns>Customers</returns>
-        public virtual IList<Customer> GetCustomersByIds(int[] customerIds)
+        public virtual async Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds)
         {
-            return _customerRepository.GetByIds(customerIds);
+            return await _customerRepository.GetByIdsAsync(customerIds);
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>
         /// <returns>A customer</returns>
-        public virtual Customer GetCustomerByGuid(Guid customerGuid)
+        public virtual async Task<Customer> GetCustomerByGuidAsync(Guid customerGuid)
         {
             if (customerGuid == Guid.Empty)
                 return null;
@@ -437,9 +437,10 @@ namespace Nop.Services.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
-            var customer = query.FirstOrDefault();
-
-            return customer;
+           
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
+            
+            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -447,7 +448,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="email">Email</param>
         /// <returns>Customer</returns>
-        public virtual Customer GetCustomerByEmail(string email)
+        public virtual async Task<Customer> GetCustomerByEmailAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
                 return null;
@@ -456,7 +457,8 @@ namespace Nop.Services.Customers
                         orderby c.Id
                         where c.Email == email
                         select c;
-            var customer = query.FirstOrDefault();
+            var customer = await query.FirstOrDefaultAsync();
+
             return customer;
         }
 
@@ -465,7 +467,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Customer</returns>
-        public virtual Customer GetCustomerBySystemName(string systemName)
+        public virtual async Task<Customer> GetCustomerBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
@@ -476,7 +478,9 @@ namespace Nop.Services.Customers
                         orderby c.Id
                         where c.SystemName == systemName
                         select c;
-            var customer = _staticCacheManager.Get(key, query.FirstOrDefault);
+
+            var customer = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
+
             return customer;
         }
 
@@ -484,9 +488,9 @@ namespace Nop.Services.Customers
         /// Gets built-in system record used for background tasks
         /// </summary>
         /// <returns>A customer object</returns>
-        public virtual Customer GetOrCreateBackgroundTaskUser()
+        public virtual async Task<Customer> GetOrCreateBackgroundTaskUserAsync()
         {
-            var backgroundTaskUser = GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
+            var backgroundTaskUser = await GetCustomerBySystemNameAsync(NopCustomerDefaults.BackgroundTaskCustomerName);
 
             if (backgroundTaskUser is null)
             {
@@ -501,17 +505,17 @@ namespace Nop.Services.Customers
                     SystemName = NopCustomerDefaults.BackgroundTaskCustomerName,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
-                    RegisteredInStoreId = _storeContext.CurrentStore.Id
+                    RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id
                 };
 
-                InsertCustomer(backgroundTaskUser);
+                await InsertCustomerAsync(backgroundTaskUser);
 
-                var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+                var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
 
                 if (guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
-                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id });
+                await AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id });
             }
 
             return backgroundTaskUser;
@@ -521,9 +525,9 @@ namespace Nop.Services.Customers
         /// Gets built-in system guest record used for requests from search engines
         /// </summary>
         /// <returns>A customer object</returns>
-        public virtual Customer GetOrCreateSearchEngineUser()
+        public virtual async Task<Customer> GetOrCreateSearchEngineUserAsync()
         {
-            var searchEngineUser = GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
+            var searchEngineUser = await GetCustomerBySystemNameAsync(NopCustomerDefaults.SearchEngineCustomerName);
 
             if (searchEngineUser is null)
             {
@@ -538,17 +542,17 @@ namespace Nop.Services.Customers
                     SystemName = NopCustomerDefaults.SearchEngineCustomerName,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
-                    RegisteredInStoreId = _storeContext.CurrentStore.Id
+                    RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id
                 };
 
-                InsertCustomer(searchEngineUser);
+                await InsertCustomerAsync(searchEngineUser);
 
-                var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+                var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
 
                 if (guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
-                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id });
+                await AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id });
             }
 
             return searchEngineUser;
@@ -559,7 +563,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="username">Username</param>
         /// <returns>Customer</returns>
-        public virtual Customer GetCustomerByUsername(string username)
+        public virtual async Task<Customer> GetCustomerByUsernameAsync(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
                 return null;
@@ -568,7 +572,8 @@ namespace Nop.Services.Customers
                         orderby c.Id
                         where c.Username == username
                         select c;
-            var customer = query.FirstOrDefault();
+            var customer = await query.FirstOrDefaultAsync();
+
             return customer;
         }
 
@@ -576,7 +581,7 @@ namespace Nop.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Customer InsertGuestCustomer()
+        public virtual async Task<Customer> InsertGuestCustomerAsync()
         {
             var customer = new Customer
             {
@@ -587,13 +592,13 @@ namespace Nop.Services.Customers
             };
 
             //add to 'Guests' role
-            var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+            var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
 
-            _customerRepository.Insert(customer);
+            await _customerRepository.InsertAsync(customer);
 
-            AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
+            await AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
 
             return customer;
         }
@@ -602,18 +607,18 @@ namespace Nop.Services.Customers
         /// Insert a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual void InsertCustomer(Customer customer)
+        public virtual async Task InsertCustomerAsync(Customer customer)
         {
-            _customerRepository.Insert(customer);
+            await _customerRepository.InsertAsync(customer);
         }
 
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual void UpdateCustomer(Customer customer)
+        public virtual async Task UpdateCustomerAsync(Customer customer)
         {
-            _customerRepository.Update(customer);
+            await _customerRepository.UpdateAsync(customer);
         }
 
         /// <summary>
@@ -626,7 +631,7 @@ namespace Nop.Services.Customers
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-        public virtual void ResetCheckoutData(Customer customer, int storeId,
+        public virtual async Task ResetCheckoutDataAsync(Customer customer, int storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true)
@@ -637,37 +642,31 @@ namespace Nop.Services.Customers
             //clear entered coupon codes
             if (clearCouponCodes)
             {
-                _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
-                _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
+                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
+                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
             }
 
             //clear checkout attributes
             if (clearCheckoutAttributes)
-            {
-                _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes, null, storeId);
-            }
+                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, null, storeId);
 
             //clear reward points flag
             if (clearRewardPoints)
-            {
-                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, false, storeId);
-            }
+                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, false, storeId);
 
             //clear selected shipping method
             if (clearShippingMethod)
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, storeId);
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, null, storeId);
-                _genericAttributeService.SaveAttribute<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, storeId);
+                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, storeId);
+                await _genericAttributeService.SaveAttributeAsync<ShippingOption>(customer, NopCustomerDefaults.OfferedShippingOptionsAttribute, null, storeId);
+                await _genericAttributeService.SaveAttributeAsync<PickupPoint>(customer, NopCustomerDefaults.SelectedPickupPointAttribute, null, storeId);
             }
 
             //clear selected payment method
             if (clearPaymentMethod)
-            {
-                _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
-            }
+                await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
 
-            UpdateCustomer(customer);
+            await UpdateCustomerAsync(customer);
         }
 
         /// <summary>
@@ -677,9 +676,9 @@ namespace Nop.Services.Customers
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
-        public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
+        public virtual async Task<int> DeleteGuestCustomersAsync(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
-            var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+            var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
 
             var allGuestCustomers = from guest in _customerRepository.Table
                                     join ccm in _customerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
@@ -705,20 +704,20 @@ namespace Nop.Services.Customers
                                      (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
                                  select new { CustomerId = guest.Id };
 
-            using var tmpGuests = _dataProvider.CreateTempDataStorage("tmp_guestsToDelete", guestsToDelete);
-            using var tmpAddresses = _dataProvider.CreateTempDataStorage("tmp_guestsAddressesToDelete",
+            await using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
+            await using var tmpAddresses = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsAddressesToDelete",
                 _customerAddressMappingRepository.Table
                     .Where(ca => tmpGuests.Any(c => c.CustomerId == ca.CustomerId))
                     .Select(ca => new { AddressId = ca.AddressId }));
 
             //delete guests
-            var totalRecordsDeleted = _customerRepository.Delete(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
+            var totalRecordsDeleted = await _customerRepository.DeleteAsync(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
 
             //delete attributes
-            _gaRepository.Delete(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
+            await _gaRepository.DeleteAsync(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
 
             //delete m -> m addresses
-            _customerAddressRepository.Delete(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
+            await _customerAddressRepository.DeleteAsync(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
 
             return totalRecordsDeleted;
         }
@@ -728,12 +727,12 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        public virtual TaxDisplayType? GetCustomerDefaultTaxDisplayType(Customer customer)
+        public virtual async Task<TaxDisplayType?> GetCustomerDefaultTaxDisplayTypeAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var roleWithOverriddenTaxType = GetCustomerRoles(customer).FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
+            var roleWithOverriddenTaxType = (await GetCustomerRolesAsync(customer)).FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
             if (roleWithOverriddenTaxType == null)
                 return null;
 
@@ -745,13 +744,13 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Customer full name</returns>
-        public virtual string GetCustomerFullName(Customer customer)
+        public virtual async Task<string> GetCustomerFullNameAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-            var lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
 
             var fullName = string.Empty;
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
@@ -775,13 +774,14 @@ namespace Nop.Services.Customers
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
-        public virtual string FormatUsername(Customer customer, bool stripTooLong = false, int maxLength = 0)
+        public virtual async Task<string> FormatUsernameAsync(Customer customer, bool stripTooLong = false, int maxLength = 0)
         {
             if (customer == null)
                 return string.Empty;
 
-            if (IsGuest(customer))
-                return EngineContext.Current.Resolve<ILocalizationService>().GetResource("Customer.Guest");
+            //TODO: try to use DI
+            if (await IsGuestAsync(customer))
+                return await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Customer.Guest");
 
             var result = string.Empty;
             switch (_customerSettings.CustomerNameFormat)
@@ -793,10 +793,10 @@ namespace Nop.Services.Customers
                     result = customer.Username;
                     break;
                 case CustomerNameFormat.ShowFullNames:
-                    result = GetCustomerFullName(customer);
+                    result = await GetCustomerFullNameAsync(customer);
                     break;
                 case CustomerNameFormat.ShowFirstName:
-                    result = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                    result = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
                     break;
                 default:
                     break;
@@ -813,12 +813,12 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Coupon codes</returns>
-        public virtual string[] ParseAppliedDiscountCouponCodes(Customer customer)
+        public virtual async Task<string[]> ParseAppliedDiscountCouponCodesAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
+            var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
@@ -852,7 +852,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code</param>
         /// <returns>New coupon codes document</returns>
-        public virtual void ApplyDiscountCouponCode(Customer customer, string couponCode)
+        public virtual async Task ApplyDiscountCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -860,7 +860,7 @@ namespace Nop.Services.Customers
             var result = string.Empty;
             try
             {
-                var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
+                var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute);
 
                 couponCode = couponCode.Trim().ToLower();
 
@@ -871,9 +871,7 @@ namespace Nop.Services.Customers
                     xmlDoc.AppendChild(element1);
                 }
                 else
-                {
                     xmlDoc.LoadXml(existingCouponCodes);
-                }
 
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//DiscountCouponCodes");
 
@@ -910,7 +908,7 @@ namespace Nop.Services.Customers
             }
 
             //apply new value
-            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, result);
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, result);
         }
 
         /// <summary>
@@ -919,21 +917,21 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code to remove</param>
         /// <returns>New coupon codes document</returns>
-        public virtual void RemoveDiscountCouponCode(Customer customer, string couponCode)
+        public virtual async Task RemoveDiscountCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
             //get applied coupon codes
-            var existingCouponCodes = ParseAppliedDiscountCouponCodes(customer);
+            var existingCouponCodes = await ParseAppliedDiscountCouponCodesAsync(customer);
 
             //clear them
-            _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
+            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.DiscountCouponCodeAttribute, null);
 
             //save again except removed one
             foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
-                    ApplyDiscountCouponCode(customer, existingCouponCode);
+                    await ApplyDiscountCouponCodeAsync(customer, existingCouponCode);
         }
 
         /// <summary>
@@ -941,12 +939,12 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Coupon codes</returns>
-        public virtual string[] ParseAppliedGiftCardCouponCodes(Customer customer)
+        public virtual async Task<string[]> ParseAppliedGiftCardCouponCodesAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
+            var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
             var couponCodes = new List<string>();
             if (string.IsNullOrEmpty(existingCouponCodes))
@@ -981,7 +979,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code</param>
         /// <returns>New coupon codes document</returns>
-        public virtual void ApplyGiftCardCouponCode(Customer customer, string couponCode)
+        public virtual async Task ApplyGiftCardCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -989,7 +987,7 @@ namespace Nop.Services.Customers
             var result = string.Empty;
             try
             {
-                var existingCouponCodes = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
+                var existingCouponCodes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute);
 
                 couponCode = couponCode.Trim().ToLower();
 
@@ -1000,9 +998,7 @@ namespace Nop.Services.Customers
                     xmlDoc.AppendChild(element1);
                 }
                 else
-                {
                     xmlDoc.LoadXml(existingCouponCodes);
-                }
 
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//GiftCardCouponCodes");
 
@@ -1038,7 +1034,7 @@ namespace Nop.Services.Customers
             }
 
             //apply new value
-            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, result);
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, result);
         }
 
         /// <summary>
@@ -1047,21 +1043,21 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code to remove</param>
         /// <returns>New coupon codes document</returns>
-        public virtual void RemoveGiftCardCouponCode(Customer customer, string couponCode)
+        public virtual async Task RemoveGiftCardCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
             //get applied coupon codes
-            var existingCouponCodes = ParseAppliedGiftCardCouponCodes(customer);
+            var existingCouponCodes = await ParseAppliedGiftCardCouponCodesAsync(customer);
 
             //clear them
-            _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
+            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.GiftCardCouponCodesAttribute, null);
 
             //save again except removed one
             foreach (var existingCouponCode in existingCouponCodes)
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
-                    ApplyGiftCardCouponCode(customer, existingCouponCode);
+                    await ApplyGiftCardCouponCodeAsync(customer, existingCouponCode);
         }
 
         #endregion
@@ -1072,9 +1068,9 @@ namespace Nop.Services.Customers
         /// Add a customer-customer role mapping
         /// </summary>
         /// <param name="roleMapping">Customer-customer role mapping</param>
-        public void AddCustomerRoleMapping(CustomerCustomerRoleMapping roleMapping)
+        public async Task AddCustomerRoleMappingAsync(CustomerCustomerRoleMapping roleMapping)
         {
-            _customerCustomerRoleMappingRepository.Insert(roleMapping);
+            await _customerCustomerRoleMappingRepository.InsertAsync(roleMapping);
         }
 
         /// <summary>
@@ -1082,7 +1078,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="role">Customer role</param>
-        public void RemoveCustomerRoleMapping(Customer customer, CustomerRole role)
+        public async Task RemoveCustomerRoleMappingAsync(Customer customer, CustomerRole role)
         {
             if (customer is null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1090,17 +1086,18 @@ namespace Nop.Services.Customers
             if (role is null)
                 throw new ArgumentNullException(nameof(role));
 
-            var mapping = _customerCustomerRoleMappingRepository.Table.SingleOrDefault(ccrm => ccrm.CustomerId == customer.Id && ccrm.CustomerRoleId == role.Id);
+            var mapping = await _customerCustomerRoleMappingRepository.Table
+                .SingleOrDefaultAsync(ccrm => ccrm.CustomerId == customer.Id && ccrm.CustomerRoleId == role.Id);
 
             if (mapping != null)
-                _customerCustomerRoleMappingRepository.Delete(mapping);
+                await _customerCustomerRoleMappingRepository.DeleteAsync(mapping);
         }
 
         /// <summary>
         /// Delete a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
-        public virtual void DeleteCustomerRole(CustomerRole customerRole)
+        public virtual async Task DeleteCustomerRoleAsync(CustomerRole customerRole)
         {
             if (customerRole == null)
                 throw new ArgumentNullException(nameof(customerRole));
@@ -1108,7 +1105,7 @@ namespace Nop.Services.Customers
             if (customerRole.IsSystemRole)
                 throw new NopException("System role could not be deleted");
 
-            _customerRoleRepository.Delete(customerRole);
+            await _customerRoleRepository.DeleteAsync(customerRole);
         }
 
         /// <summary>
@@ -1116,9 +1113,9 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>Customer role</returns>
-        public virtual CustomerRole GetCustomerRoleById(int customerRoleId)
+        public virtual async Task<CustomerRole> GetCustomerRoleByIdAsync(int customerRoleId)
         {
-            return _customerRoleRepository.GetById(customerRoleId, cache => default);
+            return await _customerRoleRepository.GetByIdAsync(customerRoleId, cache => default);
         }
 
         /// <summary>
@@ -1126,7 +1123,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="systemName">Customer role system name</param>
         /// <returns>Customer role</returns>
-        public virtual CustomerRole GetCustomerRoleBySystemName(string systemName)
+        public virtual async Task<CustomerRole> GetCustomerRoleBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
@@ -1137,7 +1134,8 @@ namespace Nop.Services.Customers
                         orderby cr.Id
                         where cr.SystemName == systemName
                         select cr;
-            var customerRole = _staticCacheManager.Get(key, query.FirstOrDefault);
+
+            var customerRole = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
             return customerRole;
         }
@@ -1148,7 +1146,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
         /// <returns>Customer role identifiers</returns>
-        public virtual int[] GetCustomerRoleIds(Customer customer, bool showHidden = false)
+        public virtual async Task<int[]> GetCustomerRoleIdsAsync(Customer customer, bool showHidden = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1161,7 +1159,7 @@ namespace Nop.Services.Customers
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRoleIdsCacheKey, customer, showHidden);
 
-            return _staticCacheManager.Get(key, () => query.ToArray());
+            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
         }
 
         /// <summary>
@@ -1170,12 +1168,12 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
         /// <returns>Result</returns>
-        public virtual IList<CustomerRole> GetCustomerRoles(Customer customer, bool showHidden = false)
+        public virtual async Task<IList<CustomerRole>> GetCustomerRolesAsync(Customer customer, bool showHidden = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            return _customerRoleRepository.GetAll(query =>
+            return await _customerRoleRepository.GetAllAsync(query =>
             {
                 return from cr in query
                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
@@ -1183,6 +1181,7 @@ namespace Nop.Services.Customers
                              (showHidden || cr.Active)
                        select cr;
             }, cache => cache.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer, showHidden));
+
         }
 
         /// <summary>
@@ -1190,7 +1189,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Customer roles</returns>
-        public virtual IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false)
+        public virtual async Task<IList<CustomerRole>> GetAllCustomerRolesAsync(bool showHidden = false)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesAllCacheKey, showHidden);
 
@@ -1199,7 +1198,7 @@ namespace Nop.Services.Customers
                         where showHidden || cr.Active
                         select cr;
 
-            var customerRoles = _staticCacheManager.Get(key, query.ToList);
+            var customerRoles = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return customerRoles;
         }
@@ -1208,9 +1207,9 @@ namespace Nop.Services.Customers
         /// Inserts a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
-        public virtual void InsertCustomerRole(CustomerRole customerRole)
+        public virtual async Task InsertCustomerRoleAsync(CustomerRole customerRole)
         {
-            _customerRoleRepository.Insert(customerRole);
+            await _customerRoleRepository.InsertAsync(customerRole);
         }
 
         /// <summary>
@@ -1220,7 +1219,7 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleSystemName">Customer role system name</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsInCustomerRole(Customer customer,
+        public virtual async Task<bool> IsInCustomerRoleAsync(Customer customer,
             string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
         {
             if (customer == null)
@@ -1229,7 +1228,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrEmpty(customerRoleSystemName))
                 throw new ArgumentNullException(nameof(customerRoleSystemName));
 
-            var customerRoles = GetCustomerRoles(customer, !onlyActiveCustomerRoles);
+            var customerRoles = await GetCustomerRolesAsync(customer, !onlyActiveCustomerRoles);
 
             return customerRoles?.Any(cr => cr.SystemName == customerRoleSystemName) ?? false;
         }
@@ -1240,9 +1239,9 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsAdmin(Customer customer, bool onlyActiveCustomerRoles = true)
+        public virtual async Task<bool> IsAdminAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
-            return IsInCustomerRole(customer, NopCustomerDefaults.AdministratorsRoleName, onlyActiveCustomerRoles);
+            return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.AdministratorsRoleName, onlyActiveCustomerRoles);
         }
 
         /// <summary>
@@ -1251,9 +1250,9 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsForumModerator(Customer customer, bool onlyActiveCustomerRoles = true)
+        public virtual async Task<bool> IsForumModeratorAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
-            return IsInCustomerRole(customer, NopCustomerDefaults.ForumModeratorsRoleName, onlyActiveCustomerRoles);
+            return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.ForumModeratorsRoleName, onlyActiveCustomerRoles);
         }
 
         /// <summary>
@@ -1262,9 +1261,9 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsRegistered(Customer customer, bool onlyActiveCustomerRoles = true)
+        public virtual async Task<bool> IsRegisteredAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
-            return IsInCustomerRole(customer, NopCustomerDefaults.RegisteredRoleName, onlyActiveCustomerRoles);
+            return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.RegisteredRoleName, onlyActiveCustomerRoles);
         }
 
         /// <summary>
@@ -1273,9 +1272,9 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsGuest(Customer customer, bool onlyActiveCustomerRoles = true)
+        public virtual async Task<bool> IsGuestAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
-            return IsInCustomerRole(customer, NopCustomerDefaults.GuestsRoleName, onlyActiveCustomerRoles);
+            return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.GuestsRoleName, onlyActiveCustomerRoles);
         }
 
         /// <summary>
@@ -1284,18 +1283,18 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
-        public virtual bool IsVendor(Customer customer, bool onlyActiveCustomerRoles = true)
+        public virtual async Task<bool> IsVendorAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
-            return IsInCustomerRole(customer, NopCustomerDefaults.VendorsRoleName, onlyActiveCustomerRoles);
+            return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.VendorsRoleName, onlyActiveCustomerRoles);
         }
 
         /// <summary>
         /// Updates the customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
-        public virtual void UpdateCustomerRole(CustomerRole customerRole)
+        public virtual async Task UpdateCustomerRoleAsync(CustomerRole customerRole)
         {
-            _customerRoleRepository.Update(customerRole);
+            await _customerRoleRepository.UpdateAsync(customerRole);
         }
 
         #endregion
@@ -1309,7 +1308,7 @@ namespace Nop.Services.Customers
         /// <param name="passwordFormat">Password format; pass null to load all records</param>
         /// <param name="passwordsToReturn">Number of returning passwords; pass null to load all records</param>
         /// <returns>List of customer passwords</returns>
-        public virtual IList<CustomerPassword> GetCustomerPasswords(int? customerId = null,
+        public virtual async Task<IList<CustomerPassword>> GetCustomerPasswordsAsync(int? customerId = null,
             PasswordFormat? passwordFormat = null, int? passwordsToReturn = null)
         {
             var query = _customerPasswordRepository.Table;
@@ -1326,7 +1325,7 @@ namespace Nop.Services.Customers
             if (passwordsToReturn.HasValue)
                 query = query.OrderByDescending(password => password.CreatedOnUtc).Take(passwordsToReturn.Value);
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -1334,31 +1333,31 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Customer password</returns>
-        public virtual CustomerPassword GetCurrentPassword(int customerId)
+        public virtual async Task<CustomerPassword> GetCurrentPasswordAsync(int customerId)
         {
             if (customerId == 0)
                 return null;
 
             //return the latest password
-            return GetCustomerPasswords(customerId, passwordsToReturn: 1).FirstOrDefault();
+            return (await GetCustomerPasswordsAsync(customerId, passwordsToReturn: 1)).FirstOrDefault();
         }
 
         /// <summary>
         /// Insert a customer password
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
-        public virtual void InsertCustomerPassword(CustomerPassword customerPassword)
+        public virtual async Task InsertCustomerPasswordAsync(CustomerPassword customerPassword)
         {
-            _customerPasswordRepository.Insert(customerPassword);
+            await _customerPasswordRepository.InsertAsync(customerPassword);
         }
 
         /// <summary>
         /// Update a customer password
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
-        public virtual void UpdateCustomerPassword(CustomerPassword customerPassword)
+        public virtual async Task UpdateCustomerPasswordAsync(CustomerPassword customerPassword)
         {
-            _customerPasswordRepository.Update(customerPassword);
+            await _customerPasswordRepository.UpdateAsync(customerPassword);
         }
 
         /// <summary>
@@ -1367,12 +1366,12 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="token">Token to validate</param>
         /// <returns>Result</returns>
-        public virtual bool IsPasswordRecoveryTokenValid(Customer customer, string token)
+        public virtual async Task<bool> IsPasswordRecoveryTokenValidAsync(Customer customer, string token)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var cPrt = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute);
+            var cPrt = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute);
             if (string.IsNullOrEmpty(cPrt))
                 return false;
 
@@ -1387,7 +1386,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        public virtual bool IsPasswordRecoveryLinkExpired(Customer customer)
+        public virtual async Task<bool> IsPasswordRecoveryLinkExpiredAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1395,11 +1394,11 @@ namespace Nop.Services.Customers
             if (_customerSettings.PasswordRecoveryLinkDaysValid == 0)
                 return false;
 
-            var geneatedDate = _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
-            if (!geneatedDate.HasValue)
+            var generatedDate = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.PasswordRecoveryTokenDateGeneratedAttribute);
+            if (!generatedDate.HasValue)
                 return false;
 
-            var daysPassed = (DateTime.UtcNow - geneatedDate.Value).TotalDays;
+            var daysPassed = (DateTime.UtcNow - generatedDate.Value).TotalDays;
             if (daysPassed > _customerSettings.PasswordRecoveryLinkDaysValid)
                 return true;
 
@@ -1411,17 +1410,17 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if password is expired; otherwise false</returns>
-        public virtual bool PasswordIsExpired(Customer customer)
+        public virtual async Task<bool> PasswordIsExpiredAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
             //the guests don't have a password
-            if (IsGuest(customer))
+            if (await IsGuestAsync(customer))
                 return false;
 
             //password lifetime is disabled for user
-            if (!GetCustomerRoles(customer).Any(role => role.Active && role.EnablePasswordLifetime))
+            if (!(await GetCustomerRolesAsync(customer)).Any(role => role.Active && role.EnablePasswordLifetime))
                 return false;
 
             //setting disabled for all
@@ -1431,9 +1430,9 @@ namespace Nop.Services.Customers
             var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, customer);
 
             //get current password usage time
-            var currentLifetime = _staticCacheManager.Get(cacheKey, () =>
+            var currentLifetime = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var customerPassword = GetCurrentPassword(customer.Id);
+                var customerPassword = await GetCurrentPasswordAsync(customer.Id);
                 //password is not found, so return max value to force customer to change password
                 if (customerPassword == null)
                     return int.MaxValue;
@@ -1453,19 +1452,21 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
-        public virtual void RemoveCustomerAddress(Customer customer, Address address)
+        public virtual async Task RemoveCustomerAddressAsync(Customer customer, Address address)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            if (_customerAddressMappingRepository.Table.FirstOrDefault(m => m.AddressId == address.Id && m.CustomerId == customer.Id) is CustomerAddressMapping mapping)
+            if (await _customerAddressMappingRepository.Table
+                .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
+                is CustomerAddressMapping mapping)
             {
                 if (customer.BillingAddressId == address.Id)
                     customer.BillingAddressId = null;
                 if (customer.ShippingAddressId == address.Id)
                     customer.ShippingAddressId = null;
 
-                _customerAddressMappingRepository.Delete(mapping);
+                await _customerAddressMappingRepository.DeleteAsync(mapping);
             }
         }
 
@@ -1474,7 +1475,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
-        public virtual void InsertCustomerAddress(Customer customer, Address address)
+        public virtual async Task InsertCustomerAddressAsync(Customer customer, Address address)
         {
             if (customer is null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1482,7 +1483,9 @@ namespace Nop.Services.Customers
             if (address is null)
                 throw new ArgumentNullException(nameof(address));
 
-            if (_customerAddressMappingRepository.Table.FirstOrDefault(m => m.AddressId == address.Id && m.CustomerId == customer.Id) is null)
+            if (await _customerAddressMappingRepository.Table
+                .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
+                is null)
             {
                 var mapping = new CustomerAddressMapping
                 {
@@ -1490,7 +1493,7 @@ namespace Nop.Services.Customers
                     CustomerId = customer.Id
                 };
 
-                _customerAddressMappingRepository.Insert(mapping);
+                await _customerAddressMappingRepository.InsertAsync(mapping);
             }
         }
 
@@ -1499,7 +1502,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Result</returns>
-        public virtual IList<Address> GetAddressesByCustomerId(int customerId)
+        public virtual async Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId)
         {
             var query = from address in _customerAddressRepository.Table
                         join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
@@ -1508,7 +1511,7 @@ namespace Nop.Services.Customers
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
 
-            return _staticCacheManager.Get(key, () => query.ToList());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -1517,7 +1520,7 @@ namespace Nop.Services.Customers
         /// <param name="customerId">Customer identifier</param>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Result</returns>
-        public virtual Address GetCustomerAddress(int customerId, int addressId)
+        public virtual async Task<Address> GetCustomerAddressAsync(int customerId, int addressId)
         {
             if (customerId == 0 || addressId == 0)
                 return null;
@@ -1529,7 +1532,7 @@ namespace Nop.Services.Customers
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
 
-            return _staticCacheManager.Get(key, () => query.Single());
+            return await _staticCacheManager.GetAsync(key, async () => await query.SingleAsync());
         }
 
         /// <summary>
@@ -1537,12 +1540,12 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer identifier</param>
         /// <returns>Result</returns>
-        public virtual Address GetCustomerBillingAddress(Customer customer)
+        public virtual async Task<Address> GetCustomerBillingAddressAsync(Customer customer)
         {
             if (customer is null)
                 throw new ArgumentNullException(nameof(customer));
 
-            return GetCustomerAddress(customer.Id, customer.BillingAddressId ?? 0);
+            return await GetCustomerAddressAsync(customer.Id, customer.BillingAddressId ?? 0);
         }
 
         /// <summary>
@@ -1550,12 +1553,12 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        public virtual Address GetCustomerShippingAddress(Customer customer)
+        public virtual async Task<Address> GetCustomerShippingAddressAsync(Customer customer)
         {
             if (customer is null)
                 throw new ArgumentNullException(nameof(customer));
 
-            return GetCustomerAddress(customer.Id, customer.ShippingAddressId ?? 0);
+            return await GetCustomerAddressAsync(customer.Id, customer.ShippingAddressId ?? 0);
         }
 
         #endregion

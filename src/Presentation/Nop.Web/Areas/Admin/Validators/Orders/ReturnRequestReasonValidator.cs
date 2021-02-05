@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Orders
     {
         public ReturnRequestReasonValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Required"));
 
             SetDatabaseValidationRules<ReturnRequestReason>(dataProvider);
         }

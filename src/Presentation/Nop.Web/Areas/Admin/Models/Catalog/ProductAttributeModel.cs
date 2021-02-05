@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product attribute model
     /// </summary>
-    public partial class ProductAttributeModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeLocalizedModel>
+    public partial record ProductAttributeModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeLocalizedModel>
     {
         #region Ctor
 
@@ -37,7 +37,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class ProductAttributeLocalizedModel : ILocalizedLocaleModel
+    public partial record ProductAttributeLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

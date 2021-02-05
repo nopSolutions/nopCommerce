@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount model
     /// </summary>
-    public partial class DiscountModel : BaseNopEntityModel
+    public partial record DiscountModel : BaseNopEntityModel
     {
         #region Ctor
 

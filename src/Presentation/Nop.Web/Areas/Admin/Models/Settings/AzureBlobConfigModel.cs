@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents Azure Blob storage configuration model
     /// </summary>
-    public partial class AzureBlobConfigModel : BaseNopModel, IConfigModel
+    public partial record AzureBlobConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
 

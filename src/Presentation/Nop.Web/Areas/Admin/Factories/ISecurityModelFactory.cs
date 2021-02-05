@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.Security;
+﻿using System.Threading.Tasks;
+using Nop.Web.Areas.Admin.Models.Security;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -12,6 +13,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Permission mapping model</param>
         /// <returns>Permission mapping model</returns>
-        PermissionMappingModel PreparePermissionMappingModel(PermissionMappingModel model);
+        Task<PermissionMappingModel> PreparePermissionMappingModelAsync(PermissionMappingModel model);
     }
 }

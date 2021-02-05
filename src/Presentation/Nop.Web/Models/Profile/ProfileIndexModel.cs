@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Profile
 {
-    public partial class ProfileIndexModel : BaseNopModel
+    public partial record ProfileIndexModel : BaseNopModel
     {
         public int CustomerProfileId { get; set; }
         public string ProfileTitle { get; set; }

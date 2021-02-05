@@ -43,20 +43,20 @@ namespace Nop.Web.Framework.Mvc.Routing
 
         #region Methods
 
-        public override ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
+        public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
         {
             if (values == null)
-                return new ValueTask<RouteValueDictionary>(values);
+                return values;
 
             if (!values.TryGetValue("SeName", out var slugValue) || string.IsNullOrEmpty(slugValue as string))
-                return new ValueTask<RouteValueDictionary>(values);
+                return values;
 
             var slug = slugValue as string;
-            var urlRecord = _urlRecordService.GetBySlug(slug);
+            var urlRecord = await _urlRecordService.GetBySlugAsync(slug);
 
             //no URL record found
             if (urlRecord == null)
-                return new ValueTask<RouteValueDictionary>(values);
+                return values;
 
             //virtual directory path
             var pathBase = httpContext.Request.PathBase;
@@ -64,9 +64,9 @@ namespace Nop.Web.Framework.Mvc.Routing
             //if URL record is not active let's find the latest one
             if (!urlRecord.IsActive)
             {
-                var activeSlug = _urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
+                var activeSlug = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
                 if (string.IsNullOrEmpty(activeSlug))
-                    return new ValueTask<RouteValueDictionary>(values);
+                    return values;
 
                 //redirect to active slug if found
                 values[NopPathRouteDefaults.ControllerFieldKey] = "Common";
@@ -75,7 +75,7 @@ namespace Nop.Web.Framework.Mvc.Routing
                 values[NopPathRouteDefaults.PermanentRedirectFieldKey] = true;
                 httpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
 
-                return new ValueTask<RouteValueDictionary>(values);
+                return values;
             }
 
             //Ensure that the slug is the same for the current language, 
@@ -85,11 +85,11 @@ namespace Nop.Web.Framework.Mvc.Routing
                 var urllanguage = values["language"];
                 if (urllanguage != null && !string.IsNullOrEmpty(urllanguage.ToString()))
                 {
-                    var language = _languageService.GetAllLanguages().FirstOrDefault(x => x.UniqueSeoCode.ToLowerInvariant() == urllanguage.ToString().ToLowerInvariant());
-                    if (language == null)
-                        language = _languageService.GetAllLanguages().FirstOrDefault();
+                    var languages = await _languageService.GetAllLanguagesAsync();
+                    var language = languages.FirstOrDefault(x => x.UniqueSeoCode.ToLowerInvariant() == urllanguage.ToString().ToLowerInvariant())
+                        ?? languages.FirstOrDefault();
 
-                    var slugForCurrentLanguage = _urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, language.Id);
+                    var slugForCurrentLanguage = await _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id);
                     if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
                     {
                         //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
@@ -101,7 +101,7 @@ namespace Nop.Web.Framework.Mvc.Routing
                         values[NopPathRouteDefaults.PermanentRedirectFieldKey] = false;
                         httpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
 
-                        return new ValueTask<RouteValueDictionary>(values);
+                        return values;
                     }
                 }
             }
@@ -115,55 +115,63 @@ namespace Nop.Web.Framework.Mvc.Routing
                     values[NopPathRouteDefaults.ProductIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 case "producttag":
                     values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
                     values[NopPathRouteDefaults.ActionFieldKey] = "ProductsByTag";
                     values[NopPathRouteDefaults.ProducttagIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 case "category":
                     values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
                     values[NopPathRouteDefaults.ActionFieldKey] = "Category";
                     values[NopPathRouteDefaults.CategoryIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 case "manufacturer":
                     values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
                     values[NopPathRouteDefaults.ActionFieldKey] = "Manufacturer";
                     values[NopPathRouteDefaults.ManufacturerIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 case "vendor":
                     values[NopPathRouteDefaults.ControllerFieldKey] = "Catalog";
                     values[NopPathRouteDefaults.ActionFieldKey] = "Vendor";
                     values[NopPathRouteDefaults.VendorIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 case "newsitem":
                     values[NopPathRouteDefaults.ControllerFieldKey] = "News";
                     values[NopPathRouteDefaults.ActionFieldKey] = "NewsItem";
                     values[NopPathRouteDefaults.NewsItemIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 case "blogpost":
                     values[NopPathRouteDefaults.ControllerFieldKey] = "Blog";
                     values[NopPathRouteDefaults.ActionFieldKey] = "BlogPost";
                     values[NopPathRouteDefaults.BlogPostIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 case "topic":
                     values[NopPathRouteDefaults.ControllerFieldKey] = "Topic";
                     values[NopPathRouteDefaults.ActionFieldKey] = "TopicDetails";
                     values[NopPathRouteDefaults.TopicIdFieldKey] = urlRecord.EntityId;
                     values[NopPathRouteDefaults.SeNameFieldKey] = urlRecord.Slug;
                     break;
+
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    _eventPublisher.Publish(new GenericRoutingEvent(values, urlRecord));
+                    await _eventPublisher.PublishAsync(new GenericRoutingEvent(values, urlRecord));
                     break;
             }
 
-            return new ValueTask<RouteValueDictionary>(values);
+            return values;
         }
 
         #endregion

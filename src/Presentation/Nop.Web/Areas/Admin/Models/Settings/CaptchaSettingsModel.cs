@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a CAPTCHA settings model
     /// </summary>
-    public partial class CaptchaSettingsModel : BaseNopModel, ISettingsModel
+    public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
     /// <summary>
     /// Represents a plugin search model
     /// </summary>
-    public partial class PluginSearchModel : BaseSearchModel
+    public partial record PluginSearchModel : BaseSearchModel
     {
         #region Ctor
 

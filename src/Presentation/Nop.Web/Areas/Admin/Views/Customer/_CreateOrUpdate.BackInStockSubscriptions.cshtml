@@ -15,7 +15,7 @@
             {
                 Title = T("Admin.Customers.Customers.BackInStockSubscriptions.Store").Text,
                 Width = "200",
-                Visible = storeService.GetAllStores().Count > 1
+                Visible = (await storeService.GetAllStoresAsync()).Count > 1
             },
             new ColumnProperty(nameof(CustomerBackInStockSubscriptionModel.ProductName))
             {

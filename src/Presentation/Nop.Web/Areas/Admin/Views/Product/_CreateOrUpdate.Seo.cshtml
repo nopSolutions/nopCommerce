@@ -2,7 +2,7 @@
 <div class="card-body">
     <div class="cards-group">
 
-        @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
+        @(await Html.LocalizedEditorAsync<ProductModel, ProductLocalizedModel>("product-seo-localized",
                 @<div>
                     <div class="form-group row">
                         <div class="col-md-3">

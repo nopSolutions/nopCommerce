@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
@@ -40,9 +41,9 @@ namespace Nop.Services.Vendors
         /// Gets all vendor attributes
         /// </summary>
         /// <returns>Vendor attributes</returns>
-        public virtual IList<VendorAttribute> GetAllVendorAttributes()
+        public virtual async Task<IList<VendorAttribute>> GetAllVendorAttributesAsync()
         {
-            return _vendorAttributeRepository.GetAll(
+            return await _vendorAttributeRepository.GetAllAsync(
                 query => query.OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id),
                 cache => default);
         }
@@ -52,36 +53,36 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorAttributeId">Vendor attribute identifier</param>
         /// <returns>Vendor attribute</returns>
-        public virtual VendorAttribute GetVendorAttributeById(int vendorAttributeId)
+        public virtual async Task<VendorAttribute> GetVendorAttributeByIdAsync(int vendorAttributeId)
         {
-            return _vendorAttributeRepository.GetById(vendorAttributeId, cache => default);
+            return await _vendorAttributeRepository.GetByIdAsync(vendorAttributeId, cache => default);
         }
 
         /// <summary>
         /// Inserts a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void InsertVendorAttribute(VendorAttribute vendorAttribute)
+        public virtual async Task InsertVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            _vendorAttributeRepository.Insert(vendorAttribute);
+            await _vendorAttributeRepository.InsertAsync(vendorAttribute);
         }
 
         /// <summary>
         /// Updates a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void UpdateVendorAttribute(VendorAttribute vendorAttribute)
+        public virtual async Task UpdateVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            _vendorAttributeRepository.Update(vendorAttribute);
+            await _vendorAttributeRepository.UpdateAsync(vendorAttribute);
         }
 
         /// <summary>
         /// Deletes a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void DeleteVendorAttribute(VendorAttribute vendorAttribute)
+        public virtual async Task DeleteVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            _vendorAttributeRepository.Delete(vendorAttribute);
+            await _vendorAttributeRepository.DeleteAsync(vendorAttribute);
         }
 
         #endregion
@@ -93,7 +94,7 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorAttributeId">The vendor attribute identifier</param>
         /// <returns>Vendor attribute values</returns>
-        public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
+        public virtual async Task<IList<VendorAttributeValue>> GetVendorAttributeValuesAsync(int vendorAttributeId)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, vendorAttributeId);
 
@@ -102,7 +103,7 @@ namespace Nop.Services.Vendors
                 .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder)
                 .ThenBy(vendorAttributeValue => vendorAttributeValue.Id);
 
-            return _staticCacheManager.Get(key, query.ToList);
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -110,36 +111,36 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorAttributeValueId">Vendor attribute value identifier</param>
         /// <returns>Vendor attribute value</returns>
-        public virtual VendorAttributeValue GetVendorAttributeValueById(int vendorAttributeValueId)
+        public virtual async Task<VendorAttributeValue> GetVendorAttributeValueByIdAsync(int vendorAttributeValueId)
         {
-            return _vendorAttributeValueRepository.GetById(vendorAttributeValueId, cache => default);
+            return await _vendorAttributeValueRepository.GetByIdAsync(vendorAttributeValueId, cache => default);
         }
 
         /// <summary>
         /// Inserts a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        public virtual async Task InsertVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            _vendorAttributeValueRepository.Insert(vendorAttributeValue);
+            await _vendorAttributeValueRepository.InsertAsync(vendorAttributeValue);
         }
 
         /// <summary>
         /// Updates the vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void UpdateVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        public virtual async Task UpdateVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            _vendorAttributeValueRepository.Update(vendorAttributeValue);
+            await _vendorAttributeValueRepository.UpdateAsync(vendorAttributeValue);
         }
 
         /// <summary>
         /// Deletes a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void DeleteVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        public virtual async Task DeleteVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            _vendorAttributeValueRepository.Delete(vendorAttributeValue);
+            await _vendorAttributeValueRepository.DeleteAsync(vendorAttributeValue);
         }
 
         #endregion

@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial  class ForumGroupModel : BaseNopModel
+    public partial  record ForumGroupModel : BaseNopModel
     {
         public ForumGroupModel()
         {

@@ -35,14 +35,14 @@
                 if (ruleSystemName) {
                     var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                     if (groupsElement.find('option').length > 1) {
-                        $("#pnlGroup").show();
+                        $("#pnlGroup").showField();
                     }
                     else {
                         $("#pnlGroup").hide();
                     }
                     if (ruleSystemName == 'AddGroup') {
-                        $("#pnlAddNewGroup").show();
-                        $("#pnlGroupName").show();
+                        $("#pnlAddNewGroup").showField();
+                        $("#pnlGroupName").showField();
                         $('#addrequirementplaceholder').html('');
                     }
                     else {
@@ -113,7 +113,7 @@
                         });
                         var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
                         if (ruleSystemName && groupsElement.find('option').length > 1) {
-                            $("#pnlGroup").show();
+                            $("#pnlGroup").showField();
                         }
                         else {
                             $("#pnlGroup").hide();

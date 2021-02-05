@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount search model
     /// </summary>
-    public partial class DiscountSearchModel : BaseSearchModel
+    public partial record DiscountSearchModel : BaseSearchModel
     {
         #region Ctor
 

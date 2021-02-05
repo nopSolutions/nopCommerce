@@ -129,13 +129,13 @@
         if (selectedPackingTypeId == @(((int) PackingType.PackByDimensions).ToString())) {
             $('#pnlPackingPackageVolume').hide();
         } else if (selectedPackingTypeId == @(((int) PackingType.PackByVolume).ToString())) {
-            $('#pnlPackingPackageVolume').show();
+            $('#pnlPackingPackageVolume').showField();
         }
     }
 
     function togglePassDimensions() {
         if ($(@Html.IdFor(model => model.PassDimensions)).is(':checked')) {
-            $('#pnlPackingType').show();
+            $('#pnlPackingType').showField();
         } else {
             $('#pnlPackingType').hide();
         }

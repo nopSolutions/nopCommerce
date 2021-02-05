@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.Home;
+﻿using System.Threading.Tasks;
+using Nop.Web.Areas.Admin.Models.Home;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -12,12 +13,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Dashboard model</param>
         /// <returns>Dashboard model</returns>
-        DashboardModel PrepareDashboardModel(DashboardModel model);
+        Task<DashboardModel> PrepareDashboardModelAsync(DashboardModel model);
 
         /// <summary>
         /// Prepare nopCommerce news model
         /// </summary>
         /// <returns>nopCommerce news model</returns>
-        NopCommerceNewsModel PrepareNopCommerceNewsModel();
+        Task<NopCommerceNewsModel> PrepareNopCommerceNewsModelAsync();
     }
 }

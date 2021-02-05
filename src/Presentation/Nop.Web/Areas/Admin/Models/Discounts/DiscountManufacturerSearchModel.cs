@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount manufacturer search model
     /// </summary>
-    public partial class DiscountManufacturerSearchModel : BaseSearchModel
+    public partial record DiscountManufacturerSearchModel : BaseSearchModel
     {
         #region Properties
 

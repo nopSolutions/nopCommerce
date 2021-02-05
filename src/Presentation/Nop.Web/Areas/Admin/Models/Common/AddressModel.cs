@@ -7,7 +7,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
-    public partial class AddressModel : BaseNopEntityModel
+    public partial record AddressModel : BaseNopEntityModel
     {
         public AddressModel()
         {
@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         #region Nested classes
 
-        public partial class AddressAttributeModel : BaseNopEntityModel
+        public partial record AddressAttributeModel : BaseNopEntityModel
         {
             public AddressAttributeModel()
             {
@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
             public IList<AddressAttributeValueModel> Values { get; set; }
         }
 
-        public partial class AddressAttributeValueModel : BaseNopEntityModel
+        public partial record AddressAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 

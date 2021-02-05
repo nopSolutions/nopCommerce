@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Cms
     /// <summary>
     /// Represents a widget model
     /// </summary>
-    public partial class WidgetModel : BaseNopModel, IPluginModel
+    public partial record WidgetModel : BaseNopModel, IPluginModel
     {
         #region Properties
 

@@ -17,7 +17,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant();
+        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
         Html.AddCanonicalUrlParts(categoryUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
@@ -155,7 +155,7 @@
         @{
             var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
         }
-        @if (!pager.IsEmpty())
+        @if (!(await pager.IsEmpty()))
         {
             <div class="pager">
                 @pager

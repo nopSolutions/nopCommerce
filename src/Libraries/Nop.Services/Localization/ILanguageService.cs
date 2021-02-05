@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.Localization
@@ -12,7 +13,7 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        void DeleteLanguage(Language language);
+        Task DeleteLanguageAsync(Language language);
 
         /// <summary>
         /// Gets all languages
@@ -20,27 +21,28 @@ namespace Nop.Services.Localization
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Languages</returns>
-        IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0);
+        Task<IList<Language>> GetAllLanguagesAsync(bool showHidden = false, int storeId = 0);
 
         /// <summary>
         /// Gets a language
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        Language GetLanguageById(int languageId);
+        Task<Language> GetLanguageByIdAsync(int languageId);
 
         /// <summary>
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        void InsertLanguage(Language language);
+        Task InsertLanguageAsync(Language language);
 
         /// <summary>
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
-        void UpdateLanguage(Language language);
+        Task UpdateLanguageAsync(Language language);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get 2 letter ISO language code
         /// </summary>

@@ -31,8 +31,14 @@ namespace Nop.Data.Migrations
                 defaultConventionSet.SchemaConvention
             };
 
-            ColumnsConventions = defaultConventionSet.ColumnsConventions;
+            ColumnsConventions = new List<IColumnsConvention>() 
+            {
+                new NopColumnsConvention(),
+                new DefaultPrimaryKeyNameConvention()
+            };
+            
             ConstraintConventions = defaultConventionSet.ConstraintConventions;
+
             SequenceConventions = defaultConventionSet.SequenceConventions;
             AutoNameConventions = defaultConventionSet.AutoNameConventions;
             SchemaConvention = defaultConventionSet.SchemaConvention;

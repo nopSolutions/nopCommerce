@@ -77,14 +77,14 @@
 
                         function toggleDisplayLogo() {
                             if ($('#@Html.IdFor(model => model.DisplayLogoInHeaderLinks)').is(':checked')) {
-                                $('#pnlLogoInHeaderLinks').show();
+                                $('#pnlLogoInHeaderLinks').showField();
                             }
                             else {
                                 $('#pnlLogoInHeaderLinks').hide();
                             }
 
                             if ($('#@Html.IdFor(model => model.DisplayLogoInFooter)').is(':checked')) {
-                                $('#pnlLogoInFooter').show();
+                                $('#pnlLogoInFooter').showField();
                             }
                             else {
                                 $('#pnlLogoInFooter').hide();

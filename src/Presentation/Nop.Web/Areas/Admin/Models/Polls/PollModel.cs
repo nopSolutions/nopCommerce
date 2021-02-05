@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Polls
     /// <summary>
     /// Represents a poll model
     /// </summary>
-    public partial class PollModel : BaseNopEntityModel, IStoreMappingSupportedModel
+    public partial record PollModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
         #region Ctor
 

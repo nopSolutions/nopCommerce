@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a message template model
     /// </summary>
-    public partial class MessageTemplateModel : BaseNopEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>, IStoreMappingSupportedModel
+    public partial record MessageTemplateModel : BaseNopEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         #endregion
     }
 
-    public partial class MessageTemplateLocalizedModel : ILocalizedLocaleModel
+    public partial record MessageTemplateLocalizedModel : ILocalizedLocaleModel
     {
         public MessageTemplateLocalizedModel()
         {

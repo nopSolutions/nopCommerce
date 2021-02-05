@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -38,7 +39,7 @@ namespace Nop.Services.News
             _newsItemRepository = newsItemRepository;
             _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
-            
+
         }
 
         #endregion
@@ -51,9 +52,9 @@ namespace Nop.Services.News
         /// Deletes a news
         /// </summary>
         /// <param name="newsItem">News item</param>
-        public virtual void DeleteNews(NewsItem newsItem)
+        public virtual async Task DeleteNewsAsync(NewsItem newsItem)
         {
-            _newsItemRepository.Delete(newsItem);
+            await _newsItemRepository.DeleteAsync(newsItem);
         }
 
         /// <summary>
@@ -61,19 +62,9 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News</returns>
-        public virtual NewsItem GetNewsById(int newsId)
+        public virtual async Task<NewsItem> GetNewsByIdAsync(int newsId)
         {
-            return _newsItemRepository.GetById(newsId, cache => default);
-        }
-
-        /// <summary>
-        /// Gets news
-        /// </summary>
-        /// <param name="newsIds">The news identifiers</param>
-        /// <returns>News</returns>
-        public virtual IList<NewsItem> GetNewsByIds(int[] newsIds)
-        {
-            return _newsItemRepository.GetByIds(newsIds);
+            return await _newsItemRepository.GetByIdAsync(newsId, cache => default);
         }
 
         /// <summary>
@@ -86,10 +77,10 @@ namespace Nop.Services.News
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="title">Filter by news item title</param>
         /// <returns>News items</returns>
-        public virtual IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
+        public virtual async Task<IPagedList<NewsItem>> GetAllNewsAsync(int languageId = 0, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            var news = _newsItemRepository.GetAllPaged(query =>
+            var news = await _newsItemRepository.GetAllPagedAsync(async query =>
             {
                 if (languageId > 0)
                     query = query.Where(n => languageId == n.LanguageId);
@@ -106,10 +97,8 @@ namespace Nop.Services.News
                 }
 
                 //Store mapping 
-                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<NewsItem>(storeId))
-                {
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<NewsItem>(storeId))
                     query = query.Where(_storeMappingService.ApplyStoreMapping<NewsItem>(storeId));
-                }
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }, pageIndex, pageSize);
@@ -121,18 +110,18 @@ namespace Nop.Services.News
         /// Inserts a news item
         /// </summary>
         /// <param name="news">News item</param>
-        public virtual void InsertNews(NewsItem news)
+        public virtual async Task InsertNewsAsync(NewsItem news)
         {
-            _newsItemRepository.Insert(news);
+            await _newsItemRepository.InsertAsync(news);
         }
 
         /// <summary>
         /// Updates the news item
         /// </summary>
         /// <param name="news">News item</param>
-        public virtual void UpdateNews(NewsItem news)
+        public virtual async Task UpdateNewsAsync(NewsItem news)
         {
-            _newsItemRepository.Update(news);
+            await _newsItemRepository.UpdateAsync(news);
         }
 
         /// <summary>
@@ -169,10 +158,10 @@ namespace Nop.Services.News
         /// <param name="toUtc">Item creation to; null to load all records</param>
         /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
+        public virtual async Task<IList<NewsComment>> GetAllCommentsAsync(int customerId = 0, int storeId = 0, int? newsItemId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
-            return _newsCommentRepository.GetAll(query =>
+            return await _newsCommentRepository.GetAllAsync(query =>
             {
                 if (approved.HasValue)
                     query = query.Where(comment => comment.IsApproved == approved);
@@ -207,9 +196,9 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="newsCommentId">News comment identifier</param>
         /// <returns>News comment</returns>
-        public virtual NewsComment GetNewsCommentById(int newsCommentId)
+        public virtual async Task<NewsComment> GetNewsCommentByIdAsync(int newsCommentId)
         {
-            return _newsCommentRepository.GetById(newsCommentId, cache => default);
+            return await _newsCommentRepository.GetByIdAsync(newsCommentId, cache => default);
         }
 
         /// <summary>
@@ -217,9 +206,9 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="commentIds">News comment identifiers</param>
         /// <returns>News comments</returns>
-        public virtual IList<NewsComment> GetNewsCommentsByIds(int[] commentIds)
+        public virtual async Task<IList<NewsComment>> GetNewsCommentsByIdsAsync(int[] commentIds)
         {
-            return _newsCommentRepository.GetByIds(commentIds);
+            return await _newsCommentRepository.GetByIdsAsync(commentIds);
         }
 
         /// <summary>
@@ -229,7 +218,7 @@ namespace Nop.Services.News
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
         /// <returns>Number of news comments</returns>
-        public virtual int GetNewsCommentsCount(NewsItem newsItem, int storeId = 0, bool? isApproved = null)
+        public virtual async Task<int> GetNewsCommentsCountAsync(NewsItem newsItem, int storeId = 0, bool? isApproved = null)
         {
             var query = _newsCommentRepository.Table.Where(comment => comment.NewsItemId == newsItem.Id);
 
@@ -241,49 +230,47 @@ namespace Nop.Services.News
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
 
-            return _staticCacheManager.Get(cacheKey, query.Count);
+            return await _staticCacheManager.GetAsync(cacheKey, async () => await query.CountAsync());
         }
 
         /// <summary>
         /// Deletes a news comment
         /// </summary>
         /// <param name="newsComment">News comment</param>
-        public virtual void DeleteNewsComment(NewsComment newsComment)
+        public virtual async Task DeleteNewsCommentAsync(NewsComment newsComment)
         {
-            _newsCommentRepository.Delete(newsComment);
+            await _newsCommentRepository.DeleteAsync(newsComment);
         }
 
         /// <summary>
         /// Deletes a news comments
         /// </summary>
         /// <param name="newsComments">News comments</param>
-        public virtual void DeleteNewsComments(IList<NewsComment> newsComments)
+        public virtual async Task DeleteNewsCommentsAsync(IList<NewsComment> newsComments)
         {
             if (newsComments == null)
                 throw new ArgumentNullException(nameof(newsComments));
 
             foreach (var newsComment in newsComments)
-            {
-                DeleteNewsComment(newsComment);
-            }
+                await DeleteNewsCommentAsync(newsComment);
         }
 
         /// <summary>
         /// Inserts a news comment
         /// </summary>
         /// <param name="comment">News comment</param>
-        public virtual void InsertNewsComment(NewsComment comment)
+        public virtual async Task InsertNewsCommentAsync(NewsComment comment)
         {
-            _newsCommentRepository.Insert(comment);
+            await _newsCommentRepository.InsertAsync(comment);
         }
 
         /// <summary>
         /// Update a news comment
         /// </summary>
         /// <param name="comment">News comment</param>
-        public virtual void UpdateNewsComment(NewsComment comment)
+        public virtual async Task UpdateNewsCommentAsync(NewsComment comment)
         {
-            _newsCommentRepository.Update(comment);
+            await _newsCommentRepository.UpdateAsync(comment);
         }
 
         #endregion

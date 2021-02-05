@@ -31,22 +31,11 @@
         </div>
     }    
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-        <meta itemprop="url" content="@Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant()"/>
+        <meta itemprop="url" content="@Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant()"/>
         <meta itemprop="price" content="@Model.ProductPrice.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/>
         <meta itemprop="priceCurrency" content="@Model.ProductPrice.CurrencyCode"/>
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
-        @if (Model.ManageInventoryMethod == ManageInventoryMethod.ManageStock || Model.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
-        {
-            @if (Model.StockAvailability.Contains(@T("Products.Availability.InStock").ToString(), StringComparison.InvariantCultureIgnoreCase) || 
-                Model.StockAvailability.Contains(@T("Products.Availability.InStockWithQuantity").ToString(), StringComparison.InvariantCultureIgnoreCase))
-            {
-                <meta itemprop="availability" content="http://schema.org/InStock"/>
-            }
-            else
-            {
-                <meta itemprop="availability" content="http://schema.org/OutOfStock"/>
-            }
-        }        
+        <meta itemprop="availability" content="http://schema.org/@(Model.InStock ? "InStock" : "OutOfStock")" />
     </div>
     <div itemprop="review" itemscope itemtype="http://schema.org/Review">
         <meta itemprop="author" content="ALL"/>

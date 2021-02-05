@@ -10,7 +10,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "AffiliatePage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
@@ -34,8 +34,8 @@
 
     function toggleLoadOnlyWithOrders() {
         if ($('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
-            $('#pnlOrdersCreatedFromUtc').show();
-            $('#pnlOrdersCreatedToUtc').show();
+            $('#pnlOrdersCreatedFromUtc').showField();
+            $('#pnlOrdersCreatedToUtc').showField();
         } else {
             $('#pnlOrdersCreatedFromUtc').hide();
             $('#pnlOrdersCreatedToUtc').hide();

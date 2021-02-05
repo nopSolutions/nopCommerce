@@ -8,6 +8,6 @@
         /// <summary>
         /// Executes a task
         /// </summary>
-        void Execute();
+        System.Threading.Tasks.Task ExecuteAsync();
     }
 }

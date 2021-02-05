@@ -1,3 +1,4 @@
+﻿﻿using System.Threading.Tasks;
 ﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Caching;
@@ -14,9 +15,9 @@ namespace Nop.Services.Directory.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected override void ClearCache(Country entity, EntityEventType entityEventType)
+        protected override async Task ClearCacheAsync(Country entity, EntityEventType entityEventType)
         {
-            RemoveByPrefix(NopEntityCacheDefaults<Country>.Prefix);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<Country>.Prefix);
         }
     }
 }

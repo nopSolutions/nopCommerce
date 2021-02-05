@@ -222,7 +222,7 @@
         </form>
         <script asp-location="Footer">
             CheckoutBilling.init('#billing-form');
-            if (@(_customerService.IsGuest(workContext.CurrentCustomer).ToString().ToLowerInvariant())) {
+            if (@((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant())) {
                 $('input.edit-address-button').show();
                 $('input.delete-address-button').show();
             }

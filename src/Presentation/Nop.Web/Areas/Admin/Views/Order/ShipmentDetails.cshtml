@@ -19,14 +19,14 @@
         function toggleShippedDate(editmode) {
             if (editmode) {
                 $('#lblShippedDate').hide();
-                $('#divShippedDate').show();
+                $('#divShippedDate').showField();
                 $('#btnEditShippedDate').hide();
-                $('#btnSaveShippedDate').show();
-                $('#btnCancelShippedDate').show();
+                $('#btnSaveShippedDate').showField();
+                $('#btnCancelShippedDate').showField();
             } else {
-                $('#lblShippedDate').show();
+                $('#lblShippedDate').showField();
                 $('#divShippedDate').hide();
-                $('#btnEditShippedDate').show();
+                $('#btnEditShippedDate').showField();
                 $('#btnSaveShippedDate').hide();
                 $('#btnCancelShippedDate').hide();
             }
@@ -35,14 +35,14 @@
         function toggleDeliveryDate(editmode) {
             if (editmode) {
                 $('#lblDeliveryDate').hide();
-                $('#divDeliveryDate').show();
+                $('#divDeliveryDate').showField();
                 $('#btnEditDeliveryDate').hide();
-                $('#btnSaveDeliveryDate').show();
-                $('#btnCancelDeliveryDate').show();
+                $('#btnSaveDeliveryDate').showField();
+                $('#btnCancelDeliveryDate').showField();
             } else {
-                $('#lblDeliveryDate').show();
+                $('#lblDeliveryDate').showField();
                 $('#divDeliveryDate').hide();
-                $('#btnEditDeliveryDate').show();
+                $('#btnEditDeliveryDate').showField();
                 $('#btnSaveDeliveryDate').hide();
                 $('#btnCancelDeliveryDate').hide();
             }

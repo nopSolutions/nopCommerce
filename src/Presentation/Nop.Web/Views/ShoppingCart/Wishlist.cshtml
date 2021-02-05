@@ -157,7 +157,7 @@
                                             }
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {
-                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.CurrentRequestProtocol);
+                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                                 editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -225,11 +225,11 @@
                     </div>
                     @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
                     {
-                        var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+                        var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
                         //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                         //of course, you can modify appropriate locales to include VAT info there
                         <div class="tax-shipping-info">
-                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") }))
                         </div>
                     }
                     <div class="buttons">
@@ -257,7 +257,7 @@
         }
         @if (Model.IsEditable && Model.Items.Count > 0)
         {
-            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, webHelper.CurrentRequestProtocol);
+            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, webHelper.GetCurrentRequestProtocol());
             <div class="share-info">
                 <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
                 <a href="@wishlistUrl" class="share-link">@wishlistUrl</a>

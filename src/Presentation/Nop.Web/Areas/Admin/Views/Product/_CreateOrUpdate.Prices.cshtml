@@ -3,7 +3,7 @@
 @inject IStoreService storeService
 @using Nop.Services.Stores
 @{
-    var stores = storeService.GetAllStores();
+    var stores = await storeService.GetAllStoresAsync();
 }
 <script>
     $(document).ready(function() {
@@ -20,7 +20,7 @@
 
     function togglePreOrder() {
         if ($('#@Html.IdFor(model => model.AvailableForPreOrder)').is(':checked')) {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').show();
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').showField();
         } else {
             $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
         }
@@ -29,8 +29,8 @@
 
     function toggleCustomerEntersPrice() {
         if ($('#@Html.IdFor(model => model.CustomerEntersPrice)').is(':checked')) {
-            $('#pnlMinimumCustomerEnteredPrice').show();
-            $('#pnlMaximumCustomerEnteredPrice').show();
+            $('#pnlMinimumCustomerEnteredPrice').showField();
+            $('#pnlMaximumCustomerEnteredPrice').showField();
         } else {
             $('#pnlMinimumCustomerEnteredPrice').hide();
             $('#pnlMaximumCustomerEnteredPrice').hide();
@@ -39,10 +39,10 @@
 
     function toggleBasepriceEnabled() {
         if ($('#@Html.IdFor(model => model.BasepriceEnabled)').is(':checked')) {
-            $('#pnlBasepriceAmount').show();
-            $('#pnlBasepriceUnit').show();
-            $('#pnlBasepriceBaseAmount').show();
-            $('#pnlBasepriceBaseUnit').show();
+            $('#pnlBasepriceAmount').showField();
+            $('#pnlBasepriceUnit').showField();
+            $('#pnlBasepriceBaseAmount').showField();
+            $('#pnlBasepriceBaseUnit').showField();
         } else {
             $('#pnlBasepriceAmount').hide();
             $('#pnlBasepriceUnit').hide();
@@ -55,12 +55,12 @@
         if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
             $('#pnlTaxCategory').hide();
         } else {
-            $('#pnlTaxCategory').show();
+            $('#pnlTaxCategory').showField();
         }
     }
 </script>
 <div class="card-body">
-    <div class="form-group row">
+    <div class="form-group row" id="product-price-area">
         <div class="col-md-3">
             <nop-label asp-for="Price" />
         </div>
@@ -239,33 +239,35 @@
             </script>
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col-md-3">
-            <nop-label asp-for="IsTaxExempt" />
+    <div id="product-tax-area">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="IsTaxExempt" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IsTaxExempt" />
+                <span asp-validation-for="IsTaxExempt"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="IsTaxExempt" />
-            <span asp-validation-for="IsTaxExempt"></span>
-        </div>
-    </div>
-    <div class="form-group row" id="pnlTaxCategory">
-        <div class="col-md-3">
-            <nop-label asp-for="TaxCategoryId" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
-            <span asp-validation-for="TaxCategoryId"></span>
+        <div class="form-group row" id="pnlTaxCategory">
+            <div class="col-md-3">
+                <nop-label asp-for="TaxCategoryId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
+                <span asp-validation-for="TaxCategoryId"></span>
+            </div>
         </div>
     </div>
     <div class="form-group row @(Model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices ? null : "advanced-setting")" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
-                <div class="col-md-3">
-                    <nop-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-                    <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
-                </div>
-            </div>
+        <div class="col-md-3">
+            <nop-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
+            <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
+        </div>
+    </div>
     <div class="card card-default @(Model.ProductEditorSettingsModel.TierPrices ? null : "advanced-setting")">
         <div class="card-header">
             @T("Admin.Catalog.Products.TierPrices")

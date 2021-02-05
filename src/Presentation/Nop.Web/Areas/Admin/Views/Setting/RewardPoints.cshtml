@@ -12,10 +12,10 @@
 
 @{
     const string hideCommonBlockAttributeName = "RewardPointsSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideEarningRewardPointsBlockAttributeName = "RewardPointsSettingsPage.HideEarningRewardPointsBlock";
-    var hideEarningRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEarningRewardPointsBlockAttributeName);
+    var hideEarningRewardPointsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideEarningRewardPointsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="RewardPoints" method="post">

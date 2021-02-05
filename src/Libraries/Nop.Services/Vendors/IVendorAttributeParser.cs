@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Vendors
@@ -13,14 +14,14 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>List of vendor attributes</returns>
-        IList<VendorAttribute> ParseVendorAttributes(string attributesXml);
+        Task<IList<VendorAttribute>> ParseVendorAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Get vendor attribute values from XML
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>List of vendor attribute values</returns>
-        IList<VendorAttributeValue> ParseVendorAttributeValues(string attributesXml);
+        Task<IList<VendorAttributeValue>> ParseVendorAttributeValuesAsync(string attributesXml);
 
         /// <summary>
         /// Gets values of the selected vendor attribute
@@ -44,6 +45,6 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        IList<string> GetAttributeWarnings(string attributesXml);
+        Task<IList<string>> GetAttributeWarningsAsync(string attributesXml);
     }
 }

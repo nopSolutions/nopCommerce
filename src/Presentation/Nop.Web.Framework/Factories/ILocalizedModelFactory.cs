@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Factories
@@ -15,6 +16,6 @@ namespace Nop.Web.Framework.Factories
         /// <typeparam name="T">Localized model type</typeparam>
         /// <param name="configure">Model configuration action</param>
         /// <returns>List of localized model</returns>
-        IList<T> PrepareLocalizedModels<T>(Action<T, int> configure = null) where T : ILocalizedLocaleModel;
+        Task<IList<T>> PrepareLocalizedModelsAsync<T>(Action<T, int> configure = null) where T : ILocalizedLocaleModel;
     }
 }

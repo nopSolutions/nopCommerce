@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -62,14 +63,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
 
         #region Methods
 
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var settings = _settingService.LoadSetting<PayPalSmartPaymentButtonsSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var settings = await _settingService.LoadSettingAsync<PayPalSmartPaymentButtonsSettings>(storeScope);
 
             //prepare model
             var model = new ConfigurationModel
@@ -89,20 +90,20 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
 
             if (storeScope > 0)
             {
-                model.ClientId_OverrideForStore = _settingService.SettingExists(settings, setting => setting.ClientId, storeScope);
-                model.SecretKey_OverrideForStore = _settingService.SettingExists(settings, setting => setting.SecretKey, storeScope);
-                model.UseSandbox_OverrideForStore = _settingService.SettingExists(settings, setting => setting.UseSandbox, storeScope);
-                model.PaymentTypeId_OverrideForStore = _settingService.SettingExists(settings, setting => setting.PaymentType, storeScope);
-                model.DisplayButtonsOnShoppingCart_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayButtonsOnShoppingCart, storeScope);
-                model.DisplayButtonsOnProductDetails_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayButtonsOnProductDetails, storeScope);
-                model.DisplayLogoInHeaderLinks_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayLogoInHeaderLinks, storeScope);
-                model.LogoInHeaderLinks_OverrideForStore = _settingService.SettingExists(settings, setting => setting.LogoInHeaderLinks, storeScope);
-                model.DisplayLogoInFooter_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayLogoInFooter, storeScope);
-                model.LogoInFooter_OverrideForStore = _settingService.SettingExists(settings, setting => setting.LogoInFooter, storeScope);
+                model.ClientId_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.ClientId, storeScope);
+                model.SecretKey_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.SecretKey, storeScope);
+                model.UseSandbox_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.UseSandbox, storeScope);
+                model.PaymentTypeId_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.PaymentType, storeScope);
+                model.DisplayButtonsOnShoppingCart_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.DisplayButtonsOnShoppingCart, storeScope);
+                model.DisplayButtonsOnProductDetails_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.DisplayButtonsOnProductDetails, storeScope);
+                model.DisplayLogoInHeaderLinks_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.DisplayLogoInHeaderLinks, storeScope);
+                model.LogoInHeaderLinks_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.LogoInHeaderLinks, storeScope);
+                model.DisplayLogoInFooter_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.DisplayLogoInFooter, storeScope);
+                model.LogoInFooter_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.LogoInFooter, storeScope);
             }
 
             //prepare available payment types
-            model.PaymentTypes = PaymentType.Capture.ToSelectList(false)
+            model.PaymentTypes = (await PaymentType.Capture.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text, item.Value))
                 .ToList();
 
@@ -110,7 +111,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             if (!_shoppingCartSettings.RoundPricesDuringCalculation)
             {
                 var url = Url.Action("AllSettings", "Setting", new { settingName = nameof(ShoppingCartSettings.RoundPricesDuringCalculation) });
-                var warning = string.Format(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.RoundingWarning"), url);
+                var warning = string.Format(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.RoundingWarning"), url);
                 _notificationService.WarningNotification(warning, false);
             }
 
@@ -118,21 +119,21 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
         }
 
         [HttpPost]
-        public IActionResult Configure(ConfigurationModel model)
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var settings = _settingService.LoadSetting<PayPalSmartPaymentButtonsSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var settings = await _settingService.LoadSettingAsync<PayPalSmartPaymentButtonsSettings>(storeScope);
 
             //first delete the unused webhook on a previous client, if changed
             if ((!model.ClientId?.Equals(settings.ClientId) ?? true) && !string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
-                _serviceManager.DeleteWebhook(settings);
+                await _serviceManager.DeleteWebhookAsync(settings);
 
             //set new settings values
             settings.ClientId = model.ClientId;
@@ -149,48 +150,48 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             //ensure that webhook created, display warning in case of fail
             if (!string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
             {
-                var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, _webHelper.CurrentRequestProtocol);
-                var (webhook, webhookError) = _serviceManager.CreateWebHook(settings, webhookUrl);
+                var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, _webHelper.GetCurrentRequestProtocol());
+                var (webhook, webhookError) = await _serviceManager.CreateWebHookAsync(settings, webhookUrl);
                 settings.WebhookId = webhook?.Id;
                 if (string.IsNullOrEmpty(settings.WebhookId))
                 {
                     var url = Url.Action("List", "Log");
-                    var warning = string.Format(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning"), url);
+                    var warning = string.Format(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning"), url);
                     _notificationService.WarningNotification(warning, false);
                 }
             }
 
             //save settings
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.WebhookId, true, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.ClientId, model.ClientId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.SecretKey, model.SecretKey_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.PaymentType, model.PaymentTypeId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayButtonsOnShoppingCart, model.DisplayButtonsOnShoppingCart_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayButtonsOnProductDetails, model.DisplayButtonsOnProductDetails_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayLogoInHeaderLinks, model.DisplayLogoInHeaderLinks_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.LogoInHeaderLinks, model.LogoInHeaderLinks_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayLogoInFooter, model.DisplayLogoInFooter_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.LogoInFooter, model.LogoInFooter_OverrideForStore, storeScope, false);
-            _settingService.ClearCache();
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.WebhookId, true, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.ClientId, model.ClientId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.SecretKey, model.SecretKey_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.PaymentType, model.PaymentTypeId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.DisplayButtonsOnShoppingCart, model.DisplayButtonsOnShoppingCart_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.DisplayButtonsOnProductDetails, model.DisplayButtonsOnProductDetails_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.DisplayLogoInHeaderLinks, model.DisplayLogoInHeaderLinks_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.LogoInHeaderLinks, model.LogoInHeaderLinks_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.DisplayLogoInFooter, model.DisplayLogoInFooter_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.LogoInFooter, model.LogoInFooter_OverrideForStore, storeScope, false);
+            await _settingService.ClearCacheAsync();
 
             //ensure credentials are valid
             if (!string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
             {
-                var (_, errorMessage) = _serviceManager.GetAccessToken(settings);
+                var (_, errorMessage) = await _serviceManager.GetAccessTokenAsync(settings);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
                     var url = Url.Action("List", "Log");
-                    var error = string.Format(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid"), url);
+                    var error = string.Format(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid"), url);
                     _notificationService.ErrorNotification(error, false);
                 }
                 else
-                    _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid"));
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid"));
             }
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         #endregion

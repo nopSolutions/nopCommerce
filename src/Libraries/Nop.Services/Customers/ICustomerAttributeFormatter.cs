@@ -1,3 +1,5 @@
+﻿using System.Threading.Tasks;
+
 namespace Nop.Services.Customers
 {
     /// <summary>
@@ -12,6 +14,6 @@ namespace Nop.Services.Customers
         /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributesXml, string separator = "<br />", bool htmlEncode = true);
+        Task<string> FormatAttributesAsync(string attributesXml, string separator = "<br />", bool htmlEncode = true);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Configuration;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Configuration;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Configuration.Caching
@@ -13,9 +14,10 @@ namespace Nop.Services.Configuration.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected override void ClearCache(Setting entity, EntityEventType entityEventType)
+        protected override Task ClearCacheAsync(Setting entity, EntityEventType entityEventType)
         {
             //clear setting cache in SettingService
+            return Task.CompletedTask;
         }
     }
 }

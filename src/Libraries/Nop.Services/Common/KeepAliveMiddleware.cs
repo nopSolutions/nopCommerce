@@ -34,14 +34,14 @@ namespace Nop.Services.Common
         /// <param name="context">HTTP context</param>
         /// <param name="webHelper">Web helper</param>
         /// <returns>Task</returns>
-        public async Task Invoke(HttpContext context, IWebHelper webHelper)
+        public async Task InvokeAsync(HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
             {
                 //keep alive page requested (we ignore it to prevent creating a guest customer records)
                 var keepAliveUrl = $"{webHelper.GetStoreLocation()}{NopCommonDefaults.KeepAlivePath}";
-                if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
+                if ((webHelper.GetThisPageUrl(false)).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                     return;
             }
 

@@ -108,18 +108,18 @@
     function toggleSearchPagePageSize() {
         if ($('#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
             $('#pnlSearchPageProductsPerPage').hide();
-            $('#pnlSearchPagePageSizeOptions').show();
+            $('#pnlSearchPagePageSizeOptions').showField();
         } else {
-            $('#pnlSearchPageProductsPerPage').show();
+            $('#pnlSearchPageProductsPerPage').showField();
             $('#pnlSearchPagePageSizeOptions').hide();
         }
     }
 
     function toggleProductSearchAutoComplete() {
         if ($('#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
-            $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
-            $('#pnlShowProductImagesInSearchAutoComplete').show();
-            $('#pnlShowLinkToAllResultInSearchAutoComplete').show();
+            $('#pnlProductSearchAutoCompleteNumberOfProducts').showField();
+            $('#pnlShowProductImagesInSearchAutoComplete').showField();
+            $('#pnlShowLinkToAllResultInSearchAutoComplete').showField();
         } else {
             $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
             $('#pnlShowProductImagesInSearchAutoComplete').hide();

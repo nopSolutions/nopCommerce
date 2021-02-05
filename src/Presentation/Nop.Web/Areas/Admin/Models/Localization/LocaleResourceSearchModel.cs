@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
     /// <summary>
     /// Represents a locale resource search model
     /// </summary>
-    public partial class LocaleResourceSearchModel : BaseSearchModel
+    public partial record LocaleResourceSearchModel : BaseSearchModel
     {
         #region Ctor
 

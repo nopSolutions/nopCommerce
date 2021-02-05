@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a hosting configuration model
     /// </summary>
-    public partial class HostingConfigModel : BaseNopModel, IConfigModel
+    public partial record HostingConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
 

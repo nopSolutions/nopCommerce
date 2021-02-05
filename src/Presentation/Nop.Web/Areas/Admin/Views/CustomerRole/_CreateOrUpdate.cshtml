@@ -13,7 +13,7 @@
     
     function toggleTaxDisplayType() {
         if ($('#@Html.IdFor(model => model.OverrideTaxDisplayType)').is(':checked')) {
-            $('#pnlDefaultTaxDisplayType').show();
+            $('#pnlDefaultTaxDisplayType').showField();
         } else {
             $('#pnlDefaultTaxDisplayType').hide();
         }
@@ -21,7 +21,7 @@
 
     function toggleRemoveButton() {
         if ($('#@Html.IdFor(model => model.PurchasedWithProductId)').val() > 0) {
-            $('#purchased-with-product-name-remove').show();
+            $('#purchased-with-product-name-remove').showField();
         } else {
             $('#purchased-with-product-name-remove').hide();
         }

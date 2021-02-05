@@ -43,8 +43,8 @@
 
     function toggleShipping() {
         if ($('#@Html.IdFor(model => model.ShippingIsTaxable)').is(':checked')) {
-            $('#pnlShippingPriceIncludesTax').show();
-            $('#pnlShippingTaxClass').show();
+            $('#pnlShippingPriceIncludesTax').showField();
+            $('#pnlShippingTaxClass').showField();
         } else {
             $('#pnlShippingPriceIncludesTax').hide();
             $('#pnlShippingTaxClass').hide();

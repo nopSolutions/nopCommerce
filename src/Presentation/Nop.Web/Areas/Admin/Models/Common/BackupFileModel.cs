@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
     /// <summary>
     /// Represents a backup file model
     /// </summary>
-    public partial class BackupFileModel : BaseNopModel
+    public partial record BackupFileModel : BaseNopModel
     {
         #region Properties
         

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Customers;
 using Nop.Web.Factories;
@@ -17,13 +18,13 @@ namespace Nop.Web.Components
             _profileModelFactory = profileModelFactory;
         }
 
-        public IViewComponentResult Invoke(int customerProfileId)
+        public async Task<IViewComponentResult> InvokeAsync(int customerProfileId)
         {
-            var customer = _customerService.GetCustomerById(customerProfileId);
+            var customer = await _customerService.GetCustomerByIdAsync(customerProfileId);
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var model = _profileModelFactory.PrepareProfileInfoModel(customer);
+            var model = await _profileModelFactory.PrepareProfileInfoModelAsync(customer);
             return View(model);
         }
     }

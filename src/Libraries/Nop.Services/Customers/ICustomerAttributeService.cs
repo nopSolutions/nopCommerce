@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Customers
@@ -12,63 +13,63 @@ namespace Nop.Services.Customers
         /// Deletes a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        void DeleteCustomerAttribute(CustomerAttribute customerAttribute);
+        Task DeleteCustomerAttributeAsync(CustomerAttribute customerAttribute);
 
         /// <summary>
         /// Gets all customer attributes
         /// </summary>
         /// <returns>Customer attributes</returns>
-        IList<CustomerAttribute> GetAllCustomerAttributes();
+        Task<IList<CustomerAttribute>> GetAllCustomerAttributesAsync();
 
         /// <summary>
         /// Gets a customer attribute 
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute</returns>
-        CustomerAttribute GetCustomerAttributeById(int customerAttributeId);
+        Task<CustomerAttribute> GetCustomerAttributeByIdAsync(int customerAttributeId);
 
         /// <summary>
         /// Inserts a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        void InsertCustomerAttribute(CustomerAttribute customerAttribute);
+        Task InsertCustomerAttributeAsync(CustomerAttribute customerAttribute);
 
         /// <summary>
         /// Updates the customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        void UpdateCustomerAttribute(CustomerAttribute customerAttribute);
+        Task UpdateCustomerAttributeAsync(CustomerAttribute customerAttribute);
 
         /// <summary>
         /// Deletes a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        void DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
+        Task DeleteCustomerAttributeValueAsync(CustomerAttributeValue customerAttributeValue);
 
         /// <summary>
         /// Gets customer attribute values by customer attribute identifier
         /// </summary>
         /// <param name="customerAttributeId">The customer attribute identifier</param>
         /// <returns>Customer attribute values</returns>
-        IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId);
+        Task<IList<CustomerAttributeValue>> GetCustomerAttributeValuesAsync(int customerAttributeId);
 
         /// <summary>
         /// Gets a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValueId">Customer attribute value identifier</param>
         /// <returns>Customer attribute value</returns>
-        CustomerAttributeValue GetCustomerAttributeValueById(int customerAttributeValueId);
+        Task<CustomerAttributeValue> GetCustomerAttributeValueByIdAsync(int customerAttributeValueId);
 
         /// <summary>
         /// Inserts a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
+        Task InsertCustomerAttributeValueAsync(CustomerAttributeValue customerAttributeValue);
 
         /// <summary>
         /// Updates the customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        void UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
+        Task UpdateCustomerAttributeValueAsync(CustomerAttributeValue customerAttributeValue);
     }
 }

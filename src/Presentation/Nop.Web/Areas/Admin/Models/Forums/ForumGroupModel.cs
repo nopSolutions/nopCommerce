@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Forums
     /// <summary>
     /// Represents a forum group model
     /// </summary>
-    public partial class ForumGroupModel : BaseNopEntityModel
+    public partial record ForumGroupModel : BaseNopEntityModel
     {
         #region Properties
 

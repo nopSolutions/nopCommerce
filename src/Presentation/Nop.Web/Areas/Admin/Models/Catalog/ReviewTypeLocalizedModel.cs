@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a review type localized model
     /// </summary>
-    public partial class ReviewTypeLocalizedModel : ILocalizedLocaleModel
+    public partial record ReviewTypeLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public partial class LanguageModel : BaseNopEntityModel
+    public partial record LanguageModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

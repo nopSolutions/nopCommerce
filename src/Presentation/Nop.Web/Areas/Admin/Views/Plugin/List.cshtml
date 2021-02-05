@@ -10,7 +10,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "LocaLPluginsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
@@ -149,8 +149,6 @@
                                             <nop-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
                                     <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchAuthor" />
@@ -186,6 +184,7 @@
                             {
                                 new FilterParameter(nameof(Model.SearchFriendlyName)),
                                 new FilterParameter(nameof(Model.SearchGroup)),
+                                new FilterParameter(nameof(Model.SearchLoadModeId)),
                                 new FilterParameter(nameof(Model.SearchAuthor))
                             },
                             ColumnCollection = new List<ColumnProperty>

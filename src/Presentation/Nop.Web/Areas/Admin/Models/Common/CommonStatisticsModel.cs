@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
-    public partial class CommonStatisticsModel : BaseNopModel
+    public partial record CommonStatisticsModel : BaseNopModel
     {
         public int NumberOfOrders { get; set; }
 

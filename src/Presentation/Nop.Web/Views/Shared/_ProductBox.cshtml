@@ -65,11 +65,11 @@
                 <span class="price actual-price">@Model.ProductPrice.Price</span>
                 @if (Model.ProductPrice.DisplayTaxShippingInfo)
                 {
-                    var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+                    var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <span class="tax-shipping-info">
-                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                        @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") }))
                     </span>
                 }
                 @if (!string.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))

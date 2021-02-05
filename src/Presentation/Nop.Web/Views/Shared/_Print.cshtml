@@ -4,10 +4,10 @@
 @inject IThemeContext themeContext
 @inject IWorkContext workContext;
 @{
-    var themeName = themeContext.WorkingThemeName;
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)" @Html.NopPageCssClasses()>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

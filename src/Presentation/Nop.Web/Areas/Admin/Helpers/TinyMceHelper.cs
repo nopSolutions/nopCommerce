@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
@@ -13,7 +14,7 @@ namespace Nop.Web.Areas.Admin.Helpers
         /// Get tinyMCE language name for current language 
         /// </summary>
         /// <returns>tinyMCE language name</returns>
-        public static string GetTinyMceLanguage()
+        public static async Task<string> GetTinyMceLanguageAsync()
         {
             //nopCommerce supports TinyMCE's localization for 10 languages:
             //Chinese, Spanish, Arabic, Portuguese, Russian, German, French, Italian, Dutch and English out-of-the-box.
@@ -23,7 +24,7 @@ namespace Nop.Web.Areas.Admin.Helpers
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
-            var languageCulture = workContext.WorkingLanguage.LanguageCulture;
+            var languageCulture = (await workContext.GetWorkingLanguageAsync()).LanguageCulture;
 
             var langFile = $"{languageCulture}.js";
             var directoryPath = fileProvider.Combine(webHostEnvironment.WebRootPath, @"lib\tinymce\langs");

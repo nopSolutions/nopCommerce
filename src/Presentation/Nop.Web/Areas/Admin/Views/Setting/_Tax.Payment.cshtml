@@ -44,8 +44,8 @@
 
     function togglePayment() {
         if ($('#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
-            $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
-            $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').showField();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').showField();
         } else {
             $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
             $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();

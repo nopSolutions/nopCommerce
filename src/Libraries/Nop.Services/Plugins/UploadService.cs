@@ -233,10 +233,10 @@ namespace Nop.Services.Plugins
                     foreach (var entry in entries)
                     {
                         //get name of the file
-                        var fileName = entry.FullName.Substring(itemPath.Length);
+                        var fileName = entry.FullName[itemPath.Length..];
                         if (string.IsNullOrEmpty(fileName))
                             continue;
-                        
+
                         var filePath = _fileProvider.Combine(pathToUpload, fileName);
 
                         //if it's a folder, we need to create it
@@ -353,7 +353,7 @@ namespace Nop.Services.Plugins
                     throw new Exception("Only zip archives are supported (*.zip)");
 
                 //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
-                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
+                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
 
                 CreateDirectory(storeIconsPath);
 
@@ -385,19 +385,20 @@ namespace Nop.Services.Plugins
                 throw new Exception("Only icons are supported (*.ico)");
 
             //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
-            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
+            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
 
             CreateDirectory(storeFaviconPath);
 
             var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
-            using (var fileStream = new FileStream(faviconPath, FileMode.Create))
-                favicon.CopyTo(fileStream);
+            using var fileStream = new FileStream(faviconPath, FileMode.Create);
+            favicon.CopyTo(fileStream);
         }
 
         /// <summary>
-        /// Upload locale pattern for ccurrent culture
+        /// Upload locale pattern for current culture
         /// </summary>
-        public virtual void UploadLocalePattern()
+        /// <param name="cultureInfo">CultureInfo</param>
+        public virtual void UploadLocalePattern(CultureInfo cultureInfo = null)
         {
             string getPath(string dirPath, string dirName)
             {
@@ -408,7 +409,7 @@ namespace Nop.Services.Plugins
             {
                 return _fileProvider.DirectoryExists(getPath(dirPath, dirName));
             }
-            
+
             var tempFolder = "temp";
             try
             {
@@ -417,10 +418,10 @@ namespace Nop.Services.Plugins
                 if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
 
-                var currentCulture = CultureInfo.CurrentCulture;
+                var currentCulture = (cultureInfo is CultureInfo) ? cultureInfo : CultureInfo.CurrentCulture;
 
                 //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
-                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) || 
+                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) ||
                     checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.TwoLetterISOLanguageName)))
                 {
                     var cultureToUse = string.Empty;
