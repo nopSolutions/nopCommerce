@@ -1073,6 +1073,9 @@ namespace Nop.Services.Orders
         {
             var warnings = new List<string>();
 
+            if (shoppingCart.Count > _shoppingCartSettings.MaximumShoppingCartItems)
+                warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
+
             var hasStandartProducts = false;
             var hasRecurringProducts = false;
 
