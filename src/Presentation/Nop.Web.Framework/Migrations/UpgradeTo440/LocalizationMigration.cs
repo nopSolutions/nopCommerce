@@ -504,6 +504,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint"] = "The description for home page in your store.",
 
                 ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html\" target=\"_blank\">our documentation.</a>",
+
+                //#3950
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute is already exists into combination: '{0}'.",
             }).Wait();
 
             // rename locales

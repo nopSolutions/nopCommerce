@@ -63,6 +63,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
@@ -101,6 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPictureService pictureService,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
+            IProductAttributeFormatter productAttributeFormatter,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IProductTagService productTagService,
@@ -135,6 +137,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _pictureService = pictureService;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
+            _productAttributeFormatter = productAttributeFormatter;
             _productModelFactory = productModelFactory;
             _productService = productService;
             _productTagService = productTagService;
@@ -2755,6 +2758,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null && product.VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
                 return Content("This is not your product");
+
+            //check if existed combinations contains the specified attribute
+            var existedCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+            if (existedCombinations?.Any() == true)
+            {
+                foreach (var combination in existedCombinations)
+                {
+                    var mappings = await _productAttributeParser
+                        .ParseProductAttributeMappingsAsync(combination.AttributesXml);
+                    
+                    if (mappings?.Any(m => m.Id == productAttributeMapping.Id) == true)
+                    {
+                        _notificationService.ErrorNotification(
+                            string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"),
+                                await _productAttributeFormatter.FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), ", ")));
+
+                        return RedirectToAction("ProductAttributeMappingEdit", new { id = productAttributeMapping.Id });
+                    }
+                }
+            }
 
             await _productAttributeService.DeleteProductAttributeMappingAsync(productAttributeMapping);
 

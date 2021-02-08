@@ -3594,6 +3594,9 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
     <Value>This attribute is already added to this product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination">
+    <Value>This attribute is already exists into combination: '{0}'.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct">
     <Value>back to product details</Value>
   </LocaleResource>
