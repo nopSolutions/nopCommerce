@@ -15,7 +15,14 @@ function clear_files(cb) {
     })
 };
 
+function clear_fontawesome(cb) {
+  return del(targetPath + '@fortawesome/fontawesome-free/{js,sprites,svgs}').then(() => {
+    cb()
+  })
+};
+
 exports.Execute = gulp.series(
   clear_folders,
-  clear_files
+  clear_files,
+  clear_fontawesome
   );
