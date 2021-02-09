@@ -19,7 +19,8 @@
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.7.0" />
     <PackageReference Include="MailKit" Version="2.10.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="4.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
+    <PackageReference Include="SkiaSharp" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.2" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.7" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.8.1" />
   </ItemGroup>
