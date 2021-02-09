@@ -5,6 +5,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Orders
 {
@@ -161,6 +162,7 @@ namespace Nop.Services.Orders
         /// <returns>Shopping cart unit price (one item)</returns>
         Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(Product product,
             Customer customer,
+            Store store,
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,

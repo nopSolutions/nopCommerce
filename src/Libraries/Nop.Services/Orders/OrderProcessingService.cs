@@ -29,6 +29,7 @@ using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 
@@ -73,6 +74,7 @@ namespace Nop.Services.Orders
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
@@ -121,6 +123,7 @@ namespace Nop.Services.Orders
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
+            IStoreService storeService,
             ITaxService taxService,
             IVendorService vendorService,
             IWebHelper webHelper,
@@ -165,6 +168,7 @@ namespace Nop.Services.Orders
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
+            _storeService = storeService;
             _taxService = taxService;
             _vendorService = vendorService;
             _webHelper = webHelper;
@@ -1294,8 +1298,8 @@ namespace Nop.Services.Orders
                         details.AppliedDiscounts.Add(disc);
 
                 //attributes
-                var attributeDescription =
-                    await _productAttributeFormatter.FormatAttributesAsync(product, sc.AttributesXml, details.Customer);
+                var store = await _storeService.GetStoreByIdAsync(sc.StoreId);
+                var attributeDescription = await _productAttributeFormatter.FormatAttributesAsync(product, sc.AttributesXml, details.Customer, store);
 
                 var itemWeight = await _shippingService.GetShoppingCartItemWeightAsync(sc);
 
@@ -1630,7 +1634,8 @@ namespace Nop.Services.Orders
             if (!itemDeleted)
             {
                 var product = await _productService.GetProductByIdAsync(updatedShoppingCartItem.ProductId);
-
+                var store = await _storeService.GetStoreByIdAsync(updatedShoppingCartItem.StoreId);
+                
                 updateOrderParameters.Warnings.AddRange(await _shoppingCartService.GetShoppingCartItemWarningsAsync(customer, updatedShoppingCartItem.ShoppingCartType,
                     product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
                     updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false, updatedShoppingCartItem.Id));
@@ -1638,7 +1643,7 @@ namespace Nop.Services.Orders
                 updatedOrderItem.ItemWeight = await _shippingService.GetShoppingCartItemWeightAsync(updatedShoppingCartItem);
                 updatedOrderItem.OriginalProductCost = await _priceCalculationService.GetProductCostAsync(product, updatedShoppingCartItem.AttributesXml);
                 updatedOrderItem.AttributeDescription = await _productAttributeFormatter.FormatAttributesAsync(product,
-                    updatedShoppingCartItem.AttributesXml, customer);
+                    updatedShoppingCartItem.AttributesXml, customer, store);
 
                 //gift cards
                 await AddGiftCardsAsync(product, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.Quantity, updatedOrderItem, updatedOrderItem.UnitPriceExclTax);
