@@ -43,6 +43,8 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CountriesStates")" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "countries-grid",
@@ -61,7 +63,7 @@
                             },
                             new ColumnProperty(nameof(CountryModel.Name))
                             {
-                                Title = T("Admin.Configuration.Countries.Fields.Name").Text                                
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(CountryModel.AllowsBilling))
                             {
@@ -127,8 +129,8 @@
                             }
                         }
                     })
-                    
-                    
+
+
                     <script>
                         $(document).ready(function () {
                             //"publish selected" button
@@ -152,7 +154,7 @@
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#publishSelectedFailed-info').text(errorThrown);
                                         $("#publishSelectedFailed").click();
-                                    }                                    
+                                    }
                                 });
                                 return false;
                             });
