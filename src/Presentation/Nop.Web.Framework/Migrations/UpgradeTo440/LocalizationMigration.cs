@@ -474,6 +474,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl.Hint"] = "Specify a value of 'Cache - Control' header value for static content (in seconds).",
                 ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions"] = "Support previous nopCommerce versions",
                 ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint"] = "Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).",
+
+                //#3015
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle"] = "Home page title",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint"] = "The title for home page in your store.",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription"] = "Home page description",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint"] = "The description for home page in your store.",
             }).Wait();
 
             // rename locales
