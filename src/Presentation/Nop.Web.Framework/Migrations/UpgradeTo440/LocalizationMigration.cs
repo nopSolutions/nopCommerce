@@ -464,6 +464,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Reports.SalesSummary.Fields.Shipping"] = "Shipping",
                 ["Admin.Reports.SalesSummary.Fields.Tax"] = "Tax",
                 ["Admin.Reports.SalesSummary.Fields.OrderTotal"] = "OrderTotal",
+
+                //#4196
+                ["Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist"] = "Plugin static file extensions blacklist",
+                ["Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint"] = "Specify the blacklist of static file extension for plugin directories.",
+                ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout"] = "Schedule task run timeout",
+                ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint"] = "The length of time, in milliseconds, before the running schedule task times out. Set null to use default value.",
+                ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl"] = "Static files cache control",
+                ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl.Hint"] = "Specify a value of 'Cache - Control' header value for static content (in seconds).",
+                ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions"] = "Support previous nopCommerce versions",
+                ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint"] = "Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).",
             }).Wait();
 
             // rename locales

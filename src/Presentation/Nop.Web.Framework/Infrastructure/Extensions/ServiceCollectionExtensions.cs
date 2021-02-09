@@ -168,7 +168,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopDataProtection(this IServiceCollection services)
         {
             //check whether to persist data protection in Redis
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StoreDataProtectionKeys)
             {
                 //store keys in Redis
@@ -271,7 +271,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             mvcBuilder.AddRazorRuntimeCompilation();
 
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.CommonConfig.UseSessionStateTempDataProvider)
             {
                 //use session-based temp data provider
@@ -325,7 +325,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopRedirectResultExecutor(this IServiceCollection services)
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
+            services.AddScoped<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.CommonConfig.MiniProfilerEnabled)
             {
                 services.AddMiniProfiler(miniProfilerOptions =>
