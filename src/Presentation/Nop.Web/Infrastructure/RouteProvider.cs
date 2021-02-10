@@ -18,7 +18,8 @@ namespace Nop.Web.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            var pattern = GetRouterPattern(endpointRouteBuilder);
+            var pattern = GetLanguageRoutePattern();
+            pattern += "/";
 
             //areas
             endpointRouteBuilder.MapControllerRoute(name: "areaRoute",
@@ -145,9 +146,6 @@ namespace Nop.Web.Infrastructure
                 new { controller = "Product", action = "ProductEmailAFriend" });
 
             //reviews
-            endpointRouteBuilder.MapControllerRoute("ProductReviews2", pattern + "productreviews/{productId2}",
-                new { controller = "Product", action = "ProductReviews2" });
-
             endpointRouteBuilder.MapControllerRoute("ProductReviews", pattern + "productreviews/{productId}",
                 new { controller = "Product", action = "ProductReviews" });
 
