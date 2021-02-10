@@ -28,8 +28,8 @@
                             <div class="card-body">
                                 <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                                     <div class="search-text">@T("Admin.Common.Search")</div>
-                                    <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                                    <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                                    <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                    <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                                 </div>
 
                                 <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -77,7 +77,7 @@
                                     <div class="row">
                                         <div class="text-center col-12">
                                             <button type="button" id="search-plugins" class="btn btn-primary btn-search">
-                                                <i class="fa fa-search"></i>
+                                                <i class="fas fa-search"></i>
                                                 @T("Admin.Common.Search")
                                             </button>
                                         </div>
@@ -141,7 +141,7 @@
 
                                 <script>
                             function renderColumnUrl(data, type, row, meta) {
-                                return '<a class="btn btn-default" href="' + data + '?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fa fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download").Text</a>';
+                                return '<a class="btn btn-default" href="' + data + '?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank"><i class="fas fa-download"></i>@T("Admin.Configuration.Plugins.OfficialFeed.Download").Text</a>';
                             }
                                 </script>
                             </div>

@@ -247,7 +247,7 @@ namespace Nop.Web.Framework.Extensions
             builder.MergeAttribute("class", "ico-help");
             builder.MergeAttribute("data-toggle", "tooltip");
             var icon = new StringBuilder();
-            icon.Append("<i class='fa fa-question-circle'></i>");
+            icon.Append("<i class='fas fa-question-circle'></i>");
             builder.InnerHtml.AppendHtml(icon.ToString());
 
             //render tag

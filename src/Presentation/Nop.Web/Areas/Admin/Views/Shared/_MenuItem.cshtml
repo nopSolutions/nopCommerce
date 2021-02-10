@@ -24,7 +24,7 @@
             @if (!string.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
-                    <i class="nav-icon fa @Url.Content(Model.IconClass)"></i>
+                    <i class="nav-icon @Url.Content(Model.IconClass)"></i>
                 </text>
             }
 
@@ -60,18 +60,18 @@ else
             @if (!string.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
-                    <i class="nav-icon fa @Url.Content(Model.IconClass)"></i>
+                    <i class="nav-icon @Url.Content(Model.IconClass)"></i>
                 </text>
             }
             <p>
                 @Model.Title
                 @if (supportRtl)
                 {
-                    <i class="right fa fa-angle-right"></i>
+                    <i class="right fas fa-angle-right"></i>
                 }
                 else
                 {
-                    <i class="right fa fa-angle-left "></i>
+                    <i class="right fas fa-angle-left "></i>
                 }
             </p>
         </a>

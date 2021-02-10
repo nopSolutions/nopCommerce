@@ -86,8 +86,8 @@
     Html.AppendScriptParts("~/lib_npm/typeahead.js/typeahead.bundle.min.js");
     Html.AppendScriptParts("~/lib_npm/jquery-migrate/jquery-migrate.min.js");
 
-    // this file can be downloaded from : 
-    // https://github.com/johnnyreilly/jquery-validation-globalize 
+    // this file can be downloaded from :
+    // https://github.com/johnnyreilly/jquery-validation-globalize
     //Html.AppendScriptParts("https://cdn.jsdelivr.net/gh/johnnyreilly/jquery-validation-globalize@1.0.0/jquery.validate.globalize.min.js");
     Html.AppendScriptParts("~/lib_npm/jquery-validation-globalize/jquery.validate.globalize.min.js");
 
@@ -97,7 +97,7 @@
     Html.AppendScriptParts("~/lib_npm/globalize/globalize/number.js");
     Html.AppendScriptParts("~/lib_npm/globalize/globalize.js");
 
-    // cldr scripts (needed for globalize)    
+    // cldr scripts (needed for globalize)
     Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/supplemental.js");
     Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/event.js");
     Html.AppendScriptParts("~/lib_npm/cldrjs/cldr.js");
@@ -127,25 +127,25 @@
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
-    <head>
-        <title>@adminPageTitle</title>
-        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        @*Google Font*@
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-        <script>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @*Google Font*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <script>
             var rootAppPath = '@(Url.Content("~/"))';
-        </script>
-        @Html.NopHeadCustom()
-        @Html.NopCssFiles(ResourceLocation.Head, false)
-        @Html.NopScripts(ResourceLocation.Head, false)
-        @*Insert favicon and app icons head code*@
-        @await Component.InvokeAsync("Favicon")
-        @Html.NopInlineScripts(ResourceLocation.Head)
-    </head>
-    <body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
-        <script type="text/javascript">
+    </script>
+    @Html.NopHeadCustom()
+    @Html.NopCssFiles(ResourceLocation.Head, false)
+    @Html.NopScripts(ResourceLocation.Head, false)
+    @*Insert favicon and app icons head code*@
+    @await Component.InvokeAsync("Favicon")
+    @Html.NopInlineScripts(ResourceLocation.Head)
+</head>
+<body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
+    <script type="text/javascript">
             var culture = "@GetDefaultLocale()";
 
             //load cldr for current culture
@@ -166,26 +166,26 @@
             }).then(Globalize.load).then(function () {
                 Globalize.locale(culture);
             });
-        </script>
-        <script>
+    </script>
+    <script>
             kendo.culture("@(currentKendoCulture)");
-        </script>
-        <div class="throbber">
-            <div class="curtain">
-            </div>
-            <div class="curtain-content">
-                <div>
-                    <h1 class="throbber-header">@T("Common.Wait...")</h1>
-                    <p>
-                        <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
-                    </p>
-                </div>
+    </script>
+    <div class="throbber">
+        <div class="curtain">
+        </div>
+        <div class="curtain-content">
+            <div>
+                <h1 class="throbber-header">@T("Common.Wait...")</h1>
+                <p>
+                    <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+                </p>
             </div>
         </div>
-        <div id="ajaxBusy">
-            <span>&nbsp;</span>
-        </div>
-        <div class="wrapper">
+    </div>
+    <div id="ajaxBusy">
+        <span>&nbsp;</span>
+    </div>
+    <div class="wrapper">
         @if (IsSectionDefined("header"))
         {
             @RenderSection("header")
@@ -218,7 +218,7 @@
                     {
                         <li class="nav-item dropdown">
                             <a class="nav-link" href="#" data-toggle="dropdown">
-                                <i class="fa fa-gears"></i>
+                                <i class="fas fa-cogs"></i>
                             </a>
                             <ul class="maintenance-menu dropdown-menu dropdown-menu-right" role="menu">
                                 <li class="dropdown-item">
@@ -295,7 +295,7 @@
             @if (!storeInformationSettings.HidePoweredByNopCommerce)
             {
                 @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                Please find more info at https://www.nopcommerce.com/nopcommerce-premium-support-services*@
+                    Please find more info at https://www.nopcommerce.com/nopcommerce-premium-support-services*@
                 <div class="pull-left">
                     Powered by <a href="https://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
                 </div>
@@ -307,39 +307,39 @@
                 @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", currentCulture))
             </div>
         </div>
-        </div>
-        <script>
-            var AdminLTEOptions = {
-                boxWidgetOptions: {
-                    boxWidgetIcons: {
-                        collapse: 'fa-minus',
-                        open: 'fa-plus'
-                    }
+    </div>
+    <script>
+        var AdminLTEOptions = {
+            boxWidgetOptions: {
+                boxWidgetIcons: {
+                    collapse: 'fa-minus',
+                    open: 'fa-plus'
                 }
-            };
-        </script>
-        @{
-            //scroll to a selected card (if specified)
-            var selectedCardName = Html.GetSelectedCardName();
-            if (!String.IsNullOrEmpty(selectedCardName))
-            {
-                <script>
-                    location.hash = '#@(selectedCardName)';
-                </script>
             }
+        };
+    </script>
+    @{
+        //scroll to a selected card (if specified)
+        var selectedCardName = Html.GetSelectedCardName();
+        if (!String.IsNullOrEmpty(selectedCardName))
+        {
+            <script>
+                    location.hash = '#@(selectedCardName)';
+            </script>
         }
-        @Html.NopCssFiles(ResourceLocation.Footer)
-        @Html.NopScripts(ResourceLocation.Footer)
-        <a id="backTop" class="btn btn-back-top bg-teal"></a>
-        <script>
-            $(document).ready(function () {
-                //enable "back top" arrow
-                $('#backTop').backTop();
+    }
+    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopScripts(ResourceLocation.Footer)
+    <a id="backTop" class="btn btn-back-top bg-teal"></a>
+    <script>
+        $(document).ready(function () {
+            //enable "back top" arrow
+            $('#backTop').backTop();
 
-                //enable tooltips
-                $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
-            });
-        </script>
-        @Html.NopInlineScripts(ResourceLocation.Footer)
-    </body>
+            //enable tooltips
+            $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
+        });
+    </script>
+    @Html.NopInlineScripts(ResourceLocation.Footer)
+</body>
 </html>

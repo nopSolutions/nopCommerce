@@ -72,20 +72,20 @@ var AdminTourDoneButton = {}
 $(document).ready(function () {
   AdminTourBackButton = {
     classes: 'button-back',
-    text: '<i class="fa fa-chevron-left"></i>' + '<div class="button-text">' + AdminTourDataProvider.localized_data.Back + '</div>',
+    text: '<i class="fas fa-chevron-left"></i>' + '<div class="button-text">' + AdminTourDataProvider.localized_data.Back + '</div>',
     secondary: true,
     action() { return Shepherd.activeTour.back(); }
   }
 
   AdminTourNextButton = {
     classes: 'button-next',
-    text: '<div class="button-text">' + AdminTourDataProvider.localized_data.NextStep + '</div>' + '<i class="fa fa-chevron-right"></i>',
+    text: '<div class="button-text">' + AdminTourDataProvider.localized_data.NextStep + '</div>' + '<i class="fas fa-chevron-right"></i>',
     action() { return Shepherd.activeTour.next(); }
   };
 
   AdminTourNextPageButton = {
     classes: 'button-next-page',
-    text: '<div class="button-text">' + AdminTourDataProvider.localized_data.NextPage + '</div>' + ' <i class="fa fa-angle-double-right"></i>',
+    text: '<div class="button-text">' + AdminTourDataProvider.localized_data.NextPage + '</div>' + ' <i class="fas fa-angle-double-right"></i>',
     action() {
       //need to specify an action for each page separately
     },

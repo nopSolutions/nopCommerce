@@ -108,12 +108,12 @@ ul.common-list {
   margin-bottom: 15px;
 }
 
-.fa.true-icon {
+i.true-icon {
   color: #007FCC;
   font-size: 20px;
 }
 
-.fa.false-icon {
+i.false-icon {
   color: #D22D2D;
   font-size: 20px;
 }
@@ -261,6 +261,10 @@ ul.common-list {
     .card.card-secondary > .card-header div {
       font-size: 20px;
       font-weight: 400;
+    }
+
+    .card.card-secondary > .card-header .card-title i {
+      padding-right: 10px;
     }
 
   .card.card-secondary .card-header i.toggle-icon {
@@ -417,8 +421,16 @@ ul.common-list {
   width: 80px;
   height: 80px;
   text-align: center;
-  padding: 10px 0px 10px 7px;
+  padding: 10px 0;
   float: right;
+  display: table;
+}
+
+.configuration-step-icon i {
+  display: table-cell;
+  margin: 0 auto;
+  vertical-align: middle;
+  padding-right: 0 !important;
 }
 
 .theme-step .configuration-step-icon {
@@ -728,8 +740,9 @@ ul.common-list {
 }
 
 /*override font-awesome styles*/
-.fa {
-  padding-right: 5px !important;
+.fa, .far, .fas {
+  padding-right: 5px;
+  font-size: 0.9em;
 }
 
 /*typeahead*/
@@ -1021,7 +1034,7 @@ td.k-state-focused.k-state-selected {
 
 .k-picker-wrap .k-select .k-i-calendar:before,
 .k-picker-wrap .k-select .k-i-clock:before {
-  font: normal normal normal 14px/1 FontAwesome;
+  font: normal normal normal 14px/1 "Font Awesome 5 Free";
   height: 17px;
   line-height: 17px;
 }
@@ -1473,11 +1486,11 @@ div.dataTables_wrapper {
     padding-left: 6px;
   }
 
-  .form-horizontal .label-wrapper i.fa {
+  .form-horizontal .label-wrapper i.fas {
     width: 16px;
   }
 
-    .form-horizontal .label-wrapper i.fa:before {
+    .form-horizontal .label-wrapper i.fas:before {
       top: 5px;
     }
 

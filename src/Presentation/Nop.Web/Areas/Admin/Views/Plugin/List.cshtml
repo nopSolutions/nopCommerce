@@ -46,7 +46,7 @@
                 });
             </script>
             <button type="button" name="uploadplugin" class="btn bg-olive" data-toggle="modal" data-target="#uploadplugin-window">
-                <i class="fa fa-upload"></i>
+                <i class="fas fa-upload"></i>
                 @T("Admin.Configuration.Plugins.Upload")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginListButtons })
@@ -103,8 +103,8 @@
                     <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -162,7 +162,7 @@
                             <div class="row">
                                 <div class="text-center col-12">
                                     <button type="button" id="search-plugins-local" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
+                                        <i class="fas fa-search"></i>
                                         @T("Admin.Common.Search")
                                     </button>
                                 </div>
@@ -234,10 +234,10 @@
                                 res = res + '<br />';
                                 //allow configuration only when a plugin has a configuration URL specified
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
+                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
                                 }
                                 if (row.Installed) {
-                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
+                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
                                 }
 
                                 return res;
@@ -246,20 +246,20 @@
                             function renderColumnFriendlyName(data, type, row, meta) {
                                 var isInstall = '<li>@T("Admin.Configuration.Plugins.Fields.Installed").Text: ';
                                 if (row.Installed) {
-                                    isInstall = isInstall + '<i class="fa fa-check true-icon"></i></li>';
+                                    isInstall = isInstall + '<i class="fas fa-check true-icon"></i></li>';
                                 }
                                 else {
-                                    isInstall = isInstall + '<i class="fa fa-close false-icon"></i></li>';
+                                    isInstall = isInstall + '<i class="fas fa-times false-icon"></i></li>';
                                 }
 
                                 var canChange = '';
                                 if (row.CanChangeEnabled) {
                                     canChange = canChange + '<li>@T("Admin.Configuration.Plugins.Fields.IsEnabled").Text: ';
                                     if (row.IsEnabled) {
-                                        canChange = canChange + '<i class="fa fa-check true-icon"></i>';
+                                        canChange = canChange + '<i class="fas fa-check true-icon"></i>';
                                     }
                                     else {
-                                        canChange = canChange + '<i class="fa fa-close false-icon"></i>';
+                                        canChange = canChange + '<i class="fas fa-times false-icon"></i>';
                                     };   
                                     canChange = canChange + '</li>';
                                 };
