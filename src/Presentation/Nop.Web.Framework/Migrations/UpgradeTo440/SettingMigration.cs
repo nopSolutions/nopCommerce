@@ -44,11 +44,32 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 .DeleteAsync(setting => setting.Name == "commonsettings.usefulltextsearch" || setting.Name == "commonsettings.fulltextmode")
                 .Wait();
 
+            //#4196
+            settingRepository
+                .DeleteAsync(setting => setting.Name == "commonsettings.scheduletaskruntimeout" ||
+                    setting.Name == "commonsettings.staticfilescachecontrol" ||
+                    setting.Name == "commonsettings.supportpreviousnopcommerceversions" ||
+                    setting.Name == "securitysettings.pluginstaticfileextensionsBlacklist")
+                .Wait();
+
             var seoSettings = settingService.LoadSettingAsync<SeoSettings>().Result;
             var newUrlRecord = "products";
             if (!seoSettings.ReservedUrlRecordSlugs.Contains(newUrlRecord))
             {
                 seoSettings.ReservedUrlRecordSlugs.Add(newUrlRecord);
+                settingService.SaveSettingAsync(seoSettings).Wait();
+            }
+
+            //#3015
+            if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageTitle).Result)
+            {
+                seoSettings.HomepageTitle = seoSettings.DefaultTitle;
+                settingService.SaveSettingAsync(seoSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageDescription).Result)
+            {
+                seoSettings.HomepageDescription = "Your home page description";
                 settingService.SaveSettingAsync(seoSettings).Wait();
             }
         }

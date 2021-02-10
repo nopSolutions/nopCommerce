@@ -26,12 +26,7 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets a honeypot input name
         /// </summary>
-        public string HoneypotInputName { get; set; }
-
-        /// <summary>
-        /// Get or set the blacklist of static file extension for plugin directories
-        /// </summary>
-        public string PluginStaticFileExtensionsBlacklist { get; set; }
+        public string HoneypotInputName { get; set; }        
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow non-ASCII characters in headers
