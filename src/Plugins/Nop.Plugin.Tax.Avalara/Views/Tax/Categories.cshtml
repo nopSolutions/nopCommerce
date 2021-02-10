@@ -11,13 +11,13 @@
 
 <form asp-controller="AvalaraTax" asp-action="Categories" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Tax.Categories")
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <div class="btn-group">
                 <button type="button" class="btn btn-warning">
-                    <i class="fa fa-exchange"></i>
+                    <i class="fas fa-exchange-alt"></i>
                     @T("Plugins.Tax.Avalara.TaxCodes")
                 </button>
                 <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -27,20 +27,20 @@
                 <ul class="dropdown-menu" role="menu">
                     <li>
                         <button type="submit" name="exportTaxCodes">
-                            <i class="fa fa-exchange"></i>
+                            <i class="fas fa-exchange-alt"></i>
                             @T("Plugins.Tax.Avalara.TaxCodes.Export")
                         </button>
                     </li>
                     <li>
                         <button type="submit" name="importTaxCodes">
-                            <i class="fa fa-exchange"></i>
+                            <i class="fas fa-exchange-alt"></i>
                             @T("Plugins.Tax.Avalara.TaxCodes.Import")
                         </button>
                     </li>
                     <li class="divider"></li>
                     <li>
                         <button type="submit" name="deleteTaxCodes">
-                            <i class="fa fa-trash-o"></i>
+                            <i class="far fa-trash-alt"></i>
                             @T("Plugins.Tax.Avalara.TaxCodes.Delete")
                         </button>
                     </li>

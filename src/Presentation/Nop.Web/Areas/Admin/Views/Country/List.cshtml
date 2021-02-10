@@ -9,28 +9,28 @@
 
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Countries")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         <button type="button" id="publish-selected" class="btn bg-teal">
-            <i class="fa fa-check-square-o"></i>
+            <i class="fas fa-check-square"></i>
             @T("Admin.Configuration.Countries.PublishSelected")
         </button>
         <button type="button" id="unpublish-selected" class="btn btn-secondary">
-            <i class="fa fa-minus-square-o"></i>
+            <i class="fas fa-minus-square"></i>
             @T("Admin.Configuration.Countries.UnpublishSelected")
         </button>
         <a asp-action="ExportCsv" class="btn btn-success">
-            <i class="fa fa-download"></i>
+            <i class="fas fa-download"></i>
             @T("Admin.Configuration.Countries.ExportToCsv")
         </a>
         <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
-            <i class="fa fa-upload"></i>
+            <i class="fas fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })

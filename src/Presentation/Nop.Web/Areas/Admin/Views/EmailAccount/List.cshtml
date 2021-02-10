@@ -21,12 +21,12 @@
 @await Html.PartialAsync("_AdminTour")
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.EmailAccounts")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.EmailAccountListButtons })
@@ -94,6 +94,6 @@
 
 <script>
     function renderColumnEdit(data, type, row, meta) {
-        return '<a href="@Url.Content("~/Admin/EmailAccount/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
+        return '<a href="@Url.Content("~/Admin/EmailAccount/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
     }
 </script>

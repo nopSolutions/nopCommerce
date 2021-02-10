@@ -10,11 +10,11 @@
             <nop-label asp-for="PointsForPurchases_Amount" />
         </div>
         <div class="col-md-9">
-            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
-            <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode" /></div>
-            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
-            <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Points" /></div>
-            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
+            <div class="form-text-row float-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
+            <div class="float-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode" /></div>
+            <div class="form-text-row float-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
+            <div class="float-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Points" /></div>
+            <div class="form-text-row float-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
             <span asp-validation-for="PointsForPurchases_Amount"></span>
             <span asp-validation-for="PointsForPurchases_Points"></span>
         </div>

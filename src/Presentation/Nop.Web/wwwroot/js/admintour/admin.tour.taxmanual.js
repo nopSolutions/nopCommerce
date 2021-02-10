@@ -86,7 +86,7 @@
     //        return tour.back();
     //      },
     //      classes: 'button-back',
-    //      text: '<i class="fa fa-arrow-left"></i> &nbsp; Back'
+    //      text: '<i class="far fa-arrow-left"></i> &nbsp; Back'
     //    },
     //    {
     //      action() {

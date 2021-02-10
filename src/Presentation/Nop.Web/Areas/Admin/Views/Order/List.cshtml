@@ -17,13 +17,13 @@
 
 <form asp-controller="Order" asp-action="List" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Orders")
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <div class="btn-group">
                 <button type="button" class="btn btn-success">
-                    <i class="fa fa-download"></i>
+                    <i class="fas fa-download"></i>
                     @T("Admin.Common.Export")
                 </button>
                 <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
@@ -32,26 +32,26 @@
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <button asp-action="ExportXml" type="submit" name="exportxml-all">
-                            <i class="fa fa-file-code-o"></i>
+                            <i class="far fa-file-code"></i>
                             @T("Admin.Common.ExportToXml.All")
                         </button>
                     </li>
                     <li class="dropdown-item">
                         <button type="button" id="exportxml-selected">
-                            <i class="fa fa-file-code-o"></i>
+                            <i class="far fa-file-code"></i>
                             @T("Admin.Common.ExportToXml.Selected")
                         </button>
                     </li>
                     <li class="dropdown-divider"></li>
                     <li class="dropdown-item">
                         <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
-                            <i class="fa fa-file-excel-o"></i>
+                            <i class="far fa-file-excel"></i>
                             @T("Admin.Common.ExportToExcel.All")
                         </button>
                     </li>
                     <li class="dropdown-item">
                         <button type="button" id="exportexcel-selected">
-                            <i class="fa fa-file-excel-o"></i>
+                            <i class="far fa-file-excel"></i>
                             @T("Admin.Common.ExportToExcel.Selected")
                         </button>
                     </li>
@@ -59,7 +59,7 @@
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-info">
-                    <i class="fa fa-file-pdf-o"></i>
+                    <i class="far fa-file-pdf"></i>
                     @T("Admin.Orders.PdfInvoices")
                 </button>
                 <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
@@ -89,8 +89,8 @@
                         <div class="card-body">
                             <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                                 <div class="search-text">@T("Admin.Common.Search")</div>
-                                <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                                <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                                <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                             </div>
 
                             <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -268,7 +268,7 @@
                                 <div class="row">
                                     <div class="text-center col-12">
                                         <button type="button" id="search-orders" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
+                                            <i class="fas fa-search"></i>
                                             @T("Admin.Common.Search")
                                         </button>
                                     </div>

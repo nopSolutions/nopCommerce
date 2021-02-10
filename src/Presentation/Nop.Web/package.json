@@ -24,7 +24,7 @@
     "datatables.net-buttons-bs4": "^1.6.5",
     "farbstastic": "^1.3.0",
     "fine-uploader": "5.16.2",
-    "font-awesome": "4.7.0",
+    "@fortawesome/fontawesome-free": "^5.15.2",
     "globalize": "^1.6.0",
     "ionicons": "^2.0.1",
     "jquery": "^3.5.1",

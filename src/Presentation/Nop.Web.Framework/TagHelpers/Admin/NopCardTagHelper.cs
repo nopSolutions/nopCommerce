@@ -149,7 +149,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             collapseIcon.AddCssClass(context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true) ? "fa-plus" : "fa-minus");
 
             var cardToolContainer = new TagBuilder("div");
-            cardToolContainer.AddCssClass("card-tools pull-right");
+            cardToolContainer.AddCssClass("card-tools float-right");
             var cardbtnContainer = new TagBuilder("button");
 
             cardbtnContainer.AddCssClass("btn btn-tool");

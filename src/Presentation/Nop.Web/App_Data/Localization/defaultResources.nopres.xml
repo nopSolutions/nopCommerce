@@ -11794,7 +11794,7 @@
     <Value>Show _MENU_ items</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.LoaderIcon">
-    <Value><![CDATA[<i class='fa fa-refresh fa-spin'></i>]]></Value>
+    <Value><![CDATA[<i class='fas fa-refresh fa-spin'></i>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.DT.LoadingRecords">
     <Value>Loading...</Value>

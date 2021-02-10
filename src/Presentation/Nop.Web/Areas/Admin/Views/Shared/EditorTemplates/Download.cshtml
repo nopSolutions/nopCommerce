@@ -169,7 +169,7 @@
                             template: "@(clientId)-qq-template",
                             multiple: false
                         }).on("complete", function (event, id, name, responseJSON, xhr) {
-                            $("#@(clientId + "downloadurl")").html("<a class='btn btn-default ml-1' href='" + responseJSON.downloadUrl + "'><i class='fa fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>");
+                            $("#@(clientId + "downloadurl")").html("<a class='btn btn-default ml-1' href='" + responseJSON.downloadUrl + "'><i class='fas fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>");
                             $("#@(clientId + "value") input").val(responseJSON.downloadId);
                             $("#@(clientId + "remove")").show();
                         });
@@ -185,20 +185,20 @@
 
                 </script>
                 <div style="clear: both;">
-                    <div id="@(clientId + "downloadurl")" class="pull-left my-1">
+                    <div id="@(clientId + "downloadurl")" class="float-left my-1">
                         @if (download != null)
                         {
-                            <a class='btn btn-default' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.Admin }))"><i class='fa fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
+                            <a class='btn btn-default' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.Admin }))"><i class='fas fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
                         }
                     </div>
-                    <div class="pull-left my-1">
+                    <div class="float-left my-1">
                         @if (download != null)
                         {
-                            <span id="@(clientId + "remove")" class="btn btn-default ml-2"><i class="fa fa-trash"></i>@T("Admin.Download.RemoveDownload")</span>
+                            <span id="@(clientId + "remove")" class="btn btn-default ml-2"><i class="far fa-trash-alt"></i>@T("Admin.Download.RemoveDownload")</span>
                         }
                         else
                         {
-                            <span id="@(clientId + "remove")" class="btn btn-default ml-2" style="display:none;"><i class="fa fa-trash"></i>@T("Admin.Download.RemoveDownload")</span>
+                            <span id="@(clientId + "remove")" class="btn btn-default ml-2" style="display:none;"><i class="far fa-trash-alt"></i>@T("Admin.Download.RemoveDownload")</span>
                         }
                     </div>
                 </div>
