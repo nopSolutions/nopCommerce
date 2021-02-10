@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using Nito.AsyncEx;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
@@ -74,7 +74,7 @@ namespace Nop.Core.Caching
             if (string.IsNullOrEmpty(json)) 
                 return (false, default);
 
-            var item = JsonSerializer.Deserialize<T>(json);
+            var item = JsonConvert.DeserializeObject<T>(json);
             _perRequestCache.Set(key.Key, item);
 
             return (true, item);
@@ -180,7 +180,7 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return;
 
-            await _distributedCache.SetStringAsync(key.Key, JsonSerializer.Serialize(data), PrepareEntryOptions(key));
+            await _distributedCache.SetStringAsync(key.Key, JsonConvert.SerializeObject(data), PrepareEntryOptions(key));
             _perRequestCache.Set(key.Key, data);
 
             using var _ = await _locker.LockAsync();
