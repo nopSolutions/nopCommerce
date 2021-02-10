@@ -3,11 +3,13 @@ using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
+using Nop.Services.Tasks;
 using Nop.Web.Framework.Menu;
 using System;
 using System.Linq;
@@ -25,6 +27,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ILocalizationService _localizationService;
         private readonly WidgetSettings _widgetSettings;
+        private readonly IScheduleTaskService _scheduleTaskService;
 
         #endregion
 
@@ -37,7 +40,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
             IQueuedEmailService queuedEmailService,
             ILocalizationService localizationService,
             ISettingService settingService,
-            WidgetSettings widgetSettings)
+            WidgetSettings widgetSettings,
+            IScheduleTaskService scheduleTaskService)
         {
             _webHelper = webHelper;
             _pluginService = pluginService;
@@ -46,6 +50,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
             _localizationService = localizationService;
             _settingService = settingService;
             _widgetSettings = widgetSettings;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         #endregion
@@ -173,6 +178,17 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
 
             _widgetSettings.ActiveWidgetSystemNames.Add(AuthenticationDefaults.PluginSystemName);
             _settingService.SaveSetting(_widgetSettings);
+
+            if (_scheduleTaskService.GetTaskByType(WeekdayProductRotation.PRODUCT_ROTATION_TASK) == null)
+            {
+                _scheduleTaskService.InsertTask(new Core.Domain.Tasks.ScheduleTask
+                {
+                    Enabled = true,
+                    Name = "Product rotation task",
+                    Type = WeekdayProductRotation.PRODUCT_ROTATION_TASK,
+                    Seconds = 5 * 60
+                });
+            }
 
             base.Install();
         }

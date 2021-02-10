@@ -133,6 +133,7 @@ namespace Nop.Core.Configuration
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
 
+        public bool TelegramBotEnabled { get; set; }
         public string TelegramBotSecret { get; set; }
         
         /// <summary>

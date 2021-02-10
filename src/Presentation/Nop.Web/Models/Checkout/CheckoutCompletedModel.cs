@@ -7,5 +7,6 @@ namespace Nop.Web.Models.Checkout
         public int OrderId { get; set; }
         public string CustomOrderNumber { get; set; }
         public bool OnePageCheckoutEnabled { get; set; }
+        public string DeliveryTimeWindowMessage { get; set; }
     }
 }

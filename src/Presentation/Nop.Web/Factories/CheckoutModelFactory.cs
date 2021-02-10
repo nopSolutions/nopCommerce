@@ -12,6 +12,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -56,6 +57,7 @@ namespace Nop.Web.Factories
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -88,7 +90,8 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            IDateTimeHelper dateTimeHelper)
         {
             _addressSettings = addressSettings;
             _commonSettings = commonSettings;
@@ -118,6 +121,7 @@ namespace Nop.Web.Factories
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -548,11 +552,29 @@ namespace Nop.Web.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var untilLunchTimeDeliveryDeadline = new DateTime(now.Year, now.Month, now.Day, 11, 0, 0);
+            var lunchTime = new DateTime(now.Year, now.Month, now.Day, 13, 0, 0);
+
+            string message;
+            if(now >= untilLunchTimeDeliveryDeadline)
+            {
+                if (now < lunchTime)
+                    message = "Lunches ordered after 11 AM will be delivered until 2 PM. Sorry for inconvenience, we'll get more flexible soon.";
+                else
+                    message = "Your lunch will be delivered TOMORROW at 1 PM.";
+            }
+            else
+            {
+                message = "Your lunch will be delivered at 1 PM.";
+            } 
+
             var model = new CheckoutCompletedModel
             {
                 OrderId = order.Id,
                 OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled,
-                CustomOrderNumber = order.CustomOrderNumber
+                CustomOrderNumber = order.CustomOrderNumber,
+                DeliveryTimeWindowMessage = message
             };
 
             return model;
