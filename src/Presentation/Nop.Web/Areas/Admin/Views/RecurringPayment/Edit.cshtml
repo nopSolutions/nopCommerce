@@ -9,14 +9,14 @@
 
 <form asp-controller="RecurringPayment" asp-action="Edit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.RecurringPayments.EditPaymentDetails")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.RecurringPayments.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")

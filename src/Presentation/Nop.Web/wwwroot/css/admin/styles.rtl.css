@@ -2240,7 +2240,7 @@ span.grid-report-item {
     vertical-align: middle;
   }
 /*fix for inline-block buttons*/
-.content-header .pull-right > .btn, .content-header .pull-right > .btn-group {
+.content-header .float-right > .btn, .content-header .float-right > .btn-group {
   float: right;
   margin-right: 3px;
   position: inherit;

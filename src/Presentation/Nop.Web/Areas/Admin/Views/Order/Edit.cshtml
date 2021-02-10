@@ -23,14 +23,14 @@
 
     <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
         <div class="content-header clearfix">
-            <h1 class="pull-left">
+            <h1 class="float-left">
                 @T("Admin.Orders.EditOrderDetails") - @Model.CustomOrderNumber
                 <small>
                     <i class="fas fa-arrow-circle-left"></i>
                     <a asp-action="List">@T("Admin.Orders.BackToList")</a>
                 </small>
             </h1>
-            <div class="pull-right">
+            <div class="float-right">
                 <a asp-action="PdfInvoice" asp-route-orderId="@Model.Id" class="btn btn-info">
                     <i class="far fa-file-pdf"></i>
                     @T("Admin.Orders.PdfInvoice")

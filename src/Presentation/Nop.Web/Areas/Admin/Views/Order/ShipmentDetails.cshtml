@@ -50,14 +50,14 @@
     </script>
 
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Shipments.BackToOrder")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <a asp-action="PdfPackagingSlip" asp-route-shipmentId="@Model.Id" class="btn btn-info">
                 <i class="far fa-file-pdf"></i>
                 @T("Admin.Orders.Shipments.PrintPackagingSlip")
@@ -90,7 +90,7 @@
                                     <nop-label asp-for="TrackingNumber" />
                                 </div>
                                 <div class="col-md-9">
-                                    <div class="input-group input-group-short pull-left">
+                                    <div class="input-group input-group-short float-left">
                                         <nop-editor asp-for="TrackingNumber" />
                                         <span class="input-group-append">
                                             <button type="submit" name="settrackingnumber" class="btn btn-info">

@@ -9,14 +9,14 @@
 
 <form asp-controller="Language" asp-action="Create" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Languages.AddNew")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Configuration.Languages.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")

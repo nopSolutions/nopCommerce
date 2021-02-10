@@ -10,14 +10,14 @@
 
 <form asp-controller="News" asp-action="NewsItemEdit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails") - @Model.Title
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="NewsItems">@T("Admin.ContentManagement.News.NewsItems.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">            
+        <div class="float-right">            
             <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("NewsItem", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")

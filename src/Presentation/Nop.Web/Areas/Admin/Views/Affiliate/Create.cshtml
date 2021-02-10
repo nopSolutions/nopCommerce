@@ -8,14 +8,14 @@
 
 <form asp-controller="Affiliate" asp-action="Create" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Affiliates.AddNew")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Affiliates.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")

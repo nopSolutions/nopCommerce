@@ -15,10 +15,10 @@
 
 <form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Plugins.Local")
         </h1>    
-        <div class="pull-right">
+        <div class="float-right">
             @if (Model.NeedToRestart)
             {
                 <button type="submit" name="plugin-apply-changes" class="btn btn-success">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
@@ -296,7 +296,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
-                                        <button type="submit" class="btn btn-danger pull-right">@T("Admin.Common.Delete")</button>
+                                        <button type="submit" class="btn btn-danger float-right">@T("Admin.Common.Delete")</button>
                                     </div>
                                 </div>
                             </div>

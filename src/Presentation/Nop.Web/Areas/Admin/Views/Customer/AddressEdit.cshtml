@@ -9,14 +9,14 @@
 
 <form asp-controller="Customer" asp-action="AddressEdit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Customers.Customers.Addresses.EditAddress") 
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.CustomerId">@T("Admin.Customers.Customers.Addresses.BackToCustomer")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
                 <i class="far fa-save"></i>
                 @T("Admin.Common.Save")

@@ -9,14 +9,14 @@
 
 <form asp-controller="ReturnRequest" asp-action="Edit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.ReturnRequests.EditReturnRequestDetails")
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.ReturnRequests.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="submit" name="notify-customer" class="btn bg-aqua">
                 <i class="fas fa-at"></i>
                 @T("Admin.ReturnRequests.NotifyCustomer")

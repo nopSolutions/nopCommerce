@@ -9,7 +9,7 @@
 
 <form asp-controller="Product" asp-action="ProductSpecAttrUpdate" id="spec-form" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @if (Model.SpecificationId == 0)
             {
                 <text>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</text>
@@ -25,7 +25,7 @@
                 </a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             @if (Model.AttributeId == 0)
             {
                 <button type="submit"

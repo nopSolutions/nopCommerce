@@ -14,14 +14,14 @@
 
 <form asp-controller="Topic" asp-action="Edit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.ContentManagement.Topics.EditTopicDetails") - @Model.SystemName
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.ContentManagement.Topics.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Topic", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info" id="preview-topic-button">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")

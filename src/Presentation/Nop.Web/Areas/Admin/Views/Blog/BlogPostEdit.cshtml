@@ -8,14 +8,14 @@
 
 <form asp-controller="Blog" asp-action="BlogPostEdit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.ContentManagement.Blog.BlogPosts.EditBlogPostDetails") - @Model.Title
             <small>
                 <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="BlogPosts">@T("Admin.ContentManagement.Blog.BlogPosts.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("BlogPost", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
                 <i class="far fa-eye"></i>
                 @T("Admin.Common.Preview")

@@ -185,13 +185,13 @@
 
                 </script>
                 <div style="clear: both;">
-                    <div id="@(clientId + "downloadurl")" class="pull-left my-1">
+                    <div id="@(clientId + "downloadurl")" class="float-left my-1">
                         @if (download != null)
                         {
                             <a class='btn btn-default' href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = AreaNames.Admin }))"><i class='fas fa-download'></i>@T("Admin.Download.DownloadUploadedFile")</a>
                         }
                     </div>
-                    <div class="pull-left my-1">
+                    <div class="float-left my-1">
                         @if (download != null)
                         {
                             <span id="@(clientId + "remove")" class="btn btn-default ml-2"><i class="far fa-trash-alt"></i>@T("Admin.Download.RemoveDownload")</span>
