@@ -1,20 +1,13 @@
-﻿@using Nop.Core.Domain.Seo
-@inject SeoSettings seoSettings
+﻿@model TopicModel
 
 @{
     Layout = "_ColumnsOne";
 
     //title
-    if (!string.IsNullOrEmpty(seoSettings.HomepageTitle))
-    {
-        Html.AddTitleParts(seoSettings.HomepageTitle);
-    }
-
+    Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
     //meta
-    if (!string.IsNullOrEmpty(seoSettings.HomepageDescription))
-    {
-        Html.AddMetaDescriptionParts(seoSettings.HomepageDescription);
-    }
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
 
     //page class
     Html.AppendPageCssClassParts("html-home-page");
