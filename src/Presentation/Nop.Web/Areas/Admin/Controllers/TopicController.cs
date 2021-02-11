@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -33,6 +36,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ITopicModelFactory _topicModelFactory;
         private readonly ITopicService _topicService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
+
 
         #endregion Fields
 
@@ -49,7 +55,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             ITopicModelFactory topicModelFactory,
             ITopicService topicService,
-            IUrlRecordService urlRecordService)
+            IUrlRecordService urlRecordService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext)
         {
             _aclService = aclService;
             _customerActivityService = customerActivityService;
@@ -63,6 +71,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _topicModelFactory = topicModelFactory;
             _topicService = topicService;
             _urlRecordService = urlRecordService;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -163,13 +173,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual async Task<IActionResult> List()
+        public virtual async Task<IActionResult> List(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //prepare model
             var model = await _topicModelFactory.PrepareTopicSearchModelAsync(new TopicSearchModel());
+
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
 
             return View(model);
         }
@@ -247,7 +268,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public virtual async Task<IActionResult> Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -259,6 +280,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _topicModelFactory.PrepareTopicModelAsync(null, topic);
+
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
 
             return View(model);
         }

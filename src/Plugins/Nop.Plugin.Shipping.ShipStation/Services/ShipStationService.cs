@@ -524,7 +524,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             };
 
             await using var stream = new MemoryStream();
-            using var writer = XmlWriter.Create(stream, settings);
+            await using var writer = XmlWriter.Create(stream, settings);
 
             await writer.WriteStartDocumentAsync();
             await writer.WriteStartElementAsync("Orders");

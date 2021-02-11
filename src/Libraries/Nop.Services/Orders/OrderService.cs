@@ -215,7 +215,7 @@ namespace Nop.Services.Orders
         /// <returns>Order</returns>
         public virtual async Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds) 
         {
-            return await _orderRepository.GetByIdsAsync(orderIds);
+            return await _orderRepository.GetByIdsAsync(orderIds, includeDeleted: false);
         }
 
         /// <summary>

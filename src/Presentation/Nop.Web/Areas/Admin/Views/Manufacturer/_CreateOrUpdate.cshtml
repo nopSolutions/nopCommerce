@@ -28,18 +28,18 @@
         <div class="form-horizontal">
             <div class="row">
                 <div class="col-md-12 clearfix">
-                    <div class="pull-left">
+                    <div class="float-left">
                         @await Component.InvokeAsync("SettingMode", new { modeName = "manufacturer-advanced-mode" })
                     </div>
                 </div>
             </div>
 
             <nop-cards id="manufacturer-cards">
-                <nop-card asp-name="manufacturer-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Manufacturers.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
-                <nop-card asp-name="manufacturer-display" asp-icon="fa fa-television" asp-title="@T("Admin.Catalog.Manufacturers.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-card>
-                <nop-card asp-name="manufacturer-mappings" asp-icon="fa fa-bookmark" asp-title="@T("Admin.Catalog.Manufacturers.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-card>
-                <nop-card asp-name="manufacturer-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
-                <nop-card asp-name="manufacturer-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Catalog.Manufacturers.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-card>
+                <nop-card asp-name="manufacturer-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.Manufacturers.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="manufacturer-display" asp-icon="fas fa-tv" asp-title="@T("Admin.Catalog.Manufacturers.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-card>
+                <nop-card asp-name="manufacturer-mappings" asp-icon="fas fa-bookmark" asp-title="@T("Admin.Catalog.Manufacturers.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-card>
+                <nop-card asp-name="manufacturer-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-card>
+                <nop-card asp-name="manufacturer-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Catalog.Manufacturers.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-card>
 
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsBlock, additionalData = Model })
             </nop-cards>

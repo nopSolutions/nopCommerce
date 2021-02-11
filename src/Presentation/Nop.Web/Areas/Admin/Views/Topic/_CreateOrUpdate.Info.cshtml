@@ -1,6 +1,7 @@
 @model TopicModel
 
 <div class="card-body">
+    <div id="info-area">
     @(await Html.LocalizedEditorAsync<TopicModel, TopicLocalizedModel>("topic-info-localized",
                                     @<div>
                                         <div class="form-group row">
@@ -45,6 +46,8 @@
                                             </div>
                                         </div>
                                         ))
+    </div>
+
     @if (Model.Id > 0)
     {
         <div class="form-group row">

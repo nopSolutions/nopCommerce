@@ -201,7 +201,8 @@
 
 
 <div class="card-body">
-    @(await Html.LocalizedEditorAsync<ProductModel, ProductLocalizedModel>("product-info-localized",
+    <div id="product-details-area">
+        @(await Html.LocalizedEditorAsync<ProductModel, ProductLocalizedModel>("product-info-localized",
     @<div>
         <div class="form-group row">
             <div class="col-md-3">
@@ -262,14 +263,15 @@
             </div>
         </div>
         </div>))
-		 		 
-    <div class="form-group row">
-        <div class="col-md-3">
-            <nop-label asp-for="Sku" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="Sku" />
-            <span asp-validation-for="Sku"></span>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Sku" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Sku" />
+                <span asp-validation-for="Sku"></span>
+            </div>
         </div>
     </div>
     <div class="form-group row">

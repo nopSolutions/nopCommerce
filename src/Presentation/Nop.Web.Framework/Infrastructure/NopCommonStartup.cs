@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddRouting(options =>
             {
                 //add constraint key for language
-                options.ConstraintMap["lang"] = typeof(LanguageParameterTransformer);
+                options.ConstraintMap[NopPathRouteDefaults.LanguageParameterTransformer] = typeof(LanguageParameterTransformer);
             });
         }
 

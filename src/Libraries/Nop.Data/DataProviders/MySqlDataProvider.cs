@@ -122,7 +122,7 @@ namespace Nop.Data.DataProviders
         {
             try
             {
-                using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
 
                 //just try to connect
                 await connection.OpenAsync();

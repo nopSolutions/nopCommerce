@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
@@ -36,9 +38,8 @@ namespace Nop.Data.DataProviders
 
         #endregion
 
-        #region Methods
-
-
+        #region Utils
+        
         /// <summary>
         /// Gets a connection to the database for a current data provider
         /// </summary>
@@ -115,7 +116,7 @@ namespace Nop.Data.DataProviders
         {
             try
             {
-                using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
                 
                 //just try to connect
                 await connection.OpenAsync();
@@ -301,6 +302,23 @@ namespace Nop.Data.DataProviders
         public virtual string GetIndexName(string targetTable, string targetColumn)
         {
             return $"IX_{targetTable}_{targetColumn}";
+        }
+
+        /// <summary>
+        /// Updates records in table, using values from entity parameter. 
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public override async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
+        {
+            using var dataContext = await CreateDataConnectionAsync();
+            await dataContext.GetTable<TEntity>()
+                .Merge()
+                .Using(entities)
+                .OnTargetKey()
+                .UpdateWhenMatched()
+                .MergeAsync();
         }
 
         #endregion

@@ -44,7 +44,16 @@ namespace Nop.Services.Orders
         /// {4} : created from date
         /// {5} : created to date
         /// </remarks>
-        public static CacheKey ShoppingCartItemsAllCacheKey => new CacheKey("Nop.shoppingcartitem.all.{0}-{1}-{2}-{3}-{4}-{5}", NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+        public static CacheKey ShoppingCartItemsAllCacheKey => new CacheKey("Nop.shoppingcartitem.all.{0}-{1}-{2}-{3}-{4}-{5}", ShoppingCartItemsByCustomerPrefix, NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer identifier
+        /// </remarks>
+        public static string ShoppingCartItemsByCustomerPrefix => "Nop.shoppingcartitem.all.{0}";
+
 
         #endregion
 

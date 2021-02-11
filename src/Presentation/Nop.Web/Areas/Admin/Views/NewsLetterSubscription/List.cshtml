@@ -19,16 +19,16 @@
 
 <form asp-controller="NewsLetterSubscription" asp-action="List" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Promotions.NewsLetterSubscriptions")
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button asp-action="ExportCSV"type="submit" name="exportcsv" class="btn btn-success">
-                <i class="fa fa-download"></i>
+                <i class="fas fa-download"></i>
                 @T("Admin.Common.ExportToCsv")
             </button>
             <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
-                <i class="fa fa-upload"></i>
+                <i class="fas fa-upload"></i>
                 @T("Admin.Common.ImportFromCsv")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionListButtons })
@@ -43,8 +43,8 @@
                     <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -105,7 +105,7 @@
                             <div class="row">
                                 <div class="text-center col-12">
                                     <button type="button" id="search-subscriptions" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
+                                        <i class="fas fa-search"></i>
                                         @T("Admin.Common.Search")
                                     </button>
                                 </div>

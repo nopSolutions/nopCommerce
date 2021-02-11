@@ -257,7 +257,7 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> ProductTagsAll()
         {
-            var model = await _catalogModelFactory.PrepareProductTagsAllModelAsync();
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
             
             return View(model);
         }
@@ -284,6 +284,7 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
+            term = term.Trim();
             if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 

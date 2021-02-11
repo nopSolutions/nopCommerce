@@ -72,6 +72,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    return;
+
                 //check whether this filter has been overridden for the action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
@@ -81,9 +84,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //ignore filter (the action is available even if a customer hasn't access to the admin area)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //there is AdminAuthorizeFilter, so check access

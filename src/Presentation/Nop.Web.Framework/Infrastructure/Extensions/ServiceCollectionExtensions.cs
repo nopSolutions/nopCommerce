@@ -51,8 +51,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static (IEngine, AppSettings) ConfigureApplicationServices(this IServiceCollection services,
             IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
-            //most of API providers require TLS 1.2 nowadays
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //let the operating system decide what TLS protocol version to use
+            //see https://docs.microsoft.com/dotnet/framework/network-programming/tls
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
 
             //create default file provider
             CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment);
@@ -289,7 +290,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             mvcBuilder.AddRazorRuntimeCompilation();
 
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.CommonConfig.UseSessionStateTempDataProvider)
             {
                 //use session-based temp data provider
@@ -343,7 +344,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopRedirectResultExecutor(this IServiceCollection services)
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
+            services.AddScoped<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
         }
 
         /// <summary>
@@ -356,7 +357,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.CommonConfig.MiniProfilerEnabled)
             {
                 services.AddMiniProfiler(miniProfilerOptions =>

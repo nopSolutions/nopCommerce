@@ -1,5 +1,5 @@
 /**
- * Globalize Runtime v1.4.3
+ * Globalize Runtime v1.6.0
  *
  * http://github.com/jquery/globalize
  *
@@ -7,10 +7,10 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2020-03-19T12:34Z
+ * Date: 2020-09-08T11:54Z
  */
 /*!
- * Globalize Runtime v1.4.3 2020-03-19T12:34Z Released under the MIT license
+ * Globalize Runtime v1.6.0 2020-09-08T11:54Z Released under the MIT license
  * http://git.io/TrdQbw
  */
 (function( root, factory ) {
@@ -109,6 +109,77 @@ var createError = function( code, message, attributes ) {
 	objectExtend( error, attributes );
 
 	return error;
+};
+
+
+
+
+/**
+ * Pushes part to parts array, concat two consecutive parts of the same type.
+ */
+var partsPush = function( parts, type, value ) {
+
+		// Concat two consecutive parts of same type
+		if ( parts.length && parts[ parts.length - 1 ].type === type ) {
+			parts[ parts.length - 1 ].value += value;
+			return;
+		}
+
+		parts.push( { type: type, value: value } );
+};
+
+
+
+
+/**
+ * formatMessage( message, data )
+ *
+ * @message [String] A message with optional {vars} to be replaced.
+ *
+ * @data [Array or JSON] Object with replacing-variables content.
+ *
+ * Return the formatted message. For example:
+ *
+ * - formatMessage( "{0} second", [ 1 ] );
+ * > [{type: "variable", value: "1", name: "0"}, {type: "literal", value: " second"}]
+ *
+ * - formatMessage( "{0}/{1}", ["m", "s"] );
+ * > [
+ *     { type: "variable", value: "m", name: "0" },
+ *     { type: "literal", value: " /" },
+ *     { type: "variable", value: "s", name: "1" }
+ *   ]
+ */
+var formatMessageToParts = function( message, data ) {
+
+	var lastOffset = 0,
+		parts = [];
+
+	// Create parts.
+	message.replace( /{[0-9a-zA-Z-_. ]+}/g, function( nameIncludingBrackets, offset ) {
+		var name = nameIncludingBrackets.slice( 1, -1 );
+		partsPush( parts, "literal", message.slice( lastOffset, offset ));
+		partsPush( parts, "variable", data[ name ] );
+		parts[ parts.length - 1 ].name = name;
+		lastOffset += offset + nameIncludingBrackets.length;
+	});
+
+	// Skip empty ones such as `{ type: 'literal', value: '' }`.
+	return parts.filter(function( part ) {
+		return part.value !== "";
+	});
+};
+
+
+
+
+/**
+ * Returns joined parts values.
+ */
+var partsJoin = function( parts ) {
+	return parts.map( function( part ) {
+		return part.value;
+	}).join( "" );
 };
 
 
@@ -237,6 +308,9 @@ Globalize.locale = function( locale ) {
 
 Globalize._createError = createError;
 Globalize._formatMessage = formatMessage;
+Globalize._formatMessageToParts = formatMessageToParts;
+Globalize._partsJoin = partsJoin;
+Globalize._partsPush = partsPush;
 Globalize._regexpEscape = regexpEscape;
 Globalize._runtimeKey = runtimeKey;
 Globalize._stringPad = stringPad;

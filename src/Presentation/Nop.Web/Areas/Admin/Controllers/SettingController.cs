@@ -1272,7 +1272,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        public virtual async Task<IActionResult> GeneralCommon()
+        public virtual async Task<IActionResult> GeneralCommon(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -1283,6 +1283,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             //notify admin that CSS bundling is not allowed in virtual directories
             if (model.MinificationSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
                 _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
+
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
 
             return View(model);
         }
@@ -1370,6 +1381,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var seoSettings = await _settingService.LoadSettingAsync<SeoSettings>(storeScope);
             seoSettings.PageTitleSeparator = model.SeoSettings.PageTitleSeparator;
             seoSettings.PageTitleSeoAdjustment = (PageTitleSeoAdjustment)model.SeoSettings.PageTitleSeoAdjustment;
+            seoSettings.HomepageTitle = model.SeoSettings.HomepageTitle;
+            seoSettings.HomepageDescription = model.SeoSettings.HomepageDescription;
             seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
             seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
             seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
@@ -1387,6 +1400,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //and loaded from database after each update
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.PageTitleSeparator, model.SeoSettings.PageTitleSeparator_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.PageTitleSeoAdjustment, model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.HomepageTitle, model.SeoSettings.HomepageTitle_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.HomepageDescription, model.SeoSettings.HomepageDescription_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultTitle, model.SeoSettings.DefaultTitle_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultMetaKeywords, model.SeoSettings.DefaultMetaKeywords_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStoreAsync(seoSettings, x => x.DefaultMetaDescription, model.SeoSettings.DefaultMetaDescription_OverrideForStore, storeScope, false);

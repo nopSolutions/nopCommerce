@@ -1,11 +1,11 @@
-/*! JsRender v1.0.5: http://jsviews.com/#jsrender */
+/*! JsRender v1.0.11: http://jsviews.com/#jsrender */
 /*! **VERSION FOR NODE.JS** (For WEB see http://jsviews.com/download/jsrender.js) */
 /*
  * Best-of-breed templating in browser or on Node.js.
  * Does not require jQuery, or HTML DOM
  * Integrates with JsViews (http://jsviews.com/#jsviews)
  *
- * Copyright 2019, Boris Moore
+ * Copyright 2021, Boris Moore
  * Released under the MIT License.
  */
 
@@ -19,20 +19,17 @@ if (typeof exports !== 'object' ) {
 
 //========================== Top-level vars ==========================
 
-var versionNumber = "v1.0.5",
-
 	// global var is the this object, which is window when running in the usual browser environment
-
+var versionNumber = "v1.0.11",
 	$, jsvStoreName, rTag, rTmplString, topView, $views,
-	_ocp = "_ocp", // Observable contextual parameter
+	_ocp = "_ocp",      // Observable contextual parameter
 
-//TODO	tmplFnsCache = {},
 	$isFunction, $isArray, $templates, $converters, $helpers, $tags, $sub, $subSettings, $subSettingsAdvanced, $viewsSettings,
 	delimOpenChar0, delimOpenChar1, delimCloseChar0, delimCloseChar1, linkChar, setting, baseOnError,
 
 	isRenderCall,
 	rNewLine = /[ \t]*(\r\n|\n|\r)/g,
-	rUnescapeQuotes = /\\(['"])/g,
+	rUnescapeQuotes = /\\(['"\\])/g, // Unescape quotes and trim
 	rEscapeQuotes = /['"\\]/g, // Escape quotes and \ character
 	rBuildHash = /(?:\x08|^)(onerror:)?(?:(~?)(([\w$.]+):)?([^\x08]+))\x08(,)?([^\x08]+)/gi,
 	rTestElseIf = /^if\s/,
@@ -56,7 +53,7 @@ var versionNumber = "v1.0.5",
 		"`": "&#96;",
 		"=": "&#61;"
 	},
-	charsFromEntities  = {
+	charsFromEntities = {
 		amp: "&",
 		gt: ">",
 		lt: "<"
@@ -66,6 +63,7 @@ var versionNumber = "v1.0.5",
 	tmplAttr = "data-jsv-tmpl",
 	jsvTmpl = "jsvTmpl",
 	indexStr = "For #index in nested block use #getIndex().",
+	cpFnStore = {},     // Compiled furnctions for computed values in template expressions (properties, methods, helpers)
 	$render = {},
 
 	jsvStores = {
@@ -90,8 +88,8 @@ var versionNumber = "v1.0.5",
 			rPath: /^(!*?)(?:null|true|false|\d[\d.]*|([\w$]+|\.|~([\w$]+)|#(view|([\w$]+))?)([\w$.^]*?)(?:[.[^]([\w$]+)\]?)?)$/g,
 			//        not                               object     helper    view  viewProperty pathTokens      leafToken
 
-			rPrm: /(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(\(?)\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,
-			//   lftPrn0           lftPrn         bound     path               operator     err                                          eq      path2 late            prn      comma  lftPrn2   apos quot        rtPrn  rtPrnDot                  prn2     space
+			rPrm: /(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(?:(\()\s*)?\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,
+			//   lftPrn0           lftPrn         bound     path               operator     err                                          eq      path2 late            prn      comma  lftPrn2          apos quot        rtPrn  rtPrnDot                  prn2     space
 
 			View: View,
 			Err: JsViewsError,
@@ -141,7 +139,7 @@ var versionNumber = "v1.0.5",
 						: $subSettingsAdvanced;
 				}
 		},
-		map: dataMap    // If jsObservable loaded first, use that definition of dataMap
+		map: dataMap // If jsObservable loaded first, use that definition of dataMap
 	};
 
 function getDerivedMethod(baseMethod, method) {
@@ -412,7 +410,7 @@ function contextParameter(key, value, get) {
 							|| storeView);
 				if (res !== undefined && storeView.tagCtx) {
 					// If storeView is a tag, but the contextual parameter has been set at at higher level (e.g. helpers)...
-					storeView = storeView.tagCtx.view.scope; //  then move storeView to the outer level (scope of tag container view)
+					storeView = storeView.tagCtx.view.scope; // then move storeView to the outer level (scope of tag container view)
 				}
 				store = storeView._ocps;
 				res = store && store.hasOwnProperty(key) && store[key] || res;
@@ -441,19 +439,17 @@ function contextParameter(key, value, get) {
 					deps = res[1] ? $sub._ceo(res[1].deps) : [_ocp]; // fn deps (with any exprObs cloned using $sub._ceo)
 					deps.unshift(res[0]); // view
 					deps._cxp = obsCtxPrm;
-					// In a context callback for a contextual param, we set get = true, to get ctxPrm  [view, dependencies...] array - needed for observe call
+					// In a context callback for a contextual param, we set get = true, to get ctxPrm [view, dependencies...] array - needed for observe call
 					return deps;
 				}
 				tagElse = obsCtxPrm.tagElse;
 				newRes = res[1] // linkFn for compiled expression
 					? obsCtxPrm.tag && obsCtxPrm.tag.cvtArgs
 						? obsCtxPrm.tag.cvtArgs(tagElse, 1)[obsCtxPrm.ind] // = tag.bndArgs() - for tag contextual parameter
-						: res[1](res[0].data, res[0], $sub)    // = fn(data, view, $sub) for compiled binding expression
+						: res[1](res[0].data, res[0], $sub) // = fn(data, view, $sub) for compiled binding expression
 					: res[0]._ocp; // Observable contextual parameter (uninitialized, or initialized as static expression, so no path dependencies)
 				if (isUpdate) {
-					if (res && newRes !== value) {
-						$sub._ucp(key, value, storeView, obsCtxPrm); // Update observable contextual parameter
-					}
+					$sub._ucp(key, value, storeView, obsCtxPrm); // Update observable contextual parameter
 					return storeView;
 				}
 				res = newRes;
@@ -594,8 +590,8 @@ function convertArgs(tagElse, bound) { // tag.cvtArgs() or tag.cvtArgs(tagElse?,
 		}
 		bindFrom = bindFrom || [0];
 		l = bindFrom.length;
-		if (!$isArray(converter) || converter.length !== l) {
-			converter = [converter];
+		if (!$isArray(converter) || (converter.arg0 !== false && (l === 1 || converter.length !== l || converter.arg0))) {
+			converter = [converter]; // Returning converter as first arg, even if converter value is an array
 			bindFrom = [0];
 			l = 1;
 		}
@@ -650,7 +646,7 @@ function renderTag(tagName, parentView, tmpl, tagCtxs, isUpdate, onError) {
 			while (m--) {
 				key = bindArray[m];
 				if (!isNaN(parseInt(key))) {
-					bindArray[m] = parseInt(key); // Convert "0" to 0,  etc.
+					bindArray[m] = parseInt(key); // Convert "0" to 0, etc.
 				}
 			}
 		}
@@ -730,7 +726,7 @@ function renderTag(tagName, parentView, tmpl, tagCtxs, isUpdate, onError) {
 			tag.linkCtx = linkCtx;
 			if (tag._.bnd = boundTag || linkCtx.fn) {
 				// Bound if {^{tag...}} or data-link="{tag...}"
-				tag._.ths = tagCtx.params.props.this; // Tag has a this=expr binding, to get javascript reference to tag instance
+				tag._.ths = tagCtx.params.props["this"]; // Tag has a this=expr binding, to get javascript reference to tag instance
 				tag._.lt = tagCtxs.lt; // If a late path @some.path has not returned @some object, mark tag as late
 				tag._.arrVws = {};
 			} else if (tag.dataBoundOnly) {
@@ -870,7 +866,7 @@ function renderTag(tagName, parentView, tmpl, tagCtxs, isUpdate, onError) {
 				if (parentView.linked && itemRet && !rWrappedInViewMarker.test(itemRet)) {
 					// When a tag renders content from the render method, with data linking then we need to wrap with view markers, if absent,
 					// to provide a contentView for the tag, which will correctly dispose bindings if deleted. The 'tmpl' for this view will
-					// be a dumbed-down template which will always return the  itemRet string (no matter what the data is). The itemRet string
+					// be a dumbed-down template which will always return the itemRet string (no matter what the data is). The itemRet string
 					// is not compiled as template markup, so can include "{{" or "}}" without triggering syntax errors
 					tmpl = { // 'Dumbed-down' template which always renders 'static' itemRet string
 						links: []
@@ -940,6 +936,9 @@ function View(context, type, parentView, data, template, key, onRender, contentT
 	};
 	self.linked = !!onRender;
 	self.type = type || "top";
+	if (type) {
+		self.cache = {_ct: $subSettings._cchCt}; // Used for caching results of computed properties and helpers (view.getCache)
+	}
 
 	if (!parentView || parentView.type === "top") {
 		(self.ctx = context || {}).root = self.data;
@@ -978,6 +977,12 @@ View.prototype = {
 	getRsc: getResource,
 	_getTmpl: getTemplate,
 	_getOb: getPathObject,
+	getCache: function(key) { // Get cached value of computed value
+		if ($subSettings._cchCt > this.cache._ct) {
+			this.cache = {_ct: $subSettings._cchCt};
+		}
+		return this.cache[key] !== undefined ? this.cache[key] : (this.cache[key] = cpFnStore[key](this.data, this, $sub));
+	},
 	_is: "view"
 };
 
@@ -990,7 +995,7 @@ function compileChildResources(parentTmpl) {
 	for (storeName in jsvStores) {
 		storeNames = storeName + "s";
 		if (parentTmpl[storeNames]) {
-			resources = parentTmpl[storeNames];    // Resources not yet compiled
+			resources = parentTmpl[storeNames];        // Resources not yet compiled
 			parentTmpl[storeNames] = {};               // Remove uncompiled resources
 			$views[storeNames](resources, parentTmpl); // Add back in the compiled resources
 		}
@@ -1064,7 +1069,7 @@ function baseApply(args) {
 //===============
 
 function compileTmpl(name, tmpl, parentTmpl, options) {
-	// tmpl is either a template object, a selector for a template script block, the name of a compiled template, or a template object
+	// tmpl is either a template object, a selector for a template script block, or the name of a compiled template
 
 	//==== nested functions ====
 	function lookupTemplate(value) {
@@ -1073,8 +1078,8 @@ function compileTmpl(name, tmpl, parentTmpl, options) {
 		var currentName, tmpl;
 		if (("" + value === value) || value.nodeType > 0 && (elem = value)) {
 			if (!elem) {
-				if (/^\.\/[^\\:*?"<>]*$/.test(value)) {
-					// tmpl="./some/file.html"
+				if (/^\.?\/[^\\:*?"<>]*$/.test(value)) {
+					// value="./some/file.html" (or "/some/file.html")
 					// If the template is not named, use "./some/file.html" as name.
 					if (tmpl = $templates[name = name || value]) {
 						value = tmpl;
@@ -1369,7 +1374,7 @@ function compileViewModel(name, type) {
 				: value;
 		}
 		for (prop in model) {
-			if (model.hasOwnProperty(prop) && (prop.charAt(0) !== "_" || !getterNames[prop.slice(1)]) && prop !== $expando  && !$isFunction(model[prop])) {
+			if (model.hasOwnProperty(prop) && (prop.charAt(0) !== "_" || !getterNames[prop.slice(1)]) && prop !== $expando && !$isFunction(model[prop])) {
 				ob[prop] = model[prop];
 			}
 		}
@@ -1542,7 +1547,7 @@ function registerStore(storeName, storeSettings) {
 /**
 * Add settings such as:
 * $.views.settings.allowCode(true)
-* @param {boolean}  value
+* @param {boolean} value
 * @returns {Settings}
 *
 * allowCode = $.views.settings.allowCode()
@@ -1637,7 +1642,7 @@ function renderContent(data, context, noIteration, parentView, key, onRender) {
 
 		isTopRenderCall = !view;
 		isRenderCall = isRenderCall || isTopRenderCall;
-		if (!view) {
+		if (isTopRenderCall) {
 			(context = context || {}).root = data; // Provide ~root as shortcut to top-level data.
 		}
 		if (!isRenderCall || $subSettingsAdvanced.useViews || tmpl.useViews || view && view !== topView) {
@@ -2069,26 +2074,25 @@ function parsedParam(args, props, ctx) {
 	return [args.slice(0, -1), props.slice(0, -1), ctx.slice(0, -1)];
 }
 
-function paramStructure(parts, type) {
-	return '\n\t'
-		+ (type
-			? type + ':{'
-			: '')
-		+ 'args:[' + parts[0] + '],\n\tprops:{' + parts[1] + '}'
-		+ (parts[2] ? ',\n\tctx:{' + parts[2] + '}' : "");
+function paramStructure(paramCode, paramVals) {
+	return '\n\tparams:{args:[' + paramCode[0] + '],\n\tprops:{' + paramCode[1] + '}'
+		+ (paramCode[2] ? ',\n\tctx:{' + paramCode[2] + '}' : "")
+		+ '},\n\targs:[' + paramVals[0] + '],\n\tprops:{' + paramVals[1] + '}'
+		+ (paramVals[2] ? ',\n\tctx:{' + paramVals[2] + '}' : "");
 }
 
 function parseParams(params, pathBindings, tmpl, isLinkExpr) {
 
-	function parseTokens(all, lftPrn0, lftPrn, bound, path, operator, err, eq, path2, late, prn, comma, lftPrn2, apos, quot, rtPrn, rtPrnDot, prn2, space, index, full) {
-	// /(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(\(?)\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,
-	//lftPrn0           lftPrn         bound     path               operator     err                                          eq      path2 late            prn      comma  lftPrn2   apos quot        rtPrn  rtPrnDot                  prn2     space
+	function parseTokens(all, lftPrn0, lftPrn, bound, path, operator, err, eq, path2, late, prn,
+												comma, lftPrn2, apos, quot, rtPrn, rtPrnDot, prn2, space, index, full) {
+	// /(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(?:(\()\s*)?\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,
+	//lftPrn0           lftPrn         bound     path               operator     err                                          eq      path2 late            prn      comma  lftPrn2          apos quot        rtPrn  rtPrnDot                  prn2     space
 	// (left paren? followed by (path? followed by operator) or (path followed by paren?)) or comma or apos or quot or right paren or space
 
 		function parsePath(allPath, not, object, helper, view, viewProperty, pathTokens, leafToken) {
 			// /^(!*?)(?:null|true|false|\d[\d.]*|([\w$]+|\.|~([\w$]+)|#(view|([\w$]+))?)([\w$.^]*?)(?:[.[^]([\w$]+)\]?)?)$/g,
 			//    not                               object     helper    view  viewProperty pathTokens      leafToken
-			var subPath = object === ".";
+			subPath = object === ".";
 			if (object) {
 				path = path.slice(not.length);
 				if (/^\.?constructor$/.test(leafToken||path)) {
@@ -2133,16 +2137,21 @@ function parseParams(params, pathBindings, tmpl, isLinkExpr) {
 							while (theOb.sb) {
 								theOb = theOb.sb;
 							}
-							if (theOb.bnd) {
-								path = "^" + path.slice(1);
+							if (theOb.prm) {
+								if (theOb.bnd) {
+									path = "^" + path.slice(1);
+								}
+								theOb.sb = path;
+								theOb.bnd = theOb.bnd || path[0] === "^";
 							}
-							theOb.sb = path;
-							theOb.bnd = theOb.bnd || path[0] === "^";
 						}
 					} else {
 						binds.push(path);
 					}
-					pathStart[parenDepth] = index + (subPath ? 1 : 0);
+					if (prn && !subPath) {
+						pathStart[fnDp] = ind;
+						compiledPathStart[fnDp] = compiledPath[fnDp].length;
+					}
 				}
 			}
 			return allPath;
@@ -2153,6 +2162,7 @@ function parseParams(params, pathBindings, tmpl, isLinkExpr) {
 			path = bound + path; // e.g. some.fn(...)^some.path - so here path is "^some.path"
 		}
 		operator = operator || "";
+		lftPrn2 = lftPrn2 || "";
 		lftPrn = lftPrn || lftPrn0 || lftPrn2;
 		path = path || path2;
 
@@ -2162,127 +2172,197 @@ function parseParams(params, pathBindings, tmpl, isLinkExpr) {
 		// Could do this - but not worth perf cost?? :-
 		// if (!path.lastIndexOf("#data.", 0)) { path = path.slice(6); } // If path starts with "#data.", remove that.
 		prn = prn || prn2 || "";
+		var expr, binds, theOb, newOb, subPath, lftPrnFCall, ret,
+			ind = index;
 
-		var expr, exprFn, binds, theOb, newOb,
-			rtSq = ")";
+		if (!aposed && !quoted) {
+			if (err) {
+				syntaxError(params);
+			}
+			if (rtPrnDot && bindings) {
+				// This is a binding to a path in which an object is returned by a helper/data function/expression, e.g. foo()^x.y or (a?b:c)^x.y
+				// We create a compiled function to get the object instance (which will be called when the dependent data of the subexpression changes,
+				// to return the new object, and trigger re-binding of the subsequent path)
+				expr = pathStart[fnDp-1];
+				if (full.length - 1 > ind - (expr || 0)) { // We need to compile a subexpression
+					expr = $.trim(full.slice(expr, ind + all.length));
+					binds = bindto || bndStack[fnDp-1].bd;
+					// Insert exprOb object, to be used during binding to return the computed object
+					theOb = binds[binds.length-1];
+					if (theOb && theOb.prm) {
+						while (theOb.sb && theOb.sb.prm) {
+							theOb = theOb.sb;
+						}
+						newOb = theOb.sb = {path: theOb.sb, bnd: theOb.bnd};
+					} else {
+						binds.push(newOb = {path: binds.pop()}); // Insert exprOb object, to be used during binding to return the computed object
+					}
+					if (theOb && theOb.sb === newOb) {
+						compiledPath[fnDp] = compiledPath[fnDp-1].slice(theOb._cpPthSt) + compiledPath[fnDp];
+						compiledPath[fnDp-1] = compiledPath[fnDp-1].slice(0, theOb._cpPthSt);
+					}
+					newOb._cpPthSt = compiledPathStart[fnDp-1];
+					newOb._cpKey = expr;
 
-		if (prn === "[") {
-			prn = "[j._sq(";
-			rtSq = ")]";
+					compiledPath[fnDp] += full.slice(prevIndex, index);
+					prevIndex = index;
+
+					newOb._cpfn = cpFnStore[expr] = cpFnStore[expr] || // Compiled function for computed value: get from store, or compile and store
+						new Function("data,view,j", // Compiled function for computed value in template
+					"//" + expr + "\nvar v;\nreturn ((v=" + compiledPath[fnDp] + (rtPrn === "]" ? ")]" : rtPrn) + ")!=null?v:null);");
+
+					compiledPath[fnDp-1] += (fnCall[prnDp] && $subSettingsAdvanced.cache ? "view.getCache(\"" + expr.replace(rEscapeQuotes, "\\$&") + "\"" : compiledPath[fnDp]);
+
+					newOb.prm = bndCtx.bd;
+					newOb.bnd = newOb.bnd || newOb.path && newOb.path.indexOf("^") >= 0;
+				}
+				compiledPath[fnDp] = "";
+			}
+			if (prn === "[") {
+				prn = "[j._sq(";
+			}
+			if (lftPrn === "[") {
+				lftPrn = "[j._sq(";
+			}
+		}
+		ret = (aposed
+			// within single-quoted string
+			? (aposed = !apos, (aposed ? all : lftPrn2 + '"'))
+			: quoted
+			// within double-quoted string
+				? (quoted = !quot, (quoted ? all : lftPrn2 + '"'))
+				:
+			(
+				(lftPrn
+					? (
+						prnStack[++prnDp] = true,
+						prnInd[prnDp] = 0,
+						bindings && (
+							pathStart[fnDp++] = ind++,
+							bndCtx = bndStack[fnDp] = {bd: []},
+							compiledPath[fnDp] = "",
+							compiledPathStart[fnDp] = 1
+						),
+						lftPrn) // Left paren, (not a function call paren)
+					: "")
+				+ (space
+					? (prnDp
+						? "" // A space within parens or within function call parens, so not a separator for tag args
+			// New arg or prop - so insert backspace \b (\x08) as separator for named params, used subsequently by rBuildHash, and prepare new bindings array
+						: (paramIndex = full.slice(paramIndex, ind), named
+							? (named = boundName = bindto = false, "\b")
+							: "\b,") + paramIndex + (paramIndex = ind + all.length, bindings && pathBindings.push(bndCtx.bd = []), "\b")
+					)
+					: eq
+			// named param. Remove bindings for arg and create instead bindings array for prop
+						? (fnDp && syntaxError(params), bindings && pathBindings.pop(), named = "_" + path, boundName = bound, paramIndex = ind + all.length,
+								bindings && ((bindings = bndCtx.bd = pathBindings[named] = []), bindings.skp = !bound), path + ':')
+						: path
+			// path
+							? (path.split("^").join(".").replace($sub.rPath, parsePath)
+								+ (prn || operator)
+							)
+							: operator
+			// operator
+								? operator
+								: rtPrn
+			// function
+									? rtPrn === "]" ? ")]" : ")"
+									: comma
+										? (fnCall[prnDp] || syntaxError(params), ",") // We don't allow top-level literal arrays or objects
+										: lftPrn0
+											? ""
+											: (aposed = apos, quoted = quot, '"')
+			))
+		);
+
+		if (!aposed && !quoted) {
+			if (rtPrn) {
+				fnCall[prnDp] = false;
+				prnDp--;
+			}
 		}
 
-		if (err && !aposed && !quoted) {
-			syntaxError(params);
-		} else {
-			if (bindings && rtPrnDot && !aposed && !quoted) {
-				// This is a binding to a path in which an object is returned by a helper/data function/expression, e.g. foo()^x.y or (a?b:c)^x.y
-				// We create a compiled function to get the object instance (which will be called when the dependent data of the subexpression changes, to return the new object, and trigger re-binding of the subsequent path)
-				if (parenDepth) {
-					expr = pathStart[parenDepth - 1];
-					if (full.length - 1 > index - (expr || 0)) { // We need to compile a subexpression
-						expr = full.slice(expr, index + all.length);
-						if (exprFn !== true) { // If not reentrant call during compilation
-							binds = bindto || bndStack[parenDepth-1].bd;
-							// Insert exprOb object, to be used during binding to return the computed object
-							theOb = binds[binds.length-1];
-							if (theOb && theOb.prm) {
-								while (theOb.sb && theOb.sb.prm) {
-									theOb = theOb.sb;
-								}
-								newOb = theOb.sb = {path: theOb.sb, bnd: theOb.bnd};
-							} else {
-								binds.push(newOb = {path: binds.pop()}); // Insert exprOb object, to be used during binding to return the computed object
-							}											 // (e.g. "some.object()" in "some.object().a.b" - to be used as context for binding the following tokens "a.b")
-						}
-						rtPrnDot = delimOpenChar1 + ":" + expr // The parameter or function subexpression
-							+ " onerror=''" // set onerror='' in order to wrap generated code with a try catch - returning '' as object instance if there is an error/missing parent
-							+ delimCloseChar0;
-						exprFn = tmplLinks[rtPrnDot];
-						if (!exprFn) {
-							tmplLinks[rtPrnDot] = true; // Flag that this exprFn (for rtPrnDot) is being compiled
-							tmplLinks[rtPrnDot] = exprFn = tmplFn(rtPrnDot, tmpl, true); // Compile the expression (or use cached copy already in tmpl.links)
-						}
-						if (exprFn !== true && newOb) {
-							// If not reentrant call during compilation
-							newOb._cpfn = exprFn;
-							newOb.prm = bndCtx.bd;
-							newOb.bnd = newOb.bnd || newOb.path && newOb.path.indexOf("^") >= 0;
-						}
+		if (bindings) {
+			if (!aposed && !quoted) {
+				if (rtPrn) {
+					if (prnStack[prnDp+1]) {
+						bndCtx = bndStack[--fnDp];
+						prnStack[prnDp+1] = false;
+					}
+					prnStart = prnInd[prnDp+1];
+				}
+				if (prn) {
+					prnInd[prnDp+1] = compiledPath[fnDp].length + (lftPrn ? 1 : 0);
+					if (path || rtPrn) {
+						bndCtx = bndStack[++fnDp] = {bd: []};
+						prnStack[prnDp+1] = true;
 					}
 				}
 			}
-			return (aposed
-				// within single-quoted string
-				? (aposed = !apos, (aposed ? all : lftPrn2 + '"'))
-				: quoted
-				// within double-quoted string
-					? (quoted = !quot, (quoted ? all : lftPrn2 + '"'))
-					:
-				(
-					(lftPrn
-						? (pathStart[parenDepth] = index++, bndCtx = bndStack[++parenDepth] = {bd: []}, lftPrn)
-						: "")
-					+ (space
-						? (parenDepth
-							? ""
-				// New arg or prop - so insert backspace \b (\x08) as separator for named params, used subsequently by rBuildHash, and prepare new bindings array
-							: (paramIndex = full.slice(paramIndex, index), named
-								? (named = boundName = bindto = false, "\b")
-								: "\b,") + paramIndex + (paramIndex = index + all.length, bindings && pathBindings.push(bndCtx.bd = []), "\b")
-						)
-						: eq
-				// named param. Remove bindings for arg and create instead bindings array for prop
-							? (parenDepth && syntaxError(params), bindings && pathBindings.pop(), named = "_" + path, boundName = bound, paramIndex = index + all.length,
-									bindings && ((bindings = bndCtx.bd = pathBindings[named] = []), bindings.skp = !bound), path + ':')
-							: path
-				// path
-								? (path.split("^").join(".").replace($sub.rPath, parsePath)
-									+ (prn
-				// some.fncall(
-										? (bndCtx = bndStack[++parenDepth] = {bd: []}, fnCall[parenDepth] = rtSq, prn)
-										: operator)
-								)
-								: operator
-				// operator
-									? operator
-									: rtPrn
-				// function
-										? ((rtPrn = fnCall[parenDepth] || rtPrn, fnCall[parenDepth] = false, bndCtx = bndStack[--parenDepth], rtPrn)
-											+ (prn // rtPrn and prn, e.g )( in (a)() or a()(), or )[ in a()[]
-												? (bndCtx = bndStack[++parenDepth], fnCall[parenDepth] = rtSq, prn)
-												: "")
-										)
-										: comma
-											? (fnCall[parenDepth] || syntaxError(params), ",") // We don't allow top-level literal arrays or objects
-											: lftPrn0
-												? ""
-												: (aposed = apos, quoted = quot, '"')
-				))
-			);
+
+			compiledPath[fnDp] = (compiledPath[fnDp]||"") + full.slice(prevIndex, index);
+			prevIndex = index+all.length;
+
+			if (!aposed && !quoted) {
+				if (lftPrnFCall = lftPrn && prnStack[prnDp+1]) {
+					compiledPath[fnDp-1] += lftPrn;
+					compiledPathStart[fnDp-1]++;
+				}
+				if (prn === "(" && subPath && !newOb) {
+					compiledPath[fnDp] = compiledPath[fnDp-1].slice(prnStart) + compiledPath[fnDp];
+					compiledPath[fnDp-1] = compiledPath[fnDp-1].slice(0, prnStart);
+				}
+			}
+			compiledPath[fnDp] += lftPrnFCall ? ret.slice(1) : ret;
 		}
+
+		if (!aposed && !quoted && prn) {
+			prnDp++;
+			if (path && prn === "(") {
+				fnCall[prnDp] = true;
+			}
+		}
+
+		if (!aposed && !quoted && prn2) {
+			if (bindings) {
+				compiledPath[fnDp] += prn;
+			}
+			ret += prn;
+		}
+		return ret;
 	}
 
-	var named, bindto, boundName,
+	var named, bindto, boundName, result,
 		quoted, // boolean for string content in double quotes
 		aposed, // or in single quotes
 		bindings = pathBindings && pathBindings[0], // bindings array for the first arg
 		bndCtx = {bd: bindings},
 		bndStack = {0: bndCtx},
 		paramIndex = 0, // list,
-		tmplLinks = (tmpl ? tmpl.links : bindings && (bindings.links = bindings.links || {})) || topView.tmpl.links,
 		// The following are used for tracking path parsing including nested paths, such as "a.b(c^d + (e))^f", and chained computed paths such as
 		// "a.b().c^d().e.f().g" - which has four chained paths, "a.b()", "^c.d()", ".e.f()" and ".g"
-		parenDepth = 0,
-		fnCall = {}, // We are in a function call
-		pathStart = {}, // tracks the start of the current path such as c^d() in the above example
-		result;
+		prnDp = 0,     // For tracking paren depth (not function call parens)
+		fnDp = 0,      // For tracking depth of function call parens
+		prnInd = {},   // We are in a function call
+		prnStart = 0,  // tracks the start of the current path such as c^d() in the above example
+		prnStack = {}, // tracks parens which are not function calls, and so are associated with new bndStack contexts
+		fnCall = {},   // We are in a function call
+		pathStart = {},// tracks the start of the current path such as c^d() in the above example
+		compiledPathStart = {0: 0},
+		compiledPath = {0:""},
+		prevIndex = 0;
 
 	if (params[0] === "@") {
 		params = params.replace(rBracketQuote, ".");
 	}
 	result = (params + (tmpl ? " " : "")).replace($sub.rPrm, parseTokens);
 
-	return !parenDepth && result || syntaxError(params); // Syntax error if unbalanced parens in params expression
+	if (bindings) {
+		result = compiledPath[0];
+	}
+
+	return !prnDp && result || syntaxError(params); // Syntax error if unbalanced parens in params expression
 }
 
 function buildCode(ast, tmpl, isLinkExpr) {
@@ -2318,7 +2398,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 		// Add newline for each callout to t() c() etc. and each markup string
 		if ("" + node === node) {
 			// a markup string to be inserted
-			code += '\n+"' + node + '"';
+			code += '+"' + node + '"';
 		} else {
 			// a compiled tag expression to be inserted
 			tagName = node[0];
@@ -2328,7 +2408,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 			} else {
 				converter = node[1];
 				content = !isLinkExpr && node[2];
-				tagCtx = paramStructure(node[3], 'params') + '},' + paramStructure(params = node[4]);
+				tagCtx = paramStructure(node[3], params = node[4]);
 				// NODE.JS-SPECIFIC CODE:
 				var prm = params[1];
 				if (prm && /^'tmpl':"\.\/[^\:*?"<>]*"$/.test(prm)) {
@@ -2393,7 +2473,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 
 				if (isGetVal && (pathBindings || trigger || converter && converter !== HTML || lateRender)) {
 					// For convertVal we need a compiled function to return the new tagCtx(s)
-					tagCtxFn = new Function("data,view,j,u", "// " + tmplName + " " + (++tmplBindingKey) + " " + tagName
+					tagCtxFn = new Function("data,view,j", "// " + tmplName + " " + (++tmplBindingKey) + " " + tagName
 						+ retStrOpen + "{" + tagCtx + "};" + retStrClose);
 					tagCtxFn._er = onError;
 					tagCtxFn._tag = tagName;
@@ -2431,7 +2511,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 					tagRender = 't("' + tagAndElses + '",view,this,';
 					if (isLinkExpr || pathBindings) {
 						// This is a bound tag (data-link expression or inline bound tag {^{tag ...}}) so we store a compiled tagCtxs function in tmp.bnds
-						code = new Function("data,view,j,u", " // " + tmplName + " " + tmplBindingKey + " " + tagAndElses + retStrOpen + code
+						code = new Function("data,view,j", " // " + tmplName + " " + tmplBindingKey + " " + tagAndElses + retStrOpen + code
 							+ retStrClose);
 						code._er = onError;
 						code._tag = tagAndElses;
@@ -2455,7 +2535,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 				}
 				if (onError && !nextIsElse) {
 					useViews = true;
-					code += ';\n}catch(e){ret' + (isLinkExpr ? "urn " : "+=") + boundOnErrStart + 'j._err(e,view,' + onError + ')' + boundOnErrEnd + ';}' + (isLinkExpr ? "" : 'ret=ret');
+					code += ';\n}catch(e){ret' + (isLinkExpr ? "urn " : "+=") + boundOnErrStart + 'j._err(e,view,' + onError + ')' + boundOnErrEnd + ';}' + (isLinkExpr ? "" : '\nret=ret');
 				}
 			}
 		}
@@ -2468,7 +2548,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 		+ (hasCnvt ? ",c=j._cnvt" : "")              // converter
 		+ (hasEncoder ? ",h=j._html" : "")           // html converter
 		+ (isLinkExpr
-				? (node[8]  // late @... path?
+				? (node[8] // late @... path?
 						? ", ob"
 						: ""
 					) + ";\n"
@@ -2477,7 +2557,7 @@ function buildCode(ast, tmpl, isLinkExpr) {
 		+ (isLinkExpr ? "\n" : ";\nreturn ret;");
 
 	try {
-		code = new Function("data,view,j,u", code);
+		code = new Function("data,view,j", code);
 	} catch (e) {
 		syntaxError("Compiled template code:\n\n" + code + '\n: "' + (e.message||e) + '"');
 	}
@@ -2584,7 +2664,7 @@ function getTargetSorted(value, tagCtx) {
 		}
 	}
 
-	start = props.start; // Get current value - after possible  changes triggered by tag.sorted refresh() above
+	start = props.start; // Get current value - after possible changes triggered by tag.sorted refresh() above
 	end = props.end;
 	if (propParams.start && start === undefined || propParams.end && end === undefined) {
 		start = end = 0;
@@ -2659,7 +2739,7 @@ $sub = $views.sub;
 $viewsSettings = $views.settings;
 
 {
-	// JsRender not already loaded, or loaded without jQuery, and we are now moving from jsrender namespace to jQuery namepace
+	// JsRender/JsViews not already loaded (or loaded without jQuery, and we are now moving from jsrender namespace to jQuery namepace)
 	for (jsvStoreName in jsvStores) {
 		registerStore(jsvStoreName, jsvStores[jsvStoreName]);
 	}
@@ -2709,7 +2789,7 @@ $viewsSettings = $views.settings;
 
 	/**
 	* $.views.settings.debugMode(true)
-	* @param {boolean}  debugMode
+	* @param {boolean} debugMode
 	* @returns {Settings}
 	*
 	* debugMode = $.views.settings.debugMode()
@@ -2719,6 +2799,7 @@ $viewsSettings = $views.settings;
 		return debugMode === undefined
 			? $subSettings.debugMode
 			: (
+				$subSettings._clFns && $subSettings._clFns(), // Clear linkExprStore (cached compiled expressions), since debugMode setting affects compilation for expressions
 				$subSettings.debugMode = debugMode,
 				$subSettings.onError = debugMode + "" === debugMode
 					? function() { return debugMode; }
@@ -2729,6 +2810,7 @@ $viewsSettings = $views.settings;
 	})(false); // jshint ignore:line
 
 	$subSettingsAdvanced = $subSettings.advanced = {
+		cache: true, // By default use cached values of computed values (Otherwise, set advanced cache setting to false)
 		useViews: false,
 		_jsv: false // For global access to JsViews store
 	};
@@ -2767,7 +2849,7 @@ $viewsSettings = $views.settings;
 					tagCtx = self.tagCtx,
 					range = tagCtx.argDefault === false,
 					props = tagCtx.props,
-					iterate =  range || tagCtx.args.length, // Not final else and not auto-create range
+					iterate = range || tagCtx.args.length, // Not final else and not auto-create range
 					result = "",
 					done = 0;
 
@@ -2861,12 +2943,16 @@ var nodeFs = require('fs'),
 
 // Support for rendering templates from file system in Node.js Node, and for Express template engine integration,
 // using app.engine('html', jsrender.__express);
-$.renderFile = $.__express = function(filepath, data, callback) {
-	filepath = './' + nodeFs.realpathSync(filepath).slice(rootDirPathLen).split(nodePathSep).join('/'); // Normalize to ./some/file.html
-	var html = $templates(filepath).render(data);
-	if (callback) {
-		callback(null, html);
+$.renderFile = $.__express = function(filepath, data, context, callback) {
+	filepath = "/" + nodeFs.realpathSync(filepath).split(nodePathSep).slice(1).join("/"); // Normalize to /some/file.html
+	if (typeof context === "function") {
+		callback = context;
+		context = undefined;
 	}
+	var html = $templates(filepath).render(data, context);
+	if (callback) {         // If a callback is provided, we call it. Note that this is undocumented.
+		callback(null, html); // The call is still synchronous (with realpathSync and readFileSync) rather
+	}                       // than making async calls to realpath readFile. Also it does not return errors.
 	return html;
 };
 

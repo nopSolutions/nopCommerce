@@ -13,10 +13,10 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.ReturnRequests")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestListButtons })
     </div>
@@ -29,8 +29,8 @@
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -76,7 +76,7 @@
                         <div class="row">
                             <div class="text-center col-12">
                                 <button type="button" id="search-returnrequests" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fas fa-search"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -179,7 +179,7 @@
                         function renderColumnOrderInfo(data, type, row, meta) {
                             if (row.OrderId > 0) {
                                 var textRenderer = $.fn.dataTable.render.text().display;
-                                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View").Text</a>';
+                                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="far fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View").Text</a>';
                             } else {
                                 return 'order item is deleted';
                             }

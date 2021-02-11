@@ -16,10 +16,10 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Shipping.DatesAndRanges")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesButtons })
     </div>
@@ -31,8 +31,8 @@
             <div class="form-horizontal">
                 <div class="cards-group">
                     <nop-cards id="datesandranges-cards">
-                        <nop-card asp-name="datesandranges-dates" asp-icon="fa fa-calendar" asp-title="@T("Admin.Configuration.Shipping.DeliveryDates")" asp-hide-block-attribute-name="@hideDatesBlockAttributeName" asp-hide="@hideDatesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Dates", Model)</nop-card>
-                        <nop-card asp-name="datesandranges-ranges" asp-icon="fa fa-arrows-h" asp-title="@T("Admin.Configuration.Shipping.ProductAvailabilityRanges")" asp-hide-block-attribute-name="@hideRangesBlockAttributeName" asp-hide="@hideRangesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Ranges", Model)</nop-card>
+                        <nop-card asp-name="datesandranges-dates" asp-icon="far fa-calendar-alt" asp-title="@T("Admin.Configuration.Shipping.DeliveryDates")" asp-hide-block-attribute-name="@hideDatesBlockAttributeName" asp-hide="@hideDatesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Dates", Model)</nop-card>
+                        <nop-card asp-name="datesandranges-ranges" asp-icon="fas fa-arrows-alt-h" asp-title="@T("Admin.Configuration.Shipping.ProductAvailabilityRanges")" asp-hide-block-attribute-name="@hideRangesBlockAttributeName" asp-hide="@hideRangesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Ranges", Model)</nop-card>
 
                         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DatesAndRangesDetailsBlock, additionalData = Model })
                     </nop-cards>

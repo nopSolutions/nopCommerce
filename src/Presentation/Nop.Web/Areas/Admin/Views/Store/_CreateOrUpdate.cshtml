@@ -1,4 +1,4 @@
-@model StoreModel
+﻿@model StoreModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -8,7 +8,7 @@
         <div class="form-horizontal">
             <div class="row">
                 <div class="col-md-12 clearfix">
-                    <div class="pull-left">
+                    <div class="float-left">
                         @await Component.InvokeAsync("SettingMode", new { modeName = "store-advanced-mode" })
                     </div>
                 </div>
@@ -18,33 +18,36 @@
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDetailsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
-                        @(await Html.LocalizedEditorAsync<StoreModel, StoreLocalizedModel>("store-localized",
-                        @<div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <nop-label asp-for="@Model.Locales[item].Name" />
+                        <div id="store-name-area">
+                            @(await Html.LocalizedEditorAsync<StoreModel, StoreLocalizedModel>("store-localized",
+                            @<div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="@Model.Locales[item].Name" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="@Model.Locales[item].Name" />
+                                        <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                    </div>
                                 </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="@Model.Locales[item].Name" />
-                                    <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>
+                            ,
+                            @<div>
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="Name" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="Name" asp-required="true" />
+                                        <span asp-validation-for="Name"></span>
+                                    </div>
                                 </div>
                             </div>
-                            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            ))
                         </div>
-                        ,
-                        @<div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <nop-label asp-for="Name" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="Name" asp-required="true" />
-                                    <span asp-validation-for="Name"></span>
-                                </div>
-                            </div>
-                        </div>
-                        ))
-                        <div class="form-group row">
+
+                        <div class="form-group row" id="store-url-area">
                             <div class="col-md-3">
                                 <nop-label asp-for="Url" />
                             </div>
@@ -53,7 +56,7 @@
                                 <span asp-validation-for="Url"></span>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row" id="ssl-area">
                             <div class="col-md-3">
                                 <nop-label asp-for="SslEnabled" />
                             </div>
@@ -90,40 +93,42 @@
                                 <span asp-validation-for="DisplayOrder"></span>
                             </div>
                         </div>
-                        <div class="form-group row advanced-setting">
-                            <div class="col-md-3">
-                                <nop-label asp-for="CompanyName" />
+                        <div id="company-info-area">
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CompanyName" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="CompanyName" />
+                                    <span asp-validation-for="CompanyName"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="CompanyName" />
-                                <span asp-validation-for="CompanyName"></span>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CompanyAddress" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="CompanyAddress" />
+                                    <span asp-validation-for="CompanyAddress"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row advanced-setting">
-                            <div class="col-md-3">
-                                <nop-label asp-for="CompanyAddress" />
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CompanyPhoneNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="CompanyPhoneNumber" />
+                                    <span asp-validation-for="CompanyPhoneNumber"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="CompanyAddress" />
-                                <span asp-validation-for="CompanyAddress"></span>
-                            </div>
-                        </div>
-                        <div class="form-group row advanced-setting">
-                            <div class="col-md-3">
-                                <nop-label asp-for="CompanyPhoneNumber" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="CompanyPhoneNumber" />
-                                <span asp-validation-for="CompanyPhoneNumber"></span>
-                            </div>
-                        </div>
-                        <div class="form-group row advanced-setting">
-                            <div class="col-md-3">
-                                <nop-label asp-for="CompanyVat" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="CompanyVat" />
-                                <span asp-validation-for="CompanyVat"></span>
+                            <div class="form-group row advanced-setting">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CompanyVat" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="CompanyVat" />
+                                    <span asp-validation-for="CompanyVat"></span>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -29,6 +32,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IStoreModelFactory _storeModelFactory;
         private readonly IStoreService _storeService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -41,7 +46,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             ISettingService settingService,
             IStoreModelFactory storeModelFactory,
-            IStoreService storeService)
+            IStoreService storeService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext)
         {
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
@@ -51,6 +58,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService = settingService;
             _storeModelFactory = storeModelFactory;
             _storeService = storeService;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
+
         }
 
         #endregion
@@ -141,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public virtual async Task<IActionResult> Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
@@ -153,6 +163,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _storeModelFactory.PrepareStoreModelAsync(null, store);
+
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
 
             return View(model);
         }

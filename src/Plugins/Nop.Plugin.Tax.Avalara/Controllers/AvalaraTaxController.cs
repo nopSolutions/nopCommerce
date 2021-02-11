@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Services;
@@ -50,9 +51,12 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
             ITaxPluginManager taxPluginManager,
+            IWorkContext workContext,
             TaxSettings taxSettings) : base(permissionService,
                 settingService,
                 taxCategoryService,
+                genericAttributeService,
+                workContext,
                 taxModelFactory,
                 taxPluginManager,
                 taxSettings)

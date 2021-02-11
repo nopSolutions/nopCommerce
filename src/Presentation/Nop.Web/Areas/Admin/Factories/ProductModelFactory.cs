@@ -1585,7 +1585,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get product tags
             var productTags = (await (await _productTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
-                .OrderByDescendingAwait(async tag => await _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true)).ToListAsync())
+                .OrderByDescendingAwait(async tag => await _productTagService.GetProductCountByProductTagIdAsync(tag.Id, storeId: 0, showHidden: true)).ToListAsync())
                 .ToPagedList(searchModel);
 
             //prepare list model
@@ -1597,7 +1597,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productTagModel = tag.ToModel<ProductTagModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productTagModel.ProductCount = await _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true);
+                    productTagModel.ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(tag.Id, storeId: 0, showHidden: true);
 
                     return productTagModel;
                 });
@@ -1625,7 +1625,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model = productTag.ToModel<ProductTagModel>();
                 }
 
-                model.ProductCount = await _productTagService.GetProductCountAsync(productTag.Id, storeId: 0, showHidden: true);
+                model.ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(productTag.Id, storeId: 0, showHidden: true);
 
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>

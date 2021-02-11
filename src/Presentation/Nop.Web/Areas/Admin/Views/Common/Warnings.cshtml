@@ -8,10 +8,10 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.System.Warnings")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsButtons })
     </div>
@@ -31,7 +31,7 @@
                                 case SystemWarningLevel.Pass:
                                     {
                                         <p class="text-green">
-                                            <i class="icon fa fa-check"></i>
+                                            <i class="icon fas fa-check"></i>
                                             @if (warning.DontEncode)
                                             {
                                                 @Html.Raw(warning.Text)
@@ -48,7 +48,7 @@
                                 case SystemWarningLevel.Warning:
                                     {
                                         <p class="text-yellow">
-                                            <i class="icon fa fa-warning"></i>
+                                            <i class="icon fas fa-exclamation-triangle"></i>
                                             @if (warning.DontEncode)
                                             {
                                                 @Html.Raw(warning.Text)
@@ -63,7 +63,7 @@
                                 case SystemWarningLevel.Fail:
                                     {
                                         <p class="text-red">
-                                            <i class="icon fa fa-ban"></i>
+                                            <i class="icon fas fa-ban"></i>
                                             @if (warning.DontEncode)
                                             {
                                                 @Html.Raw(warning.Text)

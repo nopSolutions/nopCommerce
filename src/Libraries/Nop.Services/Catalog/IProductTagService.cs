@@ -68,8 +68,16 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Number of products</returns>
-        Task<int> GetProductCountAsync(int productTagId, int storeId, bool showHidden = false);
+        Task<int> GetProductCountByProductTagIdAsync(int productTagId, int storeId, bool showHidden = false);
 
+        /// <summary>
+        /// Get product count for every linked tag
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Dictionary of "product tag ID : product count"</returns>
+        Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden = false);
+        
         /// <summary>
         /// Update product tags
         /// </summary>

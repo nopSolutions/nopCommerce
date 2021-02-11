@@ -78,6 +78,13 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
+                if (context.HttpContext.Request == null)
+                    return;
+
+                //only in POST requests
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
@@ -87,13 +94,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //whether to ignore this filter
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (context.HttpContext.Request == null)
-                    return;
-
-                //only in POST requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
                 //model received event
@@ -115,6 +115,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
+                if (context.HttpContext.Request == null)
+                    return;
+
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
@@ -124,9 +127,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //whether to ignore this filter
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (context.HttpContext.Request == null)
                     return;
 
                 //model prepared event

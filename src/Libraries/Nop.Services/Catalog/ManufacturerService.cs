@@ -237,7 +237,7 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturers</returns>
         public virtual async Task<IList<Manufacturer>> GetManufacturersByIdsAsync(int[] manufacturerIds)
         {
-            return await _manufacturerRepository.GetByIdsAsync(manufacturerIds);
+            return await _manufacturerRepository.GetByIdsAsync(manufacturerIds, includeDeleted: false);
         }
 
         /// <summary>

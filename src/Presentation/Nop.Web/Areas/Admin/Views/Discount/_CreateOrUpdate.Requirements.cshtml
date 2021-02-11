@@ -189,13 +189,13 @@
                 <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{>DiscountRequirementId}}">
                     <div class="requirement-heading clearfix">
                         {{if IsGroup}}
-                        <span class="pull-left margin-r-5">
+                        <span class="float-left margin-r-5">
                             @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
                             <i>{{:RuleName}}</i>
                         </span>
-                        <div class="interaction-type pull-left clearfix">
-                            <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
-                            <select class="form-control input-sm pull-left" id="interactiontype{{>DiscountRequirementId}}" 
+                        <div class="interaction-type float-left clearfix">
+                            <span class="float-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
+                            <select class="form-control input-sm float-left" id="interactiontype{{>DiscountRequirementId}}" 
                                     name="interactiontype{{>DiscountRequirementId}}" 
                                     onchange="changeInteraction({{> DiscountRequirementId}}, {{if ParentId}} {{>ParentId}} {{else}} null {{/if}}, this.value)">
                                 {{for AvailableInteractionTypes}}
@@ -208,14 +208,14 @@
                             </select>
                         </div>
                         {{else}}
-                        <div class="pull-left">
+                        <div class="float-left">
                             @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
                             <i>{{:RuleName}}</i>
                         </div>
                         {{/if}}
                         {{if ParentId}}
                         <button type="button" class="btn btn-link" id="deleterequirement{{>DiscountRequirementId}}" onclick="deleteRequirement({{>DiscountRequirementId}})">
-                            <i class="fa fa-trash"></i>
+                            <i class="far fa-trash-alt"></i>
                             {{if IsGroup}}
                                 @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
                             {{else}}

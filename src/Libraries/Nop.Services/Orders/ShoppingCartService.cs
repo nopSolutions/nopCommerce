@@ -654,7 +654,7 @@ namespace Nop.Services.Orders
             var cartProducts = await _productService.GetProductsByIdsAsync(productIds);
 
             return cartProducts.Where(cartProduct =>
-                !cartProduct.RequireOtherProducts &&
+                cartProduct.RequireOtherProducts &&
                 _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id)).ToList();
         }
 
@@ -1072,6 +1072,9 @@ namespace Nop.Services.Orders
             string checkoutAttributesXml, bool validateCheckoutAttributes)
         {
             var warnings = new List<string>();
+
+            if (shoppingCart.Count > _shoppingCartSettings.MaximumShoppingCartItems)
+                warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
 
             var hasStandartProducts = false;
             var hasRecurringProducts = false;

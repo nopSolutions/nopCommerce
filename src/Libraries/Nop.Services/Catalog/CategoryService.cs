@@ -631,7 +631,7 @@ namespace Nop.Services.Catalog
         /// <returns>Categories</returns>
         public virtual async Task<IList<Category>> GetCategoriesByIdsAsync(int[] categoryIds)
         {
-            return await _categoryRepository.GetByIdsAsync(categoryIds);
+            return await _categoryRepository.GetByIdsAsync(categoryIds, includeDeleted: false);
         }
         
         /// <summary>

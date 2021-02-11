@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Data;
@@ -18,6 +19,7 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<VendorNote> _vendorNoteRepository;
@@ -26,10 +28,12 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        public VendorService(IRepository<Product> productRepository,
+        public VendorService(IRepository<Customer> customerRepository,
+            IRepository<Product> productRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<VendorNote> vendorNoteRepository)
         {
+            _customerRepository = customerRepository;
             _productRepository = productRepository;
             _vendorRepository = vendorRepository;
             _vendorNoteRepository = vendorNoteRepository;
@@ -79,6 +83,22 @@ namespace Nop.Services.Vendors
                     join p in _productRepository.Table on v.Id equals p.VendorId
                     where productIds.Contains(p.Id) && !v.Deleted && v.Active
                     select v).Distinct().ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets a vendors by customers identifiers
+        /// </summary>
+        /// <param name="customerIds">Array of customer identifiers</param>
+        /// <returns>Vendors</returns>
+        public virtual async Task<IList<Vendor>> GetVendorsByCustomerIdsAsync(int[] customerIds)
+        {
+            if (customerIds is null)
+                throw new ArgumentNullException(nameof(customerIds));
+
+            return await (from v in _vendorRepository.Table
+                join c in _customerRepository.Table on v.Id equals c.VendorId
+                where customerIds.Contains(c.Id) && !v.Deleted && v.Active
+                select v).Distinct().ToListAsync();
         }
 
         /// <summary>

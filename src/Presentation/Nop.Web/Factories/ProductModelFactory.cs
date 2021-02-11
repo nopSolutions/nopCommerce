@@ -584,16 +584,18 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = await 
-                (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id))
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var productsTags = await _productTagService.GetAllProductTagsByProductIdAsync(product.Id);
+
+            var model = await productsTags
                     //filter by store
-                    .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
+                    .WhereAwait(async x => await _productTagService.GetProductCountByProductTagIdAsync(x.Id, store.Id) > 0)
                     .SelectAwait(async x => new ProductTagModel
                     {
                         Id = x.Id,
                         Name = await _localizationService.GetLocalizedAsync(x, y => y.Name),
                         SeName = await _urlRecordService.GetSeNameAsync(x),
-                        ProductCount = await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id)
+                        ProductCount = await _productTagService.GetProductCountByProductTagIdAsync(x.Id, store.Id)
                     }).ToListAsync();
 
             return model;
@@ -1239,7 +1241,8 @@ namespace Nop.Web.Factories
                 StockAvailability = await _productService.FormatStockMessageAsync(product, string.Empty),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
-                AvailableEndDate = product.AvailableEndDateTimeUtc
+                AvailableEndDate = product.AvailableEndDateTimeUtc,
+                VisibleIndividually = product.VisibleIndividually
             };
 
             //automatically generate product description?

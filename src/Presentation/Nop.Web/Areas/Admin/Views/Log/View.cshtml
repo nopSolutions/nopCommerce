@@ -9,16 +9,16 @@
 
 <form asp-controller="Log" asp-action="View" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.System.Log.ViewLogDetails")
             <small>
-                <i class="fa fa-arrow-circle-left"></i>
+                <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.System.Log.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <span id="log-delete" class="btn btn-danger">
-                <i class="fa fa-trash-o"></i>
+                <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LogDetailsButtons, additionalData = Model })

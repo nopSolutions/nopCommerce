@@ -351,7 +351,7 @@ namespace Nop.Services.Localization
             };
 
             await using var stream = new MemoryStream();
-            using var xmlWriter = XmlWriter.Create(stream, settings);
+            await using var xmlWriter = XmlWriter.Create(stream, settings);
             
             await xmlWriter.WriteStartDocumentAsync();
             await xmlWriter.WriteStartElementAsync("Language");

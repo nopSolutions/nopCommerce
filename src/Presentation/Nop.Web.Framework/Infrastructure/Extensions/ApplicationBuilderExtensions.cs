@@ -14,7 +14,6 @@ using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -55,34 +54,26 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //initialize and start schedule tasks
                 Services.Tasks.TaskManager.Instance.Initialize();
                 Services.Tasks.TaskManager.Instance.Start();
+
                 //log application start
                 engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
 
+                //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();
-
-                //install plugins
                 pluginService.InstallPluginsAsync().Wait();
-
-                //update plugins
                 pluginService.UpdatePluginsAsync().Wait();
 
-                //update nopCommerce core
+                //update nopCommerce core and db
                 var migrationManager = engine.Resolve<IMigrationManager>();
                 var assembly = Assembly.GetAssembly(typeof(ApplicationBuilderExtensions));
                 migrationManager.ApplyUpMigrations(assembly, true);
-                //update nopCommerce database
                 assembly = Assembly.GetAssembly(typeof(IMigrationManager));
                 migrationManager.ApplyUpMigrations(assembly, true);
 
 #if DEBUG
-
-                if (!DataSettingsManager.IsDatabaseInstalled())
-                    return;
-
                 //prevent save the update migrations into the DB during the developing process  
                 var versions = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
                 versions.DeleteAsync(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
-
 #endif
             }
         }
@@ -211,8 +202,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopResponseCompression(this IApplicationBuilder application)
         {
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return;
+            
             //whether to use compression (gzip by default)
-            if (DataSettingsManager.IsDatabaseInstalled() && EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
+            if (EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
                 application.UseResponseCompression();
         }
 
@@ -222,17 +216,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopStaticFiles(this IApplicationBuilder application)
         {
-            static void staticFileResponse(StaticFileResponseContext context)
-            {
-                if (!DataSettingsManager.IsDatabaseInstalled())
-                    return;
-
-                var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
-                if (!string.IsNullOrEmpty(commonSettings.StaticFilesCacheControl))
-                    context.Context.Response.Headers.Append(HeaderNames.CacheControl, commonSettings.StaticFilesCacheControl);
-            }
-
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            var appSettings = EngineContext.Current.Resolve<AppSettings>();
+
+            void staticFileResponse(StaticFileResponseContext context)
+            {
+                if (!string.IsNullOrEmpty(appSettings.CommonConfig.StaticFilesCacheControl))
+                    context.Context.Response.Headers.Append(HeaderNames.CacheControl, appSettings.CommonConfig.StaticFilesCacheControl);
+            }
 
             //common static files
             application.UseStaticFiles(new StaticFileOptions { OnPrepareResponse = staticFileResponse });
@@ -253,24 +244,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 OnPrepareResponse = staticFileResponse
             };
 
-            if (DataSettingsManager.IsDatabaseInstalled())
+            //exclude files in blacklist
+            if (!string.IsNullOrEmpty(appSettings.CommonConfig.PluginStaticFileExtensionsBlacklist))
             {
-                var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
-                if (!string.IsNullOrEmpty(securitySettings.PluginStaticFileExtensionsBlacklist))
+                var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
+                foreach (var ext in appSettings.CommonConfig.PluginStaticFileExtensionsBlacklist
+                    .Split(';', ',')
+                    .Select(e => e.Trim().ToLower())
+                    .Select(e => $"{(e.StartsWith(".") ? string.Empty : ".")}{e}")
+                    .Where(fileExtensionContentTypeProvider.Mappings.ContainsKey))
                 {
-                    var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
-
-                    foreach (var ext in securitySettings.PluginStaticFileExtensionsBlacklist
-                        .Split(';', ',')
-                        .Select(e => e.Trim().ToLower())
-                        .Select(e => $"{(e.StartsWith(".") ? string.Empty : ".")}{e}")
-                        .Where(fileExtensionContentTypeProvider.Mappings.ContainsKey))
-                    {
-                        fileExtensionContentTypeProvider.Mappings.Remove(ext);
-                    }
-
-                    staticFileOptions.ContentTypeProvider = fileExtensionContentTypeProvider;
+                    fileExtensionContentTypeProvider.Mappings.Remove(ext);
                 }
+
+                staticFileOptions.ContentTypeProvider = fileExtensionContentTypeProvider;
             }
 
             application.UseStaticFiles(staticFileOptions);
@@ -368,9 +356,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopEndpoints(this IApplicationBuilder application)
         {
-            //Add the EndpointRoutingMiddleware
-            application.UseRouting();
-
             //Execute the endpoint selected by the routing middleware
             application.UseEndpoints(endpoints =>
             {

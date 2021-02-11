@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -27,7 +29,8 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
 
         private readonly GoogleAuthenticatorService _googleAuthenticatorService;
         private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
-        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;        
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -41,6 +44,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
 
         public GoogleAuthenticatorController(GoogleAuthenticatorService googleAuthenticatorService,
             GoogleAuthenticatorSettings googleAuthenticatorSettings,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INotificationService notificationService,
@@ -51,6 +55,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         {
             _googleAuthenticatorService = googleAuthenticatorService;
             _googleAuthenticatorSettings = googleAuthenticatorSettings;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _notificationService = notificationService;
@@ -134,6 +139,11 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
             {
                 await _googleAuthenticatorService.DeleteConfigurationAsync(configuration);
             }
+            var customer = await _customerService.GetCustomerByEmailAsync(configuration.Customer) ??
+                await _customerService.GetCustomerByUsernameAsync(configuration.Customer);
+
+            if (customer != null)
+                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
 
             return new NullJsonResult();
         }

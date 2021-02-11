@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Nop.Tests.Nop.Web.Tests
@@ -21,8 +20,8 @@ namespace Nop.Tests.Nop.Web.Tests
         /// <summary>
         /// Configure the DI container 
         /// </summary>
-        /// <param name="builder">Container builder</param>
-        public void ConfigureContainer(ContainerBuilder builder)
+        /// <param name="services">Collection of service descriptors</param>
+        public void ConfigureContainer(IServiceCollection services)
         {
             
         }

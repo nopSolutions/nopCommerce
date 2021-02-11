@@ -64,6 +64,14 @@ namespace Nop.Data
         Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
+        /// Updates records in table, using values from entity parameter. 
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+
+        /// <summary>
         /// Deletes record in table. Record to delete identified
         /// by match on primary key value from obj value.
         /// </summary>

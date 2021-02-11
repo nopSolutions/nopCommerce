@@ -15,13 +15,13 @@
 
 <form asp-controller="Order" asp-action="ShipmentList" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Orders.Shipments.List")
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <div class="btn-group">
                 <button type="button" class="btn btn-info">
-                    <i class="fa fa-file-pdf-o"></i>
+                    <i class="far fa-file-pdf"></i>
                     @T("Admin.Orders.Shipments.PrintPackagingSlips")
                 </button>
                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -42,11 +42,11 @@
                 </ul>
             </div>
             <button type="button" id="ship-selected" class="btn btn-primary">
-                <i class="fa fa-truck"></i>
+                <i class="fas fa-truck"></i>
                 @T("Admin.Orders.Shipments.ShipSelected")
             </button>
             <button type="button" id="deliver-selected" class="btn btn-success">
-                <i class="fa fa-check-square-o"></i>
+                <i class="fas fa-check-square"></i>
                 @T("Admin.Orders.Shipments.DeliverySelected")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentListButtons })
@@ -61,8 +61,8 @@
                             <div class="card-body">
                                 <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                                     <div class="search-text">@T("Admin.Common.Search")</div>
-                                    <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                                    <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                                    <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                    <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                                 </div>
 
                                 <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -155,7 +155,7 @@
                                     <div class="row">
                                         <div class="text-center col-12">
                                             <button type="button" id="search-shipments" class="btn btn-primary btn-search">
-                                                <i class="fa fa-search"></i>
+                                                <i class="fas fa-search"></i>
                                                 @T("Admin.Common.Search")
                                             </button>
                                         </div>

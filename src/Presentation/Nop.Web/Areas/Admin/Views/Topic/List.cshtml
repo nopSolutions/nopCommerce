@@ -1,24 +1,35 @@
 @model TopicSearchModel
+@inject Nop.Services.Topics.ITopicService topicService
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Topics").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.TopicList;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Topics");
-}
 
-@{
+    string editQueryString = string.Empty;
+    var showTour = ViewBag.ShowTour ?? false;
+    if (showTour)
+    {
+        editQueryString = "?showtour=true";
+    }
+
     const string hideSearchBlockAttributeName = "TopicsPage.HideSearchBlock";
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
+@await Html.PartialAsync("_AdminTour")
+
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.ContentManagement.Topics")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicListButtons })
@@ -33,8 +44,8 @@
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -61,7 +72,7 @@
                         <div class="row">
                             <div class="col-md-8 offset-md-4">
                                 <button type="button" id="search-topics" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fas fa-search"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -71,10 +82,11 @@
             </div>
 
             <div class="card card-default">
-                <div class="card-body">
+                <div class="card-body" id="topics-area">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "topics-grid",
+                        RowIdBasedOnField = nameof(TopicModel.TopicName),
                         UrlRead = new DataUrl("List", "Topic", null),
                         SearchButtonId = "search-topics",
                         Length = Model.PageSize,
@@ -122,7 +134,7 @@
                             {
                                 Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
                                 Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll + " column-footer-column1",
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
@@ -149,8 +161,8 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                ClassName = NopColumnClassDefaults.Button + " column-edit",
+                                Render = new RenderCustom("renderColumnEdit")
                             }
                         }
                     })
@@ -160,3 +172,9 @@
     </div>
 </div>
 </section>
+
+<script>
+    function renderColumnEdit(data, type, row, meta) {
+        return '<a href="@Url.Content("~/Admin/Topic/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
+    }
+</script>

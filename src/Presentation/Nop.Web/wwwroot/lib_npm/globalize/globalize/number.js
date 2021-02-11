@@ -1,5 +1,5 @@
 /**
- * Globalize v1.4.3
+ * Globalize v1.6.0
  *
  * http://github.com/jquery/globalize
  *
@@ -7,10 +7,10 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2020-03-19T12:34Z
+ * Date: 2020-09-08T11:54Z
  */
 /*!
- * Globalize v1.4.3 2020-03-19T12:34Z Released under the MIT license
+ * Globalize v1.6.0 2020-09-08T11:54Z Released under the MIT license
  * http://git.io/TrdQbw
  */
 (function( root, factory ) {
@@ -37,6 +37,8 @@
 }(this, function( Cldr, Globalize ) {
 
 var createError = Globalize._createError,
+	partsJoin = Globalize._partsJoin,
+	partsPush = Globalize._partsPush,
 	regexpEscape = Globalize._regexpEscape,
 	runtimeBind = Globalize._runtimeBind,
 	stringPad = Globalize._stringPad,
@@ -81,447 +83,9 @@ var validateParameterTypeString = function( value, name ) {
 
 
 
-/**
- * EBNF representation:
- *
- * compact_pattern_re =       prefix?
- *                            number_pattern_re
- *                            suffix?
- *
- * number_pattern_re =        0+
- *
- * Regexp groups:
- *
- *  0: compact_pattern_re
- *  1: prefix
- *  2: number_pattern_re (the number pattern to use in compact mode)
- *  3: suffix
- */
-var numberCompactPatternRe = ( /^([^0]*)(0+)([^0]*)$/ );
-
-
-
-
-/**
- * goupingSeparator( number, primaryGroupingSize, secondaryGroupingSize )
- *
- * @number [Number].
- *
- * @primaryGroupingSize [Number]
- *
- * @secondaryGroupingSize [Number]
- *
- * Return the formatted number with group separator.
- */
-var numberFormatGroupingSeparator = function( number, primaryGroupingSize, secondaryGroupingSize ) {
-	var index,
-		currentGroupingSize = primaryGroupingSize,
-		ret = "",
-		sep = ",",
-		switchToSecondary = secondaryGroupingSize ? true : false;
-
-	number = String( number ).split( "." );
-	index = number[ 0 ].length;
-
-	while ( index > currentGroupingSize ) {
-		ret = number[ 0 ].slice( index - currentGroupingSize, index ) +
-			( ret.length ? sep : "" ) + ret;
-		index -= currentGroupingSize;
-		if ( switchToSecondary ) {
-			currentGroupingSize = secondaryGroupingSize;
-			switchToSecondary = false;
-		}
-	}
-
-	number[ 0 ] = number[ 0 ].slice( 0, index ) + ( ret.length ? sep : "" ) + ret;
-	return number.join( "." );
-};
-
-
-
-
-/**
- * integerFractionDigits( number, minimumIntegerDigits, minimumFractionDigits,
- * maximumFractionDigits, round, roundIncrement )
- *
- * @number [Number]
- *
- * @minimumIntegerDigits [Number]
- *
- * @minimumFractionDigits [Number]
- *
- * @maximumFractionDigits [Number]
- *
- * @round [Function]
- *
- * @roundIncrement [Function]
- *
- * Return the formatted integer and fraction digits.
- */
-var numberFormatIntegerFractionDigits = function( number, minimumIntegerDigits, minimumFractionDigits, maximumFractionDigits, round,
-	roundIncrement ) {
-
-	// Fraction
-	if ( maximumFractionDigits ) {
-
-		// Rounding
-		if ( roundIncrement ) {
-			number = round( number, roundIncrement );
-
-		// Maximum fraction digits
-		} else {
-			number = round( number, { exponent: -maximumFractionDigits } );
-		}
-
-	} else {
-		number = round( number );
-	}
-
-	number = String( number );
-
-	// Maximum integer digits (post string phase)
-	if ( maximumFractionDigits && /e-/.test( number ) ) {
-
-		// Use toFixed( maximumFractionDigits ) to make sure small numbers like 1e-7 are
-		// displayed using plain digits instead of scientific notation.
-		// 1: Remove leading decimal zeros.
-		// 2: Remove leading decimal separator.
-		// Note: String() is still preferred so it doesn't mess up with a number precision
-		// unnecessarily, e.g., (123456789.123).toFixed(10) === "123456789.1229999959",
-		// String(123456789.123) === "123456789.123".
-		number = ( +number ).toFixed( maximumFractionDigits )
-			.replace( /0+$/, "" ) /* 1 */
-			.replace( /\.$/, "" ) /* 2 */;
-	}
-
-	// Minimum fraction digits (post string phase)
-	if ( minimumFractionDigits ) {
-		number = number.split( "." );
-		number[ 1 ] = stringPad( number[ 1 ] || "", minimumFractionDigits, true );
-		number = number.join( "." );
-	}
-
-	// Minimum integer digits
-	if ( minimumIntegerDigits ) {
-		number = number.split( "." );
-		number[ 0 ] = stringPad( number[ 0 ], minimumIntegerDigits );
-		number = number.join( "." );
-	}
-
-	return number;
-};
-
-
-
-
-/**
- * toPrecision( number, precision, round )
- *
- * @number (Number)
- *
- * @precision (Number) significant figures precision (not decimal precision).
- *
- * @round (Function)
- *
- * Return number.toPrecision( precision ) using the given round function.
- */
-var numberToPrecision = function( number, precision, round ) {
-	var roundOrder;
-
-	if ( number === 0 ) {  // Fix #706
-		return number;
-	}
-
-	roundOrder = Math.ceil( Math.log( Math.abs( number ) ) / Math.log( 10 ) );
-	roundOrder -= precision;
-
-	return round( number, { exponent: roundOrder } );
-};
-
-
-
-
-/**
- * toPrecision( number, minimumSignificantDigits, maximumSignificantDigits, round )
- *
- * @number [Number]
- *
- * @minimumSignificantDigits [Number]
- *
- * @maximumSignificantDigits [Number]
- *
- * @round [Function]
- *
- * Return the formatted significant digits number.
- */
-var numberFormatSignificantDigits = function( number, minimumSignificantDigits, maximumSignificantDigits, round ) {
-	var atMinimum, atMaximum;
-
-	// Sanity check.
-	if ( minimumSignificantDigits > maximumSignificantDigits ) {
-		maximumSignificantDigits = minimumSignificantDigits;
-	}
-
-	atMinimum = numberToPrecision( number, minimumSignificantDigits, round );
-	atMaximum = numberToPrecision( number, maximumSignificantDigits, round );
-
-	// Use atMaximum only if it has more significant digits than atMinimum.
-	number = +atMinimum === +atMaximum ? atMinimum : atMaximum;
-
-	// Expand integer numbers, eg. 123e5 to 12300.
-	number = ( +number ).toString( 10 );
-
-	if ( ( /e/ ).test( number ) ) {
-		throw createErrorUnsupportedFeature({
-			feature: "integers out of (1e21, 1e-7)"
-		});
-	}
-
-	// Add trailing zeros if necessary.
-	if ( minimumSignificantDigits - number.replace( /^0+|\./g, "" ).length > 0 ) {
-		number = number.split( "." );
-		number[ 1 ] = stringPad( number[ 1 ] || "", minimumSignificantDigits - number[ 0 ].replace( /^0+/, "" ).length, true );
-		number = number.join( "." );
-	}
-
-	return number;
-};
-
-
-
-
-/**
- * EBNF representation:
- *
- * number_pattern_re =        prefix?
- *                            padding?
- *                            (integer_fraction_pattern | significant_pattern)
- *                            scientific_notation?
- *                            suffix?
- *
- * prefix =                   non_number_stuff
- *
- * padding =                  "*" regexp(.)
- *
- * integer_fraction_pattern = integer_pattern
- *                            fraction_pattern?
- *
- * integer_pattern =          regexp([#,]*[0,]*0+)
- *
- * fraction_pattern =         "." regexp(0*[0-9]*#*)
- *
- * significant_pattern =      regexp([#,]*@+#*)
- *
- * scientific_notation =      regexp(E\+?0+)
- *
- * suffix =                   non_number_stuff
- *
- * non_number_stuff =         regexp(('[^']+'|''|[^*#@0,.E])*)
- *
- *
- * Regexp groups:
- *
- *  0: number_pattern_re
- *  1: prefix
- *  2: -
- *  3: -
- *  4: padding
- *  5: (integer_fraction_pattern | significant_pattern)
- *  6: integer_fraction_pattern
- *  7: integer_pattern
- *  8: fraction_pattern
- *  9: significant_pattern
- * 10: scientific_notation
- * 11: suffix
- * 12: -
- */
-var numberPatternRe = ( /^(('([^']|'')*'|[^*#@0,.E])*)(\*.)?((([#,]*[0,]*0+)(\.0*[0-9]*#*)?)|([#,]*@+#*))(E\+?0+)?(('[^']+'|''|[^*#@0,.E])*)$/ );
-
-
-
-
-/**
- * removeLiteralQuotes( string )
- *
- * Return:
- * - `'` if input string is `''`.
- * - `o'clock` if input string is `'o''clock'`.
- * - `foo` if input string is `foo`, i.e., return the same value in case it isn't a single-quoted
- *   string.
- */
-var removeLiteralQuotes = function( string ) {
-	if ( string[ 0 ] + string[ string.length - 1 ] !== "''" ) {
-		return string;
-	}
-	if ( string === "''" ) {
-		return "'";
-	}
-	return string.replace( /''/g, "'" ).slice( 1, -1 );
-};
-
-
-
-
-/**
- * format( number, properties )
- *
- * @number [Number].
- *
- * @properties [Object] Output of number/format-properties.
- *
- * Return the formatted number.
- * ref: http://www.unicode.org/reports/tr35/tr35-numbers.html
- */
-var numberFormat = function( number, properties, pluralGenerator ) {
-	var compactMap, infinitySymbol, maximumFractionDigits, maximumSignificantDigits,
-	minimumFractionDigits, minimumIntegerDigits, minimumSignificantDigits, nanSymbol, nuDigitsMap,
-	padding, prefix, primaryGroupingSize, pattern, ret, round, roundIncrement,
-	secondaryGroupingSize, suffix, symbolMap;
-
-	padding = properties[ 1 ];
-	minimumIntegerDigits = properties[ 2 ];
-	minimumFractionDigits = properties[ 3 ];
-	maximumFractionDigits = properties[ 4 ];
-	minimumSignificantDigits = properties[ 5 ];
-	maximumSignificantDigits = properties[ 6 ];
-	roundIncrement = properties[ 7 ];
-	primaryGroupingSize = properties[ 8 ];
-	secondaryGroupingSize = properties[ 9 ];
-	round = properties[ 15 ];
-	infinitySymbol = properties[ 16 ];
-	nanSymbol = properties[ 17 ];
-	symbolMap = properties[ 18 ];
-	nuDigitsMap = properties[ 19 ];
-	compactMap = properties[ 20 ];
-
-	// NaN
-	if ( isNaN( number ) ) {
-		return nanSymbol;
-	}
-
-	if ( number < 0 ) {
-		pattern = properties[ 12 ];
-		prefix = properties[ 13 ];
-		suffix = properties[ 14 ];
-	} else {
-		pattern = properties[ 11 ];
-		prefix = properties[ 0 ];
-		suffix = properties[ 10 ];
-	}
-
-	// Infinity
-	if ( !isFinite( number ) ) {
-		return prefix + infinitySymbol + suffix;
-	}
-
-	// Percent
-	if ( pattern.indexOf( "%" ) !== -1 ) {
-		number *= 100;
-
-	// Per mille
-	} else if ( pattern.indexOf( "\u2030" ) !== -1 ) {
-		number *= 1000;
-	}
-
-	var compactPattern, compactDigits, compactProperties, divisor, numberExponent, pluralForm;
-
-	// Compact mode: initial number digit processing
-	if ( compactMap ) {
-		numberExponent = Math.abs( Math.floor( number ) ).toString().length - 1;
-		numberExponent = Math.min( numberExponent, compactMap.maxExponent );
-
-		// Use default plural form to perform initial decimal shift
-		if ( numberExponent >= 3 ) {
-			compactPattern = compactMap[ numberExponent ] && compactMap[ numberExponent ].other;
-		}
-
-		if ( compactPattern === "0" ) {
-			compactPattern = null;
-		} else if ( compactPattern ) {
-			compactDigits = compactPattern.split( "0" ).length - 1;
-			divisor = numberExponent - ( compactDigits - 1 );
-			number = number / Math.pow( 10, divisor );
-		}
-	}
-
-	// Significant digit format
-	if ( !isNaN( minimumSignificantDigits * maximumSignificantDigits ) ) {
-		number = numberFormatSignificantDigits( number, minimumSignificantDigits,
-			maximumSignificantDigits, round );
-
-	// Integer and fractional format
-	} else {
-		number = numberFormatIntegerFractionDigits( number, minimumIntegerDigits,
-			minimumFractionDigits, maximumFractionDigits, round, roundIncrement );
-	}
-
-	// Compact mode: apply formatting
-	if ( compactMap && compactPattern ) {
-
-		// Get plural form after possible roundings
-		pluralForm = pluralGenerator ? pluralGenerator( +number ) : "other";
-
-		compactPattern = compactMap[ numberExponent ][ pluralForm ] || compactPattern;
-		compactProperties = compactPattern.match( numberCompactPatternRe );
-
-		// update prefix/suffix with compact prefix/suffix
-		prefix += compactProperties[ 1 ];
-		suffix = compactProperties[ 3 ] + suffix;
-	}
-
-	// Remove the possible number minus sign
-	number = number.replace( /^-/, "" );
-
-	// Grouping separators
-	if ( primaryGroupingSize ) {
-		number = numberFormatGroupingSeparator( number, primaryGroupingSize,
-			secondaryGroupingSize );
-	}
-
-	ret = prefix;
-
-	ret += number;
-
-	// Scientific notation
-	// TODO implement here
-
-	// Padding/'([^']|'')+'|''|[.,\-+E%\u2030]/g
-	// TODO implement here
-
-	ret += suffix;
-
-	return ret.replace( /('([^']|'')+'|'')|./g, function( character, literal ) {
-
-		// Literals
-		if ( literal ) {
-			return removeLiteralQuotes( literal );
-		}
-
-		// Symbols
-		character = character.replace( /[.,\-+E%\u2030]/, function( symbol ) {
-			return symbolMap[ symbol ];
-		});
-
-		// Numbering system
-		if ( nuDigitsMap ) {
-			character = character.replace( /[0-9]/, function( digit ) {
-				return nuDigitsMap[ +digit ];
-			});
-		}
-
-		return character;
-	});
-};
-
-
-
-
-var numberFormatterFn = function( properties, pluralGenerator ) {
+var numberFormatterFn = function( numberToPartsFormatter ) {
 	return function numberFormatter( value ) {
-		validateParameterPresence( value, "value" );
-		validateParameterTypeNumber( value, "value" );
-
-		return numberFormat( value, properties, pluralGenerator );
+		return partsJoin( numberToPartsFormatter( value ));
 	};
 };
 
@@ -618,6 +182,56 @@ var numberNumberingSystemDigitsMap = function( cldr ) {
 
 	return aux._digits;
 };
+
+
+
+
+/**
+ * EBNF representation:
+ *
+ * number_pattern_re =        prefix?
+ *                            padding?
+ *                            (integer_fraction_pattern | significant_pattern)
+ *                            scientific_notation?
+ *                            suffix?
+ *
+ * prefix =                   non_number_stuff
+ *
+ * padding =                  "*" regexp(.)
+ *
+ * integer_fraction_pattern = integer_pattern
+ *                            fraction_pattern?
+ *
+ * integer_pattern =          regexp([#,]*[0,]*0+)
+ *
+ * fraction_pattern =         "." regexp(0*[0-9]*#*)
+ *
+ * significant_pattern =      regexp([#,]*@+#*)
+ *
+ * scientific_notation =      regexp(E\+?0+)
+ *
+ * suffix =                   non_number_stuff
+ *
+ * non_number_stuff =         regexp(('[^']+'|''|[^*#@0,.E])*)
+ *
+ *
+ * Regexp groups:
+ *
+ *  0: number_pattern_re
+ *  1: prefix
+ *  2: -
+ *  3: -
+ *  4: padding
+ *  5: (integer_fraction_pattern | significant_pattern)
+ *  6: integer_fraction_pattern
+ *  7: integer_pattern
+ *  8: fraction_pattern
+ *  9: significant_pattern
+ * 10: scientific_notation
+ * 11: suffix
+ * 12: -
+ */
+var numberPatternRe = ( /^(('([^']|'')*'|[^*#@0,.E])*)(\*.)?((([#,]*[0,]*0+)(\.0*[0-9]*#*)?)|([#,]*@+#*))(E\+?0+)?(('[^']+'|''|[^*#@0,.E])*)$/ );
 
 
 
@@ -1275,6 +889,28 @@ var objectMap = function( object, fn ) {
 
 
 /**
+ * removeLiteralQuotes( string )
+ *
+ * Return:
+ * - `'` if input string is `''`.
+ * - `o'clock` if input string is `'o''clock'`.
+ * - `foo` if input string is `foo`, i.e., return the same value in case it isn't a single-quoted
+ *   string.
+ */
+var removeLiteralQuotes = function( string ) {
+	if ( string[ 0 ] + string[ string.length - 1 ] !== "''" ) {
+		return string;
+	}
+	if ( string === "''" ) {
+		return "'";
+	}
+	return string.replace( /''/g, "'" ).slice( 1, -1 );
+};
+
+
+
+
+/**
  * parseProperties( pattern, cldr )
  *
  * @pattern [String] raw pattern for numbers.
@@ -1442,6 +1078,438 @@ var numberPattern = function( style, cldr ) {
 
 
 
+/**
+ * EBNF representation:
+ *
+ * compact_pattern_re =       prefix?
+ *                            number_pattern_re
+ *                            suffix?
+ *
+ * number_pattern_re =        0+
+ *
+ * Regexp groups:
+ *
+ *  0: compact_pattern_re
+ *  1: prefix
+ *  2: number_pattern_re (the number pattern to use in compact mode)
+ *  3: suffix
+ */
+var numberCompactPatternRe = ( /^([^0]*)(0+)([^0]*)$/ );
+
+
+
+
+/**
+ * goupingSeparator( number, primaryGroupingSize, secondaryGroupingSize )
+ *
+ * @number [Number].
+ *
+ * @primaryGroupingSize [Number]
+ *
+ * @secondaryGroupingSize [Number]
+ *
+ * Return the formatted number with group separator.
+ */
+var numberFormatGroupingSeparator = function( number, primaryGroupingSize, secondaryGroupingSize ) {
+	var index,
+		currentGroupingSize = primaryGroupingSize,
+		ret = "",
+		sep = ",",
+		switchToSecondary = secondaryGroupingSize ? true : false;
+
+	number = String( number ).split( "." );
+	index = number[ 0 ].length;
+
+	while ( index > currentGroupingSize ) {
+		ret = number[ 0 ].slice( index - currentGroupingSize, index ) +
+			( ret.length ? sep : "" ) + ret;
+		index -= currentGroupingSize;
+		if ( switchToSecondary ) {
+			currentGroupingSize = secondaryGroupingSize;
+			switchToSecondary = false;
+		}
+	}
+
+	number[ 0 ] = number[ 0 ].slice( 0, index ) + ( ret.length ? sep : "" ) + ret;
+	return number.join( "." );
+};
+
+
+
+
+/**
+ * integerFractionDigits( number, minimumIntegerDigits, minimumFractionDigits,
+ * maximumFractionDigits, round, roundIncrement )
+ *
+ * @number [Number]
+ *
+ * @minimumIntegerDigits [Number]
+ *
+ * @minimumFractionDigits [Number]
+ *
+ * @maximumFractionDigits [Number]
+ *
+ * @round [Function]
+ *
+ * @roundIncrement [Function]
+ *
+ * Return the formatted integer and fraction digits.
+ */
+var numberFormatIntegerFractionDigits = function( number, minimumIntegerDigits, minimumFractionDigits, maximumFractionDigits, round,
+	roundIncrement ) {
+
+	// Fraction
+	if ( maximumFractionDigits ) {
+
+		// Rounding
+		if ( roundIncrement ) {
+			number = round( number, roundIncrement );
+
+		// Maximum fraction digits
+		} else {
+			number = round( number, { exponent: -maximumFractionDigits } );
+		}
+
+	} else {
+		number = round( number );
+	}
+
+	number = String( number );
+
+	// Maximum integer digits (post string phase)
+	if ( maximumFractionDigits && /e-/.test( number ) ) {
+
+		// Use toFixed( maximumFractionDigits ) to make sure small numbers like 1e-7 are
+		// displayed using plain digits instead of scientific notation.
+		// 1: Remove leading decimal zeros.
+		// 2: Remove leading decimal separator.
+		// Note: String() is still preferred so it doesn't mess up with a number precision
+		// unnecessarily, e.g., (123456789.123).toFixed(10) === "123456789.1229999959",
+		// String(123456789.123) === "123456789.123".
+		number = ( +number ).toFixed( maximumFractionDigits )
+			.replace( /0+$/, "" ) /* 1 */
+			.replace( /\.$/, "" ) /* 2 */;
+	}
+
+	// Minimum fraction digits (post string phase)
+	if ( minimumFractionDigits ) {
+		number = number.split( "." );
+		number[ 1 ] = stringPad( number[ 1 ] || "", minimumFractionDigits, true );
+		number = number.join( "." );
+	}
+
+	// Minimum integer digits
+	if ( minimumIntegerDigits ) {
+		number = number.split( "." );
+		number[ 0 ] = stringPad( number[ 0 ], minimumIntegerDigits );
+		number = number.join( "." );
+	}
+
+	return number;
+};
+
+
+
+
+/**
+ * toPrecision( number, precision, round )
+ *
+ * @number (Number)
+ *
+ * @precision (Number) significant figures precision (not decimal precision).
+ *
+ * @round (Function)
+ *
+ * Return number.toPrecision( precision ) using the given round function.
+ */
+var numberToPrecision = function( number, precision, round ) {
+	var roundOrder;
+
+	if ( number === 0 ) {  // Fix #706
+		return number;
+	}
+
+	roundOrder = Math.ceil( Math.log( Math.abs( number ) ) / Math.log( 10 ) );
+	roundOrder -= precision;
+
+	return round( number, { exponent: roundOrder } );
+};
+
+
+
+
+/**
+ * toPrecision( number, minimumSignificantDigits, maximumSignificantDigits, round )
+ *
+ * @number [Number]
+ *
+ * @minimumSignificantDigits [Number]
+ *
+ * @maximumSignificantDigits [Number]
+ *
+ * @round [Function]
+ *
+ * Return the formatted significant digits number.
+ */
+var numberFormatSignificantDigits = function( number, minimumSignificantDigits, maximumSignificantDigits, round ) {
+	var atMinimum, atMaximum;
+
+	// Sanity check.
+	if ( minimumSignificantDigits > maximumSignificantDigits ) {
+		maximumSignificantDigits = minimumSignificantDigits;
+	}
+
+	atMinimum = numberToPrecision( number, minimumSignificantDigits, round );
+	atMaximum = numberToPrecision( number, maximumSignificantDigits, round );
+
+	// Use atMaximum only if it has more significant digits than atMinimum.
+	number = +atMinimum === +atMaximum ? atMinimum : atMaximum;
+
+	// Expand integer numbers, eg. 123e5 to 12300.
+	number = ( +number ).toString( 10 );
+
+	if ( ( /e/ ).test( number ) ) {
+		throw createErrorUnsupportedFeature({
+			feature: "integers out of (1e21, 1e-7)"
+		});
+	}
+
+	// Add trailing zeros if necessary.
+	if ( minimumSignificantDigits - number.replace( /^0+|\./g, "" ).length > 0 ) {
+		number = number.split( "." );
+		number[ 1 ] = stringPad( number[ 1 ] || "", minimumSignificantDigits - number[ 0 ].replace( /^0+/, "" ).length, true );
+		number = number.join( "." );
+	}
+
+	return number;
+};
+
+
+
+
+/**
+ * format( number, properties )
+ *
+ * @number [Number].
+ *
+ * @properties [Object] Output of number/format-properties.
+ *
+ * Return the formatted number.
+ * ref: http://www.unicode.org/reports/tr35/tr35-numbers.html
+ */
+var numberFormat = function( number, properties, pluralGenerator ) {
+	var aux, compactMap, infinitySymbol, maximumFractionDigits, maximumSignificantDigits,
+		minimumFractionDigits, minimumIntegerDigits, minimumSignificantDigits, nanSymbol,
+		nuDigitsMap, padding, prefix, primaryGroupingSize, pattern, round, roundIncrement,
+		secondaryGroupingSize, stringToParts, suffix, symbolMap;
+
+	padding = properties[ 1 ];
+	minimumIntegerDigits = properties[ 2 ];
+	minimumFractionDigits = properties[ 3 ];
+	maximumFractionDigits = properties[ 4 ];
+	minimumSignificantDigits = properties[ 5 ];
+	maximumSignificantDigits = properties[ 6 ];
+	roundIncrement = properties[ 7 ];
+	primaryGroupingSize = properties[ 8 ];
+	secondaryGroupingSize = properties[ 9 ];
+	round = properties[ 15 ];
+	infinitySymbol = properties[ 16 ];
+	nanSymbol = properties[ 17 ];
+	symbolMap = properties[ 18 ];
+	nuDigitsMap = properties[ 19 ];
+	compactMap = properties[ 20 ];
+
+	// NaN
+	if ( isNaN( number ) ) {
+		return [ { type: "nan", value: nanSymbol } ];
+	}
+
+	if ( number < 0 ) {
+		pattern = properties[ 12 ];
+		prefix = properties[ 13 ];
+		suffix = properties[ 14 ];
+	} else {
+		pattern = properties[ 11 ];
+		prefix = properties[ 0 ];
+		suffix = properties[ 10 ];
+	}
+
+	// For prefix, suffix, and number parts.
+	stringToParts = function( string ) {
+		var numberType = "integer",
+			parts = [];
+
+		// TODO Move the tokenization of all parts that don't depend on number into
+		// format-properties.
+		string.replace( /('([^']|'')+'|'')|./g, function( character, literal ) {
+
+			// Literals
+			if ( literal ) {
+				partsPush( parts, "literal", removeLiteralQuotes( literal ) );
+				return;
+			}
+
+			// Currency symbol
+			if ( character === "\u00A4" ) {
+				partsPush( parts, "currency", character );
+				return;
+			}
+
+			// Symbols
+			character = character.replace( /[.,\-+E%\u2030]/, function( symbol ) {
+				if ( symbol === "." ) {
+					numberType = "fraction";
+				}
+				partsPush( parts, numberSymbolName[symbol], symbolMap[ symbol ] );
+
+				// "Erase" handled character.
+				return "";
+			});
+
+			// Number
+			character = character.replace( /[0-9]/, function( digit ) {
+
+				// Numbering system
+				if ( nuDigitsMap ) {
+					digit = nuDigitsMap[ +digit ];
+				}
+				partsPush( parts, numberType, digit );
+
+				// "Erase" handled character.
+				return "";
+			});
+
+			// Etc
+			character.replace( /./, function( etc ) {
+				partsPush( parts, "literal", etc );
+			});
+		});
+		return parts;
+	};
+
+	prefix = stringToParts( prefix );
+	suffix = stringToParts( suffix );
+
+	// Infinity
+	if ( !isFinite( number ) ) {
+		return prefix.concat(
+			{ type: "infinity", value: infinitySymbol },
+			suffix
+		);
+	}
+
+	// Percent
+	if ( pattern.indexOf( "%" ) !== -1 ) {
+		number *= 100;
+
+	// Per mille
+	} else if ( pattern.indexOf( "\u2030" ) !== -1 ) {
+		number *= 1000;
+	}
+
+	var compactPattern, compactDigits, compactProperties, divisor, numberExponent, pluralForm;
+
+	// Compact mode: initial number digit processing
+	if ( compactMap ) {
+		numberExponent = Math.abs( Math.floor( number ) ).toString().length - 1;
+		numberExponent = Math.min( numberExponent, compactMap.maxExponent );
+
+		// Use default plural form to perform initial decimal shift
+		if ( numberExponent >= 3 ) {
+			compactPattern = compactMap[ numberExponent ] && compactMap[ numberExponent ].other;
+		}
+
+		if ( compactPattern === "0" ) {
+			compactPattern = null;
+		} else if ( compactPattern ) {
+			compactDigits = compactPattern.split( "0" ).length - 1;
+			divisor = numberExponent - ( compactDigits - 1 );
+			number = number / Math.pow( 10, divisor );
+		}
+	}
+
+	// Significant digit format
+	if ( !isNaN( minimumSignificantDigits * maximumSignificantDigits ) ) {
+		number = numberFormatSignificantDigits( number, minimumSignificantDigits,
+			maximumSignificantDigits, round );
+
+	// Integer and fractional format
+	} else {
+		number = numberFormatIntegerFractionDigits( number, minimumIntegerDigits,
+			minimumFractionDigits, maximumFractionDigits, round, roundIncrement );
+	}
+
+	// Compact mode: apply formatting
+	if ( compactMap && compactPattern ) {
+
+		// Get plural form after possible roundings
+		pluralForm = pluralGenerator ? pluralGenerator( +number ) : "other";
+
+		compactPattern = compactMap[ numberExponent ][ pluralForm ] || compactPattern;
+		compactProperties = compactPattern.match( numberCompactPatternRe );
+
+		// TODO Move the tokenization of all parts that don't depend on number into
+		// format-properties.
+		aux = function( string ) {
+			var parts = [];
+			string.replace( /(\s+)|([^\s0]+)/g, function( garbage, space, compact ) {
+
+				// Literals
+				if ( space ) {
+					partsPush( parts, "literal", space );
+					return;
+				}
+
+				// Compact value
+				if ( compact ) {
+					partsPush( parts, "compact", compact );
+					return;
+				}
+			});
+			return parts;
+		};
+
+		// update prefix/suffix with compact prefix/suffix
+		prefix = prefix.concat( aux( compactProperties[ 1 ] ) );
+		suffix = aux( compactProperties[ 3 ] ).concat( suffix );
+	}
+
+	// Remove the possible number minus sign
+	number = number.replace( /^-/, "" );
+
+	// Grouping separators
+	if ( primaryGroupingSize ) {
+		number = numberFormatGroupingSeparator( number, primaryGroupingSize,
+			secondaryGroupingSize );
+	}
+
+	// Scientific notation
+	// TODO implement here
+
+	// Padding/'([^']|'')+'|''|[.,\-+E%\u2030]/g
+	// TODO implement here
+
+	return prefix.concat(
+		stringToParts( number ),
+		suffix
+	);
+};
+
+
+
+
+var numberToPartsFormatterFn = function( properties, pluralGenerator ) {
+	return function numberToPartsFormatter( value ) {
+		validateParameterPresence( value, "value" );
+		validateParameterTypeNumber( value, "value" );
+
+		return numberFormat( value, properties, pluralGenerator );
+	};
+};
+
+
+
+
 function validateDigits( properties ) {
 	var minimumIntegerDigits = properties[ 2 ],
 		minimumFractionDigits = properties[ 3 ],
@@ -1480,6 +1548,32 @@ function validateDigits( properties ) {
  */
 Globalize.numberFormatter =
 Globalize.prototype.numberFormatter = function( options ) {
+	var args, numberToPartsFormatter, returnFn;
+
+	validateParameterTypePlainObject( options, "options" );
+
+	options = options || {};
+	args = [ options ];
+
+	numberToPartsFormatter = this.numberToPartsFormatter( options );
+	returnFn = numberFormatterFn( numberToPartsFormatter );
+	runtimeBind( args, this.cldr, returnFn, [ numberToPartsFormatter ] );
+
+	return returnFn;
+};
+
+/**
+ * .numberToPartsFormatter( [options] )
+ *
+ * @options [Object]:
+ * - style: [String] "symbol" (default), "accounting", "code" or "name".
+ * - see also number/format options.
+ *
+ * Return a function that formats a number to parts according to the given options and
+ * default/instance locale.
+ */
+Globalize.numberToPartsFormatter =
+Globalize.prototype.numberToPartsFormatter = function( options ) {
 	var args, cldr, fnArgs, pattern, properties, returnFn;
 
 	validateParameterTypePlainObject( options, "options" );
@@ -1510,7 +1604,7 @@ Globalize.prototype.numberFormatter = function( options ) {
 	if ( options.compact ) {
 		fnArgs.push( this.pluralGenerator() );
 	}
-	returnFn = numberFormatterFn.apply( null, fnArgs );
+	returnFn = numberToPartsFormatterFn.apply( null, fnArgs );
 	runtimeBind( args, cldr, returnFn, fnArgs );
 
 	return returnFn;
@@ -1576,6 +1670,23 @@ Globalize.prototype.formatNumber = function( value, options ) {
 	validateParameterTypeNumber( value, "value" );
 
 	return this.numberFormatter( options )( value );
+};
+
+/**
+ * .formatNumberToParts( value [, options] )
+ *
+ * @value [Number] number to be formatted.
+ *
+ * @options [Object]: see number/format-properties.
+ *
+ * Format a number to pars according to the given options and default/instance locale.
+ */
+Globalize.formatNumberToParts =
+Globalize.prototype.formatNumberToParts = function( value, options ) {
+	validateParameterPresence( value, "value" );
+	validateParameterTypeNumber( value, "value" );
+
+	return this.numberToPartsFormatter( options )( value );
 };
 
 /**

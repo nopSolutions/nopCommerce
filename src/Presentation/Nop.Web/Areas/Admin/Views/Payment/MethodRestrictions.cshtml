@@ -9,7 +9,7 @@
 
 <form asp-controller="Payment" asp-action="MethodRestrictions" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Payment.MethodRestrictions")
         </h1>
     </div>
@@ -27,8 +27,8 @@
                                         @T("Admin.Configuration.Payment.MethodRestrictions.Description")
                                     </div>
                                     <div class="col-sm-2 col-xs-3">
-                                        <button type="submit" name="save" class="btn btn-primary pull-right">
-                                            <i class="fa fa-floppy-o"></i>
+                                        <button type="submit" name="save" class="btn btn-primary float-right">
+                                            <i class="far fa-save"></i>
                                             @T("Admin.Common.Save")
                                         </button>
                                         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentsListButtons })

@@ -8,21 +8,21 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Catalog.Attributes.SpecificationAttributes")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <a asp-action="CreateSpecificationAttributeGroup" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Buttons.AddNew")
         </a>
         <a asp-action="CreateSpecificationAttribute" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons })
         <button type="button" id="delete-selected-specification-attributes" class="btn btn-danger">
-            <i class="fa fa-trash-o"></i>
+            <i class="far fa-trash-alt"></i>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected")
         </button>
         <nop-action-confirmation asp-button-id="delete-selected-specification-attributes" />

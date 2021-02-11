@@ -297,7 +297,7 @@ namespace Nop.Services.Seo
         {
             var urlHelper = GetUrlHelper();
 
-            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
+            await using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
                 Formatting = Formatting.Indented
             };
@@ -330,7 +330,7 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual async Task WriteSitemapAsync(Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
+            await using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
                 Formatting = Formatting.Indented
             };
@@ -496,7 +496,9 @@ namespace Nop.Services.Seo
             var localizedUrls = await languages
                 .SelectAwait(async lang =>
                 {
-                    var currentUrl = urlHelper.RouteUrl(routeName, getRouteParamsAwait?.Invoke(lang.Id), await GetHttpProtocolAsync());
+                    var currentUrl = urlHelper.RouteUrl(routeName,
+                        getRouteParamsAwait != null ? await getRouteParamsAwait(lang.Id) : null,
+                        await GetHttpProtocolAsync());
 
                     if (string.IsNullOrEmpty(currentUrl))
                         return null;

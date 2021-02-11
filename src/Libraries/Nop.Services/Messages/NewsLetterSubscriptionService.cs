@@ -86,10 +86,7 @@ namespace Nop.Services.Messages
 
             //Persist
             await _subscriptionRepository.InsertAsync(newsLetterSubscription);
-
-            //Publish event
-            await _eventPublisher.EntityInsertedAsync(newsLetterSubscription);
-
+            
             //Publish the subscription event 
             if (newsLetterSubscription.Active) 
                 await PublishSubscriptionEventAsync(newsLetterSubscription, true, publishSubscriptionEvents);
@@ -116,9 +113,6 @@ namespace Nop.Services.Messages
             //Persist
             await _subscriptionRepository.UpdateAsync(newsLetterSubscription);
             
-            //Publish event
-            await _eventPublisher.EntityUpdatedAsync(newsLetterSubscription);
-
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
                 (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email))
@@ -151,9 +145,6 @@ namespace Nop.Services.Messages
 
             await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
             
-            //event notification
-            await _eventPublisher.EntityDeletedAsync(newsLetterSubscription);
-
             //Publish the unsubscribe event 
             await PublishSubscriptionEventAsync(newsLetterSubscription, false, publishSubscriptionEvents);
         }

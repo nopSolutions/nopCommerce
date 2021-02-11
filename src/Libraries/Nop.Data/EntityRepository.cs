@@ -76,6 +76,23 @@ namespace Nop.Data
             return await _staticCacheManager.GetAsync(cacheKey, getAllAsync);
         }
 
+        /// <summary>
+        /// Adds "deleted" filter to query which contains <see cref="ISoftDeletedEntity"/> entries, if its need
+        /// </summary>
+        /// <param name="query">Entity entries</param>
+        /// <param name="includeDeleted">Whether to include deleted items</param>
+        /// <returns>Entity entries</returns>
+        protected virtual IQueryable<TEntity> AddDeletedFilter(IQueryable<TEntity> query, in bool includeDeleted)
+        {
+            if (includeDeleted)
+                return query;
+
+            if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) == null)
+                return query;
+
+            return query.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
+        }
+
         #endregion
 
         #region Methods
@@ -85,15 +102,16 @@ namespace Nop.Data
         /// </summary>
         /// <param name="id">Entity entry identifier</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="ISoftDeletedEntity"/> entities)</param>
         /// <returns>Entity entry</returns>
-        public virtual async Task<TEntity> GetByIdAsync(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+        public virtual async Task<TEntity> GetByIdAsync(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             if (!id.HasValue || id == 0)
                 return null;
 
             async Task<TEntity> getEntityAsync()
             {
-                return await Table.FirstOrDefaultAsync(entity => entity.Id == Convert.ToInt32(id));
+                return await AddDeletedFilter(Table, includeDeleted).FirstOrDefaultAsync(entity => entity.Id == Convert.ToInt32(id));
             }
 
             if (getCacheKey == null)
@@ -105,24 +123,23 @@ namespace Nop.Data
 
             return await _staticCacheManager.GetAsync(cacheKey, getEntityAsync);
         }
-
+        
         /// <summary>
         /// Get entity entries by identifiers
         /// </summary>
         /// <param name="ids">Entity entry identifiers</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>Entity entries</returns>
-        public virtual async Task<IList<TEntity>> GetByIdsAsync(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+        public virtual async Task<IList<TEntity>> GetByIdsAsync(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             if (!ids?.Any() ?? true)
                 return new List<TEntity>();
 
             async Task<IList<TEntity>> getByIdsAsync()
             {
-                var query = Table;
-                if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) != null)
-                    query = Table.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
-
+                var query = AddDeletedFilter(Table, includeDeleted);
+                
                 //get entries
                 var entries = await query.Where(entry => ids.Contains(entry.Id)).ToListAsync();
 
@@ -152,13 +169,16 @@ namespace Nop.Data
         /// </summary>
         /// <param name="func">Function to select entries</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>Entity entries</returns>
         public virtual async Task<IList<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
-            Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+            Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             async Task<IList<TEntity>> getAllAsync()
             {
-                var query = func != null ? func(Table) : Table;
+                var query = AddDeletedFilter(Table, includeDeleted);
+                query = func != null ? func(query) : query;
+
                 return await query.ToListAsync();
             }
 
@@ -170,14 +190,17 @@ namespace Nop.Data
         /// </summary>
         /// <param name="func">Function to select entries</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>Entity entries</returns>
         public virtual async Task<IList<TEntity>> GetAllAsync(
             Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
-            Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+            Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
         {
             async Task<IList<TEntity>> getAllAsync()
             {
-                var query = func != null ? await func(Table) : Table;
+                var query = AddDeletedFilter(Table, includeDeleted);
+                query = func != null ? await func(query) : query;
+
                 return await query.ToListAsync();
             }
 
@@ -189,14 +212,17 @@ namespace Nop.Data
         /// </summary>
         /// <param name="func">Function to select entries</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>Entity entries</returns>
         public virtual async Task<IList<TEntity>> GetAllAsync(
             Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
-            Func<IStaticCacheManager, Task<CacheKey>> getCacheKey = null)
+            Func<IStaticCacheManager, Task<CacheKey>> getCacheKey = null, bool includeDeleted = true)
         {
             async Task<IList<TEntity>> getAllAsync()
             {
-                var query = func != null ? await func(Table) : Table;
+                var query = AddDeletedFilter(Table, includeDeleted);
+                query = func != null ? await func(query) : query;
+
                 return await query.ToListAsync();
             }
 
@@ -210,11 +236,14 @@ namespace Nop.Data
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>Paged list of entity entries</returns>
         public virtual async Task<IPagedList<TEntity>> GetAllPagedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool includeDeleted = true)
         {
-            var query = func != null ? func(Table) : Table;
+            var query = AddDeletedFilter(Table, includeDeleted);
+
+            query = func != null ? func(query) : query;
 
             return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
         }
@@ -226,11 +255,14 @@ namespace Nop.Data
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>Paged list of entity entries</returns>
         public virtual async Task<IPagedList<TEntity>> GetAllPagedAsync(Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool includeDeleted = true)
         {
-            var query = func != null ? await func(Table) : Table;
+            var query = AddDeletedFilter(Table, includeDeleted);
+
+            query = func != null ? await func(query) : query;
 
             return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
         }
@@ -316,8 +348,7 @@ namespace Nop.Data
             if (!entities.Any())
                 return;
 
-            foreach (var entity in entities)
-                await UpdateAsync(entity, publishEvent);
+            await _dataProvider.UpdateEntitiesAsync(entities);
         }
 
         /// <summary>

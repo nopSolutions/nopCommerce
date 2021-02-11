@@ -1,8 +1,14 @@
 ﻿@model Nop.Plugin.Tax.FixedOrByCountryStateZip.Models.ConfigurationModel
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     Layout = "_ConfigurePlugin";
+
+    //tour step
+    ViewBag.TourStep = TourStep.TaxManual;
 }
+
+@await Html.PartialAsync("_AdminTour")
 
 <div class="form-group row">
     <div class="col-md-12">

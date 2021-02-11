@@ -358,7 +358,7 @@ namespace Nop.Services.Customers
 
             var customersWithCarts = from c in customers
                                      join item in items on c.Id equals item.CustomerId
-                                     orderby c.Id
+                                     orderby item.CreatedOnUtc descending
                                      select c;
 
             return await customersWithCarts.Distinct().ToPagedListAsync(pageIndex, pageSize);
@@ -420,7 +420,7 @@ namespace Nop.Services.Customers
         /// <returns>Customers</returns>
         public virtual async Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds)
         {
-            return await _customerRepository.GetByIdsAsync(customerIds);
+            return await _customerRepository.GetByIdsAsync(customerIds, includeDeleted: false);
         }
 
         /// <summary>

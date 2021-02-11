@@ -9,28 +9,28 @@
 
 <form asp-controller="ReturnRequest" asp-action="Edit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.ReturnRequests.EditReturnRequestDetails")
             <small>
-                <i class="fa fa-arrow-circle-left"></i>
+                <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.ReturnRequests.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="submit" name="notify-customer" class="btn bg-aqua">
-                <i class="fa fa-envelope-o"></i>
+                <i class="fas fa-at"></i>
                 @T("Admin.ReturnRequests.NotifyCustomer")
             </button>
             <button type="submit" name="save" class="btn btn-primary">
-                <i class="fa fa-floppy-o"></i>
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
             <button type="submit" name="save-continue" class="btn btn-primary">
-                <i class="fa fa-floppy-o"></i>
+                <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
             <span id="returnrequest-delete" class="btn btn-danger">
-                <i class="fa fa-trash-o"></i>
+                <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestDetailsButtons, additionalData = Model })

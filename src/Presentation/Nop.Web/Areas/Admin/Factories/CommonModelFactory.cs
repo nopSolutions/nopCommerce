@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -30,7 +29,6 @@ using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -63,7 +61,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IComponentContext _componentContext;
+        //private readonly IComponentContext _componentContext;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
@@ -108,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IActionContextAccessor actionContextAccessor,
             IAuthenticationPluginManager authenticationPluginManager,
             IBaseAdminModelFactory baseAdminModelFactory,
-            IComponentContext componentContext,
+            //IComponentContext componentContext,
             ICurrencyService currencyService,
             ICustomerService customerService,
             INopDataProvider dataProvider,
@@ -149,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _actionContextAccessor = actionContextAccessor;
             _authenticationPluginManager = authenticationPluginManager;
             _baseAdminModelFactory = baseAdminModelFactory;
-            _componentContext = componentContext;
+            //_componentContext = componentContext;
             _currencyService = currencyService;
             _customerService = customerService;
             _dataProvider = dataProvider;
@@ -457,7 +455,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
-
+            //TODO: This code needs to be rewritten using ASP.NET Core internal dependency injection
+            /*
             //check whether there are different plugins which try to override the same interface
             var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
             var overridenServices = _componentContext.ComponentRegistry.Registrations.Where(p =>
@@ -481,7 +480,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.PluginsOverrideSameService"), overridenService.Key, assemblies)
                 });
-            }
+            }*/
         }
 
         /// <summary>

@@ -25,6 +25,13 @@ namespace Nop.Services.Vendors
         Task<IList<Vendor>> GetVendorsByProductIdsAsync(int[] productIds);
 
         /// <summary>
+        /// Gets a vendors by customers identifiers
+        /// </summary>
+        /// <param name="customerIds">Array of customer identifiers</param>
+        /// <returns>Vendors</returns>
+        Task<IList<Vendor>> GetVendorsByCustomerIdsAsync(int[] customerIds);
+
+        /// <summary>
         /// Gets a vendor by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
