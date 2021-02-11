@@ -24,9 +24,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add options feature
             services.AddOptions();
-            
-            //add distributed memory cache
-            services.AddDistributedMemoryCache();
+
+            //add distributed cache
+            services.AddDistributedCache();
 
             //add HTTP sesion state feature
             services.AddHttpSession();

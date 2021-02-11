@@ -37,16 +37,6 @@
             $('#headersShowHide').html('@T("Admin.Common.Hide")');
         }
     }
-
-    function toggleRedisDetails() {
-        $('#pnlRedisDetails').toggle();
-        if ($('#pnlRedisDetails').css('display') == 'none') {
-            $('#redisDetailsShowHide').text('@T("Admin.Common.Show")');
-        }
-        else {
-            $('#redisDetailsShowHide').text('@T("Admin.Common.Hide")');
-        }
-    }
 </script>
 
 <section class="content">
@@ -192,48 +182,6 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="form-text-row">@Model.CurrentStaticCacheManager</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <nop-label asp-for="RedisEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <div class="form-text-row">
-                                    @T(Model.RedisEnabled ? "Admin.Common.Yes" : "Admin.Common.No")
-                                    @if (Model.RedisEnabled)
-                                    {
-                                        <a id="redisDetailsShowHide" href="javascript:toggleRedisDetails();">@T("Admin.Common.Show")</a>
-                                    }
-                                </div>
-                                <div id="pnlRedisDetails" style="display: none">
-                                    <ul>
-                                        <li>
-                                            <div>
-                                                <strong> @T("Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys")</strong>
-                                            </div>
-                                            <div style="white-space: nowrap; overflow: auto;">
-                                                @T(Model.UseRedisToStoreDataProtectionKeys ? "Admin.Common.Yes" : "Admin.Common.No")
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <strong>@T("Admin.System.SystemInfo.UseRedisForCaching")</strong>
-                                            </div>
-                                            <div style="white-space: nowrap; overflow: auto;">
-                                                @T(Model.UseRedisForCaching ? "Admin.Common.Yes" : "Admin.Common.No")
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <strong>@T("Admin.System.SystemInfo.UseRedisToStorePluginsInfo")</strong>
-                                            </div>
-                                            <div style="white-space: nowrap; overflow: auto;">
-                                                @T(Model.UseRedisToStorePluginsInfo ? "Admin.Common.Yes" : "Admin.Common.No")
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                         <div class="form-group row">

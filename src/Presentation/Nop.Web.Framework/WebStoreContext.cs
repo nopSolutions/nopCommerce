@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Stores;
 
@@ -21,6 +22,7 @@ namespace Nop.Web.Framework
 
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRepository<Store> _storeRepository;
         private readonly IStoreService _storeService;
 
         private Store _cachedStore;
@@ -35,13 +37,16 @@ namespace Nop.Web.Framework
         /// </summary>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="httpContextAccessor">HTTP context accessor</param>
+        /// <param name="storeRepository">Store repository</param>
         /// <param name="storeService">Store service</param>
         public WebStoreContext(IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
+            IRepository<Store> storeRepository,
             IStoreService storeService)
         {
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
+            _storeRepository = storeRepository;
             _storeService = storeService;
         }
 
@@ -58,9 +63,32 @@ namespace Nop.Web.Framework
                 return _cachedStore;
 
             //try to determine the current store by HOST header
-            string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
+            string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
 
             var allStores = await _storeService.GetAllStoresAsync();
+            var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
+
+            if (store == null)
+                //load the first found store
+                store = allStores.FirstOrDefault();
+
+            _cachedStore = store ?? throw new Exception("No store could be loaded");
+
+            return _cachedStore;
+        }
+
+        /// <summary>
+        /// Gets the current store
+        /// </summary>
+        public virtual Store GetCurrentStore()
+        {
+            if (_cachedStore != null)
+                return _cachedStore;
+
+            //try to determine the current store by HOST header
+            string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
+
+            var allStores = _storeRepository.Table.OrderBy(s => s.DisplayOrder).ThenBy(s => s.Id).ToList();
             var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
 
             if (store == null)

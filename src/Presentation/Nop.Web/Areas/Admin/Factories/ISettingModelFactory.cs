@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare app settings model
         /// </summary>
         /// <returns>App settings model</returns>
-        AppSettingsModel PrepareAppSettingsModel();
+        Task<AppSettingsModel> PrepareAppSettingsModel();
 
         /// <summary>
         /// Prepare blog settings model

@@ -204,7 +204,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
-
+            
             //whether to use compression (gzip by default)
             if (EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
                 application.UseResponseCompression();

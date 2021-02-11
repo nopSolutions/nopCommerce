@@ -21,6 +21,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
@@ -730,12 +731,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
 
-            model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
 
-            model.RedisEnabled = _appSettings.RedisConfig.Enabled;
-            model.UseRedisToStoreDataProtectionKeys = _appSettings.RedisConfig.StoreDataProtectionKeys;
-            model.UseRedisForCaching = _appSettings.RedisConfig.UseCaching;
-            model.UseRedisToStorePluginsInfo = _appSettings.RedisConfig.StorePluginsInfo;
+            var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
+
+            if (_appSettings.DistributedCacheConfig.Enabled)
+                currentStaticCacheManagerName +=
+                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.DistributedCacheConfig.DistributedCacheType)})";
+
+            model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 
             model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
 

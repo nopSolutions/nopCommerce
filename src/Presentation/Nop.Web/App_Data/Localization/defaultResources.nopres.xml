@@ -4386,6 +4386,39 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Description">
       <Value><![CDATA[Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html\" target=\"_blank\">our documentation.</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache">
+    <Value>Distributed cache configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.ConnectionString.Hint">
+    <Value>Specify connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.DistributedCacheType">
+    <Value>Distributed cache type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.DistributedCacheType.Hint">
+    <Value>Specify type of distributed cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.Enabled">
+    <Value>Use distributed cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.Enabled.Hint">
+    <Value>Enable this setting to use distributed cache instead of a single instance cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.SchemaName">
+    <Value>Schema name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.SchemaName.Hint">
+    <Value>Specify the schema name (by default it is dbo)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.TableName">
+    <Value>Table name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.TableName.Hint">
+    <Value>Specify the table name"</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
     <Value>Hosting configuration</Value>
   </LocaleResource>
@@ -4454,51 +4487,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly.Hint">
     <Value>Enable this setting to load an assembly into the load-from context, bypassing some security checks.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis">
-    <Value>Redis configuration</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.ConnectionString">
-    <Value>Connection string</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.ConnectionString.Hint">
-    <Value>Specify Redis connection string.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.DatabaseId">
-    <Value>Database ID</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.DatabaseId.Hint">
-    <Value>Set the specific Redis database. Leave empty to use the different database for each data type (used by default).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.Enabled">
-    <Value>Use Redis</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.Enabled.Hint">
-    <Value>Enable this setting to use Redis server.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.IgnoreTimeoutException">
-    <Value>Ignore timeout exception</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.IgnoreTimeoutException.Hint">
-    <Value>Enable this setting to ignore timeout exception (this increases cache stability but may slightly decrease site performance).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StoreDataProtectionKeys">
-    <Value>Store Data Protection keys</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StoreDataProtectionKeys.Hint">
-    <Value>Enable this setting to store the Data Protection keys in Redis database.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StorePluginsInfo">
-    <Value>Store plugins info</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StorePluginsInfo.Hint">
-    <Value>Enable this setting to store the plugins info in Redis database (instead of default file in directory).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.UseCaching">
-    <Value>Use caching</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.UseCaching.Hint">
-    <Value>Enable this setting to use Redis server for caching (instead of default in-memory caching).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Authentication">
     <Value>Authentication</Value>
@@ -7252,7 +7240,7 @@
     <Value>When enabled, all locale resources will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning">
-    <Value>It seems that you use Redis server for caching, keep in mind that enabling this setting creates a lot of traffic between the Redis server and the application because of the large number of locales.</Value>
+    <Value>It seems that you use distributed cache, keep in mind that enabling this setting creates a lot of traffic between the distributed cache server and the application because of the large number of locales.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup">
     <Value>Load all localized properties on startup</Value>
@@ -14934,12 +14922,6 @@
   <LocaleResource Name="Admin.System.SystemInfo.OperatingSystem.Hint">
     <Value>Operating system.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled">
-    <Value>Redis enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.RedisEnabled.Hint">
-    <Value>Indicates whether Redis is enabled.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ServerLocalTime">
     <Value>Server local time</Value>
   </LocaleResource>
@@ -14951,24 +14933,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ServerTimeZone.Hint">
     <Value>Server time zone.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching">
-    <Value>Use Redis for Caching</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.UseRedisForCaching.Hint">
-    <Value>Indicates whether Redis is used for Caching.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys">
-    <Value>Use Redis to store Data Protection Keys</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys.Hint">
-    <Value>Indicates whether Redis is used to store Data Protection Keys.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo">
-    <Value>Use Redis to store Plugins Info</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.UseRedisToStorePluginsInfo.Hint">
-    <Value>Indicates whether Redis is used to store Plugins Info.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UTCTime">
     <Value>Coordinated Universal Time (UTC)</Value>

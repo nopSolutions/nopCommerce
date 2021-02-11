@@ -187,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _settingModelFactory.PrepareAppSettingsModel();
+            var model = await _settingModelFactory.PrepareAppSettingsModel();
 
             return View(model);
         }
@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var appSettings = _appSettings;
             appSettings.CacheConfig = model.CacheConfigModel.ToConfig(appSettings.CacheConfig);
             appSettings.HostingConfig = model.HostingConfigModel.ToConfig(appSettings.HostingConfig);
-            appSettings.RedisConfig = model.RedisConfigModel.ToConfig(appSettings.RedisConfig);
+            appSettings.DistributedCacheConfig = model.DistributedCacheConfigModel.ToConfig(appSettings.DistributedCacheConfig);
             appSettings.AzureBlobConfig = model.AzureBlobConfigModel.ToConfig(appSettings.AzureBlobConfig);
             appSettings.InstallationConfig = model.InstallationConfigModel.ToConfig(appSettings.InstallationConfig);
             appSettings.PluginConfig = model.PluginConfigModel.ToConfig(appSettings.PluginConfig);
@@ -1863,11 +1863,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         //action displaying notification (warning) to a store owner about a lot of traffic 
-        //between the Redis server and the application when LoadAllLocaleRecordsOnStartup setting is set
-        public async Task<IActionResult> RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
+        //between the distributed cache server and the application when LoadAllLocaleRecordsOnStartup setting is set
+        public async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
-            //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
-            if (_appSettings.RedisConfig.Enabled && _appSettings.RedisConfig.UseCaching && loadAllLocaleRecordsOnStartup)
+            //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
+            if (_appSettings.DistributedCacheConfig.Enabled && _appSettings.DistributedCacheConfig.DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
             {
                 return Json(new
                 {

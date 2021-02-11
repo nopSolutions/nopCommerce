@@ -8,7 +8,6 @@ using Nop.Core.Configuration;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Core.Redis;
 using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
@@ -80,7 +79,8 @@ namespace Nop.Web.Framework.Infrastructure
 
             //data layer
             services.AddTransient<IDataProviderManager, DataProviderManager>();
-            services.AddTransient(serviceProvider => serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
+            services.AddTransient(serviceProvider =>
+                serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
 
             //repositories
             services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<>));
@@ -89,17 +89,11 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<IPluginService, PluginService>();
             services.AddScoped<OfficialFeedManager>();
 
-            //redis connection wrapper
-            if (appSettings.RedisConfig.Enabled)
-            {
-                services.AddSingleton<ILocker, RedisConnectionWrapper>();
-                services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
-            }
-
             //static cache manager
-            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.UseCaching)
+            if (appSettings.DistributedCacheConfig.Enabled)
             {
-                services.AddScoped<IStaticCacheManager, RedisCacheManager>();
+                services.AddScoped<ILocker, DistributedCacheManager>();
+                services.AddScoped<IStaticCacheManager, DistributedCacheManager>();
             }
             else
             {
@@ -241,7 +235,7 @@ namespace Nop.Web.Framework.Infrastructure
                 services.AddScoped(setting, serviceProvider =>
                 {
                     var storeId = DataSettingsManager.IsDatabaseInstalled()
-                        ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStoreAsync().Result?.Id ?? 0
+                        ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStore()?.Id ?? 0
                         : 0;
 
                     return serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting, storeId).Result;

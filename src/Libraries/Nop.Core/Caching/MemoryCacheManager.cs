@@ -36,17 +36,7 @@ namespace Nop.Core.Caching
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Get a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        private bool IsSet(CacheKey key)
-        {
-            return _memoryCache.TryGetValue(key.Key, out _);
-        }
-
+        
         /// <summary>
         /// Prepare cache entry options for the passed key
         /// </summary>
@@ -161,17 +151,7 @@ namespace Nop.Core.Caching
 
             return Task.CompletedTask;
         }
-
-        /// <summary>
-        /// Get a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        public Task<bool> IsSetAsync(CacheKey key)
-        {
-            return Task.FromResult(IsSet(key));
-        }
-
+        
         /// <summary>
         /// Perform some action with exclusive in-memory lock
         /// </summary>
@@ -182,7 +162,7 @@ namespace Nop.Core.Caching
         public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
         {
             //ensure that lock is acquired
-            if (IsSet(new CacheKey(key)))
+            if (_memoryCache.TryGetValue(key, out _))
                 return false;
 
             try
