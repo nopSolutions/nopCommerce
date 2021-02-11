@@ -540,6 +540,17 @@ label, label + * {
   text-align: center;
 }
 
+.cart .remove-from-cart input[type="checkbox"] {
+  display: none;
+}
+
+.cart .remove-from-cart .remove-btn {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  background: #ffffffab url(../images/remove.png) center no-repeat;
+}
+
 .cart td.unit-price,
 .data-table td.unit-price {
   white-space: nowrap;
