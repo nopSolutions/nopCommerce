@@ -112,7 +112,12 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
 
-                //topics accessible when a store is closed
+                //two factor verification accessible when a store is closed
+                if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("MultiFactorVerification", StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                    //topics accessible when a store is closed
                 if (controllerName.Equals("Topic", StringComparison.InvariantCultureIgnoreCase) &&
                     actionName.Equals("TopicDetails", StringComparison.InvariantCultureIgnoreCase))
                 {
