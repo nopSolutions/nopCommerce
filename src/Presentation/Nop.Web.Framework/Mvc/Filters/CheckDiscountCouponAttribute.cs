@@ -124,14 +124,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var locale = await _localizationService.GetResourceAsync("ShoppingCart.DiscountCouponCode.Activated");
                 foreach (var validCouponCode in validCouponCodes.Distinct())
                 {
-                    _notificationService.SuccessNotification(string.Format(locale, validCouponCode));
+                    _notificationService.SuccessNotification(string.Format(locale, WebUtility.HtmlEncode(validCouponCode)));
                 }
 
                 //show notifications for invalid coupon codes
                 var invalidLocale = await _localizationService.GetResourceAsync("ShoppingCart.DiscountCouponCode.Invalid");
                 foreach (var invalidCouponCode in couponCodes.Except(validCouponCodes.Distinct()))
                 {
-                    _notificationService.WarningNotification(string.Format(invalidLocale, invalidCouponCode));
+                    _notificationService.WarningNotification(string.Format(invalidLocale, WebUtility.HtmlEncode(invalidCouponCode)));
                 }
             }
 
