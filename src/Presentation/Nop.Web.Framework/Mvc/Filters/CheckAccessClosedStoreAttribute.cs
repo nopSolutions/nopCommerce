@@ -117,7 +117,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     actionName.Equals("MultiFactorVerification", StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                    //topics accessible when a store is closed
+                //topics accessible when a store is closed
                 if (controllerName.Equals("Topic", StringComparison.InvariantCultureIgnoreCase) &&
                     actionName.Equals("TopicDetails", StringComparison.InvariantCultureIgnoreCase))
                 {
