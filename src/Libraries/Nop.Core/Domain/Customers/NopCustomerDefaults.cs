@@ -211,6 +211,11 @@
         public static string LanguageIdAttribute => "LanguageId";
 
         /// <summary>
+        /// Gets a name of generic attribute to store the value of the Admin Area language Id 'AdminAreaLanguageId'
+        /// </summary>
+        public static string AdminAreaLanguageIdAttribute => "AdminAreaLanguageId";
+
+        /// <summary>
         /// Gets a name of generic attribute to store the value of 'LanguageAutomaticallyDetected'
         /// </summary>
         public static string LanguageAutomaticallyDetectedAttribute => "LanguageAutomaticallyDetected";
