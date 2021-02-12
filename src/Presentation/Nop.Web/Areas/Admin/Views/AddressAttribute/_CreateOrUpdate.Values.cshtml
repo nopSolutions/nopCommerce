@@ -1,8 +1,7 @@
 @model AddressAttributeModel
 
-<div class="cards-group">
-    @if (Model.Id > 0)
-    {
+@if (Model.Id > 0)
+{
     <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
@@ -46,13 +45,13 @@
                 }
             }
         })
-     </div>
-        <div class="card-footer">
-            <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
-                @T("Admin.Address.AddressAttributes.Values.AddNew")
-            </button>
-            <input type="submit" id="btnRefresh" style="display: none" />
-            <script>
+    </div>
+    <div class="card-footer">
+        <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
+            @T("Admin.Address.AddressAttributes.Values.AddNew")
+        </button>
+        <input type="submit" id="btnRefresh" style="display: none" />
+        <script>
                 function renderColumnEdit(data, type, row, meta) {
                     return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=addressattribute-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
                 }
@@ -66,13 +65,12 @@
                         return false;
                     });
                 });
-            </script>
-        </div>
-    }
-    else
-    {
-        <div class="card-body">
-            @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
-        </div>
-    }
-</div>  
+        </script>
+    </div>
+}
+else
+{
+    <div class="card-body">
+        @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
+    </div>
+}
