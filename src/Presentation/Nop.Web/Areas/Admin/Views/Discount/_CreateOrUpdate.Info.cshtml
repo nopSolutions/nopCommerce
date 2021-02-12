@@ -18,27 +18,27 @@
     function toggleDiscountType() {
         var selectedDiscountTypeId = $("#@Html.IdFor(model => model.DiscountTypeId)").val();
         if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
-            $('#discount-applied-to-categories-card').showField();
-            $('#discount-applied-to-manufacturers-card').hide();
-            $('#discount-applied-to-products-card').hide();
+            $('[data-card-name=discount-applied-to-categories]').showField();
+            $('[data-card-name=discount-applied-to-manufacturers]').hide();
+            $('[data-card-name=discount-applied-to-products]').hide();
             $('#pnlMaximumDiscountedQuantity').showField();
             $('#pnlAppliedToSubCategories').showField();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
-            $('#discount-applied-to-categories-card').hide();
-            $('#discount-applied-to-manufacturers-card').showField();
-            $('#discount-applied-to-products-card').hide();
+            $('[data-card-name=discount-applied-to-categories]').hide();
+            $('[data-card-name=discount-applied-to-manufacturers]').showField();
+            $('[data-card-name=discount-applied-to-products]').hide();
             $('#pnlMaximumDiscountedQuantity').showField();
             $('#pnlAppliedToSubCategories').hide();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
-            $('#discount-applied-to-categories-card').hide();
-            $('#discount-applied-to-manufacturers-card').hide();
-            $('#discount-applied-to-products-card').showField();
+            $('[data-card-name=discount-applied-to-categories]').hide();
+            $('[data-card-name=discount-applied-to-manufacturers]').hide();
+            $('[data-card-name=discount-applied-to-products]').showField();
             $('#pnlMaximumDiscountedQuantity').showField();
             $('#pnlAppliedToSubCategories').hide();
     } else {
-            $('#discount-applied-to-categories-card').hide();
-            $('#discount-applied-to-manufacturers-card').hide();
-            $('#discount-applied-to-products-card').hide();
+            $('[data-card-name=discount-applied-to-categories]').hide();
+            $('[data-card-name=discount-applied-to-manufacturers]').hide();
+            $('[data-card-name=discount-applied-to-products]').hide();
             $('#pnlMaximumDiscountedQuantity').hide();
             $('#pnlAppliedToSubCategories').hide();
     }
