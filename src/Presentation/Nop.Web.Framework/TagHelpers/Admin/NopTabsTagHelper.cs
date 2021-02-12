@@ -282,7 +282,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //merge classes
             if (context.AllAttributes.ContainsName("class"))
-                tabTitle.Attributes.Add("class", context.AllAttributes["class"].Value.ToString());
+                tabTitle.AddCssClass(context.AllAttributes["class"].Value.ToString());
+
             tabTitle.InnerHtml.AppendHtml(await linkTag.RenderHtmlContentAsync());
 
             //tab content
