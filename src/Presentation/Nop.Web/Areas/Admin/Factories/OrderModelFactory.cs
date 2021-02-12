@@ -1261,7 +1261,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateOrderTotals = _orderSettings.AutoUpdateOrderTotalsOnEditingOrder;
 
             var presetQty = 1;
-            var (presetPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, decimal.Zero, true, presetQty);
+            var (_, presetPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, decimal.Zero, true, presetQty);
             var (presetPriceInclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, true, customer);
             var (presetPriceExclTax, _) = await _taxService.GetProductPriceAsync(product, presetPrice, false, customer);
             model.UnitPriceExclTax = presetPriceExclTax;

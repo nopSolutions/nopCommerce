@@ -255,8 +255,8 @@ namespace Nop.Services.Catalog
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
-        /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        public virtual async Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
+        /// <returns>Final price without discounts, Final price, Applied discount amount, Applied discounts</returns>
+        public virtual async Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal additionalCharge = 0,
             bool includeDiscounts = true,
@@ -277,8 +277,8 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
-        /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        public virtual async Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
+        /// <returns>Final price without discounts, Final price, Applied discount amount, Applied discounts</returns>
+        public virtual async Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal additionalCharge,
             bool includeDiscounts,
@@ -301,8 +301,8 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
-        /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        public virtual async Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
+        /// <returns>Final price without discounts, Final price, Applied discount amount, Applied discounts</returns>
+        public virtual async Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal? overriddenProductPrice,
             decimal additionalCharge,
@@ -329,10 +329,11 @@ namespace Nop.Services.Catalog
                 cacheKey.CacheTime = 0;
 
             decimal rezPrice;
+            decimal rezPriceWithoutDiscount;
             decimal discountAmount;
             List<Discount> appliedDiscounts;
 
-            (rezPrice, discountAmount,  appliedDiscounts) = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            (rezPriceWithoutDiscount, rezPrice, discountAmount,  appliedDiscounts) = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var discounts = new List<Discount>();
                 var appliedDiscountAmount = decimal.Zero;
@@ -353,6 +354,8 @@ namespace Nop.Services.Catalog
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
                         price *= _productService.GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
 
+                var priceWithoutDiscount = price;
+
                 if (includeDiscounts)
                 {
                     //discount
@@ -369,10 +372,13 @@ namespace Nop.Services.Catalog
                 if (price < decimal.Zero)
                     price = decimal.Zero;
 
-                return (price, appliedDiscountAmount, discounts);
+                if (priceWithoutDiscount < decimal.Zero)
+                    priceWithoutDiscount = decimal.Zero;
+
+                return (priceWithoutDiscount, price, appliedDiscountAmount, discounts);
             });
 
-            return (rezPrice, discountAmount, appliedDiscounts);
+            return (rezPriceWithoutDiscount, rezPrice, discountAmount, appliedDiscounts);
         }
 
         /// <summary>

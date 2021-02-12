@@ -335,16 +335,15 @@ namespace Nop.Web.Factories
                 else
                 {
                     //prices
-                    var (minPossiblePriceWithoutDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false);
-                    var (minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync());
+                    var (minPossiblePriceWithoutDiscount, minPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync());
 
                     if (product.HasTierPrices)
                     {
+                        var (tierPriceMinPossiblePriceWithoutDiscount, tierPriceMinPossiblePriceWithDiscount, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), quantity: int.MaxValue);
+
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
-                        minPossiblePriceWithoutDiscount = Math.Min(minPossiblePriceWithoutDiscount,
-                            (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false, quantity: int.MaxValue)).Item1);
-                        minPossiblePriceWithDiscount = Math.Min(minPossiblePriceWithDiscount,
-                            (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: true, quantity: int.MaxValue)).Item1);
+                        minPossiblePriceWithoutDiscount = Math.Min(minPossiblePriceWithoutDiscount, tierPriceMinPossiblePriceWithoutDiscount);
+                        minPossiblePriceWithDiscount = Math.Min(minPossiblePriceWithDiscount, tierPriceMinPossiblePriceWithDiscount);
                     }
 
                     var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
@@ -438,7 +437,7 @@ namespace Nop.Web.Factories
                 Product minPriceProduct = null;
                 foreach (var associatedProduct in associatedProducts)
                 {
-                    var (tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync());
+                    var (_, tmpMinPossiblePrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync());
 
                     if (associatedProduct.HasTierPrices)
                     {

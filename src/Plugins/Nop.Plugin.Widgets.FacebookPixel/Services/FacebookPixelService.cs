@@ -553,7 +553,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var categoryName = (await _categoryService.GetCategoryByIdAsync(categoryMapping?.CategoryId ?? 0))?.Name;
                 var sku = product != null ? await _productService.FormatSkuAsync(product, item.AttributesXml) : string.Empty;
                 var quantity = product != null ? (int?)item.Quantity : null;
-                var (productPrice, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false);
+                var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false);
                 var (price, _) = await _taxService.GetProductPriceAsync(product, productPrice);
                 var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, await _workContext.GetWorkingCurrencyAsync());
                 var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
