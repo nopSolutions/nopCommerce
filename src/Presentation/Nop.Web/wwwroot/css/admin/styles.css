@@ -11,6 +11,10 @@
   background-color: #ecf0f5;
 }
 
+.form-control {
+  border-radius: 0;
+}
+
 ul, ol {
   margin-bottom: 0;
 }
@@ -1111,6 +1115,7 @@ td.k-state-focused.k-state-selected {
 
 .k-multiselect-wrap {
   min-height: 34px;
+  border-radius: 0;
 }
 
   .k-multiselect-wrap > .k-input {
@@ -2319,7 +2324,7 @@ div.dataTables_wrapper div.dataTables_paginate {
   }
 
   .form-control {
-    margin-bottom: 3px;
+    margin-bottom: 3px;    
   }
   /* KENDO */
   .k-autocomplete, .k-combobox, .k-datepicker, .k-timepicker, .k-datetimepicker,
