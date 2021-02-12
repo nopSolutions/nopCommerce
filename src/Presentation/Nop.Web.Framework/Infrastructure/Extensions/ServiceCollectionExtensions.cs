@@ -166,7 +166,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDistributedCache(this IServiceCollection services)
         {
-            var distributedCacheConfig = services.BuildServiceProvider().GetRequiredService<AppSettings>().DistributedCacheConfig;
+            var appSettings = Singleton<AppSettings>.Instance;
+            var distributedCacheConfig = appSettings.DistributedCacheConfig;
 
             if (!distributedCacheConfig.Enabled)
                 return;
@@ -176,6 +177,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 case DistributedCacheType.Memory:
                     services.AddDistributedMemoryCache();
                     break;
+
                 case DistributedCacheType.SqlServer:
                     services.AddDistributedSqlServerCache(options =>
                     {
@@ -184,6 +186,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         options.TableName = distributedCacheConfig.TableName;
                     });
                     break;
+
                 case DistributedCacheType.Redis:
                     services.AddStackExchangeRedisCache(options =>
                     {
@@ -199,8 +202,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopDataProtection(this IServiceCollection services)
         {
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
-            
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
             {
                 var blobServiceClient = new BlobServiceClient(appSettings.AzureBlobConfig.ConnectionString);
