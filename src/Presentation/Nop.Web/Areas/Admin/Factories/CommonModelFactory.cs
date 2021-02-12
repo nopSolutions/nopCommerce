@@ -19,9 +19,9 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services;
 using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
@@ -61,9 +61,9 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        //private readonly IComponentContext _componentContext;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
@@ -106,9 +106,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IActionContextAccessor actionContextAccessor,
             IAuthenticationPluginManager authenticationPluginManager,
             IBaseAdminModelFactory baseAdminModelFactory,
-            //IComponentContext componentContext,
             ICurrencyService currencyService,
             ICustomerService customerService,
+            IEventPublisher eventPublisher,
             INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             INopFileProvider fileProvider,
@@ -147,9 +147,9 @@ namespace Nop.Web.Areas.Admin.Factories
             _actionContextAccessor = actionContextAccessor;
             _authenticationPluginManager = authenticationPluginManager;
             _baseAdminModelFactory = baseAdminModelFactory;
-            //_componentContext = componentContext;
             _currencyService = currencyService;
             _customerService = customerService;
+            _eventPublisher = eventPublisher;
             _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _exchangeRatePluginManager = exchangeRatePluginManager;
@@ -823,6 +823,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //proxy connection
             await PrepareProxyConnectionWarningModelAsync(models);
+
+            //publish event
+            var warningEvent = new SystemWarningCreatedEvent();
+            await _eventPublisher.PublishAsync(warningEvent);
+            //add another warnings (for example from plugins) 
+            models.AddRange(warningEvent.SystemWarnings);
 
             return models;
         }
