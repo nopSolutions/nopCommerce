@@ -685,7 +685,9 @@ namespace Nop.Web.Factories
         {
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
-            var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHomepageKey,
+            var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHomepageKey, 
+                await _storeContext.GetCurrentStoreAsync(),
+                await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
                 pictureSize,
                 await _workContext.GetWorkingLanguageAsync(),
                 _webHelper.IsCurrentConnectionSecured());
