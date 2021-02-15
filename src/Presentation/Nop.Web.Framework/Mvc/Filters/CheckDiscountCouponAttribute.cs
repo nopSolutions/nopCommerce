@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 {
                     _notificationService.SuccessNotification(
                         string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Activated"),
-                            validCouponCode));
+                            WebUtility.HtmlEncode(validCouponCode)));
                 }
 
                 //show notifications for invalid coupon codes
@@ -130,7 +130,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 {
                     _notificationService.WarningNotification(
                         string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Invalid"),
-                            invalidCouponCode));
+                            WebUtility.HtmlEncode(invalidCouponCode)));
                 }
 
             }
