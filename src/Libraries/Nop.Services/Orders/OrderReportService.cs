@@ -620,7 +620,8 @@ namespace Nop.Services.Orders
                     var dateFormat = groupBy switch
                     {
                         GroupByOptions.Day => dayFormat,
-                        GroupByOptions.Month => "MMMM, yyyy"
+                        GroupByOptions.Month => "MMMM, yyyy",
+                        _ => ""
                     };
 
                     reportLine.Summary = date.ToString(dateFormat);
