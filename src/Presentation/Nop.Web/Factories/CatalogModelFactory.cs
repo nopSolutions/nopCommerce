@@ -349,10 +349,10 @@ namespace Nop.Web.Factories
             //load and cache them
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey,
-                language, customerRolesIds, store);
+                language, customerRoleIds, store);
 
             return await _staticCacheManager.GetAsync(cacheKey, async () => await PrepareCategorySimpleModelsAsync(0));
         }
@@ -420,10 +420,10 @@ namespace Nop.Web.Factories
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey,
-                language, customerRolesIds, store);
+                language, customerRoleIds, store);
 
             return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -689,11 +689,11 @@ namespace Nop.Web.Factories
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
             var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHomepageKey,
-                store, customerRolesIds, pictureSize, language, _webHelper.IsCurrentConnectionSecured());
+                store, customerRoleIds, pictureSize, language, _webHelper.IsCurrentConnectionSecured());
 
             var model = await _staticCacheManager.GetAsync(categoriesCacheKey, async () =>
             {
@@ -925,10 +925,10 @@ namespace Nop.Web.Factories
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerNavigationModelKey,
-                currentManufacturerId, language, customerRolesIds, store);
+                currentManufacturerId, language, customerRoleIds, store);
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var currentManufacturer = await _manufacturerService.GetManufacturerByIdAsync(currentManufacturerId);

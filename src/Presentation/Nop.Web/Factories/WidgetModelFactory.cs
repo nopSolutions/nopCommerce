@@ -59,11 +59,11 @@ namespace Nop.Web.Factories
         {
             var theme = await _themeContext.GetWorkingThemeNameAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
 
             var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
-                customerRolesIds, store, widgetZone, theme);
+                customerRoleIds, store, widgetZone, theme);
 
             var cachedModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
                 (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))

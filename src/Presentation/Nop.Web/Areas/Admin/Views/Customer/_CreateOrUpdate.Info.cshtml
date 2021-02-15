@@ -337,21 +337,21 @@
             </div>
             <script>
                 $(document).ready(function() {
-                    var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                    customerRolesIdsInput.setOptions({
-                        customerRolesIdsInput: false,
+                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                    customerRoleIdsInput.setOptions({
+                        customerRoleIdsInput: false,
                         filter: "contains"
                     });
 
                     @if (Model.AvailableCustomerRoles.Count == 0)
                     {
                         <text>
-                            customerRolesIdsInput.setOptions({
+                            customerRoleIdsInput.setOptions({
                                 enable: false,
                                 placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
                             });
-                            customerRolesIdsInput._placeholder();
-                            customerRolesIdsInput._enable();
+                            customerRoleIdsInput._placeholder();
+                            customerRoleIdsInput._enable();
                         </text>
                     }
                 });

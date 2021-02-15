@@ -17,7 +17,7 @@ namespace Nop.Services.Stores.Caching
         {
             await RemoveAsync(NopStoreDefaults.StoreMappingsCacheKey, entity.EntityId, entity.EntityName);
             await RemoveAsync(NopStoreDefaults.StoreMappingIdsCacheKey, entity.EntityId, entity.EntityName);
-            await RemoveAsync(NopStoreDefaults.StoreMappingExistsCacheKey, entity.StoreId, entity.EntityName);
+            await RemoveAsync(NopStoreDefaults.StoreMappingExistsCacheKey, entity.EntityName);
         }
     }
 }

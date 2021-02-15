@@ -66,8 +66,9 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual async Task<IList<Country>> GetAllCountriesAsync(int languageId = 0, bool showHidden = false)
         {
+            var store = await _storeContext.GetCurrentStoreAsync();
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId,
-                showHidden, await _storeContext.GetCurrentStoreAsync());
+                showHidden, store);
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
@@ -76,10 +77,9 @@ namespace Nop.Services.Directory
                     if (!showHidden)
                         query = query.Where(c => c.Published);
 
-                    //Store mapping
-                    var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
-                    if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Country>(storeId))
-                        query = query.Where(_storeMappingService.ApplyStoreMapping<Country>(storeId));
+                    //apply store mapping constraints
+                    if (!showHidden)
+                        query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 });
