@@ -15,23 +15,23 @@
 
         function toggleChangeOrderStatus(editmode) {
             if (editmode) {
-                $('#pnlChangeOrderStatus').showField();
+                $('#pnlChangeOrderStatus').show();
                 $('#btnChangeOrderStatus').hide();
             } else {
                 $('#pnlChangeOrderStatus').hide();
-                $('#btnChangeOrderStatus').showField();
+                $('#btnChangeOrderStatus').show();
             }
         }
 
         function toggleOrderTotals(editmode) {
             if (editmode) {
-                $('#trEditOrderTotals').showField();
+                $('#trEditOrderTotals').show();
                 $('#btnEditOrderTotals').hide();
-                $('#btnSaveOrderTotals').showField();
-                $('#btnCancelOrderTotals').showField();
+                $('#btnSaveOrderTotals').show();
+                $('#btnCancelOrderTotals').show();
             } else {
                 $('#trEditOrderTotals').hide();
-                $('#btnEditOrderTotals').showField();
+                $('#btnEditOrderTotals').show();
                 $('#btnSaveOrderTotals').hide();
                 $('#btnCancelOrderTotals').hide();
             }
@@ -129,7 +129,7 @@
                                         @T("Admin.Common.Save")
                                     </button>
                                     <nop-action-confirmation asp-button-id="btnSaveOrderStatus" />
-                                    <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn btn-success my-ml-1" >
+                                    <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn btn-secondary my-ml-1" >
                                         @T("Admin.Common.Cancel")
                                     </button>
                                     <div class="input-group-btn-hint">
@@ -502,7 +502,7 @@
                     </button>
                     <nop-action-confirmation asp-button-id="btnSaveOrderTotals" />
 
-                    <button type="submit" name="btnCancelOrderTotals" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="btn btn-danger">
+                    <button type="submit" name="btnCancelOrderTotals" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="btn btn-secondary">
                         @T("Admin.Common.Cancel")
                     </button>                    
                 </div>

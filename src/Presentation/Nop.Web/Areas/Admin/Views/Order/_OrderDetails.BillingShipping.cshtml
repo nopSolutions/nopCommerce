@@ -449,9 +449,9 @@
                                         $('#btnSaveShippingMethod').showField();
                                         $('#btnCancelShippingMethod').showField();
                                     } else {
-                                        $('#lblShippingMethod').showField();
+                                        $('#lblShippingMethod').show();
                                         $('#divShippingMethod').hide();
-                                        $('#btnEditShippingMethod').showField();
+                                        $('#btnEditShippingMethod').show();
                                         $('#btnSaveShippingMethod').hide();
                                         $('#btnCancelShippingMethod').hide();
                                     }
@@ -474,7 +474,7 @@
                                     </button>
                                     <nop-action-confirmation asp-button-id="btnSaveShippingMethod" />
 
-                                    <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn btn-success">
+                                    <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn btn-secondary">
                                         @T("Admin.Common.Cancel")
                                     </button>                                    
                                 </span>
