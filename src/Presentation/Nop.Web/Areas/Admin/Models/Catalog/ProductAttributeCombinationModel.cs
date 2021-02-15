@@ -54,6 +54,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture")]
         public int PictureId { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity")]
+        public int MinStockQuantity { get; set; }
+
         public string PictureThumbnailUrl { get; set; }
 
         public IList<ProductAttributeModel> ProductAttributes { get; set; }

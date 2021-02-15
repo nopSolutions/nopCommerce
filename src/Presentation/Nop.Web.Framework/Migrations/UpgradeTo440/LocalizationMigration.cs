@@ -593,7 +593,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 //#5319
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
                 //#5245
-                ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories"
+                ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories",
+
+                //#3353
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity"] = "Minimum stock qty",
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint"] = "If you have enabled 'Manage stock by attributes' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).",
             }).Wait();
 
             // rename locales

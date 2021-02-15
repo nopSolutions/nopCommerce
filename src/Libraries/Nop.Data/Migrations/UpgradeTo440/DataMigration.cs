@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Security;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo440
 {
@@ -119,6 +121,16 @@ namespace Nop.Data.Migrations.UpgradeTo440
                     Delete.UniqueConstraint(constraintName).FromTable(tableName);
 
                 Delete.Column(columnName).FromTable(tableName);
+            }
+
+            //#3353
+            var productAttributeCombinationTableName = NameCompatibilityManager.GetTableName(typeof(ProductAttributeCombination));
+
+            //add column
+            if (!Schema.Table(productAttributeCombinationTableName).Column(nameof(ProductAttributeCombination.MinStockQuantity)).Exists())
+            {
+                Alter.Table(productAttributeCombinationTableName)
+                    .AddColumn(nameof(ProductAttributeCombination.MinStockQuantity)).AsInt32().NotNullable().SetExistingRowsTo(0);
             }
         }
 

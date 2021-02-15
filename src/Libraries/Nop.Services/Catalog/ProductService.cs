@@ -1148,7 +1148,7 @@ namespace Nop.Services.Catalog
                                join p in _productRepository.Table on pac.ProductId equals p.Id
                                where
                                    //filter by combinations with stock quantity less than the minimum
-                                   pac.StockQuantity < pac.NotifyAdminForQuantityBelow &&
+                                   pac.StockQuantity <= pac.MinStockQuantity &&
                                    //filter by products with tracking inventory by attributes
                                    p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                                    //ignore deleted products

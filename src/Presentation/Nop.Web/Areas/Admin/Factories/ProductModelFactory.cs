@@ -2231,7 +2231,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     PictureId = productAttributeCombination.PictureId,
                     ProductId = productAttributeCombination.ProductId,
                     Sku = productAttributeCombination.Sku,
-                    StockQuantity = productAttributeCombination.StockQuantity
+                    StockQuantity = productAttributeCombination.StockQuantity,
+                    MinStockQuantity = productAttributeCombination.MinStockQuantity
                 };
             }
 
