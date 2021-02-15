@@ -884,6 +884,15 @@ namespace Nop.Services.Catalog
                             (searchSku && p.Sku == keywords)
                         select p.Id;
 
+                //search by SKU for ProductAttributeCombination
+                if (searchSku)
+                {
+                    productsByKeywords = productsByKeywords.Union(
+                        from pac in _productAttributeCombinationRepository.Table
+                        where pac.Sku == keywords
+                        select pac.ProductId);
+                }
+
                 if (searchProductTags)
                 {
                     productsByKeywords = productsByKeywords.Union(
