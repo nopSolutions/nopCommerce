@@ -1562,6 +1562,15 @@ div.dataTables_wrapper {
   width: 320px;
 }
 
+.form-horizontal .attributes .form-check {
+  padding-top: 7px;
+  padding-right: 10px;
+}
+
+.form-horizontal .attributes .form-check .form-check-input {
+  margin-top: .3rem;
+}
+
 .form-horizontal .k-autocomplete, .form-horizontal .k-combobox,
 .form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown,
 .form-horizontal .k-selectbox, .form-horizontal .k-textbox,
@@ -2421,24 +2430,10 @@ div.dataTables_wrapper div.dataTables_paginate {
   /*FORM ELEMENTS*/
   .form-horizontal .label-wrapper {
     float: none;
-    margin-bottom: 3px;
-    margin-top: 5px;
   }
 
   .form-horizontal .card-popup .label-wrapper {
     float: right;
-  }
-
-    .form-horizontal .card-popup .label-wrapper .col-form-label {
-      padding-top: 0;
-    }
-
-  .form-horizontal .card-popup .form-group input[type=checkbox] {
-    margin-top: 10px;
-  }
-
-  .form-group input[type=checkbox] {
-    margin-top: 2px;
   }
 
   .form-group .callout {
