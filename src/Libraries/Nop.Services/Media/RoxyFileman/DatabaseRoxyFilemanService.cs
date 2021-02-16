@@ -278,11 +278,13 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.FileExists(thumbFilePath))
                 return;
 
-            //the named semaphore helps to avoid creating the same files in different threads,
+            //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
-            using var semaphore = new Semaphore(1, 1, thumbFileName);
+            //you should be very careful, mutexes cannot be used in with the await operation
+            //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+            using var mutex = new Mutex(false, thumbFileName);
 
-            semaphore.WaitOne();
+            mutex.WaitOne();
 
             try
             {
@@ -302,7 +304,7 @@ namespace Nop.Services.Media.RoxyFileman
                             Size = CalculateDimensions(size, targetSize)
                         }));
 
-                        pictureBinaryResized = await EncodeImageAsync(image, imageFormat);
+                        pictureBinaryResized = EncodeImageAsync(image, imageFormat).Result;
                     }
                     else
                     {
@@ -311,12 +313,12 @@ namespace Nop.Services.Media.RoxyFileman
                     }
 
                     //save
-                    await _fileProvider.WriteAllBytesAsync(thumbFilePath, pictureBinaryResized);
+                    _fileProvider.WriteAllBytesAsync(thumbFilePath, pictureBinaryResized).Wait();
                 }
             }
             finally
             {
-                semaphore.Release();
+                mutex.ReleaseMutex();
             }
         }
 
