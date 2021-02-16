@@ -507,6 +507,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //#3950
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute is already exists into combination: '{0}'.",
+
+                //#4564
+                ["Admin.Common.Validation.NotEmpty"] = "Please provide a {0}"
             }).Wait();
 
             // rename locales
@@ -551,6 +554,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods", NewName = "Admin.Configuration.Authentication.ExternalMethods"},
                 new { Name = "Permission.ManageExternalAuthenticationMethods", NewName = "Permission.Authentication.ManageExternalMethods"},
                 //</MFA #475>
+                
+                //#4564
+                new { Name = "Nop.Web.Framework.Validators.MaxDecimal", NewName = "Admin.Common.Validation.Decimal.Max"},
             };
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();

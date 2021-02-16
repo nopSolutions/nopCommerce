@@ -4233,6 +4233,12 @@
   <LocaleResource Name="Admin.Common.UploadFile">
     <Value>Please upload a file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Validation.Decimal.Max">
+    <Value>The value is out of range. Maximum value is {0}.99</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Validation.NotEmpty">
+    <Value>Please provide a {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.View">
     <Value>View</Value>
   </LocaleResource>
@@ -17048,9 +17054,6 @@
   </LocaleResource>
   <LocaleResource Name="Newsletter.UnsubscribeEmailSent">
     <Value>A verification email has been sent. Thank you!</Value>
-  </LocaleResource>
-  <LocaleResource Name="Nop.Web.Framework.Validators.MaxDecimal">
-    <Value>The value is out of range. Maximum value is {0}.99</Value>
   </LocaleResource>
   <LocaleResource Name="Order.BillingAddress">
     <Value>Billing Address</Value>
