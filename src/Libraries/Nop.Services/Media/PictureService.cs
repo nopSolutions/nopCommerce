@@ -578,21 +578,23 @@ namespace Nop.Services.Media
             if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
                 return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
 
-            //the named semaphore helps to avoid creating the same files in different threads,
+            //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
-            using (var semaphore = new Semaphore(1, 1, thumbFileName))
+            //you should be very careful, mutexes cannot be used in with the await operation
+            //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+            using (var mutex = new Mutex(false, thumbFileName))
             {
-                semaphore.WaitOne();
+                mutex.WaitOne();
 
                 try
                 {
                     //check, if the file was created, while we were waiting for the release of the mutex.
-                    if (!await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                    if (!GeneratedThumbExistsAsync(thumbFilePath, thumbFileName).Result)
                     {
-                        pictureBinary ??= await LoadPictureBinaryAsync(picture);
+                        pictureBinary ??= LoadPictureBinaryAsync(picture).Result;
 
                         if ((pictureBinary?.Length ?? 0) == 0)
-                            return showDefaultPicture ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), picture) : (string.Empty, picture);
+                            return showDefaultPicture ? (GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation).Result, picture) : (string.Empty, picture);
 
                         byte[] pictureBinaryResized;
                         if (targetSize != 0)
@@ -605,18 +607,18 @@ namespace Nop.Services.Media
                                 Size = CalculateDimensions(image.Size(), targetSize)
                             }));
 
-                            pictureBinaryResized = await EncodeImageAsync(image, imageFormat);
+                            pictureBinaryResized = EncodeImageAsync(image, imageFormat).Result;
                         }
                         else
                             //create a copy of pictureBinary
                             pictureBinaryResized = pictureBinary.ToArray();
 
-                        await SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
+                        SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized).Wait();
                     }
                 }
                 finally
                 {
-                    semaphore.Release();
+                    mutex.ReleaseMutex();
                 }
             }
 
