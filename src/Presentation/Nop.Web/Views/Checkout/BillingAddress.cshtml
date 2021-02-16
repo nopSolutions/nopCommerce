@@ -54,18 +54,9 @@
                                 {
                                     <div class="address-item">
                                         <div class="address-list-page">
-                                            <input id="edit-button-@(item.Id)"
-                                                   type="button"
-                                                   class="button-2 edit-address-button"
-                                                   style="float: right; margin: 20px 10px 10px 12px; display: none;"
-                                                   onclick="CheckoutBilling.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id)); return false;"
-                                                   value="@T("Common.Edit")" />
-                                            <input id="delete-button-@(item.Id)"
-                                                   type="button"
-                                                   class="button-2 delete-address-button"
-                                                   style="float: right; margin: 20px 0 10px 0; display: none;"
-                                                   onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditAddress/', @(item.Id)); return false;"
-                                                   value="@T("Common.Delete")" />
+                                            <button id="edit-button-@(item.Id)" type="button" class="button-2 edit-address-button" style="float: right; margin: 20px 10px 10px 12px; display: none;" onclick="CheckoutBilling.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id)); return false;">@T("Common.Edit")</button>
+
+                                            <button id="delete-button-@(item.Id)" type="button" class="button-2 delete-address-button" style="float: right; margin: 20px 0 10px 0; display: none;" onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditAddress/', @(item.Id)); return false;" value="@T("Common.Delete")"></button>
                                         </div>
                                         <ul class="address-box">
                                             <li class="name">
@@ -160,7 +151,8 @@
                                             }
                                         </ul>
                                         <div class="select-button">
-                                            <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()" />
+                                            <button type="button" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()">@T("Checkout.BillToThisAddress")</button>
+                                            
                                             <script asp-location="Footer">
                                                 function selectBillingAddress@(item.Id)() {
                                                     if ($('#@Html.IdFor(model => model.ShipToSameAddress)')
@@ -204,26 +196,18 @@
                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom })
             </div>
             <div class="buttons">
-                <input id="billingaddress-save-button"
-                       type="button"
-                       class="button-1"
-                       style="display: none"
-                       onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;"
-                       value="@T("Common.Save")" />
-                <input id="billingaddress-cancel-button"
-                       type="button"
-                       class="button-1"
-                       style="display: none"
-                       onclick="setLocation('@Url.RouteUrl("CheckoutBillingAddress")')"
-                       value="@T("Common.Cancel")" />
-                <input id="billingaddress-next-button" type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
+                <button id="billingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;">@T("Common.Save")</button>
+
+                <button id="billingaddress-cancel-button" type="button" class="button-1" style="display: none" onclick="setLocation('@Url.RouteUrl("CheckoutBillingAddress")')">@T("Common.Cancel")</button>
+
+                <button id="billingaddress-next-button" type="submit" name="nextstep" class="button-1 new-address-next-step-button">@T("Checkout.NextButton")</button>
             </div>
         </form>
         <script asp-location="Footer">
             CheckoutBilling.init('#billing-form');
             if (@((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant())) {
-                $('input.edit-address-button').show();
-                $('input.delete-address-button').show();
+                $('button.edit-address-button').show();
+                $('button.delete-address-button').show();
             }
         </script>
         <div class="section order-summary">

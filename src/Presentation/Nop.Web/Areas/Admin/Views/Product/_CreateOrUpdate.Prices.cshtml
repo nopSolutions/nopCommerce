@@ -341,7 +341,7 @@
                 <button type="submit" id="btnAddNewTierPrice" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="btn btn-primary">
                     @T("Admin.Catalog.Products.TierPrices.AddNew")
                 </button>
-                <input type="submit" id="btnRefreshTierPrices" style="display: none" />
+                <button type="submit" id="btnRefreshTierPrices" style="display: none"></button>
                 <script>
                     $(document).ready(function () {
                         $('#btnRefreshTierPrices').click(function () {

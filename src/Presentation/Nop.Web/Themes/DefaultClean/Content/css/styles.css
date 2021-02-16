@@ -28,16 +28,18 @@ a img {
   border: none;
 }
 
-
+button::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner,
+input[type="file"] > button::-moz-focus-inner,
 input[type="file"] > input[type="button"]::-moz-focus-inner {
   margin: 0;
   border: 0;
   padding: 0;
 }
 
+button,
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
@@ -49,6 +51,7 @@ textarea {
   border-radius: 0;
 }
 
+button,
 input[type="button"],
 input[type="submit"],
 input[type="reset"] {
@@ -1453,7 +1456,7 @@ label, label + * {
 .poll-total-votes {
 }
 
-.poll .buttons input {
+.poll .buttons button {
   border: none;
   background-color: #aaa;
   padding: 10px 20px;
@@ -1462,8 +1465,8 @@ label, label + * {
   text-transform: uppercase;
 }
 
-.poll .buttons input:hover,
-.poll .buttons input:focus {
+.poll .buttons button:hover,
+.poll .buttons button:focus {
   background-color: #bbb;
 }
 
@@ -1838,7 +1841,7 @@ label, label + * {
   font-size: 0;
 }
 
-.item-box input[type="button"] {
+.item-box button {
   display: inline-block;
   height: 40px;
   border: none;
@@ -3345,7 +3348,7 @@ label, label + * {
   margin: 0 -1px 0 0;
 }
 
-.enter-password-form input[type="submit"] {
+.enter-password-form button[type="submit"] {
   float: left;
   width: auto;
   min-width: 86px;
@@ -3357,8 +3360,8 @@ label, label + * {
   text-transform: uppercase;
 }
 
-.enter-password-form input[type="submit"]:hover,
-.enter-password-form input[type="submit"]:focus {
+.enter-password-form button[type="submit"]:hover,
+.enter-password-form button[type="submit"]:focus {
   background-color: #248ece;
 }
 
@@ -4058,7 +4061,7 @@ label, label + * {
   font-size: 0;
 }
 
-.shopping-cart-page .common-buttons input {
+.shopping-cart-page .common-buttons button {
   display: inline-block;
   min-width: 180px;
   margin: 5px;
@@ -4069,17 +4072,17 @@ label, label + * {
   color: #fff;
 }
 
-.shopping-cart-page .common-buttons input:hover,
-.shopping-cart-page .common-buttons input:focus {
+.shopping-cart-page .common-buttons button:hover,
+.shopping-cart-page .common-buttons button:focus {
   background-color: #999;
 }
 
-.shopping-cart-page .common-buttons input:first-child {
+.shopping-cart-page .common-buttons button:first-child {
   background-color: #4ab2f1;
 }
 
-.shopping-cart-page .common-buttons input:first-child:hover,
-.shopping-cart-page .common-buttons input:first-child:focus {
+.shopping-cart-page .common-buttons button:first-child:hover,
+.shopping-cart-page .common-buttons button:first-child:focus {
   background-color: #248ece;
 }
 
@@ -4300,7 +4303,7 @@ label, label + * {
   margin: 0 -1px 0 0;
 }
 
-.cart-collaterals .coupon-code input[type="submit"] {
+.cart-collaterals .coupon-code button[type="submit"] {
   float: left;
   width: 40%;
   height: 36px; /*safari padding fix*/
@@ -4326,8 +4329,8 @@ label, label + * {
 
 .remove-discount-button,
 .remove-gift-card-button {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   border: 1px solid #999;
   background: #fff url('../images/close.png') center no-repeat;
   cursor: pointer;
@@ -5132,7 +5135,7 @@ label, label + * {
   font-size: 0;
 }
 
-.order-details-page .actions input {
+.order-details-page .actions button {
   display: inline-block;
   min-width: 165px;
   margin: 5px;
@@ -5144,17 +5147,17 @@ label, label + * {
   color: #fff;
 }
 
-.order-details-page .actions input:hover,
-.order-details-page .actions input:focus {
+.order-details-page .actions button:hover,
+.order-details-page .actions button:focus {
   background-color: #999;
 }
 
-.order-details-page .actions input:first-child {
+.order-details-page .actions button:first-child {
   background-color: #4ab2f1;
 }
 
-.order-details-page .actions input:first-child:hover,
-.order-details-page .actions input:first-child:focus {
+.order-details-page .actions button:first-child:hover,
+.order-details-page .actions button:first-child:focus {
   background-color: #248ece;
 }
 
@@ -6163,9 +6166,9 @@ label, label + * {
   margin: auto;
 }
 
-.forum-edit-page .buttons input,
-.move-topic-page .buttons input,
-.private-messages .buttons input {
+.forum-edit-page .buttons button,
+.move-topic-page .buttons button,
+.private-messages .buttons button {
   min-width: 140px;
   border: none;
   background-color: #999;
@@ -6176,12 +6179,12 @@ label, label + * {
   text-transform: uppercase;
 }
 
-.forum-edit-page .buttons input:hover,
-.forum-edit-page .buttons input:focus,
-.move-topic-page .buttons input:hover,
-.move-topic-page .buttons input:focus,
-.private-messages .buttons input:hover,
-.private-messages .buttons input:focus {
+.forum-edit-page .buttons button:hover,
+.forum-edit-page .buttons button:focus,
+.move-topic-page .buttons button:hover,
+.move-topic-page .buttons button:focus,
+.private-messages .buttons button:hover,
+.private-messages .buttons button:focus {
   background-color: #888;
 }
 
@@ -7903,7 +7906,7 @@ pre {
     margin: 0 0 5px;
   }
 
-  .mini-shopping-cart input[type="button"] {
+  .mini-shopping-cart button[type="button"] {
     display: inline-block;
     border: none;
     background-color: #4ab2f1;
@@ -7913,8 +7916,8 @@ pre {
     text-transform: uppercase;
   }
 
-  .mini-shopping-cart input[type="button"]:hover,
-  .mini-shopping-cart input[type="button"]:focus {
+  .mini-shopping-cart button[type="button"]:hover,
+  .mini-shopping-cart button[type="button"]:focus {
     background-color: #248ece;
   }
 

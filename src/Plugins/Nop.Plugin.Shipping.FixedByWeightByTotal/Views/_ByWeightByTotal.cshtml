@@ -204,7 +204,7 @@
                             onclick="javascript:OpenWindow('@(Url.Action("AddRateByWeightByTotalPopup", "FixedByWeightByTotal", new {btnId = "btnRefresh", formId = "shipping-byweight-form"}))', 800, 800, true);return false;">
                         @T("Plugins.Shipping.FixedByWeightByTotal.AddRecord")
                     </button>
-                    <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none"/>
+                    <button type="submit" name="save" id="btnRefresh" class="btn btn-default" style="display: none"></button>
                 </div>
             </div>
             <div class="card card-advanced-setting">
@@ -223,7 +223,7 @@
                             &nbsp;
                         </div>
                         <div class="col-md-9">
-                            <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")"/>
+                            <button type="button" id="savegeneralsettings" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                             <script>
 
                                 function renderColumnEdit(data, type, row, meta) {

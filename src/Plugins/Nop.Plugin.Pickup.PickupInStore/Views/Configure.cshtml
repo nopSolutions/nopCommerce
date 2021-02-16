@@ -69,8 +69,9 @@
             </script>
 
             <div class="card-footer">
-                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
-                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
+                <button type="submit" id="btnAddNewOption" name="save" class="btn btn-primary" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;">@T("Plugins.Pickup.PickupInStore.AddNew")</button>
+
+                <button id="btnRefresh" type="submit" name="save" class="btn btn-default" style="display: none"></button>
             </div>
             <script>
                 $(document).ready(function () {

@@ -235,15 +235,15 @@
                     <div class="buttons">
                         @if (Model.IsEditable)
                         {
-                            <input type="submit" name="updatecart" value="@T("Wishlist.UpdateCart")" class="button-2 update-wishlist-button" />
+                            <button type="submit" name="updatecart" class="button-2 update-wishlist-button">@T("Wishlist.UpdateCart")</button>
                         }
                         @if (Model.DisplayAddToCart)
                         {
-                            <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" class="button-2 wishlist-add-to-cart-button" />
+                            <button type="submit" name="addtocartbutton" class="button-2 wishlist-add-to-cart-button">@T("ShoppingCart.AddToCart")</button>
                         }
                         @if (Model.IsEditable && Model.EmailWishlistEnabled)
                         {
-                            <input type="button" value="@T("Wishlist.EmailAFriend")" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
+                            <button type="button" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">@T("Wishlist.EmailAFriend")</button>
                         }
                     </div>
                 </form>
