@@ -298,6 +298,19 @@ function ensureDataTablesRendered() {
   $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 }
 
+function reloadAllDataTables(itemCount) {
+  //depending on the number of elements, the time for animation of opening the menu should increase
+  var timePause = 300;
+  if (itemCount) {
+    timePause = itemCount * 100;
+  }
+  $('table[class^="table"]').each(function () {
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, timePause);
+  });
+}
+
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
@@ -322,5 +335,10 @@ $(document).ready(function () {
 
   $('#advanced-settings-mode').on('click', function (e) {
     ensureDataTablesRendered();
+  });
+
+  //when sidebar-toggle click
+  $('#nopSideBarPusher').on('click', function (e) {
+    reloadAllDataTables();
   });
 });
