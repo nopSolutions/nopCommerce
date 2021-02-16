@@ -532,10 +532,12 @@ namespace Nop.Web.Factories
             if (pageModel == null)
                 throw new ArgumentNullException(nameof(pageModel));
 
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
-                await _workContext.GetWorkingLanguageAsync(),
-                _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-                await _storeContext.GetCurrentStoreAsync());
+                language, customerRolesIds, store);
 
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -615,7 +617,7 @@ namespace Nop.Web.Factories
                 //at the moment topics are in general category too
                 if (_sitemapSettings.SitemapIncludeTopics)
                 {
-                    var topics = (await _topicService.GetAllTopicsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                    var topics = (await _topicService.GetAllTopicsAsync(storeId: store.Id))
                         .Where(topic => topic.IncludeInSitemap);
 
                     model.Items.AddRange(await topics.SelectAwait(async topic => new SitemapModel.SitemapItemModel
@@ -630,7 +632,7 @@ namespace Nop.Web.Factories
                 if (_sitemapSettings.SitemapIncludeBlogPosts && _blogSettings.Enabled)
                 {
                     var blogPostsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.BlogPosts");
-                    var blogPosts = (await _blogService.GetAllBlogPostsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                    var blogPosts = (await _blogService.GetAllBlogPostsAsync(storeId: store.Id))
                         .Where(p => p.IncludeInSitemap);
 
                     model.Items.AddRange(await blogPosts.SelectAwait(async post => new SitemapModel.SitemapItemModel
@@ -646,7 +648,7 @@ namespace Nop.Web.Factories
                 if (_sitemapSettings.SitemapIncludeNews && _newsSettings.Enabled)
                 {
                     var newsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.News");
-                    var news = await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var news = await _newsService.GetAllNewsAsync(storeId: store.Id);
                     model.Items.AddRange(await news.SelectAwait(async newsItem => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = newsGroupTitle,
@@ -660,7 +662,7 @@ namespace Nop.Web.Factories
                 if (_sitemapSettings.SitemapIncludeCategories)
                 {
                     var categoriesGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Categories");
-                    var categories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var categories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
                     model.Items.AddRange(await categories.SelectAwait(async category => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = categoriesGroupTitle,
@@ -673,7 +675,7 @@ namespace Nop.Web.Factories
                 if (_sitemapSettings.SitemapIncludeManufacturers)
                 {
                     var manufacturersGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Manufacturers");
-                    var manufacturers = await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var manufacturers = await _manufacturerService.GetAllManufacturersAsync(storeId: store.Id);
                     model.Items.AddRange(await manufacturers.SelectAwait(async manufacturer => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = manufacturersGroupTitle,
@@ -686,7 +688,7 @@ namespace Nop.Web.Factories
                 if (_sitemapSettings.SitemapIncludeProducts)
                 {
                     var productsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Products");
-                    var products = await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id, visibleIndividuallyOnly: true);
+                    var products = await _productService.SearchProductsAsync(0, storeId: store.Id, visibleIndividuallyOnly: true);
                     model.Items.AddRange(await products.SelectAwait(async product => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productsGroupTitle,
@@ -729,10 +731,12 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap as string in XML format</returns>
         public virtual async Task<string> PrepareSitemapXmlAsync(int? id)
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey, id,
-                await _workContext.GetWorkingLanguageAsync(),
-                _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-                await _storeContext.GetCurrentStoreAsync());
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey,
+                id, language, customerRolesIds, store);
 
             var siteMap = await _staticCacheManager.GetAsync(cacheKey, async () => await _sitemapGenerator.GenerateAsync(id));
 
