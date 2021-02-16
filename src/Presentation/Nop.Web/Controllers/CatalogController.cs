@@ -15,6 +15,7 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -282,6 +283,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
             term = term.Trim();

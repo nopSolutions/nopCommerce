@@ -49,8 +49,8 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("ShoppingCart", $"{pattern}cart/",
                 new { controller = "ShoppingCart", action = "Cart" });
 
-            //estimate shipping
-            endpointRouteBuilder.MapControllerRoute("EstimateShipping", $"{pattern}cart/estimateshipping",
+            //estimate shipping (AJAX)
+            endpointRouteBuilder.MapControllerRoute("EstimateShipping", "cart/estimateshipping",
                 new { controller = "ShoppingCart", action = "GetEstimateShipping" });
 
             //wishlist
@@ -75,18 +75,19 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("ProductSearch", $"{pattern}search/",
                 new { controller = "Catalog", action = "Search" });
 
-            endpointRouteBuilder.MapControllerRoute("ProductSearchAutoComplete", $"{pattern}catalog/searchtermautocomplete",
+            //autocomplete search term (AJAX)
+            endpointRouteBuilder.MapControllerRoute("ProductSearchAutoComplete", $"catalog/searchtermautocomplete",
                 new { controller = "Catalog", action = "SearchTermAutoComplete" });
 
-            //change currency (AJAX link)
+            //change currency
             endpointRouteBuilder.MapControllerRoute("ChangeCurrency", pattern + "changecurrency/{customercurrency:min(0)}",
                 new { controller = "Common", action = "SetCurrency" });
 
-            //change language (AJAX link)
+            //change language
             endpointRouteBuilder.MapControllerRoute("ChangeLanguage", pattern + "changelanguage/{langid:min(0)}",
                 new { controller = "Common", action = "SetLanguage" });
 
-            //change tax (AJAX link)
+            //change tax
             endpointRouteBuilder.MapControllerRoute("ChangeTaxType", pattern + "changetaxtype/{customertaxtype:min(0)}",
                 new { controller = "Common", action = "SetTaxType" });
 
@@ -126,17 +127,17 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("VendorList", $"{pattern}vendor/all/",
                 new { controller = "Catalog", action = "VendorAll" });
 
-            //add product to cart (without any attributes and options). used on catalog pages.
+            //add product to cart (without any attributes and options). used on catalog pages. (AJAX)
             endpointRouteBuilder.MapControllerRoute("AddProductToCart-Catalog",
-                pattern + "addproducttocart/catalog/{productId:min(0)}/{shoppingCartTypeId:min(0)}/{quantity:min(0)}",
+                "addproducttocart/catalog/{productId:min(0)}/{shoppingCartTypeId:min(0)}/{quantity:min(0)}",
                 new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" });
 
-            //add product to cart (with attributes and options). used on the product details pages.
+            //add product to cart (with attributes and options). used on the product details pages. (AJAX)
             endpointRouteBuilder.MapControllerRoute("AddProductToCart-Details",
-                pattern + "addproducttocart/details/{productId:min(0)}/{shoppingCartTypeId:min(0)}",
+                "addproducttocart/details/{productId:min(0)}/{shoppingCartTypeId:min(0)}",
                 new { controller = "ShoppingCart", action = "AddProductToCart_Details" });
 
-            //comparing products
+            //comparing products (AJAX)
             endpointRouteBuilder.MapControllerRoute("AddProductToCompare", "compareproducts/add/{productId:min(0)}",
                 new { controller = "Product", action = "AddProductToCompareList" });
 
@@ -156,18 +157,17 @@ namespace Nop.Web.Infrastructure
                 pattern + "customer/productreviews/page/{pageNumber:min(0)}",
                 new { controller = "Product", action = "CustomerProductReviews" });
 
-            //back in stock notifications
+            //back in stock notifications (AJAX)
             endpointRouteBuilder.MapControllerRoute("BackInStockSubscribePopup",
-                pattern + "backinstocksubscribe/{productId:min(0)}",
+                "backinstocksubscribe/{productId:min(0)}",
                 new { controller = "BackInStockSubscription", action = "SubscribePopup" });
 
             endpointRouteBuilder.MapControllerRoute("BackInStockSubscribeSend",
-                pattern + "backinstocksubscribesend/{productId:min(0)}",
+                "backinstocksubscribesend/{productId:min(0)}",
                 new { controller = "BackInStockSubscription", action = "SubscribePopupPOST" });
 
-            //downloads
-            endpointRouteBuilder.MapControllerRoute("GetSampleDownload",
-                pattern + "download/sample/{productid:min(0)}",
+            //downloads (file result)
+            endpointRouteBuilder.MapControllerRoute("GetSampleDownload", "download/sample/{productid:min(0)}",
                 new { controller = "Download", action = "Sample" });
 
             //checkout pages
@@ -204,8 +204,8 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("CheckoutCompleted", pattern + "checkout/completed/{orderId:int?}",
                 new { controller = "Checkout", action = "Completed" });
 
-            //subscribe newsletters
-            endpointRouteBuilder.MapControllerRoute("SubscribeNewsletter", $"{pattern}subscribenewsletter",
+            //subscribe newsletters (AJAX)
+            endpointRouteBuilder.MapControllerRoute("SubscribeNewsletter", "subscribenewsletter",
                 new { controller = "Newsletter", action = "SubscribeNewsletter" });
 
             //email wishlist
@@ -221,8 +221,8 @@ namespace Nop.Web.Infrastructure
                 pattern + "registerresult/{resultId:min(0)}",
                 new { controller = "Customer", action = "RegisterResult" });
 
-            //check username availability
-            endpointRouteBuilder.MapControllerRoute("CheckUsernameAvailability", $"{pattern}customer/checkusernameavailability",
+            //check username availability (AJAX)
+            endpointRouteBuilder.MapControllerRoute("CheckUsernameAvailability", "customer/checkusernameavailability",
                 new { controller = "Customer", action = "CheckUsernameAvailability" });
 
             //passwordrecovery
@@ -233,9 +233,9 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("PasswordRecoveryConfirm", $"{pattern}passwordrecovery/confirm",
                 new { controller = "Customer", action = "PasswordRecoveryConfirm" });
 
-            //topics
+            //topics (AJAX)
             endpointRouteBuilder.MapControllerRoute("TopicPopup",
-                pattern + "t-popup/{SystemName}",
+                "t-popup/{SystemName}",
                 new { controller = "Topic", action = "TopicDetailsPopup" });
 
             //blog
@@ -247,18 +247,18 @@ namespace Nop.Web.Infrastructure
                 pattern + "blog/month/{month}",
                 new { controller = "Blog", action = "BlogByMonth" });
 
-            //blog RSS
+            //blog RSS (file result)
             endpointRouteBuilder.MapControllerRoute("BlogRSS",
-                pattern + "blog/rss/{languageId:min(0)}",
+                "blog/rss/{languageId:min(0)}",
                 new { controller = "Blog", action = "ListRss" });
 
-            //news RSS
+            //news RSS (file result)
             endpointRouteBuilder.MapControllerRoute("NewsRSS",
-                pattern + "news/rss/{languageId:min(0)}",
+                "news/rss/{languageId:min(0)}",
                 new { controller = "News", action = "ListRss" });
 
-            //set review helpfulness (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("SetProductReviewHelpfulness", $"{pattern}setproductreviewhelpfulness",
+            //set review helpfulness (AJAX)
+            endpointRouteBuilder.MapControllerRoute("SetProductReviewHelpfulness", "setproductreviewhelpfulness",
                 new { controller = "Product", action = "SetProductReviewHelpfulness" });
 
             //customer account links
@@ -331,29 +331,26 @@ namespace Nop.Web.Infrastructure
                 pattern + "reorder/{orderId:min(0)}",
                 new { controller = "Order", action = "ReOrder" });
 
+            //pdf invoice (file result)
             endpointRouteBuilder.MapControllerRoute("GetOrderPdfInvoice",
-                pattern + "orderdetails/pdf/{orderId}",
+                "orderdetails/pdf/{orderId}",
                 new { controller = "Order", action = "GetPdfInvoice" });
 
             endpointRouteBuilder.MapControllerRoute("PrintOrderDetails",
                 pattern + "orderdetails/print/{orderId}",
                 new { controller = "Order", action = "PrintOrderDetails" });
 
-            //order downloads
-            endpointRouteBuilder.MapControllerRoute("GetDownload",
-                pattern + "download/getdownload/{orderItemId:guid}/{agree?}",
+            //order downloads (file result)
+            endpointRouteBuilder.MapControllerRoute("GetDownload", "download/getdownload/{orderItemId:guid}/{agree?}",
                 new { controller = "Download", action = "GetDownload" });
 
-            endpointRouteBuilder.MapControllerRoute("GetLicense",
-                pattern + "download/getlicense/{orderItemId:guid}/",
+            endpointRouteBuilder.MapControllerRoute("GetLicense", "download/getlicense/{orderItemId:guid}/",
                 new { controller = "Download", action = "GetLicense" });
 
-            endpointRouteBuilder.MapControllerRoute("DownloadUserAgreement",
-                pattern + "customer/useragreement/{orderItemId:guid}",
+            endpointRouteBuilder.MapControllerRoute("DownloadUserAgreement", "customer/useragreement/{orderItemId:guid}",
                 new { controller = "Customer", action = "UserAgreement" });
 
-            endpointRouteBuilder.MapControllerRoute("GetOrderNoteFile",
-                pattern + "download/ordernotefile/{ordernoteid:min(0)}",
+            endpointRouteBuilder.MapControllerRoute("GetOrderNoteFile", "download/ordernotefile/{ordernoteid:min(0)}",
                 new { controller = "Download", action = "GetOrderNoteFile" });
 
             //contact vendor
@@ -381,7 +378,7 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("MultiFactorAuthenticationSettings", $"{pattern}customer/multifactorauthentication",
                 new { controller = "Customer", action = "MultiFactorAuthentication" });
 
-            //poll vote AJAX link
+            //poll vote (AJAX)
             endpointRouteBuilder.MapControllerRoute("PollVote", "poll/vote",
                 new { controller = "Poll", action = "Vote" });
 
@@ -393,41 +390,41 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("ClearCompareList", $"{pattern}clearcomparelist/",
                 new { controller = "Product", action = "ClearCompareList" });
 
-            //new RSS
-            endpointRouteBuilder.MapControllerRoute("NewProductsRSS", $"{pattern}newproducts/rss",
+            //new RSS (file result)
+            endpointRouteBuilder.MapControllerRoute("NewProductsRSS", "newproducts/rss",
                 new { controller = "Product", action = "NewProductsRss" });
 
-            //get state list by country ID  (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("GetStatesByCountryId", $"{pattern}country/getstatesbycountryid/",
+            //get state list by country ID (AJAX)
+            endpointRouteBuilder.MapControllerRoute("GetStatesByCountryId", "country/getstatesbycountryid/",
                 new { controller = "Country", action = "GetStatesByCountryId" });
 
-            //EU Cookie law accept button handler (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("EuCookieLawAccept", $"{pattern}eucookielawaccept",
+            //EU Cookie law accept button handler (AJAX)
+            endpointRouteBuilder.MapControllerRoute("EuCookieLawAccept", "eucookielawaccept",
                 new { controller = "Common", action = "EuCookieLawAccept" });
 
-            //authenticate topic AJAX link
-            endpointRouteBuilder.MapControllerRoute("TopicAuthenticate", $"{pattern}topic/authenticate",
+            //authenticate topic (AJAX)
+            endpointRouteBuilder.MapControllerRoute("TopicAuthenticate", "topic/authenticate",
                 new { controller = "Topic", action = "Authenticate" });
 
-            //prepare top menu (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("GetCatalogRoot", $"{pattern}catalog/getcatalogroot",
+            //prepare top menu (AJAX)
+            endpointRouteBuilder.MapControllerRoute("GetCatalogRoot", "catalog/getcatalogroot",
                 new { controller = "Catalog", action = "GetCatalogRoot" });
 
-            endpointRouteBuilder.MapControllerRoute("GetCatalogSubCategories", $"{pattern}catalog/getcatalogsubcategories",
+            endpointRouteBuilder.MapControllerRoute("GetCatalogSubCategories", $"catalog/getcatalogsubcategories",
                 new { controller = "Catalog", action = "GetCatalogSubCategories" });
 
-            //product attributes with "upload file" type
+            //product attributes with "upload file" type (AJAX)
             endpointRouteBuilder.MapControllerRoute("UploadFileProductAttribute",
-                pattern + "uploadfileproductattribute/{attributeId:min(0)}",
+                "uploadfileproductattribute/{attributeId:min(0)}",
                 new { controller = "ShoppingCart", action = "UploadFileProductAttribute" });
 
-            //checkout attributes with "upload file" type
+            //checkout attributes with "upload file" type (AJAX)
             endpointRouteBuilder.MapControllerRoute("UploadFileCheckoutAttribute",
-                pattern + "uploadfilecheckoutattribute/{attributeId:min(0)}",
+                "uploadfilecheckoutattribute/{attributeId:min(0)}",
                 new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
 
-            //return request with "upload file" support
-            endpointRouteBuilder.MapControllerRoute("UploadFileReturnRequest", $"{pattern}uploadfilereturnrequest",
+            //return request with "upload file" support (AJAX)
+            endpointRouteBuilder.MapControllerRoute("UploadFileReturnRequest", "uploadfilereturnrequest",
                 new { controller = "ReturnRequest", action = "UploadFileReturnRequest" });
 
             //forums
@@ -438,7 +435,8 @@ namespace Nop.Web.Infrastructure
                 pattern + "boards/activediscussions/page/{pageNumber:int}",
                 new { controller = "Boards", action = "ActiveDiscussions" });
 
-            endpointRouteBuilder.MapControllerRoute("ActiveDiscussionsRSS", $"{pattern}boards/activediscussionsrss",
+            //forums RSS (file result)
+            endpointRouteBuilder.MapControllerRoute("ActiveDiscussionsRSS", "boards/activediscussionsrss",
                 new { controller = "Boards", action = "ActiveDiscussionsRSS" });
 
             endpointRouteBuilder.MapControllerRoute("PostEdit",
@@ -473,8 +471,9 @@ namespace Nop.Web.Infrastructure
                 pattern + "boards/topicmove/{id:min(0)}",
                 new { controller = "Boards", action = "TopicMove" });
 
+            //topic watch (AJAX)
             endpointRouteBuilder.MapControllerRoute("TopicWatch",
-                pattern + "boards/topicwatch/{id:min(0)}",
+                "boards/topicwatch/{id:min(0)}",
                 new { controller = "Boards", action = "TopicWatch" });
 
             endpointRouteBuilder.MapControllerRoute("TopicSlug",
@@ -485,12 +484,14 @@ namespace Nop.Web.Infrastructure
                 pattern + "boards/topic/{id:min(0)}/{slug?}/page/{pageNumber:int}",
                 new { controller = "Boards", action = "Topic" });
 
+            //forum watch (AJAX)
             endpointRouteBuilder.MapControllerRoute("ForumWatch",
-                pattern + "boards/forumwatch/{id:min(0)}",
+                "boards/forumwatch/{id:min(0)}",
                 new { controller = "Boards", action = "ForumWatch" });
 
+            //forums RSS (file result)
             endpointRouteBuilder.MapControllerRoute("ForumRSS",
-                pattern + "boards/forumrss/{id:min(0)}",
+                "boards/forumrss/{id:min(0)}",
                 new { controller = "Boards", action = "ForumRSS" });
 
             endpointRouteBuilder.MapControllerRoute("ForumSlug",
@@ -544,14 +545,15 @@ namespace Nop.Web.Infrastructure
                 pattern + "newsletter/subscriptionactivation/{token:guid}/{active}",
                 new { controller = "Newsletter", action = "SubscriptionActivation" });
 
-            //robots.txt
-            endpointRouteBuilder.MapControllerRoute("robots.txt", $"{pattern}robots.txt",
+            //robots.txt (file result)
+            endpointRouteBuilder.MapControllerRoute("robots.txt", "robots.txt",
                 new { controller = "Common", action = "RobotsTextFile" });
 
             //sitemap
             endpointRouteBuilder.MapControllerRoute("Sitemap", $"{pattern}sitemap",
                 new { controller = "Common", action = "Sitemap" });
 
+            //sitemap.xml (file result)
             endpointRouteBuilder.MapControllerRoute("sitemap.xml", "sitemap.xml",
                 new { controller = "Common", action = "SitemapXml" });
 
@@ -563,7 +565,7 @@ namespace Nop.Web.Infrastructure
                 new { controller = "Common", action = "StoreClosed" });
 
             //install
-            endpointRouteBuilder.MapControllerRoute("Installation", $"{pattern}{NopInstallationDefaults.InstallPath}",
+            endpointRouteBuilder.MapControllerRoute("Installation", $"{NopInstallationDefaults.InstallPath}",
                 new { controller = "Install", action = "Index" });
 
             //error page

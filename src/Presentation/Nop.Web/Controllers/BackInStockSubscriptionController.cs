@@ -10,6 +10,7 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 
@@ -62,6 +63,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> SubscribePopup(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);

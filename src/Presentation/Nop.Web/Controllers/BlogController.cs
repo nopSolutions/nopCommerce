@@ -117,6 +117,7 @@ namespace Nop.Web.Controllers
             return View("List", model);
         }
 
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var feed = new RssFeed(

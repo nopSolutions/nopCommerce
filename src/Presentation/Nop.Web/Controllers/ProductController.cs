@@ -320,6 +320,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> NewProductsRss()
         {
             var feed = new RssFeed(
