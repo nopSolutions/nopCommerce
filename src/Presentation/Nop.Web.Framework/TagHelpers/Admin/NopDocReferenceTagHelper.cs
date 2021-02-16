@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Nop.Core.Domain.Common;
+using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// "nop-hint" tag helper
+    /// "nop-doc-reference" tag helper
     /// </summary>
     [HtmlTargetElement("nop-doc-reference", Attributes = STRING_RESOURCE_ATTRIBUTE_NAME, TagStructure = TagStructure.WithoutEndTag)]
     public class NopDocReferenceTagHelper : TagHelper
@@ -17,6 +18,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string ADD_WRAPPER_ATTRIBUTE_NAME = "asp-add-wrapper";
 
         #endregion
+
+        #region Properties
 
         /// <summary>
         /// String resource value
@@ -29,6 +32,23 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(ADD_WRAPPER_ATTRIBUTE_NAME)]
         public bool AddWrapper { get; set; } = true;
+
+        #endregion
+
+        #region Fields
+
+        private readonly ISettingService _settingService;
+
+        #endregion
+
+        #region Ctor
+
+        public NopDocReferenceTagHelper(ISettingService settingService)
+        {
+            _settingService = settingService;
+        }
+
+        #endregion
 
         #region Methods
 
@@ -48,16 +68,20 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //clear the output
             output.SuppressOutput();
 
-            //add wrapper
-            if (AddWrapper)
+            var adminAreaSettings = _settingService.LoadSettingAsync<AdminAreaSettings>().Result;
+            if (adminAreaSettings.ShowDocumentationReferenceLinks)
             {
-                output.TagName = "div";
-                output.TagMode = TagMode.StartTagAndEndTag;
-                output.Attributes.SetAttribute("class", "documentation-reference");
-            }
+                //add wrapper
+                if (AddWrapper)
+                {
+                    output.TagName = "div";
+                    output.TagMode = TagMode.StartTagAndEndTag;
+                    output.Attributes.SetAttribute("class", "documentation-reference");
+                }
 
-            var hintHtml = $"<span>{StringResource}</span>";
-            output.Content.AppendHtml(hintHtml);
+                var hintHtml = $"<span>{StringResource}</span>";
+                output.Content.AppendHtml(hintHtml);
+            }
 
             return Task.CompletedTask;
         }
