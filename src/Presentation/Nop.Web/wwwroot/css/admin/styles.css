@@ -1474,21 +1474,20 @@ div.dataTables_wrapper {
 
 /* FORM ELEMENTS */
 .form-horizontal .label-wrapper {
-  display: table;
   float: right;
-  min-height: 28px;
+  display: flex;
+  align-items: flex-start;
 }
 
   .form-horizontal .label-wrapper .col-form-label {
-    display: table-cell;
     text-align: right;
   }
 
   .form-horizontal .label-wrapper .ico-help {
-    display: table-cell;
     color: #3c8dbc;
     font-size: 1.17em;
     padding-left: 6px;
+    padding-top: 0.28em;
   }
 
   .form-horizontal .label-wrapper i.fas {
@@ -1522,7 +1521,7 @@ div.dataTables_wrapper {
   }
 
   .form-group input[type=checkbox] {
-    margin-top: 10px;
+    margin-top: 13px;
   }
 
   .form-group .checkbox input[type=checkbox] {
