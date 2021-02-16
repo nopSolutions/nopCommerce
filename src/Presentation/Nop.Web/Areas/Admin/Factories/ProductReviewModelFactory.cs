@@ -174,16 +174,20 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (productReview != null)
             {
+                var showStoreName = (await _storeService.GetAllStoresAsync()).Count > 1;
+
                 //fill in model values from the entity
                 model ??= new ProductReviewModel
                 {
                     Id = productReview.Id,
-                    StoreName = (await _storeService.GetStoreByIdAsync(productReview.StoreId))?.Name,
+                    StoreName = showStoreName ? (await _storeService.GetStoreByIdAsync(productReview.StoreId))?.Name : string.Empty,
                     ProductId = productReview.ProductId,
                     ProductName = (await _productService.GetProductByIdAsync(productReview.ProductId))?.Name,
                     CustomerId = productReview.CustomerId,
                     Rating = productReview.Rating
                 };
+
+                model.ShowStoreName = showStoreName;
 
                 model.CustomerInfo = await _customerService.GetCustomerByIdAsync(productReview.CustomerId) is Customer customer && await _customerService.IsRegisteredAsync(customer)
                     ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
