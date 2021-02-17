@@ -253,6 +253,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Account.MultiFactorAuthentication.Providers"] = "Authentication providers",
                 ["Account.MultiFactorAuthentication.Providers.NoActive"] = "No active providers",
                 ["Account.MultiFactorAuthentication.Description"] = "<p>To activate multi-factor authentication for your account, you need: </p></br><ol><li>1. Activate the ’Is enabled’ setting.</li><li>2. Choose one of the multi-factor authentication providers.</li><li>3. Save.</li><li>4. Configure the selected multi-factor authentication provider by following the instructions on the individual settings page of the selected provider.</li></ol></br><p> WARNING. After saving the selected provider, be sure to configure it, otherwise you will be denied access the next time you try to enter your account.</p>",
+
+                ["Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider"] = "Multi-factor authentication provider",
+                ["Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider.Hint"] = "Name of the multi-factor authentication provider to which the customer is associated.",
+                ["Admin.Customers.Customers.UnbindMFAProvider"] = "The customer has unbinded from the multifactor authentication provider successfully.",
                 //</MFA #475>
 
                 ["Admin.Configuration.Plugins.Description.DownloadMorePlugins"] = "You can download more nopCommerce plugins in our <a href=\"https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=all-plugins\" target=\"_blank\">marketplace</a>",
