@@ -529,6 +529,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                         <br />10. Click <b>Save</b> button on this page.
 	                    <br />
                     </p>",
+                ["Admin.Configuration.LanguagePackProgressMessage"] = "The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href=\"https://www.nopcommerce.com/translations\" target=\"_blank\">translations page.</a>",
             }).Wait();
 
             // rename locales

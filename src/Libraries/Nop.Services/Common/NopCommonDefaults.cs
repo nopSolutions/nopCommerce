@@ -92,7 +92,12 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets minimal progress of language pack translation to download and install
         /// </summary>
-        public static int LanguagePackMinTranslationProgressToInstall => 90;
+        public static int LanguagePackMinTranslationProgressToInstall => 80;
+
+        /// <summary>
+        /// Gets a name of generic attribute to store the value of 'LanguagePackProgress'
+        /// </summary>
+        public static string LanguagePackProgressAttribute => "LanguagePackProgress";
 
         #endregion
 
