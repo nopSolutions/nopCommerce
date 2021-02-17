@@ -110,12 +110,12 @@
                     <div class="col-md-9">
                         <div class="input-group input-group-short">
                             <div class="input-group-text align-items-start">
-                                <div class="font-weight-bold form-text-row">@Model.OrderStatus</div>
+                                <div class="font-weight-bold">@Model.OrderStatus</div>
                             </div>
                             <div class="input-group-btn">
                                 @if (Model.CanCancelOrder)
                                 {
-                                    <button type="submit" name="cancelorder" id="cancelorder" class="btn btn-danger my-1" style="margin-right: 3px;">
+                                    <button type="submit" name="cancelorder" id="cancelorder" class="btn btn-danger" style="margin-right: 3px;">
                                         @T("Admin.Orders.Fields.OrderStatus.Cancel")
                                     </button>
                                     <nop-action-confirmation asp-button-id="cancelorder" />
@@ -124,12 +124,12 @@
                                     @T("Admin.Orders.Fields.OrderStatus.Change")
                                 </button>
                                 <div id="pnlChangeOrderStatus">
-                                    <nop-select asp-for="OrderStatusId" asp-items="@await (((OrderStatus) Model.OrderStatusId).ToSelectListAsync())" />
-                                    <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary my-1" >
+                                    <nop-select asp-for="OrderStatusId" asp-items="@await (((OrderStatus) Model.OrderStatusId).ToSelectListAsync())" class="mt-1"/>
+                                    <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary mt-1 mr-1" >
                                         @T("Admin.Common.Save")
                                     </button>
                                     <nop-action-confirmation asp-button-id="btnSaveOrderStatus" />
-                                    <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn btn-secondary my-ml-1" >
+                                    <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn btn-secondary mt-1" >
                                         @T("Admin.Common.Cancel")
                                     </button>
                                     <div class="input-group-btn-hint">
