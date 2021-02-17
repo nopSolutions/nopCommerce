@@ -134,16 +134,16 @@
                                 <div class="col-md-9">
                                     <div class="input-group input-group-short">
                                         <div id="lblShippedDate" class="input-group-text">
-                                            <div class="form-text-row">@Model.ShippedDate</div>
+                                            @Model.ShippedDate
                                         </div>
                                         @if (Model.ShippedDateUtc.HasValue)
                                         {
-                                        <div id="divShippedDate" style="display: inline-block;">
+                                        <div id="divShippedDate" style="display: inline-block;" class="col-md-9">
                                             <nop-editor asp-for="ShippedDateUtc" />
                                             @T("Admin.Orders.Shipments.ShippedDate.EnterUtc")&nbsp;&nbsp;
                                         </div>
                                         }
-                                    <div class="input-group-append">
+                                    <div class="input-group-append col-md-3">
                                         @if (Model.CanShip)
                                         {
                                             <button type="submit" name="setasshipped" id="setasshipped" class="btn btn-info btn-flat">
@@ -177,16 +177,16 @@
                                 <div class="col-md-9">
                                     <div class="input-group input-group-short">
                                         <div id="lblDeliveryDate" class="input-group-text">
-                                            <div class="form-text-row">@Model.DeliveryDate</div>
+                                            @Model.DeliveryDate
                                         </div>
                                         @if (Model.DeliveryDateUtc.HasValue)
                                         {
-                                        <div id="divDeliveryDate" style="display: inline-block;">
+                                        <div id="divDeliveryDate" style="display: inline-block;" class="col-md-9">
                                             <nop-editor asp-for="DeliveryDateUtc" />
                                             @T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")&nbsp;&nbsp;
                                         </div>
                                         }
-                                    <div class="input-group-append">
+                                    <div class="input-group-append col-md-3">
                                         @if (Model.CanDeliver)
                                         {
                                             <button type="submit" name="setasdelivered" id="setasdelivered" class="btn btn-info btn-flat">
