@@ -217,7 +217,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="format">Destination format</param>
         /// <param name="targetSize">Target size</param>
         /// <returns>Image as array of byte[]</returns>
-        protected byte[] ImageResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
+        protected virtual byte[] ImageResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
         {
             if (image == null)
                 throw new ArgumentNullException("Image is null");
@@ -259,7 +259,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="mimeType">Mime type</param>
         /// <returns>SKEncodedImageFormat</returns>
-        protected SKEncodedImageFormat GetImageFormatByMimeType(string mimeType)
+        protected virtual SKEncodedImageFormat GetImageFormatByMimeType(string mimeType)
         {
             var format = SKEncodedImageFormat.Jpeg;
             if (string.IsNullOrEmpty(mimeType))
