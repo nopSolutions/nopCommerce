@@ -470,8 +470,10 @@ namespace Nop.Tests
             _serviceProvider.GetService<INopDataProvider>().CreateDatabase(null);
             _serviceProvider.GetService<INopDataProvider>().InitializeDatabase();
 
+            var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
+
             _serviceProvider.GetService<IInstallationService>()
-                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, null, null, null).Wait();
+                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
             _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
 
             var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
