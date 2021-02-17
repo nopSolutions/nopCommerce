@@ -509,7 +509,26 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute is already exists into combination: '{0}'.",
 
                 //#4564
-                ["Admin.Common.Validation.NotEmpty"] = "Please provide a {0}"
+                ["Admin.Common.Validation.NotEmpty"] = "Please provide a {0}",
+
+                //#3296
+                ["Plugins.Payments.PayPalStandard.Instructions"] = @"
+                    <p>
+	                    <b>If you're using this gateway ensure that your primary store currency is supported by PayPal.</b>
+	                    <br />
+	                    <br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br />
+	                    <br />1. Log in to your PayPal account (click <a href=""https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8"" target=""_blank"">here</a> to create your account).
+	                    <br />2. Click on the Profile button.
+	                    <br />3. Click on the <b>Account Settings</b> link.
+	                    <br />4. Select the <b>Website payments</b> item on left panel.
+	                    <br />5. Find <b>Website Preferences</b> and click on the <b>Update</b> link.
+	                    <br />6. Under <b>Auto Return</b> for <b>Website payments preferences</b>, select the <b>On</b> radio button.
+	                    <br />7. For the <b>Return URL</b>, enter and save the URL on your site that will receive the transaction ID posted by PayPal after a customer payment (<em>{0}</em>).
+                        <br />8. Under <b>Payment Data Transfer</b>, select the <b>On</b> radio button and get your <b>Identity token</b>.
+	                    <br />9. Enter <b>Identity token</b> in the field below on the plugin configuration page.
+                        <br />10. Click <b>Save</b> button on this page.
+	                    <br />
+                    </p>",
             }).Wait();
 
             // rename locales
