@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentMigrator;
@@ -78,9 +79,7 @@ using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Installation;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
 using Task = System.Threading.Tasks.Task;
 
@@ -600,47 +599,71 @@ namespace Nop.Tests
                 var lastPart = await GetFileExtensionFromMimeTypeAsync(picture.MimeType);
                 string thumbFileName;
                 if (targetSize == 0)
+                {
                     thumbFileName = !string.IsNullOrEmpty(seoFileName)
                         ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
                         : $"{picture.Id:0000000}.{lastPart}";
+
+                    var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
+                    if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                        return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
+
+                    pictureBinary ??= await LoadPictureBinaryAsync(picture);
+
+                    //the named mutex helps to avoid creating the same files in different threads,
+                    //and does not decrease performance significantly, because the code is blocked only for the specific file.
+                    //you should be very careful, mutexes cannot be used in with the await operation
+                    //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+                    using var mutex = new Mutex(false, thumbFileName);
+                    mutex.WaitOne();
+                    try
+                    {
+                        SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
+                    }
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
+                }
                 else
+                {
                     thumbFileName = !string.IsNullOrEmpty(seoFileName)
                         ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
                         : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
 
-                var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
+                    var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
+                    if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
+                        return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
 
-                if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                    return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
-
-                //check, if the file was created, while we were waiting for the release of the mutex.
-                if (!await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
-                {
                     pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
-                    if ((pictureBinary?.Length ?? 0) == 0)
-                        return showDefaultPicture
-                            ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation),
-                                picture)
-                            : (string.Empty, picture);
-
-                    byte[] pictureBinaryResized;
-                    if (targetSize != 0)
+                    //the named mutex helps to avoid creating the same files in different threads,
+                    //and does not decrease performance significantly, because the code is blocked only for the specific file.
+                    //you should be very careful, mutexes cannot be used in with the await operation
+                    //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+                    using var mutex = new Mutex(false, thumbFileName);
+                    mutex.WaitOne();
+                    try
                     {
-                        //resizing required
-                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
-                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                        if (pictureBinary != null)
                         {
-                            Mode = ResizeMode.Max, Size = CalculateDimensions(image.Size(), targetSize)
-                        }));
+                            try
+                            {
+                                using var image = SKBitmap.Decode(pictureBinary);
+                                var format = GetImageFormatByMimeType(picture.MimeType);
+                                pictureBinary = ImageResize(image, format, targetSize);
+                            }
+                            catch
+                            {
+                            }
+                        }
 
-                        pictureBinaryResized = await EncodeImageAsync(image, imageFormat);
+                        SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
                     }
-                    else
-                        //create a copy of pictureBinary
-                        pictureBinaryResized = pictureBinary.ToArray();
-
-                    await SaveThumbAsync(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
                 }
 
                 return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
