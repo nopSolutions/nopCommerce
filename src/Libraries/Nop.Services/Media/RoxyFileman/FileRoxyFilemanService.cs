@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using SkiaSharp;
 
 namespace Nop.Services.Media.RoxyFileman
 {
@@ -519,7 +520,7 @@ namespace Nop.Services.Media.RoxyFileman
                 if (GetFileType(_fileProvider.GetFileExtension(files[i])) == "image")
                 {
                     await using var stream = new FileStream(physicalPath, FileMode.Open);
-                    using var image = Image.FromStream(stream);
+                    using var image = SKBitmap.Decode(stream);
                     width = image.Width;
                     height = image.Height;
                 }
@@ -671,52 +672,35 @@ namespace Nop.Services.Media.RoxyFileman
         public virtual async Task CreateImageThumbnailAsync(string path)
         {
             path = GetFullPath(await GetVirtualPathAsync(path));
-            int.TryParse(GetHttpContext().Request.Query["width"].ToString().Replace("px", string.Empty), out var width);
-            int.TryParse(GetHttpContext().Request.Query["height"].ToString().Replace("px", string.Empty), out var height);
 
-            await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            using var image = new Bitmap(Image.FromStream(stream));
-            var cropX = 0;
-            var cropY = 0;
+            var file = File.ReadAllBytes(path);
+            using var image = SKBitmap.Decode(file);
 
-            var imgRatio = image.Width / (double)image.Height;
 
-            if (height == 0)
-                height = Convert.ToInt32(Math.Floor(width / imgRatio));
-
-            if (width > image.Width)
-                width = image.Width;
-            if (height > image.Height)
-                height = image.Height;
-
-            var cropRatio = width / (double)height;
-            var cropWidth = Convert.ToInt32(Math.Floor(image.Height * cropRatio));
-            var cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
-
-            if (cropWidth > image.Width)
+            float width, height;
+            var targetSize = 120;
+            if (image.Height > image.Width)
             {
-                cropWidth = image.Width;
-                cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
+                // portrait
+                width = image.Width * (targetSize / (float)image.Height);
+                height = targetSize;
+            }
+            else
+            {
+                // landscape or square
+                width = targetSize;
+                height = image.Height * (targetSize / (float)image.Width);
             }
 
-            if (cropHeight > image.Height)
-            {
-                cropHeight = image.Height;
-                cropWidth = Convert.ToInt32(Math.Floor(cropHeight * cropRatio));
-            }
-
-            if (cropWidth < image.Width)
-                cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
-            if (cropHeight < image.Height)
-                cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
-
-            using var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare);
             GetHttpContext().Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
 
-            await using var thumbnailImageStream = new MemoryStream();
-            cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(thumbnailImageStream, ImageFormat.Png);
-            var thumbnailImageBinary = thumbnailImageStream.ToArray();
-            await GetHttpContext().Response.Body.WriteAsync(thumbnailImageBinary);
+            using (var bitmap = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.None))
+            {
+                using var cropImg = SKImage.FromBitmap(bitmap);
+                file = cropImg.Encode().ToArray();
+            }
+
+            await GetHttpContext().Response.Body.WriteAsync(file, 0, file.Length);
             GetHttpContext().Response.Body.Close();
         }
 
