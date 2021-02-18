@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Media;
 
@@ -26,9 +27,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult AsyncUpload()
+        public virtual async Task<IActionResult> AsyncUpload()
         {
-            //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
+            //if (!await _permissionService.Authorize(StandardPermissionProvider.UploadPictures))
             //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
 
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
@@ -41,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ? Request.Form[qqFileNameParameter].ToString()
                 : string.Empty;
 
-            var picture = _pictureService.InsertPicture(httpPostedFile, qqFileName);
+            var picture = await _pictureService.InsertPictureAsync(httpPostedFile, qqFileName);
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
@@ -53,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(ref picture, 100)
+                imageUrl = (await _pictureService.GetPictureUrlAsync(picture, 100)).Url
             });
         }
 

@@ -1,3 +1,4 @@
+﻿using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 
@@ -12,31 +13,31 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// Deletes a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        void DeleteTaxRate(TaxRate taxRate);
+        Task DeleteTaxRateAsync(TaxRate taxRate);
 
         /// <summary>
         /// Gets all tax rates
         /// </summary>
         /// <returns>Tax rates</returns>
-        IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<TaxRate>> GetAllTaxRatesAsync(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets a tax rate
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        TaxRate GetTaxRateById(int taxRateId);
+        Task<TaxRate> GetTaxRateByIdAsync(int taxRateId);
 
         /// <summary>
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        void InsertTaxRate(TaxRate taxRate);
+        Task InsertTaxRateAsync(TaxRate taxRate);
 
         /// <summary>
         /// Updates the tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        void UpdateTaxRate(TaxRate taxRate);
+        Task UpdateTaxRateAsync(TaxRate taxRate);
     }
 }

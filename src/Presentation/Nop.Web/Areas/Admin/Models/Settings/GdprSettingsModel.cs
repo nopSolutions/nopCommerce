@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a GDPR settings model
     /// </summary>
-    public partial class GdprSettingsModel : BaseNopModel, ISettingsModel
+    public partial record GdprSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

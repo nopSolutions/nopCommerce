@@ -7,14 +7,13 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a SEO settings model
     /// </summary>
-    public partial class SeoSettingsModel : BaseNopModel, ISettingsModel
+    public partial record SeoSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
-        [NoTrim]
         public string PageTitleSeparator { get; set; }
         public bool PageTitleSeparator_OverrideForStore { get; set; }
 
@@ -22,6 +21,14 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public int PageTitleSeoAdjustment { get; set; }
         public bool PageTitleSeoAdjustment_OverrideForStore { get; set; }
         public SelectList PageTitleSeoAdjustmentValues { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HomepageTitle")]
+        public string HomepageTitle { get; set; }
+        public bool HomepageTitle_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HomepageDescription")]
+        public string HomepageDescription { get; set; }
+        public bool HomepageDescription_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultTitle")]
         public string DefaultTitle { get; set; }

@@ -176,27 +176,27 @@
     function toggleReCaptchaV3ScoreThreshold() {
         var reCaptchaV3 = "@((int)CaptchaType.ReCaptchaV3)";
         if ($('#@Html.IdFor(model => model.CaptchaSettings.CaptchaType)').val() === reCaptchaV3)
-            $('#ssReCaptchaV3ScoreThresholdpnl').show();
+            $('#ssReCaptchaV3ScoreThresholdpnl').showField();
         else
             $('#ssReCaptchaV3ScoreThresholdpnl').hide();
     }
 
     function toggleReCaptcha() {
         if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
-            $('#ssCaptchaTypepnl').show();
-            $('#ssCaptchaShowOnLoginPagepnl').show();
-            $('#ssCaptchaShowOnRegistrationPagepnl').show();
-            $('#ssCaptchaShowOnForgotPassworPagepnl').show();
-            $('#ssCaptchaShowOnContactUsPagepnl').show();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-            $('#ssCaptchaShowOnProductReviewPagepnl').show();
-            $('#ssCaptchaShowOnApplyVendorPagepnl').show();
-            $('#ssCaptchaShowOnForumpnl').show();
-            $('#ssReCaptchaPublicKeypnl').show();
-            $('#ssReCaptchaPrivateKeypnl').show();
+            $('#ssCaptchaTypepnl').showField();
+            $('#ssCaptchaShowOnLoginPagepnl').showField();
+            $('#ssCaptchaShowOnRegistrationPagepnl').showField();
+            $('#ssCaptchaShowOnForgotPassworPagepnl').showField();
+            $('#ssCaptchaShowOnContactUsPagepnl').showField();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').showField();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').showField();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').showField();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').showField();
+            $('#ssCaptchaShowOnProductReviewPagepnl').showField();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').showField();
+            $('#ssCaptchaShowOnForumpnl').showField();
+            $('#ssReCaptchaPublicKeypnl').showField();
+            $('#ssReCaptchaPrivateKeypnl').showField();
             toggleReCaptchaV3ScoreThreshold();
         } else {
             $('#ssCaptchaTypepnl').hide();

@@ -1,5 +1,5 @@
 /**
- * Globalize Runtime v1.4.3
+ * Globalize Runtime v1.6.0
  *
  * http://github.com/jquery/globalize
  *
@@ -7,10 +7,10 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2020-03-19T12:34Z
+ * Date: 2020-09-08T11:54Z
  */
 /*!
- * Globalize Runtime v1.4.3 2020-03-19T12:34Z Released under the MIT license
+ * Globalize Runtime v1.6.0 2020-09-08T11:54Z Released under the MIT license
  * http://git.io/TrdQbw
  */
 (function( root, factory ) {
@@ -38,6 +38,8 @@
 
 
 var createError = Globalize._createError,
+	partsJoin = Globalize._partsJoin,
+	partsPush = Globalize._partsPush,
 	regexpEscape = Globalize._regexpEscape,
 	runtimeKey = Globalize._runtimeKey,
 	stringPad = Globalize._stringPad,
@@ -326,6 +328,19 @@ var numberPatternRe = ( /^(('([^']|'')*'|[^*#@0,.E])*)(\*.)?((([#,]*[0,]*0+)(\.0
 
 
 
+var numberSymbolName = {
+	".": "decimal",
+	",": "group",
+	"%": "percentSign",
+	"+": "plusSign",
+	"-": "minusSign",
+	"E": "exponential",
+	"\u2030": "perMille"
+};
+
+
+
+
 /**
  * removeLiteralQuotes( string )
  *
@@ -359,10 +374,10 @@ var removeLiteralQuotes = function( string ) {
  * ref: http://www.unicode.org/reports/tr35/tr35-numbers.html
  */
 var numberFormat = function( number, properties, pluralGenerator ) {
-	var compactMap, infinitySymbol, maximumFractionDigits, maximumSignificantDigits,
-	minimumFractionDigits, minimumIntegerDigits, minimumSignificantDigits, nanSymbol, nuDigitsMap,
-	padding, prefix, primaryGroupingSize, pattern, ret, round, roundIncrement,
-	secondaryGroupingSize, suffix, symbolMap;
+	var aux, compactMap, infinitySymbol, maximumFractionDigits, maximumSignificantDigits,
+		minimumFractionDigits, minimumIntegerDigits, minimumSignificantDigits, nanSymbol,
+		nuDigitsMap, padding, prefix, primaryGroupingSize, pattern, round, roundIncrement,
+		secondaryGroupingSize, stringToParts, suffix, symbolMap;
 
 	padding = properties[ 1 ];
 	minimumIntegerDigits = properties[ 2 ];
@@ -382,7 +397,7 @@ var numberFormat = function( number, properties, pluralGenerator ) {
 
 	// NaN
 	if ( isNaN( number ) ) {
-		return nanSymbol;
+		return [ { type: "nan", value: nanSymbol } ];
 	}
 
 	if ( number < 0 ) {
@@ -395,9 +410,68 @@ var numberFormat = function( number, properties, pluralGenerator ) {
 		suffix = properties[ 10 ];
 	}
 
+	// For prefix, suffix, and number parts.
+	stringToParts = function( string ) {
+		var numberType = "integer",
+			parts = [];
+
+		// TODO Move the tokenization of all parts that don't depend on number into
+		// format-properties.
+		string.replace( /('([^']|'')+'|'')|./g, function( character, literal ) {
+
+			// Literals
+			if ( literal ) {
+				partsPush( parts, "literal", removeLiteralQuotes( literal ) );
+				return;
+			}
+
+			// Currency symbol
+			if ( character === "\u00A4" ) {
+				partsPush( parts, "currency", character );
+				return;
+			}
+
+			// Symbols
+			character = character.replace( /[.,\-+E%\u2030]/, function( symbol ) {
+				if ( symbol === "." ) {
+					numberType = "fraction";
+				}
+				partsPush( parts, numberSymbolName[symbol], symbolMap[ symbol ] );
+
+				// "Erase" handled character.
+				return "";
+			});
+
+			// Number
+			character = character.replace( /[0-9]/, function( digit ) {
+
+				// Numbering system
+				if ( nuDigitsMap ) {
+					digit = nuDigitsMap[ +digit ];
+				}
+				partsPush( parts, numberType, digit );
+
+				// "Erase" handled character.
+				return "";
+			});
+
+			// Etc
+			character.replace( /./, function( etc ) {
+				partsPush( parts, "literal", etc );
+			});
+		});
+		return parts;
+	};
+
+	prefix = stringToParts( prefix );
+	suffix = stringToParts( suffix );
+
 	// Infinity
 	if ( !isFinite( number ) ) {
-		return prefix + infinitySymbol + suffix;
+		return prefix.concat(
+			{ type: "infinity", value: infinitySymbol },
+			suffix
+		);
 	}
 
 	// Percent
@@ -450,9 +524,30 @@ var numberFormat = function( number, properties, pluralGenerator ) {
 		compactPattern = compactMap[ numberExponent ][ pluralForm ] || compactPattern;
 		compactProperties = compactPattern.match( numberCompactPatternRe );
 
+		// TODO Move the tokenization of all parts that don't depend on number into
+		// format-properties.
+		aux = function( string ) {
+			var parts = [];
+			string.replace( /(\s+)|([^\s0]+)/g, function( garbage, space, compact ) {
+
+				// Literals
+				if ( space ) {
+					partsPush( parts, "literal", space );
+					return;
+				}
+
+				// Compact value
+				if ( compact ) {
+					partsPush( parts, "compact", compact );
+					return;
+				}
+			});
+			return parts;
+		};
+
 		// update prefix/suffix with compact prefix/suffix
-		prefix += compactProperties[ 1 ];
-		suffix = compactProperties[ 3 ] + suffix;
+		prefix = prefix.concat( aux( compactProperties[ 1 ] ) );
+		suffix = aux( compactProperties[ 3 ] ).concat( suffix );
 	}
 
 	// Remove the possible number minus sign
@@ -464,50 +559,24 @@ var numberFormat = function( number, properties, pluralGenerator ) {
 			secondaryGroupingSize );
 	}
 
-	ret = prefix;
-
-	ret += number;
-
 	// Scientific notation
 	// TODO implement here
 
 	// Padding/'([^']|'')+'|''|[.,\-+E%\u2030]/g
 	// TODO implement here
 
-	ret += suffix;
-
-	return ret.replace( /('([^']|'')+'|'')|./g, function( character, literal ) {
-
-		// Literals
-		if ( literal ) {
-			return removeLiteralQuotes( literal );
-		}
-
-		// Symbols
-		character = character.replace( /[.,\-+E%\u2030]/, function( symbol ) {
-			return symbolMap[ symbol ];
-		});
-
-		// Numbering system
-		if ( nuDigitsMap ) {
-			character = character.replace( /[0-9]/, function( digit ) {
-				return nuDigitsMap[ +digit ];
-			});
-		}
-
-		return character;
-	});
+	return prefix.concat(
+		stringToParts( number ),
+		suffix
+	);
 };
 
 
 
 
-var numberFormatterFn = function( properties, pluralGenerator ) {
+var numberFormatterFn = function( numberToPartsFormatter ) {
 	return function numberFormatter( value ) {
-		validateParameterPresence( value, "value" );
-		validateParameterTypeNumber( value, "value" );
-
-		return numberFormat( value, properties, pluralGenerator );
+		return partsJoin( numberToPartsFormatter( value ));
 	};
 };
 
@@ -721,6 +790,18 @@ var numberParserFn = function( properties ) {
 
 
 
+var numberToPartsFormatterFn = function( properties, pluralGenerator ) {
+	return function numberToPartsFormatter( value ) {
+		validateParameterPresence( value, "value" );
+		validateParameterTypeNumber( value, "value" );
+
+		return numberFormat( value, properties, pluralGenerator );
+	};
+};
+
+
+
+
 var numberTruncate = function( value ) {
 	if ( isNaN( value ) ) {
 		return NaN;
@@ -824,6 +905,7 @@ Globalize._numberFormatterFn = numberFormatterFn;
 Globalize._numberParse = numberParse;
 Globalize._numberParserFn = numberParserFn;
 Globalize._numberRound = numberRound;
+Globalize._numberToPartsFormatterFn = numberToPartsFormatterFn;
 Globalize._removeLiteralQuotes = removeLiteralQuotes;
 Globalize._validateParameterPresence = validateParameterPresence;
 Globalize._validateParameterTypeNumber = validateParameterTypeNumber;
@@ -844,6 +926,12 @@ Globalize.prototype.numberFormatter = function( options ) {
 	return cached( runtimeKey( "numberFormatter", this._locale, [ options ] ) );
 };
 
+Globalize.numberToPartsFormatter =
+Globalize.prototype.numberToPartsFormatter = function( options ) {
+	options = options || {};
+	return cached( runtimeKey( "numberToPartsFormatter", this._locale, [ options ] ) );
+};
+
 Globalize.numberParser =
 Globalize.prototype.numberParser = function( options ) {
 	options = options || {};
@@ -852,6 +940,14 @@ Globalize.prototype.numberParser = function( options ) {
 
 Globalize.formatNumber =
 Globalize.prototype.formatNumber = function( value, options ) {
+	validateParameterPresence( value, "value" );
+	validateParameterTypeNumber( value, "value" );
+
+	return this.numberFormatter( options )( value );
+};
+
+Globalize.formatNumberToParts =
+Globalize.prototype.formatNumberToParts = function( value, options ) {
 	validateParameterPresence( value, "value" );
 	validateParameterTypeNumber( value, "value" );
 

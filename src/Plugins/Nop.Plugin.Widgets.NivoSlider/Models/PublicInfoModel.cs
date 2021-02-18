@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Widgets.NivoSlider.Models
 {
-    public class PublicInfoModel : BaseNopModel
+    public record PublicInfoModel : BaseNopModel
     {
         public string Picture1Url { get; set; }
         public string Text1 { get; set; }

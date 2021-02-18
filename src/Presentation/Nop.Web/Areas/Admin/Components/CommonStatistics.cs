@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -38,22 +39,22 @@ namespace Nop.Web.Areas.Admin.Components
         /// Invoke view component
         /// </summary>
         /// <returns>View component result</returns>
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
-                !_permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||
-                !_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests) ||
-                !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
             {
                 return Content(string.Empty);
             }
 
             //a vendor doesn't have access to this report
-            if (_workContext.CurrentVendor != null)
+            if (await _workContext.GetCurrentVendorAsync() != null)
                 return Content(string.Empty);
 
             //prepare model
-            var model = _commonModelFactory.PrepareCommonStatisticsModel();
+            var model = await _commonModelFactory.PrepareCommonStatisticsModelAsync();
 
             return View(model);
         }

@@ -15,7 +15,7 @@
 
     function toggleEnableCondition() {
         if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
-            $('#pnlAttributes').show();
+            $('#pnlAttributes').showField();
         } else {
             $('#pnlAttributes').hide();
         }
@@ -64,7 +64,7 @@
                                 $("#@Html.IdFor(model => model.ConditionModel.SelectedProductAttributeId)")
                                     .val();
                             $('[id^="pnl_attribute_values_"]').hide();
-                            $('#pnl_attribute_values_' + selectedProductAttributeId).show();
+                            $('#pnl_attribute_values_' + selectedProductAttributeId).showField();
                         }
                         </script>
                     </div>

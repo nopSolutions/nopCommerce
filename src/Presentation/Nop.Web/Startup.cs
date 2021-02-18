@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,10 +45,10 @@ namespace Nop.Web
         /// <summary>
         /// Configure the DI container 
         /// </summary>
-        /// <param name="builder">Container builder</param>
-        public void ConfigureContainer(ContainerBuilder builder)
+        /// <param name="services">Collection of service descriptors</param>
+        public void ConfigureContainer(IServiceCollection services)
         {
-            _engine.RegisterDependencies(builder, _appSettings);
+            _engine.RegisterDependencies(services, _appSettings);
         }
 
         /// <summary>

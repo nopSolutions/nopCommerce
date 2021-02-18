@@ -26,10 +26,10 @@
         asp-route-btnId="@Context.Request.Query["btnId"]"
         asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             &nbsp;
         </div>
     </div>
@@ -97,7 +97,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <button type="button" id="search-products" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fas fa-search"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -159,7 +159,7 @@
                     </div>
                     <div class="card-footer">
                         <button type="submit" name="save" class="btn btn-primary">
-                            <i class="fa fa-floppy-o"></i>
+                            <i class="far fa-save"></i>
                             @T("Admin.Common.Save")
                         </button>
                     </div>

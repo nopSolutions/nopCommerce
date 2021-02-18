@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -73,40 +74,44 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         /// <summary>
         /// Prepare the news comment model
         /// </summary>
         /// <param name="newsComment">News comment</param>
         /// <returns>News comment model</returns>
-        public virtual NewsCommentModel PrepareNewsCommentModel(NewsComment newsComment)
+        protected virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
         {
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
 
-            var customer = _customerService.GetCustomerById(newsComment.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
 
             var model = new NewsCommentModel
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(customer),
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !_customerService.IsGuest(customer),
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuestAsync(customer),
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                    await _genericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Prepare the news item model
@@ -115,7 +120,7 @@ namespace Nop.Web.Factories
         /// <param name="newsItem">News item</param>
         /// <param name="prepareComments">Whether to prepare news comment models</param>
         /// <returns>News item model</returns>
-        public virtual NewsItemModel PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
+        public virtual async Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -127,29 +132,29 @@ namespace Nop.Web.Factories
             model.MetaTitle = newsItem.MetaTitle;
             model.MetaDescription = newsItem.MetaDescription;
             model.MetaKeywords = newsItem.MetaKeywords;
-            model.SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = newsItem.Title;
             model.Short = newsItem.Short;
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
 
             //number of news comments
-            var storeId = _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            
-            model.NumberOfComments = _newsService.GetNewsCommentsCount(newsItem, storeId, true);
+            var storeId = _newsSettings.ShowNewsCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0;
+
+            model.NumberOfComments = await _newsService.GetNewsCommentsCountAsync(newsItem, storeId, true);
 
             if (prepareComments)
             {
-                var newsComments = _newsService.GetAllComments(
+                var newsComments = await _newsService.GetAllCommentsAsync(
                     newsItemId: newsItem.Id,
                     approved: true,
-                    storeId: _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0);
+                    storeId: _newsSettings.ShowNewsCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0);
 
                 foreach (var nc in newsComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
-                    var commentModel = PrepareNewsCommentModel(nc);
+                    var commentModel = await PrepareNewsCommentModelAsync(nc);
                     model.Comments.Add(commentModel);
                 }
             }
@@ -161,29 +166,31 @@ namespace Nop.Web.Factories
         /// Prepare the home page news items model
         /// </summary>
         /// <returns>Home page news items model</returns>
-        public virtual HomepageNewsItemsModel PrepareHomepageNewsItemsModel()
+        public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, _workContext.WorkingLanguage, _storeContext.CurrentStore);
-            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
+            var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
+                var language = await _workContext.GetWorkingLanguageAsync();
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, 0, _newsSettings.MainPageNewsCount);
+
                 return new HomepageNewsItemsModel
                 {
-                    WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                    NewsItems = newsItems
-                        .Select(x =>
-                        {
-                            var newsModel = new NewsItemModel();
-                            PrepareNewsItemModel(newsModel, x, false);
-                            return newsModel;
-                        }).ToList()
+                    WorkingLanguageId = language.Id,
+                    NewsItems = await newsItems.SelectAwait(async newsItem =>
+                    {
+                        var newsModel = new NewsItemModel();
+                        await PrepareNewsItemModelAsync(newsModel, newsItem, false);
+                        return newsModel;
+                    }).ToListAsync()
                 };
             });
 
             //"Comments" property of "NewsItemModel" object depends on the current customer.
             //Furthermore, we just don't need it for home page news. So let's reset it.
             //But first we need to clone the cached model (the updated one should not be cached)
-            var model = (HomepageNewsItemsModel)cachedModel.Clone();
+            var model = cachedModel with { };
             foreach (var newsItemModel in model.NewsItems)
                 newsItemModel.Comments.Clear();
 
@@ -195,29 +202,28 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="command">News paging filtering model</param>
         /// <returns>News item list model</returns>
-        public virtual NewsItemListModel PrepareNewsItemListModel(NewsPagingFilteringModel command)
+        public virtual async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command)
         {
-            var model = new NewsItemListModel
-            {
-                WorkingLanguageId = _workContext.WorkingLanguage.Id
-            };
-
             if (command.PageSize <= 0)
                 command.PageSize = _newsSettings.NewsArchivePageSize;
             if (command.PageNumber <= 0)
                 command.PageNumber = 1;
 
-            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
-                command.PageNumber - 1, command.PageSize);
-            model.PagingFilteringContext.LoadPagedList(newsItems);
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, command.PageNumber - 1, command.PageSize);
 
-            model.NewsItems = newsItems
-                .Select(x =>
+            var model = new NewsItemListModel
+            {
+                WorkingLanguageId = language.Id,
+                NewsItems = await newsItems.SelectAwait(async newsItem =>
                 {
                     var newsModel = new NewsItemModel();
-                    PrepareNewsItemModel(newsModel, x, false);
+                    await PrepareNewsItemModelAsync(newsModel, newsItem, false);
                     return newsModel;
-                }).ToList();
+                }).ToListAsync()
+            };
+            model.PagingFilteringContext.LoadPagedList(newsItems);
 
             return model;
         }

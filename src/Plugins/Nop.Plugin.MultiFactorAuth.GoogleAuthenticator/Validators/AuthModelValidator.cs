@@ -13,9 +13,9 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Validators
         public AuthModelValidator(ILocalizationService localizationService)
         {
             RuleFor(model => model.Code).NotEmpty()
-                .WithMessage(localizationService.GetResource("Plugins.MultiFactorAuth.GoogleAuthenticator.Fields.Code.Required"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Fields.Code.Required"));
             RuleFor(model => model.Code).Matches(@"^[0-9]{6,6}$")
-                .WithMessage(localizationService.GetResource("Plugins.MultiFactorAuth.GoogleAuthenticator.Fields.Code.Wrong"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Fields.Code.Wrong"));
         }
     }
 }

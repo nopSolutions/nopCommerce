@@ -12,7 +12,7 @@
 
         function toggleAllowVendorsToEditInfo() {
             if ($('#@Html.IdFor(model => model.AllowVendorsToEditInfo)').is(':checked')) {
-                $('#pnlNotifyStoreOwnerAboutVendorInformationChange').show();
+                $('#pnlNotifyStoreOwnerAboutVendorInformationChange').showField();
             } else {
                 $('#pnlNotifyStoreOwnerAboutVendorInformationChange').hide();
             }
@@ -20,7 +20,7 @@
 
         function toggleAllowCustomersToApplyForVendorAccount() {
             if ($('#@Html.IdFor(model => model.AllowCustomersToApplyForVendorAccount)').is(':checked')) {
-                $('#pnlTermsOfServiceEnabled').show();
+                $('#pnlTermsOfServiceEnabled').showField();
             } else {
                 $('#pnlTermsOfServiceEnabled').hide();
             }

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Messages;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Messages;
 using Nop.Web.Areas.Admin.Models.Messages;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account search model</returns>
-        EmailAccountSearchModel PrepareEmailAccountSearchModel(EmailAccountSearchModel searchModel);
+        Task<EmailAccountSearchModel> PrepareEmailAccountSearchModelAsync(EmailAccountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged email account list model
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account list model</returns>
-        EmailAccountListModel PrepareEmailAccountListModel(EmailAccountSearchModel searchModel);
+        Task<EmailAccountListModel> PrepareEmailAccountListModelAsync(EmailAccountSearchModel searchModel);
 
         /// <summary>
         /// Prepare email account model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="emailAccount">Email account</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Email account model</returns>
-        EmailAccountModel PrepareEmailAccountModel(EmailAccountModel model,
+        Task<EmailAccountModel> PrepareEmailAccountModelAsync(EmailAccountModel model,
             EmailAccount emailAccount, bool excludeProperties = false);
     }
 }

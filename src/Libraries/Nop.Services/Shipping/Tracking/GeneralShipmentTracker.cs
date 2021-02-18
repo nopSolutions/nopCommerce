@@ -1,9 +1,10 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // Contributor(s): oskar.kjellin 
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Shipping.Tracking
@@ -48,9 +49,9 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">Tracking number</param>
         /// <returns>Tracker (IShipmentTracker)</returns>
-        protected virtual IShipmentTracker GetTrackerByTrackingNumber(string trackingNumber)
+        protected virtual async Task<IShipmentTracker> GetTrackerByTrackingNumberAsync(string trackingNumber)
         {
-            return GetAllTrackers().FirstOrDefault(c => c.IsMatch(trackingNumber));
+            return await GetAllTrackers().FirstOrDefaultAwaitAsync(async c => await c.IsMatchAsync(trackingNumber));
         }
 
         #endregion
@@ -62,11 +63,11 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>True if the tracker can track, otherwise false.</returns>
-        public virtual bool IsMatch(string trackingNumber)
+        public virtual async Task<bool> IsMatchAsync(string trackingNumber)
         {
-            var tracker = GetTrackerByTrackingNumber(trackingNumber);
+            var tracker = await GetTrackerByTrackingNumberAsync(trackingNumber);
             if (tracker != null)
-                return tracker.IsMatch(trackingNumber);
+                return await tracker.IsMatchAsync(trackingNumber);
             return false;
         }
 
@@ -75,10 +76,14 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>URL of a tracking page.</returns>
-        public virtual string GetUrl(string trackingNumber)
+        public virtual async Task<string> GetUrlAsync(string trackingNumber)
         {
-            var tracker = GetTrackerByTrackingNumber(trackingNumber);
-            return tracker?.GetUrl(trackingNumber);
+            var tracker = await GetTrackerByTrackingNumberAsync(trackingNumber);
+
+            if (tracker == null)
+                return null;
+
+            return await tracker.GetUrlAsync(trackingNumber);
         }
 
         /// <summary>
@@ -86,14 +91,14 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
         /// <returns>List of Shipment Events.</returns>
-        public virtual IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber)
+        public virtual async Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber)
         {
             if (string.IsNullOrEmpty(trackingNumber))
                 return new List<ShipmentStatusEvent>();
 
-            var tracker = GetTrackerByTrackingNumber(trackingNumber);
+            var tracker = await GetTrackerByTrackingNumberAsync(trackingNumber);
             if (tracker != null)
-                return tracker.GetShipmentEvents(trackingNumber);
+                return await tracker.GetShipmentEventsAsync(trackingNumber);
             return new List<ShipmentStatusEvent>();
         }
 

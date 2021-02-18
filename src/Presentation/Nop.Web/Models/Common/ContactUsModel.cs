@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
-    public partial class ContactUsModel : BaseNopModel
+    public partial record ContactUsModel : BaseNopModel
     {
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("ContactUs.Email")]

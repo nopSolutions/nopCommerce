@@ -1,8 +1,8 @@
-﻿using Nop.Core.Caching;
+﻿﻿using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
 using Nop.Services.Events;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Customers.Caching
 {
@@ -17,25 +17,26 @@ namespace Nop.Services.Customers.Caching
         /// Handle password changed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(CustomerPasswordChangedEvent eventMessage)
+        public async Task HandleEventAsync(CustomerPasswordChangedEvent eventMessage)
         {
-            Remove(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId);
         }
 
         /// <summary>
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Customer entity)
+        protected override async Task ClearCacheAsync(Customer entity)
         {
-            RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
-            RemoveByPrefix(NopCustomerServicesDefaults.CustomerAddressesPrefix);
-            RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesByCustomerPrefix, entity);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesByCustomerPrefix, entity);
+            await RemoveByPrefixAsync(NopOrderDefaults.ShoppingCartItemsByCustomerPrefix, entity);
 
             if (string.IsNullOrEmpty(entity.SystemName))
                 return;
 
-            Remove(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerByGuidCacheKey, entity.CustomerGuid);
         }
 
         #endregion

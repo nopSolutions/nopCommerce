@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a measure search model
     /// </summary>
-    public partial class MeasureSearchModel : BaseSearchModel
+    public partial record MeasureSearchModel : BaseSearchModel
     {
         #region Ctor
 

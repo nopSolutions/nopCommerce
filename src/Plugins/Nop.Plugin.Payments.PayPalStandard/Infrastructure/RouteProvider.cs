@@ -18,7 +18,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Infrastructure
 
             //IPN
             endpointRouteBuilder.MapControllerRoute("Plugin.Payments.PayPalStandard.IPNHandler", "Plugins/PaymentPayPalStandard/IPNHandler",
-                 new { controller = "PaymentPayPalStandard", action = "IPNHandler" });
+                 new { controller = "PaymentPayPalStandardIpn", action = "IPNHandler" });
 
             //Cancel
             endpointRouteBuilder.MapControllerRoute("Plugin.Payments.PayPalStandard.CancelOrder", "Plugins/PaymentPayPalStandard/CancelOrder",

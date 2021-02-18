@@ -16,10 +16,11 @@ namespace Nop.Web.Framework.Validators
         /// Ctor
         /// </summary>
         public PhoneNumberPropertyValidator(CustomerSettings customerSettings)
-            : base("Phone number is not valid")
         {
             _customerSettings = customerSettings;
         }
+
+        protected override string GetDefaultMessageTemplate() => "Phone number is not valid";
 
         /// <summary>
         /// Is valid?

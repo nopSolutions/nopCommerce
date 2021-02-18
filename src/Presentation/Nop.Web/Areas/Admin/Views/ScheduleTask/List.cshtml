@@ -8,10 +8,10 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.System.ScheduleTasks")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons })
     </div>
@@ -50,9 +50,7 @@
                                 new ColumnProperty(nameof(ScheduleTaskModel.Name))
                                 {
                                     Title = T("Admin.System.ScheduleTasks.Name").Text,
-                                    Width = "300",
-                                    Editable = true,
-                                    EditType = EditType.String
+                                    Width = "300"
                                 },
                                 new ColumnProperty(nameof(ScheduleTaskModel.Seconds))
                                 {

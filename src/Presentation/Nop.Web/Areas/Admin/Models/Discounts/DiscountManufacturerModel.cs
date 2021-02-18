@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount manufacturer model
     /// </summary>
-    public partial class DiscountManufacturerModel : BaseNopEntityModel
+    public partial record DiscountManufacturerModel : BaseNopEntityModel
     {
         #region Properties
 

@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
     /// <summary>
     /// Represents a vendor note model
     /// </summary>
-    public partial class VendorNoteModel : BaseNopEntityModel
+    public partial record VendorNoteModel : BaseNopEntityModel
     {
         #region Properties
 

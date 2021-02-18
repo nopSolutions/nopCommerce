@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.MultiFactorAuthentication
     /// <summary>
     /// Represents an multi-factor authentication method model
     /// </summary>
-    public partial class MultiFactorAuthenticationMethodModel : BaseNopModel, IPluginModel
+    public partial record MultiFactorAuthenticationMethodModel : BaseNopModel, IPluginModel
     {
         #region Properties
 

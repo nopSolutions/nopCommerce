@@ -1,19 +1,21 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Azure.Storage.Blobs.Models;
+using Nop.Core.Configuration;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
     /// <summary>
     /// Represents the app settings model
     /// </summary>
-    public partial class AppSettingsModel : BaseNopModel
+    public partial record AppSettingsModel : BaseNopModel
     {
         #region Ctor
 
         public AppSettingsModel()
         {
             CacheConfigModel = new CacheConfigModel();
+            DistributedCacheConfigModel = new DistributedCacheConfigModel();
             HostingConfigModel = new HostingConfigModel();
-            RedisConfigModel = new RedisConfigModel();
             AzureBlobConfigModel = new AzureBlobConfigModel();
             InstallationConfigModel = new InstallationConfigModel();
             PluginConfigModel = new PluginConfigModel();
@@ -27,8 +29,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public CacheConfigModel CacheConfigModel { get; set; }
 
         public HostingConfigModel HostingConfigModel { get; set; }
-
-        public RedisConfigModel RedisConfigModel { get; set; }
+        
+        public DistributedCacheConfigModel DistributedCacheConfigModel { get; set; }
 
         public AzureBlobConfigModel AzureBlobConfigModel { get; set; }
 

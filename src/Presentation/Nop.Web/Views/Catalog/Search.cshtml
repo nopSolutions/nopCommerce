@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <input type="submit" class="button-1 search-button" value="@T("Search.Button")" />
+                    <button type="submit" class="button-1 search-button">@T("Search.Button")</button>
                 </div>
             </form>
         </div>
@@ -123,9 +123,14 @@
                 </div>
             }
             @{
-                var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true);
+                var pager = Html.Pager(Model.PagingFilteringContext)
+                    .QueryParam("pagenumber")
+                    .BooleanParameterName("adv")
+                    .BooleanParameterName("isc")
+                    .BooleanParameterName("sid")
+                    .RenderEmptyParameters(true);
             }
-            @if (!pager.IsEmpty())
+            @if (!(await pager.IsEmpty()))
             {
                 <div class="pager">
                     @pager

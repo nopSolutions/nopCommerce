@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a queued email search model
     /// </summary>
-    public partial class QueuedEmailSearchModel : BaseSearchModel
+    public partial record QueuedEmailSearchModel : BaseSearchModel
     {
         #region Properties
 

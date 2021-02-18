@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class EmailRevalidationModel : BaseNopModel
+    public partial record EmailRevalidationModel : BaseNopModel
     {
         public string Result { get; set; }
 

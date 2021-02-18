@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Stores;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core
 {
@@ -10,11 +11,16 @@ namespace Nop.Core
         /// <summary>
         /// Gets the current store
         /// </summary>
-        Store CurrentStore { get; }
+        Task<Store> GetCurrentStoreAsync();
+
+        /// <summary>
+        /// Gets the current store
+        /// </summary>
+        Store GetCurrentStore();
 
         /// <summary>
         /// Gets active store scope configuration
         /// </summary>
-        int ActiveStoreScopeConfiguration { get; }
+        Task<int> GetActiveStoreScopeConfigurationAsync();
     }
 }

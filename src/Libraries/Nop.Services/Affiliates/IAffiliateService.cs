@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 
@@ -14,20 +15,20 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Affiliate</returns>
-        Affiliate GetAffiliateById(int affiliateId);
+        Task<Affiliate> GetAffiliateByIdAsync(int affiliateId);
 
         /// <summary>
         /// Gets an affiliate by friendly URL name
         /// </summary>
         /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Affiliate</returns>
-        Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName);
+        Task<Affiliate> GetAffiliateByFriendlyUrlNameAsync(string friendlyUrlName);
 
         /// <summary>
         /// Marks affiliate as deleted 
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        void DeleteAffiliate(Affiliate affiliate);
+        Task DeleteAffiliateAsync(Affiliate affiliate);
 
         /// <summary>
         /// Gets all affiliates
@@ -42,7 +43,7 @@ namespace Nop.Services.Affiliates
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Affiliates</returns>
-        IPagedList<Affiliate> GetAllAffiliates(string friendlyUrlName = null,
+        Task<IPagedList<Affiliate>> GetAllAffiliatesAsync(string friendlyUrlName = null,
             string firstName = null, string lastName = null,
             bool loadOnlyWithOrders = false,
             DateTime? ordersCreatedFromUtc = null, DateTime? ordersCreatedToUtc = null,
@@ -53,27 +54,27 @@ namespace Nop.Services.Affiliates
         /// Inserts an affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        void InsertAffiliate(Affiliate affiliate);
+        Task InsertAffiliateAsync(Affiliate affiliate);
 
         /// <summary>
         /// Updates the affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        void UpdateAffiliate(Affiliate affiliate);
+        Task UpdateAffiliateAsync(Affiliate affiliate);
 
         /// <summary>
         /// Get full name
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliate full name</returns>
-        string GetAffiliateFullName(Affiliate affiliate);
+        Task<string> GetAffiliateFullNameAsync(Affiliate affiliate);
 
         /// <summary>
         /// Generate affiliate URL
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Generated affiliate URL</returns>
-        string GenerateUrl(Affiliate affiliate);
+        Task<string> GenerateUrlAsync(Affiliate affiliate);
 
         /// <summary>
         /// Validate friendly URL name
@@ -81,6 +82,6 @@ namespace Nop.Services.Affiliates
         /// <param name="affiliate">Affiliate</param>
         /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Valid friendly name</returns>
-        string ValidateFriendlyUrlName(Affiliate affiliate, string friendlyUrlName);
+        Task<string> ValidateFriendlyUrlNameAsync(Affiliate affiliate, string friendlyUrlName);
     }
 }

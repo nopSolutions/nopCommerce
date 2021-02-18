@@ -10,9 +10,9 @@
     Html.AddScriptParts("~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     // tinyMCE language
-    var language = TinyMceHelper.GetTinyMceLanguage();
+    var language = await TinyMceHelper.GetTinyMceLanguageAsync();
 
-    var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+    var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures);
 
     var random = CommonHelper.GenerateRandomInteger();
 
@@ -54,7 +54,7 @@
             $.ajax({
                 cache: false,
                 type: "GET",
-                url: "@(Url.Action("CreateConfiguration", "RoxyFileman"))",
+                url: "@Url.Action("CreateConfiguration", "RoxyFileman")",
                 success: function (data, textStatus, jqXHR) {
                     var roxyFileman = '@Url.Content("~/lib/Roxy_Fileman/index.html")';
                     roxyFileman += (roxyFileman.indexOf("?") < 0 ? "?" : "&") + "type=" + type.filetype;

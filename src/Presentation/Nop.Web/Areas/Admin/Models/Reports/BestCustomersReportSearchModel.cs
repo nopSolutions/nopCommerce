@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a best customers report search model
     /// </summary>
-    public partial class BestCustomersReportSearchModel : BaseSearchModel
+    public partial record BestCustomersReportSearchModel : BaseSearchModel
     {
         #region Ctor
 

@@ -7,7 +7,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.Log
     /// <summary>
     /// Represents a tax transaction log model
     /// </summary>
-    public class TaxTransactionLogModel : BaseNopEntityModel
+    public record TaxTransactionLogModel : BaseNopEntityModel
     {
         #region Properties
 

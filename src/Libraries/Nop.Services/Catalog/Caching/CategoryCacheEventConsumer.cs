@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 using Nop.Services.Discounts;
 
@@ -13,16 +14,16 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Category entity)
+        protected override async Task ClearCacheAsync(Category entity)
         {
-            RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesHomepagePrefix);
-            RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefix);
-            RemoveByPrefix(NopCatalogDefaults.CategoryProductsNumberPrefix);
-            RemoveByPrefix(NopDiscountDefaults.CategoryIdsPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, entity);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesHomepagePrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoryBreadcrumbPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoryProductsNumberPrefix);
+            await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsPrefix);
         }
     }
 }

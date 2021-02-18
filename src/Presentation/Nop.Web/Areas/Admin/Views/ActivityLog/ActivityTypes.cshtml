@@ -10,12 +10,12 @@
 
 <form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Customers.ActivityLogType")
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <button type="submit" name="save" class="btn btn-primary">
-                <i class="fa fa-floppy-o"></i>
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons })
@@ -52,7 +52,7 @@
                     {
                         typeModel.Id,
                         typeModel.Name,
-                        Enabled = typeModel.Enabled.ToString().ToLowerInvariant()
+                        Enabled = typeModel.Enabled
                     }).ToList())
                 })
             </div>

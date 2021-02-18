@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 
@@ -31,18 +32,18 @@ namespace Nop.Services.Catalog
         /// Delete category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public virtual void DeleteCategoryTemplate(CategoryTemplate categoryTemplate)
+        public virtual async Task DeleteCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            _categoryTemplateRepository.Delete(categoryTemplate);
+            await _categoryTemplateRepository.DeleteAsync(categoryTemplate);
         }
 
         /// <summary>
         /// Gets all category templates
         /// </summary>
         /// <returns>Category templates</returns>
-        public virtual IList<CategoryTemplate> GetAllCategoryTemplates()
+        public virtual async Task<IList<CategoryTemplate>> GetAllCategoryTemplatesAsync()
         {
-            var templates = _categoryTemplateRepository.GetAll(query =>
+            var templates = await _categoryTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -57,27 +58,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>Category template</returns>
-        public virtual CategoryTemplate GetCategoryTemplateById(int categoryTemplateId)
+        public virtual async Task<CategoryTemplate> GetCategoryTemplateByIdAsync(int categoryTemplateId)
         {
-            return _categoryTemplateRepository.GetById(categoryTemplateId, cache => default);
+            return await _categoryTemplateRepository.GetByIdAsync(categoryTemplateId, cache => default);
         }
 
         /// <summary>
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public virtual void InsertCategoryTemplate(CategoryTemplate categoryTemplate)
+        public virtual async Task InsertCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            _categoryTemplateRepository.Insert(categoryTemplate);
+            await _categoryTemplateRepository.InsertAsync(categoryTemplate);
         }
 
         /// <summary>
         /// Updates the category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public virtual void UpdateCategoryTemplate(CategoryTemplate categoryTemplate)
+        public virtual async Task UpdateCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            _categoryTemplateRepository.Update(categoryTemplate);
+            await _categoryTemplateRepository.UpdateAsync(categoryTemplate);
         }
 
         #endregion

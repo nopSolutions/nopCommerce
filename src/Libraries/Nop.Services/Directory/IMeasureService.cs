@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
@@ -12,39 +13,39 @@ namespace Nop.Services.Directory
         /// Deletes measure dimension
         /// </summary>
         /// <param name="measureDimension">Measure dimension</param>
-        void DeleteMeasureDimension(MeasureDimension measureDimension);
+        Task DeleteMeasureDimensionAsync(MeasureDimension measureDimension);
 
         /// <summary>
         /// Gets a measure dimension by identifier
         /// </summary>
         /// <param name="measureDimensionId">Measure dimension identifier</param>
         /// <returns>Measure dimension</returns>
-        MeasureDimension GetMeasureDimensionById(int measureDimensionId);
+        Task<MeasureDimension> GetMeasureDimensionByIdAsync(int measureDimensionId);
 
         /// <summary>
         /// Gets a measure dimension by system keyword
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
         /// <returns>Measure dimension</returns>
-        MeasureDimension GetMeasureDimensionBySystemKeyword(string systemKeyword);
+        Task<MeasureDimension> GetMeasureDimensionBySystemKeywordAsync(string systemKeyword);
 
         /// <summary>
         /// Gets all measure dimensions
         /// </summary>
         /// <returns>Measure dimensions</returns>
-        IList<MeasureDimension> GetAllMeasureDimensions();
+        Task<IList<MeasureDimension>> GetAllMeasureDimensionsAsync();
 
         /// <summary>
         /// Inserts a measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        void InsertMeasureDimension(MeasureDimension measure);
+        Task InsertMeasureDimensionAsync(MeasureDimension measure);
 
         /// <summary>
         /// Updates the measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        void UpdateMeasureDimension(MeasureDimension measure);
+        Task UpdateMeasureDimensionAsync(MeasureDimension measure);
 
         /// <summary>
         /// Converts dimension
@@ -54,17 +55,8 @@ namespace Nop.Services.Directory
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        decimal ConvertDimension(decimal value,
+        Task<decimal> ConvertDimensionAsync(decimal value,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true);
-
-        /// <summary>
-        /// Converts to primary measure dimension
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureDimension">Source dimension</param>
-        /// <returns>Converted value</returns>
-        decimal ConvertToPrimaryMeasureDimension(decimal value,
-            MeasureDimension sourceMeasureDimension);
 
         /// <summary>
         /// Converts from primary dimension
@@ -72,46 +64,46 @@ namespace Nop.Services.Directory
         /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <returns>Converted value</returns>
-        decimal ConvertFromPrimaryMeasureDimension(decimal value,
+        Task<decimal> ConvertFromPrimaryMeasureDimensionAsync(decimal value,
             MeasureDimension targetMeasureDimension);
 
         /// <summary>
         /// Deletes measure weight
         /// </summary>
         /// <param name="measureWeight">Measure weight</param>
-        void DeleteMeasureWeight(MeasureWeight measureWeight);
+        Task DeleteMeasureWeightAsync(MeasureWeight measureWeight);
 
         /// <summary>
         /// Gets a measure weight by identifier
         /// </summary>
         /// <param name="measureWeightId">Measure weight identifier</param>
         /// <returns>Measure weight</returns>
-        MeasureWeight GetMeasureWeightById(int measureWeightId);
+        Task<MeasureWeight> GetMeasureWeightByIdAsync(int measureWeightId);
 
         /// <summary>
         /// Gets a measure weight by system keyword
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
         /// <returns>Measure weight</returns>
-        MeasureWeight GetMeasureWeightBySystemKeyword(string systemKeyword);
+        Task<MeasureWeight> GetMeasureWeightBySystemKeywordAsync(string systemKeyword);
 
         /// <summary>
         /// Gets all measure weights
         /// </summary>
         /// <returns>Measure weights</returns>
-        IList<MeasureWeight> GetAllMeasureWeights();
+        Task<IList<MeasureWeight>> GetAllMeasureWeightsAsync();
 
         /// <summary>
         /// Inserts a measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        void InsertMeasureWeight(MeasureWeight measure);
+        Task InsertMeasureWeightAsync(MeasureWeight measure);
 
         /// <summary>
         /// Updates the measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        void UpdateMeasureWeight(MeasureWeight measure);
+        Task UpdateMeasureWeightAsync(MeasureWeight measure);
 
         /// <summary>
         /// Converts weight
@@ -121,16 +113,8 @@ namespace Nop.Services.Directory
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        decimal ConvertWeight(decimal value,
+        Task<decimal> ConvertWeightAsync(decimal value,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true);
-
-        /// <summary>
-        /// Converts to primary measure weight
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureWeight">Source weight</param>
-        /// <returns>Converted value</returns>
-        decimal ConvertToPrimaryMeasureWeight(decimal value, MeasureWeight sourceMeasureWeight);
 
         /// <summary>
         /// Converts from primary weight
@@ -138,7 +122,7 @@ namespace Nop.Services.Directory
         /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <returns>Converted value</returns>
-        decimal ConvertFromPrimaryMeasureWeight(decimal value,
+        Task<decimal> ConvertFromPrimaryMeasureWeightAsync(decimal value,
             MeasureWeight targetMeasureWeight);
     }
 }

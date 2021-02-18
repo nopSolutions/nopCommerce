@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
 
@@ -31,18 +32,18 @@ namespace Nop.Services.Topics
         /// Delete topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void DeleteTopicTemplate(TopicTemplate topicTemplate)
+        public virtual async Task DeleteTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            _topicTemplateRepository.Delete(topicTemplate);
+            await _topicTemplateRepository.DeleteAsync(topicTemplate);
         }
 
         /// <summary>
         /// Gets all topic templates
         /// </summary>
         /// <returns>Topic templates</returns>
-        public virtual IList<TopicTemplate> GetAllTopicTemplates()
+        public virtual async Task<IList<TopicTemplate>> GetAllTopicTemplatesAsync()
         {
-            var templates = _topicTemplateRepository.GetAll(query=>
+            var templates = await _topicTemplateRepository.GetAllAsync(query=>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -57,27 +58,27 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>Topic template</returns>
-        public virtual TopicTemplate GetTopicTemplateById(int topicTemplateId)
+        public virtual async Task<TopicTemplate> GetTopicTemplateByIdAsync(int topicTemplateId)
         {
-            return _topicTemplateRepository.GetById(topicTemplateId, cache => default);
+            return await _topicTemplateRepository.GetByIdAsync(topicTemplateId, cache => default);
         }
 
         /// <summary>
         /// Inserts topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void InsertTopicTemplate(TopicTemplate topicTemplate)
+        public virtual async Task InsertTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            _topicTemplateRepository.Insert(topicTemplate);
+            await _topicTemplateRepository.InsertAsync(topicTemplate);
         }
 
         /// <summary>
         /// Updates the topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void UpdateTopicTemplate(TopicTemplate topicTemplate)
+        public virtual async Task UpdateTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            _topicTemplateRepository.Update(topicTemplate);
+            await _topicTemplateRepository.UpdateAsync(topicTemplate);
         }
 
         #endregion

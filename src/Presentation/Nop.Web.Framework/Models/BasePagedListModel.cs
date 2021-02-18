@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Models
     /// <summary>
     /// Represents the base paged list model (implementation for DataTables grids)
     /// </summary>
-    public abstract partial class BasePagedListModel<T> : BaseNopModel, IPagedModel<T> where T : BaseNopModel
+    public abstract partial record BasePagedListModel<T> : BaseNopModel, IPagedModel<T> where T : BaseNopModel
     {
         /// <summary>
         /// Gets or sets data records

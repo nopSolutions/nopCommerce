@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 {
-    public class ConfigurationModel : BaseNopModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
+    public record ConfigurationModel : BaseNopModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
     {
         public ConfigurationModel()
         {

@@ -9,12 +9,12 @@
 
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Languages")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageListButtons })
@@ -30,6 +30,7 @@
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "languages-grid",
+                            RowIdBasedOnField = nameof(LanguageModel.Name),
                             UrlRead = new DataUrl("List", "Language", null),
                             Length = Model.PageSize,
                             LengthMenu = Model.AvailablePageSizes,

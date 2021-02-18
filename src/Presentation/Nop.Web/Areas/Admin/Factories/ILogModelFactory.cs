@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Logging;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Logging;
 using Nop.Web.Areas.Admin.Models.Logging;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Log search model</param>
         /// <returns>Log search model</returns>
-        LogSearchModel PrepareLogSearchModel(LogSearchModel searchModel);
+        Task<LogSearchModel> PrepareLogSearchModelAsync(LogSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged log list model
         /// </summary>
         /// <param name="searchModel">Log search model</param>
         /// <returns>Log list model</returns>
-        LogListModel PrepareLogListModel(LogSearchModel searchModel);
+        Task<LogListModel> PrepareLogListModelAsync(LogSearchModel searchModel);
 
         /// <summary>
         /// Prepare log model
@@ -29,6 +30,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="log">Log</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Log model</returns>
-        LogModel PrepareLogModel(LogModel model, Log log, bool excludeProperties = false);
+        Task<LogModel> PrepareLogModelAsync(LogModel model, Log log, bool excludeProperties = false);
     }
 }

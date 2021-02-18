@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer associated external authentication model
     /// </summary>
-    public partial class CustomerAssociatedExternalAuthModel : BaseNopEntityModel
+    public partial record CustomerAssociatedExternalAuthModel : BaseNopEntityModel
     {
         #region Properties
 

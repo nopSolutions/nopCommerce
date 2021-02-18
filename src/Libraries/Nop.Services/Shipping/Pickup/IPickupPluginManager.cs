@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Plugins;
 
@@ -16,7 +17,7 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <param name="systemName">Filter by pickup point provider system name; pass null to load all plugins</param>
         /// <returns>List of active pickup point providers</returns>
-        IList<IPickupPointProvider> LoadActivePlugins(Customer customer = null, int storeId = 0, string systemName = null);
+        Task<IList<IPickupPointProvider>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, string systemName = null);
 
         /// <summary>
         /// Check whether the passed pickup point provider is active
@@ -32,6 +33,6 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Result</returns>
-        bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0);
+        Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0);
     }
 }

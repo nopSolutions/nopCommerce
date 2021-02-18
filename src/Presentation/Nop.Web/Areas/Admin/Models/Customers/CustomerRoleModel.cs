@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer role model
     /// </summary>
-    public partial class CustomerRoleModel : BaseNopEntityModel
+    public partial record CustomerRoleModel : BaseNopEntityModel
     {
         #region Ctor
 

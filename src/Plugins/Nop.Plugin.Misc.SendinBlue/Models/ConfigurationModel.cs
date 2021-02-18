@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Models
     /// <summary>
     /// Represents a configuration model
     /// </summary>
-    public class ConfigurationModel : BaseNopModel
+    public record ConfigurationModel : BaseNopModel
     {
         #region Ctor
 

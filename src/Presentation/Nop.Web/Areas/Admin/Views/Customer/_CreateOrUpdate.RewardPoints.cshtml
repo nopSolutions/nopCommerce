@@ -15,7 +15,7 @@
                 new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
                 {
                     Title = T("Admin.Customers.Customers.RewardPoints.Fields.Store").Text,
-                    Visible = storeService.GetAllStores().Count > 1
+                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
                 },
                 new ColumnProperty(nameof(CustomerRewardPointsModel.Points))
                 {
@@ -102,7 +102,7 @@
                             <span asp-validation-for="@Model.AddRewardPoints.ActivationDelay"></span>
                         </div>
                         <div class="col-md-3">
-                            <nop-select asp-for="@Model.AddRewardPoints.ActivationDelayPeriodId" asp-items="@(((RewardPointsActivatingDelayPeriod) Model.AddRewardPoints.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
+                            <nop-select asp-for="@Model.AddRewardPoints.ActivationDelayPeriodId" asp-items="@await (((RewardPointsActivatingDelayPeriod) Model.AddRewardPoints.ActivationDelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
                             <span asp-validation-for="@Model.AddRewardPoints.ActivationDelayPeriodId"></span>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
             if ($('#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)').is(':checked'))
                 $('#pnl-activating-delay').hide();
             else
-                $('#pnl-activating-delay').show();
+                $('#pnl-activating-delay').showField();
         }
         </script>
     </div>

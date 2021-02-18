@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a low stock product search model
     /// </summary>
-    public partial class LowStockProductSearchModel : BaseSearchModel
+    public partial record LowStockProductSearchModel : BaseSearchModel
     {
         #region Ctor
 

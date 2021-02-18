@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Plugins
     {
         public PluginValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.FriendlyName).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Plugins.Fields.FriendlyName.Required"));
+            RuleFor(x => x.FriendlyName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Plugins.Fields.FriendlyName.Required"));
         }
     }
 }

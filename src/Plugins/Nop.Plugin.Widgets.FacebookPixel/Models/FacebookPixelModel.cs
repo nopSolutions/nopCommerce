@@ -8,7 +8,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Models
     /// <summary>
     /// Represents a Facebook Pixel model
     /// </summary>
-    public class FacebookPixelModel : BaseNopEntityModel
+    public record FacebookPixelModel : BaseNopEntityModel
     {
         #region Ctor
 

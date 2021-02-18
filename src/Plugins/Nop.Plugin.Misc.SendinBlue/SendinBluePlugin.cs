@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tasks;
@@ -11,6 +12,7 @@ using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Infrastructure;
+using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Plugin.Misc.SendinBlue
 {
@@ -64,9 +66,9 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return new List<string> { PublicWidgetZones.HeadHtmlTag };
+            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeadHtmlTag });
         }
 
         /// <summary>
@@ -90,10 +92,10 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// <summary>
         /// Install the plugin
         /// </summary>
-        public override void Install()
+        public override async Task InstallAsync()
         {
             //settings
-            _settingService.SaveSetting(new SendinBlueSettings
+            await _settingService.SaveSettingAsync(new SendinBlueSettings
             {
                 //prepopulate a tracking script
                 TrackingScript = $@"<!-- SendinBlue tracking code -->
@@ -109,13 +111,13 @@ namespace Nop.Plugin.Misc.SendinBlue
             if (!_widgetSettings.ActiveWidgetSystemNames.Contains(SendinBlueDefaults.SystemName))
             {
                 _widgetSettings.ActiveWidgetSystemNames.Add(SendinBlueDefaults.SystemName);
-                _settingService.SaveSetting(_widgetSettings);
+                await _settingService.SaveSettingAsync(_widgetSettings);
             }
 
             //install synchronization task
-            if (_scheduleTaskService.GetTaskByType(SendinBlueDefaults.SynchronizationTask) == null)
+            if (await _scheduleTaskService.GetTaskByTypeAsync(SendinBlueDefaults.SynchronizationTask) == null)
             {
-                _scheduleTaskService.InsertTask(new ScheduleTask
+                await _scheduleTaskService.InsertTaskAsync(new ScheduleTask
                 {
                     Enabled = true,
                     Seconds = SendinBlueDefaults.DefaultSynchronizationPeriod * 60 * 60,
@@ -125,7 +127,7 @@ namespace Nop.Plugin.Misc.SendinBlue
             }
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Misc.SendinBlue.AccountInfo"] = "Account info",
                 ["Plugins.Misc.SendinBlue.AccountInfo.Hint"] = "Display account information.",
@@ -183,51 +185,51 @@ namespace Nop.Plugin.Misc.SendinBlue
                 ["Plugins.Misc.SendinBlue.UseSendinBlueTemplate"] = "SendinBlue template"
             });
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task UninstallAsync()
         {
             //smtp accounts
-            foreach (var store in _storeService.GetAllStores())
+            foreach (var store in await _storeService.GetAllStoresAsync())
             {
                 var key = $"{nameof(SendinBlueSettings)}.{nameof(SendinBlueSettings.EmailAccountId)}";
-                var emailAccountId = _settingService.GetSettingByKey<int>(key, storeId: store.Id, loadSharedValueIfNotFound: true);
-                var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountId);
+                var emailAccountId = await _settingService.GetSettingByKeyAsync<int>(key, storeId: store.Id, loadSharedValueIfNotFound: true);
+                var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId);
                 if (emailAccount != null)
-                    _emailAccountService.DeleteEmailAccount(emailAccount);
+                    await _emailAccountService.DeleteEmailAccountAsync(emailAccount);
             }
 
             //settings
             if (_widgetSettings.ActiveWidgetSystemNames.Contains(SendinBlueDefaults.SystemName))
             {
                 _widgetSettings.ActiveWidgetSystemNames.Remove(SendinBlueDefaults.SystemName);
-                _settingService.SaveSetting(_widgetSettings);
+                await _settingService.SaveSettingAsync(_widgetSettings);
             }
-            _settingService.DeleteSetting<SendinBlueSettings>();
+            await _settingService.DeleteSettingAsync<SendinBlueSettings>();
 
             //generic attributes
-            foreach (var store in _storeService.GetAllStores())
+            foreach (var store in await _storeService.GetAllStoresAsync())
             {
-                var messageTemplates = _messageTemplateService.GetAllMessageTemplates(store.Id);
+                var messageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(store.Id);
                 foreach (var messageTemplate in messageTemplates)
                 {
-                    _genericAttributeService.SaveAttribute<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute, null);
+                    await _genericAttributeService.SaveAttributeAsync<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute, null);
                 }
             }
 
             //schedule task
-            var task = _scheduleTaskService.GetTaskByType(SendinBlueDefaults.SynchronizationTask);
+            var task = await _scheduleTaskService.GetTaskByTypeAsync(SendinBlueDefaults.SynchronizationTask);
             if (task != null)
-                _scheduleTaskService.DeleteTask(task);
+                await _scheduleTaskService.DeleteTaskAsync(task);
 
             //locales
-            _localizationService.DeleteLocaleResources("Plugins.Misc.SendinBlue");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Misc.SendinBlue");
 
-            base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

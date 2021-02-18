@@ -193,7 +193,7 @@
 
     function togglePassword() {
         if ($('#@Html.IdFor(model => model.IsPasswordProtected)').is(':checked')) {
-            $('#pnlPasswordEnabled').show();
+            $('#pnlPasswordEnabled').showField();
         } else {
             $('#pnlPasswordEnabled').hide();
         }

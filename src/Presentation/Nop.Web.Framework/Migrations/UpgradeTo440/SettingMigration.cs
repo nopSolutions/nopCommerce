@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -15,7 +16,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
         /// <summary>Collect the UP migration expressions</summary>
         public override void Up()
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             //do not use DI, because it produces exception on the installation process
@@ -23,25 +24,54 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
             //#4904 External authentication errors logging
-            var externalAuthenticationSettings = settingService.LoadSetting<ExternalAuthenticationSettings>();
-            if (!settingService.SettingExists(externalAuthenticationSettings, settings => settings.LogErrors))
+            var externalAuthenticationSettings = settingService.LoadSettingAsync<ExternalAuthenticationSettings>().Result;
+            if (!settingService.SettingExistsAsync(externalAuthenticationSettings, settings => settings.LogErrors).Result)
             {
                 externalAuthenticationSettings.LogErrors = false;
-                settingService.SaveSetting(externalAuthenticationSettings);
+                settingService.SaveSettingAsync(externalAuthenticationSettings).Wait();
             }
 
-            var multiFactorAuthenticationSettings = settingService.LoadSetting<MultiFactorAuthenticationSettings>();
-            if (!settingService.SettingExists(multiFactorAuthenticationSettings, settings => settings.ForceMultifactorAuthentication))
+            var multiFactorAuthenticationSettings = settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>().Result;
+            if (!settingService.SettingExistsAsync(multiFactorAuthenticationSettings, settings => settings.ForceMultifactorAuthentication).Result)
             {
                 multiFactorAuthenticationSettings.ForceMultifactorAuthentication = false;
 
-                settingService.SaveSetting(multiFactorAuthenticationSettings);
+                settingService.SaveSettingAsync(multiFactorAuthenticationSettings).Wait();
             }
 
             //#5102 Delete Full-text settings
-            settingRepository.Delete(setting =>
-                setting.Name == "commonsettings.usefulltextsearch" ||
-                setting.Name == "commonsettings.fulltextmode");
+            settingRepository
+                .DeleteAsync(setting => setting.Name == "commonsettings.usefulltextsearch" || setting.Name == "commonsettings.fulltextmode")
+                .Wait();
+
+            //#4196
+            settingRepository
+                .DeleteAsync(setting => setting.Name == "commonsettings.scheduletaskruntimeout" ||
+                    setting.Name == "commonsettings.staticfilescachecontrol" ||
+                    setting.Name == "commonsettings.supportpreviousnopcommerceversions" ||
+                    setting.Name == "securitysettings.pluginstaticfileextensionsBlacklist")
+                .Wait();
+
+            var seoSettings = settingService.LoadSettingAsync<SeoSettings>().Result;
+            var newUrlRecord = "products";
+            if (!seoSettings.ReservedUrlRecordSlugs.Contains(newUrlRecord))
+            {
+                seoSettings.ReservedUrlRecordSlugs.Add(newUrlRecord);
+                settingService.SaveSettingAsync(seoSettings).Wait();
+            }
+
+            //#3015
+            if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageTitle).Result)
+            {
+                seoSettings.HomepageTitle = seoSettings.DefaultTitle;
+                settingService.SaveSettingAsync(seoSettings).Wait();
+            }
+
+            if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageDescription).Result)
+            {
+                seoSettings.HomepageDescription = "Your home page description";
+                settingService.SaveSettingAsync(seoSettings).Wait();
+            }
         }
 
         public override void Down()

@@ -53,11 +53,11 @@
 
     function toggleGdprEnabled() {
         if ($('#@Html.IdFor(model => model.GdprEnabled)').is(':checked')) {
-            $('#pnlLogPrivacyPolicyConsent').show();
-            $('#pnlLogNewsletterConsent').show();
-            $('#pnlLogUserProfileChanges').show();
+            $('#pnlLogPrivacyPolicyConsent').showField();
+            $('#pnlLogNewsletterConsent').showField();
+            $('#pnlLogUserProfileChanges').showField();
 
-            $('[data-card-name=gdprsettings-consents]').show();
+            $('[data-card-name=gdprsettings-consents]').showField();
             ensureDataTablesRendered();
         } else {
             $('#pnlLogPrivacyPolicyConsent').hide();

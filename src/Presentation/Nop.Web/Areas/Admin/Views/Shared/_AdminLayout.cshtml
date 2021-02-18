@@ -23,7 +23,9 @@
 
     //Kendo UI
     var kendoVersion = "2020.1.406";
-    var currentKendoCulture = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.LanguageCulture;
+
+    var currentKendoCulture = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).LanguageCulture;
+
     var currentCulture = CultureInfo.CurrentCulture;
 
     //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
@@ -41,13 +43,12 @@
         return cultureToUse;
     }
 
-    var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     //CSS resources
     if (supportRtl)
     {
         Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
-
         Html.AppendCssFileParts("~/lib/adminLTE/css/adminlte-rtl.min.css");
         Html.AppendCssFileParts("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css");
     }
@@ -64,7 +65,7 @@
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.common.min.css");
-    Html.AppendCssFileParts("~/lib_npm/font-awesome/css/font-awesome.min.css");
+    Html.AppendCssFileParts("~/lib_npm/@fortawesome/fontawesome-free/css/all.min.css");
     Html.AppendCssFileParts("~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
     Html.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
 
@@ -84,8 +85,8 @@
     Html.AppendScriptParts("~/lib_npm/typeahead.js/typeahead.bundle.min.js");
     Html.AppendScriptParts("~/lib_npm/jquery-migrate/jquery-migrate.min.js");
 
-    // this file can be downloaded from : 
-    // https://github.com/johnnyreilly/jquery-validation-globalize 
+    // this file can be downloaded from :
+    // https://github.com/johnnyreilly/jquery-validation-globalize
     //Html.AppendScriptParts("https://cdn.jsdelivr.net/gh/johnnyreilly/jquery-validation-globalize@1.0.0/jquery.validate.globalize.min.js");
     Html.AppendScriptParts("~/lib_npm/jquery-validation-globalize/jquery.validate.globalize.min.js");
 
@@ -95,7 +96,7 @@
     Html.AppendScriptParts("~/lib_npm/globalize/globalize/number.js");
     Html.AppendScriptParts("~/lib_npm/globalize/globalize.js");
 
-    // cldr scripts (needed for globalize)    
+    // cldr scripts (needed for globalize)
     Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/supplemental.js");
     Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/event.js");
     Html.AppendScriptParts("~/lib_npm/cldrjs/cldr.js");
@@ -114,35 +115,36 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //has "Manage Maintenance" permission?
-    var canManageMaintenance = permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
+    var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance);
 
     //avatar
-    var currentCustomer = workContext.CurrentCustomer;
+    var currentCustomer = await workContext.GetCurrentCustomerAsync();
 
     //event
-    eventPublisher.Publish(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
-    <head>
-        <title>@adminPageTitle</title>
-        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        @*Google Font*@
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-        <script>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @*Google Font*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <script>
             var rootAppPath = '@(Url.Content("~/"))';
-        </script>
-        @Html.NopHeadCustom()
-        @Html.NopCssFiles(ResourceLocation.Head, false)
-        @Html.NopScripts(ResourceLocation.Head, false)
-        @*Insert favicon and app icons head code*@
-        @await Component.InvokeAsync("Favicon")
-    </head>
-    <body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
-        <script type="text/javascript">
+    </script>
+    @Html.NopHeadCustom()
+    @Html.NopCssFiles(ResourceLocation.Head, false)
+    @Html.NopScripts(ResourceLocation.Head, false)
+    @*Insert favicon and app icons head code*@
+    @await Component.InvokeAsync("Favicon")
+    @Html.NopInlineScripts(ResourceLocation.Head)
+</head>
+<body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
+    <script type="text/javascript">
             var culture = "@GetDefaultLocale()";
 
             //load cldr for current culture
@@ -163,26 +165,26 @@
             }).then(Globalize.load).then(function () {
                 Globalize.locale(culture);
             });
-        </script>
-        <script>
-            kendo.culture("@(currentKendoCulture)");            
-        </script>
-        <div class="throbber">
-            <div class="curtain">
-            </div>
-            <div class="curtain-content">
-                <div>
-                    <h1 class="throbber-header">@T("Common.Wait...")</h1>
-                    <p>
-                        <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
-                    </p>
-                </div>
+    </script>
+    <script>
+            kendo.culture("@(currentKendoCulture)");
+    </script>
+    <div class="throbber">
+        <div class="curtain">
+        </div>
+        <div class="curtain-content">
+            <div>
+                <h1 class="throbber-header">@T("Common.Wait...")</h1>
+                <p>
+                    <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+                </p>
             </div>
         </div>
-        <div id="ajaxBusy">
-            <span>&nbsp;</span>
-        </div>
-        <div class="wrapper">
+    </div>
+    <div id="ajaxBusy">
+        <span>&nbsp;</span>
+    </div>
+    <div class="wrapper">
         @if (IsSectionDefined("header"))
         {
             @RenderSection("header")
@@ -191,15 +193,21 @@
         {
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderBefore })
             <nav class="main-header navbar navbar-expand navbar-dark bg-dark">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" id="nopSideBarPusher" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+                    </li>
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
+                </ul>
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.HeaderNavbarBefore })
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         @await Component.InvokeAsync("AdminLanguageSelector")
                     </li>
-                    @if (customerService.IsRegistered(currentCustomer))
+                    @if (await customerService.IsRegisteredAsync(currentCustomer))
                     {
                         <li class="nav-item">
-                            <a href="#" class="nav-link disabled">@customerService.GetCustomerFullName(currentCustomer)</a>
+                            <a href="#" class="nav-link disabled">@await customerService.GetCustomerFullNameAsync(currentCustomer)</a>
                         </li>
                         <li class="nav-item">
                             <a asp-controller="Customer" asp-action="Logout" asp-area="" class="nav-link">@T("Admin.Header.Logout")</a>
@@ -215,7 +223,7 @@
                     {
                         <li class="nav-item dropdown">
                             <a class="nav-link" href="#" data-toggle="dropdown">
-                                <i class="fa fa-gears"></i>
+                                <i class="fas fa-cogs"></i>
                             </a>
                             <ul class="maintenance-menu dropdown-menu dropdown-menu-right" role="menu">
                                 <li class="dropdown-item">
@@ -235,11 +243,11 @@
                                             <span>@T("Admin.Header.RestartApplication")</span>
                                         </button>
                                         <script>
-                                    $(document).ready(function () {
-                                        $("#restart-application").click(function (e) {
-                                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
-                                        });
+                                $(document).ready(function () {
+                                    $("#restart-application").click(function (e) {
+                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
                                     });
+                                });
                                         </script>
                                     </form>
                                 </li>
@@ -262,6 +270,7 @@
                 <!-- Brand Logo -->
                 <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark logo-switch">
                     <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image-xl logo-xl">
+                    <img src="~/css/admin/images/logo-mini.png" alt="logo.png" class="brand-image-xs logo-xs">
                 </a>
                 <div class="sidebar">
                     <div class="sidebar-form">
@@ -285,57 +294,58 @@
         }
         <div class="content-wrapper">
             @await Html.PartialAsync("Notifications")
-                <nop-antiforgery-token />
-                @RenderBody()
+            <nop-antiforgery-token />
+            @RenderBody()
         </div>
         <div class="main-footer clearfix">
             @if (!storeInformationSettings.HidePoweredByNopCommerce)
             {
                 @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
                     Please find more info at https://www.nopcommerce.com/nopcommerce-premium-support-services*@
-                <div class="pull-left">
+                <div class="float-left">
                     Powered by <a href="https://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
                 </div>
             }
-            <div class="pull-right hidden-xs">
-                 <b>nopCommerce version @NopVersion.FULL_VERSION</b>
+            <div class="float-right hidden-xs">
+                <b>nopCommerce version @NopVersion.FULL_VERSION</b>
             </div>
             <div class="text-center">
-                @dateTimeHelper.ConvertToUserTime(DateTime.Now).ToString("f", currentCulture)
+                @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", currentCulture))
             </div>
         </div>
     </div>
-        <script>
-            var AdminLTEOptions = {
-                boxWidgetOptions: {
-                    boxWidgetIcons: {
-                        collapse: 'fa-minus',
-                        open: 'fa-plus'
-                    }
+    <script>
+        var AdminLTEOptions = {
+            boxWidgetOptions: {
+                boxWidgetIcons: {
+                    collapse: 'fa-minus',
+                    open: 'fa-plus'
                 }
-            };
-        </script>
-        @{
-            //scroll to a selected card (if specified)
-            var selectedCardName = this.Html.GetSelectedCardName();
-            if (!String.IsNullOrEmpty(selectedCardName))
-            {
-                <script>
-                    location.hash = '#@(selectedCardName)';
-                </script>
             }
+        };
+    </script>
+    @{
+        //scroll to a selected card (if specified)
+        var selectedCardName = Html.GetSelectedCardName();
+        if (!String.IsNullOrEmpty(selectedCardName))
+        {
+            <script>
+                    location.hash = '#@(selectedCardName)';
+            </script>
         }
-        @Html.NopCssFiles(ResourceLocation.Footer)
-        @Html.NopScripts(ResourceLocation.Footer)
-        <a id="backTop" class="btn btn-back-top bg-teal"></a>
-        <script>
-            $(document).ready(function () {
-                //enable "back top" arrow
-                $('#backTop').backTop();
+    }
+    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopScripts(ResourceLocation.Footer)
+    <a id="backTop" class="btn btn-back-top bg-teal"></a>
+    <script>
+        $(document).ready(function () {
+            //enable "back top" arrow
+            $('#backTop').backTop();
 
-                //enable tooltips
-                $('[data-toggle="tooltip"]').tooltip({placement: 'bottom'});
-            });
-        </script>
-    </body>
+            //enable tooltips
+            $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
+        });
+    </script>
+    @Html.NopInlineScripts(ResourceLocation.Footer)
+</body>
 </html>

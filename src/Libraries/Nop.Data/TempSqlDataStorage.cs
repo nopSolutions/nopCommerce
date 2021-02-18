@@ -1,5 +1,4 @@
-using System;
-using System.Linq;
+﻿using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
 
@@ -13,10 +12,9 @@ namespace Nop.Data
     {
         #region Ctor
 
-        public TempSqlDataStorage(string storageName, IQueryable<T> query, Func<DataConnection> dataConnectionFactory)
-            : base(dataConnectionFactory(), storageName, query)
+        public TempSqlDataStorage(string storageName, IQueryable<T> query, DataConnection dataConnection)
+            : base(dataConnection, storageName, query)
         {
-            
         }
 
         #endregion

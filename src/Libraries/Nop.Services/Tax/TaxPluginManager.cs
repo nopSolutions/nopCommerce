@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Customers;
@@ -36,9 +37,9 @@ namespace Nop.Services.Tax
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Tax provider</returns>
-        public virtual ITaxProvider LoadPrimaryPlugin(Customer customer = null, int storeId = 0)
+        public virtual async Task<ITaxProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
         {
-            return LoadPrimaryPlugin(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
+            return await LoadPrimaryPluginAsync(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
         }
 
         /// <summary>
@@ -58,9 +59,9 @@ namespace Nop.Services.Tax
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Result</returns>
-        public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
+        public virtual async Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0)
         {
-            var taxProvider = LoadPluginBySystemName(systemName, customer, storeId);
+            var taxProvider = await LoadPluginBySystemNameAsync(systemName, customer, storeId);
             return IsPluginActive(taxProvider);
         }
 

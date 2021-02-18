@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
@@ -14,13 +15,13 @@ namespace Nop.Services.Orders
         /// Deletes a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        void DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute);
+        Task DeleteCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute);
 
         /// <summary>
         /// Deletes checkout attributes
         /// </summary>
         /// <param name="checkoutAttributes">Checkout attributes</param>
-        void DeleteCheckoutAttributes(IList<CheckoutAttribute> checkoutAttributes);
+        Task DeleteCheckoutAttributesAsync(IList<CheckoutAttribute> checkoutAttributes);
 
         /// <summary>
         /// Gets all checkout attributes
@@ -28,33 +29,33 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="excludeShippableAttributes">A value indicating whether we should exclude shippable attributes</param>
         /// <returns>Checkout attributes</returns>
-        IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false);
+        Task<IList<CheckoutAttribute>> GetAllCheckoutAttributesAsync(int storeId = 0, bool excludeShippableAttributes = false);
 
         /// <summary>
         /// Gets a checkout attribute 
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute</returns>
-        CheckoutAttribute GetCheckoutAttributeById(int checkoutAttributeId);
+        Task<CheckoutAttribute> GetCheckoutAttributeByIdAsync(int checkoutAttributeId);
 
         /// <summary>
         /// Gets checkout attributes 
         /// </summary>
         /// <param name="checkoutAttributeIds">Checkout attribute identifiers</param>
         /// <returns>Checkout attributes</returns>
-        IList<CheckoutAttribute> GetCheckoutAttributeByIds(int[] checkoutAttributeIds);
+        Task<IList<CheckoutAttribute>> GetCheckoutAttributeByIdsAsync(int[] checkoutAttributeIds);
 
         /// <summary>
         /// Inserts a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute);
+        Task InsertCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute);
 
         /// <summary>
         /// Updates the checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute);
+        Task UpdateCheckoutAttributeAsync(CheckoutAttribute checkoutAttribute);
 
         #endregion
 
@@ -64,33 +65,33 @@ namespace Nop.Services.Orders
         /// Deletes a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        void DeleteCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue);
+        Task DeleteCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue);
 
         /// <summary>
         /// Gets checkout attribute values by checkout attribute identifier
         /// </summary>
         /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
         /// <returns>Checkout attribute values</returns>
-        IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId);
-        
+        Task<IList<CheckoutAttributeValue>> GetCheckoutAttributeValuesAsync(int checkoutAttributeId);
+
         /// <summary>
         /// Gets a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
         /// <returns>Checkout attribute value</returns>
-        CheckoutAttributeValue GetCheckoutAttributeValueById(int checkoutAttributeValueId);
+        Task<CheckoutAttributeValue> GetCheckoutAttributeValueByIdAsync(int checkoutAttributeValueId);
 
         /// <summary>
         /// Inserts a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue);
+        Task InsertCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue);
 
         /// <summary>
         /// Updates the checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue);
+        Task UpdateCheckoutAttributeValueAsync(CheckoutAttributeValue checkoutAttributeValue);
         
         #endregion
     }

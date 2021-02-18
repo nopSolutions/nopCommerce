@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
@@ -16,12 +17,12 @@ namespace Nop.Web.Components
             _newsletterModelFactory = newsletterModelFactory;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");
 
-            var model = _newsletterModelFactory.PrepareNewsletterBoxModel();
+            var model = await _newsletterModelFactory.PrepareNewsletterBoxModelAsync();
             return View(model);
         }
     }

@@ -28,9 +28,9 @@ namespace Nop.Services.Caching
         /// <summary>
         /// Executes a task
         /// </summary>
-        public void Execute()
+        public async System.Threading.Tasks.Task ExecuteAsync()
         {
-            _staticCacheManager.Clear();
+            await _staticCacheManager.ClearAsync();
         }
 
         #endregion

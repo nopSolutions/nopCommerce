@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Validators.Messages
         public EmailAccountValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.Email).NotEmpty();
-            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
+            RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
 
             RuleFor(x => x.DisplayName).NotEmpty();
 

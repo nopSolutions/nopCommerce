@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer attribute value model
     /// </summary>
-    public partial class CustomerAttributeValueModel : BaseNopEntityModel, ILocalizedModel<CustomerAttributeValueLocalizedModel>
+    public partial record CustomerAttributeValueModel : BaseNopEntityModel, ILocalizedModel<CustomerAttributeValueLocalizedModel>
     {
         #region Ctor
 
@@ -36,7 +36,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         #endregion
     }
 
-    public partial class CustomerAttributeValueLocalizedModel : ILocalizedLocaleModel
+    public partial record CustomerAttributeValueLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

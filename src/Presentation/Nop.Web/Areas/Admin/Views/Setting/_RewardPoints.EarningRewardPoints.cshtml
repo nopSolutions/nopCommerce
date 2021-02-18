@@ -10,11 +10,11 @@
             <nop-label asp-for="PointsForPurchases_Amount" />
         </div>
         <div class="col-md-9">
-            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
-            <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode" /></div>
-            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
-            <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Points" /></div>
-            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
+            <div class="form-text-row float-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
+            <div class="float-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode" /></div>
+            <div class="form-text-row float-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
+            <div class="float-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Points" /></div>
+            <div class="form-text-row float-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
             <span asp-validation-for="PointsForPurchases_Amount"></span>
             <span asp-validation-for="PointsForPurchases_Points"></span>
         </div>
@@ -80,7 +80,7 @@
                     <span asp-validation-for="ActivationDelay"></span>
                 </div>
                 <div class="col-md-3">
-                    <nop-select asp-for="ActivationDelayPeriodId" asp-items="@(((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
+                    <nop-select asp-for="ActivationDelayPeriodId" asp-items="@await (((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectListAsync())" style="max-width: 200px;" />
                     <span asp-validation-for="ActivationDelayPeriodId"></span>
                 </div>
             </div>
@@ -127,6 +127,6 @@
         if ($('#@Html.IdFor(model => model.ActivatePointsImmediately)').is(':checked'))
             $('#pnl-activating-delay').hide();
         else
-            $('#pnl-activating-delay').show();
+            $('#pnl-activating-delay').showField();
     }
 </script>

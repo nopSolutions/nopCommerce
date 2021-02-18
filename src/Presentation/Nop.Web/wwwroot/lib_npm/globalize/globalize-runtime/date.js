@@ -1,5 +1,5 @@
 /**
- * Globalize Runtime v1.4.3
+ * Globalize Runtime v1.6.0
  *
  * http://github.com/jquery/globalize
  *
@@ -7,10 +7,10 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2020-03-19T12:34Z
+ * Date: 2020-09-08T11:54Z
  */
 /*!
- * Globalize Runtime v1.4.3 2020-03-19T12:34Z Released under the MIT license
+ * Globalize Runtime v1.6.0 2020-09-08T11:54Z Released under the MIT license
  * http://git.io/TrdQbw
  */
 (function( root, factory ) {
@@ -43,6 +43,8 @@
 
 var createErrorUnsupportedFeature = Globalize._createErrorUnsupportedFeature,
 	looseMatching = Globalize._looseMatching,
+	partsJoin = Globalize._partsJoin,
+	partsPush = Globalize._partsPush,
 	regexpEscape = Globalize._regexpEscape,
 	removeLiteralQuotes = Globalize._removeLiteralQuotes,
 	runtimeKey = Globalize._runtimeKey,
@@ -698,14 +700,7 @@ var dateFormat = function( date, numberFormatters, properties ) {
 		dateField = dateFieldsMap[ chr ];
 		type = dateField ? dateField : "literal";
 
-		// Concat two consecutive literals
-		if ( type === "literal" && parts.length && parts[ parts.length - 1 ].type === "literal" ) {
-			parts[ parts.length - 1 ].value += value;
-			return;
-		}
-
-		parts.push( { type: type, value: value } );
-
+		partsPush( parts, type, value );
 	});
 
 	return parts;
@@ -717,9 +712,7 @@ var dateFormat = function( date, numberFormatters, properties ) {
 
 var dateFormatterFn = function( dateToPartsFormatter ) {
 	return function dateFormatter( value ) {
-		return dateToPartsFormatter( value ).map( function( part ) {
-			return part.value;
-		}).join( "" );
+		return partsJoin( dateToPartsFormatter( value ));
 	};
 };
 

@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.News
 {
-    public partial class AddNewsCommentModel : BaseNopModel
+    public partial record AddNewsCommentModel : BaseNopModel
     {
         [NopResourceDisplayName("News.Comments.CommentTitle")]
         public string CommentTitle { get; set; }

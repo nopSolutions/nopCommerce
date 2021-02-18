@@ -9,7 +9,7 @@
     <div class="cards-group">
         <div class="card card-default">
             <div class="card-body">
-                @(Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
+                @(await Html.LocalizedEditorAsync<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
                 @<div>
                     <div class="form-group row">
                         <div class="col-md-3">
@@ -72,7 +72,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-9 offset-md-3">
-                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                     </div>
                 </div>
             </div>

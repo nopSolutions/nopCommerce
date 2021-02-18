@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a setting model
     /// </summary>
-    public partial class SettingModel : BaseNopEntityModel
+    public partial record SettingModel : BaseNopEntityModel
     {
         #region Ctor
 

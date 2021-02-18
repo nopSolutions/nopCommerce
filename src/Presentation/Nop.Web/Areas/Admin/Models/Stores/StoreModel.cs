@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Stores
     /// <summary>
     /// Represents a store model
     /// </summary>
-    public partial class StoreModel : BaseNopEntityModel, ILocalizedModel<StoreLocalizedModel>
+    public partial record StoreModel : BaseNopEntityModel, ILocalizedModel<StoreLocalizedModel>
     {
         #region Ctor
 
@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Models.Stores
         #endregion
     }
 
-    public partial class StoreLocalizedModel : ILocalizedLocaleModel
+    public partial record StoreLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

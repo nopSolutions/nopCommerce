@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Factories
@@ -12,6 +13,6 @@ namespace Nop.Web.Factories
         /// Prepare the external authentication method model
         /// </summary>
         /// <returns>List of the external authentication method model</returns>
-        List<ExternalAuthenticationMethodModel> PrepareExternalMethodsModel();
+        Task<List<ExternalAuthenticationMethodModel>> PrepareExternalMethodsModelAsync();
     }
 }

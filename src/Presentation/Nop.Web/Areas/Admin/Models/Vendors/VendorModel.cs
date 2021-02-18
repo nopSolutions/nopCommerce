@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
     /// <summary>
     /// Represents a vendor model
     /// </summary>
-    public partial class VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>
+    public partial record VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>
     {
         #region Ctor
 
@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
 
         #region Nested classes
         
-        public partial class VendorAttributeModel : BaseNopEntityModel
+        public partial record VendorAttributeModel : BaseNopEntityModel
         {
             public VendorAttributeModel()
             {
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
             public IList<VendorAttributeValueModel> Values { get; set; }
         }
 
-        public partial class VendorAttributeValueModel : BaseNopEntityModel
+        public partial record VendorAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 
@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         #endregion
     }
 
-    public partial class VendorLocalizedModel : ILocalizedLocaleModel
+    public partial record VendorLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

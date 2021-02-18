@@ -444,10 +444,10 @@
                                 function toggleEditShippingMethod(editmode) {
                                     if (editmode) {
                                         $('#lblShippingMethod').hide();
-                                        $('#divShippingMethod').show();
+                                        $('#divShippingMethod').showField();
                                         $('#btnEditShippingMethod').hide();
-                                        $('#btnSaveShippingMethod').show();
-                                        $('#btnCancelShippingMethod').show();
+                                        $('#btnSaveShippingMethod').showField();
+                                        $('#btnCancelShippingMethod').showField();
                                     } else {
                                         $('#lblShippingMethod').show();
                                         $('#divShippingMethod').hide();
@@ -459,7 +459,7 @@
                             </script>
                             <div class="input-group input-group-short">
                                 <div id="lblShippingMethod" class="input-group-text">
-                                    <div class="form-text-row">@Model.ShippingMethod</div>
+                                    @Model.ShippingMethod
                                 </div>
                                 <div id="divShippingMethod">
                                     <nop-editor asp-for="ShippingMethod" />
@@ -474,7 +474,7 @@
                                     </button>
                                     <nop-action-confirmation asp-button-id="btnSaveShippingMethod" />
 
-                                    <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn btn-success">
+                                    <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn btn-secondary">
                                         @T("Admin.Common.Cancel")
                                     </button>                                    
                                 </span>

@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -12,31 +13,31 @@ namespace Nop.Services.Catalog
         /// Delete manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        void DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
+        Task DeleteManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate);
 
         /// <summary>
         /// Gets all manufacturer templates
         /// </summary>
         /// <returns>Manufacturer templates</returns>
-        IList<ManufacturerTemplate> GetAllManufacturerTemplates();
+        Task<IList<ManufacturerTemplate>> GetAllManufacturerTemplatesAsync();
 
         /// <summary>
         /// Gets a manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplateId">Manufacturer template identifier</param>
         /// <returns>Manufacturer template</returns>
-        ManufacturerTemplate GetManufacturerTemplateById(int manufacturerTemplateId);
+        Task<ManufacturerTemplate> GetManufacturerTemplateByIdAsync(int manufacturerTemplateId);
 
         /// <summary>
         /// Inserts manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
+        Task InsertManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate);
 
         /// <summary>
         /// Updates the manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate);
+        Task UpdateManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate);
     }
 }

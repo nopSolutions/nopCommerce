@@ -14,24 +14,24 @@
         var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
         //validation
         if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationMinLength').showField();
+            $('#pnlValidationMaxLength').showField();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').show();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').showField();
+            $('#pnlDefaultValue').showField();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationMinLength').showField();
+            $('#pnlValidationMaxLength').showField();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').show();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').showField();
+            $('#pnlDefaultValue').showField();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').show();
-            $('#pnlValidationFileAllowedExtensions').show();
+            $('#pnlValidationFileMaximumSize').showField();
+            $('#pnlValidationFileAllowedExtensions').showField();
             $('#pnlDefaultValueLocalized').hide();
             $('#pnlDefaultValue').hide();
             $("#@Html.IdFor(model => model.DefaultValue)").val('');
@@ -60,7 +60,7 @@
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
-            $('[data-card-name=product-attribute-mapping-values]').show();
+            $('[data-card-name=product-attribute-mapping-values]').showField();
         } else {
             $('[data-card-name=product-attribute-mapping-values]').hide();
         }
@@ -78,7 +78,7 @@
             <span asp-validation-for="ProductAttributeId"></span>
         </div>
     </div>
-    @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("productattribute-localized",
+    @(await Html.LocalizedEditorAsync<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("productattribute-localized",
     @<div>
         <div class="form-group row">
             <div class="col-md-3">
@@ -118,11 +118,11 @@
             <nop-label asp-for="AttributeControlTypeId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="AttributeControlTypeId" asp-items="@(((AttributeControlType)Model.AttributeControlTypeId).ToSelectList())" />
+            <nop-select asp-for="AttributeControlTypeId" asp-items="@await (((AttributeControlType)Model.AttributeControlTypeId).ToSelectListAsync())" />
             <span asp-validation-for="AttributeControlTypeId"></span>
         </div>
     </div>
-    @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("pnlDefaultValueLocalized",
+    @(await Html.LocalizedEditorAsync<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("pnlDefaultValueLocalized",
     @<div>
         <div class="form-group row advanced-setting">
             <div class="col-md-3">
