@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
-using Nop.Services.Defaults;
 using Nop.Services.Localization;
+using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Validators;
 
@@ -12,8 +12,14 @@ namespace Nop.Web.Areas.Admin.Validators.Topics
     {
         public TopicValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.SeName).Length(0, NopSeoDefaults.ForumTopicLength)
-                .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.ForumTopicLength));
+            RuleFor(x => x.SeName)
+                .Length(0, NopSeoDefaults.ForumTopicLength)
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.ForumTopicLength);
+
+            RuleFor(x => x.Password)
+                .NotEmpty()
+                .When(x => x.IsPasswordProtected)
+                .WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"));
 
             SetDatabaseValidationRules<Topic>(dataProvider);
         }

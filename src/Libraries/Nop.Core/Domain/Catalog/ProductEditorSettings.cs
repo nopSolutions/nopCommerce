@@ -120,7 +120,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value indicating whether 'Require other products added to the cart' field is shown
         /// </summary>
-        public bool RequireOtherProductsAddedToTheCart { get; set; }
+        public bool RequireOtherProductsAddedToCart { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Is gift card' field is shown

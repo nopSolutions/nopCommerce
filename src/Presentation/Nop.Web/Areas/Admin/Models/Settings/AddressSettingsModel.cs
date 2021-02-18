@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents an address settings model
     /// </summary>
-    public partial class AddressSettingsModel : BaseNopModel, ISettingsModel
+    public partial record AddressSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

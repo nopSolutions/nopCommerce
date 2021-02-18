@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Koristi SQL Server račun</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Koristi internu pohranu podataka (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL lozinka</Value>
   </LocaleResource>

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
@@ -12,9 +13,15 @@ namespace Nop.Core
     public interface IWorkContext
     {
         /// <summary>
-        /// Gets or sets the current customer
+        /// Gets the current customer
         /// </summary>
-        Customer CurrentCustomer { get; set; }
+        Task<Customer> GetCurrentCustomerAsync();
+
+        /// <summary>
+        /// Sets the current customer
+        /// </summary>
+        /// <param name="customer">Current customer</param>
+        Task SetCurrentCustomerAsync(Customer customer = null);
 
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
@@ -24,26 +31,38 @@ namespace Nop.Core
         /// <summary>
         /// Gets the current vendor (logged-in manager)
         /// </summary>
-        Vendor CurrentVendor { get; }
+        Task<Vendor> GetCurrentVendorAsync();
 
         /// <summary>
-        /// Gets or sets current user working language
+        /// Gets current user working language
         /// </summary>
-        Language WorkingLanguage { get; set; }
+        Task<Language> GetWorkingLanguageAsync();
+
+        /// <summary>
+        /// Sets current user working language
+        /// </summary>
+        /// <param name="language">Language</param>
+        Task SetWorkingLanguageAsync(Language language);
 
         /// <summary>
         /// Gets or sets current user working currency
         /// </summary>
-        Currency WorkingCurrency { get; set; }
+        Task<Currency> GetWorkingCurrencyAsync();
+
+        /// <summary>
+        /// Sets current user working currency
+        /// </summary>
+        /// <param name="currency">Currency</param>
+        Task SetWorkingCurrencyAsync(Currency currency);
 
         /// <summary>
         /// Gets or sets current tax display type
         /// </summary>
-        TaxDisplayType TaxDisplayType { get; set; }
+        Task<TaxDisplayType> GetTaxDisplayTypeAsync();
 
         /// <summary>
-        /// Gets or sets value indicating whether we're in admin area
+        /// Sets current tax display type
         /// </summary>
-        bool IsAdmin { get; set; }
+        Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType);        
     }
 }

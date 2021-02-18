@@ -8,13 +8,13 @@
     }
 }
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
     $("#@Html.IdForModel()").kendoNumericTextBox({
         min: @Html.Raw(decimal.MinValue),
         max: @Html.Raw(decimal.MaxValue),
         decimals: 4,
         restrictDecimals: true,
-        format: "#.00 @postfix"
+        format: "#.0000 @postfix"
         });
     });
 </script>

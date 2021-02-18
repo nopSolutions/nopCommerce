@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
@@ -7,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a pickup point provider model
     /// </summary>
-    public partial class PickupPointProviderModel : BaseNopModel, IPluginModel
+    public partial record PickupPointProviderModel : BaseNopModel, IPluginModel
     {
         #region Properties
 

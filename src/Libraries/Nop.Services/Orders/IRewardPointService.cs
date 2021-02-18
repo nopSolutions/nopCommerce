@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -16,11 +17,12 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">A value indicating whether to show reward points that did not yet activated</param>
+        /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
-        IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
-            bool showNotActivated = false, int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<RewardPointsHistory>> GetRewardPointsHistoryAsync(int customerId = 0, int? storeId = null,
+            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets reduced reward points balance per order
@@ -35,7 +37,7 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Balance</returns>
-        int GetRewardPointsBalance(int customerId, int storeId);
+        Task<int> GetRewardPointsBalanceAsync(int customerId, int storeId);
 
         /// <summary>
         /// Add reward points history record
@@ -49,7 +51,7 @@ namespace Nop.Services.Orders
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
         /// <param name="endDate">Date and time when the reward points will no longer be valid; pass null to add date termless points</param>
         /// <returns>Reward points history entry identifier</returns>
-        int AddRewardPointsHistoryEntry(Customer customer, int points, int storeId, string message = "",
+        Task<int> AddRewardPointsHistoryEntryAsync(Customer customer, int points, int storeId, string message = "",
             Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null);
 
         /// <summary>
@@ -57,24 +59,18 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
         /// <returns>Reward point history entry</returns>
-        RewardPointsHistory GetRewardPointsHistoryEntryById(int rewardPointsHistoryId);
+        Task<RewardPointsHistory> GetRewardPointsHistoryEntryByIdAsync(int rewardPointsHistoryId);
 
-        /// <summary>
-        /// Insert the reward point history entry
-        /// </summary>
-        /// <param name="rewardPointsHistory">Reward point history entry</param>
-        void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
-        
         /// <summary>
         /// Updates the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        void UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
+        Task UpdateRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory);
 
         /// <summary>
         /// Delete the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        void DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
+        Task DeleteRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory);
     }
 }

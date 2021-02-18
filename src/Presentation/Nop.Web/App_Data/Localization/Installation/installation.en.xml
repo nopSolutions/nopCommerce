@@ -36,6 +36,12 @@
   <LocaleResource Name="ConnectionStringWrongFormat">
     <Value>Wrong SQL connection string format</Value>
   </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Create database if it doesn't exist</Value>
   </LocaleResource>
@@ -114,9 +120,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Use SQL Server account</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Use built-in data storage (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
   </LocaleResource>
@@ -143,5 +146,8 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Restarting...</Value>
   </LocaleResource>
 </Language>

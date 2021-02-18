@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Directory
@@ -19,8 +16,7 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
 
@@ -28,13 +24,11 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
-        public StateProvinceService(IStaticCacheManager cacheManager,
-            IEventPublisher eventPublisher,
+        public StateProvinceService(IStaticCacheManager staticCacheManager,
             ILocalizationService localizationService,
             IRepository<StateProvince> stateProvinceRepository)
         {
-            _cacheManager = cacheManager;
-            _eventPublisher = eventPublisher;
+            _staticCacheManager = staticCacheManager;
             _localizationService = localizationService;
             _stateProvinceRepository = stateProvinceRepository;
         }
@@ -46,15 +40,9 @@ namespace Nop.Services.Directory
         /// Deletes a state/province
         /// </summary>
         /// <param name="stateProvince">The state/province</param>
-        public virtual void DeleteStateProvince(StateProvince stateProvince)
+        public virtual async Task DeleteStateProvinceAsync(StateProvince stateProvince)
         {
-            if (stateProvince == null)
-                throw new ArgumentNullException(nameof(stateProvince));
-
-            _stateProvinceRepository.Delete(stateProvince);
-
-            //event notification
-            _eventPublisher.EntityDeleted(stateProvince);
+            await _stateProvinceRepository.DeleteAsync(stateProvince);
         }
 
         /// <summary>
@@ -62,12 +50,9 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="stateProvinceId">The state/province identifier</param>
         /// <returns>State/province</returns>
-        public virtual StateProvince GetStateProvinceById(int stateProvinceId)
+        public virtual async Task<StateProvince> GetStateProvinceByIdAsync(int stateProvinceId)
         {
-            if (stateProvinceId == 0)
-                return null;
-
-            return _stateProvinceRepository.ToCachedGetById(stateProvinceId);
+            return await _stateProvinceRepository.GetByIdAsync(stateProvinceId, cache => default);
         }
 
         /// <summary>
@@ -76,13 +61,13 @@ namespace Nop.Services.Directory
         /// <param name="abbreviation">The state/province abbreviation</param>
         /// <param name="countryId">Country identifier; pass null to load the state regardless of a country</param>
         /// <returns>State/province</returns>
-        public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation, int? countryId = null)
+        public virtual async Task<StateProvince> GetStateProvinceByAbbreviationAsync(string abbreviation, int? countryId = null)
         {
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var key = NopDirectoryCachingDefaults.StateProvincesByAbbreviationCacheKey
-                .FillCacheKey(abbreviation, countryId ?? 0);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey
+                , abbreviation, countryId ?? 0);
 
             var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
 
@@ -90,7 +75,7 @@ namespace Nop.Services.Directory
             if (countryId.HasValue)
                 query = query.Where(state => state.CountryId == countryId);
 
-            return query.ToCachedFirstOrDefault(key);
+            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -98,9 +83,9 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="address">Address</param>
         /// <returns>Country</returns>
-        public virtual StateProvince GetStateProvinceByAddress(Address address)
+        public virtual async Task<StateProvince> GetStateProvinceByAddressAsync(Address address)
         {
-            return GetStateProvinceById(address?.StateProvinceId ?? 0);
+            return await GetStateProvinceByIdAsync(address?.StateProvinceId ?? 0);
         }
 
         /// <summary>
@@ -110,26 +95,25 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort states by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>States</returns>
-        public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
+        public virtual async Task<IList<StateProvince>> GetStateProvincesByCountryIdAsync(int countryId, int languageId = 0, bool showHidden = false)
         {
-            var key = NopDirectoryCachingDefaults.StateProvincesByCountryCacheKey.FillCacheKey(countryId, languageId, showHidden);
-            return _cacheManager.Get(key, () =>
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByCountryCacheKey, countryId, languageId, showHidden);
+
+            return await _staticCacheManager.GetAsync(key, async () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
                             orderby sp.DisplayOrder, sp.Name
                             where sp.CountryId == countryId &&
                             (showHidden || sp.Published)
                             select sp;
-                var stateProvinces = query.ToList();
+                var stateProvinces = await query.ToListAsync();
 
                 if (languageId > 0)
-                {
                     //we should sort states by localized names when they have the same display order
-                    stateProvinces = stateProvinces
+                    stateProvinces = await stateProvinces.ToAsyncEnumerable()
                         .OrderBy(c => c.DisplayOrder)
-                        .ThenBy(c => _localizationService.GetLocalized(c, x => x.Name, languageId))
-                        .ToList();
-                }
+                        .ThenByAwait(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
+                        .ToListAsync();
 
                 return stateProvinces;
             });
@@ -140,14 +124,15 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>States</returns>
-        public virtual IList<StateProvince> GetStateProvinces(bool showHidden = false)
+        public virtual async Task<IList<StateProvince>> GetStateProvincesAsync(bool showHidden = false)
         {
             var query = from sp in _stateProvinceRepository.Table
                         orderby sp.CountryId, sp.DisplayOrder, sp.Name
                         where showHidden || sp.Published
                         select sp;
 
-            var stateProvinces = query.ToCachedList(NopDirectoryCachingDefaults.StateProvincesAllCacheKey.FillCacheKey(showHidden));
+
+            var stateProvinces = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesAllCacheKey, showHidden), async () => await query.ToListAsync());
 
             return stateProvinces;
         }
@@ -156,30 +141,18 @@ namespace Nop.Services.Directory
         /// Inserts a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        public virtual void InsertStateProvince(StateProvince stateProvince)
+        public virtual async Task InsertStateProvinceAsync(StateProvince stateProvince)
         {
-            if (stateProvince == null)
-                throw new ArgumentNullException(nameof(stateProvince));
-
-            _stateProvinceRepository.Insert(stateProvince);
-
-            //event notification
-            _eventPublisher.EntityInserted(stateProvince);
+            await _stateProvinceRepository.InsertAsync(stateProvince);
         }
 
         /// <summary>
         /// Updates a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        public virtual void UpdateStateProvince(StateProvince stateProvince)
+        public virtual async Task UpdateStateProvinceAsync(StateProvince stateProvince)
         {
-            if (stateProvince == null)
-                throw new ArgumentNullException(nameof(stateProvince));
-
-            _stateProvinceRepository.Update(stateProvince);
-
-            //event notification
-            _eventPublisher.EntityUpdated(stateProvince);
+            await _stateProvinceRepository.UpdateAsync(stateProvince);
         }
 
         #endregion

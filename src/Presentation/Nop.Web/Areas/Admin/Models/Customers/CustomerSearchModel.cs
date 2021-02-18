@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer search model
     /// </summary>
-    public partial class CustomerSearchModel : BaseSearchModel, IAclSupportedModel
+    public partial record CustomerSearchModel : BaseSearchModel, IAclSupportedModel
     {
         #region Ctor
 

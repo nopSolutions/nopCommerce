@@ -87,5 +87,15 @@ namespace Nop.Plugin.Shipping.UPS
         /// Gets or sets a value indicating whether to record plugin tracing in log
         /// </summary>
         public bool Tracing { get; set; }
+
+        /// <summary>
+        /// Gets or sets package weight type (LBS or KGS)
+        /// </summary>
+        public string WeightType { get; set; }
+
+        /// <summary>
+        /// Gets or sets package dimensions type (IN or CM)
+        /// </summary>
+        public string DimensionsType { get; set; }
     }
 }

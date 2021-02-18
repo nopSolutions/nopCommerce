@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -54,20 +55,20 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <returns>True if the file can be handled; otherwise false</returns>
-        protected virtual bool CanHandleFile(string path)
+        protected virtual async Task<bool> CanHandleFileAsync(string path)
         {
             var result = false;
 
             var fileExtension = _fileProvider.GetFileExtension(path).Replace(".", string.Empty).ToLower();
 
-            var forbiddenUploads = GetSetting("FORBIDDEN_UPLOADS").Trim().ToLower();
+            var forbiddenUploads = (await GetSettingAsync("FORBIDDEN_UPLOADS")).Trim().ToLower();
             if (!string.IsNullOrEmpty(forbiddenUploads))
             {
                 var forbiddenFileExtensions = new ArrayList(Regex.Split(forbiddenUploads, "\\s+"));
                 result = !forbiddenFileExtensions.Contains(fileExtension);
             }
 
-            var allowedUploads = GetSetting("ALLOWED_UPLOADS").Trim().ToLower();
+            var allowedUploads = (await GetSettingAsync("ALLOWED_UPLOADS")).Trim().ToLower();
             if (string.IsNullOrEmpty(allowedUploads))
                 return result;
 
@@ -82,7 +83,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="parentDirectoryPath">Path to the parent directory</param>
         /// <returns>Array of the paths to the directories</returns>
-        protected virtual ArrayList GetDirectories(string parentDirectoryPath)
+        protected virtual async Task<ArrayList> GetDirectoriesByParentDirectoryAsync(string parentDirectoryPath)
         {
             var directories = new ArrayList();
 
@@ -90,7 +91,7 @@ namespace Nop.Services.Media.RoxyFileman
             foreach (var directory in directoryNames)
             {
                 directories.Add(directory);
-                directories.AddRange(GetDirectories(directory));
+                directories.AddRange(await GetDirectoriesByParentDirectoryAsync(directory));
             }
 
             return directories;
@@ -106,13 +107,34 @@ namespace Nop.Services.Media.RoxyFileman
             var fileType = "file";
 
             fileExtension = fileExtension.ToLower();
-            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif")
+            if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif" || fileExtension == ".webp")
                 fileType = "image";
 
             if (fileExtension == ".swf" || fileExtension == ".flv")
                 fileType = "flash";
 
-            return fileType;
+            // Media file types supported by HTML5
+            if (fileExtension == ".mp4" || fileExtension == ".webm" // video
+                || fileExtension == ".ogg") // audio
+                fileType = "media";
+
+            // These media extensions are supported by tinyMCE
+            if (fileExtension == ".mov" // video
+                || fileExtension == ".m4a" || fileExtension == ".mp3" || fileExtension == ".wav") // audio
+                fileType = "media";
+
+            /* These media extensions are not supported by HTML5 or tinyMCE out of the box
+             * but may possibly be supported if You find players for them.
+             * if (fileExtension == ".3gp" || fileExtension == ".flv" 
+             *     || fileExtension == ".rmvb" || fileExtension == ".wmv" || fileExtension == ".divx"
+             *     || fileExtension == ".divx" || fileExtension == ".mpg" || fileExtension == ".rmvb"
+             *     || fileExtension == ".vob" // video
+             *     || fileExtension == ".aif" || fileExtension == ".aiff" || fileExtension == ".amr"
+             *     || fileExtension == ".asf" || fileExtension == ".asx" || fileExtension == ".wma"
+             *     || fileExtension == ".mid" || fileExtension == ".mp2") // audio
+             *     fileType = "media"; */
+
+             return fileType;
         }
 
         /// <summary>
@@ -143,9 +165,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get the absolute path to the language resources file
         /// </summary>
         /// <returns>Path</returns>
-        protected virtual string GetLanguageFile()
+        protected virtual async Task<string> GetLanguageFileAsync()
         {
-            var languageCode = GetSetting("LANG");
+            var languageCode = await GetSettingAsync("LANG");
             var languageFile = $"{NopRoxyFilemanDefaults.LanguageDirectory}/{languageCode}.json";
 
             if (!_fileProvider.FileExists(GetFullPath(languageFile)))
@@ -169,11 +191,11 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get the virtual path to root directory of uploaded files 
         /// </summary>
         /// <returns>Path</returns>
-        protected virtual string GetRootDirectory()
+        protected virtual async Task<string> GetRootDirectoryAsync()
         {
-            var filesRoot = GetSetting("FILES_ROOT");
+            var filesRoot = await GetSettingAsync("FILES_ROOT");
 
-            var sessionPathKey = GetSetting("SESSION_PATH_KEY");
+            var sessionPathKey = await GetSettingAsync("SESSION_PATH_KEY");
             if (!string.IsNullOrEmpty(sessionPathKey))
                 filesRoot = GetHttpContext().Session.GetString(sessionPathKey);
 
@@ -188,10 +210,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="key">Setting key</param>
         /// <returns>Setting value</returns>
-        protected virtual string GetSetting(string key)
+        protected virtual async Task<string> GetSettingAsync(string key)
         {
             if (_settings == null)
-                _settings = ParseJson(GetFullPath(NopRoxyFilemanDefaults.ConfigurationFile));
+                _settings = await ParseJsonAsync(GetFullPath(NopRoxyFilemanDefaults.ConfigurationFile));
 
             if (_settings.TryGetValue(key, out var value))
                 return value;
@@ -233,11 +255,11 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="path">Path</param>
         /// <returns>Path</returns>
-        protected virtual string GetVirtualPath(string path)
+        protected virtual async Task<string> GetVirtualPathAsync(string path)
         {
             path ??= string.Empty;
 
-            var rootDirectory = GetRootDirectory();
+            var rootDirectory = await GetRootDirectoryAsync();
             if (!path.StartsWith(rootDirectory))
                 path = rootDirectory + path;
 
@@ -249,13 +271,13 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="file">Path to the file</param>
         /// <returns>Collection of keys and values from the parsed file</returns>
-        protected virtual Dictionary<string, string> ParseJson(string file)
+        protected virtual async Task<Dictionary<string, string>> ParseJsonAsync(string file)
         {
             var result = new Dictionary<string, string>();
             var json = string.Empty;
             try
             {
-                json = _fileProvider.ReadAllText(file, Encoding.UTF8)?.Trim();
+                json = (await _fileProvider.ReadAllTextAsync(file, Encoding.UTF8))?.Trim();
             }
             catch
             {
@@ -266,10 +288,10 @@ namespace Nop.Services.Media.RoxyFileman
                 return result;
 
             if (json.StartsWith("{"))
-                json = json.Substring(1, json.Length - 2);
+                json = json[1..^1];
 
             json = json.Trim();
-            json = json.Substring(1, json.Length - 2);
+            json = json[1..^1];
 
             var lines = Regex.Split(json, "\"\\s*,\\s*\"");
             foreach (var line in lines)
@@ -304,7 +326,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Create configuration file for RoxyFileman
         /// </summary>
-        public virtual void CreateConfiguration()
+        public virtual async Task CreateConfigurationAsync()
         {
             var filePath = GetConfigurationFilePath();
 
@@ -312,7 +334,7 @@ namespace Nop.Services.Media.RoxyFileman
             _fileProvider.CreateFile(filePath);
 
             //try to read existing configuration
-            var existingText = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
+            var existingText = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
             var existingConfiguration = JsonConvert.DeserializeAnonymousType(existingText, new
             {
                 FILES_ROOT = string.Empty,
@@ -373,12 +395,12 @@ namespace Nop.Services.Media.RoxyFileman
                 ALLOWED_UPLOADS = existingConfiguration?.ALLOWED_UPLOADS ?? string.Empty,
                 FILEPERMISSIONS = existingConfiguration?.FILEPERMISSIONS ?? "0644",
                 DIRPERMISSIONS = existingConfiguration?.DIRPERMISSIONS ?? "0755",
-                LANG = existingConfiguration?.LANG ?? _workContext.WorkingLanguage.UniqueSeoCode,
+                LANG = existingConfiguration?.LANG ?? (await _workContext.GetWorkingLanguageAsync()).UniqueSeoCode,
                 DATEFORMAT = existingConfiguration?.DATEFORMAT ?? "dd/MM/yyyy HH:mm",
                 OPEN_LAST_DIR = existingConfiguration?.OPEN_LAST_DIR ?? "yes",
 
                 //no need user to configure
-                INTEGRATION = "tinymce4",
+                INTEGRATION = "custom",
                 RETURN_URL_PREFIX = currentPathBase,
                 DIRLIST = $"{currentPathBase}/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
                 CREATEDIR = $"{currentPathBase}/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",
@@ -399,7 +421,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             //save the file
             var text = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            await _fileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
         }
 
         /// <summary>
@@ -417,10 +439,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="key">Language resource key</param>
         /// <returns>Language resource value</returns>
-        public virtual string GetLanguageResource(string key)
+        public virtual async Task<string> GetLanguageResourceAsync(string key)
         {
             if (_languageResources == null)
-                _languageResources = ParseJson(GetLanguageFile());
+                _languageResources = await ParseJsonAsync(await GetLanguageFileAsync());
 
             if (_languageResources.TryGetValue(key, out var value))
                 return value;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Nop.Core;
 using Nop.Services.Common;
@@ -52,17 +53,17 @@ namespace Nop.Services.Plugins.Marketplace
         /// Get available categories of marketplace extensions
         /// </summary>
         /// <returns>Result</returns>
-        public virtual IList<OfficialFeedCategory> GetCategories()
+        public virtual async Task<IList<OfficialFeedCategory>> GetCategoriesAsync()
         {
             //load XML
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(_nopHttpClient.GetExtensionsCategoriesAsync().Result);
+                xml.LoadXml(await _nopHttpClient.GetExtensionsCategoriesAsync());
             }
             catch (Exception ex)
             {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                await _logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
             }
 
             //get list of categories from the XML
@@ -78,17 +79,17 @@ namespace Nop.Services.Plugins.Marketplace
         /// Get available versions of marketplace extensions
         /// </summary>
         /// <returns>Result</returns>
-        public virtual IList<OfficialFeedVersion> GetVersions()
+        public virtual async Task<IList<OfficialFeedVersion>> GetVersionsAsync()
         {
             //load XML
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(_nopHttpClient.GetExtensionsVersionsAsync().Result);
+                xml.LoadXml(await _nopHttpClient.GetExtensionsVersionsAsync());
             }
             catch (Exception ex)
             {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                await _logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
             }
 
             //get list of versions from the XML
@@ -109,7 +110,7 @@ namespace Nop.Services.Plugins.Marketplace
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Plugins</returns>
-        public virtual IPagedList<OfficialFeedPlugin> GetAllPlugins(int categoryId = 0,
+        public virtual async Task<IPagedList<OfficialFeedPlugin>> GetAllPluginsAsync(int categoryId = 0,
             int versionId = 0, int price = 0, string searchTerm = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -117,11 +118,11 @@ namespace Nop.Services.Plugins.Marketplace
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(_nopHttpClient.GetExtensionsAsync(categoryId, versionId, price, searchTerm, pageIndex, pageSize).Result);
+                xml.LoadXml(await _nopHttpClient.GetExtensionsAsync(categoryId, versionId, price, searchTerm, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                await _logger.ErrorAsync("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
             }
 
             //get list of extensions from the XML

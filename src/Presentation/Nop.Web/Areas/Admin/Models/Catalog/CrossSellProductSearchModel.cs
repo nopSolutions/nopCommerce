@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a cross-sell product search model
     /// </summary>
-    public partial class CrossSellProductSearchModel : BaseSearchModel
+    public partial record CrossSellProductSearchModel : BaseSearchModel
     {
         #region Properties
 

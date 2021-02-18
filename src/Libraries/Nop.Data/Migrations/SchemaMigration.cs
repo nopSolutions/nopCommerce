@@ -27,6 +27,7 @@ using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Migrations
 {
+    [SkipMigrationOnUpdate]
     [NopMigration("2020/01/31 11:24:16:2551771", "Nop.Data base schema")]
     public class SchemaMigration : AutoReversingMigration
     {
@@ -86,6 +87,7 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<BackInStockSubscription>(Create);
             _migrationManager.BuildTable<RelatedProduct>(Create);
             _migrationManager.BuildTable<ReviewType>(Create);
+            _migrationManager.BuildTable<SpecificationAttributeGroup>(Create);
             _migrationManager.BuildTable<SpecificationAttribute>(Create);
             _migrationManager.BuildTable<ProductAttributeCombination>(Create);
             _migrationManager.BuildTable<ProductAttributeMapping>(Create);

@@ -117,9 +117,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Użyj konta SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Użyj przechowywania danych (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>Hasło SQL</Value>
   </LocaleResource>

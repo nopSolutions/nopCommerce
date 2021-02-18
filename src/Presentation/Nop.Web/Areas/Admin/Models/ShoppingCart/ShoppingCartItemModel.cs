@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
     /// <summary>
     /// Represents a shopping cart item model
     /// </summary>
-    public partial class ShoppingCartItemModel : BaseNopEntityModel
+    public partial record ShoppingCartItemModel : BaseNopEntityModel
     {
         #region Properties
 

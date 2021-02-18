@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Tax
     /// <summary>
     /// Represents a tax configuration model
     /// </summary>
-    public partial class TaxConfigurationModel : BaseNopModel
+    public partial record TaxConfigurationModel : BaseNopModel
     {
         #region Ctor
 

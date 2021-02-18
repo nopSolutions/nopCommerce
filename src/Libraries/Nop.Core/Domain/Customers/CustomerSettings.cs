@@ -38,6 +38,21 @@ namespace Nop.Core.Domain.Customers
         public string UsernameValidationRule { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether phone number will be validated (when registering or changing on the 'My Account' page)
+        /// </summary>
+        public bool PhoneNumberValidationEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether phone number will be validated using regex (when registering or changing on the 'My Account' page)
+        /// </summary>
+        public bool PhoneNumberValidationUseRegex { get; set; }
+
+        /// <summary>
+        /// Gets or sets a phone number validation rule
+        /// </summary>
+        public string PhoneNumberValidationRule { get; set; }
+
+        /// <summary>
         /// Default password format for customers
         /// </summary>
         public PasswordFormat DefaultPasswordFormat { get; set; }
@@ -220,7 +235,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
         /// </summary>
-        public int DeleteGuestTaskOlderThanMinutes { get; set; }
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }        
 
         #region Form fields
 

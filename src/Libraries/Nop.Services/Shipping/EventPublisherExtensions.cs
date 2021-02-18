@@ -1,5 +1,6 @@
-﻿using Nop.Core.Domain.Shipping;
-using Nop.Services.Events;
+﻿﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Shipping;
+ using Nop.Core.Events;
 
 namespace Nop.Services.Shipping
 {
@@ -13,9 +14,9 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="shipment">The shipment.</param>
-        public static void PublishShipmentSent(this IEventPublisher eventPublisher, Shipment shipment)
+        public static async Task PublishShipmentSentAsync(this IEventPublisher eventPublisher, Shipment shipment)
         {
-            eventPublisher.Publish(new ShipmentSentEvent(shipment));
+            await eventPublisher.PublishAsync(new ShipmentSentEvent(shipment));
         }
 
         /// <summary>
@@ -23,9 +24,9 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="shipment">The shipment.</param>
-        public static void PublishShipmentDelivered(this IEventPublisher eventPublisher, Shipment shipment)
+        public static async Task PublishShipmentDeliveredAsync(this IEventPublisher eventPublisher, Shipment shipment)
         {
-            eventPublisher.Publish(new ShipmentDeliveredEvent(shipment));
+            await eventPublisher.PublishAsync(new ShipmentDeliveredEvent(shipment));
         }
     }
 }

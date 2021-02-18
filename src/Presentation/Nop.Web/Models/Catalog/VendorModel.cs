@@ -4,7 +4,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class VendorModel : BaseNopEntityModel
+    public partial record VendorModel : BaseNopEntityModel
     {
         public VendorModel()
         {

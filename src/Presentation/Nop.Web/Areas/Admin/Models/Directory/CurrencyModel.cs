@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a currency model
     /// </summary>
-    public partial class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingSupportedModel
+    public partial record CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         #endregion
     }
 
-    public partial class CurrencyLocalizedModel : ILocalizedLocaleModel
+    public partial record CurrencyLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

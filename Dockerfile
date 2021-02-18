@@ -1,5 +1,5 @@
 # create the build instance 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 
 WORKDIR /src                                                                    
 COPY ./src ./
@@ -29,10 +29,6 @@ WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalSmartPaymentButtons
 RUN dotnet build Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalStandard
 RUN dotnet build Nop.Plugin.Payments.PayPalStandard.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Payments.Qualpay
-RUN dotnet build Nop.Plugin.Payments.Qualpay.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Payments.Square
-RUN dotnet build Nop.Plugin.Payments.Square.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
 RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal
@@ -57,7 +53,7 @@ WORKDIR /src/Presentation/Nop.Web
 RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
 # create the runtime instance 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime 
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime 
 
 # add globalization support
 RUN apk add --no-cache icu-libs

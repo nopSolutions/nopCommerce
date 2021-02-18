@@ -1,0 +1,32 @@
+﻿@model IList<MultiFactorAuthenticationProviderModel>
+
+<ul class="method-list" id="mfa-provider-block">
+    @foreach (var provider in Model)
+    {
+        <li>
+            <div class="method-name">
+                @if (!string.IsNullOrEmpty(provider.LogoUrl))
+                {
+                    <div class="payment-logo">
+                        <label for="provider_@(provider.SystemName)">
+                            <img src="@provider.LogoUrl" alt="@provider.Name" />
+                        </label>
+                    </div>
+                }
+                <div class="payment-details">
+                    <input id="provider_@(provider.SystemName)" type="radio" name="provider_@(provider.SystemName)" value="@(provider.SystemName)" checked="@provider.Selected" />
+                    <label for="provider_@(provider.SystemName)">@provider.Name</label>
+                    @if (!string.IsNullOrEmpty(provider.Description))
+                    {
+                        <div class="payment-description">@provider.Description</div>
+                    }
+                </div>
+
+                <div class="buttons">
+                    <button type="button" class="button-1 save-customer-info-button" onclick="location.href = '@(Url.RouteUrl("CustomerMultiFactorAuthenticationProviderConfig", new { providerSysName = provider.SystemName}))'">@T("Common.Config")</button>
+                </div>
+            </div>
+        </li>  
+    }
+</ul>
+

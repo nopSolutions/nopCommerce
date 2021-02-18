@@ -114,9 +114,7 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL Server hesabı kullan</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>SQL Server Compact kullan</Value>
-  </LocaleResource>
+
   <LocaleResource Name="SqlPassword">
     <Value>SQL Şifre</Value>
   </LocaleResource>

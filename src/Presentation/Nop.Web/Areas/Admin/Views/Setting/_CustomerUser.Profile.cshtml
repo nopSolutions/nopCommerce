@@ -1,7 +1,7 @@
 ﻿@model CustomerUserSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CustomerSettings.AllowViewingProfiles" />
         </div>
@@ -10,7 +10,7 @@
             <span asp-validation-for="CustomerSettings.AllowViewingProfiles"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CustomerSettings.ShowCustomersLocation" />
         </div>
@@ -19,7 +19,7 @@
             <span asp-validation-for="CustomerSettings.ShowCustomersLocation"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CustomerSettings.ShowCustomersJoinDate" />
         </div>
@@ -34,15 +34,17 @@ $(document).ready(function () {
     $("#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
     $("#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
     $("#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)").click(toggleUsernameValidation);
-
-    toggleAvatar();
+	$("#@Html.IdFor(model => model.CustomerSettings.PhoneNumberValidationEnabled)").click(togglePhoneNumberValidation);
+    
+	toggleAvatar();
     toggleUsername();
     toggleUsernameValidation();
+	togglePhoneNumberValidation();
 });
 
 function toggleAvatar() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
-        $('#pnlDefaultAvatarEnabled').show();
+        $('#pnlDefaultAvatarEnabled').showField();
     } else {
         $('#pnlDefaultAvatarEnabled').hide();
     }
@@ -50,8 +52,8 @@ function toggleAvatar() {
 
 function toggleUsername() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
-        $('#pnlAllowUsersToChangeUsernames').show();
-        $('#pnlCheckUsernameAvailability').show();
+        $('#pnlAllowUsersToChangeUsernames').showField();
+        $('#pnlCheckUsernameAvailability').showField();
         $('#pnlUsernameValidationEnabled').show();
     } else {
         $('#pnlAllowUsersToChangeUsernames').hide();
@@ -60,13 +62,23 @@ function toggleUsername() {
     }
 }
 
-    function toggleUsernameValidation() {
+function toggleUsernameValidation() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)').is(':checked')) {
-        $('#pnlUsernameValidationRule').show();
-        $('#pnlUsernameValidationUseRegex').show();
+        $('#pnlUsernameValidationRule').showField();
+        $('#pnlUsernameValidationUseRegex').showField();
     } else {
         $('#pnlUsernameValidationRule').hide();
         $('#pnlUsernameValidationUseRegex').hide();
+    }
+}
+	
+function togglePhoneNumberValidation() {
+    if ($('#@Html.IdFor(model => model.CustomerSettings.PhoneNumberValidationEnabled)').is(':checked')) {
+        $('#pnlPhoneNumberValidationRule').showField();
+        $('#pnlPhoneNumberValidationUseRegex').showField();
+    } else {
+        $('#pnlPhoneNumberValidationRule').hide();
+        $('#pnlPhoneNumberValidationUseRegex').hide();
     }
 }
 </script>

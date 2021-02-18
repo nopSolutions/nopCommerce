@@ -7,13 +7,13 @@
 
 @{
     //register CSS and JS
-    Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
-    Html.AddScriptParts("~/lib/fineuploader/jquery.fine-uploader.min.js");
+    Html.AddCssFileParts("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
+    Html.AddScriptParts("~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
 
     //other variables
     var random = CommonHelper.GenerateRandomInteger();
     var clientId = "picture" + random;
-    var picture = pictureService.GetPictureById(Model);
+    var picture = await pictureService.GetPictureByIdAsync(Model);
 
     const int pictureSize = 100;
 }
@@ -24,24 +24,24 @@
 <div class="upload-picture-block">
     <div class="picture-container">
         <div id="@(clientId + "image")" class="uploaded-image">
-            <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))"/>
+            <img src="@(await pictureService.GetPictureUrlAsync(Model, pictureSize, true))" />
         </div>
     </div>
     <div class="upload-button-container">
         @*fine uploader container*@
-        <div id="@clientId" class="upload-image-button pull-left margin-t-5">
+        <div id="@clientId" class="upload-image-button float-left px-md-1">
             <noscript>
                 <p>Please enable JavaScript to use file uploader.</p>
             </noscript>
         </div>
-        <div class="remove-image-button pull-left margin-t-5">
+        <div class="remove-image-button float-left px-md-1">
             @if (picture != null)
             {
-                <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
+                <span id="@(clientId + "remove")" class="btn btn-danger">@T("Admin.Picture.RemovePicture")</span>
             }
             else
             {
-                <span id="@(clientId + "remove")" class="btn bg-red" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
+                <span id="@(clientId + "remove")" class="btn btn-danger" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
             }
         </div>
     </div>
@@ -53,7 +53,7 @@
         <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
             <span>@T("Common.FileUploader.DropFiles")</span>
         </div>
-        <div class="qq-upload-button-selector qq-upload-button">
+        <div class="qq-upload-button-selector btn bg-gradient-green">
             <div>@T("Common.FileUploader.Upload")</div>
         </div>
         <span class="qq-drop-processing-selector qq-drop-processing">
@@ -85,7 +85,10 @@
                 endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
             },
             template: "@(clientId)-qq-template",
-            multiple: false
+            multiple: false,
+            validation: {
+                allowedExtensions: [ "bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"]
+            }
         }).on("complete", function(event, id, name, responseJSON, xhr) {
             if (responseJSON.success) {
                 $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "'/>");
@@ -94,7 +97,7 @@
             }
         });
         $("#@(clientId + "remove")").click(function(e) {
-            $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl(pictureSize)'/>");
+            $("#@(clientId + "image")").html("<img src='@await pictureService.GetDefaultPictureUrlAsync(pictureSize)'/>");
             $("#@(clientId + "value") input").val(0);
             $("#@(clientId) .qq-upload-list-selector").empty();
             $(this).hide();

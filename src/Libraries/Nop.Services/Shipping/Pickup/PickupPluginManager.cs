@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Shipping.Pickup
@@ -20,8 +22,9 @@ namespace Nop.Services.Shipping.Pickup
 
         #region Ctor
 
-        public PickupPluginManager(IPluginService pluginService,
-            ShippingSettings shippingSettings) : base(pluginService)
+        public PickupPluginManager(ICustomerService customerService,
+            IPluginService pluginService,
+            ShippingSettings shippingSettings) : base(customerService, pluginService)
         {
             _shippingSettings = shippingSettings;
         }
@@ -37,9 +40,9 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <param name="systemName">Filter by pickup point provider system name; pass null to load all plugins</param>
         /// <returns>List of active pickup point providers</returns>
-        public virtual IList<IPickupPointProvider> LoadActivePlugins(Customer customer = null, int storeId = 0, string systemName = null)
+        public virtual async Task<IList<IPickupPointProvider>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, string systemName = null)
         {
-            var pickupPointProviders = LoadActivePlugins(_shippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
+            var pickupPointProviders = await LoadActivePluginsAsync(_shippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
 
             //filter by passed system name
             if (!string.IsNullOrEmpty(systemName))
@@ -69,9 +72,9 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Result</returns>
-        public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
+        public virtual async Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0)
         {
-            var pickupPointProvider = LoadPluginBySystemName(systemName, customer, storeId);
+            var pickupPointProvider = await LoadPluginBySystemNameAsync(systemName, customer, storeId);
             return IsPluginActive(pickupPointProvider);
         }
 

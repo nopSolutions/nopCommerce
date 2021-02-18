@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a product search model to add to the order
     /// </summary>
-    public partial class AddProductToOrderSearchModel : BaseSearchModel
+    public partial record AddProductToOrderSearchModel : BaseSearchModel
     {
         #region Ctor
 

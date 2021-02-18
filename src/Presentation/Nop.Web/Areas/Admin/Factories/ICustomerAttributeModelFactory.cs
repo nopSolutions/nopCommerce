@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Web.Areas.Admin.Models.Customers;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer attribute search model</param>
         /// <returns>Customer attribute search model</returns>
-        CustomerAttributeSearchModel PrepareCustomerAttributeSearchModel(CustomerAttributeSearchModel searchModel);
+        Task<CustomerAttributeSearchModel> PrepareCustomerAttributeSearchModelAsync(CustomerAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged customer attribute list model
         /// </summary>
         /// <param name="searchModel">Customer attribute search model</param>
         /// <returns>Customer attribute list model</returns>
-        CustomerAttributeListModel PrepareCustomerAttributeListModel(CustomerAttributeSearchModel searchModel);
+        Task<CustomerAttributeListModel> PrepareCustomerAttributeListModelAsync(CustomerAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare customer attribute model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customerAttribute">Customer attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Customer attribute model</returns>
-        CustomerAttributeModel PrepareCustomerAttributeModel(CustomerAttributeModel model,
+        Task<CustomerAttributeModel> PrepareCustomerAttributeModelAsync(CustomerAttributeModel model,
             CustomerAttribute customerAttribute, bool excludeProperties = false);
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Customer attribute value search model</param>
         /// <param name="customerAttribute">Customer attribute</param>
         /// <returns>Customer attribute value list model</returns>
-        CustomerAttributeValueListModel PrepareCustomerAttributeValueListModel(CustomerAttributeValueSearchModel searchModel,
+        Task<CustomerAttributeValueListModel> PrepareCustomerAttributeValueListModelAsync(CustomerAttributeValueSearchModel searchModel,
             CustomerAttribute customerAttribute);
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customerAttributeValue">Customer attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Customer attribute value model</returns>
-        CustomerAttributeValueModel PrepareCustomerAttributeValueModel(CustomerAttributeValueModel model,
+        Task<CustomerAttributeValueModel> PrepareCustomerAttributeValueModelAsync(CustomerAttributeValueModel model,
             CustomerAttribute customerAttribute, CustomerAttributeValue customerAttributeValue, bool excludeProperties = false);
     }
 }

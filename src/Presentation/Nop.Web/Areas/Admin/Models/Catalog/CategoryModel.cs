@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a category model
     /// </summary>
-    public partial class CategoryModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
+    public partial record CategoryModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
         ILocalizedModel<CategoryLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class CategoryLocalizedModel : ILocalizedLocaleModel
+    public partial record CategoryLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

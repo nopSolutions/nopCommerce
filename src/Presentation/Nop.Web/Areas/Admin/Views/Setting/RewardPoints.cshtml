@@ -12,38 +12,40 @@
 
 @{
     const string hideCommonBlockAttributeName = "RewardPointsSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideEarningRewardPointsBlockAttributeName = "RewardPointsSettingsPage.HideEarningRewardPointsBlock";
-    var hideEarningRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEarningRewardPointsBlockAttributeName);
+    var hideEarningRewardPointsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideEarningRewardPointsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="RewardPoints" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Settings.RewardPoints")
         </h1>
-        <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsButtons })
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Component.InvokeAsync("StoreScopeConfiguration")
-            @await Component.InvokeAsync("SettingMode")
-            <div asp-validation-summary="All"></div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync("StoreScopeConfiguration")
+                @await Component.InvokeAsync("SettingMode")
+                <div asp-validation-summary="All"></div>
 
-            <nop-panels id="rewardpointssettings-panels">
-                <nop-panel asp-name="rewardpointssettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.Common", Model)</nop-panel>
-                <nop-panel asp-name="rewardpointssettings-earning-reward-points" asp-icon="fa fa-usd" asp-title="@T("Admin.Configuration.Settings.RewardPoints.Earning")" asp-hide-block-attribute-name="@hideEarningRewardPointsBlockAttributeName" asp-hide="@hideEarningRewardPointsBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.EarningRewardPoints", Model)</nop-panel>
+                <nop-cards id="rewardpointssettings-cards">
+                    <nop-card asp-name="rewardpointssettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.Common", Model)</nop-card>
+                    <nop-card asp-name="rewardpointssettings-earning-reward-points" asp-icon="fas fa-dollar-sign" asp-title="@T("Admin.Configuration.Settings.RewardPoints.Earning")" asp-hide-block-attribute-name="@hideEarningRewardPointsBlockAttributeName" asp-hide="@hideEarningRewardPointsBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.EarningRewardPoints", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsDetailsBlock, additionalData = Model })
-            </nop-panels>
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
         </div>
-    </div>
+    </section>
 </form>

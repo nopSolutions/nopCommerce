@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +17,9 @@ namespace Nop.Web
 
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
+
+        private AppSettings _appSettings;
         private IEngine _engine;
-        private NopConfig _nopConfig;
 
         #endregion
 
@@ -39,12 +39,16 @@ namespace Nop.Web
         /// <param name="services">Collection of service descriptors</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            (_engine, _nopConfig) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
+            (_engine, _appSettings) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
         }
 
-        public void ConfigureContainer(ContainerBuilder builder)
+        /// <summary>
+        /// Configure the DI container 
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public void ConfigureContainer(IServiceCollection services)
         {
-            _engine.RegisterDependencies(builder, _nopConfig);
+            _engine.RegisterDependencies(services, _appSettings);
         }
 
         /// <summary>
@@ -54,7 +58,6 @@ namespace Nop.Web
         public void Configure(IApplicationBuilder application)
         {
             application.ConfigureRequestPipeline();
-
             application.StartEngine();
         }
     }

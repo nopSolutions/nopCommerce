@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models;
 using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Web.Framework.Components;
 
@@ -19,7 +20,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
         #region Fields
 
         private readonly ILocalizationService _localizationService;
-        private readonly PaymentSettings _paymentSettings;
+        private readonly INotificationService _notificationService;
+        private readonly IPaymentService _paymentService;
+        private readonly OrderSettings _orderSettings;
+        private readonly PayPalSmartPaymentButtonsSettings _settings;
         private readonly ServiceManager _serviceManager;
 
         #endregion
@@ -27,46 +31,18 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
         #region Ctor
 
         public PaymentInfoViewComponent(ILocalizationService localizationService,
-            PaymentSettings paymentSettings,
+            INotificationService notificationService,
+            IPaymentService paymentService,
+            OrderSettings orderSettings,
+            PayPalSmartPaymentButtonsSettings settings,
             ServiceManager serviceManager)
         {
             _localizationService = localizationService;
-            _paymentSettings = paymentSettings;
+            _notificationService = notificationService;
+            _paymentService = paymentService;
+            _orderSettings = orderSettings;
+            _settings = settings;
             _serviceManager = serviceManager;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Generate an order GUID
-        /// </summary>
-        /// <param name="processPaymentRequest">Process payment request</param>
-        protected virtual void GenerateOrderGuid(ProcessPaymentRequest processPaymentRequest)
-        {
-            if (processPaymentRequest == null)
-                return;
-
-            //we should use the same GUID for multiple payment attempts
-            //this way a payment gateway can prevent security issues such as credit card brute-force attacks
-            //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-            var previousPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>(Defaults.PaymentRequestSessionKey);
-            if (_paymentSettings.RegenerateOrderGuidInterval > 0 && previousPaymentRequest?.OrderGuidGeneratedOnUtc != null)
-            {
-                var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
-                if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
-                {
-                    processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
-                    processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
-                }
-            }
-
-            if (processPaymentRequest.OrderGuid == Guid.Empty)
-            {
-                processPaymentRequest.OrderGuid = Guid.NewGuid();
-                processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
-            }
         }
 
         #endregion
@@ -79,25 +55,31 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
         /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var model = new PaymentInfoModel();
 
             //prepare order GUID
             var paymentRequest = new ProcessPaymentRequest();
-            GenerateOrderGuid(paymentRequest);
+            _paymentService.GenerateOrderGuid(paymentRequest);
 
             //try to create an order
-            var (order, error) = _serviceManager.CreateOrder(paymentRequest.OrderGuid);
+            var (order, errorMessage) = await _serviceManager.CreateOrderAsync(_settings, paymentRequest.OrderGuid);
             if (order != null)
             {
                 model.OrderId = order.Id;
 
                 //save order details for future using
-                paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.OrderId"), order.Id);
+                paymentRequest.CustomValues.Add(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.OrderId"), order.Id);
             }
-            else if (!string.IsNullOrEmpty(error))
-                model.Errors = error;
+            else if (!string.IsNullOrEmpty(errorMessage))
+            {
+                model.Errors = errorMessage;
+                if (_orderSettings.OnePageCheckoutEnabled)
+                    ModelState.AddModelError(string.Empty, errorMessage);
+                else
+                    _notificationService.ErrorNotification(errorMessage);
+            }
 
             HttpContext.Session.Set(Defaults.PaymentRequestSessionKey, paymentRequest);
 

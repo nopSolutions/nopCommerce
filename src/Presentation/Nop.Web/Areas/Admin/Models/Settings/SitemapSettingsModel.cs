@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a Sitemap settings model
     /// </summary>
-    public partial class SitemapSettingsModel : BaseNopModel, ISettingsModel
+    public partial record SitemapSettingsModel : BaseNopModel, ISettingsModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Affiliates;
@@ -31,20 +35,20 @@ using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Blogs;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
+using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.News;
-using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Installation
 {
@@ -55,197 +59,101 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
         private readonly INopDataProvider _dataProvider;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
-        private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Affiliate> _affiliateRepository;
-        private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
-        private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
-        private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<PollAnswer> _pollAnswerRepository;
-        private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
-        private readonly IRepository<RelatedProduct> _relatedProductRepository;
-        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
-        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
-        private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
-        private readonly IRepository<SearchTerm> _searchTermRepository;
-        private readonly IRepository<Shipment> _shipmentRepository;
-        private readonly IRepository<ShipmentItem> _shipmentItemRepository;
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IRepository<TierPrice> _tierPriceRepository;
-        private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public CodeFirstInstallationService(IAddressService addressService,
-            INopDataProvider dataProvider,
-            IGenericAttributeService genericAttributeService,
+        public CodeFirstInstallationService(INopDataProvider dataProvider,
             INopFileProvider fileProvider,
-            IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<Address> addressRepository,
-            IRepository<Affiliate> affiliateRepository,
-            IRepository<BlogPost> blogPostRepository,
             IRepository<Category> categoryRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
             IRepository<Country> countryRepository,
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
-            IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
-            IRepository<Discount> discountRepository,
             IRepository<EmailAccount> emailAccountRepository,
-            IRepository<Forum> forumRepository,
-            IRepository<ForumGroup> forumGroupRepository,
-            IRepository<GiftCard> giftCardRepository,
             IRepository<Language> languageRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
-            IRepository<MessageTemplate> messageTemplateRepository,
-            IRepository<NewsItem> newsItemRepository,
-            IRepository<Order> orderRepository,
-            IRepository<OrderItem> orderItemRepository,
-            IRepository<OrderNote> orderNoteRepository,
-            IRepository<PollAnswer> pollAnswerRepository,
-            IRepository<Poll> pollRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
-            IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
-            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
-            IRepository<RelatedProduct> relatedProductRepository,
-            IRepository<ReturnRequestAction> returnRequestActionRepository,
-            IRepository<ReturnRequestReason> returnRequestReasonRepository,
-            IRepository<ScheduleTask> scheduleTaskRepository,
-            IRepository<SearchTerm> searchTermRepository,
-            IRepository<Shipment> shipmentRepository,
-            IRepository<ShipmentItem> shipmentItemRepository,
-            IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<StateProvince> stateProvinceRepository,
-            IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<Store> storeRepository,
             IRepository<TaxCategory> taxCategoryRepository,
-            IRepository<TierPrice> tierPriceRepository,
-            IRepository<Topic> topicRepository,
             IRepository<TopicTemplate> topicTemplateRepository,
             IRepository<UrlRecord> urlRecordRepository,
-            IRepository<Vendor> vendorRepository,
-            IRepository<Warehouse> warehouseRepository,
             IWebHelper webHelper)
         {
-            _addressService = addressService;
             _dataProvider = dataProvider;
-            _genericAttributeService = genericAttributeService;
             _fileProvider = fileProvider;
-            _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
             _addressRepository = addressRepository;
-            _affiliateRepository = affiliateRepository;
-            _blogPostRepository = blogPostRepository;
             _categoryRepository = categoryRepository;
             _categoryTemplateRepository = categoryTemplateRepository;
             _countryRepository = countryRepository;
             _currencyRepository = currencyRepository;
-            _customerPasswordRepository = customerPasswordRepository;
             _customerRepository = customerRepository;
             _customerRoleRepository = customerRoleRepository;
             _deliveryDateRepository = deliveryDateRepository;
-            _discountRepository = discountRepository;
             _emailAccountRepository = emailAccountRepository;
-            _forumGroupRepository = forumGroupRepository;
-            _forumRepository = forumRepository;
-            _giftCardRepository = giftCardRepository;
             _languageRepository = languageRepository;
             _manufacturerRepository = manufacturerRepository;
             _manufacturerTemplateRepository = manufacturerTemplateRepository;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
-            _messageTemplateRepository = messageTemplateRepository;
-            _newsItemRepository = newsItemRepository;
-            _orderItemRepository = orderItemRepository;
-            _orderNoteRepository = orderNoteRepository;
-            _orderRepository = orderRepository;
-            _pollAnswerRepository = pollAnswerRepository;
-            _pollRepository = pollRepository;
             _productAttributeRepository = productAttributeRepository;
-            _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
-            _productProductTagMappingRepository = productProductTagMappingRepository;
             _productRepository = productRepository;
             _productTagRepository = productTagRepository;
             _productTemplateRepository = productTemplateRepository;
-            _relatedProductRepository = relatedProductRepository;
-            _returnRequestActionRepository = returnRequestActionRepository;
-            _returnRequestReasonRepository = returnRequestReasonRepository;
-            _scheduleTaskRepository = scheduleTaskRepository;
-            _searchTermRepository = searchTermRepository;
-            _shipmentItemRepository = shipmentItemRepository;
-            _shipmentRepository = shipmentRepository;
-            _shippingMethodRepository = shippingMethodRepository;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _stateProvinceRepository = stateProvinceRepository;
-            _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _storeRepository = storeRepository;
             _taxCategoryRepository = taxCategoryRepository;
-            _tierPriceRepository = tierPriceRepository;
-            _topicRepository = topicRepository;
             _topicTemplateRepository = topicTemplateRepository;
             _urlRecordRepository = urlRecordRepository;
-            _vendorRepository = vendorRepository;
-            _warehouseRepository = warehouseRepository;
             _webHelper = webHelper;
         }
 
@@ -253,27 +161,47 @@ namespace Nop.Services.Installation
 
         #region Utilities
 
-        protected virtual T InsertInstallationData<T>(T entity) where T : BaseEntity
+        protected virtual async Task<T> InsertInstallationDataAsync<T>(T entity) where T : BaseEntity
         {
-            return _dataProvider.InsertEntity(entity);
+            return await _dataProvider.InsertEntityAsync(entity);
         }
 
-        protected virtual void InsertInstallationData<T>(params T[] entities) where T : BaseEntity
+        protected virtual async Task InsertInstallationDataAsync<T>(params T[] entities) where T : BaseEntity
         {
+            await _dataProvider.BulkInsertEntitiesAsync(entities);
+        }
+
+        protected virtual async Task InsertInstallationDataAsync<T>(IList<T> entities) where T : BaseEntity
+        {
+            if (!entities.Any())
+                return;
+
+            await InsertInstallationDataAsync(entities.ToArray());
+        }
+
+        protected virtual async Task UpdateInstallationDataAsync<T>(T entity) where T : BaseEntity
+        {
+            await _dataProvider.UpdateEntityAsync(entity);
+        }
+
+        protected virtual async Task UpdateInstallationDataAsync<T>(IList<T> entities) where T : BaseEntity
+        {
+            if (!entities.Any())
+                return;
+
             foreach (var entity in entities)
-            {
-                InsertInstallationData(entity);
-            }
+                await _dataProvider.UpdateEntityAsync(entity);
         }
 
-        protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
+        protected virtual async Task<int> GetSpecificationAttributeOptionIdAsync(string specAttributeName, string specAttributeOptionName)
         {
-            var specificationAttribute = _specificationAttributeRepository.Table.Single(sa => sa.Name == specAttributeName);
+            var specificationAttribute = await _specificationAttributeRepository.Table
+                .SingleAsync(sa => sa.Name == specAttributeName);
 
-            var specificationAttributeOption = _specificationAttributeOptionRepository.Table.Single(sao =>
-                sao.Name == specAttributeOptionName && sao.SpecificationAttributeId == specificationAttribute.Id);
+            var specificationAttributeOption = await _specificationAttributeOptionRepository.Table
+                .SingleAsync(sao => sao.Name == specAttributeOptionName && sao.SpecificationAttributeId == specificationAttribute.Id);
 
-            return specificationAttributeOption;
+            return specificationAttributeOption.Id;
         }
 
         /// <summary>
@@ -283,14 +211,14 @@ namespace Nop.Services.Installation
         /// <param name="fileName"></param>
         /// <param name="displayOrder"></param>
         /// <returns>Identifier of inserted picture</returns>
-        protected virtual int InsertProductPicture(Product product, string fileName, int displayOrder = 1)
+        protected virtual async Task<int> InsertProductPictureAsync(Product product, string fileName, int displayOrder = 1)
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = GetSamplesPath();
 
-            var pic = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, fileName)), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(product.Name));
+            var pic = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, fileName)), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(product.Name));
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductPicture
                 {
                     ProductId = product.Id,
@@ -301,7 +229,7 @@ namespace Nop.Services.Installation
             return pic.Id;
         }
 
-        protected virtual string ValidateSeName<T>(T entity, string seName) where T : BaseEntity
+        protected virtual async Task<string> ValidateSeNameAsync<T>(T entity, string seName) where T : BaseEntity
         {
             //duplicate of ValidateSeName method of \Nop.Services\Seo\UrlRecordService.cs (we cannot inject it here)
             if (entity == null)
@@ -316,9 +244,7 @@ namespace Nop.Services.Installation
             {
                 var c2 = c.ToString();
                 if (okChars.Contains(c2))
-                {
                     sb.Append(c2);
-                }
             }
 
             seName = sb.ToString();
@@ -341,7 +267,7 @@ namespace Nop.Services.Installation
                 var query = from ur in _urlRecordRepository.Table
                             where tempSeName != null && ur.Slug == tempSeName
                             select ur;
-                var urlRecord = query.FirstOrDefault();
+                var urlRecord = await query.FirstOrDefaultAsync();
 
                 var entityName = entity.GetType().Name;
                 var reserved = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
@@ -362,17 +288,16 @@ namespace Nop.Services.Installation
             return _fileProvider.GetAbsolutePath(NopInstallationDefaults.SampleImagesPath);
         }
 
-        protected virtual void InstallStores()
+        protected virtual async Task InstallStoresAsync()
         {
-            //var storeUrl = "http://www.yourStore.com/";
-            var storeUrl = _webHelper.GetStoreLocation(false);
+            var storeUrl = _webHelper.GetStoreLocation();
             var stores = new List<Store>
             {
                 new Store
                 {
                     Name = "Your store name",
                     Url = storeUrl,
-                    SslEnabled = false,
+                    SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                     //should we set some default company info?
@@ -383,44 +308,46 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _storeRepository.Insert(stores);
+            await InsertInstallationDataAsync(stores);
         }
 
-        protected virtual void InstallMeasures()
+        protected virtual async Task InstallMeasuresAsync(RegionInfo regionInfo)
         {
+            var isMetric = regionInfo?.IsMetric ?? false;
+
             var measureDimensions = new List<MeasureDimension>
             {
                 new MeasureDimension
                 {
                     Name = "inch(es)",
                     SystemKeyword = "inches",
-                    Ratio = 1M,
-                    DisplayOrder = 1
+                    Ratio = isMetric ? 39.3701M : 1M,
+                    DisplayOrder = isMetric ? 1 : 0
                 },
                 new MeasureDimension
                 {
                     Name = "feet",
                     SystemKeyword = "feet",
-                    Ratio = 0.08333333M,
-                    DisplayOrder = 2
+                    Ratio = isMetric ? 3.28084M : 0.08333333M,
+                    DisplayOrder = isMetric ? 1 : 0
                 },
                 new MeasureDimension
                 {
                     Name = "meter(s)",
                     SystemKeyword = "meters",
-                    Ratio = 0.0254M,
-                    DisplayOrder = 3
+                    Ratio = isMetric ? 1M : 0.0254M,
+                    DisplayOrder = isMetric ? 0 : 1
                 },
                 new MeasureDimension
                 {
                     Name = "millimetre(s)",
                     SystemKeyword = "millimetres",
-                    Ratio = 25.4M,
-                    DisplayOrder = 4
+                    Ratio = isMetric ? 1000M : 25.4M,
+                    DisplayOrder = isMetric ? 0 : 1
                 }
             };
 
-            _measureDimensionRepository.Insert(measureDimensions);
+            await InsertInstallationDataAsync(measureDimensions);
 
             var measureWeights = new List<MeasureWeight>
             {
@@ -428,100 +355,124 @@ namespace Nop.Services.Installation
                 {
                     Name = "ounce(s)",
                     SystemKeyword = "ounce",
-                    Ratio = 16M,
-                    DisplayOrder = 1
+                    Ratio = isMetric ? 35.274M : 16M,
+                    DisplayOrder = isMetric ? 1 : 0
                 },
                 new MeasureWeight
                 {
                     Name = "lb(s)",
                     SystemKeyword = "lb",
-                    Ratio = 1M,
-                    DisplayOrder = 2
+                    Ratio = isMetric ? 2.20462M : 1M,
+                    DisplayOrder = isMetric ? 1 : 0
                 },
                 new MeasureWeight
                 {
                     Name = "kg(s)",
                     SystemKeyword = "kg",
-                    Ratio = 0.45359237M,
-                    DisplayOrder = 3
+                    Ratio = isMetric ? 1M : 0.45359237M,
+                    DisplayOrder = isMetric ? 0 : 1
                 },
                 new MeasureWeight
                 {
                     Name = "gram(s)",
                     SystemKeyword = "grams",
-                    Ratio = 453.59237M,
-                    DisplayOrder = 4
+                    Ratio = isMetric ? 1000M : 453.59237M,
+                    DisplayOrder = isMetric ? 0 : 1
                 }
             };
 
-            _measureWeightRepository.Insert(measureWeights);
+            await InsertInstallationDataAsync(measureWeights);
         }
 
-        protected virtual void InstallTaxCategories()
+        protected virtual async Task InstallTaxCategoriesAsync()
         {
             var taxCategories = new List<TaxCategory>
-                               {
-                                   new TaxCategory
-                                       {
-                                           Name = "Books",
-                                           DisplayOrder = 1
-                                       },
-                                   new TaxCategory
-                                       {
-                                           Name = "Electronics & Software",
-                                           DisplayOrder = 5
-                                       },
-                                   new TaxCategory
-                                       {
-                                           Name = "Downloadable Products",
-                                           DisplayOrder = 10
-                                       },
-                                   new TaxCategory
-                                       {
-                                           Name = "Jewelry",
-                                           DisplayOrder = 15
-                                       },
-                                   new TaxCategory
-                                       {
-                                           Name = "Apparel",
-                                           DisplayOrder = 20
-                                       }
-                               };
-            _taxCategoryRepository.Insert(taxCategories);
+            {
+                new TaxCategory {Name = "Books", DisplayOrder = 1},
+                new TaxCategory {Name = "Electronics & Software", DisplayOrder = 5},
+                new TaxCategory {Name = "Downloadable Products", DisplayOrder = 10},
+                new TaxCategory {Name = "Jewelry", DisplayOrder = 15},
+                new TaxCategory {Name = "Apparel", DisplayOrder = 20}
+            };
+
+            await InsertInstallationDataAsync(taxCategories);
         }
 
-        protected virtual void InstallLanguages()
+        protected virtual async Task InstallLanguagesAsync((string languagePackDownloadLink, int languagePackProgress) languagePackInfo, CultureInfo cultureInfo, RegionInfo regionInfo)
         {
-            var language = new Language
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+            var defaultCulture = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
+            var defaultLanguage = new Language
             {
-                Name = "English",
-                LanguageCulture = "en-US",
-                UniqueSeoCode = "en",
-                FlagImageFileName = "us.png",
+                Name = defaultCulture.TwoLetterISOLanguageName.ToUpper(),
+                LanguageCulture = defaultCulture.Name,
+                UniqueSeoCode = defaultCulture.TwoLetterISOLanguageName,
+                FlagImageFileName = $"{defaultCulture.Name.ToLower()[^2..]}.png",
+                Rtl = defaultCulture.TextInfo.IsRightToLeft,
                 Published = true,
                 DisplayOrder = 1
             };
-            _languageRepository.Insert(language);
-        }
+            await InsertInstallationDataAsync(defaultLanguage);
 
-        protected virtual void InstallLocaleResources()
-        {
-            //'English' language
-            var language = _languageRepository.Table.Single(l => l.Name == "English");
-
-            //save resources
+            //Install locale resources for default culture
             var directoryPath = _fileProvider.MapPath(NopInstallationDefaults.LocalizationResourcesPath);
             var pattern = $"*.{NopInstallationDefaults.LocalizationResourcesFileExtension}";
             foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
-                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 using var streamReader = new StreamReader(filePath);
-                localizationService.ImportResourcesFromXml(language, streamReader);
+                await localizationService.ImportResourcesFromXmlAsync(defaultLanguage, streamReader);
             }
+
+            if (cultureInfo == null || regionInfo == null || cultureInfo.Name == NopCommonDefaults.DefaultLanguageCulture)
+                return;
+
+            var language = new Language
+            {
+                Name = cultureInfo.TwoLetterISOLanguageName.ToUpper(),
+                LanguageCulture = cultureInfo.Name,
+                UniqueSeoCode = cultureInfo.TwoLetterISOLanguageName,
+                FlagImageFileName = $"{regionInfo.TwoLetterISORegionName.ToLower()}.png",
+                Rtl = cultureInfo.TextInfo.IsRightToLeft,
+                Published = true,
+                DisplayOrder = 2
+            };
+            await InsertInstallationDataAsync(language);
+
+            if (string.IsNullOrEmpty(languagePackInfo.languagePackDownloadLink))
+                return;
+
+            //download and import language pack
+            try
+            {
+                var httpClientFactory = EngineContext.Current.Resolve<IHttpClientFactory>();
+                var httpClient = httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+                await using var stream = await httpClient.GetStreamAsync(languagePackInfo.languagePackDownloadLink);
+                using var streamReader = new StreamReader(stream);
+                await localizationService.ImportResourcesFromXmlAsync(language, streamReader);
+
+                //set this language as default
+                language.DisplayOrder = 0;
+                await UpdateInstallationDataAsync(language);
+
+                //save progress for showing in admin panel (only for first start)
+                await InsertInstallationDataAsync(new GenericAttribute
+                {
+                    EntityId = language.Id,
+                    Key = NopCommonDefaults.LanguagePackProgressAttribute,
+                    KeyGroup = nameof(Language),
+                    Value = languagePackInfo.languagePackProgress.ToString(),
+                    StoreId = 0,
+                    CreatedOrUpdatedDateUTC = DateTime.UtcNow
+                });
+            }
+            catch { }
         }
 
-        protected virtual void InstallCurrencies()
+        protected virtual async Task InstallCurrenciesAsync(CultureInfo cultureInfo, RegionInfo regionInfo)
         {
+            //set some currencies with a rate against the USD
+            var defaultCurrencies = new List<string>() { "USD", "AUD", "GBP", "CAD", "CNY", "EUR", "HKD", "JPY", "RUB", "SEK", "INR" };
             var currencies = new List<Currency>
             {
                 new Currency
@@ -595,9 +546,8 @@ namespace Nop.Services.Installation
                     CurrencyCode = "EUR",
                     Rate = 0.86M,
                     DisplayLocale = string.Empty,
-                    //CustomFormatting = "€0.00",
                     CustomFormatting = $"{"\u20ac"}0.00", //euro symbol
-                    Published = true,
+                    Published = false,
                     DisplayOrder = 6,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
@@ -669,3455 +619,70 @@ namespace Nop.Services.Installation
                     RoundingType = RoundingType.Rounding001
                 }
             };
-            _currencyRepository.Insert(currencies);
+
+            //set additional currency
+            if (cultureInfo != null && regionInfo != null)
+            {
+                if (!defaultCurrencies.Contains(regionInfo.ISOCurrencySymbol))
+                {
+                    currencies.Add(new Currency
+                    {
+                        Name = regionInfo.CurrencyEnglishName,
+                        CurrencyCode = regionInfo.ISOCurrencySymbol,
+                        Rate = 1,
+                        DisplayLocale = cultureInfo.Name,
+                        CustomFormatting = string.Empty,
+                        Published = true,
+                        DisplayOrder = 0,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        UpdatedOnUtc = DateTime.UtcNow,
+                        RoundingType = RoundingType.Rounding001
+                    });
+                }
+
+                foreach (var currency in currencies.Where(currency => currency.CurrencyCode == regionInfo.ISOCurrencySymbol))
+                {
+                    currency.Published = true;
+                    currency.DisplayOrder = 0;
+                }
+            }
+
+
+            await InsertInstallationDataAsync(currencies);
         }
 
-        protected virtual void InstallCountriesAndStates()
+        protected virtual async Task InstallCountriesAndStatesAsync()
         {
-            var cUsa = new Country
+            var countries = ISO3166.GetCollection().Select(country => new Country
             {
-                Name = "United States",
+                Name = country.Name,
                 AllowsBilling = true,
                 AllowsShipping = true,
-                TwoLetterIsoCode = "US",
-                ThreeLetterIsoCode = "USA",
-                NumericIsoCode = 840,
-                SubjectToVat = false,
-                DisplayOrder = 1,
+                TwoLetterIsoCode = country.Alpha2,
+                ThreeLetterIsoCode = country.Alpha3,
+                NumericIsoCode = country.NumericCode,
+                SubjectToVat = country.SubjectToVat,
+                DisplayOrder = country.NumericCode == 840 ? 1 : 100,
                 Published = true
-            };
+            }).ToList();
 
-            var cCanada = new Country
+            await InsertInstallationDataAsync(countries.ToArray());
+
+            //Import states for all countries
+            var directoryPath = _fileProvider.MapPath(NopInstallationDefaults.LocalizationResourcesPath);
+            var pattern = "*.txt";
+
+            //we use different scope to prevent creating wrong settings in DI, because the settings data not exists yet
+            using var scope = EngineContext.Current.Resolve<IServiceProvider>().CreateScope();
+            var importManager = scope.ServiceProvider.GetRequiredService<IImportManager>();
+            foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
-                Name = "Canada",
-                AllowsBilling = true,
-                AllowsShipping = true,
-                TwoLetterIsoCode = "CA",
-                ThreeLetterIsoCode = "CAN",
-                NumericIsoCode = 124,
-                SubjectToVat = false,
-                DisplayOrder = 100,
-                Published = true
-            };
-
-            var countries = new List<Country>
-            {
-                cUsa,
-                cCanada,
-                //other countries
-                new Country
-                {
-                    Name = "Argentina",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AR",
-                    ThreeLetterIsoCode = "ARG",
-                    NumericIsoCode = 32,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Armenia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AM",
-                    ThreeLetterIsoCode = "ARM",
-                    NumericIsoCode = 51,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Aruba",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AW",
-                    ThreeLetterIsoCode = "ABW",
-                    NumericIsoCode = 533,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Australia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AU",
-                    ThreeLetterIsoCode = "AUS",
-                    NumericIsoCode = 36,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Austria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AT",
-                    ThreeLetterIsoCode = "AUT",
-                    NumericIsoCode = 40,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Azerbaijan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AZ",
-                    ThreeLetterIsoCode = "AZE",
-                    NumericIsoCode = 31,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bahamas",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BS",
-                    ThreeLetterIsoCode = "BHS",
-                    NumericIsoCode = 44,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bangladesh",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BD",
-                    ThreeLetterIsoCode = "BGD",
-                    NumericIsoCode = 50,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belarus",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BY",
-                    ThreeLetterIsoCode = "BLR",
-                    NumericIsoCode = 112,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belgium",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BE",
-                    ThreeLetterIsoCode = "BEL",
-                    NumericIsoCode = 56,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belize",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BZ",
-                    ThreeLetterIsoCode = "BLZ",
-                    NumericIsoCode = 84,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bermuda",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BM",
-                    ThreeLetterIsoCode = "BMU",
-                    NumericIsoCode = 60,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bolivia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BO",
-                    ThreeLetterIsoCode = "BOL",
-                    NumericIsoCode = 68,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bosnia and Herzegowina",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BA",
-                    ThreeLetterIsoCode = "BIH",
-                    NumericIsoCode = 70,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Brazil",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BR",
-                    ThreeLetterIsoCode = "BRA",
-                    NumericIsoCode = 76,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bulgaria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BG",
-                    ThreeLetterIsoCode = "BGR",
-                    NumericIsoCode = 100,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cayman Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KY",
-                    ThreeLetterIsoCode = "CYM",
-                    NumericIsoCode = 136,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Chile",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CL",
-                    ThreeLetterIsoCode = "CHL",
-                    NumericIsoCode = 152,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "China",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CN",
-                    ThreeLetterIsoCode = "CHN",
-                    NumericIsoCode = 156,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Colombia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CO",
-                    ThreeLetterIsoCode = "COL",
-                    NumericIsoCode = 170,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Costa Rica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CR",
-                    ThreeLetterIsoCode = "CRI",
-                    NumericIsoCode = 188,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Croatia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HR",
-                    ThreeLetterIsoCode = "HRV",
-                    NumericIsoCode = 191,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cuba",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CU",
-                    ThreeLetterIsoCode = "CUB",
-                    NumericIsoCode = 192,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cyprus",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CY",
-                    ThreeLetterIsoCode = "CYP",
-                    NumericIsoCode = 196,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Czech Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CZ",
-                    ThreeLetterIsoCode = "CZE",
-                    NumericIsoCode = 203,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Denmark",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DK",
-                    ThreeLetterIsoCode = "DNK",
-                    NumericIsoCode = 208,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Dominican Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DO",
-                    ThreeLetterIsoCode = "DOM",
-                    NumericIsoCode = 214,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "East Timor",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TL",
-                    ThreeLetterIsoCode = "TLS",
-                    NumericIsoCode = 626,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ecuador",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EC",
-                    ThreeLetterIsoCode = "ECU",
-                    NumericIsoCode = 218,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Egypt",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EG",
-                    ThreeLetterIsoCode = "EGY",
-                    NumericIsoCode = 818,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Finland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FI",
-                    ThreeLetterIsoCode = "FIN",
-                    NumericIsoCode = 246,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "France",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FR",
-                    ThreeLetterIsoCode = "FRA",
-                    NumericIsoCode = 250,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Georgia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GE",
-                    ThreeLetterIsoCode = "GEO",
-                    NumericIsoCode = 268,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Germany",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DE",
-                    ThreeLetterIsoCode = "DEU",
-                    NumericIsoCode = 276,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Gibraltar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GI",
-                    ThreeLetterIsoCode = "GIB",
-                    NumericIsoCode = 292,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Greece",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GR",
-                    ThreeLetterIsoCode = "GRC",
-                    NumericIsoCode = 300,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guatemala",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GT",
-                    ThreeLetterIsoCode = "GTM",
-                    NumericIsoCode = 320,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Hong Kong",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HK",
-                    ThreeLetterIsoCode = "HKG",
-                    NumericIsoCode = 344,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Hungary",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HU",
-                    ThreeLetterIsoCode = "HUN",
-                    NumericIsoCode = 348,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "India",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IN",
-                    ThreeLetterIsoCode = "IND",
-                    NumericIsoCode = 356,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Indonesia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ID",
-                    ThreeLetterIsoCode = "IDN",
-                    NumericIsoCode = 360,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ireland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IE",
-                    ThreeLetterIsoCode = "IRL",
-                    NumericIsoCode = 372,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Israel",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IL",
-                    ThreeLetterIsoCode = "ISR",
-                    NumericIsoCode = 376,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Italy",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IT",
-                    ThreeLetterIsoCode = "ITA",
-                    NumericIsoCode = 380,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Jamaica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JM",
-                    ThreeLetterIsoCode = "JAM",
-                    NumericIsoCode = 388,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Japan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JP",
-                    ThreeLetterIsoCode = "JPN",
-                    NumericIsoCode = 392,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Jordan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JO",
-                    ThreeLetterIsoCode = "JOR",
-                    NumericIsoCode = 400,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kazakhstan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KZ",
-                    ThreeLetterIsoCode = "KAZ",
-                    NumericIsoCode = 398,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Korea, Democratic People's Republic of",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KP",
-                    ThreeLetterIsoCode = "PRK",
-                    NumericIsoCode = 408,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kuwait",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KW",
-                    ThreeLetterIsoCode = "KWT",
-                    NumericIsoCode = 414,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Malaysia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MY",
-                    ThreeLetterIsoCode = "MYS",
-                    NumericIsoCode = 458,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mexico",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MX",
-                    ThreeLetterIsoCode = "MEX",
-                    NumericIsoCode = 484,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Netherlands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NL",
-                    ThreeLetterIsoCode = "NLD",
-                    NumericIsoCode = 528,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "New Zealand",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NZ",
-                    ThreeLetterIsoCode = "NZL",
-                    NumericIsoCode = 554,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Norway",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NO",
-                    ThreeLetterIsoCode = "NOR",
-                    NumericIsoCode = 578,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Pakistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PK",
-                    ThreeLetterIsoCode = "PAK",
-                    NumericIsoCode = 586,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Palestine",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PS",
-                    ThreeLetterIsoCode = "PSE",
-                    NumericIsoCode = 275,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Paraguay",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PY",
-                    ThreeLetterIsoCode = "PRY",
-                    NumericIsoCode = 600,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Peru",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PE",
-                    ThreeLetterIsoCode = "PER",
-                    NumericIsoCode = 604,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Philippines",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PH",
-                    ThreeLetterIsoCode = "PHL",
-                    NumericIsoCode = 608,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Poland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PL",
-                    ThreeLetterIsoCode = "POL",
-                    NumericIsoCode = 616,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Portugal",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PT",
-                    ThreeLetterIsoCode = "PRT",
-                    NumericIsoCode = 620,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Puerto Rico",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PR",
-                    ThreeLetterIsoCode = "PRI",
-                    NumericIsoCode = 630,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Qatar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "QA",
-                    ThreeLetterIsoCode = "QAT",
-                    NumericIsoCode = 634,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Romania",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RO",
-                    ThreeLetterIsoCode = "ROM",
-                    NumericIsoCode = 642,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Russian Federation",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RU",
-                    ThreeLetterIsoCode = "RUS",
-                    NumericIsoCode = 643,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Saudi Arabia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SA",
-                    ThreeLetterIsoCode = "SAU",
-                    NumericIsoCode = 682,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Singapore",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SG",
-                    ThreeLetterIsoCode = "SGP",
-                    NumericIsoCode = 702,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Slovakia (Slovak Republic)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SK",
-                    ThreeLetterIsoCode = "SVK",
-                    NumericIsoCode = 703,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Slovenia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SI",
-                    ThreeLetterIsoCode = "SVN",
-                    NumericIsoCode = 705,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "South Africa",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ZA",
-                    ThreeLetterIsoCode = "ZAF",
-                    NumericIsoCode = 710,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Spain",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ES",
-                    ThreeLetterIsoCode = "ESP",
-                    NumericIsoCode = 724,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Sweden",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SE",
-                    ThreeLetterIsoCode = "SWE",
-                    NumericIsoCode = 752,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Switzerland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CH",
-                    ThreeLetterIsoCode = "CHE",
-                    NumericIsoCode = 756,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Taiwan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TW",
-                    ThreeLetterIsoCode = "TWN",
-                    NumericIsoCode = 158,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Thailand",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TH",
-                    ThreeLetterIsoCode = "THA",
-                    NumericIsoCode = 764,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Turkey",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TR",
-                    ThreeLetterIsoCode = "TUR",
-                    NumericIsoCode = 792,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ukraine",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UA",
-                    ThreeLetterIsoCode = "UKR",
-                    NumericIsoCode = 804,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United Arab Emirates",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AE",
-                    ThreeLetterIsoCode = "ARE",
-                    NumericIsoCode = 784,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United Kingdom",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GB",
-                    ThreeLetterIsoCode = "GBR",
-                    NumericIsoCode = 826,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United States minor outlying islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UM",
-                    ThreeLetterIsoCode = "UMI",
-                    NumericIsoCode = 581,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Uruguay",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UY",
-                    ThreeLetterIsoCode = "URY",
-                    NumericIsoCode = 858,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Uzbekistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UZ",
-                    ThreeLetterIsoCode = "UZB",
-                    NumericIsoCode = 860,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Venezuela",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VE",
-                    ThreeLetterIsoCode = "VEN",
-                    NumericIsoCode = 862,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Serbia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RS",
-                    ThreeLetterIsoCode = "SRB",
-                    NumericIsoCode = 688,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Afghanistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AF",
-                    ThreeLetterIsoCode = "AFG",
-                    NumericIsoCode = 4,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Albania",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AL",
-                    ThreeLetterIsoCode = "ALB",
-                    NumericIsoCode = 8,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Algeria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DZ",
-                    ThreeLetterIsoCode = "DZA",
-                    NumericIsoCode = 12,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "American Samoa",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AS",
-                    ThreeLetterIsoCode = "ASM",
-                    NumericIsoCode = 16,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Andorra",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AD",
-                    ThreeLetterIsoCode = "AND",
-                    NumericIsoCode = 20,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Angola",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AO",
-                    ThreeLetterIsoCode = "AGO",
-                    NumericIsoCode = 24,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Anguilla",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AI",
-                    ThreeLetterIsoCode = "AIA",
-                    NumericIsoCode = 660,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Antarctica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AQ",
-                    ThreeLetterIsoCode = "ATA",
-                    NumericIsoCode = 10,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Antigua and Barbuda",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AG",
-                    ThreeLetterIsoCode = "ATG",
-                    NumericIsoCode = 28,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bahrain",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BH",
-                    ThreeLetterIsoCode = "BHR",
-                    NumericIsoCode = 48,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Barbados",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BB",
-                    ThreeLetterIsoCode = "BRB",
-                    NumericIsoCode = 52,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Benin",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BJ",
-                    ThreeLetterIsoCode = "BEN",
-                    NumericIsoCode = 204,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bhutan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BT",
-                    ThreeLetterIsoCode = "BTN",
-                    NumericIsoCode = 64,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Botswana",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BW",
-                    ThreeLetterIsoCode = "BWA",
-                    NumericIsoCode = 72,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bouvet Island",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BV",
-                    ThreeLetterIsoCode = "BVT",
-                    NumericIsoCode = 74,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "British Indian Ocean Territory",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IO",
-                    ThreeLetterIsoCode = "IOT",
-                    NumericIsoCode = 86,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Brunei Darussalam",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BN",
-                    ThreeLetterIsoCode = "BRN",
-                    NumericIsoCode = 96,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Burkina Faso",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BF",
-                    ThreeLetterIsoCode = "BFA",
-                    NumericIsoCode = 854,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Burundi",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BI",
-                    ThreeLetterIsoCode = "BDI",
-                    NumericIsoCode = 108,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cambodia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KH",
-                    ThreeLetterIsoCode = "KHM",
-                    NumericIsoCode = 116,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cameroon",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CM",
-                    ThreeLetterIsoCode = "CMR",
-                    NumericIsoCode = 120,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cape Verde",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CV",
-                    ThreeLetterIsoCode = "CPV",
-                    NumericIsoCode = 132,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Central African Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CF",
-                    ThreeLetterIsoCode = "CAF",
-                    NumericIsoCode = 140,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Chad",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TD",
-                    ThreeLetterIsoCode = "TCD",
-                    NumericIsoCode = 148,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Christmas Island",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CX",
-                    ThreeLetterIsoCode = "CXR",
-                    NumericIsoCode = 162,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cocos (Keeling) Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CC",
-                    ThreeLetterIsoCode = "CCK",
-                    NumericIsoCode = 166,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Comoros",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KM",
-                    ThreeLetterIsoCode = "COM",
-                    NumericIsoCode = 174,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Congo",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CG",
-                    ThreeLetterIsoCode = "COG",
-                    NumericIsoCode = 178,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Congo (Democratic Republic of the)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CD",
-                    ThreeLetterIsoCode = "COD",
-                    NumericIsoCode = 180,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cook Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CK",
-                    ThreeLetterIsoCode = "COK",
-                    NumericIsoCode = 184,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cote D'Ivoire",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CI",
-                    ThreeLetterIsoCode = "CIV",
-                    NumericIsoCode = 384,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Djibouti",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DJ",
-                    ThreeLetterIsoCode = "DJI",
-                    NumericIsoCode = 262,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Dominica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DM",
-                    ThreeLetterIsoCode = "DMA",
-                    NumericIsoCode = 212,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "El Salvador",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SV",
-                    ThreeLetterIsoCode = "SLV",
-                    NumericIsoCode = 222,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Equatorial Guinea",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GQ",
-                    ThreeLetterIsoCode = "GNQ",
-                    NumericIsoCode = 226,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Eritrea",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ER",
-                    ThreeLetterIsoCode = "ERI",
-                    NumericIsoCode = 232,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Estonia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EE",
-                    ThreeLetterIsoCode = "EST",
-                    NumericIsoCode = 233,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ethiopia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ET",
-                    ThreeLetterIsoCode = "ETH",
-                    NumericIsoCode = 231,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Falkland Islands (Malvinas)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FK",
-                    ThreeLetterIsoCode = "FLK",
-                    NumericIsoCode = 238,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Faroe Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FO",
-                    ThreeLetterIsoCode = "FRO",
-                    NumericIsoCode = 234,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Fiji",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FJ",
-                    ThreeLetterIsoCode = "FJI",
-                    NumericIsoCode = 242,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "French Guiana",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GF",
-                    ThreeLetterIsoCode = "GUF",
-                    NumericIsoCode = 254,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "French Polynesia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PF",
-                    ThreeLetterIsoCode = "PYF",
-                    NumericIsoCode = 258,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "French Southern Territories",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TF",
-                    ThreeLetterIsoCode = "ATF",
-                    NumericIsoCode = 260,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Gabon",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GA",
-                    ThreeLetterIsoCode = "GAB",
-                    NumericIsoCode = 266,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Gambia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GM",
-                    ThreeLetterIsoCode = "GMB",
-                    NumericIsoCode = 270,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ghana",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GH",
-                    ThreeLetterIsoCode = "GHA",
-                    NumericIsoCode = 288,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Greenland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GL",
-                    ThreeLetterIsoCode = "GRL",
-                    NumericIsoCode = 304,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Grenada",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GD",
-                    ThreeLetterIsoCode = "GRD",
-                    NumericIsoCode = 308,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guadeloupe",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GP",
-                    ThreeLetterIsoCode = "GLP",
-                    NumericIsoCode = 312,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guam",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GU",
-                    ThreeLetterIsoCode = "GUM",
-                    NumericIsoCode = 316,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guinea",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GN",
-                    ThreeLetterIsoCode = "GIN",
-                    NumericIsoCode = 324,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guinea-bissau",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GW",
-                    ThreeLetterIsoCode = "GNB",
-                    NumericIsoCode = 624,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guyana",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GY",
-                    ThreeLetterIsoCode = "GUY",
-                    NumericIsoCode = 328,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Haiti",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HT",
-                    ThreeLetterIsoCode = "HTI",
-                    NumericIsoCode = 332,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Heard and Mc Donald Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HM",
-                    ThreeLetterIsoCode = "HMD",
-                    NumericIsoCode = 334,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Honduras",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HN",
-                    ThreeLetterIsoCode = "HND",
-                    NumericIsoCode = 340,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Iceland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IS",
-                    ThreeLetterIsoCode = "ISL",
-                    NumericIsoCode = 352,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Iran (Islamic Republic of)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IR",
-                    ThreeLetterIsoCode = "IRN",
-                    NumericIsoCode = 364,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Iraq",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IQ",
-                    ThreeLetterIsoCode = "IRQ",
-                    NumericIsoCode = 368,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kenya",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KE",
-                    ThreeLetterIsoCode = "KEN",
-                    NumericIsoCode = 404,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kiribati",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KI",
-                    ThreeLetterIsoCode = "KIR",
-                    NumericIsoCode = 296,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Korea",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KR",
-                    ThreeLetterIsoCode = "KOR",
-                    NumericIsoCode = 410,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kyrgyzstan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KG",
-                    ThreeLetterIsoCode = "KGZ",
-                    NumericIsoCode = 417,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Lao People's Democratic Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LA",
-                    ThreeLetterIsoCode = "LAO",
-                    NumericIsoCode = 418,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Latvia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LV",
-                    ThreeLetterIsoCode = "LVA",
-                    NumericIsoCode = 428,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Lebanon",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LB",
-                    ThreeLetterIsoCode = "LBN",
-                    NumericIsoCode = 422,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Lesotho",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LS",
-                    ThreeLetterIsoCode = "LSO",
-                    NumericIsoCode = 426,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Liberia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LR",
-                    ThreeLetterIsoCode = "LBR",
-                    NumericIsoCode = 430,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Libyan Arab Jamahiriya",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LY",
-                    ThreeLetterIsoCode = "LBY",
-                    NumericIsoCode = 434,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Liechtenstein",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LI",
-                    ThreeLetterIsoCode = "LIE",
-                    NumericIsoCode = 438,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Lithuania",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LT",
-                    ThreeLetterIsoCode = "LTU",
-                    NumericIsoCode = 440,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Luxembourg",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LU",
-                    ThreeLetterIsoCode = "LUX",
-                    NumericIsoCode = 442,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Macau",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MO",
-                    ThreeLetterIsoCode = "MAC",
-                    NumericIsoCode = 446,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Macedonia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MK",
-                    ThreeLetterIsoCode = "MKD",
-                    NumericIsoCode = 807,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Madagascar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MG",
-                    ThreeLetterIsoCode = "MDG",
-                    NumericIsoCode = 450,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Malawi",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MW",
-                    ThreeLetterIsoCode = "MWI",
-                    NumericIsoCode = 454,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Maldives",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MV",
-                    ThreeLetterIsoCode = "MDV",
-                    NumericIsoCode = 462,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mali",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ML",
-                    ThreeLetterIsoCode = "MLI",
-                    NumericIsoCode = 466,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Malta",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MT",
-                    ThreeLetterIsoCode = "MLT",
-                    NumericIsoCode = 470,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Marshall Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MH",
-                    ThreeLetterIsoCode = "MHL",
-                    NumericIsoCode = 584,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Martinique",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MQ",
-                    ThreeLetterIsoCode = "MTQ",
-                    NumericIsoCode = 474,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mauritania",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MR",
-                    ThreeLetterIsoCode = "MRT",
-                    NumericIsoCode = 478,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mauritius",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MU",
-                    ThreeLetterIsoCode = "MUS",
-                    NumericIsoCode = 480,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mayotte",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "YT",
-                    ThreeLetterIsoCode = "MYT",
-                    NumericIsoCode = 175,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Micronesia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FM",
-                    ThreeLetterIsoCode = "FSM",
-                    NumericIsoCode = 583,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Moldova",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MD",
-                    ThreeLetterIsoCode = "MDA",
-                    NumericIsoCode = 498,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Monaco",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MC",
-                    ThreeLetterIsoCode = "MCO",
-                    NumericIsoCode = 492,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mongolia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MN",
-                    ThreeLetterIsoCode = "MNG",
-                    NumericIsoCode = 496,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Montenegro",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ME",
-                    ThreeLetterIsoCode = "MNE",
-                    NumericIsoCode = 499,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Montserrat",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MS",
-                    ThreeLetterIsoCode = "MSR",
-                    NumericIsoCode = 500,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Morocco",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MA",
-                    ThreeLetterIsoCode = "MAR",
-                    NumericIsoCode = 504,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mozambique",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MZ",
-                    ThreeLetterIsoCode = "MOZ",
-                    NumericIsoCode = 508,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Myanmar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MM",
-                    ThreeLetterIsoCode = "MMR",
-                    NumericIsoCode = 104,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Namibia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NA",
-                    ThreeLetterIsoCode = "NAM",
-                    NumericIsoCode = 516,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Nauru",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NR",
-                    ThreeLetterIsoCode = "NRU",
-                    NumericIsoCode = 520,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Nepal",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NP",
-                    ThreeLetterIsoCode = "NPL",
-                    NumericIsoCode = 524,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Netherlands Antilles",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AN",
-                    ThreeLetterIsoCode = "ANT",
-                    NumericIsoCode = 530,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "New Caledonia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NC",
-                    ThreeLetterIsoCode = "NCL",
-                    NumericIsoCode = 540,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Nicaragua",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NI",
-                    ThreeLetterIsoCode = "NIC",
-                    NumericIsoCode = 558,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Niger",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NE",
-                    ThreeLetterIsoCode = "NER",
-                    NumericIsoCode = 562,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Nigeria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NG",
-                    ThreeLetterIsoCode = "NGA",
-                    NumericIsoCode = 566,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Niue",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NU",
-                    ThreeLetterIsoCode = "NIU",
-                    NumericIsoCode = 570,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Norfolk Island",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NF",
-                    ThreeLetterIsoCode = "NFK",
-                    NumericIsoCode = 574,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Northern Mariana Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MP",
-                    ThreeLetterIsoCode = "MNP",
-                    NumericIsoCode = 580,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Oman",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "OM",
-                    ThreeLetterIsoCode = "OMN",
-                    NumericIsoCode = 512,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Palau",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PW",
-                    ThreeLetterIsoCode = "PLW",
-                    NumericIsoCode = 585,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Panama",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PA",
-                    ThreeLetterIsoCode = "PAN",
-                    NumericIsoCode = 591,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Papua New Guinea",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PG",
-                    ThreeLetterIsoCode = "PNG",
-                    NumericIsoCode = 598,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Pitcairn",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PN",
-                    ThreeLetterIsoCode = "PCN",
-                    NumericIsoCode = 612,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Reunion",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RE",
-                    ThreeLetterIsoCode = "REU",
-                    NumericIsoCode = 638,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Rwanda",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RW",
-                    ThreeLetterIsoCode = "RWA",
-                    NumericIsoCode = 646,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Saint Kitts and Nevis",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KN",
-                    ThreeLetterIsoCode = "KNA",
-                    NumericIsoCode = 659,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Saint Lucia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LC",
-                    ThreeLetterIsoCode = "LCA",
-                    NumericIsoCode = 662,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Saint Vincent and the Grenadines",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VC",
-                    ThreeLetterIsoCode = "VCT",
-                    NumericIsoCode = 670,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Samoa",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "WS",
-                    ThreeLetterIsoCode = "WSM",
-                    NumericIsoCode = 882,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "San Marino",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SM",
-                    ThreeLetterIsoCode = "SMR",
-                    NumericIsoCode = 674,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Sao Tome and Principe",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ST",
-                    ThreeLetterIsoCode = "STP",
-                    NumericIsoCode = 678,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Senegal",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SN",
-                    ThreeLetterIsoCode = "SEN",
-                    NumericIsoCode = 686,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Seychelles",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SC",
-                    ThreeLetterIsoCode = "SYC",
-                    NumericIsoCode = 690,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Sierra Leone",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SL",
-                    ThreeLetterIsoCode = "SLE",
-                    NumericIsoCode = 694,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Solomon Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SB",
-                    ThreeLetterIsoCode = "SLB",
-                    NumericIsoCode = 90,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Somalia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SO",
-                    ThreeLetterIsoCode = "SOM",
-                    NumericIsoCode = 706,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "South Georgia & South Sandwich Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GS",
-                    ThreeLetterIsoCode = "SGS",
-                    NumericIsoCode = 239,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "South Sudan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SS",
-                    ThreeLetterIsoCode = "SSD",
-                    NumericIsoCode = 728,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Sri Lanka",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "LK",
-                    ThreeLetterIsoCode = "LKA",
-                    NumericIsoCode = 144,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "St. Helena",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SH",
-                    ThreeLetterIsoCode = "SHN",
-                    NumericIsoCode = 654,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "St. Pierre and Miquelon",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PM",
-                    ThreeLetterIsoCode = "SPM",
-                    NumericIsoCode = 666,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Sudan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SD",
-                    ThreeLetterIsoCode = "SDN",
-                    NumericIsoCode = 736,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Suriname",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SR",
-                    ThreeLetterIsoCode = "SUR",
-                    NumericIsoCode = 740,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Svalbard and Jan Mayen Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SJ",
-                    ThreeLetterIsoCode = "SJM",
-                    NumericIsoCode = 744,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Swaziland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SZ",
-                    ThreeLetterIsoCode = "SWZ",
-                    NumericIsoCode = 748,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Syrian Arab Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SY",
-                    ThreeLetterIsoCode = "SYR",
-                    NumericIsoCode = 760,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Tajikistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TJ",
-                    ThreeLetterIsoCode = "TJK",
-                    NumericIsoCode = 762,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Tanzania",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TZ",
-                    ThreeLetterIsoCode = "TZA",
-                    NumericIsoCode = 834,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Togo",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TG",
-                    ThreeLetterIsoCode = "TGO",
-                    NumericIsoCode = 768,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Tokelau",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TK",
-                    ThreeLetterIsoCode = "TKL",
-                    NumericIsoCode = 772,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Tonga",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TO",
-                    ThreeLetterIsoCode = "TON",
-                    NumericIsoCode = 776,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Trinidad and Tobago",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TT",
-                    ThreeLetterIsoCode = "TTO",
-                    NumericIsoCode = 780,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Tunisia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TN",
-                    ThreeLetterIsoCode = "TUN",
-                    NumericIsoCode = 788,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Turkmenistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TM",
-                    ThreeLetterIsoCode = "TKM",
-                    NumericIsoCode = 795,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Turks and Caicos Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TC",
-                    ThreeLetterIsoCode = "TCA",
-                    NumericIsoCode = 796,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Tuvalu",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TV",
-                    ThreeLetterIsoCode = "TUV",
-                    NumericIsoCode = 798,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Uganda",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UG",
-                    ThreeLetterIsoCode = "UGA",
-                    NumericIsoCode = 800,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Vanuatu",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VU",
-                    ThreeLetterIsoCode = "VUT",
-                    NumericIsoCode = 548,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Vatican City State (Holy See)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VA",
-                    ThreeLetterIsoCode = "VAT",
-                    NumericIsoCode = 336,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Viet Nam",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VN",
-                    ThreeLetterIsoCode = "VNM",
-                    NumericIsoCode = 704,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Virgin Islands (British)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VG",
-                    ThreeLetterIsoCode = "VGB",
-                    NumericIsoCode = 92,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Virgin Islands (U.S.)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VI",
-                    ThreeLetterIsoCode = "VIR",
-                    NumericIsoCode = 850,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Wallis and Futuna Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "WF",
-                    ThreeLetterIsoCode = "WLF",
-                    NumericIsoCode = 876,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Western Sahara",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EH",
-                    ThreeLetterIsoCode = "ESH",
-                    NumericIsoCode = 732,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Yemen",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "YE",
-                    ThreeLetterIsoCode = "YEM",
-                    NumericIsoCode = 887,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Zambia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ZM",
-                    ThreeLetterIsoCode = "ZMB",
-                    NumericIsoCode = 894,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Zimbabwe",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ZW",
-                    ThreeLetterIsoCode = "ZWE",
-                    NumericIsoCode = 716,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                }
-            };
-            _countryRepository.Insert(countries);
-
-            var statesUsa = new List<StateProvince>
-            {
-                new StateProvince
-                {
-                    Name = "AA (Armed Forces Americas)",
-                    Abbreviation = "AA",
-                    Published = true,
-                    DisplayOrder = 1,
-                    CountryId = cUsa.Id
-                },
-                new StateProvince
-                {
-                    Name = "AE (Armed Forces Europe)",
-                    Abbreviation = "AE",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Alabama",
-                    Abbreviation = "AL",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Alaska",
-                    Abbreviation = "AK",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "American Samoa",
-                    Abbreviation = "AS",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "AP (Armed Forces Pacific)",
-                    Abbreviation = "AP",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Arizona",
-                    Abbreviation = "AZ",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Arkansas",
-                    Abbreviation = "AR",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "California",
-                    Abbreviation = "CA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Colorado",
-                    Abbreviation = "CO",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Connecticut",
-                    Abbreviation = "CT",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Delaware",
-                    Abbreviation = "DE",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "District of Columbia",
-                    Abbreviation = "DC",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Federated States of Micronesia",
-                    Abbreviation = "FM",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Florida",
-                    Abbreviation = "FL",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Georgia",
-                    Abbreviation = "GA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Guam",
-                    Abbreviation = "GU",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Hawaii",
-                    Abbreviation = "HI",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Idaho",
-                    Abbreviation = "ID",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Illinois",
-                    Abbreviation = "IL",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Indiana",
-                    Abbreviation = "IN",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Iowa",
-                    Abbreviation = "IA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Kansas",
-                    Abbreviation = "KS",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Kentucky",
-                    Abbreviation = "KY",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Louisiana",
-                    Abbreviation = "LA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Maine",
-                    Abbreviation = "ME",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Marshall Islands",
-                    Abbreviation = "MH",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Maryland",
-                    Abbreviation = "MD",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Massachusetts",
-                    Abbreviation = "MA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Michigan",
-                    Abbreviation = "MI",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Minnesota",
-                    Abbreviation = "MN",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Mississippi",
-                    Abbreviation = "MS",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Missouri",
-                    Abbreviation = "MO",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Montana",
-                    Abbreviation = "MT",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Nebraska",
-                    Abbreviation = "NE",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Nevada",
-                    Abbreviation = "NV",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "New Hampshire",
-                    Abbreviation = "NH",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "New Jersey",
-                    Abbreviation = "NJ",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "New Mexico",
-                    Abbreviation = "NM",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "New York",
-                    Abbreviation = "NY",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "North Carolina",
-                    Abbreviation = "NC",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "North Dakota",
-                    Abbreviation = "ND",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Northern Mariana Islands",
-                    Abbreviation = "MP",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Ohio",
-                    Abbreviation = "OH",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Oklahoma",
-                    Abbreviation = "OK",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Oregon",
-                    Abbreviation = "OR",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Palau",
-                    Abbreviation = "PW",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Pennsylvania",
-                    Abbreviation = "PA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Puerto Rico",
-                    Abbreviation = "PR",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Rhode Island",
-                    Abbreviation = "RI",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "South Carolina",
-                    Abbreviation = "SC",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "South Dakota",
-                    Abbreviation = "SD",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Tennessee",
-                    Abbreviation = "TN",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Texas",
-                    Abbreviation = "TX",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Utah",
-                    Abbreviation = "UT",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Vermont",
-                    Abbreviation = "VT",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Virgin Islands",
-                    Abbreviation = "VI",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Virginia",
-                    Abbreviation = "VA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Washington",
-                    Abbreviation = "WA",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "West Virginia",
-                    Abbreviation = "WV",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Wisconsin",
-                    Abbreviation = "WI",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Wyoming",
-                    Abbreviation = "WY",
-                    Published = true,
-                    DisplayOrder = 1
-                }
-            };
-
-            statesUsa.ForEach(x => x.CountryId = cUsa.Id);
-            _stateProvinceRepository.Insert(statesUsa);
-
-            var statesCanada = new List<StateProvince>
-            {
-                new StateProvince
-                {
-                    Name = "Alberta",
-                    Abbreviation = "AB",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "British Columbia",
-                    Abbreviation = "BC",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Manitoba",
-                    Abbreviation = "MB",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "New Brunswick",
-                    Abbreviation = "NB",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Newfoundland and Labrador",
-                    Abbreviation = "NL",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Northwest Territories",
-                    Abbreviation = "NT",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Nova Scotia",
-                    Abbreviation = "NS",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Nunavut",
-                    Abbreviation = "NU",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Ontario",
-                    Abbreviation = "ON",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Prince Edward Island",
-                    Abbreviation = "PE",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Quebec",
-                    Abbreviation = "QC",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Saskatchewan",
-                    Abbreviation = "SK",
-                    Published = true,
-                    DisplayOrder = 1
-                },
-                new StateProvince
-                {
-                    Name = "Yukon Territory",
-                    Abbreviation = "YT",
-                    Published = true,
-                    DisplayOrder = 1
-                }
-            };
-
-            statesCanada.ForEach(x => x.CountryId = cCanada.Id);
-            _stateProvinceRepository.Insert(statesCanada);
+                await using var stream = new FileStream(filePath, FileMode.Open);
+                await importManager.ImportStatesFromTxtAsync(stream, false);
+            }
         }
 
-        protected virtual void InstallShippingMethods()
+        protected virtual async Task InstallShippingMethodsAsync()
         {
             var shippingMethods = new List<ShippingMethod>
             {
@@ -4141,10 +706,11 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _shippingMethodRepository.Insert(shippingMethods);
+
+            await InsertInstallationDataAsync(shippingMethods);
         }
 
-        protected virtual void InstallDeliveryDates()
+        protected virtual async Task InstallDeliveryDatesAsync()
         {
             var deliveryDates = new List<DeliveryDate>
             {
@@ -4164,10 +730,11 @@ namespace Nop.Services.Installation
                     DisplayOrder = 10
                 }
             };
-            _deliveryDateRepository.Insert(deliveryDates);
+
+            await InsertInstallationDataAsync(deliveryDates);
         }
 
-        protected virtual void InstallProductAvailabilityRanges()
+        protected virtual async Task InstallProductAvailabilityRangesAsync()
         {
             var productAvailabilityRanges = new List<ProductAvailabilityRange>
             {
@@ -4187,19 +754,20 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
+
+            await InsertInstallationDataAsync(productAvailabilityRanges);
         }
 
-        protected virtual void InstallSampleCustomers()
+        protected virtual async Task InstallSampleCustomersAsync()
         {
-            var crRegistered = _customerRoleRepository.Table.FirstOrDefault(customerRole =>
-                customerRole.SystemName == NopCustomerDefaults.RegisteredRoleName);
+            var crRegistered = await _customerRoleRepository.Table
+                .FirstOrDefaultAsync(customerRole => customerRole.SystemName == NopCustomerDefaults.RegisteredRoleName);
 
             if (crRegistered == null)
                 throw new ArgumentNullException(nameof(crRegistered));
 
             //default store 
-            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
 
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
@@ -4218,7 +786,7 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            var defaultSecondUserAddress = InsertInstallationData(
+            var defaultSecondUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
                     FirstName = "Steve",
@@ -4239,17 +807,33 @@ namespace Nop.Services.Installation
             secondUser.BillingAddressId = defaultSecondUserAddress.Id;
             secondUser.ShippingAddressId = defaultSecondUserAddress.Id;
 
-            _customerRepository.Insert(secondUser);
+            await InsertInstallationDataAsync(secondUser);
 
-            InsertInstallationData(new CustomerAddressMapping { CustomerId = secondUser.Id, AddressId = defaultSecondUserAddress.Id });
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = secondUser.Id, CustomerRoleId = crRegistered.Id });
+            await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = secondUser.Id, AddressId = defaultSecondUserAddress.Id });
+            await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = secondUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
+            await InsertInstallationDataAsync(new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationDataAsync(new CustomerPassword
             {
                 CustomerId = secondUser.Id,
                 Password = "123456",
@@ -4271,7 +855,7 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            var defaultThirdUserAddress = InsertInstallationData(
+            var defaultThirdUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
                     FirstName = "Arthur",
@@ -4291,17 +875,33 @@ namespace Nop.Services.Installation
             thirdUser.BillingAddressId = defaultThirdUserAddress.Id;
             thirdUser.ShippingAddressId = defaultThirdUserAddress.Id;
 
-            _customerRepository.Insert(thirdUser);
+            await InsertInstallationDataAsync(thirdUser);
 
-            InsertInstallationData(new CustomerAddressMapping { CustomerId = thirdUser.Id, AddressId = defaultThirdUserAddress.Id });
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = thirdUser.Id, CustomerRoleId = crRegistered.Id });
+            await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = thirdUser.Id, AddressId = defaultThirdUserAddress.Id });
+            await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = thirdUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
+            await InsertInstallationDataAsync(new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationDataAsync(new CustomerPassword
             {
                 CustomerId = thirdUser.Id,
                 Password = "123456",
@@ -4322,7 +922,7 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            var defaultFourthUserAddress = InsertInstallationData(
+            var defaultFourthUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
                     FirstName = "James",
@@ -4342,17 +942,33 @@ namespace Nop.Services.Installation
             fourthUser.BillingAddressId = defaultFourthUserAddress.Id;
             fourthUser.ShippingAddressId = defaultFourthUserAddress.Id;
 
-            _customerRepository.Insert(fourthUser);
+            await InsertInstallationDataAsync(fourthUser);
 
-            InsertInstallationData(new CustomerAddressMapping { CustomerId = fourthUser.Id, AddressId = defaultFourthUserAddress.Id });
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fourthUser.Id, CustomerRoleId = crRegistered.Id });
+            await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = fourthUser.Id, AddressId = defaultFourthUserAddress.Id });
+            await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = fourthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
+            await InsertInstallationDataAsync(new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationDataAsync(new CustomerPassword
             {
                 CustomerId = fourthUser.Id,
                 Password = "123456",
@@ -4373,7 +989,7 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            var defaultFifthUserAddress = InsertInstallationData(
+            var defaultFifthUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
                     FirstName = "Brenda",
@@ -4394,19 +1010,33 @@ namespace Nop.Services.Installation
             fifthUser.BillingAddressId = defaultFifthUserAddress.Id;
             fifthUser.ShippingAddressId = defaultFifthUserAddress.Id;
 
-            _customerRepository.Insert(fifthUser);
+            await InsertInstallationDataAsync(fifthUser);
 
-            InsertInstallationData(new CustomerAddressMapping { CustomerId = fifthUser.Id, AddressId = defaultFifthUserAddress.Id });
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fifthUser.Id, CustomerRoleId = crRegistered.Id });
+            await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = fifthUser.Id, AddressId = defaultFifthUserAddress.Id });
+            await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = fifthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute,
-                defaultFifthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute,
-                defaultFifthUserAddress.LastName);
+            await InsertInstallationDataAsync(new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationDataAsync(new CustomerPassword
             {
                 CustomerId = fifthUser.Id,
                 Password = "123456",
@@ -4427,7 +1057,7 @@ namespace Nop.Services.Installation
                 LastActivityDateUtc = DateTime.UtcNow,
                 RegisteredInStoreId = storeId
             };
-            var defaultSixthUserAddress = InsertInstallationData(
+            var defaultSixthUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
                     FirstName = "Victoria",
@@ -4439,8 +1069,8 @@ namespace Nop.Services.Installation
                     Address1 = "201 1st Avenue South",
                     Address2 = string.Empty,
                     City = "Saskatoon",
-                    StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan")?.Id,
-                    CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN")?.Id,
+                    StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "Saskatchewan"))?.Id,
+                    CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "CAN"))?.Id,
                     ZipPostalCode = "S7K 1J9",
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -4448,17 +1078,33 @@ namespace Nop.Services.Installation
             sixthUser.BillingAddressId = defaultSixthUserAddress.Id;
             sixthUser.ShippingAddressId = defaultSixthUserAddress.Id;
 
-            _customerRepository.Insert(sixthUser);
+            await InsertInstallationDataAsync(sixthUser);
 
-            InsertInstallationData(new CustomerAddressMapping { CustomerId = sixthUser.Id, AddressId = defaultSixthUserAddress.Id });
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
+            await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = sixthUser.Id, AddressId = defaultSixthUserAddress.Id });
+            await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
+            await InsertInstallationDataAsync(new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationDataAsync(new CustomerPassword
             {
                 CustomerId = sixthUser.Id,
                 Password = "123456",
@@ -4468,7 +1114,7 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
+        protected virtual async Task InstallCustomersAndUsersAsync(string defaultUserEmail, string defaultUserPassword)
         {
             var crAdministrators = new CustomerRole
             {
@@ -4513,10 +1159,11 @@ namespace Nop.Services.Installation
                 crGuests,
                 crVendors
             };
-            _customerRoleRepository.Insert(customerRoles);
+
+            await InsertInstallationDataAsync(customerRoles);
 
             //default store 
-            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
 
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
@@ -4535,7 +1182,7 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            var defaultAdminUserAddress = InsertInstallationData(
+            var defaultAdminUserAddress = await InsertInstallationDataAsync(
                 new Address
                 {
                     FirstName = "John",
@@ -4556,23 +1203,39 @@ namespace Nop.Services.Installation
             adminUser.BillingAddressId = defaultAdminUserAddress.Id;
             adminUser.ShippingAddressId = defaultAdminUserAddress.Id;
 
-            _customerRepository.Insert(adminUser);
+            await InsertInstallationDataAsync(adminUser);
 
-            InsertInstallationData(new CustomerAddressMapping { CustomerId = adminUser.Id, AddressId = defaultAdminUserAddress.Id });
+            await InsertInstallationDataAsync(new CustomerAddressMapping { CustomerId = adminUser.Id, AddressId = defaultAdminUserAddress.Id });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crAdministrators.Id },
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crForumModerators.Id },
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.FirstNameAttribute, "John");
-            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.LastNameAttribute, "Smith");
+            await InsertInstallationDataAsync(new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "John",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "Smith",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
-            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
+            await customerRegistrationService.ChangePasswordAsync(new ChangePasswordRequest(defaultUserEmail, false,
+                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServicesDefaults.DefaultHashedPasswordFormat));
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
@@ -4588,9 +1251,9 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            _customerRepository.Insert(searchEngineUser);
+            await InsertInstallationDataAsync(searchEngineUser);
 
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerRoleId = crGuests.Id, CustomerId = searchEngineUser.Id });
+            await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerRoleId = crGuests.Id, CustomerId = searchEngineUser.Id });
 
             //built-in user for background tasks
             var backgroundTaskUser = new Customer
@@ -4606,23 +1269,47 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            _customerRepository.Insert(backgroundTaskUser);
+            await InsertInstallationDataAsync(backgroundTaskUser);
 
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = backgroundTaskUser.Id, CustomerRoleId = crGuests.Id });
+            await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = backgroundTaskUser.Id, CustomerRoleId = crGuests.Id });
         }
 
-        protected virtual void InstallOrders()
+        protected virtual async Task InstallOrdersAsync()
         {
+            static Address cloneAddress(Address address)
+            {
+                var addr = new Address
+                {
+                    FirstName = address.FirstName,
+                    LastName = address.LastName,
+                    Email = address.Email,
+                    Company = address.Company,
+                    CountryId = address.CountryId,
+                    StateProvinceId = address.StateProvinceId,
+                    County = address.County,
+                    City = address.City,
+                    Address1 = address.Address1,
+                    Address2 = address.Address2,
+                    ZipPostalCode = address.ZipPostalCode,
+                    PhoneNumber = address.PhoneNumber,
+                    FaxNumber = address.FaxNumber,
+                    CustomAttributes = address.CustomAttributes,
+                    CreatedOnUtc = address.CreatedOnUtc
+                };
+
+                return addr;
+            }
+
             //default store
-            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
             //first order
-            var firstCustomer = _customerRepository.Table.First(c => c.Email == "steve_gates@nopCommerce.com");
+            var firstCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "steve_gates@nopCommerce.com");
 
-            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.BillingAddressId)));
-            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.ShippingAddressId)));
+            var firstCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(firstCustomer.BillingAddressId)));
+            var firstCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(firstCustomer.ShippingAddressId)));
 
             var firstOrder = new Order
             {
@@ -4678,9 +1365,10 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(firstOrder);
+
+            await InsertInstallationDataAsync(firstOrder);
             firstOrder.CustomOrderNumber = firstOrder.Id.ToString();
-            _orderRepository.Update(firstOrder);
+            await UpdateInstallationDataAsync(firstOrder);
 
             //item Apple iCam
             var firstOrderItem1 = new OrderItem
@@ -4705,10 +1393,11 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(firstOrderItem1);
+
+            await InsertInstallationDataAsync(firstOrderItem1);
 
             //item Leica T Mirrorless Digital Camera
-            var fierstOrderItem2 = new OrderItem
+            var firstOrderItem2 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
@@ -4730,7 +1419,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fierstOrderItem2);
+
+            await InsertInstallationDataAsync(firstOrderItem2);
 
             //item $25 Virtual Gift Card
             var firstOrderItem3 = new OrderItem
@@ -4755,7 +1445,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(firstOrderItem3);
+
+            await InsertInstallationDataAsync(firstOrderItem3);
 
             var firstOrderGiftcard = new GiftCard
             {
@@ -4772,16 +1463,18 @@ namespace Nop.Services.Installation
                 IsRecipientNotified = false,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _giftCardRepository.Insert(firstOrderGiftcard);
+
+            await InsertInstallationDataAsync(firstOrderGiftcard);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = firstOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
@@ -4789,10 +1482,10 @@ namespace Nop.Services.Installation
             });
 
             //second order
-            var secondCustomer = _customerRepository.Table.First(c => c.Email == "arthur_holmes@nopCommerce.com");
+            var secondCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "arthur_holmes@nopCommerce.com");
 
-            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.BillingAddressId)));
-            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.ShippingAddressId)));
+            var secondCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(secondCustomer.BillingAddressId)));
+            var secondCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(secondCustomer.ShippingAddressId)));
 
             var secondOrder = new Order
             {
@@ -4848,12 +1541,13 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(secondOrder);
+
+            await InsertInstallationDataAsync(secondOrder);
             secondOrder.CustomOrderNumber = secondOrder.Id.ToString();
-            _orderRepository.Update(secondOrder);
+            await UpdateInstallationDataAsync(secondOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
@@ -4883,7 +1577,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(secondOrderItem1);
+
+            await InsertInstallationDataAsync(secondOrderItem1);
 
             //item Flower Girl Bracelet
             var secondOrderItem2 = new OrderItem
@@ -4908,19 +1603,20 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(secondOrderItem2);
+
+            await InsertInstallationDataAsync(secondOrderItem2);
 
             //third order
-            var thirdCustomer = _customerRepository.Table.First(c => c.Email == "james_pan@nopCommerce.com");
+            var thirdCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "james_pan@nopCommerce.com");
 
-            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(thirdCustomer.BillingAddressId)));
+            var thirdCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(thirdCustomer.BillingAddressId)));
 
             var thirdOrder = new Order
             {
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
                 CustomerId = thirdCustomer.Id,
-                CustomerLanguageId = _languageRepository.Table.First().Id,
+                CustomerLanguageId = (await _languageRepository.Table.FirstAsync()).Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 8.80M,
                 OrderSubtotalExclTax = 8.80M,
@@ -4968,12 +1664,13 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(thirdOrder);
+
+            await InsertInstallationDataAsync(thirdOrder);
             thirdOrder.CustomOrderNumber = thirdOrder.Id.ToString();
-            _orderRepository.Update(thirdOrder);
+            await UpdateInstallationDataAsync(thirdOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
@@ -5003,7 +1700,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(thirdOrderItem1);
+
+            await InsertInstallationDataAsync(thirdOrderItem1);
 
             //item Night Visions
             var thirdOrderItem2 = new OrderItem
@@ -5028,7 +1726,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(thirdOrderItem2);
+
+            await InsertInstallationDataAsync(thirdOrderItem2);
 
             //item Science & Faith
             var thirdOrderItem3 = new OrderItem
@@ -5053,15 +1752,16 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(thirdOrderItem3);
+
+            await InsertInstallationDataAsync(thirdOrderItem3);
 
             //fourth order
-            var fourthCustomer = _customerRepository.Table.First(c => c.Email == "brenda_lindgren@nopCommerce.com");
+            var fourthCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
-            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.BillingAddressId)));
-            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            
+            var fourthCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fourthCustomer.BillingAddressId)));
+            var fourthCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerPickupAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fourthCustomer.ShippingAddressId)));
+
             var fourthOrder = new Order
             {
                 StoreId = defaultStore.Id,
@@ -5117,24 +1817,27 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(fourthOrder);
+
+            await InsertInstallationDataAsync(fourthOrder);
             fourthOrder.CustomOrderNumber = fourthOrder.Id.ToString();
-            _orderRepository.Update(fourthOrder);
+            await UpdateInstallationDataAsync(fourthOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = fourthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 OrderId = fourthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
@@ -5164,7 +1867,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fourthOrderItem1);
+
+            await InsertInstallationDataAsync(fourthOrderItem1);
 
             //item First Prize Pies
             var fourthOrderItem2 = new OrderItem
@@ -5189,7 +1893,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fourthOrderItem2);
+
+            await InsertInstallationDataAsync(fourthOrderItem2);
 
             //item Fahrenheit 451 by Ray Bradbury
             var fourthOrderItem3 = new OrderItem
@@ -5214,7 +1919,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fourthOrderItem3);
+
+            await InsertInstallationDataAsync(fourthOrderItem3);
 
             //shipments
             //shipment 1
@@ -5228,7 +1934,8 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _shipmentRepository.Insert(fourthOrderShipment1);
+
+            await InsertInstallationDataAsync(fourthOrderShipment1);
 
             var fourthOrderShipment1Item1 = new ShipmentItem
             {
@@ -5237,7 +1944,8 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment1.Id
             };
-            _shipmentItemRepository.Insert(fourthOrderShipment1Item1);
+
+            await InsertInstallationDataAsync(fourthOrderShipment1Item1);
 
             var fourthOrderShipment1Item2 = new ShipmentItem
             {
@@ -5246,7 +1954,8 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment1.Id
             };
-            _shipmentItemRepository.Insert(fourthOrderShipment1Item2);
+
+            await InsertInstallationDataAsync(fourthOrderShipment1Item2);
 
             //shipment 2
             var fourthOrderShipment2 = new Shipment
@@ -5259,7 +1968,8 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _shipmentRepository.Insert(fourthOrderShipment2);
+
+            await InsertInstallationDataAsync(fourthOrderShipment2);
 
             var fourthOrderShipment2Item1 = new ShipmentItem
             {
@@ -5268,13 +1978,14 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment2.Id
             };
-            _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
+
+            await InsertInstallationDataAsync(fourthOrderShipment2Item1);
 
             //fifth order
             var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
 
-            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.BillingAddressId)));
-            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.ShippingAddressId)));
+            var fifthCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fifthCustomer.BillingAddressId)));
+            var fifthCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(fifthCustomer.ShippingAddressId)));
 
             var fifthOrder = new Order
             {
@@ -5330,30 +2041,34 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(fifthOrder);
+
+            await InsertInstallationDataAsync(fifthOrder);
             fifthOrder.CustomOrderNumber = fifthOrder.Id.ToString();
-            _orderRepository.Update(fifthOrder);
+            await UpdateInstallationDataAsync(fifthOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = fifthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 OrderId = fifthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
                 OrderId = fifthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationDataAsync(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order delivered",
@@ -5383,7 +2098,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fifthOrderItem1);
+
+            await InsertInstallationDataAsync(fifthOrderItem1);
 
             //shipment 1
             var fifthOrderShipment1 = new Shipment
@@ -5396,7 +2112,8 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _shipmentRepository.Insert(fifthOrderShipment1);
+
+            await InsertInstallationDataAsync(fifthOrderShipment1);
 
             var fifthOrderShipment1Item1 = new ShipmentItem
             {
@@ -5405,17 +2122,18 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fifthOrderShipment1.Id
             };
-            _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
+
+            await InsertInstallationDataAsync(fifthOrderShipment1Item1);
         }
 
-        protected virtual void InstallActivityLog(string defaultUserEmail)
+        protected virtual async Task InstallActivityLogAsync(string defaultUserEmail)
         {
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
 
-            _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationDataAsync(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditCategory")?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
                 Comment = "Edited a category ('Computers')",
@@ -5424,7 +2142,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationDataAsync(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditDiscount")?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
@@ -5433,7 +2151,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationDataAsync(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditSpecAttribute")?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
                 Comment = "Edited a specification attribute ('CPU Type')",
@@ -5442,7 +2160,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationDataAsync(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "AddNewProductAttribute")?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
                 Comment = "Added a new product attribute ('Some attribute')",
@@ -5451,7 +2169,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationDataAsync(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "DeleteGiftCard")?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
@@ -5461,44 +2179,49 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallSearchTerms()
+        protected virtual async Task InstallSearchTermsAsync()
         {
             //default store
             var defaultStore = _storeRepository.Table.FirstOrDefault();
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
-            _searchTermRepository.Insert(new SearchTerm
+            await InsertInstallationDataAsync(new SearchTerm
             {
                 Count = 34,
                 Keyword = "computer",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationDataAsync(new SearchTerm
             {
                 Count = 30,
                 Keyword = "camera",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationDataAsync(new SearchTerm
             {
                 Count = 27,
                 Keyword = "jewelry",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationDataAsync(new SearchTerm
             {
                 Count = 26,
                 Keyword = "shoes",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationDataAsync(new SearchTerm
             {
                 Count = 19,
                 Keyword = "jeans",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationDataAsync(new SearchTerm
             {
                 Count = 10,
                 Keyword = "gift",
@@ -5506,7 +2229,7 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallEmailAccounts()
+        protected virtual async Task InstallEmailAccountsAsync()
         {
             var emailAccounts = new List<EmailAccount>
             {
@@ -5522,10 +2245,11 @@ namespace Nop.Services.Installation
                     UseDefaultCredentials = false
                 }
             };
-            _emailAccountRepository.Insert(emailAccounts);
+
+            await InsertInstallationDataAsync(emailAccounts);
         }
 
-        protected virtual void InstallMessageTemplates()
+        protected virtual async Task InstallMessageTemplatesAsync()
         {
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
@@ -5609,7 +2333,7 @@ namespace Nop.Services.Installation
                 {
                     Name = MessageTemplateSystemNames.GiftCardNotification,
                     Subject = "%GiftCard.SenderName% has sent you a gift card for %Store.Name%",
-                    Body = $"<p>{Environment.NewLine}You have received a gift card for %Store.Name%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}Dear %GiftCard.RecipientName%,{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%GiftCard.SenderName% (%GiftCard.SenderEmail%) has sent you a %GiftCard.Amount% gift cart for <a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}You gift card code is %GiftCard.CouponCode%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}%GiftCard.Message%{Environment.NewLine}</p>{Environment.NewLine}",
+                    Body = $"<p>{Environment.NewLine}You have received a gift card for %Store.Name%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}Dear %GiftCard.RecipientName%,{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%GiftCard.SenderName% (%GiftCard.SenderEmail%) has sent you a %GiftCard.Amount% gift card for <a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}Your gift card code is %GiftCard.CouponCode%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}%GiftCard.Message%{Environment.NewLine}</p>{Environment.NewLine}",
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
                 },
@@ -5910,10 +2634,11 @@ namespace Nop.Services.Installation
                     EmailAccountId = eaGeneral.Id
                 }
             };
-            _messageTemplateRepository.Insert(messageTemplates);
+
+            await InsertInstallationDataAsync(messageTemplates);
         }
 
-        protected virtual void InstallTopics()
+        protected virtual async Task InstallTopicsAsync()
         {
             var defaultTopicTemplate =
                 _topicTemplateRepository.Table.FirstOrDefault(tt => tt.Name == "Default template");
@@ -6066,26 +2791,32 @@ namespace Nop.Services.Installation
                     TopicTemplateId = defaultTopicTemplate.Id
                 }
             };
-            _topicRepository.Insert(topics);
+
+            await InsertInstallationDataAsync(topics);
 
             //search engine names
             foreach (var topic in topics)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = topic.Id,
                     EntityName = nameof(Topic),
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = ValidateSeName(topic, !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName)
+                    Slug = await ValidateSeNameAsync(topic, !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName)
                 });
             }
         }
 
-        protected virtual void InstallSettings()
+        protected virtual async Task InstallSettingsAsync(RegionInfo regionInfo)
         {
+            var isMetric = regionInfo?.IsMetric ?? false;
+            var country = regionInfo?.TwoLetterISORegionName ?? string.Empty;
+            var isGermany = country == "DE";
+            var isEurope = ISO3166.FromCountryCode(country)?.SubjectToVat ?? false;
+
             var settingService = EngineContext.Current.Resolve<ISettingService>();
-            settingService.SaveSetting(new PdfSettings
+            await settingService.SaveSettingAsync(new PdfSettings
             {
                 LogoPictureId = 0,
                 LetterPageSizeEnabled = false,
@@ -6095,7 +2826,7 @@ namespace Nop.Services.Installation
                 InvoiceFooterTextColumn2 = null
             });
 
-            settingService.SaveSetting(new SitemapSettings
+            await settingService.SaveSettingAsync(new SitemapSettings
             {
                 SitemapEnabled = true,
                 SitemapPageSize = 200,
@@ -6108,7 +2839,7 @@ namespace Nop.Services.Installation
                 SitemapIncludeTopics = true
             });
 
-            settingService.SaveSetting(new SitemapXmlSettings
+            await settingService.SaveSettingAsync(new SitemapXmlSettings
             {
                 SitemapXmlEnabled = true,
                 SitemapXmlIncludeBlogPosts = true,
@@ -6121,34 +2852,31 @@ namespace Nop.Services.Installation
                 SitemapXmlIncludeTopics = true
             });
 
-            settingService.SaveSetting(new CommonSettings
+            await settingService.SaveSettingAsync(new CommonSettings
             {
                 UseSystemEmailForContactUsForm = true,
 
                 DisplayJavaScriptDisabledWarning = false,
-                UseFullTextSearch = false,
-                FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
-                RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
                 BbcodeEditorOpenLinksInNewWindow = false,
                 PopupForTermsOfServiceLinks = true,
                 JqueryMigrateScriptLoggingActive = false,
-                SupportPreviousNopcommerceVersions = true,
                 UseResponseCompression = true,
-                StaticFilesCacheControl = "public,max-age=31536000",
                 FaviconAndAppIconsHeadCode = "<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/icons/icons_0/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/icons/icons_0/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/icons/icons_0/android-chrome-192x192.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/icons/icons_0/favicon-16x16.png\"><link rel=\"manifest\" href=\"/icons/icons_0/site.webmanifest\"><link rel=\"mask-icon\" href=\"/icons/icons_0/safari-pinned-tab.svg\" color=\"#5bbad5\"><link rel=\"shortcut icon\" href=\"/icons/icons_0/favicon.ico\"><meta name=\"msapplication-TileColor\" content=\"#2d89ef\"><meta name=\"msapplication-TileImage\" content=\"/icons/icons_0/mstile-144x144.png\"><meta name=\"msapplication-config\" content=\"/icons/icons_0/browserconfig.xml\"><meta name=\"theme-color\" content=\"#ffffff\">",
                 EnableHtmlMinification = true,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
-                EnableCssBundling = false
+                EnableCssBundling = false,
+                RestartTimeout = NopCommonDefaults.RestartTimeout
             });
 
-            settingService.SaveSetting(new SeoSettings
+            await settingService.SaveSettingAsync(new SeoSettings
             {
                 PageTitleSeparator = ". ",
                 PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
+                HomepageTitle = "Home page title",
+                HomepageDescription = "Home page description",
                 DefaultTitle = "Your store",
                 DefaultMetaKeywords = string.Empty,
                 DefaultMetaDescription = string.Empty,
@@ -6191,6 +2919,7 @@ namespace Nop.Services.Installation
                     "config",
                     "eucookielawaccept",
                     "page-not-found",
+                    "products",
                     //system names are not allowed (anyway they will cause a runtime error),
                     "con",
                     "lpt1",
@@ -6218,7 +2947,7 @@ namespace Nop.Services.Installation
                 CustomHeadTags = string.Empty
             });
 
-            settingService.SaveSetting(new AdminAreaSettings
+            await settingService.SaveSettingAsync(new AdminAreaSettings
             {
                 DefaultGridPageSize = 15,
                 PopupGridPageSize = 7,
@@ -6232,15 +2961,16 @@ namespace Nop.Services.Installation
                 UseIsoDateFormatInJsonResult = true
             });
 
-            settingService.SaveSetting(new ProductEditorSettings
+            await settingService.SaveSettingAsync(new ProductEditorSettings
             {
                 Weight = true,
                 Dimensions = true,
                 ProductAttributes = true,
-                SpecificationAttributes = true
+                SpecificationAttributes = true,
+                PAngV = isGermany
             });
 
-            settingService.SaveSetting(new GdprSettings
+            await settingService.SaveSettingAsync(new GdprSettings
             {
                 GdprEnabled = false,
                 LogPrivacyPolicyConsent = true,
@@ -6248,7 +2978,7 @@ namespace Nop.Services.Installation
                 LogUserProfileChanges = true
             });
 
-            settingService.SaveSetting(new CatalogSettings
+            await settingService.SaveSettingAsync(new CatalogSettings
             {
                 AllowViewUnpublishedProductPage = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
@@ -6268,6 +2998,7 @@ namespace Nop.Services.Installation
                 ShowShareButton = true,
                 PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
                 ProductReviewsMustBeApproved = false,
+                OneReviewPerProductFromCustomer = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
                 ProductReviewPossibleOnlyAfterPurchasing = false,
@@ -6311,12 +3042,12 @@ namespace Nop.Services.Installation
                 ProductsByTagPageSizeOptions = "6, 3, 9, 18",
                 MaximumBackInStockSubscriptions = 200,
                 ManufacturersBlockItemsToDisplay = 2,
-                DisplayTaxShippingInfoFooter = false,
-                DisplayTaxShippingInfoProductDetailsPage = false,
-                DisplayTaxShippingInfoProductBoxes = false,
-                DisplayTaxShippingInfoShoppingCart = false,
-                DisplayTaxShippingInfoWishlist = false,
-                DisplayTaxShippingInfoOrderDetailsPage = false,
+                DisplayTaxShippingInfoFooter = isGermany,
+                DisplayTaxShippingInfoProductDetailsPage = isGermany,
+                DisplayTaxShippingInfoProductBoxes = isGermany,
+                DisplayTaxShippingInfoShoppingCart = isGermany,
+                DisplayTaxShippingInfoWishlist = isGermany,
+                DisplayTaxShippingInfoOrderDetailsPage = isGermany,
                 DefaultCategoryPageSizeOptions = "6, 3, 9",
                 DefaultCategoryPageSize = 6,
                 DefaultManufacturerPageSizeOptions = "6, 3, 9",
@@ -6334,9 +3065,9 @@ namespace Nop.Services.Installation
                 UseAjaxLoadMenu = false
             });
 
-            settingService.SaveSetting(new LocalizationSettings
+            await settingService.SaveSettingAsync(new LocalizationSettings
             {
-                DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
+                DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.LanguageCulture == NopCommonDefaults.DefaultLanguageCulture).Id,
                 UseImagesForLanguageSelection = false,
                 SeoFriendlyUrlsForLanguagesEnabled = false,
                 AutomaticallyDetectLanguage = false,
@@ -6346,13 +3077,13 @@ namespace Nop.Services.Installation
                 IgnoreRtlPropertyForAdminArea = false
             });
 
-            settingService.SaveSetting(new CustomerSettings
+            await settingService.SaveSettingAsync(new CustomerSettings
             {
                 UsernamesEnabled = false,
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = NopCustomerServiceDefaults.DefaultHashedPasswordFormat,
+                HashedPasswordFormat = NopCustomerServicesDefaults.DefaultHashedPasswordFormat,
                 PasswordMinLength = 6,
                 PasswordRequireDigit = false,
                 PasswordRequireLowercase = false,
@@ -6409,10 +3140,18 @@ namespace Nop.Services.Installation
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
                 AllowCustomersToCheckGiftCardBalance = false,
-                DeleteGuestTaskOlderThanMinutes = 1440
+                DeleteGuestTaskOlderThanMinutes = 1440,
+                PhoneNumberValidationEnabled = false,
+                PhoneNumberValidationUseRegex = false,
+                PhoneNumberValidationRule = "^[0-9]{1,14}?$"
             });
 
-            settingService.SaveSetting(new AddressSettings
+            await settingService.SaveSettingAsync(new MultiFactorAuthenticationSettings
+            {
+                ForceMultifactorAuthentication = false
+            });
+
+            await settingService.SaveSettingAsync(new AddressSettings
             {
                 CompanyEnabled = true,
                 StreetAddressEnabled = true,
@@ -6431,7 +3170,7 @@ namespace Nop.Services.Installation
                 FaxEnabled = true
             });
 
-            settingService.SaveSetting(new MediaSettings
+            await settingService.SaveSettingAsync(new MediaSettings
             {
                 AvatarPictureSize = 120,
                 ProductThumbPictureSize = 415,
@@ -6454,27 +3193,26 @@ namespace Nop.Services.Installation
                 UseAbsoluteImagePath = true
             });
 
-            settingService.SaveSetting(new StoreInformationSettings
+            await settingService.SaveSettingAsync(new StoreInformationSettings
             {
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
-                DisplayMiniProfilerInPublicStore = false,
-                DisplayMiniProfilerForAdminOnly = false,
-                DisplayEuCookieLawWarning = false,
+                DisplayEuCookieLawWarning = isEurope,
                 FacebookLink = "https://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
                 YoutubeLink = "https://www.youtube.com/user/nopCommerce",
                 HidePoweredByNopCommerce = false
             });
 
-            settingService.SaveSetting(new ExternalAuthenticationSettings
+            await settingService.SaveSettingAsync(new ExternalAuthenticationSettings
             {
                 RequireEmailValidation = false,
+                LogErrors = false,
                 AllowCustomersToRemoveAssociations = true
             });
 
-            settingService.SaveSetting(new RewardPointsSettings
+            await settingService.SaveSettingAsync(new RewardPointsSettings
             {
                 Enabled = true,
                 ExchangeRate = 1,
@@ -6492,22 +3230,26 @@ namespace Nop.Services.Installation
                 PageSize = 10
             });
 
-            settingService.SaveSetting(new CurrencySettings
+            var primaryCurrency = "USD";
+            await settingService.SaveSettingAsync(new CurrencySettings
             {
                 DisplayCurrencyLabel = false,
-                PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
-                PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
+                PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == primaryCurrency).Id,
+                PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == primaryCurrency).Id,
                 ActiveExchangeRateProviderSystemName = "CurrencyExchange.ECB",
                 AutoUpdateEnabled = false
             });
 
-            settingService.SaveSetting(new MeasureSettings
+            var baseDimension = isMetric ? "meters" : "inches";
+            var baseWeight = isMetric ? "kg" : "lb";
+
+            await settingService.SaveSettingAsync(new MeasureSettings
             {
-                BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "inches").Id,
-                BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == "lb").Id
+                BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == baseDimension).Id,
+                BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == baseWeight).Id
             });
 
-            settingService.SaveSetting(new MessageTemplatesSettings
+            await settingService.SaveSettingAsync(new MessageTemplatesSettings
             {
                 CaseInvariantReplacement = false,
                 Color1 = "#b9babe",
@@ -6515,7 +3257,7 @@ namespace Nop.Services.Installation
                 Color3 = "#dde2e6"
             });
 
-            settingService.SaveSetting(new ShoppingCartSettings
+            await settingService.SaveSettingAsync(new ShoppingCartSettings
             {
                 DisplayCartAfterAddingProduct = false,
                 DisplayWishlistAfterAddingProduct = false,
@@ -6540,7 +3282,7 @@ namespace Nop.Services.Installation
                 RenderAssociatedAttributeValueQuantity = true
             });
 
-            settingService.SaveSetting(new OrderSettings
+            await settingService.SaveSettingAsync(new OrderSettings
             {
                 ReturnRequestNumberMask = "{ID}",
                 IsReOrderAllowed = true,
@@ -6574,7 +3316,7 @@ namespace Nop.Services.Installation
                 AllowAdminsToBuyCallForPriceProducts = true
             });
 
-            settingService.SaveSetting(new SecuritySettings
+            await settingService.SaveSettingAsync(new SecuritySettings
             {
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                 AdminAreaAllowedIpAddresses = null,
@@ -6583,7 +3325,7 @@ namespace Nop.Services.Installation
                 AllowNonAsciiCharactersInHeaders = true
             });
 
-            settingService.SaveSetting(new ShippingSettings
+            await settingService.SaveSettingAsync(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedByWeightByTotal" },
                 ActivePickupPointProviderSystemNames = new List<string> { "Pickup.PickupInStore" },
@@ -6596,7 +3338,8 @@ namespace Nop.Services.Installation
                 FreeShippingOverXEnabled = false,
                 FreeShippingOverXValue = decimal.Zero,
                 FreeShippingOverXIncludingTax = false,
-                EstimateShippingEnabled = true,
+                EstimateShippingProductPageEnabled = true,
+                EstimateShippingCartPageEnabled = true,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
                 HideShippingTotal = false,
@@ -6604,10 +3347,11 @@ namespace Nop.Services.Installation
                 BypassShippingMethodSelectionIfOnlyOne = false,
                 UseCubeRootMethod = true,
                 ConsiderAssociatedProductsDimensions = true,
-                ShipSeparatelyOneItemEach = true
+                ShipSeparatelyOneItemEach = true,
+                RequestDelay = 300,
             });
 
-            settingService.SaveSetting(new PaymentSettings
+            await settingService.SaveSettingAsync(new PaymentSettings
             {
                 ActivePaymentMethodSystemNames = new List<string>
                     {
@@ -6622,7 +3366,7 @@ namespace Nop.Services.Installation
                 RegenerateOrderGuidInterval = 180
             });
 
-            settingService.SaveSetting(new TaxSettings
+            await settingService.SaveSettingAsync(new TaxSettings
             {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
                 TaxBasedOnPickupPointAddress = false,
@@ -6643,8 +3387,8 @@ namespace Nop.Services.Installation
                 PaymentMethodAdditionalFeeIsTaxable = false,
                 PaymentMethodAdditionalFeeIncludesTax = false,
                 PaymentMethodAdditionalFeeTaxClassId = 0,
-                EuVatEnabled = false,
-                EuVatShopCountryId = 0,
+                EuVatEnabled = isEurope,
+                EuVatShopCountryId = isEurope ? (_countryRepository.Table.FirstOrDefault(x => x.TwoLetterIsoCode == country)?.Id ?? 0) : 0,
                 EuVatAllowVatExemption = true,
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
@@ -6652,13 +3396,13 @@ namespace Nop.Services.Installation
                 LogErrors = false
             });
 
-            settingService.SaveSetting(new DateTimeSettings
+            await settingService.SaveSettingAsync(new DateTimeSettings
             {
                 DefaultStoreTimeZoneId = string.Empty,
                 AllowCustomersToSetTimeZone = false
             });
 
-            settingService.SaveSetting(new BlogSettings
+            await settingService.SaveSettingAsync(new BlogSettings
             {
                 Enabled = true,
                 PostsPageSize = 10,
@@ -6669,7 +3413,7 @@ namespace Nop.Services.Installation
                 BlogCommentsMustBeApproved = false,
                 ShowBlogCommentsPerStore = false
             });
-            settingService.SaveSetting(new NewsSettings
+            await settingService.SaveSettingAsync(new NewsSettings
             {
                 Enabled = true,
                 AllowNotRegisteredUsersToLeaveComments = true,
@@ -6682,7 +3426,7 @@ namespace Nop.Services.Installation
                 ShowNewsCommentsPerStore = false
             });
 
-            settingService.SaveSetting(new ForumSettings
+            await settingService.SaveSettingAsync(new ForumSettings
             {
                 ForumsEnabled = false,
                 RelativeDateTimeFormattingEnabled = true,
@@ -6719,7 +3463,7 @@ namespace Nop.Services.Installation
                 ForumSearchTermMinimumLength = 3
             });
 
-            settingService.SaveSetting(new VendorSettings
+            await settingService.SaveSettingAsync(new VendorSettings
             {
                 DefaultVendorPageSizeOptions = "6, 3, 9",
                 VendorsBlockItemsToDisplay = 0,
@@ -6736,17 +3480,17 @@ namespace Nop.Services.Installation
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
                 throw new Exception("Default email account cannot be loaded");
-            settingService.SaveSetting(new EmailAccountSettings
+            await settingService.SaveSettingAsync(new EmailAccountSettings
             {
                 DefaultEmailAccountId = eaGeneral.Id
             });
 
-            settingService.SaveSetting(new WidgetSettings
+            await settingService.SaveSettingAsync(new WidgetSettings
             {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" }
             });
 
-            settingService.SaveSetting(new DisplayDefaultMenuItemSettings
+            await settingService.SaveSettingAsync(new DisplayDefaultMenuItemSettings
             {
                 DisplayHomepageMenuItem = true,
                 DisplayNewProductsMenuItem = true,
@@ -6757,7 +3501,7 @@ namespace Nop.Services.Installation
                 DisplayContactUsMenuItem = true
             });
 
-            settingService.SaveSetting(new DisplayDefaultFooterItemSettings
+            await settingService.SaveSettingAsync(new DisplayDefaultFooterItemSettings
             {
                 DisplaySitemapFooterItem = true,
                 DisplayContactUsFooterItem = true,
@@ -6776,7 +3520,7 @@ namespace Nop.Services.Installation
                 DisplayApplyVendorAccountFooterItem = true
             });
 
-            settingService.SaveSetting(new CaptchaSettings
+            await settingService.SaveSettingAsync(new CaptchaSettings
             {
                 ReCaptchaApiUrl = "https://www.google.com/recaptcha/",
                 ReCaptchaDefaultLanguage = string.Empty,
@@ -6787,7 +3531,7 @@ namespace Nop.Services.Installation
                 AutomaticallyChooseLanguage = true,
                 Enabled = false,
                 CaptchaType = CaptchaType.CheckBoxReCaptchaV2,
-                ReCaptchaV3ScoreThreshold = 0.5,
+                ReCaptchaV3ScoreThreshold = 0.5M,
                 ShowOnApplyVendorPage = false,
                 ShowOnBlogCommentPage = false,
                 ShowOnContactUsPage = false,
@@ -6801,12 +3545,12 @@ namespace Nop.Services.Installation
                 ShowOnRegistrationPage = false,
             });
 
-            settingService.SaveSetting(new MessagesSettings
+            await settingService.SaveSettingAsync(new MessagesSettings
             {
                 UsePopupNotifications = false
             });
 
-            settingService.SaveSetting(new ProxySettings
+            await settingService.SaveSettingAsync(new ProxySettings
             {
                 Enabled = false,
                 Address = string.Empty,
@@ -6817,17 +3561,17 @@ namespace Nop.Services.Installation
                 PreAuthenticate = true
             });
 
-            settingService.SaveSetting(new CookieSettings
+            await settingService.SaveSettingAsync(new CookieSettings
             {
-                CompareProductsCookieExpires = 24 *10,
-                RecentlyViewedProductsCookieExpires = 24 *10,
+                CompareProductsCookieExpires = 24 * 10,
+                RecentlyViewedProductsCookieExpires = 24 * 10,
                 CustomerCookieExpires = 24 * 365
             });
         }
 
-        protected virtual void InstallCheckoutAttributes()
+        protected virtual async Task InstallCheckoutAttributesAsync()
         {
-            var ca1 = InsertInstallationData(new CheckoutAttribute
+            var ca1 = await InsertInstallationDataAsync(new CheckoutAttribute
             {
                 Name = "Gift wrapping",
                 IsRequired = true,
@@ -6836,7 +3580,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new CheckoutAttributeValue
                 {
                     Name = "No",
@@ -6854,16 +3598,22 @@ namespace Nop.Services.Installation
                 });
         }
 
-        protected virtual void InstallSpecificationAttributes()
+        protected virtual async Task InstallSpecificationAttributesAsync()
         {
-            var sa1 = InsertInstallationData(
+            var sag1 = await InsertInstallationDataAsync(
+                new SpecificationAttributeGroup
+                {
+                    Name = "System unit"
+                });
+
+            var sa1 = await InsertInstallationDataAsync(
                 new SpecificationAttribute
                 {
                     Name = "Screensize",
                     DisplayOrder = 1
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new SpecificationAttributeOption
                 {
                     SpecificationAttributeId = sa1.Id,
@@ -6895,14 +3645,15 @@ namespace Nop.Services.Installation
                     DisplayOrder = 5
                 });
 
-            var sa2 = InsertInstallationData(
+            var sa2 = await InsertInstallationDataAsync(
                 new SpecificationAttribute
                 {
                     Name = "CPU Type",
-                    DisplayOrder = 2
+                    DisplayOrder = 2,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new SpecificationAttributeOption
                 {
                     SpecificationAttributeId = sa2.Id,
@@ -6916,14 +3667,15 @@ namespace Nop.Services.Installation
                     DisplayOrder = 2
                 });
 
-            var sa3 = InsertInstallationData(
+            var sa3 = await InsertInstallationDataAsync(
                 new SpecificationAttribute
                 {
                     Name = "Memory",
-                    DisplayOrder = 3
+                    DisplayOrder = 3,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new SpecificationAttributeOption
                 {
                     SpecificationAttributeId = sa3.Id,
@@ -6943,14 +3695,15 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 });
 
-            var sa4 = InsertInstallationData(
+            var sa4 = await InsertInstallationDataAsync(
                 new SpecificationAttribute
                 {
                     Name = "Hard drive",
-                    DisplayOrder = 5
+                    DisplayOrder = 5,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new SpecificationAttributeOption
                 {
                     SpecificationAttributeId = sa4.Id,
@@ -6970,14 +3723,14 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 });
 
-            var sa5 = InsertInstallationData(
+            var sa5 = await InsertInstallationDataAsync(
                 new SpecificationAttribute
                 {
                     Name = "Color",
                     DisplayOrder = 1
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new SpecificationAttributeOption
                 {
                     SpecificationAttributeId = sa5.Id,
@@ -7001,7 +3754,7 @@ namespace Nop.Services.Installation
                 });
         }
 
-        protected virtual void InstallProductAttributes()
+        protected virtual async Task InstallProductAttributesAsync()
         {
             var productAttributes = new List<ProductAttribute>
             {
@@ -7042,10 +3795,11 @@ namespace Nop.Services.Installation
                     Name = "Software"
                 }
             };
-            _productAttributeRepository.Insert(productAttributes);
+
+            await InsertInstallationDataAsync(productAttributes);
         }
 
-        protected virtual void InstallCategories()
+        protected virtual async Task InstallCategoriesAsync()
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
@@ -7065,7 +3819,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_computers.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Computers")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_computers.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Computers"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -7073,7 +3827,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryComputers);
-            _categoryRepository.Insert(categoryComputers);
+
+            await InsertInstallationDataAsync(categoryComputers);
 
             var categoryDesktops = new Category
             {
@@ -7083,7 +3838,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_desktops.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Desktops")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_desktops.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Desktops"))).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7092,7 +3847,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryDesktops);
-            _categoryRepository.Insert(categoryDesktops);
+
+            await InsertInstallationDataAsync(categoryDesktops);
 
             var categoryNotebooks = new Category
             {
@@ -7102,7 +3858,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_notebooks.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Notebooks")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_notebooks.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Notebooks"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -7110,7 +3866,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryNotebooks);
-            _categoryRepository.Insert(categoryNotebooks);
+
+            await InsertInstallationDataAsync(categoryNotebooks);
 
             var categorySoftware = new Category
             {
@@ -7120,7 +3877,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_software.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Software")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_software.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Software"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
@@ -7128,7 +3885,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categorySoftware);
-            _categoryRepository.Insert(categorySoftware);
+
+            await InsertInstallationDataAsync(categorySoftware);
 
             var categoryElectronics = new Category
             {
@@ -7137,7 +3895,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_electronics.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Electronics")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_electronics.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Electronics"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomepage = true,
@@ -7146,7 +3904,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryElectronics);
-            _categoryRepository.Insert(categoryElectronics);
+
+            await InsertInstallationDataAsync(categoryElectronics);
 
             var categoryCameraPhoto = new Category
             {
@@ -7156,7 +3915,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_camera_photo.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Camera, photo")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_camera_photo.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Camera, photo"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7165,7 +3924,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryCameraPhoto);
-            _categoryRepository.Insert(categoryCameraPhoto);
+
+            await InsertInstallationDataAsync(categoryCameraPhoto);
 
             var categoryCellPhones = new Category
             {
@@ -7175,7 +3935,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_cell_phones.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Cell phones")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_cell_phones.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Cell phones"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -7183,7 +3943,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryCellPhones);
-            _categoryRepository.Insert(categoryCellPhones);
+
+            await InsertInstallationDataAsync(categoryCellPhones);
 
             var categoryOthers = new Category
             {
@@ -7193,7 +3954,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_accessories.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Accessories")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Accessories"))).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -7202,7 +3963,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryOthers);
-            _categoryRepository.Insert(categoryOthers);
+
+            await InsertInstallationDataAsync(categoryOthers);
 
             var categoryApparel = new Category
             {
@@ -7211,7 +3973,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_apparel.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Apparel")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_apparel.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Apparel"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomepage = true,
@@ -7220,7 +3982,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryApparel);
-            _categoryRepository.Insert(categoryApparel);
+
+            await InsertInstallationDataAsync(categoryApparel);
 
             var categoryShoes = new Category
             {
@@ -7230,7 +3993,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_shoes.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Shoes")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_shoes.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Shoes"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7239,7 +4002,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryShoes);
-            _categoryRepository.Insert(categoryShoes);
+
+            await InsertInstallationDataAsync(categoryShoes);
 
             var categoryClothing = new Category
             {
@@ -7249,7 +4013,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_clothing.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Clothing")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_clothing.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Clothing"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -7257,7 +4021,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryClothing);
-            _categoryRepository.Insert(categoryClothing);
+
+            await InsertInstallationDataAsync(categoryClothing);
 
             var categoryAccessories = new Category
             {
@@ -7267,7 +4032,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_apparel_accessories.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apparel Accessories")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_apparel_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Apparel Accessories"))).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -7276,7 +4041,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryAccessories);
-            _categoryRepository.Insert(categoryAccessories);
+
+            await InsertInstallationDataAsync(categoryAccessories);
 
             var categoryDigitalDownloads = new Category
             {
@@ -7285,7 +4051,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_digital_downloads.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Digital downloads")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_digital_downloads.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Digital downloads"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomepage = true,
@@ -7294,7 +4060,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryDigitalDownloads);
-            _categoryRepository.Insert(categoryDigitalDownloads);
+
+            await InsertInstallationDataAsync(categoryDigitalDownloads);
 
             var categoryBooks = new Category
             {
@@ -7305,7 +4072,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_book.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Book")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_book.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Book"))).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7314,7 +4081,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryBooks);
-            _categoryRepository.Insert(categoryBooks);
+
+            await InsertInstallationDataAsync(categoryBooks);
 
             var categoryJewelry = new Category
             {
@@ -7323,7 +4091,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_jewelry.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Jewelry")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_jewelry.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Jewelry"))).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7332,7 +4100,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryJewelry);
-            _categoryRepository.Insert(categoryJewelry);
+
+            await InsertInstallationDataAsync(categoryJewelry);
 
             var categoryGiftCards = new Category
             {
@@ -7341,7 +4110,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_gift_cards.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName("Gift Cards")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "category_gift_cards.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync("Gift Cards"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 7,
@@ -7349,23 +4118,22 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryGiftCards);
-            _categoryRepository.Insert(categoryGiftCards);
+
+            await InsertInstallationDataAsync(categoryGiftCards);
 
             //search engine names
             foreach (var category in allCategories)
-            {
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = category.Id,
                     EntityName = nameof(Category),
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = ValidateSeName(category, category.Name)
+                    Slug = await ValidateSeNameAsync(category, category.Name)
                 });
-            }
         }
 
-        protected virtual void InstallManufacturers()
+        protected virtual async Task InstallManufacturersAsync()
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = GetSamplesPath();
@@ -7384,12 +4152,14 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_apple.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Apple")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "manufacturer_apple.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Apple"))).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerAsus);
+
+            await InsertInstallationDataAsync(manufacturerAsus);
+
             allManufacturers.Add(manufacturerAsus);
 
             var manufacturerHp = new Manufacturer
@@ -7400,12 +4170,14 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_hp.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Hp")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "manufacturer_hp.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Hp"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerHp);
+
+            await InsertInstallationDataAsync(manufacturerHp);
+
             allManufacturers.Add(manufacturerHp);
 
             var manufacturerNike = new Manufacturer
@@ -7416,29 +4188,29 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_nike.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Nike")).Id,
+                PictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "manufacturer_nike.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Nike"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerNike);
+
+            await InsertInstallationDataAsync(manufacturerNike);
+
             allManufacturers.Add(manufacturerNike);
 
             //search engine names
             foreach (var manufacturer in allManufacturers)
-            {
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
                     EntityName = nameof(Manufacturer),
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = ValidateSeName(manufacturer, manufacturer.Name)
+                    Slug = await ValidateSeNameAsync(manufacturer, manufacturer.Name)
                 });
-            }
         }
 
-        protected virtual void InstallComputers(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
+        protected virtual async Task InstallComputersAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             var productBuildComputer = new Product
             {
@@ -7477,33 +4249,33 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productBuildComputer);
 
-            _productRepository.Insert(productBuildComputer);
+            await InsertInstallationDataAsync(productBuildComputer);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productBuildComputer.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
                 DisplayOrder = 1
             });
 
-            var pic_product_Desktops_1 = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_Desktops_1.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name));
-            var pic_product_Desktops_2 = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_Desktops_2.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productBuildComputer.Name));
+            var picProductDesktops1 = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_Desktops_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productBuildComputer.Name));
+            var picProductDesktops2 = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_Desktops_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productBuildComputer.Name));
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductPicture
                 {
                     ProductId = productBuildComputer.Id,
-                    PictureId = pic_product_Desktops_1.Id,
+                    PictureId = picProductDesktops1.Id,
                     DisplayOrder = 1
                 },
                 new ProductPicture
                 {
                     ProductId = productBuildComputer.Id,
-                    PictureId = pic_product_Desktops_2.Id,
+                    PictureId = picProductDesktops2.Id,
                     DisplayOrder = 2
                 });
 
-            var pamProcessor = InsertInstallationData(new ProductAttributeMapping
+            var pamProcessor = await InsertInstallationDataAsync(new ProductAttributeMapping
             {
                 ProductId = productBuildComputer.Id,
                 ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Processor").Id,
@@ -7511,7 +4283,7 @@ namespace Nop.Services.Installation
                 IsRequired = true
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamProcessor.Id,
@@ -7529,7 +4301,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 2
                 });
 
-            var pamRAM = InsertInstallationData(new ProductAttributeMapping
+            var pamRam = await InsertInstallationDataAsync(new ProductAttributeMapping
             {
                 ProductId = productBuildComputer.Id,
                 ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "RAM").Id,
@@ -7537,17 +4309,17 @@ namespace Nop.Services.Installation
                 IsRequired = true
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
-                    ProductAttributeMappingId = pamRAM.Id,
+                    ProductAttributeMappingId = pamRam.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "2 GB",
                     DisplayOrder = 1
                 },
                 new ProductAttributeValue
                 {
-                    ProductAttributeMappingId = pamRAM.Id,
+                    ProductAttributeMappingId = pamRam.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "4GB",
                     PriceAdjustment = 20,
@@ -7555,14 +4327,14 @@ namespace Nop.Services.Installation
                 },
                 new ProductAttributeValue
                 {
-                    ProductAttributeMappingId = pamRAM.Id,
+                    ProductAttributeMappingId = pamRam.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "8GB",
                     PriceAdjustment = 60,
                     DisplayOrder = 3
                 });
 
-            var pamHDD = InsertInstallationData(
+            var pamHdd = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productBuildComputer.Id,
@@ -7571,24 +4343,24 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
-                    ProductAttributeMappingId = pamHDD.Id,
+                    ProductAttributeMappingId = pamHdd.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "320 GB",
                     DisplayOrder = 1
                 },
                 new ProductAttributeValue
                 {
-                    ProductAttributeMappingId = pamHDD.Id,
+                    ProductAttributeMappingId = pamHdd.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "400 GB",
                     PriceAdjustment = 100,
                     DisplayOrder = 2
                 });
 
-            var pamOS = InsertInstallationData(
+            var pamOs = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productBuildComputer.Id,
@@ -7597,10 +4369,10 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
-                    ProductAttributeMappingId = pamOS.Id,
+                    ProductAttributeMappingId = pamOs.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Vista Home",
                     PriceAdjustment = 50,
@@ -7609,21 +4381,21 @@ namespace Nop.Services.Installation
                 },
                 new ProductAttributeValue
                 {
-                    ProductAttributeMappingId = pamOS.Id,
+                    ProductAttributeMappingId = pamOs.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Vista Premium",
                     PriceAdjustment = 60,
                     DisplayOrder = 2
                 });
 
-            var pamSoftware = InsertInstallationData(new ProductAttributeMapping
+            var pamSoftware = await InsertInstallationDataAsync(new ProductAttributeMapping
             {
                 ProductId = productBuildComputer.Id,
                 ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Software").Id,
                 AttributeControlType = AttributeControlType.Checkboxes
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamSoftware.Id,
@@ -7650,8 +4422,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 2
                 });
 
-            AddProductTag(productBuildComputer, "awesome");
-            AddProductTag(productBuildComputer, "computer");
+            await AddProductTagAsync(productBuildComputer, "awesome");
+            await AddProductTagAsync(productBuildComputer, "computer");
 
             var productDigitalStorm = new Product
             {
@@ -7686,26 +4458,26 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productDigitalStorm);
 
-            _productRepository.Insert(productDigitalStorm);
+            await InsertInstallationDataAsync(productDigitalStorm);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productDigitalStorm.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
                 DisplayOrder = 1
             });
 
-            var pic_product_DigitalStorm = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_DigitalStorm.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productDigitalStorm.Name));
+            var picProductDigitalStorm = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_DigitalStorm.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productDigitalStorm.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productDigitalStorm.Id,
-                PictureId = pic_product_DigitalStorm.Id,
+                PictureId = picProductDigitalStorm.Id,
                 DisplayOrder = 1
             });
 
-            AddProductTag(productDigitalStorm, "cool");
-            AddProductTag(productDigitalStorm, "computer");
+            await AddProductTagAsync(productDigitalStorm, "cool");
+            await AddProductTagAsync(productDigitalStorm, "computer");
 
             var productLenovoIdeaCentre = new Product
             {
@@ -7740,26 +4512,26 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLenovoIdeaCentre);
 
-            _productRepository.Insert(productLenovoIdeaCentre);
+            await InsertInstallationDataAsync(productLenovoIdeaCentre);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLenovoIdeaCentre.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
                 DisplayOrder = 1
             });
 
-            var pic_product_LenovoIdeaCentre = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_LenovoIdeaCentre.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoIdeaCentre.Name));
+            var picProductLenovoIdeaCentre = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_LenovoIdeaCentre.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productLenovoIdeaCentre.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productLenovoIdeaCentre.Id,
-                PictureId = pic_product_LenovoIdeaCentre.Id,
+                PictureId = picProductLenovoIdeaCentre.Id,
                 DisplayOrder = 1
             });
 
-            AddProductTag(productLenovoIdeaCentre, "awesome");
-            AddProductTag(productLenovoIdeaCentre, "computer");
+            await AddProductTagAsync(productLenovoIdeaCentre, "awesome");
+            await AddProductTagAsync(productLenovoIdeaCentre, "computer");
 
             var productAppleMacBookPro = new Product
             {
@@ -7796,45 +4568,45 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAppleMacBookPro);
 
-            _productRepository.Insert(productAppleMacBookPro);
+            await InsertInstallationDataAsync(productAppleMacBookPro);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAppleMacBookPro.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(new ProductManufacturer
+            await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productAppleMacBookPro.Id,
                 ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
                 DisplayOrder = 2
             });
 
-            var pic_product_macbook_1 = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_macbook_1.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name));
-            var pic_product_macbook_2 = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_macbook_2.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAppleMacBookPro.Name));
+            var picProductMacBook1 = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_macbook_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productAppleMacBookPro.Name));
+            var picProductMacBook2 = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_macbook_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productAppleMacBookPro.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productAppleMacBookPro.Id,
-                PictureId = pic_product_macbook_1.Id,
+                PictureId = picProductMacBook1.Id,
                 DisplayOrder = 1
             }, new ProductPicture
             {
                 ProductId = productAppleMacBookPro.Id,
-                PictureId = pic_product_macbook_2.Id,
+                PictureId = picProductMacBook2.Id,
                 DisplayOrder = 2
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductSpecificationAttribute
                 {
                     ProductId = productAppleMacBookPro.Id,
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 1,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Screensize", "13.0''").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Screensize", "13.0''")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -7842,7 +4614,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 2,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("CPU Type", "Intel Core i5").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("CPU Type", "Intel Core i5")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -7850,12 +4622,12 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 3,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Memory", "4 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Memory", "4 GB")
                 });
 
-            AddProductTag(productAppleMacBookPro, "compact");
-            AddProductTag(productAppleMacBookPro, "awesome");
-            AddProductTag(productAppleMacBookPro, "computer");
+            await AddProductTagAsync(productAppleMacBookPro, "compact");
+            await AddProductTagAsync(productAppleMacBookPro, "awesome");
+            await AddProductTagAsync(productAppleMacBookPro, "computer");
 
             var productAsusN551JK = new Product
             {
@@ -7891,32 +4663,32 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productAsusN551JK);
 
-            _productRepository.Insert(productAsusN551JK);
+            await InsertInstallationDataAsync(productAsusN551JK);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAsusN551JK.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                 DisplayOrder = 1
             });
 
-            var pic_product_asuspc_N551JK = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_asuspc_N551JK.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productAsusN551JK.Name));
+            var picProductAsuspcN551Jk = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_asuspc_N551JK.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productAsusN551JK.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productAsusN551JK.Id,
-                PictureId = pic_product_asuspc_N551JK.Id,
+                PictureId = picProductAsuspcN551Jk.Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductSpecificationAttribute
                 {
                     ProductId = productAsusN551JK.Id,
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 1,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Screensize", "15.6''").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Screensize", "15.6''")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -7924,7 +4696,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 2,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("CPU Type", "Intel Core i7").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("CPU Type", "Intel Core i7")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -7932,7 +4704,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 3,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Memory", "16 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Memory", "16 GB")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -7940,12 +4712,12 @@ namespace Nop.Services.Installation
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 4,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Hard drive", "1 TB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Hard drive", "1 TB")
                 });
 
-            AddProductTag(productAsusN551JK, "compact");
-            AddProductTag(productAsusN551JK, "awesome");
-            AddProductTag(productAsusN551JK, "computer");
+            await AddProductTagAsync(productAsusN551JK, "compact");
+            await AddProductTagAsync(productAsusN551JK, "awesome");
+            await AddProductTagAsync(productAsusN551JK, "computer");
 
             var productSamsungSeries = new Product
             {
@@ -7981,32 +4753,32 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSamsungSeries);
 
-            _productRepository.Insert(productSamsungSeries);
+            await InsertInstallationDataAsync(productSamsungSeries);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productSamsungSeries.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                 DisplayOrder = 1
             });
 
-            var pic_product_SamsungNP900X4C = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_SamsungNP900X4C.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productSamsungSeries.Name));
+            var picProductSamsungNp900X4C = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_SamsungNP900X4C.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productSamsungSeries.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productSamsungSeries.Id,
-                PictureId = pic_product_SamsungNP900X4C.Id,
+                PictureId = picProductSamsungNp900X4C.Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductSpecificationAttribute
                 {
                     ProductId = productSamsungSeries.Id,
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 1,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Screensize", "15.0''").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Screensize", "15.0''")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8014,7 +4786,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 2,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("CPU Type", "Intel Core i5").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("CPU Type", "Intel Core i5")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8022,7 +4794,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 3,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Memory", "8 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Memory", "8 GB")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8030,12 +4802,12 @@ namespace Nop.Services.Installation
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 4,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Hard drive", "128 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Hard drive", "128 GB")
                 });
 
-            AddProductTag(productSamsungSeries, "nice");
-            AddProductTag(productSamsungSeries, "computer");
-            AddProductTag(productSamsungSeries, "compact");
+            await AddProductTagAsync(productSamsungSeries, "nice");
+            await AddProductTagAsync(productSamsungSeries, "computer");
+            await AddProductTagAsync(productSamsungSeries, "compact");
 
             var productHpSpectre = new Product
             {
@@ -8070,46 +4842,46 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHpSpectre);
 
-            _productRepository.Insert(productHpSpectre);
+            await InsertInstallationDataAsync(productHpSpectre);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHpSpectre.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(new ProductManufacturer
+            await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productHpSpectre.Id,
                 ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
                 DisplayOrder = 3
             });
 
-            var pic_product_HPSpectreXT_1 = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_1.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name));
-            var pic_product_HPSpectreXT_2 = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_2.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpSpectre.Name));
+            var picProductHpSpectreXt1 = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productHpSpectre.Name));
+            var picProductHpSpectreXt2 = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productHpSpectre.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productHpSpectre.Id,
-                PictureId = pic_product_HPSpectreXT_1.Id,
+                PictureId = picProductHpSpectreXt1.Id,
                 DisplayOrder = 1
             },
             new ProductPicture
             {
                 ProductId = productHpSpectre.Id,
-                PictureId = pic_product_HPSpectreXT_2.Id,
+                PictureId = picProductHpSpectreXt2.Id,
                 DisplayOrder = 2
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductSpecificationAttribute
                 {
                     ProductId = productHpSpectre.Id,
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 1,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Screensize", "13.3''").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Screensize", "13.3''")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8117,7 +4889,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 2,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("CPU Type", "Intel Core i5").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("CPU Type", "Intel Core i5")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8125,7 +4897,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 3,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Memory", "4 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Memory", "4 GB")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8133,11 +4905,11 @@ namespace Nop.Services.Installation
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 4,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Hard drive", "128 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Hard drive", "128 GB")
                 });
 
-            AddProductTag(productHpSpectre, "nice");
-            AddProductTag(productHpSpectre, "computer");
+            await AddProductTagAsync(productHpSpectre, "nice");
+            await AddProductTagAsync(productHpSpectre, "computer");
 
             var productHpEnvy = new Product
             {
@@ -8172,39 +4944,39 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHpEnvy);
 
-            _productRepository.Insert(productHpEnvy);
+            await InsertInstallationDataAsync(productHpEnvy);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHpEnvy.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(new ProductManufacturer
+            await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productHpEnvy.Id,
                 ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
                 DisplayOrder = 4
             });
 
-            var pic_product_HpEnvy6 = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_HpEnvy6.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHpEnvy.Name));
+            var picProductHpEnvy6 = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_HpEnvy6.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productHpEnvy.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productHpEnvy.Id,
-                PictureId = pic_product_HpEnvy6.Id,
+                PictureId = picProductHpEnvy6.Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductSpecificationAttribute
                 {
                     ProductId = productHpEnvy.Id,
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 1,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Screensize", "15.6''").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Screensize", "15.6''")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8212,7 +4984,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 2,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("CPU Type", "Intel Core i7").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("CPU Type", "Intel Core i7")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8220,7 +4992,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 3,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Memory", "8 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Memory", "8 GB")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8228,12 +5000,12 @@ namespace Nop.Services.Installation
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 4,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Hard drive", "500 GB").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Hard drive", "500 GB")
                 });
 
-            AddProductTag(productHpEnvy, "computer");
-            AddProductTag(productHpEnvy, "cool");
-            AddProductTag(productHpEnvy, "compact");
+            await AddProductTagAsync(productHpEnvy, "computer");
+            await AddProductTagAsync(productHpEnvy, "cool");
+            await AddProductTagAsync(productHpEnvy, "compact");
 
             var productLenovoThinkpad = new Product
             {
@@ -8268,32 +5040,32 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLenovoThinkpad);
 
-            _productRepository.Insert(productLenovoThinkpad);
+            await InsertInstallationDataAsync(productLenovoThinkpad);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLenovoThinkpad.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                 DisplayOrder = 1
             });
 
-            var pic_product_LenovoThinkpad = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_LenovoThinkpad.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoThinkpad.Name));
+            var picProductLenovoThinkpad = await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "product_LenovoThinkpad.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeNameAsync(productLenovoThinkpad.Name));
 
-            InsertInstallationData(new ProductPicture
+            await InsertInstallationDataAsync(new ProductPicture
             {
                 ProductId = productLenovoThinkpad.Id,
-                PictureId = pic_product_LenovoThinkpad.Id,
+                PictureId = picProductLenovoThinkpad.Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductSpecificationAttribute
                 {
                     ProductId = productLenovoThinkpad.Id,
                     AllowFiltering = false,
                     ShowOnProductPage = true,
                     DisplayOrder = 1,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Screensize", "14.0''").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Screensize", "14.0''")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -8301,12 +5073,12 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = true,
                     DisplayOrder = 2,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("CPU Type", "Intel Core i7").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("CPU Type", "Intel Core i7")
                 });
 
-            AddProductTag(productLenovoThinkpad, "awesome");
-            AddProductTag(productLenovoThinkpad, "computer");
-            AddProductTag(productLenovoThinkpad, "compact");
+            await AddProductTagAsync(productLenovoThinkpad, "awesome");
+            await AddProductTagAsync(productLenovoThinkpad, "computer");
+            await AddProductTagAsync(productLenovoThinkpad, "compact");
 
             var productAdobePhotoshop = new Product
             {
@@ -8341,19 +5113,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAdobePhotoshop);
 
-            _productRepository.Insert(productAdobePhotoshop);
+            await InsertInstallationDataAsync(productAdobePhotoshop);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAdobePhotoshop.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productAdobePhotoshop, "product_AdobePhotoshop.jpeg");
+            await InsertProductPictureAsync(productAdobePhotoshop, "product_AdobePhotoshop.jpeg");
 
-            AddProductTag(productAdobePhotoshop, "computer");
-            AddProductTag(productAdobePhotoshop, "awesome");
+            await AddProductTagAsync(productAdobePhotoshop, "computer");
+            await AddProductTagAsync(productAdobePhotoshop, "awesome");
 
             var productWindows8Pro = new Product
             {
@@ -8388,19 +5160,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productWindows8Pro);
 
-            _productRepository.Insert(productWindows8Pro);
+            await InsertInstallationDataAsync(productWindows8Pro);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productWindows8Pro.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productWindows8Pro, "product_Windows8.jpeg");
+            await InsertProductPictureAsync(productWindows8Pro, "product_Windows8.jpeg");
 
-            AddProductTag(productWindows8Pro, "awesome");
-            AddProductTag(productWindows8Pro, "computer");
+            await AddProductTagAsync(productWindows8Pro, "awesome");
+            await AddProductTagAsync(productWindows8Pro, "computer");
 
             var productSoundForge = new Product
             {
@@ -8439,20 +5211,20 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSoundForge);
 
-            _productRepository.Insert(productSoundForge);
+            await InsertInstallationDataAsync(productSoundForge);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productSoundForge.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productSoundForge, "product_SoundForge.jpeg");
+            await InsertProductPictureAsync(productSoundForge, "product_SoundForge.jpeg");
 
-            AddProductTag(productSoundForge, "game");
-            AddProductTag(productSoundForge, "computer");
-            AddProductTag(productSoundForge, "cool");
+            await AddProductTagAsync(productSoundForge, "game");
+            await AddProductTagAsync(productSoundForge, "computer");
+            await AddProductTagAsync(productSoundForge, "cool");
 
             relatedProducts.AddRange(new[]
             {
@@ -8619,7 +5391,7 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallElectronics(ProductTemplate productTemplateSimple, ProductTemplate productTemplateGrouped, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
+        protected virtual async Task InstallElectronicsAsync(ProductTemplate productTemplateSimple, ProductTemplate productTemplateGrouped, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             //this one is a grouped product with two associated ones
             var productNikonD5500DSLR = new Product
@@ -8655,22 +5427,22 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikonD5500DSLR);
 
-            _productRepository.Insert(productNikonD5500DSLR);
+            await InsertInstallationDataAsync(productNikonD5500DSLR);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikonD5500DSLR.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productNikonD5500DSLR, "product_NikonCamera_1.jpeg");
-            InsertProductPicture(productNikonD5500DSLR, "product_NikonCamera_2.jpeg", 2);
+            await InsertProductPictureAsync(productNikonD5500DSLR, "product_NikonCamera_1.jpeg");
+            await InsertProductPictureAsync(productNikonD5500DSLR, "product_NikonCamera_2.jpeg", 2);
 
-            AddProductTag(productNikonD5500DSLR, "cool");
-            AddProductTag(productNikonD5500DSLR, "camera");
+            await AddProductTagAsync(productNikonD5500DSLR, "cool");
+            await AddProductTagAsync(productNikonD5500DSLR, "camera");
 
-            var productNikonD5500DSLR_associated_1 = new Product
+            var productNikonD5500DslrAssociated1 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = false, //hide this products
@@ -8700,13 +5472,13 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allProducts.Add(productNikonD5500DSLR_associated_1);
+            allProducts.Add(productNikonD5500DslrAssociated1);
 
-            _productRepository.Insert(productNikonD5500DSLR_associated_1);
+            await InsertInstallationDataAsync(productNikonD5500DslrAssociated1);
 
-            InsertProductPicture(productNikonD5500DSLR_associated_1, "product_NikonCamera_black.jpeg");
+            await InsertProductPictureAsync(productNikonD5500DslrAssociated1, "product_NikonCamera_black.jpeg");
 
-            var productNikonD5500DSLR_associated_2 = new Product
+            var productNikonD5500DslrAssociated2 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = false, //hide this products
@@ -8736,11 +5508,11 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allProducts.Add(productNikonD5500DSLR_associated_2);
+            allProducts.Add(productNikonD5500DslrAssociated2);
 
-            _productRepository.Insert(productNikonD5500DSLR_associated_2);
+            await InsertInstallationDataAsync(productNikonD5500DslrAssociated2);
 
-            InsertProductPicture(productNikonD5500DSLR_associated_2, "product_NikonCamera_red.jpeg");
+            await InsertProductPictureAsync(productNikonD5500DslrAssociated2, "product_NikonCamera_red.jpeg");
 
             var productLeica = new Product
             {
@@ -8775,19 +5547,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLeica);
 
-            _productRepository.Insert(productLeica);
+            await InsertInstallationDataAsync(productLeica);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLeica.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
                 DisplayOrder = 3
             });
 
-            InsertProductPicture(productLeica, "product_LeicaT.jpeg");
+            await InsertProductPictureAsync(productLeica, "product_LeicaT.jpeg");
 
-            AddProductTag(productLeica, "camera");
-            AddProductTag(productLeica, "cool");
+            await AddProductTagAsync(productLeica, "camera");
+            await AddProductTagAsync(productLeica, "cool");
 
             var productAppleICam = new Product
             {
@@ -8822,23 +5594,23 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAppleICam);
 
-            _productRepository.Insert(productAppleICam);
+            await InsertInstallationDataAsync(productAppleICam);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAppleICam.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
                 DisplayOrder = 2
             });
 
-            InsertInstallationData(new ProductManufacturer
+            await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productAppleICam.Id,
                 ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productAppleICam, "product_iCam.jpeg");
+            await InsertProductPictureAsync(productAppleICam, "product_iCam.jpeg");
 
             var productHtcOne = new Product
             {
@@ -8875,20 +5647,20 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHtcOne);
 
-            _productRepository.Insert(productHtcOne);
+            await InsertInstallationDataAsync(productHtcOne);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHtcOne.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productHtcOne, "product_HTC_One_M8.jpeg");
+            await InsertProductPictureAsync(productHtcOne, "product_HTC_One_M8.jpeg");
 
-            AddProductTag(productHtcOne, "cell");
-            AddProductTag(productHtcOne, "compact");
-            AddProductTag(productHtcOne, "awesome");
+            await AddProductTagAsync(productHtcOne, "cell");
+            await AddProductTagAsync(productHtcOne, "compact");
+            await AddProductTagAsync(productHtcOne, "awesome");
 
             var productHtcOneMini = new Product
             {
@@ -8924,21 +5696,21 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHtcOneMini);
 
-            _productRepository.Insert(productHtcOneMini);
+            await InsertInstallationDataAsync(productHtcOneMini);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productHtcOneMini.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productHtcOneMini, "product_HTC_One_Mini_1.jpeg");
-            InsertProductPicture(productHtcOneMini, "product_HTC_One_Mini_2.jpeg", 2);
+            await InsertProductPictureAsync(productHtcOneMini, "product_HTC_One_Mini_1.jpeg");
+            await InsertProductPictureAsync(productHtcOneMini, "product_HTC_One_Mini_2.jpeg", 2);
 
-            AddProductTag(productHtcOneMini, "awesome");
-            AddProductTag(productHtcOneMini, "compact");
-            AddProductTag(productHtcOneMini, "cell");
+            await AddProductTagAsync(productHtcOneMini, "awesome");
+            await AddProductTagAsync(productHtcOneMini, "compact");
+            await AddProductTagAsync(productHtcOneMini, "cell");
 
             var productNokiaLumia = new Product
             {
@@ -8973,20 +5745,20 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNokiaLumia);
 
-            _productRepository.Insert(productNokiaLumia);
+            await InsertInstallationDataAsync(productNokiaLumia);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNokiaLumia.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productNokiaLumia, "product_Lumia1020.jpeg");
+            await InsertProductPictureAsync(productNokiaLumia, "product_Lumia1020.jpeg");
 
-            AddProductTag(productNokiaLumia, "awesome");
-            AddProductTag(productNokiaLumia, "cool");
-            AddProductTag(productNokiaLumia, "camera");
+            await AddProductTagAsync(productNokiaLumia, "awesome");
+            await AddProductTagAsync(productNokiaLumia, "cool");
+            await AddProductTagAsync(productNokiaLumia, "camera");
 
             var productBeatsPill = new Product
             {
@@ -9024,19 +5796,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productBeatsPill);
 
-            _productRepository.Insert(productBeatsPill);
+            await InsertInstallationDataAsync(productBeatsPill);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productBeatsPill.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productBeatsPill, "product_PillBeats_1.jpeg");
-            InsertProductPicture(productBeatsPill, "product_PillBeats_2.jpeg", 2);
+            await InsertProductPictureAsync(productBeatsPill, "product_PillBeats_1.jpeg");
+            await InsertProductPictureAsync(productBeatsPill, "product_PillBeats_2.jpeg", 2);
 
-            _tierPriceRepository.Insert(new List<TierPrice>
+            await InsertInstallationDataAsync(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9060,8 +5832,8 @@ namespace Nop.Services.Installation
                 }
             });
 
-            AddProductTag(productBeatsPill, "computer");
-            AddProductTag(productBeatsPill, "cool");
+            await AddProductTagAsync(productBeatsPill, "computer");
+            await AddProductTagAsync(productBeatsPill, "cool");
 
             var productUniversalTabletCover = new Product
             {
@@ -9096,19 +5868,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productUniversalTabletCover);
 
-            _productRepository.Insert(productUniversalTabletCover);
+            await InsertInstallationDataAsync(productUniversalTabletCover);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productUniversalTabletCover.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productUniversalTabletCover, "product_TabletCover.jpeg");
+            await InsertProductPictureAsync(productUniversalTabletCover, "product_TabletCover.jpeg");
 
-            AddProductTag(productUniversalTabletCover, "computer");
-            AddProductTag(productUniversalTabletCover, "cool");
+            await AddProductTagAsync(productUniversalTabletCover, "computer");
+            await AddProductTagAsync(productUniversalTabletCover, "cool");
 
             var productPortableSoundSpeakers = new Product
             {
@@ -9143,16 +5915,16 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productPortableSoundSpeakers);
 
-            _productRepository.Insert(productPortableSoundSpeakers);
+            await InsertInstallationDataAsync(productPortableSoundSpeakers);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productPortableSoundSpeakers.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productPortableSoundSpeakers, "product_Speakers.jpeg");
+            await InsertProductPictureAsync(productPortableSoundSpeakers, "product_Speakers.jpeg");
 
             relatedProducts.AddRange(new[]
             {
@@ -9239,7 +6011,7 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallApparel(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, ProductAvailabilityRange productAvailabilityRange)
+        protected virtual async Task InstallApparelAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, ProductAvailabilityRange productAvailabilityRange)
         {
             var productNikeFloral = new Product
             {
@@ -9274,35 +6046,35 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikeFloral);
 
-            _productRepository.Insert(productNikeFloral);
+            await InsertInstallationDataAsync(productNikeFloral);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikeFloral.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(new ProductManufacturer
+            await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productNikeFloral.Id,
                 ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
                 DisplayOrder = 2
             });
 
-            var pic_product_NikeFloralShoe_1Id = InsertProductPicture(productNikeFloral, "product_NikeFloralShoe_1.jpg");
-            var pic_product_NikeFloralShoe_2Id = InsertProductPicture(productNikeFloral, "product_NikeFloralShoe_2.jpg", 2);
+            var picProductNikeFloralShoe1Id = await InsertProductPictureAsync(productNikeFloral, "product_NikeFloralShoe_1.jpg");
+            var picProductNikeFloralShoe2Id = await InsertProductPictureAsync(productNikeFloral, "product_NikeFloralShoe_2.jpg", 2);
 
-            InsertInstallationData(new ProductSpecificationAttribute
+            await InsertInstallationDataAsync(new ProductSpecificationAttribute
             {
                 ProductId = productNikeFloral.Id,
                 AllowFiltering = true,
                 ShowOnProductPage = false,
                 DisplayOrder = 1,
-                SpecificationAttributeOptionId = GetSpecificationAttributeOption("Color", "Grey").Id
+                SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Color", "Grey")
             });
 
-            var pamSize = InsertInstallationData(
+            var pamSize = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeFloral.Id,
@@ -9311,7 +6083,7 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamSize.Id,
@@ -9341,7 +6113,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 4
                 });
 
-            var pamColor = InsertInstallationData(
+            var pamColor = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeFloral.Id,
@@ -9350,7 +6122,7 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamColor.Id,
@@ -9366,7 +6138,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 2
                 });
 
-            var pamPrint = InsertInstallationData(
+            var pamPrint = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeFloral.Id,
@@ -9375,31 +6147,31 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamPrint.Id,
-                    PictureId = pic_product_NikeFloralShoe_1Id,
+                    PictureId = picProductNikeFloralShoe1Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Natural",
                     DisplayOrder = 1,
-                    ImageSquaresPictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_2.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Natural Print")).Id
+                    ImageSquaresPictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_2.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Natural Print"))).Id
                 },
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamPrint.Id,
-                    PictureId = pic_product_NikeFloralShoe_2Id,
+                    PictureId = picProductNikeFloralShoe2Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Fresh",
                     DisplayOrder = 2,
-                    ImageSquaresPictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_1.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Fresh Print")).Id
+                    ImageSquaresPictureId = (await pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_1.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeNameAsync("Fresh Print"))).Id
                 });
 
-            AddProductTag(productNikeFloral, "cool");
-            AddProductTag(productNikeFloral, "shoes");
-            AddProductTag(productNikeFloral, "apparel");
+            await AddProductTagAsync(productNikeFloral, "cool");
+            await AddProductTagAsync(productNikeFloral, "shoes");
+            await AddProductTagAsync(productNikeFloral, "apparel");
 
-            _productRepository.Update(productNikeFloral);
+            await UpdateInstallationDataAsync(productNikeFloral);
 
             var productAdidas = new Product
             {
@@ -9435,27 +6207,27 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAdidas);
 
-            _productRepository.Insert(productAdidas);
+            await InsertInstallationDataAsync(productAdidas);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productAdidas.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                 DisplayOrder = 1
             });
 
-            var pic_product_adidasId = InsertProductPicture(productAdidas, "product_adidas.jpg");
-            var pic_product_adidas_2Id = InsertProductPicture(productAdidas, "product_adidas_2.jpg", 2);
-            var pic_product_adidas_3Id = InsertProductPicture(productAdidas, "product_adidas_3.jpg", 3);
+            var picProductAdidasId = await InsertProductPictureAsync(productAdidas, "product_adidas.jpg");
+            var picProductAdidas2Id = await InsertProductPictureAsync(productAdidas, "product_adidas_2.jpg", 2);
+            var picProductAdidas3Id = await InsertProductPictureAsync(productAdidas, "product_adidas_3.jpg", 3);
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductSpecificationAttribute
                 {
                     ProductId = productAdidas.Id,
                     AllowFiltering = true,
                     ShowOnProductPage = false,
                     DisplayOrder = 1,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Color", "Grey").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Color", "Grey")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -9463,7 +6235,7 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = false,
                     DisplayOrder = 2,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Color", "Red").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Color", "Red")
                 },
                 new ProductSpecificationAttribute
                 {
@@ -9471,10 +6243,10 @@ namespace Nop.Services.Installation
                     AllowFiltering = true,
                     ShowOnProductPage = false,
                     DisplayOrder = 3,
-                    SpecificationAttributeOptionId = GetSpecificationAttributeOption("Color", "Blue").Id
+                    SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Color", "Blue")
                 });
 
-            var pamAdidasSize = InsertInstallationData(
+            var pamAdidasSize = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productAdidas.Id,
@@ -9483,7 +6255,7 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamAdidasSize.Id,
@@ -9513,7 +6285,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 4
                 });
 
-            var pamAdidasColor = InsertInstallationData(
+            var pamAdidasColor = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productAdidas.Id,
@@ -9522,11 +6294,11 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamAdidasColor.Id,
-                    PictureId = pic_product_adidasId,
+                    PictureId = picProductAdidasId,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Red",
                     IsPreSelected = true,
@@ -9536,7 +6308,7 @@ namespace Nop.Services.Installation
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamAdidasColor.Id,
-                    PictureId = pic_product_adidas_2Id,
+                    PictureId = picProductAdidas2Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Blue",
                     ColorSquaresRgb = "#363656",
@@ -9545,18 +6317,18 @@ namespace Nop.Services.Installation
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamAdidasColor.Id,
-                    PictureId = pic_product_adidas_3Id,
+                    PictureId = picProductAdidas3Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Silver",
                     ColorSquaresRgb = "#c5c5d5",
                     DisplayOrder = 3
                 });
 
-            AddProductTag(productAdidas, "cool");
-            AddProductTag(productAdidas, "shoes");
-            AddProductTag(productAdidas, "apparel");
+            await AddProductTagAsync(productAdidas, "cool");
+            await AddProductTagAsync(productAdidas, "shoes");
+            await AddProductTagAsync(productAdidas, "apparel");
 
-            _productRepository.Update(productAdidas);
+            await UpdateInstallationDataAsync(productAdidas);
 
             var productNikeZoom = new Product
             {
@@ -9592,36 +6364,36 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productNikeZoom);
 
-            _productRepository.Insert(productNikeZoom);
+            await InsertInstallationDataAsync(productNikeZoom);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikeZoom.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(new ProductManufacturer
+            await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productNikeZoom.Id,
                 ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
                 DisplayOrder = 2
             });
 
-            InsertProductPicture(productNikeZoom, "product_NikeZoom.jpg");
+            await InsertProductPictureAsync(productNikeZoom, "product_NikeZoom.jpg");
 
-            InsertInstallationData(new ProductSpecificationAttribute
+            await InsertInstallationDataAsync(new ProductSpecificationAttribute
             {
                 ProductId = productNikeZoom.Id,
                 AllowFiltering = true,
                 ShowOnProductPage = false,
                 DisplayOrder = 1,
-                SpecificationAttributeOptionId = GetSpecificationAttributeOption("Color", "Grey").Id
+                SpecificationAttributeOptionId = await GetSpecificationAttributeOptionIdAsync("Color", "Grey")
             });
 
-            AddProductTag(productNikeZoom, "jeans");
-            AddProductTag(productNikeZoom, "cool");
-            AddProductTag(productNikeZoom, "apparel");
+            await AddProductTagAsync(productNikeZoom, "jeans");
+            await AddProductTagAsync(productNikeZoom, "cool");
+            await AddProductTagAsync(productNikeZoom, "apparel");
 
             var productNikeTailwind = new Product
             {
@@ -9656,25 +6428,25 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikeTailwind);
 
-            _productRepository.Insert(productNikeTailwind);
+            await InsertInstallationDataAsync(productNikeTailwind);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNikeTailwind.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                 DisplayOrder = 1
             });
 
-            InsertInstallationData(new ProductManufacturer
+            await InsertInstallationDataAsync(new ProductManufacturer
             {
                 ProductId = productNikeTailwind.Id,
                 ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
                 DisplayOrder = 2
             });
 
-            InsertProductPicture(productNikeTailwind, "product_NikeShirt.jpg");
+            await InsertProductPictureAsync(productNikeTailwind, "product_NikeShirt.jpg");
 
-            var pamNikeSize = InsertInstallationData(
+            var pamNikeSize = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productNikeTailwind.Id,
@@ -9683,7 +6455,7 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamNikeSize.Id,
@@ -9727,9 +6499,9 @@ namespace Nop.Services.Installation
                     DisplayOrder = 6
                 });
 
-            AddProductTag(productNikeTailwind, "cool");
-            AddProductTag(productNikeTailwind, "apparel");
-            AddProductTag(productNikeTailwind, "shirt");
+            await AddProductTagAsync(productNikeTailwind, "cool");
+            await AddProductTagAsync(productNikeTailwind, "apparel");
+            await AddProductTagAsync(productNikeTailwind, "shirt");
 
             var productOversizedWomenTShirt = new Product
             {
@@ -9766,18 +6538,18 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productOversizedWomenTShirt);
 
-            _productRepository.Insert(productOversizedWomenTShirt);
+            await InsertInstallationDataAsync(productOversizedWomenTShirt);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productOversizedWomenTShirt.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productOversizedWomenTShirt, "product_WomenTShirt.jpg");
+            await InsertProductPictureAsync(productOversizedWomenTShirt, "product_WomenTShirt.jpg");
 
-            _tierPriceRepository.Insert(new List<TierPrice>
+            await InsertInstallationDataAsync(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9799,9 +6571,9 @@ namespace Nop.Services.Installation
                 }
             });
 
-            AddProductTag(productOversizedWomenTShirt, "cool");
-            AddProductTag(productOversizedWomenTShirt, "apparel");
-            AddProductTag(productOversizedWomenTShirt, "shirt");
+            await AddProductTagAsync(productOversizedWomenTShirt, "cool");
+            await AddProductTagAsync(productOversizedWomenTShirt, "apparel");
+            await AddProductTagAsync(productOversizedWomenTShirt, "shirt");
 
             var productCustomTShirt = new Product
             {
@@ -9836,18 +6608,18 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productCustomTShirt);
 
-            _productRepository.Insert(productCustomTShirt);
+            await InsertInstallationDataAsync(productCustomTShirt);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productCustomTShirt.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productCustomTShirt, "product_CustomTShirt.jpeg");
+            await InsertProductPictureAsync(productCustomTShirt, "product_CustomTShirt.jpeg");
 
-            _productAttributeMappingRepository.Insert(
+            await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productCustomTShirt.Id,
@@ -9857,9 +6629,9 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            AddProductTag(productCustomTShirt, "cool");
-            AddProductTag(productCustomTShirt, "shirt");
-            AddProductTag(productCustomTShirt, "apparel");
+            await AddProductTagAsync(productCustomTShirt, "cool");
+            await AddProductTagAsync(productCustomTShirt, "shirt");
+            await AddProductTagAsync(productCustomTShirt, "apparel");
 
             var productLeviJeans = new Product
             {
@@ -9896,19 +6668,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLeviJeans);
 
-            _productRepository.Insert(productLeviJeans);
+            await InsertInstallationDataAsync(productLeviJeans);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productLeviJeans.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productLeviJeans, "product_LeviJeans_1.jpg");
-            InsertProductPicture(productLeviJeans, "product_LeviJeans_2.jpg", 2);
+            await InsertProductPictureAsync(productLeviJeans, "product_LeviJeans_1.jpg");
+            await InsertProductPictureAsync(productLeviJeans, "product_LeviJeans_2.jpg", 2);
 
-            _tierPriceRepository.Insert(new List<TierPrice>
+            await InsertInstallationDataAsync(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9930,9 +6702,9 @@ namespace Nop.Services.Installation
                 }
             });
 
-            AddProductTag(productLeviJeans, "cool");
-            AddProductTag(productLeviJeans, "jeans");
-            AddProductTag(productLeviJeans, "apparel");
+            await AddProductTagAsync(productLeviJeans, "cool");
+            await AddProductTagAsync(productLeviJeans, "jeans");
+            await AddProductTagAsync(productLeviJeans, "apparel");
 
             var productObeyHat = new Product
             {
@@ -9967,18 +6739,18 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productObeyHat);
 
-            _productRepository.Insert(productObeyHat);
+            await InsertInstallationDataAsync(productObeyHat);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productObeyHat.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productObeyHat, "product_hat.jpg");
+            await InsertProductPictureAsync(productObeyHat, "product_hat.jpg");
 
-            var pamObeyHatSize = InsertInstallationData(
+            var pamObeyHatSize = await InsertInstallationDataAsync(
                 new ProductAttributeMapping
                 {
                     ProductId = productObeyHat.Id,
@@ -9987,7 +6759,7 @@ namespace Nop.Services.Installation
                     IsRequired = true
                 });
 
-            InsertInstallationData(
+            await InsertInstallationDataAsync(
                 new ProductAttributeValue
                 {
                     ProductAttributeMappingId = pamObeyHatSize.Id,
@@ -10017,8 +6789,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 4
                 });
 
-            AddProductTag(productObeyHat, "apparel");
-            AddProductTag(productObeyHat, "cool");
+            await AddProductTagAsync(productObeyHat, "apparel");
+            await AddProductTagAsync(productObeyHat, "cool");
 
             var productBelt = new Product
             {
@@ -10054,16 +6826,16 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productBelt);
 
-            _productRepository.Insert(productBelt);
+            await InsertInstallationDataAsync(productBelt);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productBelt.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productBelt, "product_Belt.jpeg");
+            await InsertProductPictureAsync(productBelt, "product_Belt.jpeg");
 
             var productSunglasses = new Product
             {
@@ -10098,19 +6870,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSunglasses);
 
-            _productRepository.Insert(productSunglasses);
+            await InsertInstallationDataAsync(productSunglasses);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productSunglasses.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productSunglasses, "product_Sunglasses.jpg");
+            await InsertProductPictureAsync(productSunglasses, "product_Sunglasses.jpg");
 
-            AddProductTag(productSunglasses, "apparel");
-            AddProductTag(productSunglasses, "cool");
+            await AddProductTagAsync(productSunglasses, "apparel");
+            await AddProductTagAsync(productSunglasses, "cool");
 
             relatedProducts.AddRange(new[]
             {
@@ -10178,28 +6950,28 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallDigitalDownloads(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, string sampleDownloadsPath, IDownloadService downloadService)
+        protected virtual async Task InstallDigitalDownloadsAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, string sampleDownloadsPath, IDownloadService downloadService)
         {
             var downloadNightVision1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.ApplicationXZipCo,
-                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
+                DownloadBinary = await _fileProvider.ReadAllBytesAsync(sampleDownloadsPath + "product_NightVision_1.zip"),
                 Extension = ".zip",
                 Filename = "Night_Vision_1",
                 IsNew = true
             };
-            downloadService.InsertDownload(downloadNightVision1);
+            await downloadService.InsertDownloadAsync(downloadNightVision1);
             var downloadNightVision2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.TextPlain,
-                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
+                DownloadBinary = await _fileProvider.ReadAllBytesAsync(sampleDownloadsPath + "product_NightVision_2.txt"),
                 Extension = ".txt",
                 Filename = "Night_Vision_1",
                 IsNew = true
             };
-            downloadService.InsertDownload(downloadNightVision2);
+            await downloadService.InsertDownloadAsync(downloadNightVision2);
             var productNightVision = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -10235,40 +7007,40 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNightVision);
 
-            _productRepository.Insert(productNightVision);
+            await InsertInstallationDataAsync(productNightVision);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productNightVision.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productNightVision, "product_NightVisions.jpeg");
+            await InsertProductPictureAsync(productNightVision, "product_NightVisions.jpeg");
 
-            AddProductTag(productNightVision, "awesome");
-            AddProductTag(productNightVision, "digital");
+            await AddProductTagAsync(productNightVision, "awesome");
+            await AddProductTagAsync(productNightVision, "digital");
 
             var downloadIfYouWait1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.ApplicationXZipCo,
-                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
+                DownloadBinary = await _fileProvider.ReadAllBytesAsync(sampleDownloadsPath + "product_IfYouWait_1.zip"),
                 Extension = ".zip",
                 Filename = "If_You_Wait_1",
                 IsNew = true
             };
-            downloadService.InsertDownload(downloadIfYouWait1);
+            await downloadService.InsertDownloadAsync(downloadIfYouWait1);
             var downloadIfYouWait2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.TextPlain,
-                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
+                DownloadBinary = await _fileProvider.ReadAllBytesAsync(sampleDownloadsPath + "product_IfYouWait_2.txt"),
                 Extension = ".txt",
                 Filename = "If_You_Wait_1",
                 IsNew = true
             };
-            downloadService.InsertDownload(downloadIfYouWait2);
+            await downloadService.InsertDownloadAsync(downloadIfYouWait2);
             var productIfYouWait = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -10306,30 +7078,30 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productIfYouWait);
 
-            _productRepository.Insert(productIfYouWait);
+            await InsertInstallationDataAsync(productIfYouWait);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productIfYouWait.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productIfYouWait, "product_IfYouWait.jpeg");
+            await InsertProductPictureAsync(productIfYouWait, "product_IfYouWait.jpeg");
 
-            AddProductTag(productIfYouWait, "digital");
-            AddProductTag(productIfYouWait, "awesome");
+            await AddProductTagAsync(productIfYouWait, "digital");
+            await AddProductTagAsync(productIfYouWait, "awesome");
 
             var downloadScienceAndFaith = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = MimeTypes.ApplicationXZipCo,
-                DownloadBinary = _fileProvider.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
+                DownloadBinary = await _fileProvider.ReadAllBytesAsync(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
                 Extension = ".zip",
                 Filename = "Science_And_Faith",
                 IsNew = true
             };
-            downloadService.InsertDownload(downloadScienceAndFaith);
+            await downloadService.InsertDownloadAsync(downloadScienceAndFaith);
             var productScienceAndFaith = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -10366,19 +7138,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productScienceAndFaith);
 
-            _productRepository.Insert(productScienceAndFaith);
+            await InsertInstallationDataAsync(productScienceAndFaith);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productScienceAndFaith.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productScienceAndFaith, "product_ScienceAndFaith.jpeg");
+            await InsertProductPictureAsync(productScienceAndFaith, "product_ScienceAndFaith.jpeg");
 
-            AddProductTag(productScienceAndFaith, "digital");
-            AddProductTag(productScienceAndFaith, "awesome");
+            await AddProductTagAsync(productScienceAndFaith, "digital");
+            await AddProductTagAsync(productScienceAndFaith, "awesome");
 
             relatedProducts.AddRange(new[]
             {
@@ -10405,7 +7177,7 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallBooks(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
+        protected virtual async Task InstallBooksAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             var productFahrenheit = new Product
             {
@@ -10442,20 +7214,20 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFahrenheit);
 
-            _productRepository.Insert(productFahrenheit);
+            await InsertInstallationDataAsync(productFahrenheit);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productFahrenheit.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productFahrenheit, "product_Fahrenheit451.jpeg");
+            await InsertProductPictureAsync(productFahrenheit, "product_Fahrenheit451.jpeg");
 
-            AddProductTag(productFahrenheit, "awesome");
-            AddProductTag(productFahrenheit, "book");
-            AddProductTag(productFahrenheit, "nice");
+            await AddProductTagAsync(productFahrenheit, "awesome");
+            await AddProductTagAsync(productFahrenheit, "book");
+            await AddProductTagAsync(productFahrenheit, "nice");
 
             var productFirstPrizePies = new Product
             {
@@ -10491,18 +7263,18 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFirstPrizePies);
 
-            _productRepository.Insert(productFirstPrizePies);
+            await InsertInstallationDataAsync(productFirstPrizePies);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productFirstPrizePies.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productFirstPrizePies, "product_FirstPrizePies.jpeg");
+            await InsertProductPictureAsync(productFirstPrizePies, "product_FirstPrizePies.jpeg");
 
-            AddProductTag(productFirstPrizePies, "book");
+            await AddProductTagAsync(productFirstPrizePies, "book");
 
             var productPrideAndPrejudice = new Product
             {
@@ -10538,18 +7310,18 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productPrideAndPrejudice);
 
-            _productRepository.Insert(productPrideAndPrejudice);
+            await InsertInstallationDataAsync(productPrideAndPrejudice);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productPrideAndPrejudice.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productPrideAndPrejudice, "product_PrideAndPrejudice.jpeg");
+            await InsertProductPictureAsync(productPrideAndPrejudice, "product_PrideAndPrejudice.jpeg");
 
-            AddProductTag(productPrideAndPrejudice, "book");
+            await AddProductTagAsync(productPrideAndPrejudice, "book");
 
             relatedProducts.AddRange(new[]
             {
@@ -10586,7 +7358,7 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallJewelry(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
+        protected virtual async Task InstallJewelryAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             var productElegantGemstoneNecklace = new Product
             {
@@ -10625,19 +7397,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productElegantGemstoneNecklace);
 
-            _productRepository.Insert(productElegantGemstoneNecklace);
+            await InsertInstallationDataAsync(productElegantGemstoneNecklace);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productElegantGemstoneNecklace.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productElegantGemstoneNecklace, "product_GemstoneNecklaces.jpg");
+            await InsertProductPictureAsync(productElegantGemstoneNecklace, "product_GemstoneNecklaces.jpg");
 
-            AddProductTag(productElegantGemstoneNecklace, "jewelry");
-            AddProductTag(productElegantGemstoneNecklace, "awesome");
+            await AddProductTagAsync(productElegantGemstoneNecklace, "jewelry");
+            await AddProductTagAsync(productElegantGemstoneNecklace, "awesome");
 
             var productFlowerGirlBracelet = new Product
             {
@@ -10673,19 +7445,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFlowerGirlBracelet);
 
-            _productRepository.Insert(productFlowerGirlBracelet);
+            await InsertInstallationDataAsync(productFlowerGirlBracelet);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productFlowerGirlBracelet.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productFlowerGirlBracelet, "product_FlowerBracelet.jpg");
+            await InsertProductPictureAsync(productFlowerGirlBracelet, "product_FlowerBracelet.jpg");
 
-            AddProductTag(productFlowerGirlBracelet, "awesome");
-            AddProductTag(productFlowerGirlBracelet, "jewelry");
+            await AddProductTagAsync(productFlowerGirlBracelet, "awesome");
+            await AddProductTagAsync(productFlowerGirlBracelet, "jewelry");
 
             var productEngagementRing = new Product
             {
@@ -10720,19 +7492,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productEngagementRing);
 
-            _productRepository.Insert(productEngagementRing);
+            await InsertInstallationDataAsync(productEngagementRing);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = productEngagementRing.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productEngagementRing, "product_EngagementRing_1.jpg");
+            await InsertProductPictureAsync(productEngagementRing, "product_EngagementRing_1.jpg");
 
-            AddProductTag(productEngagementRing, "jewelry");
-            AddProductTag(productEngagementRing, "awesome");
+            await AddProductTagAsync(productEngagementRing, "jewelry");
+            await AddProductTagAsync(productEngagementRing, "awesome");
 
             relatedProducts.AddRange(new[]
             {
@@ -10769,7 +7541,7 @@ namespace Nop.Services.Installation
             });
         }
 
-        protected virtual void InstallGiftCards(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, DeliveryDate deliveryDate)
+        protected virtual async Task InstallGiftCardsAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, DeliveryDate deliveryDate)
         {
             var product25GiftCard = new Product
             {
@@ -10798,19 +7570,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product25GiftCard);
 
-            _productRepository.Insert(product25GiftCard);
+            await InsertInstallationDataAsync(product25GiftCard);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = product25GiftCard.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
                 DisplayOrder = 2
             });
 
-            InsertProductPicture(product25GiftCard, "product_25giftcart.jpeg");
+            await InsertProductPictureAsync(product25GiftCard, "product_25giftcart.jpeg");
 
-            AddProductTag(product25GiftCard, "nice");
-            AddProductTag(product25GiftCard, "gift");
+            await AddProductTagAsync(product25GiftCard, "nice");
+            await AddProductTagAsync(product25GiftCard, "gift");
 
             var product50GiftCard = new Product
             {
@@ -10846,16 +7618,16 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product50GiftCard);
 
-            _productRepository.Insert(product50GiftCard);
+            await InsertInstallationDataAsync(product50GiftCard);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = product50GiftCard.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
                 DisplayOrder = 3
             });
 
-            InsertProductPicture(product50GiftCard, "product_50giftcart.jpeg");
+            await InsertProductPictureAsync(product50GiftCard, "product_50giftcart.jpeg");
 
             var product100GiftCard = new Product
             {
@@ -10889,19 +7661,19 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product100GiftCard);
 
-            _productRepository.Insert(product100GiftCard);
+            await InsertInstallationDataAsync(product100GiftCard);
 
-            InsertInstallationData(new ProductCategory
+            await InsertInstallationDataAsync(new ProductCategory
             {
                 ProductId = product100GiftCard.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
                 DisplayOrder = 4
             });
 
-            InsertProductPicture(product100GiftCard, "product_100giftcart.jpeg");
+            await InsertProductPictureAsync(product100GiftCard, "product_100giftcart.jpeg");
         }
 
-        protected virtual void InstallProducts(string defaultUserEmail)
+        protected virtual async Task InstallProductsAsync(string defaultUserEmail)
         {
             var productTemplateSimple = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
             if (productTemplateSimple == null)
@@ -10945,35 +7717,33 @@ namespace Nop.Services.Installation
             var relatedProducts = new List<RelatedProduct>();
 
             //desktops, notebooks, software
-            InstallComputers(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
+            await InstallComputersAsync(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
             //camera & photo, cell phones, others
-            InstallElectronics(productTemplateSimple, productTemplateGrouped, allProducts, sampleImagesPath, pictureService, relatedProducts);
+            await InstallElectronicsAsync(productTemplateSimple, productTemplateGrouped, allProducts, sampleImagesPath, pictureService, relatedProducts);
             //shoes, clothing, accessories
-            InstallApparel(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, productAvailabilityRange);
+            await InstallApparelAsync(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, productAvailabilityRange);
             //digital downloads
-            InstallDigitalDownloads(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, sampleDownloadsPath, downloadService);
+            await InstallDigitalDownloadsAsync(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, sampleDownloadsPath, downloadService);
             //books
-            InstallBooks(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
+            await InstallBooksAsync(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
             //jewelry
-            InstallJewelry(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
+            await InstallJewelryAsync(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts);
             //gift cards
-            InstallGiftCards(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, deliveryDate);
+            await InstallGiftCardsAsync(productTemplateSimple, allProducts, sampleImagesPath, pictureService, relatedProducts, deliveryDate);
 
             //search engine names
             foreach (var product in allProducts)
-            {
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = product.Id,
                     EntityName = nameof(Product),
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = ValidateSeName(product, product.Name)
+                    Slug = await ValidateSeNameAsync(product, product.Name)
                 });
-            }
 
             //related products
-            _relatedProductRepository.Insert(relatedProducts);
+            await InsertInstallationDataAsync(relatedProducts);
 
             //reviews
             using (var random = new SecureRandomNumberGenerator())
@@ -10990,7 +7760,7 @@ namespace Nop.Services.Installation
                     //rating from 4 to 5
                     var rating = random.Next(4, 6);
 
-                    InsertInstallationData(new ProductReview
+                    await InsertInstallationDataAsync(new ProductReview
                     {
                         CustomerId = defaultCustomer.Id,
                         ProductId = product.Id,
@@ -11006,17 +7776,16 @@ namespace Nop.Services.Installation
                     });
 
                     product.ApprovedRatingSum = rating;
-                    //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                    product.ApprovedTotalReviews = 1;
                 }
             }
 
-            _productRepository.Update(allProducts);
+            await UpdateInstallationDataAsync(allProducts);
 
             //stock quantity history
             foreach (var product in allProducts)
-            {
                 if (product.StockQuantity > 0)
-                    _stockQuantityHistoryRepository.Insert(new StockQuantityHistory
+                    await InsertInstallationDataAsync(new StockQuantityHistory
                     {
                         ProductId = product.Id,
                         WarehouseId = product.WarehouseId > 0 ? (int?)product.WarehouseId : null,
@@ -11025,10 +7794,9 @@ namespace Nop.Services.Installation
                         Message = "The stock quantity has been edited",
                         CreatedOnUtc = DateTime.UtcNow
                     });
-            }
         }
 
-        protected virtual void InstallForums()
+        protected virtual async Task InstallForumsAsync()
         {
             var forumGroup = new ForumGroup
             {
@@ -11038,7 +7806,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
 
-            _forumGroupRepository.Insert(forumGroup);
+            await InsertInstallationDataAsync(forumGroup);
 
             var newProductsForum = new Forum
             {
@@ -11053,7 +7821,8 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _forumRepository.Insert(newProductsForum);
+
+            await InsertInstallationDataAsync(newProductsForum);
 
             var mobileDevicesForum = new Forum
             {
@@ -11068,7 +7837,8 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _forumRepository.Insert(mobileDevicesForum);
+
+            await InsertInstallationDataAsync(mobileDevicesForum);
 
             var packagingShippingForum = new Forum
             {
@@ -11082,10 +7852,11 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _forumRepository.Insert(packagingShippingForum);
+
+            await InsertInstallationDataAsync(packagingShippingForum);
         }
 
-        protected virtual void InstallDiscounts()
+        protected virtual async Task InstallDiscountsAsync()
         {
             var discounts = new List<Discount>
             {
@@ -11112,10 +7883,11 @@ namespace Nop.Services.Installation
                     CouponCode = "456"
                 }
             };
-            _discountRepository.Insert(discounts);
+
+            await InsertInstallationDataAsync(discounts);
         }
 
-        protected virtual void InstallBlogPosts(string defaultUserEmail)
+        protected virtual async Task InstallBlogPostsAsync(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
 
@@ -11142,26 +7914,24 @@ namespace Nop.Services.Installation
                     LanguageId = defaultLanguage.Id,
                     Title = "Why your online store needs a wish list",
                     BodyOverview = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p>",
-                    Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It avoids any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
+                    Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It aasync Tasks any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
                     Tags = "e-commerce, nopCommerce, sample tag, money",
                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(1)
                 }
             };
 
-            _blogPostRepository.Insert(blogPosts);
+            await InsertInstallationDataAsync(blogPosts);
 
             //search engine names
             foreach (var blogPost in blogPosts)
-            {
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = blogPost.Id,
                     EntityName = nameof(BlogPost),
                     LanguageId = blogPost.LanguageId,
                     IsActive = true,
-                    Slug = ValidateSeName(blogPost, blogPost.Title)
+                    Slug = await ValidateSeNameAsync(blogPost, blogPost.Title)
                 });
-            }
 
             //comments
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
@@ -11174,8 +7944,7 @@ namespace Nop.Services.Installation
                 throw new Exception("No default store could be loaded");
 
             foreach (var blogPost in blogPosts)
-            {
-                blogService.InsertBlogComment(new BlogComment
+                await blogService.InsertBlogCommentAsync(new BlogComment
                 {
                     BlogPostId = blogPost.Id,
                     CustomerId = defaultCustomer.Id,
@@ -11184,12 +7953,11 @@ namespace Nop.Services.Installation
                     StoreId = defaultStore.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-            }
 
-            _blogPostRepository.Update(blogPosts);
+            await UpdateInstallationDataAsync(blogPosts);
         }
 
-        protected virtual void InstallNews(string defaultUserEmail)
+        protected virtual async Task InstallNewsAsync(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
 
@@ -11231,20 +7999,19 @@ namespace Nop.Services.Installation
                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(2)
                 }
             };
-            _newsItemRepository.Insert(news);
+
+            await InsertInstallationDataAsync(news);
 
             //search engine names
             foreach (var newsItem in news)
-            {
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = newsItem.Id,
                     EntityName = nameof(NewsItem),
                     LanguageId = newsItem.LanguageId,
                     IsActive = true,
-                    Slug = ValidateSeName(newsItem, newsItem.Title)
+                    Slug = await ValidateSeNameAsync(newsItem, newsItem.Title)
                 });
-            }
 
             //comments
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
@@ -11257,8 +8024,7 @@ namespace Nop.Services.Installation
                 throw new Exception("No default store could be loaded");
 
             foreach (var newsItem in news)
-            {
-                newsService.InsertNewsComment(new NewsComment
+                await newsService.InsertNewsCommentAsync(new NewsComment
                 {
                     NewsItemId = newsItem.Id,
                     CustomerId = defaultCustomer.Id,
@@ -11268,12 +8034,11 @@ namespace Nop.Services.Installation
                     StoreId = defaultStore.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-            }
 
-            _newsItemRepository.Update(news);
+            await UpdateInstallationDataAsync(news);
         }
 
-        protected virtual void InstallPolls()
+        protected virtual async Task InstallPollsAsync()
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
 
@@ -11290,9 +8055,9 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             };
 
-            _pollRepository.Insert(poll1);
+            await InsertInstallationDataAsync(poll1);
 
-            var answers = new List<PollAnswer>()
+            var answers = new List<PollAnswer>
             {
                 new PollAnswer
             {
@@ -11320,10 +8085,10 @@ namespace Nop.Services.Installation
             }
             };
 
-            _pollAnswerRepository.Insert(answers);
+            await InsertInstallationDataAsync(answers);
         }
 
-        protected virtual void InstallActivityLogTypes()
+        protected virtual async Task InstallActivityLogTypesAsync()
         {
             var activityLogTypes = new List<ActivityLogType>
             {
@@ -11477,6 +8242,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "AddNewSpecAttribute",
                     Enabled = true,
                     Name = "Add a new specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Add a new specification attribute group"
                 },
                 new ActivityLogType
                 {
@@ -11735,6 +8506,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "DeleteSpecAttribute",
                     Enabled = true,
                     Name = "Delete a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Delete a specification attribute group"
                 },
                 new ActivityLogType
                 {
@@ -12008,6 +8785,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "EditSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Edit a specification attribute group"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "EditVendor",
                     Enabled = true,
                     Name = "Edit a vendor"
@@ -12230,10 +9013,11 @@ namespace Nop.Services.Installation
                     Name = "Upload a favicon and app icons"
                 }
             };
-            _activityLogTypeRepository.Insert(activityLogTypes);
+
+            await InsertInstallationDataAsync(activityLogTypes);
         }
 
-        protected virtual void InstallProductTemplates()
+        protected virtual async Task InstallProductTemplatesAsync()
         {
             var productTemplates = new List<ProductTemplate>
             {
@@ -12252,10 +9036,11 @@ namespace Nop.Services.Installation
                     IgnoredProductTypes = ((int)ProductType.SimpleProduct).ToString()
                 }
             };
-            _productTemplateRepository.Insert(productTemplates);
+
+            await InsertInstallationDataAsync(productTemplates);
         }
 
-        protected virtual void InstallCategoryTemplates()
+        protected virtual async Task InstallCategoryTemplatesAsync()
         {
             var categoryTemplates = new List<CategoryTemplate>
             {
@@ -12266,10 +9051,11 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            _categoryTemplateRepository.Insert(categoryTemplates);
+
+            await InsertInstallationDataAsync(categoryTemplates);
         }
 
-        protected virtual void InstallManufacturerTemplates()
+        protected virtual async Task InstallManufacturerTemplatesAsync()
         {
             var manufacturerTemplates = new List<ManufacturerTemplate>
             {
@@ -12280,10 +9066,11 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            _manufacturerTemplateRepository.Insert(manufacturerTemplates);
+
+            await InsertInstallationDataAsync(manufacturerTemplates);
         }
 
-        protected virtual void InstallTopicTemplates()
+        protected virtual async Task InstallTopicTemplatesAsync()
         {
             var topicTemplates = new List<TopicTemplate>
             {
@@ -12294,10 +9081,11 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            _topicTemplateRepository.Insert(topicTemplates);
+
+            await InsertInstallationDataAsync(topicTemplates);
         }
 
-        protected virtual void InstallScheduleTasks()
+        protected virtual async Task InstallScheduleTasksAsync()
         {
             var tasks = new List<ScheduleTask>
             {
@@ -12353,10 +9141,10 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _scheduleTaskRepository.Insert(tasks);
+            await InsertInstallationDataAsync(tasks);
         }
 
-        protected virtual void InstallReturnRequestReasons()
+        protected virtual async Task InstallReturnRequestReasonsAsync()
         {
             var returnRequestReasons = new List<ReturnRequestReason>
             {
@@ -12376,10 +9164,11 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _returnRequestReasonRepository.Insert(returnRequestReasons);
+
+            await InsertInstallationDataAsync(returnRequestReasons);
         }
 
-        protected virtual void InstallReturnRequestActions()
+        protected virtual async Task InstallReturnRequestActionsAsync()
         {
             var returnRequestActions = new List<ReturnRequestAction>
             {
@@ -12399,10 +9188,11 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _returnRequestActionRepository.Insert(returnRequestActions);
+
+            await InsertInstallationDataAsync(returnRequestActions);
         }
 
-        protected virtual void InstallWarehouses()
+        protected virtual async Task InstallWarehousesAsync()
         {
             var warehouse1address = new Address
             {
@@ -12413,7 +9203,9 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _addressRepository.Insert(warehouse1address);
+
+            await InsertInstallationDataAsync(warehouse1address);
+
             var warehouse2address = new Address
             {
                 Address1 = "300 South Spring Stree",
@@ -12423,7 +9215,9 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "90013",
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _addressRepository.Insert(warehouse2address);
+
+            await InsertInstallationDataAsync(warehouse2address);
+
             var warehouses = new List<Warehouse>
             {
                 new Warehouse
@@ -12438,10 +9232,10 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _warehouseRepository.Insert(warehouses);
+            await InsertInstallationDataAsync(warehouses);
         }
 
-        protected virtual void InstallVendors()
+        protected virtual async Task InstallVendorsAsync()
         {
             var vendors = new List<Vendor>
             {
@@ -12473,23 +9267,21 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _vendorRepository.Insert(vendors);
+            await InsertInstallationDataAsync(vendors);
 
             //search engine names
             foreach (var vendor in vendors)
-            {
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = vendor.Id,
                     EntityName = nameof(Vendor),
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = ValidateSeName(vendor, vendor.Name)
+                    Slug = await ValidateSeNameAsync(vendor, vendor.Name)
                 });
-            }
         }
 
-        protected virtual void InstallAffiliates()
+        protected virtual async Task InstallAffiliatesAsync()
         {
             var affiliateAddress = new Address
             {
@@ -12505,16 +9297,19 @@ namespace Nop.Services.Installation
                 CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _addressRepository.Insert(affiliateAddress);
+
+            await InsertInstallationDataAsync(affiliateAddress);
+
             var affilate = new Affiliate
             {
                 Active = true,
                 AddressId = affiliateAddress.Id
             };
-            _affiliateRepository.Insert(affilate);
+
+            await InsertInstallationDataAsync(affilate);
         }
 
-        private void AddProductTag(Product product, string tag)
+        private async Task AddProductTagAsync(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
 
@@ -12524,20 +9319,21 @@ namespace Nop.Services.Installation
                 {
                     Name = tag
                 };
-                _productTagRepository.Insert(productTag);
+
+                await InsertInstallationDataAsync(productTag);
 
                 //search engine name
-                _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationDataAsync(new UrlRecord
                 {
                     EntityId = productTag.Id,
                     EntityName = nameof(ProductTag),
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = ValidateSeName(productTag, productTag.Name)
+                    Slug = await ValidateSeNameAsync(productTag, productTag.Name)
                 });
             }
 
-            _productProductTagMappingRepository.Insert(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
+            await InsertInstallationDataAsync(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
         }
 
         #endregion
@@ -12549,61 +9345,64 @@ namespace Nop.Services.Installation
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
         /// <param name="defaultUserPassword">Default user password</param>
-        public virtual void InstallRequiredData(string defaultUserEmail, string defaultUserPassword)
+        /// <param name="languagePackInfo">Language pack info</param>
+        /// <param name="regionInfo">RegionInfo</param>
+        /// <param name="cultureInfo">CultureInfo</param>
+        public virtual async Task InstallRequiredDataAsync(string defaultUserEmail, string defaultUserPassword,
+            (string languagePackDownloadLink, int languagePackProgress) languagePackInfo, RegionInfo regionInfo, CultureInfo cultureInfo)
         {
-            InstallStores();
-            InstallMeasures();
-            InstallTaxCategories();
-            InstallLanguages();
-            InstallCurrencies();
-            InstallCountriesAndStates();
-            InstallShippingMethods();
-            InstallDeliveryDates();
-            InstallProductAvailabilityRanges();
-            InstallEmailAccounts();
-            InstallMessageTemplates();
-            InstallTopicTemplates();
-            InstallSettings();
-            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
-            InstallTopics();
-            InstallLocaleResources();
-            InstallActivityLogTypes();
-            InstallProductTemplates();
-            InstallCategoryTemplates();
-            InstallManufacturerTemplates();
-            InstallScheduleTasks();
-            InstallReturnRequestReasons();
-            InstallReturnRequestActions();
+            await InstallStoresAsync();
+            await InstallMeasuresAsync(regionInfo);
+            await InstallTaxCategoriesAsync();
+            await InstallLanguagesAsync(languagePackInfo, cultureInfo, regionInfo);
+            await InstallCurrenciesAsync(cultureInfo, regionInfo);
+            await InstallCountriesAndStatesAsync();
+            await InstallShippingMethodsAsync();
+            await InstallDeliveryDatesAsync();
+            await InstallProductAvailabilityRangesAsync();
+            await InstallEmailAccountsAsync();
+            await InstallMessageTemplatesAsync();
+            await InstallTopicTemplatesAsync();
+            await InstallSettingsAsync(regionInfo);
+            await InstallCustomersAndUsersAsync(defaultUserEmail, defaultUserPassword);
+            await InstallTopicsAsync();
+            await InstallActivityLogTypesAsync();
+            await InstallProductTemplatesAsync();
+            await InstallCategoryTemplatesAsync();
+            await InstallManufacturerTemplatesAsync();
+            await InstallScheduleTasksAsync();
+            await InstallReturnRequestReasonsAsync();
+            await InstallReturnRequestActionsAsync();
         }
 
         /// <summary>
         /// Install sample data
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
-        public virtual void InstallSampleData(string defaultUserEmail)
+        public virtual async Task InstallSampleDataAsync(string defaultUserEmail)
         {
-            InstallSampleCustomers();
-            InstallCheckoutAttributes();
-            InstallSpecificationAttributes();
-            InstallProductAttributes();
-            InstallCategories();
-            InstallManufacturers();
-            InstallProducts(defaultUserEmail);
-            InstallForums();
-            InstallDiscounts();
-            InstallBlogPosts(defaultUserEmail);
-            InstallNews(defaultUserEmail);
-            InstallPolls();
-            InstallWarehouses();
-            InstallVendors();
-            InstallAffiliates();
-            InstallOrders();
-            InstallActivityLog(defaultUserEmail);
-            InstallSearchTerms();
+            await InstallSampleCustomersAsync();
+            await InstallCheckoutAttributesAsync();
+            await InstallSpecificationAttributesAsync();
+            await InstallProductAttributesAsync();
+            await InstallCategoriesAsync();
+            await InstallManufacturersAsync();
+            await InstallProductsAsync(defaultUserEmail);
+            await InstallForumsAsync();
+            await InstallDiscountsAsync();
+            await InstallBlogPostsAsync(defaultUserEmail);
+            await InstallNewsAsync(defaultUserEmail);
+            await InstallPollsAsync();
+            await InstallWarehousesAsync();
+            await InstallVendorsAsync();
+            await InstallAffiliatesAsync();
+            await InstallOrdersAsync();
+            await InstallActivityLogAsync(defaultUserEmail);
+            await InstallSearchTermsAsync();
 
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
-            settingService.SaveSetting(new DisplayDefaultMenuItemSettings
+            await settingService.SaveSettingAsync(new DisplayDefaultMenuItemSettings
             {
                 DisplayHomepageMenuItem = false,
                 DisplayNewProductsMenuItem = false,

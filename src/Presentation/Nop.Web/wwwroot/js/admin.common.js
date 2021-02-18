@@ -1,3 +1,7 @@
+$.fn.showField = function () {
+  this.css('display', 'flex');
+}
+
 function setLocation(url) {
     window.location.href = url;
 }
@@ -24,7 +28,7 @@ $(document).ready(function () {
     });
 
     //we must intercept all events of pressing the Enter button in the search bar to be sure that the input focus remains in the context of the search
-    $("div.panel-search").keypress(function (event) {
+    $("div.card-search").keypress(function (event) {
         if (event.which == 13 || event.keyCode == 13) {
             $("button.btn-search").click();
             return false;
@@ -48,30 +52,37 @@ function checkAllOverriddenStoreValue(item) {
 
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
+
+    // first toggle appropriate hidden inputs for checkboxes
+    if ($(selector).is(':checkbox')) {
+        var name = $(selector).attr('name');
+        $('input:hidden[name="' + name + '"]').attr('disabled', !$(obj).is(':checked'));
+    }
+
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable(false);
             }
-        }); 
+        });
     }
     else {
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable();
             }
         });
-    };
+    }
 }
 
 function bindBootstrapTabSelectEvent(tabsId, inputId) {
-    $('#' + tabsId + ' > ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('#' + tabsId + ' > div ul li a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
         var tabName = $(e.target).attr("data-tab-name");
         $("#" + inputId).val(tabName);
     });
@@ -233,24 +244,33 @@ $(document).ajaxStart(function () {
 
 //no-tabs solution
 $(document).ready(function () {
-    $(".panel.collapsible-panel >.panel-heading").click(WrapAndSaveBlockData);
+  $(".card.card-secondary >.card-header").click(CardToggle);
+
+  //expanded
+  $('.card.card-secondary').on('expanded.lte.cardwidget', function () {
+    WrapAndSaveBlockData($(this), false)
+    
+    if ($(this).find('table.dataTable').length > 0) {
+      setTimeout(function () {
+        ensureDataTablesRendered();
+      }, 420);
+    }
+  });
+
+  //collapsed
+  $('.card.card-secondary').on('collapsed.lte.cardwidget', function () {
+    WrapAndSaveBlockData($(this), true)
+  });
 });
 
-function WrapAndSaveBlockData() {
-    $(this).parents(".panel").find(">.panel-container").slideToggle();
-    $("#ajaxBusy span").addClass("no-ajax-loader");
-    var icon = $(this).find("i.toggle-icon");
-    if ($(this).hasClass("opened")) {
-        icon.removeClass("fa-minus");
-        icon.addClass("fa-plus");
-        saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), true);
-    } else {
-        icon.addClass("fa-minus");
-        icon.removeClass("fa-plus");
-        saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), false);
-    }
+function CardToggle() {
+  var card = $(this).parent(".card.card-secondary");
+  card.CardWidget('toggle'); 
+}
 
-    $(this).toggleClass("opened");
+function WrapAndSaveBlockData(card, collapsed) {
+  var hideAttribute = card.attr("data-hideAttribute");
+  saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', hideAttribute, collapsed);
 }
 
 //collapse search block
@@ -259,7 +279,7 @@ $(document).ready(function () {
 });
 
 function ToggleSearchBlockAndSavePreferences() {
-    $(this).parents(".panel-search").find(".search-body").slideToggle();
+    $(this).parents(".card-search").find(".search-body").slideToggle();
     var icon = $(this).find(".icon-collapse i");
     if ($(this).hasClass("opened")) {
       icon.removeClass("fa-angle-up");
@@ -285,34 +305,38 @@ function reloadAllDataTables(itemCount) {
     timePause = itemCount * 100;
   }
   $('table[class^="table"]').each(function () {
-  setTimeout(function () {
-    ensureDataTablesRendered();
-  }, timePause);
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, timePause);
   });
 }
 
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
+  $('button[data-card-widget="collapse"]').on('click', function (e) {
+    //hack with waiting animation. 
+    //when page is loaded, a box that should be collapsed have style 'display: none;'.that's why a table is not updated
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, 1);
+  });
+
+  // when tab item click
+  $('.nav-tabs .nav-item').on('click', function (e) {
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, 1);
+  });
+
   $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     ensureDataTablesRendered();
   });
-  $(".panel.collapsible-panel >.panel-heading").click(function () {
-    ensureDataTablesRendered();
-  });
+
   $('#advanced-settings-mode').on('click', function (e) {
     ensureDataTablesRendered();
   });
-});
 
-//Recalculate the column widths
-$(document).ready(function () {
-  // when menu item click
-  $('.treeview').on('click', function (e) {
-    var itemCount = $(e.currentTarget).find('ul').children('li:not([class])').length;
-       
-    reloadAllDataTables(itemCount);
-  });
   //when sidebar-toggle click
   $('#nopSideBarPusher').on('click', function (e) {
     reloadAllDataTables();

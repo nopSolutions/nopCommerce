@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class CustomerReturnRequestsModel : BaseNopModel
+    public partial record CustomerReturnRequestsModel : BaseNopModel
     {
         public CustomerReturnRequestsModel()
         {
@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Order
 
         #region Nested classes
 
-        public partial class ReturnRequestModel : BaseNopEntityModel
+        public partial record ReturnRequestModel : BaseNopEntityModel
         {
             public string CustomNumber { get; set; }
             public string ReturnRequestStatus { get; set; }

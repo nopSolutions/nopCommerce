@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Models
     /// <summary>
     /// Represents SMS model
     /// </summary>
-    public class SmsModel : BaseNopEntityModel
+    public record SmsModel : BaseNopEntityModel
     {
         #region Ctor
 
@@ -27,12 +27,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Models
 
         public IList<SelectListItem> AvailableMessages { get; set; }
 
+        public string DefaultSelectedMessageId { get; set; }
+
         public string Name { get; set; }
 
         [NopResourceDisplayName("Plugins.Misc.SendinBlue.PhoneType")]
         public int PhoneTypeId { get; set; }
 
         public IList<SelectListItem> AvailablePhoneTypes { get; set; }
+
+        public string DefaultSelectedPhoneTypeId { get; set; }
 
         public string PhoneType { get; set; }
 

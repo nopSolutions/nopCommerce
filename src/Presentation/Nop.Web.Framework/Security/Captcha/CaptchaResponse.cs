@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Security.Captcha
         public string Action { get; set; }
 
         [JsonProperty(PropertyName = "score")]
-        public double Score { get; set; }
+        public decimal Score { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether validation is success

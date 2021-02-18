@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Tax
 {
@@ -16,17 +13,14 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
 
         #endregion
 
         #region Ctor
 
-        public TaxCategoryService(IEventPublisher eventPublisher,
-            IRepository<TaxCategory> taxCategoryRepository)
+        public TaxCategoryService(IRepository<TaxCategory> taxCategoryRepository)
         {
-            _eventPublisher = eventPublisher;
             _taxCategoryRepository = taxCategoryRepository;
         }
 
@@ -38,28 +32,23 @@ namespace Nop.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void DeleteTaxCategory(TaxCategory taxCategory)
+        public virtual async Task DeleteTaxCategoryAsync(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
-            _taxCategoryRepository.Delete(taxCategory);
-
-            //event notification
-            _eventPublisher.EntityDeleted(taxCategory);
+            await _taxCategoryRepository.DeleteAsync(taxCategory);
         }
 
         /// <summary>
         /// Gets all tax categories
         /// </summary>
         /// <returns>Tax categories</returns>
-        public virtual IList<TaxCategory> GetAllTaxCategories()
+        public virtual async Task<IList<TaxCategory>> GetAllTaxCategoriesAsync()
         {
-            var query = from tc in _taxCategoryRepository.Table
-                orderby tc.DisplayOrder, tc.Id
-                select tc;
-
-            var taxCategories = query.ToCachedList(NopTaxCachingDefaults.TaxCategoriesAllCacheKey);
+            var taxCategories = await _taxCategoryRepository.GetAllAsync(query=>
+            {
+                return from tc in query
+                    orderby tc.DisplayOrder, tc.Id
+                    select tc;
+            }, cache => default);
 
             return taxCategories;
         }
@@ -69,42 +58,27 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
+        public virtual async Task<TaxCategory> GetTaxCategoryByIdAsync(int taxCategoryId)
         {
-            if (taxCategoryId == 0)
-                return null;
-
-            return _taxCategoryRepository.ToCachedGetById(taxCategoryId);
+            return await _taxCategoryRepository.GetByIdAsync(taxCategoryId, cache => default);
         }
 
         /// <summary>
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void InsertTaxCategory(TaxCategory taxCategory)
+        public virtual async Task InsertTaxCategoryAsync(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
-            _taxCategoryRepository.Insert(taxCategory);
-
-            //event notification
-            _eventPublisher.EntityInserted(taxCategory);
+            await _taxCategoryRepository.InsertAsync(taxCategory);
         }
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void UpdateTaxCategory(TaxCategory taxCategory)
+        public virtual async Task UpdateTaxCategoryAsync(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
-            _taxCategoryRepository.Update(taxCategory);
-
-            //event notification
-            _eventPublisher.EntityUpdated(taxCategory);
+            await _taxCategoryRepository.UpdateAsync(taxCategory);
         }
 
         #endregion

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Infrastructure.Installation
 {
@@ -14,6 +13,12 @@ namespace Nop.Web.Infrastructure.Installation
         /// <param name="resourceName">Resource name</param>
         /// <returns>Resource value</returns>
         string GetResource(string resourceName);
+
+        /// <summary>
+        /// Get current browser culture
+        /// </summary>
+        /// <returns>Current culture</returns>
+        string GetBrowserCulture();
 
         /// <summary>
         /// Get current language for the installation page
@@ -39,6 +44,6 @@ namespace Nop.Web.Infrastructure.Installation
         /// <param name="valuesToExclude">Values to exclude</param>
         /// <param name="useLocalization">Localize</param>
         /// <returns>SelectList</returns>
-        SelectList GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true);
+        Dictionary<int, string> GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true);
     }
 }

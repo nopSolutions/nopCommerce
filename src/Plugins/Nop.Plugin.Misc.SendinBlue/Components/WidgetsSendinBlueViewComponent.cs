@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Web.Framework.Components;
 
@@ -42,7 +42,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Components
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
         /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var trackingScript = string.Empty;
 
@@ -51,8 +51,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Components
                 return Content(trackingScript);
 
             //get customer email
-            var customerEmail = !_customerService.IsGuest(_workContext.CurrentCustomer)
-                ? _workContext.CurrentCustomer.Email?.Replace("'", "\\'")
+            var customerEmail = !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync())
+                ? (await _workContext.GetCurrentCustomerAsync()).Email?.Replace("'", "\\'")
                 : string.Empty;
 
             //prepare tracking script

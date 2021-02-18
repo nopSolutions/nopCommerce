@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
@@ -17,17 +15,14 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
 
         #endregion
 
         #region Ctor
 
-        public EmailAccountService(IEventPublisher eventPublisher,
-            IRepository<EmailAccount> emailAccountRepository)
+        public EmailAccountService(IRepository<EmailAccount> emailAccountRepository)
         {
-            _eventPublisher = eventPublisher;
             _emailAccountRepository = emailAccountRepository;
         }
 
@@ -39,7 +34,7 @@ namespace Nop.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void InsertEmailAccount(EmailAccount emailAccount)
+        public virtual async Task InsertEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
@@ -62,17 +57,14 @@ namespace Nop.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            _emailAccountRepository.Insert(emailAccount);
-
-            //event notification
-            _eventPublisher.EntityInserted(emailAccount);
+            await _emailAccountRepository.InsertAsync(emailAccount);
         }
 
         /// <summary>
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void UpdateEmailAccount(EmailAccount emailAccount)
+        public virtual async Task UpdateEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
@@ -95,28 +87,22 @@ namespace Nop.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            _emailAccountRepository.Update(emailAccount);
-
-            //event notification
-            _eventPublisher.EntityUpdated(emailAccount);
+            await _emailAccountRepository.UpdateAsync(emailAccount);
         }
 
         /// <summary>
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void DeleteEmailAccount(EmailAccount emailAccount)
+        public virtual async Task DeleteEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
 
-            if (GetAllEmailAccounts().Count == 1)
+            if ((await GetAllEmailAccountsAsync()).Count == 1)
                 throw new NopException("You cannot delete this email account. At least one account is required.");
 
-            _emailAccountRepository.Delete(emailAccount);
-
-            //event notification
-            _eventPublisher.EntityDeleted(emailAccount);
+            await _emailAccountRepository.DeleteAsync(emailAccount);
         }
 
         /// <summary>
@@ -124,25 +110,23 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        public virtual EmailAccount GetEmailAccountById(int emailAccountId)
+        public virtual async Task<EmailAccount> GetEmailAccountByIdAsync(int emailAccountId)
         {
-            if (emailAccountId == 0)
-                return null;
-
-            return _emailAccountRepository.ToCachedGetById(emailAccountId);
+            return await _emailAccountRepository.GetByIdAsync(emailAccountId, cache => default);
         }
 
         /// <summary>
         /// Gets all email accounts
         /// </summary>
         /// <returns>Email accounts list</returns>
-        public virtual IList<EmailAccount> GetAllEmailAccounts()
+        public virtual async Task<IList<EmailAccount>> GetAllEmailAccountsAsync()
         {
-            var query = from ea in _emailAccountRepository.Table
-                        orderby ea.Id
-                        select ea;
-
-            var emailAccounts = query.ToCachedList(NopMessageCachingDefaults.EmailAccountsAllCacheKey);
+            var emailAccounts = await _emailAccountRepository.GetAllAsync(query =>
+            {
+                return from ea in query
+                    orderby ea.Id
+                    select ea;
+            }, cache => default);
 
             return emailAccounts;
         }

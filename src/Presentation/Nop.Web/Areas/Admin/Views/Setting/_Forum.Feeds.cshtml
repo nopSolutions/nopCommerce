@@ -1,7 +1,7 @@
 @model ForumSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ForumFeedsEnabled_OverrideForStore" asp-input="ForumFeedsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ForumFeedsEnabled" />
@@ -11,17 +11,19 @@
             <span asp-validation-for="ForumFeedsEnabled"></span>
         </div>
     </div>
-    <div class="form-group">
-        <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ForumFeedCount_OverrideForStore" asp-input="ForumFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ForumFeedCount" />
+    <nop-nested-setting asp-for="ForumFeedsEnabled">
+        <div class="form-group row" id="pnlForumFeedCount">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ForumFeedCount_OverrideForStore" asp-input="ForumFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ForumFeedCount" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ForumFeedCount" />
+                <span asp-validation-for="ForumFeedCount"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="ForumFeedCount" />
-            <span asp-validation-for="ForumFeedCount"></span>
-        </div>
-    </div>
-    <div class="form-group">
+    </nop-nested-setting>
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ActiveDiscussionsFeedEnabled_OverrideForStore" asp-input="ActiveDiscussionsFeedEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ActiveDiscussionsFeedEnabled" />
@@ -31,14 +33,16 @@
             <span asp-validation-for="ActiveDiscussionsFeedEnabled"></span>
         </div>
     </div>
-    <div class="form-group">
-        <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ActiveDiscussionsFeedCount_OverrideForStore" asp-input="ActiveDiscussionsFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ActiveDiscussionsFeedCount" />
+    <nop-nested-setting asp-for="ActiveDiscussionsFeedEnabled">
+        <div class="form-group row" id="pnlActiveDiscussionsFeedCount">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ActiveDiscussionsFeedCount_OverrideForStore" asp-input="ActiveDiscussionsFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ActiveDiscussionsFeedCount" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ActiveDiscussionsFeedCount" />
+                <span asp-validation-for="ActiveDiscussionsFeedCount"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="ActiveDiscussionsFeedCount" />
-            <span asp-validation-for="ActiveDiscussionsFeedCount"></span>
-        </div>
-    </div>
+    </nop-nested-setting>
 </div>

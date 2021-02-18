@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a CAPTCHA settings model
     /// </summary>
-    public partial class CaptchaSettingsModel : BaseNopModel, ISettingsModel
+    public partial record CaptchaSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 
@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public SelectList CaptchaTypeValues { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold")]
-        public double ReCaptchaV3ScoreThreshold { get; set; }
+        public decimal ReCaptchaV3ScoreThreshold { get; set; }
         public bool ReCaptchaV3ScoreThreshold_OverrideForStore { get; set; }
 
         #endregion

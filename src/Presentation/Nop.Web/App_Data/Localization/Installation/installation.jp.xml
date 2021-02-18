@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>SQLServerのアカウントを使用</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>組み込みデータストレージを使用(SQLServer Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQLServerのパスワード</Value>
   </LocaleResource>

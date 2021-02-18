@@ -1,8 +1,9 @@
-//------------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------------
 // Contributor(s): oskar.kjellin 
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Shipping.Tracking
 {
@@ -16,20 +17,20 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>True if the tracker can track, otherwise false.</returns>
-        bool IsMatch(string trackingNumber);
+        Task<bool> IsMatchAsync(string trackingNumber);
 
         /// <summary>
         /// Gets an URL for a page to show tracking info (third party tracking page).
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>URL of a tracking page.</returns>
-        string GetUrl(string trackingNumber);
+        Task<string> GetUrlAsync(string trackingNumber);
 
         /// <summary>
         /// Gets all events for a tracking number.
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
         /// <returns>List of Shipment Events.</returns>
-        IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber);
+        Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber);
     }
 }

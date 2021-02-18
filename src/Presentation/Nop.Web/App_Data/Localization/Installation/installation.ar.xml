@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>استخدم حساب SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>استخدام المدمج في تخزين البيانات (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL كلمة المرور</Value>
   </LocaleResource>

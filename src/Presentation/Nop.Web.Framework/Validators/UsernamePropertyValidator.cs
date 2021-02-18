@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation.Validators;
 using Nop.Core.Domain.Customers;
@@ -16,10 +16,11 @@ namespace Nop.Web.Framework.Validators
         /// Ctor
         /// </summary>
         public UsernamePropertyValidator(CustomerSettings customerSettings)
-            : base("Username is not valid")
         {
             _customerSettings = customerSettings;
         }
+
+        protected override string GetDefaultMessageTemplate() => "Username is not valid";
 
         /// <summary>
         /// Is valid?

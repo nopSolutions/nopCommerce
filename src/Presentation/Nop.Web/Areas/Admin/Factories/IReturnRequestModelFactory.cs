@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Orders;
 using Nop.Web.Areas.Admin.Models.Orders;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request search model</param>
         /// <returns>Return request search model</returns>
-        ReturnRequestSearchModel PrepareReturnRequestSearchModel(ReturnRequestSearchModel searchModel);
+        Task<ReturnRequestSearchModel> PrepareReturnRequestSearchModelAsync(ReturnRequestSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged return request list model
         /// </summary>
         /// <param name="searchModel">Return request search model</param>
         /// <returns>Return request list model</returns>
-        ReturnRequestListModel PrepareReturnRequestListModel(ReturnRequestSearchModel searchModel);
+        Task<ReturnRequestListModel> PrepareReturnRequestListModelAsync(ReturnRequestSearchModel searchModel);
 
         /// <summary>
         /// Prepare return request model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="returnRequest">Return request</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Return request model</returns>
-        ReturnRequestModel PrepareReturnRequestModel(ReturnRequestModel model,
+        Task<ReturnRequestModel> PrepareReturnRequestModelAsync(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties = false);
 
         /// <summary>
@@ -37,14 +38,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request reason search model</param>
         /// <returns>Return request reason search model</returns>
-        ReturnRequestReasonSearchModel PrepareReturnRequestReasonSearchModel(ReturnRequestReasonSearchModel searchModel);
+        Task<ReturnRequestReasonSearchModel> PrepareReturnRequestReasonSearchModelAsync(ReturnRequestReasonSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged return request reason list model
         /// </summary>
         /// <param name="searchModel">Return request reason search model</param>
         /// <returns>Return request reason list model</returns>
-        ReturnRequestReasonListModel PrepareReturnRequestReasonListModel(ReturnRequestReasonSearchModel searchModel);
+        Task<ReturnRequestReasonListModel> PrepareReturnRequestReasonListModelAsync(ReturnRequestReasonSearchModel searchModel);
 
         /// <summary>
         /// Prepare return request reason model
@@ -53,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="returnRequestReason">Return request reason</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Return request reason model</returns>
-        ReturnRequestReasonModel PrepareReturnRequestReasonModel(ReturnRequestReasonModel model,
+        Task<ReturnRequestReasonModel> PrepareReturnRequestReasonModelAsync(ReturnRequestReasonModel model,
             ReturnRequestReason returnRequestReason, bool excludeProperties = false);
 
         /// <summary>
@@ -61,14 +62,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request action search model</param>
         /// <returns>Return request action search model</returns>
-        ReturnRequestActionSearchModel PrepareReturnRequestActionSearchModel(ReturnRequestActionSearchModel searchModel);
+        Task<ReturnRequestActionSearchModel> PrepareReturnRequestActionSearchModelAsync(ReturnRequestActionSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged return request action list model
         /// </summary>
         /// <param name="searchModel">Return request action search model</param>
         /// <returns>Return request action list model</returns>
-        ReturnRequestActionListModel PrepareReturnRequestActionListModel(ReturnRequestActionSearchModel searchModel);
+        Task<ReturnRequestActionListModel> PrepareReturnRequestActionListModelAsync(ReturnRequestActionSearchModel searchModel);
 
         /// <summary>
         /// Prepare return request action model
@@ -77,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="returnRequestAction">Return request action</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Return request action model</returns>
-        ReturnRequestActionModel PrepareReturnRequestActionModel(ReturnRequestActionModel model,
+        Task<ReturnRequestActionModel> PrepareReturnRequestActionModelAsync(ReturnRequestActionModel model,
             ReturnRequestAction returnRequestAction, bool excludeProperties = false);
     }
 }

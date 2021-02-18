@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a return request search model
     /// </summary>
-    public class ReturnRequestSearchModel: BaseSearchModel
+    public record ReturnRequestSearchModel: BaseSearchModel
     {
         #region Ctor
 

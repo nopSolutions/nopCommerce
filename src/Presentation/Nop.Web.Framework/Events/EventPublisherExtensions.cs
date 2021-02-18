@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Nop.Services.Events;
+﻿﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+ using Nop.Core.Events;
 
 namespace Nop.Web.Framework.Events
 {
@@ -14,9 +15,9 @@ namespace Nop.Web.Framework.Events
         /// <typeparam name="T">Type of the model</typeparam>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="model">Model</param>
-        public static void ModelPrepared<T>(this IEventPublisher eventPublisher, T model)
+        public static async Task ModelPreparedAsync<T>(this IEventPublisher eventPublisher, T model)
         {
-            eventPublisher.Publish(new ModelPreparedEvent<T>(model));
+            await eventPublisher.PublishAsync(new ModelPreparedEvent<T>(model));
         }
 
         /// <summary>
@@ -26,9 +27,9 @@ namespace Nop.Web.Framework.Events
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="model">Model</param>
         /// <param name="modelState">Model state</param>
-        public static void ModelReceived<T>(this IEventPublisher eventPublisher, T model, ModelStateDictionary modelState)
+        public static async Task ModelReceivedAsync<T>(this IEventPublisher eventPublisher, T model, ModelStateDictionary modelState)
         {
-            eventPublisher.Publish(new ModelReceivedEvent<T>(model, modelState));
+            await eventPublisher.PublishAsync(new ModelReceivedEvent<T>(model, modelState));
         }
     }
 }

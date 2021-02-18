@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 
-<div class="panel-body">
+<div class="card-body">
     <p>
         @T("Admin.Catalog.Products.SpecificationAttributes.Hint")
     </p>
@@ -9,8 +9,8 @@
         /*hide "add spec" table if no attributes are defined*/
         if (Model.HasAvailableSpecificationAttributes)
         {
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "specificationattributes-grid",
@@ -65,11 +65,11 @@
                         }
                     })
                 </div>
-                <div class="panel-footer">
+                <div class="card-footer">
                     <a asp-action="ProductSpecAttributeAddOrEdit"
                        asp-route-productId="@Model.Id"
-                       class="btn bg-blue">
-                        <i class="fa fa-plus-square"></i>
+                       class="btn btn-primary">
+                        <i class="fas fa-plus-square"></i>
                         @T("Admin.Catalog.Products.SpecificationAttributes.AddButton")
                     </a>
 
@@ -78,8 +78,8 @@
         }
         else
         {
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @T("Admin.Catalog.Products.SpecificationAttributes.NoAttributes")
                 </div>
             </div>
@@ -87,8 +87,8 @@
     }
     else
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
             </div>
         </div>

@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a category search model
     /// </summary>
-    public partial class CategorySearchModel : BaseSearchModel
+    public partial record CategorySearchModel : BaseSearchModel
     {
         #region Ctor
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain;
 
 namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
@@ -34,12 +33,37 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         public string WebhookId { get; set; }
 
-        /// <summary>
-        /// Gets or sets a list of widget zones to display logo and buttons (Prominently feature)
-        /// </summary>
-        public List<string> ButtonsWidgetZones { get; set; }
-
         #region Advanced settings
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display buttons on the shopping cart page
+        /// </summary>
+        public bool DisplayButtonsOnShoppingCart { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display buttons on a product details page
+        /// </summary>
+        public bool DisplayButtonsOnProductDetails { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display logo in header links
+        /// </summary>
+        public bool DisplayLogoInHeaderLinks { get; set; }
+
+        /// <summary>
+        /// Gets or sets the source code of logo in header links
+        /// </summary>
+        public string LogoInHeaderLinks { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display logo in footer
+        /// </summary>
+        public bool DisplayLogoInFooter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the source code of logo in footer
+        /// </summary>
+        public string LogoInFooter { get; set; }
 
         /// <summary>
         /// Gets or sets the disabled funding types (separated by comma)

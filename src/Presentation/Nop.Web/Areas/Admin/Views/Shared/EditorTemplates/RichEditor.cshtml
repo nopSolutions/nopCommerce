@@ -7,13 +7,12 @@
 @using Nop.Web.Framework.UI
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
-    Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     // tinyMCE language
-    var language = TinyMceHelper.GetTinyMceLanguage();
+    var language = await TinyMceHelper.GetTinyMceLanguageAsync();
 
-    var allowJbimages = false;
-    var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+    var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures);
 
     var random = CommonHelper.GenerateRandomInteger();
 
@@ -50,30 +49,30 @@
 <script>
     $(document).ready(function() {
         @* wooncherk contribution *@
-        function RoxyFileBrowser@(random)(field_name, url, type, win) {
+        function RoxyFileBrowser@(random)(callback, value, type) {
             //we manually generate the configuration file to ensure that it works fine in virtual directory
             $.ajax({
                 cache: false,
                 type: "GET",
-                url: "@(Url.Action("CreateConfiguration", "RoxyFileman"))",
+                url: "@Url.Action("CreateConfiguration", "RoxyFileman")",
                 success: function (data, textStatus, jqXHR) {
                     var roxyFileman = '@Url.Content("~/lib/Roxy_Fileman/index.html")';
-                    if (roxyFileman.indexOf("?") < 0) {
-                        roxyFileman += "?type=" + type;
-                    } else {
-                        roxyFileman += "&type=" + type;
-                    }
-                    roxyFileman += '&input=' + field_name + '&value=' + document.getElementById(field_name).value;
-                    tinyMCE.activeEditor.windowManager.open({
-                        file: roxyFileman,
+                    roxyFileman += (roxyFileman.indexOf("?") < 0 ? "?" : "&") + "type=" + type.filetype;
+                    if (value)
+                        roxyFileman += '&value=' + value; // a link to already chosen image if it exists
+                    if (tinyMCE.activeEditor.settings.language)
+                        roxyFileman += '&langCode=' + tinyMCE.activeEditor.settings.language;
+                    const instanceApi = tinyMCE.activeEditor.windowManager.openUrl({
                         title: 'Roxy Fileman',
+                        url: roxyFileman,
                         width: 850,
                         height: 650,
-                        resizable: "yes",
                         plugins: "media",
-                        inline: "yes",
-                        close_previous: "no"
-                    }, { window: win, input: field_name });
+                        onMessage: function(dialogApi, details) {
+                            callback(details.content);
+                            instanceApi.close();
+                        }
+                    });
                     return false;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -88,21 +87,21 @@
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 200,
             width: '100%',
-            autoresize_min_height: 200,
-            autoresize_max_height: 200,
+            resize: true,
+            min_height: 200,
+            max_height: '100%',
             plugins: [
                 "advlist autolink autoresize directionality lists link image charmap preview anchor",
                 "searchreplace visualblocks code fullscreen textcolor",
-                "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
+                "insertdatetime media table paste@(enableFullPage ? " fullpage" : null)"
             ],
-            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
-            //"relative_urls" required by jbimages plugin to be set to "false"
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
             relative_urls: false,
             @if (allowRoxyFileman)
             {
                 <text>
                     //picture manager
-                    file_browser_callback: RoxyFileBrowser@(random),
+                    file_picker_callback: RoxyFileBrowser@(random),
                 </text>
             }
             @if (!string.IsNullOrEmpty(language))
@@ -117,7 +116,8 @@
             convert_urls: false,
             //ensure that special chars are not encoded. For example, ä, ö and ü should NOT become "&auml;", "&ouml;" and "&uuml;"
             //Otherwise, database searches become impossible when words contain a character of this kind
-            entity_encoding: "raw",
+            entity_encoding: "named",
+            entities: '160,nbsp',
             @if (allowJavaScript)
             {
                 <text>

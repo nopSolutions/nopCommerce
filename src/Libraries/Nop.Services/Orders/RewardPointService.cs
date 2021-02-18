@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 
@@ -19,7 +18,6 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<RewardPointsHistory> _rewardPointsHistoryRepository;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -29,13 +27,11 @@ namespace Nop.Services.Orders
         #region Ctor
 
         public RewardPointService(IDateTimeHelper dateTimeHelper,
-            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<RewardPointsHistory> rewardPointsHistoryRepository,
             RewardPointsSettings rewardPointsSettings)
         {
             _dateTimeHelper = dateTimeHelper;
-            _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _rewardPointsHistoryRepository = rewardPointsHistoryRepository;
             _rewardPointsSettings = rewardPointsSettings;
@@ -52,7 +48,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">Whether to load reward points that did not yet activated</param>
         /// <returns>Query to load reward points history</returns>
-        protected virtual IQueryable<RewardPointsHistory> GetRewardPointsQuery(int customerId, int? storeId, bool showNotActivated = false)
+        protected virtual async Task<IQueryable<RewardPointsHistory>> GetRewardPointsQueryAsync(int customerId, int? storeId, bool showNotActivated = false)
         {
             var query = _rewardPointsHistoryRepository.Table;
 
@@ -65,13 +61,11 @@ namespace Nop.Services.Orders
                 query = query.Where(historyEntry => historyEntry.StoreId == storeId);
 
             //whether to show only the points that already activated
-            if (!showNotActivated)
-            {
+            if (!showNotActivated) 
                 query = query.Where(historyEntry => historyEntry.CreatedOnUtc < DateTime.UtcNow);
-            }
 
             //update points balance
-            UpdateRewardPointsBalance(query);
+            await UpdateRewardPointsBalanceAsync(query);
 
             return query;
         }
@@ -80,7 +74,7 @@ namespace Nop.Services.Orders
         /// Update reward points balance if necessary
         /// </summary>
         /// <param name="query">Input query</param>
-        protected virtual void UpdateRewardPointsBalance(IQueryable<RewardPointsHistory> query)
+        protected virtual async Task UpdateRewardPointsBalanceAsync(IQueryable<RewardPointsHistory> query)
         {
             //get expired points
             var nowUtc = DateTime.UtcNow;
@@ -91,18 +85,18 @@ namespace Nop.Services.Orders
             //reduce the balance for these points
             foreach (var historyEntry in expiredPoints)
             {
-                InsertRewardPointsHistoryEntry(new RewardPointsHistory
+                await InsertRewardPointsHistoryEntryAsync(new RewardPointsHistory
                 {
                     CustomerId = historyEntry.CustomerId,
                     StoreId = historyEntry.StoreId,
                     Points = -historyEntry.ValidPoints.Value,
-                    Message = string.Format(_localizationService.GetResource("RewardPoints.Expired"),
-                        _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
+                    Message = string.Format(await _localizationService.GetResourceAsync("RewardPoints.Expired"),
+                        await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
                     CreatedOnUtc = historyEntry.EndDateUtc.Value
                 });
 
                 historyEntry.ValidPoints = 0;
-                UpdateRewardPointsHistoryEntry(historyEntry);
+                await UpdateRewardPointsHistoryEntryAsync(historyEntry);
             }
 
             //get has not yet activated points, but it's time to do it
@@ -124,8 +118,17 @@ namespace Nop.Services.Orders
             {
                 currentPointsBalance += historyEntry.Points;
                 historyEntry.PointsBalance = currentPointsBalance;
-                UpdateRewardPointsHistoryEntry(historyEntry);
+                await UpdateRewardPointsHistoryEntryAsync(historyEntry);
             }
+        }
+
+        /// <summary>
+        /// Insert the reward point history entry
+        /// </summary>
+        /// <param name="rewardPointsHistory">Reward point history entry</param>
+        protected virtual async Task InsertRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
+        {
+            await _rewardPointsHistoryRepository.InsertAsync(rewardPointsHistory);
         }
 
         #endregion
@@ -138,17 +141,23 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">A value indicating whether to show reward points that did not yet activated</param>
+        /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
-        public virtual IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
-            bool showNotActivated = false, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<RewardPointsHistory>> GetRewardPointsHistoryAsync(int customerId = 0, int? storeId = null,
+            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = GetRewardPointsQuery(customerId, storeId, showNotActivated)
-                .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
+            var query = await GetRewardPointsQueryAsync(customerId, storeId, showNotActivated);
+
+            if (orderGuid.HasValue)
+                query = query.Where(historyEntry => historyEntry.UsedWithOrder == orderGuid.Value);
+
+            query = query.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc)
+                .ThenByDescending(historyEntry => historyEntry.Id);
 
             //return paged reward points history
-            return new PagedList<RewardPointsHistory>(query, pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -157,13 +166,13 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Balance</returns>
-        public virtual int GetRewardPointsBalance(int customerId, int storeId)
+        public virtual async Task<int> GetRewardPointsBalanceAsync(int customerId, int storeId)
         {
-            var query = GetRewardPointsQuery(customerId, storeId)
+            var query = (await GetRewardPointsQueryAsync(customerId, storeId))
                 .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
 
             //return point balance of the first actual history entry
-            return query.FirstOrDefault()?.PointsBalance ?? 0;
+            return (await query.FirstOrDefaultAsync())?.PointsBalance ?? 0;
         }
 
         /// <summary>
@@ -171,7 +180,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="rewardPointsBalance">Reward points balance</param>
         /// <returns>Reduced balance</returns>
-        public int GetReducedPointsBalance(int rewardPointsBalance)
+        public virtual int GetReducedPointsBalance(int rewardPointsBalance)
         {
             if (_rewardPointsSettings.MaximumRewardPointsToUsePerOrder > 0 &&
                 rewardPointsBalance > _rewardPointsSettings.MaximumRewardPointsToUsePerOrder)
@@ -192,7 +201,7 @@ namespace Nop.Services.Orders
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
         /// <param name="endDate">Date and time when the reward points will no longer be valid; pass null to add date termless points</param>
         /// <returns>Reward points history entry identifier</returns>
-        public virtual int AddRewardPointsHistoryEntry(Customer customer, int points, int storeId, string message = "",
+        public virtual async Task<int> AddRewardPointsHistoryEntryAsync(Customer customer, int points, int storeId, string message = "",
             Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null)
         {
             if (customer == null)
@@ -210,27 +219,28 @@ namespace Nop.Services.Orders
                 CustomerId = customer.Id,
                 StoreId = storeId,
                 Points = points,
-                PointsBalance = activatingDate.HasValue ? null : (int?)(GetRewardPointsBalance(customer.Id, storeId) + points),
+                PointsBalance = activatingDate.HasValue ? null : (int?)(await GetRewardPointsBalanceAsync(customer.Id, storeId) + points),
                 UsedAmount = usedAmount,
                 Message = message,
                 CreatedOnUtc = activatingDate ?? DateTime.UtcNow,
                 EndDateUtc = endDate,
-                ValidPoints = points > 0 ? (int?)points : null
+                ValidPoints = points > 0 ? (int?)points : null,
+                UsedWithOrder = usedWithOrder?.OrderGuid
             };
-            InsertRewardPointsHistoryEntry(newHistoryEntry);
+            await InsertRewardPointsHistoryEntryAsync(newHistoryEntry);
 
             //reduce valid points of previous entries
             if (points >= 0) 
                 return newHistoryEntry.Id;
 
-            var withValidPoints = GetRewardPointsQuery(customer.Id, storeId)
+            var withValidPoints = (await GetRewardPointsQueryAsync(customer.Id, storeId))
                 .Where(historyEntry => historyEntry.ValidPoints > 0)
                 .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
             foreach (var historyEntry in withValidPoints)
             {
                 points += historyEntry.ValidPoints.Value;
                 historyEntry.ValidPoints = Math.Max(points, 0);
-                UpdateRewardPointsHistoryEntry(historyEntry);
+                await UpdateRewardPointsHistoryEntryAsync(historyEntry);
 
                 if (points >= 0)
                     break;
@@ -244,57 +254,27 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
         /// <returns>Reward point history entry</returns>
-        public virtual RewardPointsHistory GetRewardPointsHistoryEntryById(int rewardPointsHistoryId)
+        public virtual async Task<RewardPointsHistory> GetRewardPointsHistoryEntryByIdAsync(int rewardPointsHistoryId)
         {
-            if (rewardPointsHistoryId == 0)
-                return null;
-
-            return _rewardPointsHistoryRepository.ToCachedGetById(rewardPointsHistoryId);
-        }
-
-        /// <summary>
-        /// Insert the reward point history entry
-        /// </summary>
-        /// <param name="rewardPointsHistory">Reward point history entry</param>
-        public virtual void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
-        {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
-            _rewardPointsHistoryRepository.Insert(rewardPointsHistory);
-
-            //event notification
-            _eventPublisher.EntityInserted(rewardPointsHistory);
+            return await _rewardPointsHistoryRepository.GetByIdAsync(rewardPointsHistoryId);
         }
 
         /// <summary>
         /// Update the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        public virtual void UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
+        public virtual async Task UpdateRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
-            _rewardPointsHistoryRepository.Update(rewardPointsHistory);
-
-            //event notification
-            _eventPublisher.EntityUpdated(rewardPointsHistory);
+            await _rewardPointsHistoryRepository.UpdateAsync(rewardPointsHistory);
         }
 
         /// <summary>
         /// Delete the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        public virtual void DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
+        public virtual async Task DeleteRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
-            _rewardPointsHistoryRepository.Delete(rewardPointsHistory);
-
-            //event notification
-            _eventPublisher.EntityDeleted(rewardPointsHistory);
+            await _rewardPointsHistoryRepository.DeleteAsync(rewardPointsHistory);
         }
 
         #endregion

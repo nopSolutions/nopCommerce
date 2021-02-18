@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Folosește contul SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Folosiți mediul de stocare intern (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>Parola SQL</Value>
   </LocaleResource>

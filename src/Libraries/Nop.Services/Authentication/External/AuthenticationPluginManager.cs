@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
@@ -18,7 +20,8 @@ namespace Nop.Services.Authentication.External
         #region Ctor
 
         public AuthenticationPluginManager(ExternalAuthenticationSettings externalAuthenticationSettings,
-            IPluginService pluginService) : base(pluginService)
+            ICustomerService customerService,
+            IPluginService pluginService) : base(customerService, pluginService)
         {
             _externalAuthenticationSettings = externalAuthenticationSettings;
         }
@@ -33,9 +36,9 @@ namespace Nop.Services.Authentication.External
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>List of active authentication methods</returns>
-        public virtual IList<IExternalAuthenticationMethod> LoadActivePlugins(Customer customer = null, int storeId = 0)
+        public virtual async Task<IList<IExternalAuthenticationMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0)
         {
-            return LoadActivePlugins(_externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
+            return await LoadActivePluginsAsync(_externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
         }
 
         /// <summary>
@@ -55,9 +58,9 @@ namespace Nop.Services.Authentication.External
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Result</returns>
-        public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
+        public virtual async Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0)
         {
-            var authenticationMethod = LoadPluginBySystemName(systemName, customer, storeId);
+            var authenticationMethod = await LoadPluginBySystemNameAsync(systemName, customer, storeId);
             return IsPluginActive(authenticationMethod);
         }
 

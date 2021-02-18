@@ -1,10 +1,16 @@
 ﻿@model Nop.Plugin.Tax.FixedOrByCountryStateZip.Models.ConfigurationModel
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     Layout = "_ConfigurePlugin";
+
+    //tour step
+    ViewBag.TourStep = TourStep.TaxManual;
 }
 
-<div class="form-group">
+@await Html.PartialAsync("_AdminTour")
+
+<div class="form-group row">
     <div class="col-md-12">
         <div class="onoffswitch">
             <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="advanced-settings-mode" checked="@Model.CountryStateZipEnabled">

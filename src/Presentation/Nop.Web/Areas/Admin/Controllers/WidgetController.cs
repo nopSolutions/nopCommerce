@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Cms;
+using Nop.Core.Events;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -50,43 +51,43 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _widgetModelFactory.PrepareWidgetSearchModel(new WidgetSearchModel());
+            var model = await _widgetModelFactory.PrepareWidgetSearchModelAsync(new WidgetSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(WidgetSearchModel searchModel)
+        public virtual async Task<IActionResult> List(WidgetSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _widgetModelFactory.PrepareWidgetListModel(searchModel);
+            var model = await _widgetModelFactory.PrepareWidgetListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult WidgetUpdate(WidgetModel model)
+        public virtual async Task<IActionResult> WidgetUpdate(WidgetModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var widget = _widgetPluginManager.LoadPluginBySystemName(model.SystemName);
+            var widget = await _widgetPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))
             {
                 if (!model.IsActive)
                 {
                     //mark as disabled
                     _widgetSettings.ActiveWidgetSystemNames.Remove(widget.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_widgetSettings);
+                    await _settingService.SaveSettingAsync(_widgetSettings);
                 }
             }
             else
@@ -95,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _widgetSettings.ActiveWidgetSystemNames.Add(widget.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_widgetSettings);
+                    await _settingService.SaveSettingAsync(_widgetSettings);
                 }
             }
 
@@ -108,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

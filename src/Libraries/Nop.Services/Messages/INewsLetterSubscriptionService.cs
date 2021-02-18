@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 
@@ -14,35 +15,35 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
+        Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
         /// Updates a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
+        Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
         /// Deletes a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
+        Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true);
 
         /// <summary>
         /// Gets a newsletter subscription by newsletter subscription identifier
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId);
+        Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId);
 
         /// <summary>
         /// Gets a newsletter subscription by newsletter subscription GUID
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid);
+        Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid);
 
         /// <summary>
         /// Gets a newsletter subscription by email and store ID
@@ -50,7 +51,7 @@ namespace Nop.Services.Messages
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, int storeId);
+        Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreIdAsync(string email, int storeId);
 
         /// <summary>
         /// Gets the newsletter subscription list
@@ -64,7 +65,7 @@ namespace Nop.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
-        IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
+        Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptionsAsync(string email = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int storeId = 0, bool? isActive = null, int customerRoleId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);

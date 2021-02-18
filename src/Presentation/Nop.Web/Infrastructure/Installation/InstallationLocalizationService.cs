@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Common;
 
 namespace Nop.Web.Infrastructure.Installation
 {
@@ -65,6 +65,16 @@ namespace Nop.Web.Infrastructure.Installation
         }
 
         /// <summary>
+        /// Get current browser culture
+        /// </summary>
+        /// <returns>Current culture</returns>
+        public string GetBrowserCulture()
+        {
+            _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(HeaderNames.AcceptLanguage, out var userLanguages);
+            return userLanguages.FirstOrDefault()?.Split(',').FirstOrDefault() ?? NopCommonDefaults.DefaultLanguageCulture;
+        }
+
+        /// <summary>
         /// Get current language for the installation page
         /// </summary>
         /// <returns>Current language</returns>
@@ -74,7 +84,7 @@ namespace Nop.Web.Infrastructure.Installation
 
             //try to get cookie
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
-            httpContext.Request.Cookies.TryGetValue(cookieName, out string cookieLanguageCode);
+            httpContext.Request.Cookies.TryGetValue(cookieName, out var cookieLanguageCode);
 
             //ensure it's available (it could be delete since the previous installation)
             var availableLanguages = GetAvailableLanguages();
@@ -87,7 +97,7 @@ namespace Nop.Web.Infrastructure.Installation
             //let's find by current browser culture
             if (httpContext.Request.Headers.TryGetValue(HeaderNames.AcceptLanguage, out var userLanguages))
             {
-                var userLanguage = userLanguages.FirstOrDefault()?.Split(',')[0] ?? string.Empty;
+                var userLanguage = userLanguages.FirstOrDefault()?.Split(',').FirstOrDefault() ?? string.Empty;
                 if (!string.IsNullOrEmpty(userLanguage))
                 {
                     //right. we do "StartsWith" (not "Equals") because we have shorten codes (not full culture names)
@@ -212,24 +222,19 @@ namespace Nop.Web.Infrastructure.Installation
         }
 
         /// <summary>
-        /// Get a list of available data provider types
+        /// Get a dictionary of available data provider types
         /// </summary>
         /// <param name="valuesToExclude">Values to exclude</param>
         /// <param name="useLocalization">Localize</param>
-        /// <returns>SelectList</returns>
-        public SelectList GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true)
+        /// <returns>Key-value pairs of available data providers types</returns>
+        public Dictionary<int, string> GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true)
         {
-            var values =
-                from DataProviderType enumValue in Enum.GetValues(typeof(DataProviderType))
-                where enumValue != DataProviderType.Unknown && (valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue)))
-                select new
-                {
-                    ID = Convert.ToInt32(enumValue),
-                    Name = useLocalization ? GetResource(enumValue.ToString()) :
-                    CommonHelper.ConvertEnum(enumValue.ToString())
-                };
-
-            return new SelectList(values.OrderBy(v => v.Name), "ID", "Name", null);
+            return Enum.GetValues(typeof(DataProviderType))
+                .Cast<DataProviderType>()
+                .Where(enumValue => enumValue != DataProviderType.Unknown && (valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))))
+                .ToDictionary(
+                    enumValue => Convert.ToInt32(enumValue),
+                    enumValue => useLocalization ? GetResource(enumValue.ToString()) : CommonHelper.ConvertEnum(enumValue.ToString()));
         }
 
         #endregion

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Http;
@@ -43,7 +44,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public IList<Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRatesAsync(string exchangeRateCurrencyCode)
         {
             if (exchangeRateCurrencyCode == null)
                 throw new ArgumentNullException(nameof(exchangeRateCurrencyCode));
@@ -63,7 +64,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             try
             {
                 var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                var stream = httpClient.GetStreamAsync("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml").Result;
+                var stream = await httpClient.GetStreamAsync("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml");
 
                 //load XML document
                 var document = new XmlDocument();
@@ -82,7 +83,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
                 foreach (XmlNode currency in dailyRates.ChildNodes)
                 {
                     //get rate
-                    if (!decimal.TryParse(currency.Attributes["rate"].Value, out var currencyRate))
+                    if (!decimal.TryParse(currency.Attributes["rate"].Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out var currencyRate))
                         continue;
 
                     ratesToEuro.Add(new Core.Domain.Directory.ExchangeRate()
@@ -95,7 +96,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             }
             catch (Exception ex)
             {
-                _logger.Error("ECB exchange rate provider", ex);
+                await _logger.ErrorAsync("ECB exchange rate provider", ex);
             }
 
             //return result for the euro
@@ -105,7 +106,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             //use only currencies that are supported by ECB
             var exchangeRateCurrency = ratesToEuro.FirstOrDefault(rate => rate.CurrencyCode.Equals(exchangeRateCurrencyCode, StringComparison.InvariantCultureIgnoreCase));
             if (exchangeRateCurrency == null)
-                throw new NopException(_localizationService.GetResource("Plugins.ExchangeRate.EcbExchange.Error"));
+                throw new NopException(await _localizationService.GetResourceAsync("Plugins.ExchangeRate.EcbExchange.Error"));
 
             //return result for the selected (not euro) currency
             return ratesToEuro.Select(rate => new Core.Domain.Directory.ExchangeRate
@@ -119,23 +120,23 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <summary>
         /// Install the plugin
         /// </summary>
-        public override void Install()
+        public override async Task InstallAsync()
         {
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
+            await _localizationService.AddOrUpdateLocaleResourceAsync("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task UninstallAsync()
         {
             //locales
-            _localizationService.DeletePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error");
+            await _localizationService.DeleteLocaleResourceAsync("Plugins.ExchangeRate.EcbExchange.Error");
 
-            base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

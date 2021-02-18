@@ -5,7 +5,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Models
     /// <summary>
     /// Represents message template model
     /// </summary>
-    public class SendinBlueMessageTemplateModel : BaseNopEntityModel
+    public record SendinBlueMessageTemplateModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

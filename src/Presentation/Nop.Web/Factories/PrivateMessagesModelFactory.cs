@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -57,7 +58,7 @@ namespace Nop.Web.Factories
         /// <param name="page">Number of items page; pass null to disable paging</param>
         /// <param name="tab">Tab name</param>
         /// <returns>Private message index model</returns>
-        public virtual PrivateMessageIndexModel PreparePrivateMessageIndexModel(int? page, string tab)
+        public virtual Task<PrivateMessageIndexModel> PreparePrivateMessageIndexModelAsync(int? page, string tab)
         {
             var inboxPage = 0;
             var sentItemsPage = 0;
@@ -92,7 +93,7 @@ namespace Nop.Web.Factories
                 SentItemsTabSelected = sentItemsTabSelected
             };
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace Nop.Web.Factories
         /// <param name="page">Number of items page</param>
         /// <param name="tab">Tab name</param>
         /// <returns>Private message list model</returns>
-        public virtual PrivateMessageListModel PrepareInboxModel(int page, string tab)
+        public virtual async Task<PrivateMessageListModel> PrepareInboxModelAsync(int page, string tab)
         {
             if (page > 0)
             {
@@ -112,10 +113,10 @@ namespace Nop.Web.Factories
 
             var messages = new List<PrivateMessageModel>();
 
-            var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
-                0, _workContext.CurrentCustomer.Id, null, null, false, string.Empty, page, pageSize);
+            var list = await _forumService.GetAllPrivateMessagesAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                0, (await _workContext.GetCurrentCustomerAsync()).Id, null, null, false, string.Empty, page, pageSize);
             foreach (var pm in list)
-                messages.Add(PreparePrivateMessageModel(pm));
+                messages.Add(await PreparePrivateMessageModelAsync(pm));
 
             var pagerModel = new PagerModel
             {
@@ -143,7 +144,7 @@ namespace Nop.Web.Factories
         /// <param name="page">Number of items page</param>
         /// <param name="tab">Tab name</param>
         /// <returns>Private message list model</returns>
-        public virtual PrivateMessageListModel PrepareSentModel(int page, string tab)
+        public virtual async Task<PrivateMessageListModel> PrepareSentModelAsync(int page, string tab)
         {
             if (page > 0)
             {
@@ -154,10 +155,10 @@ namespace Nop.Web.Factories
 
             var messages = new List<PrivateMessageModel>();
 
-            var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
-                _workContext.CurrentCustomer.Id, 0, null, false, null, string.Empty, page, pageSize);
+            var list = await _forumService.GetAllPrivateMessagesAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                (await _workContext.GetCurrentCustomerAsync()).Id, 0, null, false, null, string.Empty, page, pageSize);
             foreach (var pm in list)
-                messages.Add(PreparePrivateMessageModel(pm));
+                messages.Add(await PreparePrivateMessageModelAsync(pm));
 
             var pagerModel = new PagerModel
             {
@@ -185,7 +186,7 @@ namespace Nop.Web.Factories
         /// <param name="customerTo">Customer, recipient of the message</param>
         /// <param name="replyToPM">Private message, pass if reply to a previous message is need</param>
         /// <returns>Send private message model</returns>
-        public virtual SendPrivateMessageModel PrepareSendPrivateMessageModel(Customer customerTo, PrivateMessage replyToPM)
+        public virtual async Task<SendPrivateMessageModel> PrepareSendPrivateMessageModelAsync(Customer customerTo, PrivateMessage replyToPM)
         {
             if (customerTo == null)
                 throw new ArgumentNullException(nameof(customerTo));
@@ -193,15 +194,15 @@ namespace Nop.Web.Factories
             var model = new SendPrivateMessageModel
             {
                 ToCustomerId = customerTo.Id,
-                CustomerToName = _customerService.FormatUsername(customerTo),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customerTo)
+                CustomerToName = await _customerService.FormatUsernameAsync(customerTo),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customerTo)
             };
 
             if (replyToPM == null)
                 return model;
 
-            if (replyToPM.ToCustomerId == _workContext.CurrentCustomer.Id ||
-                replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id)
+            if (replyToPM.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id ||
+                replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
             {
                 model.ReplyToMessageId = replyToPM.Id;
                 model.Subject = $"Re: {replyToPM.Subject}";
@@ -215,26 +216,26 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="pm">Private message</param>
         /// <returns>Private message model</returns>
-        public virtual PrivateMessageModel PreparePrivateMessageModel(PrivateMessage pm)
+        public virtual async Task<PrivateMessageModel> PreparePrivateMessageModelAsync(PrivateMessage pm)
         {
             if (pm == null)
                 throw new ArgumentNullException(nameof(pm));
 
-            var fromCustomer = _customerService.GetCustomerById(pm.FromCustomerId);
-            var toCustomer = _customerService.GetCustomerById(pm.ToCustomerId);
+            var fromCustomer = await _customerService.GetCustomerByIdAsync(pm.FromCustomerId);
+            var toCustomer = await _customerService.GetCustomerByIdAsync(pm.ToCustomerId);
 
             var model = new PrivateMessageModel
             {
                 Id = pm.Id,
                 FromCustomerId = pm.FromCustomerId,
-                CustomerFromName = _customerService.FormatUsername(fromCustomer),
-                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(fromCustomer),
+                CustomerFromName = await _customerService.FormatUsernameAsync(fromCustomer),
+                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(fromCustomer),
                 ToCustomerId = pm.ToCustomerId,
-                CustomerToName = _customerService.FormatUsername(toCustomer),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(toCustomer),
+                CustomerToName = await _customerService.FormatUsernameAsync(toCustomer),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(toCustomer),
                 Subject = pm.Subject,
                 Message = _forumService.FormatPrivateMessageText(pm),
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),
                 IsRead = pm.IsRead,
             };
 

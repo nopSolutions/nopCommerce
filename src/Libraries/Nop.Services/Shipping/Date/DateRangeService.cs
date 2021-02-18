@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Shipping.Date
 {
@@ -16,7 +13,6 @@ namespace Nop.Services.Shipping.Date
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
 
@@ -24,11 +20,9 @@ namespace Nop.Services.Shipping.Date
 
         #region Ctor
 
-        public DateRangeService(IEventPublisher eventPublisher,
-            IRepository<DeliveryDate> deliveryDateRepository,
+        public DateRangeService(IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository)
         {
-            _eventPublisher = eventPublisher;
             _deliveryDateRepository = deliveryDateRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
         }
@@ -44,24 +38,23 @@ namespace Nop.Services.Shipping.Date
         /// </summary>
         /// <param name="deliveryDateId">The delivery date identifier</param>
         /// <returns>Delivery date</returns>
-        public virtual DeliveryDate GetDeliveryDateById(int deliveryDateId)
+        public virtual async Task<DeliveryDate> GetDeliveryDateByIdAsync(int deliveryDateId)
         {
-            if (deliveryDateId == 0)
-                return null;
-
-            return _deliveryDateRepository.ToCachedGetById(deliveryDateId);
+            return await _deliveryDateRepository.GetByIdAsync(deliveryDateId, cache => default);
         }
 
         /// <summary>
         /// Get all delivery dates
         /// </summary>
         /// <returns>Delivery dates</returns>
-        public virtual IList<DeliveryDate> GetAllDeliveryDates()
+        public virtual async Task<IList<DeliveryDate>> GetAllDeliveryDatesAsync()
         {
-            var query = from dd in _deliveryDateRepository.Table
-                        orderby dd.DisplayOrder, dd.Id
-                        select dd;
-            var deliveryDates = query.ToCachedList(NopShippingCachingDefaults.DeliveryDatesAllCacheKey);
+            var deliveryDates = await _deliveryDateRepository.GetAllAsync(query =>
+            {
+                return from dd in query
+                    orderby dd.DisplayOrder, dd.Id
+                    select dd;
+            }, cache => default);
 
             return deliveryDates;
         }
@@ -70,45 +63,27 @@ namespace Nop.Services.Shipping.Date
         /// Insert a delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        public virtual void InsertDeliveryDate(DeliveryDate deliveryDate)
+        public virtual async Task InsertDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            if (deliveryDate == null)
-                throw new ArgumentNullException(nameof(deliveryDate));
-
-            _deliveryDateRepository.Insert(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityInserted(deliveryDate);
+            await _deliveryDateRepository.InsertAsync(deliveryDate);
         }
 
         /// <summary>
         /// Update the delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        public virtual void UpdateDeliveryDate(DeliveryDate deliveryDate)
+        public virtual async Task UpdateDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            if (deliveryDate == null)
-                throw new ArgumentNullException(nameof(deliveryDate));
-
-            _deliveryDateRepository.Update(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(deliveryDate);
+            await _deliveryDateRepository.UpdateAsync(deliveryDate);
         }
 
         /// <summary>
         /// Delete a delivery date
         /// </summary>
         /// <param name="deliveryDate">The delivery date</param>
-        public virtual void DeleteDeliveryDate(DeliveryDate deliveryDate)
+        public virtual async Task DeleteDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            if (deliveryDate == null)
-                throw new ArgumentNullException(nameof(deliveryDate));
-
-            _deliveryDateRepository.Delete(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(deliveryDate);
+            await _deliveryDateRepository.DeleteAsync(deliveryDate);
         }
 
         #endregion
@@ -120,67 +95,50 @@ namespace Nop.Services.Shipping.Date
         /// </summary>
         /// <param name="productAvailabilityRangeId">The product availability range identifier</param>
         /// <returns>Product availability range</returns>
-        public virtual ProductAvailabilityRange GetProductAvailabilityRangeById(int productAvailabilityRangeId)
+        public virtual async Task<ProductAvailabilityRange> GetProductAvailabilityRangeByIdAsync(int productAvailabilityRangeId)
         {
-            return productAvailabilityRangeId != 0 ? _productAvailabilityRangeRepository.ToCachedGetById(productAvailabilityRangeId) : null;
+            return productAvailabilityRangeId != 0 ? await _productAvailabilityRangeRepository.GetByIdAsync(productAvailabilityRangeId, cache => default) : null;
         }
 
         /// <summary>
         /// Get all product availability ranges
         /// </summary>
         /// <returns>Product availability ranges</returns>
-        public virtual IList<ProductAvailabilityRange> GetAllProductAvailabilityRanges()
+        public virtual async Task<IList<ProductAvailabilityRange>> GetAllProductAvailabilityRangesAsync()
         {
-            var query = from par in _productAvailabilityRangeRepository.Table
-                        orderby par.DisplayOrder, par.Id
-                        select par;
-
-            return query.ToCachedList(NopShippingCachingDefaults.ProductAvailabilityAllCacheKey);
+            return await _productAvailabilityRangeRepository.GetAllAsync(query =>
+            {
+                return from par in query
+                    orderby par.DisplayOrder, par.Id
+                    select par;
+            }, cache => default);
         }
 
         /// <summary>
         /// Insert the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        public virtual void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
+        public virtual async Task InsertProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            if (productAvailabilityRange == null)
-                throw new ArgumentNullException(nameof(productAvailabilityRange));
-
-            _productAvailabilityRangeRepository.Insert(productAvailabilityRange);
-
-            //event notification
-            _eventPublisher.EntityInserted(productAvailabilityRange);
+            await _productAvailabilityRangeRepository.InsertAsync(productAvailabilityRange);
         }
 
         /// <summary>
         /// Update the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        public virtual void UpdateProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
+        public virtual async Task UpdateProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            if (productAvailabilityRange == null)
-                throw new ArgumentNullException(nameof(productAvailabilityRange));
-
-            _productAvailabilityRangeRepository.Update(productAvailabilityRange);
-
-            //event notification
-            _eventPublisher.EntityUpdated(productAvailabilityRange);
+            await _productAvailabilityRangeRepository.UpdateAsync(productAvailabilityRange);
         }
 
         /// <summary>
         /// Delete the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        public virtual void DeleteProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
+        public virtual async Task DeleteProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            if (productAvailabilityRange == null)
-                throw new ArgumentNullException(nameof(productAvailabilityRange));
-
-            _productAvailabilityRangeRepository.Delete(productAvailabilityRange);
-
-            //event notification
-            _eventPublisher.EntityDeleted(productAvailabilityRange);
+            await _productAvailabilityRangeRepository.DeleteAsync(productAvailabilityRange);
         }
 
         #endregion

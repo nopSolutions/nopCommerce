@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Web.Models.Cms;
 
 namespace Nop.Web.Factories
@@ -14,6 +15,6 @@ namespace Nop.Web.Factories
         /// <param name="widgetZone">Name of widget zone</param>
         /// <param name="additionalData">Additional data object</param>
         /// <returns>List of the render widget models</returns>
-        List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null);
+        Task<List<RenderWidgetModel>> PrepareRenderWidgetModelAsync(string widgetZone, object additionalData = null);
     }
 }

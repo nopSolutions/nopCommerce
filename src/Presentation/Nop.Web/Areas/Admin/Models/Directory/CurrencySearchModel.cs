@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a currency search model
     /// </summary>
-    public partial class CurrencySearchModel : BaseSearchModel
+    public partial record CurrencySearchModel : BaseSearchModel
     {
         #region Ctor
 

@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Messages
         public TestMessageTemplateValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.SendTo).NotEmpty();
-            RuleFor(x => x.SendTo).EmailAddress().WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
+            RuleFor(x => x.SendTo).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
         }
     }
 }

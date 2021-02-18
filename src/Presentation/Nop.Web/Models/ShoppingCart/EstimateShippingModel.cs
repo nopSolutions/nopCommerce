@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.ShoppingCart
 {
-    public partial class EstimateShippingModel : BaseNopModel
+    public partial record EstimateShippingModel : BaseNopModel
     {
         public EstimateShippingModel()
         {
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
         }
+
+        public int RequestDelay { get; set; }
 
         public bool Enabled { get; set; }
 
@@ -22,23 +25,27 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<SelectListItem> AvailableStates { get; set; }
     }
 
-    public partial class EstimateShippingResultModel : BaseNopModel
+    public partial record EstimateShippingResultModel : BaseNopModel
     {
         public EstimateShippingResultModel()
         {
             ShippingOptions = new List<ShippingOptionModel>();
-            Warnings = new List<string>();
+            Errors = new List<string>();
         }
 
         public IList<ShippingOptionModel> ShippingOptions { get; set; }
 
-        public IList<string> Warnings { get; set; }
+        public bool Success => !Errors.Any();
+
+        public IList<string> Errors { get; set; }
 
         #region Nested Classes
 
-        public partial class ShippingOptionModel : BaseNopModel
+        public partial record ShippingOptionModel : BaseNopModel
         {
             public string Name { get; set; }
+
+            public string ShippingRateComputationMethodSystemName { get; set; }
 
             public string Description { get; set; }
 
@@ -47,6 +54,8 @@ namespace Nop.Web.Models.ShoppingCart
             public decimal Rate { get; set; }
 
             public string DeliveryDateFormat { get; set; }
+
+            public bool Selected { get; set; }
         }
 
         #endregion

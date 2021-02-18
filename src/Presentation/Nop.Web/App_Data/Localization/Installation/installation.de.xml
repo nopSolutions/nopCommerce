@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL Server Konto benutzen</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Integrierte Datenbank verwenden (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
   </LocaleResource>

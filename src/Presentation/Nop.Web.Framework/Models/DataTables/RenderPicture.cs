@@ -7,9 +7,10 @@
     {
         #region Ctor
 
-        public RenderPicture(string srcPrefix = "")
+        public RenderPicture(string srcPrefix = "", int width = 0)
         {
             SrcPrefix = srcPrefix;
+            Width = width;
         }
 
         #endregion
@@ -25,6 +26,11 @@
         /// Gets or sets picture source
         /// </summary>
         public string Src { get; set; }
+
+        /// <summary>
+        /// Gets or sets picture width
+        /// </summary>
+        public int Width { get; set; }
 
         #endregion
     }

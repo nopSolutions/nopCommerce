@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Directory;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Directory;
 using Nop.Web.Areas.Admin.Models.Directory;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -13,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Country search model</param>
         /// <returns>Country search model</returns>
-        CountrySearchModel PrepareCountrySearchModel(CountrySearchModel searchModel);
+        Task<CountrySearchModel> PrepareCountrySearchModelAsync(CountrySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged country list model
         /// </summary>
         /// <param name="searchModel">Country search model</param>
         /// <returns>Country list model</returns>
-        CountryListModel PrepareCountryListModel(CountrySearchModel searchModel);
+        Task<CountryListModel> PrepareCountryListModelAsync(CountrySearchModel searchModel);
 
         /// <summary>
         /// Prepare country model
@@ -29,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="country">Country</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Country model</returns>
-        CountryModel PrepareCountryModel(CountryModel model, Country country, bool excludeProperties = false);
+        Task<CountryModel> PrepareCountryModelAsync(CountryModel model, Country country, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged state and province list model
@@ -37,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">State and province search model</param>
         /// <param name="country">Country</param>
         /// <returns>State and province list model</returns>
-        StateProvinceListModel PrepareStateProvinceListModel(StateProvinceSearchModel searchModel, Country country);
+        Task<StateProvinceListModel> PrepareStateProvinceListModelAsync(StateProvinceSearchModel searchModel, Country country);
 
         /// <summary>
         /// Prepare state and province model
@@ -47,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="state">State or province</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>State and province model</returns>
-        StateProvinceModel PrepareStateProvinceModel(StateProvinceModel model,
+        Task<StateProvinceModel> PrepareStateProvinceModelAsync(StateProvinceModel model,
             Country country, StateProvince state, bool excludeProperties = false);
     }
 }

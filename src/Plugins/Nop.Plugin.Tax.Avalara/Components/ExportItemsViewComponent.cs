@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Components;
@@ -38,13 +39,13 @@ namespace Nop.Plugin.Tax.Avalara.Components
         /// <param name="widgetZone">Widget zone</param>
         /// <param name="additionalData">Additional parameters</param>
         /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            //ensure that Avalara tax provider is active
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return Content(string.Empty);
 
-            //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return Content(string.Empty);
 
             //ensure that it's a proper widget zone

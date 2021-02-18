@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 
@@ -16,14 +17,14 @@ namespace Nop.Services.Blogs
         /// Deletes a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        void DeleteBlogPost(BlogPost blogPost);
+        Task DeleteBlogPostAsync(BlogPost blogPost);
 
         /// <summary>
         /// Gets a blog post
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
         /// <returns>Blog post</returns>
-        BlogPost GetBlogPostById(int blogPostId);
+        Task<BlogPost> GetBlogPostByIdAsync(int blogPostId);
 
         /// <summary>
         /// Gets all blog posts
@@ -37,7 +38,7 @@ namespace Nop.Services.Blogs
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="title">Filter by blog post title</param>
         /// <returns>Blog posts</returns>
-        IPagedList<BlogPost> GetAllBlogPosts(int storeId = 0, int languageId = 0,
+        Task<IPagedList<BlogPost>> GetAllBlogPostsAsync(int storeId = 0, int languageId = 0,
             DateTime? dateFrom = null, DateTime? dateTo = null, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null);
 
@@ -51,7 +52,7 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        IPagedList<BlogPost> GetAllBlogPostsByTag(int storeId = 0,
+        Task<IPagedList<BlogPost>> GetAllBlogPostsByTagAsync(int storeId = 0,
             int languageId = 0, string tag = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
@@ -62,19 +63,19 @@ namespace Nop.Services.Blogs
         /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false);
+        Task<IList<BlogPostTag>> GetAllBlogPostTagsAsync(int storeId, int languageId, bool showHidden = false);
 
         /// <summary>
         /// Inserts a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        void InsertBlogPost(BlogPost blogPost);
+        Task InsertBlogPostAsync(BlogPost blogPost);
 
         /// <summary>
         /// Updates the blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        void UpdateBlogPost(BlogPost blogPost);
+        Task UpdateBlogPostAsync(BlogPost blogPost);
 
         /// <summary>
         /// Returns all posts published between the two dates.
@@ -83,15 +84,16 @@ namespace Nop.Services.Blogs
         /// <param name="dateFrom">Date from</param>
         /// <param name="dateTo">Date to</param>
         /// <returns>Filtered posts</returns>
-        IList<BlogPost> GetPostsByDate(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo);
+        Task<IList<BlogPost>> GetPostsByDateAsync(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo);
 
         /// <summary>
         /// Parse tags
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Tags</returns>
-        IList<string> ParseTags(BlogPost blogPost);
+        Task<IList<string>> ParseTagsAsync(BlogPost blogPost);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get a value indicating whether a blog post is available now (availability dates)
         /// </summary>
@@ -115,7 +117,7 @@ namespace Nop.Services.Blogs
         /// <param name="toUtc">Item creation to; null to load all records</param>
         /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
-        IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0, int? blogPostId = null,
+        Task<IList<BlogComment>> GetAllCommentsAsync(int customerId = 0, int storeId = 0, int? blogPostId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null);
 
         /// <summary>
@@ -123,14 +125,14 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogCommentId">Blog comment identifier</param>
         /// <returns>Blog comment</returns>
-        BlogComment GetBlogCommentById(int blogCommentId);
+        Task<BlogComment> GetBlogCommentByIdAsync(int blogCommentId);
 
         /// <summary>
         /// Get blog comments by identifiers
         /// </summary>
         /// <param name="commentIds">Blog comment identifiers</param>
         /// <returns>Blog comments</returns>
-        IList<BlogComment> GetBlogCommentsByIds(int[] commentIds);
+        Task<IList<BlogComment>> GetBlogCommentsByIdsAsync(int[] commentIds);
 
         /// <summary>
         /// Get the count of blog comments
@@ -139,31 +141,31 @@ namespace Nop.Services.Blogs
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
         /// <returns>Number of blog comments</returns>
-        int GetBlogCommentsCount(BlogPost blogPost, int storeId = 0, bool? isApproved = null);
+        Task<int> GetBlogCommentsCountAsync(BlogPost blogPost, int storeId = 0, bool? isApproved = null);
 
         /// <summary>
         /// Deletes a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        void DeleteBlogComment(BlogComment blogComment);
+        Task DeleteBlogCommentAsync(BlogComment blogComment);
 
         /// <summary>
         /// Deletes blog comments
         /// </summary>
         /// <param name="blogComments">Blog comments</param>
-        void DeleteBlogComments(IList<BlogComment> blogComments);
+        Task DeleteBlogCommentsAsync(IList<BlogComment> blogComments);
 
         /// <summary>
         /// Inserts a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        void InsertBlogComment(BlogComment blogComment);
+        Task InsertBlogCommentAsync(BlogComment blogComment);
 
         /// <summary>
         /// Update a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        void UpdateBlogComment(BlogComment blogComment);
+        Task UpdateBlogCommentAsync(BlogComment blogComment);
 
         #endregion
     }
