@@ -15,6 +15,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
@@ -56,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEmailAccountService _emailAccountService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IExportManager _exportManager;
         private readonly IForumService _forumService;
         private readonly IGdprService _gdprService;
@@ -92,6 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
+            IEventPublisher eventPublisher,
             IExportManager exportManager,
             IForumService forumService,
             IGdprService gdprService,
@@ -124,6 +127,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _emailAccountService = emailAccountService;
+            _eventPublisher = eventPublisher;
             _exportManager = exportManager;
             _forumService = forumService;
             _gdprService = gdprService;
@@ -847,6 +851,27 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             customer.AffiliateId = 0;
             await _customerService.UpdateCustomerAsync(customer);
+
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> RemoveBindMFA(int id)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            //try to get a customer with the specified id
+            var customer = await _customerService.GetCustomerByIdAsync(id);
+            if (customer == null)
+                return RedirectToAction("List");
+
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
+
+            //raise event       
+            await _eventPublisher.PublishAsync(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.UnbindMFAProvider"));
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }

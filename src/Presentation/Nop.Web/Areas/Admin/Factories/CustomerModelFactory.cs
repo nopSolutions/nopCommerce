@@ -698,6 +698,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation;
                 model.GdprEnabled = _gdprSettings.GdprEnabled;
 
+                model.MultiFactorAuthenticationProvider = await _genericAttributeService
+                    .GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+
                 //whether to fill in some of properties
                 if (!excludeProperties)
                 {
