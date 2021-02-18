@@ -53,7 +53,7 @@
             <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"
                     data-trigger="state-select">
             </select>
-            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
             <span asp-validation-for="StateProvinceId"></span>
         </div>
     }

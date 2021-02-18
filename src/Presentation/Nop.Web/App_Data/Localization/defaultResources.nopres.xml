@@ -15873,7 +15873,7 @@
   <LocaleResource Name="Common.View">
     <Value>View</Value>
   </LocaleResource>
-  <LocaleResource Name="Common.Wait...">
+  <LocaleResource Name="Common.Wait">
     <Value>Wait...</Value>
   </LocaleResource>
   <LocaleResource Name="Common.Warning">
