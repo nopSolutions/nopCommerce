@@ -11295,6 +11295,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.LastVisitedPage.Hint">
     <Value>The last visited date (public store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider">
+    <Value>Multi-factor authentication provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider.Hint">
+    <Value>Name of the multi-factor authentication provider to which the customer is associated.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter">
     <Value>Newsletter</Value>
   </LocaleResource>
@@ -11654,6 +11660,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.SomeComment">
     <Value>Some comment here...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.UnbindMFAProvider">
+    <Value>The customer has unbinded from the multifactor authentication provider successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Updated">
     <Value>The customer has been updated successfully.</Value>
