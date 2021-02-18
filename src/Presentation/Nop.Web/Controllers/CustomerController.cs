@@ -1569,6 +1569,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> UserAgreement(Guid orderItemId)
         {
             var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);

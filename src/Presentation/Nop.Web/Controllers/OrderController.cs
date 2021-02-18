@@ -15,6 +15,7 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -177,6 +178,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / PDF invoice
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetPdfInvoice(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
