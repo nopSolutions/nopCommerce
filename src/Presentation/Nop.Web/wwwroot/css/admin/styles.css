@@ -1114,7 +1114,7 @@ td.k-state-focused.k-state-selected {
     }
 
 .k-multiselect-wrap {
-  min-height: 34px;
+  min-height: 36px;
   border-radius: 0;
 }
 
@@ -1942,14 +1942,14 @@ span.grid-report-item {
 
   .parent-setting.opened + .nested-setting .form-group.parent-setting div[class^="col-md-"] + div[class^="col-md-"]:before {
     position: absolute;
-    height: 46px;
+    height: 36px;
     content: "";
     margin-left: -10px;
     margin-top: -18px;
   }
 
-  .parent-setting.opened + .nested-setting .form-group.parent-setting.opened > div[class^="col-md-"] + div[class^="col-md-"]:after {
-    display: none;
+  .parent-setting.opened + .nested-setting .form-group.parent-setting.opened > div[class^="col-md-"] + div[class^="col-md-"]:before {
+    height: 110%;
   }
 
   .parent-setting.opened + .nested-setting .form-group:last-child {
@@ -1966,13 +1966,17 @@ span.grid-report-item {
     top: 17px;
   }
 
+    .parent-setting.opened + .nested-setting .form-group.parent-setting.opened > div[class^="col-md-"] + div[class^="col-md-"]:after {
+    display: none;
+  }
+
   .parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"] {
     border-left: none;
   }
 
     .parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"]:before {
       position: absolute;
-      height: 17px;
+      height: 18px;
       content: "";
       margin-left: -10px;
     }
