@@ -1480,8 +1480,13 @@ div.dataTables_wrapper {
   align-items: flex-start;
 }
 
+.form-horizontal .multi-store-override-option + .label-wrapper {
+  width: 90%;
+}
+
   .form-horizontal .label-wrapper .col-form-label {
     text-align: right;
+    flex-grow: 2;
   }
 
   .form-horizontal .label-wrapper .ico-help {
