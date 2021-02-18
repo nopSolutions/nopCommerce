@@ -2321,6 +2321,21 @@ div.dataTables_wrapper .data-tables-refresh > div {
     border: 1px solid #e3e3e3;
   }
 
+  .table-bordered > thead > tr > th label,
+  .table-bordered > tbody > tr > th label,
+  .table-bordered > tfoot > tr > th label{
+    font-weight: bold !important;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .table-bordered > thead > tr > th label input[type=checkbox],
+  .table-bordered > tbody > tr > th label input[type=checkbox],
+  .table-bordered > tfoot > tr > th label input[type=checkbox]{
+    margin-left: 5px;
+  }
+
   .table-bordered > thead > tr > td,
   .table-bordered > tbody > tr > td,
   .table-bordered > tfoot > tr > td {
