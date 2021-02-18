@@ -78,6 +78,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                         false);
             }
 
+            //progress of localozation 
+            var progress = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute);
+            if (!string.IsNullOrEmpty(progress))
+            {
+                _notificationService.SuccessNotification(
+                    string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage"), progress), false);
+                await _genericAttributeService.SaveAttributeAsync(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
+            }
+
             //prepare model
             var model = await _homeModelFactory.PrepareDashboardModelAsync(new DashboardModel());
 

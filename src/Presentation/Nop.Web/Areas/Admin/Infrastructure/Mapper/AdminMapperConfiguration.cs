@@ -832,6 +832,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AllowSendingOfWelcomeMessage, options => options.Ignore())
                 .ForMember(model => model.AllowReSendingOfActivationMessage, options => options.Ignore())
                 .ForMember(model => model.GdprEnabled, options => options.Ignore())
+                .ForMember(model => model.MultiFactorAuthenticationProvider, options => options.Ignore())
                 .ForMember(model => model.CustomerAssociatedExternalAuthRecordsSearchModel, options => options.Ignore())
                 .ForMember(model => model.CustomerAddressSearchModel, options => options.Ignore())
                 .ForMember(model => model.CustomerOrderSearchModel, options => options.Ignore())

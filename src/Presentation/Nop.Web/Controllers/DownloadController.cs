@@ -7,6 +7,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -34,6 +35,8 @@ namespace Nop.Web.Controllers
             _workContext = workContext;
         }
         
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> Sample(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -60,6 +63,8 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension }; 
         }
 
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetDownload(Guid orderItemId, bool agree = false)
         {
             var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
@@ -119,6 +124,8 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };  
         }
 
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetLicense(Guid orderItemId)
         {
             var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
@@ -176,6 +183,8 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetOrderNoteFile(int orderNoteId)
         {
             var orderNote = await _orderService.GetOrderNoteByIdAsync(orderNoteId);
