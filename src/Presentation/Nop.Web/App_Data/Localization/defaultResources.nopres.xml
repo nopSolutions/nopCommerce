@@ -11985,6 +11985,9 @@
   <LocaleResource Name="Admin.GiftCards.List.RecipientName.Hint">
     <Value>Search by recipient name. Leave empty to load all records.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.RecipientNotified">
+    <Value>The recipient has been notified successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Updated">
     <Value>The gift card has been updated successfully.</Value>
   </LocaleResource>
@@ -15870,7 +15873,7 @@
   <LocaleResource Name="Common.View">
     <Value>View</Value>
   </LocaleResource>
-  <LocaleResource Name="Common.Wait...">
+  <LocaleResource Name="Common.Wait">
     <Value>Wait...</Value>
   </LocaleResource>
   <LocaleResource Name="Common.Warning">
