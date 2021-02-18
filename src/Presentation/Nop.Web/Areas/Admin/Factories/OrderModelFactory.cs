@@ -193,47 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
-
-            //set some of address fields as enabled and required
-            model.FirstNameEnabled = true;
-            model.FirstNameRequired = true;
-            model.LastNameEnabled = true;
-            model.LastNameRequired = true;
-            model.EmailEnabled = true;
-            model.EmailRequired = true;
-            model.CompanyEnabled = _addressSettings.CompanyEnabled;
-            model.CompanyRequired = _addressSettings.CompanyRequired;
-            model.CountryEnabled = _addressSettings.CountryEnabled;
-            model.CountryRequired = _addressSettings.CountryEnabled;
-            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-            model.CountyEnabled = _addressSettings.CountyEnabled;
-            model.CountyRequired = _addressSettings.CountyRequired;
-            model.CityEnabled = _addressSettings.CityEnabled;
-            model.CityRequired = _addressSettings.CityRequired;
-            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
-            model.PhoneEnabled = _addressSettings.PhoneEnabled;
-            model.PhoneRequired = _addressSettings.PhoneRequired;
-            model.FaxEnabled = _addressSettings.FaxEnabled;
-            model.FaxRequired = _addressSettings.FaxRequired;
-        }
-
+        
         /// <summary>
         /// Prepare order item models
         /// </summary>
@@ -542,7 +502,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
             model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
 
-            await PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -628,7 +588,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ShippingAddress = shippingAddress.ToModel(model.ShippingAddress);
                 model.ShippingAddress.CountryName = shippingCountry?.Name;
                 model.ShippingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress))?.Name;
-                await PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
+                await _baseAdminModelFactory.PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
                 model.ShippingAddressGoogleMapsUrl = "https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
                     $"{WebUtility.UrlEncode(shippingAddress.Address1 + " " + shippingAddress.ZipPostalCode + " " + shippingAddress.City + " " + (shippingCountry?.Name ?? string.Empty))}";
             }
@@ -1334,7 +1294,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare address model
             model.Address = address.ToModel(model.Address);
-            await PrepareAddressModelAsync(model.Address, address);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             //prepare available countries
             await _baseAdminModelFactory.PrepareCountriesAsync(model.Address.AvailableCountries);

@@ -67,35 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set some of address fields as enabled and required
-            model.CountryEnabled = true;
-            model.CountryRequired = true;
-            model.StateProvinceEnabled = true;
-            model.CountyEnabled = true;
-            model.CityEnabled = true;
-            model.StreetAddressEnabled = true;
-            model.ZipPostalCodeEnabled = true;
-            model.ZipPostalCodeRequired = true;
-            model.PhoneEnabled = true;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-        }
-
+        
         /// <summary>
         /// Prepare delivery date search model
         /// </summary>
@@ -489,7 +461,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressByIdAsync(warehouse?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await PrepareAddressModelAsync(model.Address, address);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             return model;
         }
