@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core.Domain.Common;
-using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -37,15 +36,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
         #region Fields
 
-        private readonly ISettingService _settingService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
 
         #region Ctor
 
-        public NopDocReferenceTagHelper(ISettingService settingService)
+        public NopDocReferenceTagHelper(AdminAreaSettings adminAreaSettings)
         {
-            _settingService = settingService;
+            _adminAreaSettings = adminAreaSettings;
         }
 
         #endregion
@@ -68,8 +67,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //clear the output
             output.SuppressOutput();
 
-            var adminAreaSettings = _settingService.LoadSettingAsync<AdminAreaSettings>().Result;
-            if (adminAreaSettings.ShowDocumentationReferenceLinks)
+            if (_adminAreaSettings.ShowDocumentationReferenceLinks)
             {
                 //add wrapper
                 if (AddWrapper)
