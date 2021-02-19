@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
@@ -89,6 +90,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 shippingSettings.RequestDelay = 300;
                 settingService.SaveSettingAsync(shippingSettings).Wait();
+            }
+
+            //#4303
+            var orderSettings = settingService.LoadSettingAsync<OrderSettings>().Result;
+            if (!settingService.SettingExistsAsync(orderSettings, settings => settings.DisplayCustomerCurrencyOnOrders).Result)
+            {
+                orderSettings.DisplayCustomerCurrencyOnOrders = false;
+                settingService.SaveSettingAsync(orderSettings).Wait();
             }
         }
 
