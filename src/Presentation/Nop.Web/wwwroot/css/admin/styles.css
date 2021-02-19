@@ -1134,7 +1134,7 @@ td.k-state-focused.k-state-selected {
 .form-horizontal .form-group .k-dropdown {
   cursor: default;
   width: 100% !important;
-  height: 32px;
+  height: 38px;
 }
 
   .form-horizontal .form-group .k-dropdown .k-dropdown-wrap {
@@ -1154,8 +1154,8 @@ td.k-state-focused.k-state-selected {
     }
 
     .form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input {
-      height: 32px;
-      line-height: 32px;
+      height: 36px;
+      line-height: 36px;
       display: block;
       padding: 0;
     }
