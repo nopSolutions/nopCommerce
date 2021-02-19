@@ -148,11 +148,6 @@ button, .button-1, .button-2 {
   cursor: pointer;
 }
 
-input[type="button"]:focus, input[type="submit"]:focus,
-button:focus, .button-1:focus, .button-2:focus {
-  position: relative;
-}
-
 label, label + * {
   vertical-align: middle;
 }
