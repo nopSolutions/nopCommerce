@@ -260,6 +260,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fixed"] = "Fixed rate",
+                ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip"] = "By Country",
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategoryName"] = "Tax category",
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fields.Rate"] = "Rate",

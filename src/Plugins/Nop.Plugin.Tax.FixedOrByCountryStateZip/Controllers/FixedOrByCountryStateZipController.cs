@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -31,6 +33,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
         private readonly ICountryService _countryService;
         private readonly ICountryStateZipService _taxRateService;
+        private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -38,8 +41,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWorkContext _workContext;
-
-
+        
         #endregion
 
         #region Ctor
@@ -47,6 +49,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         public FixedOrByCountryStateZipController(FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
             ICountryService countryService,
             ICountryStateZipService taxRateService,
+            ILocalizationService localizationService,
             IPermissionService permissionService,
             ISettingService settingService,
             IStateProvinceService stateProvinceService,
@@ -60,6 +63,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             _countryService = countryService;
             _taxRateService = taxRateService;
             _permissionService = permissionService;
+            _localizationService = localizationService;
             _settingService = settingService;
             _stateProvinceService = stateProvinceService;
             _storeService = storeService;
@@ -79,10 +83,22 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
                 return AccessDeniedView();
 
             var taxCategories = await _taxCategoryService.GetAllTaxCategoriesAsync();
+
             if (!taxCategories.Any())
-                return Content("No tax categories can be loaded");
+            {
+                var errorModel = new ConfigurationModel
+                {
+                    TaxCategoriesCanNotLoadedError = string.Format(
+                        await _localizationService.GetResourceAsync(
+                            "Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"),
+                        Url.Action("Categories", "Tax"))
+                };
+
+                return View("~/Plugins/Tax.FixedOrByCountryStateZip/Views/Configure.cshtml", errorModel);
+            }
 
             var model = new ConfigurationModel { CountryStateZipEnabled = _countryStateZipSettings.CountryStateZipEnabled };
+            
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
             var stores = await _storeService.GetAllStoresAsync();
