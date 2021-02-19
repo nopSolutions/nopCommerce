@@ -330,6 +330,7 @@ namespace Nop.Services.Catalog
                     ProductId = productCopy.Id,
                     AttributesXml = newAttributesXml,
                     StockQuantity = combination.StockQuantity,
+                    MinStockQuantity = combination.MinStockQuantity,
                     AllowOutOfStockOrders = combination.AllowOutOfStockOrders,
                     Sku = combination.Sku,
                     ManufacturerPartNumber = combination.ManufacturerPartNumber,
