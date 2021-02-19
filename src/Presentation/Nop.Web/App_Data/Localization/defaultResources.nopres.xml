@@ -12187,7 +12187,7 @@
     <Value>Is recipient notified</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.IsRecipientNotified.Hint">
-    <Value>Is recipient notified.</Value>
+    <Value>Indicates whether the gift card recipient is notified by email. Click the "Notify recipient" button to send an email notification.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.IsRecipientNotified.Notify">
     <Value>Notify recipient</Value>

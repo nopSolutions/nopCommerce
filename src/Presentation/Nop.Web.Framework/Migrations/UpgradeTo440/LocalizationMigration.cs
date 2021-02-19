@@ -671,6 +671,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 //#5209
                 ["Admin.ShoppingCartType.StartDate.Hint"] = "The start date for the search (when a product was added to the cart).",
                 ["Admin.ShoppingCartType.EndDate.Hint"] = "The end date for the search (when a product was added to the cart).",
+                //#5206
+                ["Admin.GiftCards.Fields.IsRecipientNotified.Hint"] = "Indicates whether the gift card recipient is notified by email. Click the \"Notify recipient\" button to send an email notification.",
             }).Wait();
 
             // rename locales
