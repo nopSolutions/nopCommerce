@@ -4482,6 +4482,9 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache.TableName.Hint">
     <Value>Specify the table name"</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.EnvironmentVariablesWarning">
+    <Value>Warning! The current setting value is overridden in environment variables</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
     <Value>Hosting configuration</Value>
   </LocaleResource>

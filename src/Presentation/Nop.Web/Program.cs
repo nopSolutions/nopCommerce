@@ -20,7 +20,12 @@ namespace Nop.Web
                     options.ValidateOnBuild = true;
                 })
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
-                    .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true))
+                    .ConfigureAppConfiguration(config =>
+                    {
+                        config
+                            .AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true)
+                            .AddEnvironmentVariables();
+                    })
                     .UseStartup<Startup>())
                 .Build();
 
