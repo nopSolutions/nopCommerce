@@ -14422,7 +14422,7 @@
     <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ShoppingCartType.EndDate.Hint">
-    <Value>The end date for the search.</Value>
+    <Value>The end date for the search (when a product was added to the cart).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ShoppingCartType.Product">
     <Value>Product</Value>
@@ -14440,7 +14440,7 @@
     <Value>Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ShoppingCartType.StartDate.Hint">
-    <Value>The start date for the search.</Value>
+    <Value>The start date for the search (when a product was added to the cart).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ShoppingCartType.Store">
     <Value>Store</Value>

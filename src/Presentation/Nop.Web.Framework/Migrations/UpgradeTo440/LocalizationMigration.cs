@@ -593,7 +593,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 //#5319
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
                 //#5245
-                ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories"
+                ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories",
+                //#5209
+                ["Admin.ShoppingCartType.StartDate.Hint"] = "The start date for the search (when a product was added to the cart).",
+                ["Admin.ShoppingCartType.EndDate.Hint"] = "The end date for the search (when a product was added to the cart).",
             }).Wait();
 
             // rename locales
