@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Seo;
@@ -72,6 +73,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 seoSettings.HomepageDescription = "Your home page description";
                 settingService.SaveSettingAsync(seoSettings).Wait();
+            }
+
+            //#5210
+            var adminAreaSettings = settingService.LoadSettingAsync<AdminAreaSettings>().Result;
+            if (!settingService.SettingExistsAsync(adminAreaSettings, settings => settings.ShowDocumentationReferenceLinks).Result)
+            {
+                adminAreaSettings.ShowDocumentationReferenceLinks = true;
+                settingService.SaveSettingAsync(adminAreaSettings).Wait();
             }
 
             //#4944

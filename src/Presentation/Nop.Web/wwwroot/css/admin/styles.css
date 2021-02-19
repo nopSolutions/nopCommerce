@@ -1474,6 +1474,15 @@ div.dataTables_wrapper {
   white-space: nowrap;
 }
 
+.documentation-reference {
+  margin-bottom: 10px;
+}
+
+.documentation-reference i {
+  font-size: 0.9em;
+  color: #4d4d4d;
+}
+
 /* FORM ELEMENTS */
 .form-horizontal .label-wrapper {
   float: right;

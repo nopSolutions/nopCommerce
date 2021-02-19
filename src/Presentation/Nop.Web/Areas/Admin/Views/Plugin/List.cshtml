@@ -173,6 +173,8 @@
 
                 <div class="card card-default">
                     <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins")" />
+
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "plugins-local-grid",
@@ -221,7 +223,7 @@
                                 }
                             }
                         })
-                        
+
                         <script>
                             var textRenderer = $.fn.dataTable.render.text().display;
 
@@ -260,7 +262,7 @@
                                     }
                                     else {
                                         canChange = canChange + '<i class="fas fa-times false-icon"></i>';
-                                    };   
+                                    };
                                     canChange = canChange + '</li>';
                                 };
 
@@ -269,7 +271,7 @@
                                     '<li>@T("Admin.Configuration.Plugins.Fields.Author").Text: ' + row.Author + '</li>' +
                                     '<li>@T("Admin.Configuration.Plugins.Fields.SystemName").Text: ' + row.SystemName + '</li>' +
                                     '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text: ' + row.DisplayOrder + '</li>' +
-                                    isInstall + 
+                                    isInstall +
                                     canChange;
                             }
 
