@@ -537,7 +537,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 //#5144
                 ["Admin.GiftCards.RecipientNotified"] = "The recipient has been notified successfully.",
                 //#5319
-                ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>"
+                ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
+                //#5245
+                ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories"
             }).Wait();
 
             // rename locales
