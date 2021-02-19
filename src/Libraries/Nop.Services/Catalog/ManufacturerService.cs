@@ -65,35 +65,6 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Filter hidden entries according to constraints if any
-        /// </summary>
-        /// <param name="query">Query to filter</param>
-        /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
-        /// <returns>Filtered query</returns>
-        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
-            int storeId, int[] customerRolesIds)
-            where TEntity : Manufacturer
-        {
-            //filter unpublished entries
-            query = query.Where(entry => entry.Published);
-
-            //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
-                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
-
-            //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
-
-            return query;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -152,13 +123,19 @@ namespace Nop.Services.Catalog
             return await _manufacturerRepository.GetAllPagedAsync(async query =>
             {
                 if (!showHidden)
-                {
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
-                }
+                    query = query.Where(m => m.Published);
                 else if (overridePublished.HasValue)
                     query = query.Where(m => m.Published == overridePublished.Value);
+
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                if (!showHidden)
+                {
+                    var customer = await _workContext.GetCurrentCustomerAsync();
+                    query = await _aclService.ApplyAcl(query, customer);
+                }
 
                 query = query.Where(m => !m.Deleted);
 
@@ -289,10 +266,16 @@ namespace Nop.Services.Catalog
 
             if (!showHidden)
             {
-                var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                var manufacturersQuery = _manufacturerRepository.Table.Where(m => m.Published);
+
+                //apply store mapping constraints
+                var store = await _storeContext.GetCurrentStoreAsync();
+                manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, store.Id);
+
+                //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                var manufacturersQuery = await FilterHiddenEntriesAsync(_manufacturerRepository.Table, storeId, customerRolesIds);
+                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customer);
+
                 query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
             }
 
@@ -311,12 +294,11 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             var key = _staticCacheManager
-                .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId, showHidden, customer, storeId);
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId, showHidden, customer, store);
 
             var query = from pm in _productManufacturerRepository.Table
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
@@ -326,7 +308,14 @@ namespace Nop.Services.Catalog
 
             if (!showHidden)
             {
-                var manufacturersQuery = await FilterHiddenEntriesAsync(_manufacturerRepository.Table, storeId, customerRolesIds);
+                var manufacturersQuery = _manufacturerRepository.Table.Where(m => m.Published);
+
+                //apply store mapping constraints
+                manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, store.Id);
+
+                //apply ACL constraints
+                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customer);
+
                 query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
             }
 

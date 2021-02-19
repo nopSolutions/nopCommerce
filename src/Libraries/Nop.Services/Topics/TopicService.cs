@@ -51,35 +51,6 @@ namespace Nop.Services.Topics
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Filter hidden entries according to constraints if any
-        /// </summary>
-        /// <param name="query">Query to filter</param>
-        /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
-        /// <returns>Filtered query</returns>
-        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
-            int storeId, int[] customerRolesIds)
-            where TEntity : Topic
-        {
-            //filter unpublished entries
-            query = query.Where(entry => entry.Published);
-
-            //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
-                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
-
-            //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
-
-            return query;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -114,16 +85,23 @@ namespace Nop.Services.Topics
                 return null;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey, systemName, storeId, customerRolesIds);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey, systemName, storeId, customerRoleIds);
 
             var topic = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var query = _topicRepository.Table;
 
                 if (!showHidden)
-                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                    query = query.Where(t => t.Published);
+
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                if (!showHidden)
+                    query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 return query.Where(t => t.SystemName == systemName)
                     .OrderBy(t => t.Id)
@@ -145,12 +123,19 @@ namespace Nop.Services.Topics
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             return await _topicRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                    query = query.Where(t => t.Published);
+
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                if (!showHidden && !ignoreAcl)
+                    query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 if (onlyIncludedInTopMenu)
                     query = query.Where(t => t.IncludeInTopMenu);
@@ -160,7 +145,7 @@ namespace Nop.Services.Topics
             {
                 return ignoreAcl
                     ? cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu)
-                    : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, customerRolesIds);
+                    : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, customerRoleIds);
             });
         }
 

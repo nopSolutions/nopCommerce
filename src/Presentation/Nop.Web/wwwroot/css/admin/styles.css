@@ -1448,12 +1448,13 @@ div.dataTables_wrapper {
     color: #0076BB;
     font-weight: normal;
     margin-left: 6px;
+    font-size: 65%;
   }
 
-    .content-header > h1 > small .fa-arrow-circle-left {
-      font-size: 18px;
-      margin-right: 1px;
-    }
+  .content-header > h1 > small i {
+    font-size: 0.8em;
+    padding-right: 2px;
+  }
 
 .content-header .btn {
   margin-bottom: 5px;
@@ -1480,8 +1481,13 @@ div.dataTables_wrapper {
   align-items: flex-start;
 }
 
+.form-horizontal .multi-store-override-option + .label-wrapper {
+  width: 90%;
+}
+
   .form-horizontal .label-wrapper .col-form-label {
     text-align: right;
+    flex-grow: 2;
   }
 
   .form-horizontal .label-wrapper .ico-help {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -51,22 +50,47 @@ namespace Nop.Services.Stores
             await _storeMappingRepository.InsertAsync(storeMapping);
         }
 
+        /// <summary>
+        /// Get a value indicating whether a store mapping exists for an entity type
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <returns>True if exists; otherwise false</returns>
+        protected virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported
+        {
+            var entityName = typeof(TEntity).Name;
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
+
+            var query = from sm in _storeMappingRepository.Table
+                        where sm.EntityName == entityName
+                        select sm.StoreId;
+
+            return await _staticCacheManager.GetAsync(key, query.Any);
+        }
+
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Get an expression predicate to apply a store mapping
+        /// Apply store mapping to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <param name="query">Query to filter</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Lambda expression</returns>
-        public virtual Expression<Func<TEntity, bool>> ApplyStoreMapping<TEntity>(int storeId) where TEntity : BaseEntity, IStoreMappingSupported
+        /// <returns>Filtered query</returns>
+        public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId)
+            where TEntity : BaseEntity, IStoreMappingSupported
         {
-            return entity => !entity.LimitedToStores ||
-                (from storeMapping in _storeMappingRepository.Table
-                 where storeMapping.StoreId == storeId && storeMapping.EntityId == entity.Id && storeMapping.EntityName == typeof(TEntity).Name
-                 select storeMapping.EntityId).Any();
+            if (query is null)
+                throw new ArgumentNullException(nameof(query));
+
+            if (storeId == 0 || _catalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
+                return query;
+
+            return from entity in query
+                   where !entity.LimitedToStores || _storeMappingRepository.Table.Any(sm =>
+                         sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id && sm.StoreId == storeId)
+                   select entity;
         }
 
         /// <summary>
@@ -129,28 +153,6 @@ namespace Nop.Services.Stores
             };
 
             await InsertStoreMappingAsync(storeMapping);
-        }
-
-        /// <summary>
-        /// Get a value indicating whether a store mapping exists for an entity type
-        /// </summary>
-        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>True if exists; otherwise false</returns>
-        public virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>(int storeId) where TEntity : BaseEntity, IStoreMappingSupported
-        {
-            if (storeId == 0)
-                return false;
-
-            var entityName = typeof(TEntity).Name;
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, storeId, entityName);
-
-            var query = from sm in _storeMappingRepository.Table
-                        where sm.StoreId == storeId &&
-                              sm.EntityName == entityName
-                        select sm.StoreId;
-
-            return await _staticCacheManager.GetAsync(key, query.Any);
         }
 
         /// <summary>

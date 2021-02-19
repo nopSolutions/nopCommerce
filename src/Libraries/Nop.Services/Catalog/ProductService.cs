@@ -324,31 +324,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Filter hidden entries according to constraints if any
-        /// </summary>
-        /// <param name="query">Query to filter</param>
-        /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
-        /// <returns>Filtered query</returns>
-        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
-            int storeId, int[] customerRolesIds)
-            where TEntity : Product
-        {
-            //filter unpublished entries
-            query = query.Where(entry => entry.Published);
-
-            //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
-                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
-
-            //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
-
-            return query;
-        }
-        
-        /// <summary>
         /// Reserve the given quantity in the warehouses.
         /// </summary>
         /// <param name="product">Product</param>
@@ -561,7 +536,7 @@ namespace Nop.Services.Catalog
         {
             await _productRepository.UpdateAsync(product);
         }
-        
+
         /// <summary>
         /// Gets featured products by a category identifier
         /// </summary>
@@ -576,18 +551,22 @@ namespace Nop.Services.Catalog
                 return featuredProducts;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, customerRolesIds, storeId);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, customerRoleIds, storeId);
 
             var featuredProductIds = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var query = from p in _productRepository.Table
                             join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                            where !p.Deleted && p.VisibleIndividually &&
+                            where p.Published && !p.Deleted && p.VisibleIndividually &&
                                 pc.IsFeaturedProduct && categoryId == pc.CategoryId
                             select p;
 
-                query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 featuredProducts = query.ToList();
 
@@ -614,18 +593,22 @@ namespace Nop.Services.Catalog
                 return featuredProducts;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, customerRolesIds, storeId);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, customerRoleIds, storeId);
 
             var featuredProductIds = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var query = from p in _productRepository.Table
                             join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                            where !p.Deleted && p.VisibleIndividually &&
+                            where p.Published && !p.Deleted && p.VisibleIndividually &&
                                 pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId
                             select p;
 
-                query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 featuredProducts = query.ToList();
 
@@ -647,12 +630,15 @@ namespace Nop.Services.Catalog
         {
             return await _productRepository.GetAllAsync(async query =>
             {
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                query = await _aclService.ApplyAcl(query, customer);
 
                 query = from p in query
-                        where p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
+                        where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
                         LinqToDB.Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
                         select p;
 
@@ -673,13 +659,15 @@ namespace Nop.Services.Catalog
             if (categoryIds != null && categoryIds.Contains(0))
                 categoryIds.Remove(0);
 
+            var query = _productRepository.Table.Where(p => p.Published && !p.Deleted && p.VisibleIndividually);
+
+            //apply store mapping constraints
+            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+            //apply ACL constraints
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-
-            var query = _productRepository.Table;
-            query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
-
-            query = query.Where(p => !p.Deleted && p.VisibleIndividually);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            query = await _aclService.ApplyAcl(query, customerRoleIds);
 
             //category filtering
             if (categoryIds != null && categoryIds.Any())
@@ -691,7 +679,7 @@ namespace Nop.Services.Catalog
             }
 
             var cacheKey = _staticCacheManager
-                .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRolesIds, storeId, categoryIds);
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRoleIds, storeId, categoryIds);
 
             //only distinct products
             return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).Count());
@@ -841,13 +829,19 @@ namespace Nop.Services.Catalog
             var productsQuery = _productRepository.Table;
 
             if (!showHidden)
-            {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                productsQuery = await FilterHiddenEntriesAsync(productsQuery, storeId, customerRolesIds);
-            }
+                productsQuery = productsQuery.Where(p => p.Published);
             else if (overridePublished.HasValue)
                 productsQuery = productsQuery.Where(p => p.Published == overridePublished.Value);
+
+            //apply store mapping constraints
+            productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+            //apply ACL constraints
+            if (!showHidden)
+            {
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
+            }
 
             productsQuery =
                 from p in productsQuery
@@ -942,7 +936,7 @@ namespace Nop.Services.Catalog
 
             if (categoryIds?.Count > 0)
             {
-                var productCategoryQuery = 
+                var productCategoryQuery =
                     from pc in _productCategoryRepository.Table
                     where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                         categoryIds.Contains(pc.CategoryId)
@@ -1674,7 +1668,7 @@ namespace Nop.Services.Catalog
                 }
             }
         }
-        
+
         /// <summary>
         /// Book the reserved quantity
         /// </summary>
@@ -1695,7 +1689,7 @@ namespace Nop.Services.Catalog
                 return;
 
             var pwi = await _productWarehouseInventoryRepository.Table
-                
+
                 .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
             if (pwi == null)
                 return;
@@ -1729,7 +1723,7 @@ namespace Nop.Services.Catalog
                 return 0;
 
             var pwi = await _productWarehouseInventoryRepository.Table
-                
+
                 .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
             if (pwi == null)
                 return 0;
@@ -1872,7 +1866,7 @@ namespace Nop.Services.Catalog
         {
             await _crossSellProductRepository.InsertAsync(crossSellProduct);
         }
-        
+
         /// <summary>
         /// Gets a cross-sells
         /// </summary>
@@ -2164,9 +2158,15 @@ namespace Nop.Services.Catalog
             {
                 if (!showHidden)
                 {
+                    var productsQuery = _productRepository.Table.Where(p => p.Published);
+
+                    //apply store mapping constraints
+                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+                    //apply ACL constraints
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    var productsQuery = await FilterHiddenEntriesAsync(_productRepository.Table, storeId, customerRolesIds);
+                    productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
+
                     query = query.Where(review => productsQuery.Any(product => product.Id == review.ProductId));
                 }
 
@@ -2249,7 +2249,7 @@ namespace Nop.Services.Catalog
         {
             await _productReviewRepository.DeleteAsync(productReviews);
         }
-        
+
         /// <summary>
         /// Sets or create a product review helpfulness record
         /// </summary>
@@ -2283,7 +2283,7 @@ namespace Nop.Services.Catalog
                 await _productReviewHelpfulnessRepository.UpdateAsync(prh);
             }
         }
-        
+
         /// <summary>
         /// Updates a product review
         /// </summary>

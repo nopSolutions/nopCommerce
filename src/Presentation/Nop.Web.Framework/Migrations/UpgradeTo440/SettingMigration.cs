@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -71,6 +72,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 seoSettings.HomepageDescription = "Your home page description";
                 settingService.SaveSettingAsync(seoSettings).Wait();
+            }
+
+            //#4944
+            var shippingSettings = settingService.LoadSettingAsync<ShippingSettings>().Result;
+            if (!settingService.SettingExistsAsync(shippingSettings, settings => settings.RequestDelay).Result)
+            {
+                shippingSettings.RequestDelay = 300;
+                settingService.SaveSettingAsync(shippingSettings).Wait();
             }
         }
 
