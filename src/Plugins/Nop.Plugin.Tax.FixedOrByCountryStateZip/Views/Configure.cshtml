@@ -13,7 +13,7 @@
 @if (Model.AvailableTaxCategories.Any())
 {
     <div class="form-group row">
-        <div class="col-md-12">
+        <div class="col-md-3">
             <div class="onoffswitch">
                 <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="advanced-settings-mode" checked="@Model.CountryStateZipEnabled">
                 <label class="onoffswitch-label" for="advanced-settings-mode">
@@ -22,6 +22,13 @@
                           data-locale-advanced="@T("Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip")"></span>
                     <span class="onoffswitch-switch"></span>
                 </label>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="float-right">
+                <a asp-controller="Tax" asp-action="Categories" class="btn btn-primary" id="manage-tax-categories-button">
+                    @T("Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage")
+                </a>
             </div>
         </div>
     </div>
