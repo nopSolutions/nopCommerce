@@ -189,14 +189,13 @@
                 </div>
             </div>
         </div>
-
-        @if (Model.Id > 0)
-        {
-            <div class="cards-group">
-                <div class="card card-default">
-                    <div class="card-header">
-                        @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents")
-                    </div>
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-header">
+                    @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents")
+                </div>
+                @if (Model.Id > 0)
+                {
                     <div class="card-body">
                         @if (!Model.HideCustomEventsSearch)
                         {
@@ -326,8 +325,14 @@
                             });
                         </script>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="card-body">
+                        @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.SaveBeforeEdit")
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
 </div>
