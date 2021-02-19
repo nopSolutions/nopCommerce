@@ -73,6 +73,13 @@ namespace Nop.Services.Catalog
         Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId);
 
         /// <summary>
+        /// Gets the manufacturers by category identifier
+        /// </summary>
+        /// <param name="categoryId">Cateogry identifier</param>
+        /// <returns>Manufacturers</returns>
+        Task<IList<Manufacturer>> GetManufacturersByCategoryIdAsync(int categoryId);
+
+        /// <summary>
         /// Gets manufacturers by identifier
         /// </summary>
         /// <param name="manufacturerIds">manufacturer identifiers</param>

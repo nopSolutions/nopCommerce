@@ -691,7 +691,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="manufacturerIds">Manufacturer identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
@@ -720,7 +720,7 @@ namespace Nop.Services.Catalog
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
-            int manufacturerId = 0,
+            IList<int> manufacturerIds = null,
             int storeId = 0,
             int vendorId = 0,
             int warehouseId = 0,
@@ -742,7 +742,7 @@ namespace Nop.Services.Catalog
             bool? overridePublished = null)
         {
             var (products, _) = await SearchProductsAsync(false,
-                pageIndex, pageSize, categoryIds, manufacturerId,
+                pageIndex, pageSize, categoryIds, manufacturerIds,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, excludeFeaturedProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchManufacturerPartNumber, searchSku,
@@ -759,7 +759,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="manufacturerIds">Manufacturer identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
@@ -789,7 +789,7 @@ namespace Nop.Services.Catalog
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
-            int manufacturerId = 0,
+            IList<int> manufacturerIds = null,
             int storeId = 0,
             int vendorId = 0,
             int warehouseId = 0,
@@ -810,18 +810,6 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            //validate "categoryIds" parameter
-            if (categoryIds != null && categoryIds.Contains(0))
-                categoryIds.Remove(0);
-
-            //pass specification identifiers as comma-delimited string
-            var commaSeparatedSpecIds = string.Empty;
-            if (filteredSpecs != null)
-            {
-                ((List<int>)filteredSpecs).Sort();
-                commaSeparatedSpecIds = string.Join(",", filteredSpecs);
-            }
-
             //some databases don't support int.MaxValue
             if (pageSize == int.MaxValue)
                 pageSize = int.MaxValue - 1;
@@ -934,28 +922,44 @@ namespace Nop.Services.Catalog
                     select p;
             }
 
-            if (categoryIds?.Count > 0)
+            if (categoryIds is not null)
             {
-                var productCategoryQuery =
-                    from pc in _productCategoryRepository.Table
-                    where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
-                        categoryIds.Contains(pc.CategoryId)
-                    select pc;
+                if (categoryIds.Contains(0))
+                    categoryIds.Remove(0);
 
-                productsQuery =
-                    from p in productsQuery
-                    where productCategoryQuery.Any(pc => pc.ProductId == p.Id)
-                    select p;
+                if (categoryIds.Any())
+                {
+                    var productCategoryQuery =
+                        from pc in _productCategoryRepository.Table
+                        where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
+                            categoryIds.Contains(pc.CategoryId)
+                        select pc;
+
+                    productsQuery =
+                        from p in productsQuery
+                        where productCategoryQuery.Any(pc => pc.ProductId == p.Id)
+                        select p;
+                }
             }
 
-            if (manufacturerId > 0)
+            if (manufacturerIds is not null)
             {
-                productsQuery =
-                    from p in productsQuery
-                    join pmm in _productManufacturerRepository.Table on p.Id equals pmm.ProductId
-                    where pmm.ManufacturerId == manufacturerId &&
-                        (!excludeFeaturedProducts || !pmm.IsFeaturedProduct)
-                    select p;
+                if (manufacturerIds.Contains(0))
+                    manufacturerIds.Remove(0);
+
+                if (manufacturerIds.Any())
+                {
+                    var productManufacturerQuery =
+                        from pm in _productManufacturerRepository.Table
+                        where (!excludeFeaturedProducts || !pm.IsFeaturedProduct) &&
+                            manufacturerIds.Contains(pm.ManufacturerId)
+                        select pm;
+
+                    productsQuery =
+                        from p in productsQuery
+                        where productManufacturerQuery.Any(pm => pm.ProductId == p.Id)
+                        select p;
+                }
             }
 
             if (productTagId > 0)
@@ -971,7 +975,7 @@ namespace Nop.Services.Catalog
             {
                 productsQuery =
                     from p in productsQuery
-                    join psm in _productSpecificationAttributeRepository.Table.Where(psa => filteredSpecs.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
+                    join psm in _productSpecificationAttributeRepository.Table.Where(psa => psa.AllowFiltering && filteredSpecs.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
                     group p by p into groupedProduct
                     where groupedProduct.Count() == filteredSpecs.Count
                     select groupedProduct.Key;

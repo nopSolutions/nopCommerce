@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -26,6 +29,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressService _addressService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -44,7 +49,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public VendorModelFactory(IAddressAttributeModelFactory addressAttributeModelFactory,
+        public VendorModelFactory(CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
@@ -58,6 +65,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
             _addressAttributeModelFactory = addressAttributeModelFactory;
             _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -346,7 +355,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Active = true;
                 model.AllowCustomersToSelectPageSize = true;
                 model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
+                model.PriceRangeFiltering = true;
+                model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
+
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //prepare localized models
             if (!excludeProperties)

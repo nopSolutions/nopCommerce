@@ -50,16 +50,6 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<ProductTag>>,
         IConsumer<EntityUpdatedEvent<ProductTag>>,
         IConsumer<EntityDeletedEvent<ProductTag>>,
-        //specification attributes
-        IConsumer<EntityUpdatedEvent<SpecificationAttribute>>,
-        IConsumer<EntityDeletedEvent<SpecificationAttribute>>,
-        //specification attribute options
-        IConsumer<EntityUpdatedEvent<SpecificationAttributeOption>>,
-        IConsumer<EntityDeletedEvent<SpecificationAttributeOption>>,
-        //Product specification attribute
-        IConsumer<EntityInsertedEvent<ProductSpecificationAttribute>>,
-        IConsumer<EntityUpdatedEvent<ProductSpecificationAttribute>>,
-        IConsumer<EntityDeletedEvent<ProductSpecificationAttribute>>,
         //Product attribute values
         IConsumer<EntityUpdatedEvent<ProductAttributeValue>>,
         //Topics
@@ -122,7 +112,6 @@ namespace Nop.Web.Infrastructure.Cache
         {
             //clear all localizable models
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         }
@@ -131,7 +120,6 @@ namespace Nop.Web.Infrastructure.Cache
         {
             //clear all localizable models
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         }
@@ -140,7 +128,6 @@ namespace Nop.Web.Infrastructure.Cache
         {
             //clear all localizable models
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         }
@@ -304,53 +291,6 @@ namespace Nop.Web.Infrastructure.Cache
         public async Task HandleEventAsync(EntityDeletedEvent<ProductTag> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Specification attributes
-
-        public async Task HandleEventAsync(EntityUpdatedEvent<SpecificationAttribute> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public async Task HandleEventAsync(EntityDeletedEvent<SpecificationAttribute> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Specification attribute options
-
-        public async Task HandleEventAsync(EntityUpdatedEvent<SpecificationAttributeOption> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public async Task HandleEventAsync(EntityDeletedEvent<SpecificationAttributeOption> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Product specification attribute
-
-        public async Task HandleEventAsync(EntityInsertedEvent<ProductSpecificationAttribute> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public async Task HandleEventAsync(EntityUpdatedEvent<ProductSpecificationAttribute> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public async Task HandleEventAsync(EntityDeletedEvent<ProductSpecificationAttribute> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
         }
 
         #endregion

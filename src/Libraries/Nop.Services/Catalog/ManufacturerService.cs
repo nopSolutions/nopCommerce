@@ -24,11 +24,13 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
+        private readonly ICategoryService _categoryService;
         private readonly ICustomerService _customerService;
         private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -40,11 +42,13 @@ namespace Nop.Services.Catalog
 
         public ManufacturerService(CatalogSettings catalogSettings,
             IAclService aclService,
+            ICategoryService categoryService,
             ICustomerService customerService,
             IRepository<DiscountManufacturerMapping> discountManufacturerMappingRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
+            IRepository<ProductCategory> productCategoryRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -52,11 +56,13 @@ namespace Nop.Services.Catalog
         {
             _catalogSettings = catalogSettings;
             _aclService = aclService;
+            _categoryService = categoryService;
             _customerService = customerService;
             _discountManufacturerMappingRepository = discountManufacturerMappingRepository;
             _manufacturerRepository = manufacturerRepository;
             _productRepository = productRepository;
             _productManufacturerRepository = productManufacturerRepository;
+            _productCategoryRepository = productCategoryRepository;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
@@ -205,6 +211,57 @@ namespace Nop.Services.Catalog
             manufacturers = manufacturers.OrderBy(manufacturer => manufacturer.DisplayOrder).ThenBy(manufacturer => manufacturer.Id);
 
             return await manufacturers.ToPagedListAsync(pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Gets the manufacturers by category identifier
+        /// </summary>
+        /// <param name="categoryId">Cateogry identifier</param>
+        /// <returns>Manufacturers</returns>
+        public virtual async Task<IList<Manufacturer>> GetManufacturersByCategoryIdAsync(int categoryId)
+        {
+            if (categoryId <= 0)
+                return new List<Manufacturer>();
+
+            // get available products in category
+            var productsQuery = from p in _productRepository.Table
+                                where !p.Deleted && p.Published &&
+                                      (p.ParentGroupedProductId == 0 || p.VisibleIndividually) &&
+                                      (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc <= DateTime.UtcNow) &&
+                                      (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc >= DateTime.UtcNow)
+                                select p;
+
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+
+            //apply store mapping constraints
+            productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, store.Id);
+
+            //apply ACL constraints
+            productsQuery = await _aclService.ApplyAcl(productsQuery, currentCustomer);
+
+            var subCategoryIds = _catalogSettings.ShowProductsFromSubcategories
+                ? await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)
+                : null;
+
+            var productCategoryQuery = from pc in _productCategoryRepository.Table
+                                       where (pc.CategoryId == categoryId || (_catalogSettings.ShowProductsFromSubcategories && subCategoryIds.Contains(pc.CategoryId))) &&
+                                             (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)
+                                       select pc;
+
+            // get manufacturers of the products
+            var manufacturersQuery = from m in _manufacturerRepository.Table
+                                     join pm in _productManufacturerRepository.Table on m.Id equals pm.ManufacturerId
+                                     join p in productsQuery on pm.ProductId equals p.Id
+                                     join pc in productCategoryQuery on p.Id equals pc.ProductId
+                                     orderby
+                                        pm.DisplayOrder, m.Name
+                                     select m;
+
+            var key = _staticCacheManager
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturersByCategoryCacheKey, categoryId.ToString());
+
+            return await _staticCacheManager.GetAsync(key, async () => await manufacturersQuery.Distinct().ToListAsync());
         }
 
         /// <summary>

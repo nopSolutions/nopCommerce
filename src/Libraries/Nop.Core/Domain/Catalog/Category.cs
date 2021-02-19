@@ -69,11 +69,6 @@ namespace Nop.Core.Domain.Catalog
         public string PageSizeOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets the available price ranges
-        /// </summary>
-        public string PriceRanges { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to show the category on home page
         /// </summary>
         public bool ShowOnHomepage { get; set; }
@@ -117,5 +112,25 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range filtering is enabled
+        /// </summary>
+        public bool PriceRangeFiltering { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "from" price
+        /// </summary>
+        public decimal PriceFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "to" price
+        /// </summary>
+        public decimal PriceTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range should be calculated automatically
+        /// </summary>
+        public bool AutomaticallyCalculatePriceRange { get; set; }
     }
 }

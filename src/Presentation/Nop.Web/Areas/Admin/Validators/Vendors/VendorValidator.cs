@@ -27,6 +27,16 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength);
 
+            RuleFor(x => x.PriceFrom)
+                .GreaterThanOrEqualTo(0)
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceFrom.GreaterThanOrEqualZero"))
+                .When(x => x.PriceRangeFiltering && !x.AutomaticallyCalculatePriceRange);
+
+            RuleFor(x => x.PriceTo)
+                .GreaterThan(x => x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero)
+                .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom").Result, x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
+                .When(x => x.PriceRangeFiltering && !x.AutomaticallyCalculatePriceRange);
+
             SetDatabaseValidationRules<Vendor>(dataProvider);
         }
     }

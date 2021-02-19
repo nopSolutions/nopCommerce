@@ -22,7 +22,10 @@ namespace Nop.Services.Catalog.Caching
             {
                 await RemoveByPrefixAsync(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
                 await RemoveByPrefixAsync(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
+                await RemoveByPrefixAsync(NopCatalogDefaults.FilterableSpecificationAttributeOptionsPrefix);
             }
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

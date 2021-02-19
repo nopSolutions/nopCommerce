@@ -491,11 +491,20 @@ namespace Nop.Services.ExportImport
                     case "PageSizeOptions":
                         category.PageSizeOptions = property.StringValue;
                         break;
-                    case "PriceRanges":
-                        category.PriceRanges = property.StringValue;
-                        break;
                     case "ShowOnHomepage":
                         category.ShowOnHomepage = property.BooleanValue;
+                        break;
+                    case "PriceRangeFiltering":
+                        category.PriceRangeFiltering = property.BooleanValue;
+                        break;
+                    case "PriceFrom":
+                        category.PriceFrom = property.DecimalValue;
+                        break;
+                    case "PriceTo":
+                        category.PriceTo = property.DecimalValue;
+                        break;
+                    case "AutomaticallyCalculatePriceRange":
+                        category.AutomaticallyCalculatePriceRange = property.BooleanValue;
                         break;
                     case "IncludeInTopMenu":
                         category.IncludeInTopMenu = property.BooleanValue;
@@ -1987,8 +1996,17 @@ namespace Nop.Services.ExportImport
                         case "PageSizeOptions":
                             manufacturer.PageSizeOptions = property.StringValue;
                             break;
-                        case "PriceRanges":
-                            manufacturer.PriceRanges = property.StringValue;
+                        case "PriceRangeFiltering":
+                            manufacturer.PriceRangeFiltering = property.BooleanValue;
+                            break;
+                        case "PriceFrom":
+                            manufacturer.PriceFrom = property.DecimalValue;
+                            break;
+                        case "PriceTo":
+                            manufacturer.PriceTo = property.DecimalValue;
+                            break;
+                        case "AutomaticallyCalculatePriceRange":
+                            manufacturer.AutomaticallyCalculatePriceRange = property.BooleanValue;
                             break;
                         case "Published":
                             manufacturer.Published = property.BooleanValue;
