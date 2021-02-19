@@ -1027,7 +1027,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a scope and in the usual way to get a new instance there is no possibility
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var newRoxyFilemanService = scope.ServiceProvider.GetRequiredService<IRoxyFilemanService>();
+                var newRoxyFilemanService = EngineContext.Current.Resolve<IRoxyFilemanService>(scope);
                 await newRoxyFilemanService.ConfigureAsync();
             }
 

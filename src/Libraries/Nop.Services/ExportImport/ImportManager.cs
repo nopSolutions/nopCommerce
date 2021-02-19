@@ -1079,14 +1079,12 @@ namespace Nop.Services.ExportImport
         {
             foreach (var path in SplitProductFile(worksheet, metadata))
             {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    // Resolve
-                    var importManager = scope.ServiceProvider.GetRequiredService<IImportManager>();
+                using var scope = _serviceScopeFactory.CreateScope();
+                // Resolve
+                var importManager = EngineContext.Current.Resolve<IImportManager>(scope);
 
-                    using var sr = new StreamReader(path);
-                    await importManager.ImportProductsFromXlsxAsync(sr.BaseStream);
-                }
+                using var sr = new StreamReader(path);
+                await importManager.ImportProductsFromXlsxAsync(sr.BaseStream);
 
                 try
                 {
