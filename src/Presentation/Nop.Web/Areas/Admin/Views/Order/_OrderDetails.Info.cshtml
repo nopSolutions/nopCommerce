@@ -179,7 +179,7 @@
                         {
                             <div class="col-md-6">
                                 <div class="form-text-row">
-                                    @Model.OrderSubtotalInclTax <strong>@T("Admin.Orders.Fields.OrderSubtotalInclTax")</strong>
+                                    @Html.Raw(Model.OrderSubtotalInclTax) <strong>@T("Admin.Orders.Fields.OrderSubtotalInclTax")</strong>
                                 </div>
                             </div>
                         }
@@ -187,7 +187,7 @@
                         {
                             <div class="col-md-6">
                                 <div class="form-text-row">
-                                    @Model.OrderSubtotalExclTax <strong>@T("Admin.Orders.Fields.OrderSubtotalExclTax")</strong>
+                                    @Html.Raw(Model.OrderSubtotalExclTax) <strong>@T("Admin.Orders.Fields.OrderSubtotalExclTax")</strong>
                                 </div>
                             </div>
                         }
@@ -212,7 +212,7 @@
                             {
                                 <div class="col-md-6">
                                     <div class="form-text-row">
-                                        @Model.OrderSubTotalDiscountInclTax <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountInclTax")</strong>
+                                        @Html.Raw(Model.OrderSubTotalDiscountInclTax) <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountInclTax")</strong>
                                     </div>
                                 </div>
                             }
@@ -220,7 +220,7 @@
                             {
                                 <div class="col-md-6">
                                     <div class="form-text-row">
-                                        @Model.OrderSubTotalDiscountExclTax <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountExclTax")</strong>
+                                        @Html.Raw(Model.OrderSubTotalDiscountExclTax) <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountExclTax")</strong>
                                     </div>
                                 </div>
                             }
@@ -243,7 +243,7 @@
                         {
                             <div class="col-md-6">
                                 <div class="form-text-row">
-                                    @Model.OrderShippingInclTax <strong>@T("Admin.Orders.Fields.OrderShippingInclTax")</strong>
+                                    @Html.Raw(Model.OrderShippingInclTax) <strong>@T("Admin.Orders.Fields.OrderShippingInclTax")</strong>
                                 </div>
                             </div>
                         }
@@ -251,7 +251,7 @@
                         {
                             <div class="col-md-6">
                                 <div class="form-text-row">
-                                    @Model.OrderShippingExclTax <strong>@T("Admin.Orders.Fields.OrderShippingExclTax")</strong>
+                                    @Html.Raw(Model.OrderShippingExclTax) <strong>@T("Admin.Orders.Fields.OrderShippingExclTax")</strong>
                                 </div>
                             </div>
                         }
@@ -276,7 +276,7 @@
                             {
                                 <div class="col-md-6">
                                     <div class="form-text-row">
-                                        @Model.PaymentMethodAdditionalFeeInclTax <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax")</strong>
+                                        @Html.Raw(Model.PaymentMethodAdditionalFeeInclTax) <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax")</strong>
                                     </div>
                                 </div>
                             }
@@ -284,7 +284,7 @@
                             {
                                 <div class="col-md-6">
                                     <div class="form-text-row">
-                                        @Model.PaymentMethodAdditionalFeeExclTax <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax")</strong>
+                                        @Html.Raw(Model.PaymentMethodAdditionalFeeExclTax) <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax")</strong>
                                     </div>
                                 </div>
                             }
@@ -301,7 +301,7 @@
                             <nop-label asp-for="Tax" /> <span style="padding-top: 7px;margin-right: 5px;float: right;">@tr.Rate%</span>
                         </div>
                         <div class="col-md-9">
-                            @tr.Value
+                            @Html.Raw(tr.Value)
                         </div>
                     </div>
                 }
@@ -313,7 +313,7 @@
                         <nop-label asp-for="Tax" />
                     </div>
                     <div class="col-md-9">
-                        <div class="form-text-row">@Model.Tax</div>
+                        <div class="form-text-row">@Html.Raw(Model.Tax)</div>
                     </div>
                 </div>
             }
@@ -324,7 +324,7 @@
                         <nop-label asp-for="OrderTotalDiscount" />
                     </div>
                     <div class="col-md-9">
-                        <div class="form-text-row">@Model.OrderTotalDiscount</div>
+                        <div class="form-text-row">@Html.Raw(Model.OrderTotalDiscount)</div>
                     </div>
                 </div>
             }
@@ -356,7 +356,7 @@
                     <nop-label asp-for="OrderTotal" />
                 </div>
                 <div class="col-md-9">
-                    <div class="form-text-row">@Model.OrderTotal</div>
+                    <div class="form-text-row">@Html.Raw(Model.OrderTotal)</div>
                 </div>
             </div>
             @if (!string.IsNullOrEmpty(Model.RefundedAmount))
@@ -394,7 +394,7 @@
                     <nop-label asp-for="Profit" />
                 </div>
                 <div class="col-md-9">
-                    <div class="form-text-row">@Model.Profit</div>
+                    <div class="form-text-row">@Html.Raw(Model.Profit)</div>
                 </div>
             </div>
             <div id="trEditOrderTotals">

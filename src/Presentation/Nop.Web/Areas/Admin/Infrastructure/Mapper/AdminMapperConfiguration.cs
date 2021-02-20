@@ -1295,6 +1295,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<OrderSettingsModel, OrderSettings>()
                 .ForMember(settings => settings.GeneratePdfInvoiceInCustomerLanguage, options => options.Ignore())
                 .ForMember(settings => settings.MinimumOrderPlacementInterval, options => options.Ignore())
+                .ForMember(settings => settings.DisplayCustomerCurrencyOnOrders, options => options.Ignore())
                 .ForMember(settings => settings.ReturnRequestsFileMaximumSize, options => options.Ignore());
 
             CreateMap<ReturnRequestAction, ReturnRequestActionModel>();
