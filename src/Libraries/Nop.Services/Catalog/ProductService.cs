@@ -707,7 +707,7 @@ namespace Nop.Services.Catalog
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier (search for text searching)</param>
-        /// <param name="filteredSpecs">Filtered product specification identifiers</param>
+        /// <param name="filteredSpecOptions">Specification options list to filter products; null to load all records</param>
         /// <param name="orderBy">Order by</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="overridePublished">
@@ -736,7 +736,7 @@ namespace Nop.Services.Catalog
             bool searchSku = true,
             bool searchProductTags = false,
             int languageId = 0,
-            IList<int> filteredSpecs = null,
+            IList<SpecificationAttributeOption> filteredSpecOptions = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
             bool? overridePublished = null)
@@ -902,13 +902,16 @@ namespace Nop.Services.Catalog
                     select p;
             }
 
-            if (filteredSpecs?.Count > 0)
+            if (filteredSpecOptions?.Count > 0)
             {
+                var optionIds = filteredSpecOptions.Select(sao => sao.Id);
+                var specAttributeCount = filteredSpecOptions.Select(sao => sao.SpecificationAttributeId).Distinct().Count();
+
                 productsQuery =
                     from p in productsQuery
-                    join psm in _productSpecificationAttributeRepository.Table.Where(psa => psa.AllowFiltering && filteredSpecs.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
+                    join psm in _productSpecificationAttributeRepository.Table.Where(psa => psa.AllowFiltering && optionIds.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
                     group p by p into groupedProduct
-                    where groupedProduct.Count() == filteredSpecs.Count
+                    where groupedProduct.Count() == specAttributeCount
                     select groupedProduct.Key;
             }
             

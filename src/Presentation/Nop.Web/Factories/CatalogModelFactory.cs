@@ -962,6 +962,8 @@ namespace Nop.Web.Factories
                 model.ManufacturerFilter = await PrepareManufacturerFilterModel(command.ManufacturerIds, manufacturers);
             }
 
+            var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+
             //products
             var products = await _productService.SearchProductsAsync(
                 command.PageNumber - 1,
@@ -973,7 +975,7 @@ namespace Nop.Web.Factories
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
                 manufacturerIds: command.ManufacturerIds,
-                filteredSpecs: command.SpecificationOptionIds,
+                filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
             model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
@@ -1100,6 +1102,8 @@ namespace Nop.Web.Factories
 
             model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
 
+            var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+
             //products
             var products = await _productService.SearchProductsAsync(
                 command.PageNumber - 1,
@@ -1110,7 +1114,7 @@ namespace Nop.Web.Factories
                 excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
-                filteredSpecs: command.SpecificationOptionIds,
+                filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
             model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
