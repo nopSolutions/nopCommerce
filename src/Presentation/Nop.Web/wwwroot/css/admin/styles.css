@@ -878,7 +878,7 @@ table .btn {
 .k-numeric-wrap.k-state-default {
   border-radius: 0;
   border: none;
-  height: 34px;
+  height: 38px;
   padding-right: 23px;
   background: #fff;
 }
@@ -953,9 +953,15 @@ td.k-state-focused.k-state-selected {
 
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused {
-  border-color: #00c0ef;
-  box-shadow: none;
-  padding-bottom: 0;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  border-radius: 0;
+  border: 1px solid #80bdff;
+}
+
+.k-picker-wrap.k-state-focused .k-input,
+.k-numeric-wrap.k-state-focused .k-input {
+  border: none;
 }
 
 .k-numerictextbox .k-link {
@@ -1108,9 +1114,25 @@ td.k-state-focused.k-state-selected {
     border-radius: 0;
   }
 
-    .k-multiselect.k-header.k-state-hover, .k-multiselect.k-header.k-state-focused {
+    .k-multiselect.k-header.k-state-hover {
       border-color: #3c8dbc !important;
       box-shadow: none !important;
+    }
+
+    .k-multiselect.k-state-focused {
+      color: #495057;
+      background-color: #fff;
+      border-color: #80bdff;
+      border-width: 0;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+      border-radius: 0;
+    }
+
+    .k-state-focused>.k-multiselect-wrap {
+      box-shadow: none;
+      border: 1px solid #80bdff;
+      border-radius: 0;
     }
 
 .k-multiselect-wrap {
@@ -1538,6 +1560,13 @@ div.dataTables_wrapper {
 
   .form-group input[type=checkbox] {
     margin-top: 13px;
+  }
+
+  .form-group input[type=checkbox]:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+    border-radius: 0;
+    border: 1px solid #80bdff;
   }
 
   .form-group .checkbox input[type=checkbox] {
