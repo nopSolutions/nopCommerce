@@ -319,6 +319,21 @@ namespace Nop.Data.DataProviders
             using var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
             await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
+
+        /// <summary>
+        /// Executes command asynchronously and returns number of affected records
+        /// </summary>
+        /// <param name="sql">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        public virtual async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
+        {
+            using var dataContext = await CreateDataConnectionAsync();
+            var command = new CommandInfo(dataContext, sql, dataParameters);
+            var affectedRecords = await command.ExecuteAsync();
+            UpdateOutputParameters(dataContext, dataParameters);
+            return affectedRecords;
+        }
         
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
