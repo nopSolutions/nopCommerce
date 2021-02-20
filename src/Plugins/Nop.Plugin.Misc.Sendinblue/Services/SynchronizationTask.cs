@@ -10,15 +10,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
     {
         #region Fields
 
-        private readonly SendinblueManager _sendinBlueEmailManager;
+        private readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 
         #region Ctor
 
-        public SynchronizationTask(SendinblueManager sendinBlueEmailManager)
+        public SynchronizationTask(SendinblueManager sendinblueEmailManager)
         {
-            _sendinBlueEmailManager = sendinBlueEmailManager;
+            _sendinblueEmailManager = sendinblueEmailManager;
         }
 
         #endregion
@@ -30,7 +30,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         public async Task ExecuteAsync()
         {
-            await _sendinBlueEmailManager.SynchronizeAsync();
+            await _sendinblueEmailManager.SynchronizeAsync();
         }
 
         #endregion

@@ -45,7 +45,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly MessageTemplatesSettings _messageTemplatesSettings;
-        private readonly SendinblueManager _sendinBlueEmailManager;
+        private readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 
@@ -65,7 +65,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             IStoreService storeService,
             IWorkContext workContext,
             MessageTemplatesSettings messageTemplatesSettings,
-            SendinblueManager sendinBlueEmailManager)
+            SendinblueManager sendinblueEmailManager)
         {
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
@@ -81,7 +81,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             _storeService = storeService;
             _workContext = workContext;
             _messageTemplatesSettings = messageTemplatesSettings;
-            _sendinBlueEmailManager = sendinBlueEmailManager;
+            _sendinblueEmailManager = sendinblueEmailManager;
         }
 
         #endregion
@@ -96,23 +96,23 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         {
             //load settings for active store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
 
             //whether plugin is configured
-            if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
+            if (string.IsNullOrEmpty(sendinblueSettings.ApiKey))
                 return;
 
             //prepare common properties
             model.ActiveStoreScopeConfiguration = storeId;
-            model.ApiKey = sendinBlueSettings.ApiKey;
-            model.ListId = sendinBlueSettings.ListId;
-            model.SmtpKey = sendinBlueSettings.SmtpKey;
-            model.SenderId = sendinBlueSettings.SenderId;
-            model.UseSmsNotifications = sendinBlueSettings.UseSmsNotifications;
-            model.SmsSenderName = sendinBlueSettings.SmsSenderName;
-            model.StoreOwnerPhoneNumber = sendinBlueSettings.StoreOwnerPhoneNumber;
-            model.UseMarketingAutomation = sendinBlueSettings.UseMarketingAutomation;
-            model.TrackingScript = sendinBlueSettings.TrackingScript;
+            model.ApiKey = sendinblueSettings.ApiKey;
+            model.ListId = sendinblueSettings.ListId;
+            model.SmtpKey = sendinblueSettings.SmtpKey;
+            model.SenderId = sendinblueSettings.SenderId;
+            model.UseSmsNotifications = sendinblueSettings.UseSmsNotifications;
+            model.SmsSenderName = sendinblueSettings.SmsSenderName;
+            model.StoreOwnerPhoneNumber = sendinblueSettings.StoreOwnerPhoneNumber;
+            model.UseMarketingAutomation = sendinblueSettings.UseMarketingAutomation;
+            model.TrackingScript = sendinblueSettings.TrackingScript;
 
             model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), SendinblueDefaults.HideGeneralBlock);
             model.HideSynchronizationBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), SendinblueDefaults.HideSynchronizationBlock);
@@ -148,11 +148,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage?.Value ?? "0";
 
             //check whether email account exists
-            if (sendinBlueSettings.UseSmtp && await _emailAccountService.GetEmailAccountByIdAsync(sendinBlueSettings.EmailAccountId) != null)
-                model.UseSmtp = sendinBlueSettings.UseSmtp;
+            if (sendinblueSettings.UseSmtp && await _emailAccountService.GetEmailAccountByIdAsync(sendinblueSettings.EmailAccountId) != null)
+                model.UseSmtp = sendinblueSettings.UseSmtp;
 
             //get account info
-            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _sendinBlueEmailManager.GetAccountInfoAsync();
+            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _sendinblueEmailManager.GetAccountInfoAsync();
             model.AccountInfo = accountInfo;
             model.MarketingAutomationKey = maKey;
             model.MarketingAutomationDisabled = !marketingAutomationEnabled;
@@ -162,28 +162,28 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             //prepare overridable settings
             if (storeId > 0)
             {
-                model.ListId_OverrideForStore = await _settingService.SettingExistsAsync(sendinBlueSettings, settings => settings.ListId, storeId);
-                model.UseSmtp_OverrideForStore = await _settingService.SettingExistsAsync(sendinBlueSettings, settings => settings.UseSmtp, storeId);
-                model.SenderId_OverrideForStore = await _settingService.SettingExistsAsync(sendinBlueSettings, settings => settings.SenderId, storeId);
-                model.UseSmsNotifications_OverrideForStore = await _settingService.SettingExistsAsync(sendinBlueSettings, settings => settings.UseSmsNotifications, storeId);
-                model.SmsSenderName_OverrideForStore = await _settingService.SettingExistsAsync(sendinBlueSettings, settings => settings.SmsSenderName, storeId);
-                model.UseMarketingAutomation_OverrideForStore = await _settingService.SettingExistsAsync(sendinBlueSettings, settings => settings.UseMarketingAutomation, storeId);
+                model.ListId_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.ListId, storeId);
+                model.UseSmtp_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.UseSmtp, storeId);
+                model.SenderId_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.SenderId, storeId);
+                model.UseSmsNotifications_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.UseSmsNotifications, storeId);
+                model.SmsSenderName_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.SmsSenderName, storeId);
+                model.UseMarketingAutomation_OverrideForStore = await _settingService.SettingExistsAsync(sendinblueSettings, settings => settings.UseMarketingAutomation, storeId);
             }
 
             //check SMTP status
-            var (smtpEnabled, smtpErrors) = await _sendinBlueEmailManager.SmtpIsEnabledAsync();
+            var (smtpEnabled, smtpErrors) = await _sendinblueEmailManager.SmtpIsEnabledAsync();
             if (!string.IsNullOrEmpty(smtpErrors))
                 _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {smtpErrors}");
 
             //get available contact lists to synchronize
-            var (lists, listsErrors) = await _sendinBlueEmailManager.GetListsAsync();
+            var (lists, listsErrors) = await _sendinblueEmailManager.GetListsAsync();
             model.AvailableLists = lists.Select(list => new SelectListItem(list.Name, list.Id)).ToList();
             model.AvailableLists.Insert(0, new SelectListItem("Select list", "0"));
             if (!string.IsNullOrEmpty(listsErrors))
                 _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {listsErrors}");
 
             //get available senders of emails from account
-            var (senders, sendersErrors) = await _sendinBlueEmailManager.GetSendersAsync();
+            var (senders, sendersErrors) = await _sendinblueEmailManager.GetSendersAsync();
             model.AvailableSenders = senders.Select(list => new SelectListItem(list.Name, list.Id)).ToList();
             model.AvailableSenders.Insert(0, new SelectListItem("Select sender", "0"));
             if (!string.IsNullOrEmpty(sendersErrors))
@@ -193,7 +193,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokensAsync());
 
             //create attributes in account
-            var attributesErrors = await _sendinBlueEmailManager.PrepareAttributesAsync();
+            var attributesErrors = await _sendinblueEmailManager.PrepareAttributesAsync();
             if (!string.IsNullOrEmpty(attributesErrors))
                 _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {attributesErrors}");            
         }
@@ -222,11 +222,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
 
             //set API key
-            sendinBlueSettings.ApiKey = model.ApiKey;
-            await _settingService.SaveSettingAsync(sendinBlueSettings, settings => settings.ApiKey, clearCache: false);
+            sendinblueSettings.ApiKey = model.ApiKey;
+            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.ApiKey, clearCache: false);
             await _settingService.ClearCacheAsync();
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
@@ -244,15 +244,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
 
             //create webhook for the unsubscribe event
-            sendinBlueSettings.UnsubscribeWebhookId = await _sendinBlueEmailManager.GetUnsubscribeWebHookIdAsync();
-            await _settingService.SaveSettingAsync(sendinBlueSettings, settings => settings.UnsubscribeWebhookId, clearCache: false);
+            sendinblueSettings.UnsubscribeWebhookId = await _sendinblueEmailManager.GetUnsubscribeWebHookIdAsync();
+            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.UnsubscribeWebhookId, clearCache: false);
 
             //set list of contacts to synchronize
-            sendinBlueSettings.ListId = model.ListId;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinBlueSettings, settings => settings.ListId, model.ListId_OverrideForStore, storeId, false);
+            sendinblueSettings.ListId = model.ListId;
+            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.ListId, model.ListId_OverrideForStore, storeId, false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -272,7 +272,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             //synchronize contacts of selected store
-            var messages = await _sendinBlueEmailManager.SynchronizeAsync(false, await _storeContext.GetActiveStoreScopeConfigurationAsync());
+            var messages = await _sendinblueEmailManager.SynchronizeAsync(false, await _storeContext.GetActiveStoreScopeConfigurationAsync());
             foreach (var message in messages)
             {
                 _notificationService.Notification(message.Type, message.Message, false);
@@ -306,7 +306,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
 
             if (model.UseSmtp)
             {
@@ -315,13 +315,13 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 await _settingService.SaveSettingAsync(_messageTemplatesSettings, settings => settings.CaseInvariantReplacement, clearCache: false);
 
                 //check whether SMTP enabled on account
-                var (smtpIsEnabled, smtpErrors) = await _sendinBlueEmailManager.SmtpIsEnabledAsync();
+                var (smtpIsEnabled, smtpErrors) = await _sendinblueEmailManager.SmtpIsEnabledAsync();
                 if (smtpIsEnabled)
                 {
                     //get email account or create new one
-                    var (emailAccountId, emailAccountErrors) = await _sendinBlueEmailManager.GetEmailAccountIdAsync(model.SenderId, model.SmtpKey);
-                    sendinBlueSettings.EmailAccountId = emailAccountId;
-                    await _settingService.SaveSettingAsync(sendinBlueSettings, settings => settings.EmailAccountId, storeId, false);
+                    var (emailAccountId, emailAccountErrors) = await _sendinblueEmailManager.GetEmailAccountIdAsync(model.SenderId, model.SmtpKey);
+                    sendinblueSettings.EmailAccountId = emailAccountId;
+                    await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.EmailAccountId, storeId, false);
                     if (!string.IsNullOrEmpty(emailAccountErrors))
                         _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {emailAccountErrors}");
                 }
@@ -336,16 +336,16 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             }
 
             //set whether to use SMTP 
-            sendinBlueSettings.UseSmtp = model.UseSmtp;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinBlueSettings, settings => settings.UseSmtp, model.UseSmtp_OverrideForStore, storeId, false);
+            sendinblueSettings.UseSmtp = model.UseSmtp;
+            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.UseSmtp, model.UseSmtp_OverrideForStore, storeId, false);
 
             //set sender of transactional emails
-            sendinBlueSettings.SenderId = model.SenderId;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinBlueSettings, settings => settings.SenderId, model.SenderId_OverrideForStore, storeId, false);
+            sendinblueSettings.SenderId = model.SenderId;
+            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.SenderId, model.SenderId_OverrideForStore, storeId, false);
 
             //set SMTP key
-            sendinBlueSettings.SmtpKey = model.SmtpKey;
-            await _settingService.SaveSettingAsync(sendinBlueSettings, settings => settings.SmtpKey, clearCache: false);
+            sendinblueSettings.SmtpKey = model.SmtpKey;
+            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.SmtpKey, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -407,12 +407,12 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             if (model.UseSendinblueTemplate)
             {
                 var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-                var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
 
                 //get template or create new one
                 var currentTemplateId = await _genericAttributeService.GetAttributeAsync<int?>(message, SendinblueDefaults.TemplateIdAttribute);
-                var templateId = await _sendinBlueEmailManager.GetTemplateIdAsync(currentTemplateId, message,
-                    await _emailAccountService.GetEmailAccountByIdAsync(sendinBlueSettings.EmailAccountId));
+                var templateId = await _sendinblueEmailManager.GetTemplateIdAsync(currentTemplateId, message,
+                    await _emailAccountService.GetEmailAccountByIdAsync(sendinblueSettings.EmailAccountId));
                 await _genericAttributeService.SaveAttributeAsync(message, SendinblueDefaults.TemplateIdAttribute, templateId);
                 model.EditLink = $"{string.Format(SendinblueDefaults.EditMessageTemplateUrl, templateId)}";
             }
@@ -443,14 +443,14 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
 
-            sendinBlueSettings.UseSmsNotifications = model.UseSmsNotifications;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinBlueSettings, settings => settings.UseSmsNotifications, model.UseSmsNotifications_OverrideForStore, storeId, false);
-            sendinBlueSettings.SmsSenderName = model.SmsSenderName;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinBlueSettings, settings => settings.SmsSenderName, model.SmsSenderName_OverrideForStore, storeId, false);
-            sendinBlueSettings.StoreOwnerPhoneNumber = model.StoreOwnerPhoneNumber;
-            await _settingService.SaveSettingAsync(sendinBlueSettings, settings => settings.StoreOwnerPhoneNumber, clearCache: false);
+            sendinblueSettings.UseSmsNotifications = model.UseSmsNotifications;
+            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.UseSmsNotifications, model.UseSmsNotifications_OverrideForStore, storeId, false);
+            sendinblueSettings.SmsSenderName = model.SmsSenderName;
+            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.SmsSenderName, model.SmsSenderName_OverrideForStore, storeId, false);
+            sendinblueSettings.StoreOwnerPhoneNumber = model.StoreOwnerPhoneNumber;
+            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.StoreOwnerPhoneNumber, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -574,7 +574,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             if (!ModelState.IsValid)
                 return await Configure();
 
-            var campaignErrors = await _sendinBlueEmailManager.SendSMSCampaignAsync(model.CampaignListId, model.CampaignSenderName, model.CampaignText);
+            var campaignErrors = await _sendinblueEmailManager.SendSMSCampaignAsync(model.CampaignListId, model.CampaignSenderName, model.CampaignText);
             if (!string.IsNullOrEmpty(campaignErrors))
                 _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {campaignErrors}");
             else
@@ -593,19 +593,19 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
                 return await Configure();
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId);
 
-            sendinBlueSettings.UseMarketingAutomation = model.UseMarketingAutomation;
-            await _settingService.SaveSettingOverridablePerStoreAsync(sendinBlueSettings, settings => settings.UseMarketingAutomation, model.UseMarketingAutomation_OverrideForStore, storeId, false);
+            sendinblueSettings.UseMarketingAutomation = model.UseMarketingAutomation;
+            await _settingService.SaveSettingOverridablePerStoreAsync(sendinblueSettings, settings => settings.UseMarketingAutomation, model.UseMarketingAutomation_OverrideForStore, storeId, false);
 
-            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _sendinBlueEmailManager.GetAccountInfoAsync();
-            sendinBlueSettings.MarketingAutomationKey = maKey;
+            var (accountInfo, marketingAutomationEnabled, maKey, accountErrors) = await _sendinblueEmailManager.GetAccountInfoAsync();
+            sendinblueSettings.MarketingAutomationKey = maKey;
             if (!string.IsNullOrEmpty(accountErrors))
                 _notificationService.ErrorNotification($"{SendinblueDefaults.NotificationMessage} {accountErrors}");
 
-            await _settingService.SaveSettingAsync(sendinBlueSettings, settings => settings.MarketingAutomationKey, clearCache: false);
-            sendinBlueSettings.TrackingScript = model.TrackingScript;
-            await _settingService.SaveSettingAsync(sendinBlueSettings, settings => settings.TrackingScript, clearCache: false);
+            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.MarketingAutomationKey, clearCache: false);
+            sendinblueSettings.TrackingScript = model.TrackingScript;
+            await _settingService.SaveSettingAsync(sendinblueSettings, settings => settings.TrackingScript, clearCache: false);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();
@@ -642,7 +642,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             try
             {
                 using var streamReader = new StreamReader(Request.Body);
-                await _sendinBlueEmailManager.UnsubscribeWebhookAsync(await streamReader.ReadToEndAsync());
+                await _sendinblueEmailManager.UnsubscribeWebhookAsync(await streamReader.ReadToEndAsync());
             }
             catch (Exception ex)
             {
