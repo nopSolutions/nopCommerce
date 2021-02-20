@@ -122,6 +122,10 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -186,6 +190,10 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetManufacturerProducts(int manufacturerId, CatalogProductsCommand command)
         {
             var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
@@ -232,6 +240,10 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetVendorProducts(int vendorId, CatalogProductsCommand command)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
@@ -269,6 +281,10 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetTagProducts(int tagId, CatalogProductsCommand command)
         {
             var productTag = await _productTagService.GetProductTagByIdAsync(tagId);
@@ -340,6 +356,10 @@ namespace Nop.Web.Controllers
             return Json(result);
         }
 
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> SearchProducts(SearchModel searchModel, CatalogProductsCommand command)
         {
             if (searchModel == null)
