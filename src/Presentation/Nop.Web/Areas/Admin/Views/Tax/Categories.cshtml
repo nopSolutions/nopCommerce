@@ -20,7 +20,7 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons })
             <div class="card card-default">
                 <div class="card-body">
-                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TaxManagement")" />
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TaxManagement", Docs.TaxManagement + Utm.OnAdmin)" />
 
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {

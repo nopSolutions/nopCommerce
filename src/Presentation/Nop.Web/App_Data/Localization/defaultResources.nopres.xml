@@ -4447,7 +4447,7 @@
     <Value>Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Description">
-    <Value><![CDATA[Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html\" target=\"_blank\">our documentation.</a>]]></Value>
+    <Value><![CDATA[Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href="{0}" target="_blank">our documentation.</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache">
     <Value>Distributed cache configuration</Value>
@@ -5017,7 +5017,7 @@
     <Value>Favicon and app icons have been uploaded</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.LanguagePackProgressMessage">
-    <Value><![CDATA[The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href="https://www.nopcommerce.com/translations" target="_blank">translations page.</a> page]]></Value>
+    <Value><![CDATA[The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href="{1}" target="_blank">translations page.</a> page]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages">
     <Value>Languages</Value>
@@ -5194,7 +5194,7 @@
     <Value>Configure</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.Methods.DownloadMorePlugins">
-    <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/extensions?category=payment-modules&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=payment-plugins" target="_blank">marketplace</a>]]></Value>
+    <Value><![CDATA[You can download more plugins in our <a href="{0}" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.Methods.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -5248,7 +5248,7 @@
     <Value>Manual plugin installation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description.DownloadMorePlugins">
-    <Value><![CDATA[You can download more nopCommerce plugins in our <a href="https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=all-plugins" target="_blank">marketplace</a>]]></Value>
+    <Value><![CDATA[You can download more nopCommerce plugins in our <a href="{0}" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step1">
     <Value>Upload the plugin to the /plugins folder in your nopCommerce directory.</Value>
@@ -5392,7 +5392,7 @@
     <Value>Download</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Instructions">
-    <Value><![CDATA[Here you can find third-party extensions and themes which are developed by our community and partners. They are also available in our <a href="https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=official-plugins" target="_blank">marketplace</a>]]></Value>
+    <Value><![CDATA[Here you can find third-party extensions and themes which are developed by our community and partners. They are also available in our <a href="{0}" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Name">
     <Value>Name</Value>
@@ -7132,7 +7132,7 @@
     <Value>Default store theme</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore">
-    <Value><![CDATA[You can get more themes in our <a href="https://www.nopcommerce.com/themes?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=general-common-theme" target="_blank">marketplace</a>]]></Value>
+    <Value><![CDATA[You can get more themes in our <a href="{0}" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.Hint">
     <Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
@@ -9172,7 +9172,7 @@
     <Value>Configure</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.DownloadMorePlugins">
-    <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/extensions?category=shipping-delivery&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=shipping-plugins" target="_blank">marketplace</a>]]></Value>
+    <Value><![CDATA[You can download more plugins in our <a href="{0}" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -9361,7 +9361,7 @@
     <Value>Configure</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Providers.DownloadMorePlugins">
-    <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/extensions?category=taxes&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=tax-plugins" target="_blank">marketplace</a>]]></Value>
+    <Value><![CDATA[You can download more plugins in our <a href="{0}" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Providers.Fields.FriendlyName">
     <Value>Friendly name</Value>
@@ -9562,7 +9562,7 @@
     <Value>Payment methods</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PayPal.Text">
-    <Value><![CDATA[If you want to process payments online, we’d recommend you to set up the PayPal Smart Payment Buttons payment method. PayPal Checkout with Smart Payment Buttons gives your buyers a simplified and secure checkout experience. Read more about how to set this plugin <a href=\"https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-smart-payment-buttons.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">here</a>.]]></Value>
+    <Value><![CDATA[If you want to process payments online, we’d recommend you to set up the PayPal Smart Payment Buttons payment method. PayPal Checkout with Smart Payment Buttons gives your buyers a simplified and secure checkout experience. Read more about how to set this plugin <a href="{0}" target="_blank">here</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.PayPal.Title">
     <Value>PayPal Smart Payment Buttons</Value>
@@ -9589,7 +9589,7 @@
     <Value>Upload your logo</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PersonalizeStore.Theme.Text">
-    <Value><![CDATA[On this page, you can set up your store theme. After you choose a theme on our <a href=\\"https://www.nopcommerce.com/themes?utm_source=admin-panel&utm_medium=tour&utm_campaign=marketplace&utm_content=tooltip\" target=\\"_blank\\">marketplace</a>, upload it on your site following <a href=\\"https://docs.nopcommerce.com/getting-started/design-your-store/choose-and-install-a-theme.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\\"_blank\\">these instructions</a>. Then refresh this page, and you will see all the available themes. Choose one and click the <b>Save</b> button in the top right.]]></Value>
+    <Value><![CDATA[On this page, you can set up your store theme. After you choose a theme on our <a href="{0}" target="_blank">marketplace</a>, upload it on your site following <a href="{1}" target="_blank">these instructions</a>. Then refresh this page, and you will see all the available themes. Choose one and click the <b>Save</b> button in the top right.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PersonalizeStore.Theme.Title">
     <Value>Choose a theme</Value>
@@ -9604,7 +9604,7 @@
     <Value>“Powered by” link</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Text">
-    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src=\"../../js/admintour/images/product-page.jpg\"/></div>]]></Value>
+    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src="../../js/admintour/images/product-page.jpg"/></div>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Title">
     <Value>Product details</Value>
@@ -9622,7 +9622,7 @@
     <Value>Product pictures</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Price.Text">
-    <Value><![CDATA[Enter the product price in a predefined currency here. Read more on how to manage currencies <a href=\"https://docs.nopcommerce.com/getting-started/configure-payments/advanced-configuration/currencies.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">here</a>.]]></Value>
+    <Value><![CDATA[Enter the product price in a predefined currency here. Read more on how to manage currencies <a href="{0}" target="_blank">here</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Price.Title">
     <Value>Product price</Value>
@@ -9682,13 +9682,13 @@
     <Value>Manual shipping provider</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.ShippingProviders.Providers.Text">
-    <Value><![CDATA[You can see all the shipping providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href=\"https://www.nopcommerce.com/extensions?category=shipping-delivery&utm_source=admin-panel&utm_medium=tour&utm_campaign=marketplace&utm_content=tooltip\" target=\"_blank\">marketplace</a>.]]></Value>
+    <Value><![CDATA[You can see all the shipping providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href="{0}" target="_blank">marketplace</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.ShippingProviders.Providers.Title">
     <Value>Shipping providers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.ShippingProviders.ShipStation.Text">
-    <Value><![CDATA[If you want to provide more accurate shipping rates, we recommend using shipping services such as ShipStation. Read how to configure it in <a href=\"https://docs.nopcommerce.com/getting-started/configure-shipping/shipping-providers/shipstation.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">this article</a>.]]></Value>
+    <Value><![CDATA[If you want to provide more accurate shipping rates, we recommend using shipping services such as ShipStation. Read how to configure it in <a href="{0}" target="_blank">this article</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.ShippingProviders.ShipStation.Title">
     <Value>ShipStation</Value>
@@ -9700,7 +9700,7 @@
     <Value>Your store name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Text">
-    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href=\"https://docs.nopcommerce.com/getting-started/advanced-configuration/how-to-install-and-configure-ssl-certification.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">here</a>]]>.</Value>
+    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href="{0}" target="_blank">here</a>]]>.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Title">
     <Value>Enable SSL</Value>
@@ -9742,7 +9742,7 @@
     <Value>“Fixed rate/By country” switch</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.TaxProviders.Avalara.Text">
-    <Value><![CDATA[You can automate the tax compliance in your store. Set up the Avalara tax provider, and you won’t need to worry about taxes anymore. Avalara is an automated tax compliance software. Read how to configure it in <a href=\"https://docs.nopcommerce.com/getting-started/configure-taxes/tax-providers/avalara.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">this article</a>.]]></Value>
+    <Value><![CDATA[You can automate the tax compliance in your store. Set up the Avalara tax provider, and you won’t need to worry about taxes anymore. Avalara is an automated tax compliance software. Read how to configure it in <a href="{0}" target="_blank">this article</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.TaxProviders.Avalara.Title">
     <Value>Avalara tax provider</Value>
@@ -9766,7 +9766,7 @@
     <Value>Mark as a primary provider</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.TaxProviders.TaxProviders.Text">
-    <Value><![CDATA[You can see all the tax providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href=\"https://www.nopcommerce.com/extensions?category=taxes&utm_source=admin-panel&utm_medium=tour&utm_campaign=marketplace&utm_content=tooltip\" target=\"_blank\">marketplace</a>.]]></Value>
+    <Value><![CDATA[You can see all the tax providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href="{0}" target="_blank">marketplace</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.TaxProviders.TaxProviders.Title">
     <Value>Tax providers</Value>
@@ -11896,163 +11896,163 @@
     <Value>Pending return requests</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Acl">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/customer-management/access-control-list.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">access control list</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">access control list</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ActivityLog">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/customer-management/activity-log.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">activity log</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">activity log</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Affiliates">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/promotional-tools/affiliates.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">affiliates</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">affiliates</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Blog">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/content-management/blog.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">blog</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">blog</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Categories">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/categories.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">categories</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">categories</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.CheckoutAttributes">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/order-management/checkout-attributes.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">checkout attributes</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">checkout attributes</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.CountriesStates">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-shipping/advanced-configuration/countries-states.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">countries and states</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">countries and states</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Currencies">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-payments/advanced-configuration/currencies.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">currencies</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">currencies</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.CustomerRoles">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/customer-management/customer-roles.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">customer roles</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">customer roles</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Customers">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/customer-management/managing-customers.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">customers</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">customers</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.DatesAndRanges">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-shipping/advanced-configuration/dates-and-ranges.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">dates and ranges</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">dates and ranges</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Discounts">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/promotional-tools/discounts.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">discounts</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">discounts</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.EmailAccounts">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/email-accounts.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">email accounts</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">email accounts</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.EmailCampaigns">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/promotional-tools/email-campaigns.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">email campaigns</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">email campaigns</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ExternalAuthentication">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/advanced-configuration/external-authentication-methods.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">external authentication methods</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">external authentication methods</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Forums">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/content-management/forums.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">forums</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">forums</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Gdpr">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/advanced-configuration/gdpr-settings.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">GDPR in nopCommerce</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">GDPR in nopCommerce</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.GiftCards">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/promotional-tools/gift-cards.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">gift cards</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">gift cards</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Localization">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/advanced-configuration/localization.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">localization</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">localization</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Log">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/system-administration/log.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">log</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">log</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Maintenance">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/system-administration/maintenance.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">maintenance</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">maintenance</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Manufacturers">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/manufacturers.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">manufacturers</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">manufacturers</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Measures">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-shipping/advanced-configuration/measures.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">measures</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">measures</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.MessageQueue">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/system-administration/message-queue.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">message queue</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">message queue</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.MessageTemplates">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/content-management/message-templates.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">message templates</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">message templates</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.MultiStore">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/advanced-configuration/multi-store.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">multi-store</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">multi-store</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.News">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/content-management/news.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">news</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">news</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.OnlineCustomers">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/customer-management/online-customers.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">online customers</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">online customers</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Orders">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/order-management/orders.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">orders</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">orders</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.PaymentMethodRestrictions">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-payments/advanced-configuration/payment-method-restrictions.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">payment method restrictions</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">payment method restrictions</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.PaymentMethods">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-payments/payment-methods/index.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">payment methods</a>.]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">payment methods</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.PickupPoints">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-shipping/advanced-configuration/pickup-points.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">pickup points</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">pickup points</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Plugins">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/advanced-configuration/plugins-in-nopcommerce.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">plugins in nopCommerce</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">plugins in nopCommerce</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Polls">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/content-management/polls.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">polls</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">polls</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ProductAttributes">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/products/product-attributes.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">product attributes</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">product attributes</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ProductReviews">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/products/product-reviews.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">product reviews</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">product reviews</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Products">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/products/index.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">products</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">products</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ProductTags">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/products/product-tags.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">product tags</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">product tags</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.RecurringPayments">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/products/recurring-products.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">recurring products</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">recurring products</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Reports">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/reports.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">reports</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">reports</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ReturnRequests">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/order-management/return-requests.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">return requests</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">return requests</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ScheduleTasks">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/system-administration/schedule-tasks.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">scheduled tasks</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">scheduled tasks</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.SeoOptimization">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/search-engine-optimization.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">search engine optimization</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">search engine optimization</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ShippingManagement">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/order-management/shipping-management.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">shipping management</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">shipping management</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ShippingProviders">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-shipping/shipping-providers/index.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">shipping providers</a>.]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">shipping providers</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.ShoppingCartsAndWishlists">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/order-management/shopping-carts-and-wishlists.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">shopping carts and wishlists</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">shopping carts and wishlists</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.SpecificationAttributes">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/catalog/products/specification-attributes.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">specification attributes</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">specification attributes</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.TaxManagement">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-taxes/index.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">tax management</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">tax management</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.TaxProviders">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-taxes/tax-providers/index.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">tax providers</a>.]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">tax providers</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Templates">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/system-administration/templates.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">templates</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">templates</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.TopicsPages">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/content-management/topics-pages.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">topics (pages)</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">topics (pages)</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.VendorManagement">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/running-your-store/vendor-management.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">vendor management</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">vendor management</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Documentation.Reference.Warehouses">
-    <Value><![CDATA[Learn more about <a target=\"_blank\" href=\"https://docs.nopcommerce.com/en/getting-started/configure-shipping/advanced-configuration/warehouses.html?utm_source=admin-panel&utm_medium=admin-page&utm_campaign=documentation&utm_content=doc-reference\">warehouses</a>]]></Value>
+    <Value><![CDATA[Learn more about <a target="_blank" href="{0}">warehouses</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Download.DownloadUploadedFile">
     <Value>Download uploaded file</Value>
@@ -14725,10 +14725,10 @@
     <Value>Message.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Log.List.PremiumSupport">
-    <Value><![CDATA[Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list" target="_blank">here</a>.]]></Value>
+    <Value><![CDATA[Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="{0}" target="_blank">here</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Log.PremiumSupport">
-    <Value><![CDATA[Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-details" target="_blank">here</a>.]]></Value>
+    <Value><![CDATA[Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="{0}" target="_blank">here</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Log.ViewLogDetails">
     <Value>View log entry details</Value>

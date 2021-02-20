@@ -36,7 +36,7 @@
             <div class="card-body">
                 <p>
                     @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
-                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.SpecificationAttributes")" asp-add-wrapper="false"/>
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.SpecificationAttributes", Docs.SpecificationAttributes + Utm.OnAdmin)" asp-add-wrapper="false"/>
                 </p>
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {

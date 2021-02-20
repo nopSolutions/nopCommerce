@@ -26,7 +26,7 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
-                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.MultiStore")" />
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.MultiStore", Docs.MultiStore + Utm.OnAdmin)" />
 
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {

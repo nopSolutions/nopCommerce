@@ -67,7 +67,7 @@
                 <div class="cards-group">
                     <div class="card card-default">
                         <div class="card-body">
-                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductTags")" />
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductTags", Docs.ProductTags + Utm.OnAdmin)" />
 
                             @await Html.PartialAsync("Table", new DataTablesModel
                             {

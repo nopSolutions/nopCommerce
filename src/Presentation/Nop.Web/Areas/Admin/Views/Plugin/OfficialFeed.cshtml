@@ -34,7 +34,7 @@
 
                                 <div class="search-body @(hideSearchBlock ? "closed" : "")">
                                     <p>
-                                        @T("Admin.Configuration.Plugins.OfficialFeed.Instructions")
+                                        @T("Admin.Configuration.Plugins.OfficialFeed.Instructions", OfficialSite.Marketplace + Utm.OnAdminPluginsFeed)
                                     </p>
                                     <div class="row">
                                         <div class="col-md-5">
@@ -88,7 +88,7 @@
 
                         <div class="card card-default">
                             <div class="card-body">
-                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins")" />
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins", Docs.Plugins + Utm.OnAdmin)" />
 
                                 @await Html.PartialAsync("Table", new DataTablesModel
                            {

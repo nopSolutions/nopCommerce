@@ -23,7 +23,7 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
-                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PickupPoints")" />
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PickupPoints", Docs.PickupPoints + Utm.OnAdmin)" />
 
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {

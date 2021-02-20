@@ -150,7 +150,7 @@
 
             <div class="card card-default">
                 <div class="card-body">
-                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductReviews")" />
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductReviews", Docs.ProductReviews + Utm.OnAdmin)" />
 
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {

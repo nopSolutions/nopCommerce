@@ -95,7 +95,7 @@
 
             <div class="card card-default">
                 <div class="card-body">
-                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ActivityLog")" />
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ActivityLog", Docs.ActivityLog + Utm.OnAdmin)" />
 
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {

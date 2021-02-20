@@ -1,25 +1,26 @@
-﻿@inject Nop.Services.Stores.IStoreService storeService
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+﻿@using Nop.Core.Domain.Customers
+@using Nop.Services.Stores
+
+@inject IStoreService storeService
 @inject IWorkContext workContext
-@using Nop.Core.Domain.Customers
 
 @{
-  const string cardId = "configuration-steps-card";
+    const string cardId = "configuration-steps-card";
 
-  //hide value
-  var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+    //hide value
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
 
-  //close value
-  var closeCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+    //close value
+    var closeCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
-  var defaultStoreId = (await storeService.GetAllStoresAsync()).FirstOrDefault()?.Id ?? 0;
+    var defaultStoreId = (await storeService.GetAllStoresAsync()).FirstOrDefault()?.Id ?? 0;
 }
 
 <div class="card card-primary card-outline configuration-steps @if (hideCard){<text>collapsed-card</text>}" id="@cardId">
     <div class="card-header with-border">
         <h3 class="card-title">
             <i class="far fa-star"></i>
-            @T("Admin.ConfigurationSteps")          
+            @T("Admin.ConfigurationSteps")
         </h3>
         <div class="card-tools float-right">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -54,11 +55,11 @@
         <div class="row">
             <div class="col-12">
                 <h4>
-                    @T("Admin.ConfigurationSteps.Welcome.Title")                    
+                    @T("Admin.ConfigurationSteps.Welcome.Title")
                 </h4>
             </div>
             <p class="intro text-center">
-                @T("Admin.ConfigurationSteps.Welcome.Text")                
+                @T("Admin.ConfigurationSteps.Welcome.Text")
             </p>
         </div>
 
@@ -229,7 +230,7 @@
                     </div>
 
                     <div class="col-4">
-                        <a class="configuration-step-link copyright-step" href="https://www.nopcommerce.com/nopcommerce-copyright-removal-key" target="_blank">
+                        <a class="configuration-step-link copyright-step" href="@(OfficialSite.CopyrightRemovalKey)" target="_blank">
                             <div class="row">
                                 <div class="col-12 col-xl-3">
                                     <div class="configuration-step-icon">

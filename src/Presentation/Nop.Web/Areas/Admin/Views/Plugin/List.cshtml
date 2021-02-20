@@ -119,7 +119,7 @@
                                 </ol>
                             </p>
                             <p>
-                                @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
+                                @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins", OfficialSite.Marketplace + Utm.OnAdminAllPlugins)
                             </p>
                             <div class="row">
                                 <div class="col-md-6">
@@ -173,7 +173,7 @@
 
                 <div class="card card-default">
                     <div class="card-body">
-                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins")" />
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins", Docs.Plugins + Utm.OnAdmin)" />
 
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
