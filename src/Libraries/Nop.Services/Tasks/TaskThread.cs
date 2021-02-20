@@ -76,9 +76,9 @@ namespace Nop.Services.Tasks
                     var serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
                     using var scope = serviceScopeFactory.CreateScope();
                     // Resolve
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
-                    var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-                    var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
+                    var logger = EngineContext.Current.Resolve<ILogger>(scope);
+                    var localizationService = EngineContext.Current.Resolve<ILocalizationService>(scope);
+                    var storeContext = EngineContext.Current.Resolve<IStoreContext>(scope);
 
                     var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResourceAsync("ScheduleTasks.TimeoutError") : ex.Message;
 
