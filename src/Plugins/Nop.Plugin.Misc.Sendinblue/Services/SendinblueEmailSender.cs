@@ -16,7 +16,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         #region Fields
 
         private readonly IStoreContext _storeContext;
-        private readonly SendinblueSettings _sendinBlueSettings;
+        private readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 
@@ -26,10 +26,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             INopFileProvider fileProvider,
             ISmtpBuilder smtpBuilder,
             IStoreContext storeContext,
-            SendinblueSettings sendinBlueSettings) : base(downloadService, fileProvider, smtpBuilder)
+            SendinblueSettings sendinblueSettings) : base(downloadService, fileProvider, smtpBuilder)
         {
             _storeContext = storeContext;
-            _sendinBlueSettings = sendinBlueSettings;
+            _sendinblueSettings = sendinblueSettings;
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             int attachedDownloadId = 0, IDictionary<string, string> headers = null)
         {
             //add store identifier in email headers
-            if (emailAccount.Id == _sendinBlueSettings.EmailAccountId)
+            if (emailAccount.Id == _sendinblueSettings.EmailAccountId)
             {
                 headers ??= new Dictionary<string, string>();
                 headers.Add(SendinblueDefaults.EmailCustomHeader, (await _storeContext.GetCurrentStoreAsync()).Id.ToString());

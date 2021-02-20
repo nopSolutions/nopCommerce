@@ -52,7 +52,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly SendinblueSettings _sendinBlueSettings;
+        private readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 
@@ -79,7 +79,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
-            SendinblueSettings sendinBlueSettings)
+            SendinblueSettings sendinblueSettings)
         {
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
@@ -102,7 +102,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
             _workContext = workContext;
-            _sendinBlueSettings = sendinBlueSettings;
+            _sendinblueSettings = sendinblueSettings;
         }
 
         #endregion
@@ -116,14 +116,14 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private MarketingAutomationApi CreateMarketingAutomationClient()
         {
             //validate tracker identifier
-            if (string.IsNullOrEmpty(_sendinBlueSettings.MarketingAutomationKey))
+            if (string.IsNullOrEmpty(_sendinblueSettings.MarketingAutomationKey))
                 throw new NopException($"Marketing automation not configured");
 
             var apiConfiguration = new Configuration()
             {
                 MaKey = new Dictionary<string, string>
                 {
-                    [SendinblueDefaults.MarketingAutomationKeyHeader] = _sendinBlueSettings.MarketingAutomationKey
+                    [SendinblueDefaults.MarketingAutomationKeyHeader] = _sendinblueSettings.MarketingAutomationKey
                 },
                 UserAgent = SendinblueDefaults.UserAgent
             };
@@ -142,7 +142,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleShoppingCartChangedEventAsync(ShoppingCartItem cartItem)
         {
             //whether marketing automation is enabled
-            if (!_sendinBlueSettings.UseMarketingAutomation)
+            if (!_sendinblueSettings.UseMarketingAutomation)
                 return;
 
             var customer = await _customerService.GetCustomerByIdAsync(cartItem.CustomerId);
@@ -270,7 +270,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleOrderCompletedEventAsync(Order order)
         {
             //whether marketing automation is enabled
-            if (!_sendinBlueSettings.UseMarketingAutomation)
+            if (!_sendinblueSettings.UseMarketingAutomation)
                 return;
 
             if (order is null)
@@ -403,7 +403,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleOrderPlacedEventAsync(Order order)
         {
             //whether marketing automation is enabled
-            if (!_sendinBlueSettings.UseMarketingAutomation)
+            if (!_sendinblueSettings.UseMarketingAutomation)
                 return;
 
             //copy shopping cart GUID to order

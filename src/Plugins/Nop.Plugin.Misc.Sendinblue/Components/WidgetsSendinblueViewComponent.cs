@@ -17,7 +17,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
 
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
-        private readonly SendinblueSettings _sendinBlueSettings;
+        private readonly SendinblueSettings _sendinblueSettings;
 
         #endregion
 
@@ -25,11 +25,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
 
         public WidgetsSendinblueViewComponent(ICustomerService customerService,
             IWorkContext workContext,
-            SendinblueSettings sendinBlueSettings)
+            SendinblueSettings sendinblueSettings)
         {
             _customerService = customerService;
             _workContext = workContext;
-            _sendinBlueSettings = sendinBlueSettings;
+            _sendinblueSettings = sendinblueSettings;
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
             var trackingScript = string.Empty;
 
             //ensure Marketing Automation is enabled
-            if (!_sendinBlueSettings.UseMarketingAutomation)
+            if (!_sendinblueSettings.UseMarketingAutomation)
                 return Content(trackingScript);
 
             //get customer email
@@ -56,8 +56,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Components
                 : string.Empty;
 
             //prepare tracking script
-            trackingScript = $"{_sendinBlueSettings.TrackingScript}{Environment.NewLine}"
-                .Replace(SendinblueDefaults.TrackingScriptId, _sendinBlueSettings.MarketingAutomationKey)
+            trackingScript = $"{_sendinblueSettings.TrackingScript}{Environment.NewLine}"
+                .Replace(SendinblueDefaults.TrackingScriptId, _sendinblueSettings.MarketingAutomationKey)
                 .Replace(SendinblueDefaults.TrackingScriptCustomerEmail, customerEmail);
 
             return View("~/Plugins/Misc.Sendinblue/Views/PublicInfo.cshtml", trackingScript);

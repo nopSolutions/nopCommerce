@@ -93,15 +93,15 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private async Task<TClient> CreateApiClientAsync<TClient>(Func<Configuration, TClient> clientCtor) where TClient : IApiAccessor
         {
             //check whether plugin is configured to request services (validate API key)
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-            if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
+            if (string.IsNullOrEmpty(sendinblueSettings.ApiKey))
                 throw new NopException($"Plugin not configured");
 
             var apiConfiguration = new Configuration()
             {
                 ApiKey = new Dictionary<string, string> { 
-                    [SendinblueDefaults.ApiKeyHeader] = sendinBlueSettings.ApiKey, 
-                    [SendinblueDefaults.PartnerKeyHeader] = sendinBlueSettings.ApiKey 
+                    [SendinblueDefaults.ApiKeyHeader] = sendinblueSettings.ApiKey, 
+                    [SendinblueDefaults.PartnerKeyHeader] = sendinblueSettings.ApiKey 
                 },
                 ApiKeyPrefix = new Dictionary<string, string> { [SendinblueDefaults.PartnerKeyHeader] = SendinblueDefaults.PartnerName },
                 UserAgent = SendinblueDefaults.UserAgent
@@ -406,8 +406,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             try
             {
                 //whether plugin is configured
-                var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-                if (!string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
+                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
+                if (!string.IsNullOrEmpty(sendinblueSettings.ApiKey))
                 {
                     //use only passed store identifier for the manual synchronization
                     //use all store ids for the synchronization task
@@ -630,8 +630,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             try
             {
                 //whether plugin is configured
-                var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-                if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
+                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
+                if (string.IsNullOrEmpty(sendinblueSettings.ApiKey))
                     throw new NopException("Plugin not configured");
 
                 //parse string to JSON object
@@ -673,11 +673,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 var client = await CreateApiClientAsync(config => new WebhooksApi(config));
 
                 //check whether webhook already exist
-                var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-                if (sendinBlueSettings.UnsubscribeWebhookId != 0)
+                var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
+                if (sendinblueSettings.UnsubscribeWebhookId != 0)
                 {
-                    await client.GetWebhookAsync(sendinBlueSettings.UnsubscribeWebhookId);
-                    return sendinBlueSettings.UnsubscribeWebhookId;
+                    await client.GetWebhookAsync(sendinblueSettings.UnsubscribeWebhookId);
+                    return sendinblueSettings.UnsubscribeWebhookId;
                 }
 
                 //or create new one
@@ -1212,8 +1212,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task SendSMSAsync(string to, string from, string text)
         {
             //whether SMS notifications enabled
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
-            if (!sendinBlueSettings.UseSmsNotifications)
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>();
+            if (!sendinblueSettings.UseSmsNotifications)
                 return;
 
             try

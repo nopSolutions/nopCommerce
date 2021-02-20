@@ -27,20 +27,20 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         #region Fields
 
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly SendinblueManager _sendinBlueEmailManager;
-        private readonly SendinblueMarketingAutomationManager _sendinBlueMarketingAutomationManager;
+        private readonly SendinblueManager _sendinblueEmailManager;
+        private readonly SendinblueMarketingAutomationManager _sendinblueMarketingAutomationManager;
 
         #endregion
 
         #region Ctor
 
         public EventConsumer(IGenericAttributeService genericAttributeService,
-            SendinblueManager sendinBlueEmailManager,
-            SendinblueMarketingAutomationManager sendinBlueMarketingAutomationManager)
+            SendinblueManager sendinblueEmailManager,
+            SendinblueMarketingAutomationManager sendinblueMarketingAutomationManager)
         {
             _genericAttributeService = genericAttributeService;
-            _sendinBlueEmailManager = sendinBlueEmailManager;
-            _sendinBlueMarketingAutomationManager = sendinBlueMarketingAutomationManager;
+            _sendinblueEmailManager = sendinblueEmailManager;
+            _sendinblueMarketingAutomationManager = sendinblueMarketingAutomationManager;
         }
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EmailUnsubscribedEvent eventMessage)
         {
             //unsubscribe contact
-            await _sendinBlueEmailManager.UnsubscribeAsync(eventMessage.Subscription);
+            await _sendinblueEmailManager.UnsubscribeAsync(eventMessage.Subscription);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EmailSubscribedEvent eventMessage)
         {
             //subscribe contact
-            await _sendinBlueEmailManager.SubscribeAsync(eventMessage.Subscription);
+            await _sendinblueEmailManager.SubscribeAsync(eventMessage.Subscription);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            await _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
+            await _sendinblueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            await _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
+            await _sendinblueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(EntityDeletedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            await _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
+            await _sendinblueMarketingAutomationManager.HandleShoppingCartChangedEventAsync(eventMessage.Entity);
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             //handle event
-            await _sendinBlueMarketingAutomationManager.HandleOrderCompletedEventAsync(eventMessage.Order);
-            await _sendinBlueEmailManager.UpdateContactAfterCompletingOrderAsync(eventMessage.Order);
+            await _sendinblueMarketingAutomationManager.HandleOrderCompletedEventAsync(eventMessage.Order);
+            await _sendinblueEmailManager.UpdateContactAfterCompletingOrderAsync(eventMessage.Order);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             //handle event
-            await _sendinBlueMarketingAutomationManager.HandleOrderPlacedEventAsync(eventMessage.Order);
+            await _sendinblueMarketingAutomationManager.HandleOrderPlacedEventAsync(eventMessage.Order);
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ISettingService _settingService;
         private readonly ITokenizer _tokenizer;
-        private readonly SendinblueManager _sendinBlueEmailManager;
+        private readonly SendinblueManager _sendinblueEmailManager;
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             IStoreService storeService,
             IQueuedEmailService queuedEmailService,
             ITokenizer tokenizer,
-            SendinblueManager sendinBlueEmailManager)
+            SendinblueManager sendinblueEmailManager)
             : base(commonSettings,
                 emailAccountSettings,
                 addressService,
@@ -79,7 +79,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             _queuedEmailService = queuedEmailService;
             _settingService = settingService;
             _tokenizer = tokenizer;
-            _sendinBlueEmailManager = sendinBlueEmailManager;
+            _sendinblueEmailManager = sendinblueEmailManager;
         }
 
         #endregion
@@ -95,10 +95,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         {
             //get plugin settings
             var storeId = (int?)tokens.FirstOrDefault(token => token.Key == "Store.Id")?.Value;
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId ?? 0);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId ?? 0);
 
             //ensure SMS notifications enabled
-            if (!sendinBlueSettings.UseSmsNotifications)
+            if (!sendinblueSettings.UseSmsNotifications)
                 return;
 
             //whether to send SMS by the passed message template
@@ -119,7 +119,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             {
                 case 0:
                     //merchant phone
-                    phoneNumberTo = sendinBlueSettings.StoreOwnerPhoneNumber;
+                    phoneNumberTo = sendinblueSettings.StoreOwnerPhoneNumber;
                     break;
                 case 1:
                     //customer phone
@@ -132,7 +132,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
             }
 
             //try to send SMS
-            await _sendinBlueEmailManager.SendSMSAsync(phoneNumberTo, sendinBlueSettings.SmsSenderName, text);
+            await _sendinblueEmailManager.SendSMSAsync(phoneNumberTo, sendinblueSettings.SmsSenderName, text);
         }
 
         /// <summary>
@@ -159,10 +159,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         {
             //get plugin settings
             var storeId = (int?)tokens.FirstOrDefault(token => token.Key == "Store.Id")?.Value;
-            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId ?? 0);
+            var sendinblueSettings = await _settingService.LoadSettingAsync<SendinblueSettings>(storeId ?? 0);
 
             //ensure email notifications enabled
-            if (!sendinBlueSettings.UseSmtp)
+            if (!sendinblueSettings.UseSmtp)
                 return null;
 
             //whether to send email by the passed message template
@@ -172,10 +172,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 return null;
 
             //get the specified email account from settings
-            emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(sendinBlueSettings.EmailAccountId) ?? emailAccount;
+            emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(sendinblueSettings.EmailAccountId) ?? emailAccount;
 
             //get an email from the template
-            var email = await _sendinBlueEmailManager.GetQueuedEmailFromTemplateAsync(templateId.Value)
+            var email = await _sendinblueEmailManager.GetQueuedEmailFromTemplateAsync(templateId.Value)
                 ?? throw new NopException($"There is no template with id {templateId}");
 
             //replace body and subject tokens
