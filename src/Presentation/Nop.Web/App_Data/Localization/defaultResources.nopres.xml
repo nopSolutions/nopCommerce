@@ -16374,6 +16374,12 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.TextBox">
     <Value>Textbox</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.AlwaysDisplay">
+    <Value>Always display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.Disable">
+    <Value>Disable</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeValueType.AssociatedToProduct">
     <Value>Associated to product</Value>
   </LocaleResource>

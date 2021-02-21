@@ -683,6 +683,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint"] = "Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.",
                 ["Products.ProductAttributes.DropdownList.DefaultItem"] = "Please select",
                 ["Products.ProductAttributes.NotAvailable"] = "Not available",
+                ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.Disable"] = "Disable",
+                ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.AlwaysDisplay"] = "Always display",
             }).Wait();
 
             // rename locales
