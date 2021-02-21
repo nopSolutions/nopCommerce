@@ -1,37 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Language Name="한국어" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="简体中文" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>관리자 이메일</Value>
+    <Value>管理员邮箱</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>관리자 이메일을 입력하세요</Value>
+    <Value>请输入管理员邮箱</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>관리자 비밀번호</Value>
+    <Value>管理员密码</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>관리자 비밀번호를 입력하세요</Value>
+    <Value>请输入管理员密码</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>'{1}'폴더에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>账户 '{0}' 没有修改文件夹'{1}'的权限. 请配置.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>'{1}'파일에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>账户'{0}' 没有修改文件'{1}'的权限. 请配置.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>비밀번호 확인</Value>
+    <Value>确认密码</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>비밀번호 확인을 입력하세요</Value>
+    <Value>请输入确认密码</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>연결 문자열</Value>
+    <Value>连接字符串</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>SQL 연결 문자열이 필요합니다</Value>
+    <Value>连接字符串是必填的</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>잘못된 SQL 연결 문자열 형식</Value>
+    <Value>连接字符串的格式错误</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Country</Value>
@@ -40,102 +40,102 @@
     <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>존재하지 않는 경우 데이터베이스 생성</Value>
+    <Value>如果不存在，创建数据库</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>샘플 데이터 생성</Value>
+    <Value>导入测试数据</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>指定自定义排序规则</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>데이터베이스</Value>
+    <Value>数据库</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>데이터베이스를 작성하는 중 오류가 발생했습니다: {0}</Value>
+    <Value>创建数据库: {0}的时候发生错误</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>데이터베이스 정보</Value>
+    <Value>数据库信息</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>데이터베이스 이름</Value>
+    <Value>数据库名称</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>데이터베이스가 존재하지 않거나 데이터베이스에 연결할 수 있는 권한이 없습니다</Value>
+    <Value>数据库不存在，或者没有连接它的权限</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>데이터 공급자 선택</Value>
+    <Value>选择数据提供程序</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>nopCommerce 사용 방법에 대한 정보가 필요하면, </Value>
+    <Value>如果需要了解如何使用nopCommerce, 请访问</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>nopCommerce.com의 문서 섹션을 방문하십시오</Value>
+    <Value>nopCommerce.com上的文档部分</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>예</Value>
+    <Value>例子</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>설치</Value>
+    <Value>安装</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>nopCommerce 설치중...</Value>
+    <Value>正在安装nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>통합 Windows 인증 사용</Value>
+    <Value>使用集成windows身份认证</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>비밀번호가 일치하지 않습니다</Value>
+    <Value>密码不匹配</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>원시 연결 문자열 입력 (고급)</Value>
+    <Value>输入原始连接字符串(高级)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>설치 재시작</Value>
+    <Value>重启安装</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>설치 프로세스를 다시 시작하려면 클릭하십시오 (캐시 된 모든 값 지우기)</Value>
+    <Value>点击以重新启动安装过程(清除所有缓存值)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>正在重启...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>服务器名</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>请输入服务器名称</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>설치 실패: {0}</Value>
+    <Value>安装失败: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>SQL Server 비밀번호</Value>
+    <Value>数据库密码</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL Server 비밀번호가 필요합니다</Value>
+    <Value>请输入数据库密码</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>SQL Server 사용자 이름</Value>
+    <Value>数据库用户名</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL Server 사용자 이름이 필요합니다</Value>
+    <Value>请输入数据库用户名</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>상점 정보</Value>
+    <Value>商店信息</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce 설치</Value>
+    <Value>nopCommerce 安装</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>이 설치 마법사를 완료하려면 데이터베이스 서버와 관련된 일부 정보 ( "연결 문자열")를 알아야합니다. 필요한 경우 ISP에 문의하십시오. 로컬 컴퓨터나 서버에 설치하는 경우 시스템 관리자의 정보가 필요할 수 있습니다.</Value>
+    <Value>完成这个向导，你必须知道如何连接数据库("即连接字符串").如有必要，请联系你的服务提供商。如果在本机或服务器上安装，你可能还需要一些管理员的信息 .</Value>
   </LocaleResource>
 </Language>

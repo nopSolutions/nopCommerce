@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="한국어" IsDefault="false" IsRightToLeft="false">
+<Language Name="Türkçe" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>관리자 이메일</Value>
+    <Value>Yönetici e-posta</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>관리자 이메일을 입력하세요</Value>
+    <Value>Yönetici e-posta alanı boş bırakılamaz</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>관리자 비밀번호</Value>
+    <Value>Yönetici şifre</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>관리자 비밀번호를 입력하세요</Value>
+    <Value>Yönetici şifre alanı boş bırakılamaz</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>'{1}'폴더에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>The '{0}' hesabı '{1}' klasörü için değiştirme yetkisi yok. Lütfen bu hakları düzenleyiniz.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>'{1}'파일에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>The '{0}' hesabı '{1}'. dosyası için değiştirme yetkisi yok. Lütfen bu hakları düzenleyiniz.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>비밀번호 확인</Value>
+    <Value>Şifreyi onayla</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>비밀번호 확인을 입력하세요</Value>
+    <Value>Şifreyi onayla alanı boş bırakılamaz</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>연결 문자열</Value>
+    <Value>Bağlantı cümleciği (Connection string)</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>SQL 연결 문자열이 필요합니다</Value>
+    <Value>Bağlantı cümleciği (Connection string) alanı boş bırakılamaz</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>잘못된 SQL 연결 문자열 형식</Value>
+    <Value>Hatalı SQL bağlantı cümleciği (connection string) biçimi</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Country</Value>
@@ -40,102 +40,102 @@
     <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>존재하지 않는 경우 데이터베이스 생성</Value>
+    <Value>Veritabanı yok ise oluştur</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>샘플 데이터 생성</Value>
+    <Value>Örnek veriler oluştur</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>Konum Belirt</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>데이터베이스</Value>
+    <Value>Veri tabanı</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>데이터베이스를 작성하는 중 오류가 발생했습니다: {0}</Value>
+    <Value>Veritabanı oluşturulurken hata oluştu: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>데이터베이스 정보</Value>
+    <Value>Veritabanı bilgisi</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>데이터베이스 이름</Value>
+    <Value>Veritabanı adı</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>데이터베이스가 존재하지 않거나 데이터베이스에 연결할 수 있는 권한이 없습니다</Value>
+    <Value>Veritabanı yok veya bağlanmak için gerekli izinleriniz yok</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>데이터 공급자 선택</Value>
+    <Value>Veri kaynağını seçin</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>nopCommerce 사용 방법에 대한 정보가 필요하면, </Value>
+    <Value>nopCommerce'in nasıl kullanıldığı hakkında daha fazla bilgi için </Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>nopCommerce.com의 문서 섹션을 방문하십시오</Value>
+    <Value>nopCommerce.com adresincen document bölümünü ziyaret edin.</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>예</Value>
+    <Value>Örnek</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>설치</Value>
+    <Value>Yükle</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>nopCommerce 설치중...</Value>
+    <Value>nopCommerce yükleniyor...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>통합 Windows 인증 사용</Value>
+    <Value>Windows kullanıcı bilgilerini kullan</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
-    <Value>MySQL</Value>
+    <Value>MYSQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>비밀번호가 일치하지 않습니다</Value>
+    <Value>Şifreler uyuşmuyor</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>원시 연결 문자열 입력 (고급)</Value>
+    <Value>raw bağlantı cümleciği (connection string) giriniz (ileri düzey)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>설치 재시작</Value>
+    <Value>Yüklemeyi yeniden başlat</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>설치 프로세스를 다시 시작하려면 클릭하십시오 (캐시 된 모든 값 지우기)</Value>
+    <Value>Yükleme işlemini yeniden başlatmak için tıklayınız. (Önbellekteki tüm bilgileri temizle)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>Yeniden BAŞLATILIYOR...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>SUNUCU Adı</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>Sunucu Adı GEREKLİ !</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>설치 실패: {0}</Value>
+    <Value>Kurulum başarısız: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>SQL Server 비밀번호</Value>
+    <Value>SQL Şifre</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL Server 비밀번호가 필요합니다</Value>
+    <Value>SQL Şifre alanı boş bırakılamaz</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>SQL Server 사용자 이름</Value>
+    <Value>SQL Kullanıcı adı</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL Server 사용자 이름이 필요합니다</Value>
+    <Value>SQL Kullanıcı adı boş bırakılamaz</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>상점 정보</Value>
+    <Value>Mağaza bilgisi</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce 설치</Value>
+    <Value>nopCommerce Yükle</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>이 설치 마법사를 완료하려면 데이터베이스 서버와 관련된 일부 정보 ( "연결 문자열")를 알아야합니다. 필요한 경우 ISP에 문의하십시오. 로컬 컴퓨터나 서버에 설치하는 경우 시스템 관리자의 정보가 필요할 수 있습니다.</Value>
+    <Value>Bu sihirbazı tamamlamak için bazı bilgilere ihtiyaç duyacaksınız. SQL bağlantı cümleciğinizi ("connection string") bilmiyorsanız lütfen internet servis sağlayıcınız ile iletişime geçin. Kurulumu kendi bilgisayarınız üzerinde gerçekleştirecekseniz sistem yöneticinizden bu bilgileri alabilirsiniz.</Value>
   </LocaleResource>
 </Language>

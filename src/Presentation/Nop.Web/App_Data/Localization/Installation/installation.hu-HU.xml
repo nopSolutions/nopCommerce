@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="한국어" IsDefault="false" IsRightToLeft="false">
+<Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>관리자 이메일</Value>
+    <Value>Admin felhasználó e-mail</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>관리자 이메일을 입력하세요</Value>
+    <Value>Adja meg a rendszergazda emailt</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>관리자 비밀번호</Value>
+    <Value>Rendszergazda felhasználó jelszó</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>관리자 비밀번호를 입력하세요</Value>
+    <Value>Írja be rendszergazdai jelszót</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>'{1}'폴더에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>A '{0}' fiókot nem biztosították a :Módosítás engedély mappában "{1}". Kérjük, adja meg ezeket az engedélyeket.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>'{1}'파일에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>A '{0}' fiókot nem biztosították a: Módosítás engedély a fájlban '{1}'. Kérjük, adja meg ezeket az engedélyeket.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>비밀번호 확인</Value>
+    <Value>Erősítse meg a jelszót</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>비밀번호 확인을 입력하세요</Value>
+    <Value>Adja meg a a jelszó megerősítését</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>연결 문자열</Value>
+    <Value>Csatlakozási szöveg</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>SQL 연결 문자열이 필요합니다</Value>
+    <Value>A SQL kapcsolat string szükséges</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>잘못된 SQL 연결 문자열 형식</Value>
+    <Value>Hibás az  SQL kapcsolat string formátuma</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Country</Value>
@@ -40,102 +40,102 @@
     <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>존재하지 않는 경우 데이터베이스 생성</Value>
+    <Value>Hozzon létre adatbázist, ha nem létezik</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>샘플 데이터 생성</Value>
+    <Value>Mintaadat létrehozása</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>Adja meg az egyéni egyeztetést</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>데이터베이스</Value>
+    <Value>Adatbázis</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>데이터베이스를 작성하는 중 오류가 발생했습니다: {0}</Value>
+    <Value>Hiba történt az adatbázis megteremtésekor: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>데이터베이스 정보</Value>
+    <Value>Adatbázis információk</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>데이터베이스 이름</Value>
+    <Value>Adatbázis neve</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>데이터베이스가 존재하지 않거나 데이터베이스에 연결할 수 있는 권한이 없습니다</Value>
+    <Value>Adatbázis nem létezik, vagy nem rendelkezik engedéllyel a csatlakozáshoz</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>데이터 공급자 선택</Value>
+    <Value>Válassza az adatszolgáltatót</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>nopCommerce 사용 방법에 대한 정보가 필요하면, </Value>
+    <Value>Ha információra van szüksége, hogyan kell használni nopCommerce-t, látogasson el a</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>nopCommerce.com의 문서 섹션을 방문하십시오</Value>
+    <Value>A dokumentáció szakasz nopCommerce.com-on</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>예</Value>
+    <Value>Példa</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>설치</Value>
+    <Value>Telepítse</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>nopCommerce 설치중...</Value>
+    <Value>nopCommerce telepítése ...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>통합 Windows 인증 사용</Value>
+    <Value>Használja a beépített Windows-hitelesítést</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>비밀번호가 일치하지 않습니다</Value>
+    <Value>A jelszavak nem egyeznek</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>원시 연결 문자열 입력 (고급)</Value>
+    <Value>Adja meg a nyers kapcsolati karakter láncot (haladó)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>설치 재시작</Value>
+    <Value>A  telepítés újraindítása</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>설치 프로세스를 다시 시작하려면 클릭하십시오 (캐시 된 모든 값 지우기)</Value>
+    <Value>Ide kattintva indítsa újra a telepítést (törli az összes tárolt értékeket)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>Újraindítás...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>Szerver neve</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>A Szerver nevének megadása kötelező</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>설치 실패: {0}</Value>
+    <Value>A telepítés sikertelen: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>SQL Server 비밀번호</Value>
+    <Value>SQL Jelszó</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL Server 비밀번호가 필요합니다</Value>
+    <Value>SQL Jelszó szükséges</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>SQL Server 사용자 이름</Value>
+    <Value>SQL Felhasználónév</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL Server 사용자 이름이 필요합니다</Value>
+    <Value>SQL Felhasználónév szükséges</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>상점 정보</Value>
+    <Value>Áruház információk</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce 설치</Value>
+    <Value>nopCommerce telepítés</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>이 설치 마법사를 완료하려면 데이터베이스 서버와 관련된 일부 정보 ( "연결 문자열")를 알아야합니다. 필요한 경우 ISP에 문의하십시오. 로컬 컴퓨터나 서버에 설치하는 경우 시스템 관리자의 정보가 필요할 수 있습니다.</Value>
+    <Value> A varázsló befejezéséhez, tudnia kell néhány információt az adatbázis szerver ("kapcsolat string"). Kérjük, lépjen kapcsolatba az internetszolgáltatóval, ha szükséges. Ha a telepítés helyi gépen vagy a szerveren, akkor szüksége lehet információkra a Rendszer Admin-tol.</Value>
   </LocaleResource>
 </Language>

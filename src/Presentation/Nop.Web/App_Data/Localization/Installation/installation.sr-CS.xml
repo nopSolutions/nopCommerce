@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="한국어" IsDefault="false" IsRightToLeft="false">
+<Language Name="Srpski" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>관리자 이메일</Value>
+    <Value>E-mail admin korisnika</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>관리자 이메일을 입력하세요</Value>
+    <Value>Unesite e-mail admin korisnika</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>관리자 비밀번호</Value>
+    <Value>Lozinka administratora</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>관리자 비밀번호를 입력하세요</Value>
+    <Value>Unesite admin lozinku</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>'{1}'폴더에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>nalog '{0}' nije odobren uz Dopuštenje za izmenu u folder '{1}'. Molimo konfigurišite te dozvole.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>'{1}'파일에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+    <Value>nalog '{0}' nije odobren uz Dopuštenje za izmenu u datoteci '{1}'. Molimo konfigurišite te dozvole.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>비밀번호 확인</Value>
+    <Value>Potvrdite lozinku</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>비밀번호 확인을 입력하세요</Value>
+    <Value>Potvrdite lozinku</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>연결 문자열</Value>
+    <Value>Vez za vezu</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>SQL 연결 문자열이 필요합니다</Value>
+    <Value>Potreban je niz SQL veza</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>잘못된 SQL 연결 문자열 형식</Value>
+    <Value>Pogrešan format SQL veze</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Country</Value>
@@ -40,102 +40,102 @@
     <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>존재하지 않는 경우 데이터베이스 생성</Value>
+    <Value>Kreirajte bazu podataka ako ne postoji</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>샘플 데이터 생성</Value>
+    <Value>Kreirajte uzorke podataka</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>Navedite prilagođeno upoređivanje</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
-    <Value>데이터베이스</Value>
+    <Value>Baza podataka</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>데이터베이스를 작성하는 중 오류가 발생했습니다: {0}</Value>
+    <Value>Došlo je do greške prilikom kreiranja baze podataka: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>데이터베이스 정보</Value>
+    <Value>Informacije o bazi podataka</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>데이터베이스 이름</Value>
+    <Value>Ime baze podataka</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>데이터베이스가 존재하지 않거나 데이터베이스에 연결할 수 있는 권한이 없습니다</Value>
+    <Value>Baza podataka ne postoji, ili vi nemate prava da se povežete na nju</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>데이터 공급자 선택</Value>
+    <Value>Izaberi izvor podataka</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>nopCommerce 사용 방법에 대한 정보가 필요하면, </Value>
+    <Value>Ako su vam potrebne informacije o tome kako koristiti nopCommerce, posetite</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>nopCommerce.com의 문서 섹션을 방문하십시오</Value>
+    <Value>odeljak sa dokumentacijom na nopCommerce.com</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>예</Value>
+    <Value>Primer</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>설치</Value>
+    <Value>Instaliraj</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>nopCommerce 설치중...</Value>
+    <Value>Instaliranje nopCommerce ...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>통합 Windows 인증 사용</Value>
+    <Value>Koristite Windows autentikaciju</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
-    <Value>비밀번호가 일치하지 않습니다</Value>
+    <Value>Lozinkе sе nе podudaraju</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>원시 연결 문자열 입력 (고급)</Value>
+    <Value>Unesite sirovi niz veze (napredno)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>설치 재시작</Value>
+    <Value>Ponovo pokrenite instalaciju</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>설치 프로세스를 다시 시작하려면 클릭하십시오 (캐시 된 모든 값 지우기)</Value>
+    <Value>Kliknite da biste ponovo pokrenuli postupak instalacije (očistite sve predmemorirane vrednosti)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>Restartovanje...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>Ime servera</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>Ime servera je obavezno</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
-    <Value>설치 실패: {0}</Value>
+    <Value>Podešavanje nije uspelo: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
-    <Value>SQL Server 비밀번호</Value>
+    <Value>SQL lozinka</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL Server 비밀번호가 필요합니다</Value>
+    <Value>SQL lozinka je obavezna</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsername">
-    <Value>SQL Server 사용자 이름</Value>
+    <Value>Korisnicko ime za SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL Server 사용자 이름이 필요합니다</Value>
+    <Value>SQL korisničko ime je obavezno</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>상점 정보</Value>
+    <Value>Informacije o prodavnici</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce 설치</Value>
+    <Value>nopCommerce instalacija</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>이 설치 마법사를 완료하려면 데이터베이스 서버와 관련된 일부 정보 ( "연결 문자열")를 알아야합니다. 필요한 경우 ISP에 문의하십시오. 로컬 컴퓨터나 서버에 설치하는 경우 시스템 관리자의 정보가 필요할 수 있습니다.</Value>
+    <Value>Da biste dovršili ovaj čarobnjak, morate znati neke informacije u vezi sa vašim serverom baze podataka ("konektivni niz"). Po potrebi kontaktirajte svog ISP. Ako instalirate na lokalnu mašinu ili server, možda će vam trebati informacije sa vašeg Administrator sistema.</Value>
   </LocaleResource>
 </Language>
