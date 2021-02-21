@@ -160,6 +160,9 @@ namespace Nop.Web.Infrastructure.Installation
                 foreach (Match match in matches)
                     languageCode = match.Groups[1].Value;
 
+                //at now we use language codes only (not full culture names)
+                languageCode = languageCode[..2];
+
                 var languageNode = xmlDocument.SelectSingleNode(@"//Language");
 
                 if (languageNode == null || languageNode.Attributes == null)
