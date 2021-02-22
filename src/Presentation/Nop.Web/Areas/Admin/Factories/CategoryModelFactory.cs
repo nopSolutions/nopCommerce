@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -25,6 +27,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICategoryService _categoryService;
@@ -41,6 +45,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CategoryModelFactory(CatalogSettings catalogSettings,
+            CurrencySettings currencySettings,
+            ICurrencyService currencyService,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICategoryService categoryService,
@@ -53,6 +59,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService)
         {
             _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _baseAdminModelFactory = baseAdminModelFactory;
             _categoryService = categoryService;
@@ -211,7 +219,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Published = true;
                 model.IncludeInTopMenu = true;
                 model.AllowCustomersToSelectPageSize = true;
+                model.PriceRangeFiltering = true;
+                model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
+
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //prepare localized models
             if (!excludeProperties)
@@ -316,9 +329,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,

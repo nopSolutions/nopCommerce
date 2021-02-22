@@ -489,6 +489,32 @@ namespace Nop.Web.Infrastructure
                 pattern: $"catalog/getcatalogsubcategories",
                 defaults: new { controller = "Catalog", action = "GetCatalogSubCategories" });
 
+            //Catalog products (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "GetCategoryProducts",
+                pattern: $"category/products/",
+                defaults: new { controller = "Catalog", action = "GetCategoryProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "GetManufacturerProducts",
+                pattern: $"manufacturer/products/",
+                defaults: new { controller = "Catalog", action = "GetManufacturerProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "GetTagProducts",
+                pattern: $"tag/products",
+                defaults: new { controller = "Catalog", action = "GetTagProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "SearchProducts",
+                pattern: $"product/search",
+                defaults: new { controller = "Catalog", action = "SearchProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "GetVendorProducts",
+                pattern: $"vendor/products",
+                defaults: new { controller = "Catalog", action = "GetVendorProducts" });
+
+            //product combinations (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "GetProductCombinations",
+                pattern: $"product/combinations",
+                defaults: new { controller = "Product", action = "GetProductCombinations" });
+
             //product attributes with "upload file" type (AJAX)
             endpointRouteBuilder.MapControllerRoute(name: "UploadFileProductAttribute",
                 pattern: $"uploadfileproductattribute/{{attributeId:min(0)}}",

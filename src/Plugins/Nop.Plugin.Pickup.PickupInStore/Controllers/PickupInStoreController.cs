@@ -98,14 +98,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
             var model = new StorePickupPointModel
             {
-                Address =
-                {
-                    CountryEnabled = _addressSettings.CountryEnabled,
-                    StateProvinceEnabled = _addressSettings.StateProvinceEnabled,
-                    ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled,
-                    CityEnabled = _addressSettings.CityEnabled,
-                    CountyEnabled = _addressSettings.CountyEnabled
-                }
+                Address = new AddressModel()
             };
 
             model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"), Value = "0" });
@@ -202,11 +195,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                     CountryId = address.CountryId,
                     StateProvinceId = address.StateProvinceId,
                     ZipPostalCode = address.ZipPostalCode,
-                    CountryEnabled = _addressSettings.CountryEnabled,
-                    StateProvinceEnabled = _addressSettings.StateProvinceEnabled,
-                    ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled,
-                    CityEnabled = _addressSettings.CityEnabled,
-                    CountyEnabled = _addressSettings.CountyEnabled
                 };
             }
 

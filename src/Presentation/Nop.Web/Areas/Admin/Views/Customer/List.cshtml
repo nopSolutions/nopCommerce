@@ -241,6 +241,8 @@
 
                     <div class="card card-default">
                         <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Customers", Docs.Customers + Utm.OnAdmin)" />
+
                             @{
                                 var gridModel = new DataTablesModel
                                 {
@@ -250,7 +252,7 @@
                                     Length = Model.PageSize,
                                     LengthMenu = Model.AvailablePageSizes,
                                     Filters = new List<FilterParameter>
-                                    {
+                                                        {
                                     new FilterParameter(nameof(Model.SelectedCustomerRoleIds)),
                                     new FilterParameter(nameof(Model.SearchEmail)),
                                     new FilterParameter(nameof(Model.SearchUsername)),

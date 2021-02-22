@@ -192,6 +192,14 @@ namespace Nop.Data
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
+        /// Executes command asynchronously and returns number of affected records
+        /// </summary>
+        /// <param name="sql">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters);
+
+        /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type
         /// </summary>

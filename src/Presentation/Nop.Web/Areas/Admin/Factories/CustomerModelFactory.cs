@@ -314,53 +314,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set some of address fields as enabled and required
-            model.FirstNameEnabled = true;
-            model.FirstNameRequired = true;
-            model.LastNameEnabled = true;
-            model.LastNameRequired = true;
-            model.EmailEnabled = true;
-            model.EmailRequired = true;
-            model.CompanyEnabled = _addressSettings.CompanyEnabled;
-            model.CompanyRequired = _addressSettings.CompanyRequired;
-            model.CountryEnabled = _addressSettings.CountryEnabled;
-            model.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
-            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-            model.CityEnabled = _addressSettings.CityEnabled;
-            model.CityRequired = _addressSettings.CityRequired;
-            model.CountyEnabled = _addressSettings.CountyEnabled;
-            model.CountyRequired = _addressSettings.CountyRequired;
-            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
-            model.PhoneEnabled = _addressSettings.PhoneEnabled;
-            model.PhoneRequired = _addressSettings.PhoneRequired;
-            model.FaxEnabled = _addressSettings.FaxEnabled;
-            model.FaxRequired = _addressSettings.FaxRequired;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-
-            //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
-        }
-
-        /// <summary>
         /// Prepare HTML string address
         /// </summary>
         /// <param name="model">Address model</param>
@@ -951,7 +904,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CustomerId = customer.Id;
 
             //prepare address model
-            await PrepareAddressModelAsync(model.Address, address);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             return model;
         }

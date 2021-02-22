@@ -14,7 +14,8 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCacheAsync(Category entity)
+        /// <param name="entityEventType">Entity event type</param>
+        protected override async Task ClearCacheAsync(Category entity, EntityEventType entityEventType)
         {
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity);
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId);
@@ -24,6 +25,11 @@ namespace Nop.Services.Catalog.Caching
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoryBreadcrumbPrefix);
             await RemoveByPrefixAsync(NopCatalogDefaults.CategoryProductsNumberPrefix);
             await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsPrefix);
+
+            if (entityEventType == EntityEventType.Delete)
+                await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByCategoryCacheKey, entity);
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

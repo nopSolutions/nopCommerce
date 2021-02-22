@@ -42,6 +42,8 @@
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
+                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Maintenance", Docs.Maintenance + Utm.OnAdmin)"/>
+
                 <nop-cards id="maintenance-cards">
                     <div class="row">
                         <nop-card class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-delete-guests" asp-icon="fas fa-trash-alt" asp-title="@T("Admin.System.Maintenance.DeleteGuests")" asp-hide-block-attribute-name="@hideDeleteGuestsBlockAttributeName" asp-hide="@hideDeleteGuestsBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteGuests", Model)</nop-card>

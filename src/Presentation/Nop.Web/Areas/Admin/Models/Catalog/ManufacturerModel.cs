@@ -75,8 +75,17 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PageSizeOptions")]
         public string PageSizeOptions { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceRanges")]
-        public string PriceRanges { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering")]
+        public bool PriceRangeFiltering { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceFrom")]
+        public decimal PriceFrom { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceTo")]
+        public decimal PriceTo { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange")]
+        public bool AutomaticallyCalculatePriceRange { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Published")]
         public bool Published { get; set; }
@@ -105,6 +114,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableDiscounts { get; set; }
 
         public ManufacturerProductSearchModel ManufacturerProductSearchModel { get; set; }
+
+        public string PrimaryStoreCurrencyCode { get; set; }
 
         #endregion
     }

@@ -34,7 +34,7 @@
                     ZipPostalCode: address.zipPostalCode
                 });
 
-                return `@Html.Raw(Url.Action("getestimateshipping", "shoppingcart"))?${params}`;
+                return '@Html.Raw(Url.Action("getestimateshipping", "shoppingcart"))?' + params;
             },
             handlers: {
                 selectedOption: function (option) {
@@ -50,7 +50,7 @@
 
                     $.ajax({
                         cache: false,
-                        url: `@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))${params ? `?${params}` : ''}`,
+                        url: '@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))' + (params ? '?$' + params : ''),
                         data: $('#shopping-cart-form').serialize(),
                         type: 'POST',
                         beforeSend: function () {

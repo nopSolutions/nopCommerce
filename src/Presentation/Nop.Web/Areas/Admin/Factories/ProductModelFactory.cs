@@ -709,9 +709,9 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: categoryIds,
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 warehouseId: searchModel.SearchWarehouseId,
@@ -991,9 +991,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -1099,9 +1099,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -1212,9 +1212,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -1319,9 +1319,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -2125,9 +2125,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -2231,7 +2231,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     PictureId = productAttributeCombination.PictureId,
                     ProductId = productAttributeCombination.ProductId,
                     Sku = productAttributeCombination.Sku,
-                    StockQuantity = productAttributeCombination.StockQuantity
+                    StockQuantity = productAttributeCombination.StockQuantity,
+                    MinStockQuantity = productAttributeCombination.MinStockQuantity
                 };
             }
 

@@ -83,6 +83,8 @@
 
             <div class="card card-default">
                 <div class="card-body" id="topics-area">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TopicsPages", Docs.TopicsPages + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "topics-grid",

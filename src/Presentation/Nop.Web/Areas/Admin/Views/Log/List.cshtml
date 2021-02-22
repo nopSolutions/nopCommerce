@@ -39,7 +39,7 @@
                     <div class="card card-default">
                         <div class="card-body">
                             <p>
-                                @T("Admin.System.Log.List.PremiumSupport")
+                                @T("Admin.System.Log.List.PremiumSupport", OfficialSite.PremiumSupportServices + Utm.OnAdminLogList)
                             </p>
                         </div>
                     </div>
@@ -105,6 +105,8 @@
 
                     <div class="card card-default">
                         <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Log", Docs.Log + Utm.OnAdmin)" />
+
                             @await Html.PartialAsync("Table", new DataTablesModel
                             {
                                 Name = "log-grid",

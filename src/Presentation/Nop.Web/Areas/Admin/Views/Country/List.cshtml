@@ -43,6 +43,8 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CountriesStates", Docs.CountriesStates + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "countries-grid",
@@ -61,7 +63,7 @@
                             },
                             new ColumnProperty(nameof(CountryModel.Name))
                             {
-                                Title = T("Admin.Configuration.Countries.Fields.Name").Text                                
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(CountryModel.AllowsBilling))
                             {
@@ -127,8 +129,8 @@
                             }
                         }
                     })
-                    
-                    
+
+
                     <script>
                         $(document).ready(function () {
                             //"publish selected" button
@@ -152,7 +154,7 @@
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#publishSelectedFailed-info').text(errorThrown);
                                         $("#publishSelectedFailed").click();
-                                    }                                    
+                                    }
                                 });
                                 return false;
                             });
@@ -209,7 +211,7 @@
                                 <em>@T("Admin.Configuration.Countries.ImportTip")</em>
                             </li>
                             <li>
-                                <em><a href="https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
+                                <em><a href="@(OfficialSite.StatesPackage + Utm.OnAdminCountries)" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
                             </li>
                         </ul>
                         <div class="form-group row">

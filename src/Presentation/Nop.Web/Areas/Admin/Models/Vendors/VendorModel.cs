@@ -76,6 +76,18 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         [NopResourceDisplayName("Admin.Vendors.Fields.PageSizeOptions")]
         public string PageSizeOptions { get; set; }
 
+        [NopResourceDisplayName("Admin.Vendors.Fields.PriceRangeFiltering")]
+        public bool PriceRangeFiltering { get; set; }
+
+        [NopResourceDisplayName("Admin.Vendors.Fields.PriceFrom")]
+        public decimal PriceFrom { get; set; }
+
+        [NopResourceDisplayName("Admin.Vendors.Fields.PriceTo")]
+        public decimal PriceTo { get; set; }
+
+        [NopResourceDisplayName("Admin.Vendors.Fields.AutomaticallyCalculatePriceRange")]
+        public bool AutomaticallyCalculatePriceRange { get; set; }
+
         public List<VendorAttributeModel> VendorAttributes { get; set; }
 
         public IList<VendorLocalizedModel> Locales { get; set; }
@@ -89,10 +101,12 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
 
         public VendorNoteSearchModel VendorNoteSearchModel { get; set; }
 
+        public string PrimaryStoreCurrencyCode { get; set; }
+
         #endregion
 
         #region Nested classes
-        
+
         public partial record VendorAttributeModel : BaseNopEntityModel
         {
             public VendorAttributeModel()

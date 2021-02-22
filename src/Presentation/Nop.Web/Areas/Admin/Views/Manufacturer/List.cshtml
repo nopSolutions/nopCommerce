@@ -113,6 +113,8 @@
             </div>
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Manufacturers", Docs.Manufacturers + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "manufacturers-grid",

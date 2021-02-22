@@ -79,6 +79,8 @@
 
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.SeoOptimization", Docs.SeoOptimization + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "sename-grid",
@@ -109,7 +111,7 @@
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Name))
                             {
-                                Title = T("Admin.System.SeNames.Name").Text                              
+                                Title = T("Admin.System.SeNames.Name").Text
                             },
                             new ColumnProperty(nameof(UrlRecordModel.EntityId))
                             {

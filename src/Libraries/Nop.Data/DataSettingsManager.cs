@@ -89,16 +89,16 @@ namespace Nop.Data
                     return new DataSettings();
 
                 //get data settings from the old txt file
-                var dataSettings =
+                var dataSettings_old =
                     LoadDataSettingsFromOldFile(await fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8));
 
                 //save data settings to the new file
-                await SaveSettingsAsync(dataSettings, fileProvider);
+                await SaveSettingsAsync(dataSettings_old, fileProvider);
 
                 //and delete the old one
                 fileProvider.DeleteFile(filePath);
 
-                Singleton<DataSettings>.Instance = dataSettings;
+                Singleton<DataSettings>.Instance = dataSettings_old;
                 return Singleton<DataSettings>.Instance;
             }
 
@@ -107,7 +107,22 @@ namespace Nop.Data
                 return new DataSettings();
 
             //get data settings from the JSON file
-            Singleton<DataSettings>.Instance = JsonConvert.DeserializeObject<DataSettings>(text);
+            var dataSettings = JsonConvert.DeserializeObject<DataSettings>(text);
+
+            var dataConnectionString = Environment.GetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableDataConnectionString);
+            var dataProvider = Environment.GetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableDataProvider);
+            var sqlCommandTimeout = Environment.GetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableSQLCommandTimeout);
+
+            if (!string.IsNullOrEmpty(dataConnectionString))
+                dataSettings.ConnectionString = dataConnectionString;
+
+            if (!string.IsNullOrEmpty(dataProvider))
+                dataSettings.DataProvider = JsonConvert.DeserializeObject<DataProviderType>(dataProvider);
+
+            if (!string.IsNullOrEmpty(sqlCommandTimeout) && int.TryParse(sqlCommandTimeout, out var sqlTimeOut))
+                dataSettings.SQLCommandTimeout = sqlTimeOut;
+
+            Singleton<DataSettings>.Instance = dataSettings;
 
             return Singleton<DataSettings>.Instance;
         }
@@ -136,15 +151,15 @@ namespace Nop.Data
                     return new DataSettings();
 
                 //get data settings from the old txt file
-                var dataSettings = LoadDataSettingsFromOldFile(fileProvider.ReadAllText(filePath, Encoding.UTF8));
+                var dataSettings_old = LoadDataSettingsFromOldFile(fileProvider.ReadAllText(filePath, Encoding.UTF8));
 
                 //save data settings to the new file
-                SaveSettings(dataSettings, fileProvider);
+                SaveSettings(dataSettings_old, fileProvider);
 
                 //and delete the old one
                 fileProvider.DeleteFile(filePath);
 
-                Singleton<DataSettings>.Instance = dataSettings;
+                Singleton<DataSettings>.Instance = dataSettings_old;
                 return Singleton<DataSettings>.Instance;
             }
 
@@ -153,7 +168,22 @@ namespace Nop.Data
                 return new DataSettings();
 
             //get data settings from the JSON file
-            Singleton<DataSettings>.Instance = JsonConvert.DeserializeObject<DataSettings>(text);
+            var dataSettings = JsonConvert.DeserializeObject<DataSettings>(text);
+
+            var dataConnectionString = Environment.GetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableDataConnectionString);
+            var dataProvider = Environment.GetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableDataProvider);
+            var sqlCommandTimeout = Environment.GetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableSQLCommandTimeout);
+
+            if (!string.IsNullOrEmpty(dataConnectionString))
+                dataSettings.ConnectionString = dataConnectionString;
+
+            if (!string.IsNullOrEmpty(dataProvider))
+                dataSettings.DataProvider = JsonConvert.DeserializeObject<DataProviderType>(dataProvider);
+
+            if (!string.IsNullOrEmpty(sqlCommandTimeout) && int.TryParse(sqlCommandTimeout, out var sqlTimeOut))
+                dataSettings.SQLCommandTimeout = sqlTimeOut;
+
+            Singleton<DataSettings>.Instance = dataSettings;
 
             return Singleton<DataSettings>.Instance;
         }

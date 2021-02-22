@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Portugês (Brasil)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email do Administrador</Value>
@@ -28,13 +28,16 @@
     <Value>String de conexão</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>Entre com a string de conexão</Value>
-  </LocaleResource>
-  <LocaleResource Name="ConnectionStringValues">
-    <Value>Entre com os valores de conexão do SQL</Value>
+    <Value>Uma string de conexão com SQL é obrigatória</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
     <Value>Formato incorreto para a String de conexão</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Criar banco de dados se não existir</Value>
@@ -43,7 +46,7 @@
     <Value>Criar dados de exemplo</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Especifique o agrupamento do SQL</Value>
+    <Value>Especificar ordenação personalizada</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Banco de dados</Value>
@@ -56,9 +59,6 @@
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
     <Value>Nome do banco de dados</Value>
-  </LocaleResource>
-  <LocaleResource Name="DatabaseNameRequired">
-    <Value>Entre com o nome do banco de dados</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
     <Value>Banco de dados não existe ou você não tem permissão para conexão</Value>
@@ -90,11 +90,11 @@
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>As senhas não são iguais</Value>
   </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>Entre com a string de conexão (avançado)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Recommended">
-    <Value>[Recomendado]</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
     <Value>Reiniciar a instalação</Value>
@@ -102,17 +102,17 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Clique para reiniciar o processo de instalação (limpar todos os valores)</Value>
   </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Reiniciando...</Value>
+  </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Nome do servidor SQL</Value>
+    <Value>Nome do servidor</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Entre com o nome do servidor SQL</Value>
+    <Value>Nome do servidor é obrigatório</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Falha na configuração: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlAuthentication">
-    <Value>Usar conta do servidor SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>Senha SQL</Value>
@@ -134,9 +134,6 @@
   </LocaleResource>
   <LocaleResource Name="Title">
     <Value>Instalação nopCommerce</Value>
-  </LocaleResource>
-  <LocaleResource Name="Tooltip1">
-    <Value>nopCommerce é a solução ASP.NET online líder em lojas de e-commerce. Este passo a passo irá guiar você no processo de configuração do nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Para completar o passo a passo você precisa saber algumas informações sobre seu servidor de banco de dados ("string de conexão"). Por favor entre em contato com seu provedor de hospedagem se necessário. Se você está instalando em um computador local ou servidor talvez seja necessário informações do seu Administrador de Sistemas.</Value>

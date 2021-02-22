@@ -47,6 +47,22 @@ namespace Nop.Services.Catalog
             string currencyCode, bool showTax, int languageId);
 
         /// <summary>
+        /// Formats the order price
+        /// </summary>
+        /// <param name="price">Price</param>
+        /// <param name="currencyRate">Currency rate</param>
+        /// <param name="customerCurrencyCode">Customer currency code</param>
+        /// <param name="displayCustomerCurrency">A value indicating whether to display price on customer currency</param>
+        /// <param name="primaryStoreCurrency">Primary store currency</param>
+        /// <param name="languageId">Language</param>
+        /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
+        /// <param name="showTax">A value indicating whether to show tax suffix</param>
+        /// <returns>Price</returns>
+        Task<string> FormatOrderPriceAsync(decimal price, 
+            decimal currencyRate, string customerCurrencyCode, bool displayCustomerCurrency,
+            Currency primaryStoreCurrency, int languageId, bool? priceIncludesTax = null, bool? showTax = null);
+
+        /// <summary>
         /// Formats the price
         /// </summary>
         /// <param name="price">Price</param>

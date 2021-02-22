@@ -17,39 +17,24 @@
         Html.AddCanonicalUrlParts(productsByTagUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
+
+@section CatalogFilters {
+    @await Html.PartialAsync("_CatalogFilters", Model.CatalogProductsModel)
+}
+
 <div class="page product-tag-page">
     <div class="page-title">
         <h1>@string.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h1>
     </div>
     <div class="page-body">
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductsByTagTop, additionalData = Model })
-        @if (Model.Products.Count > 0)
-        {
-            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
-        }
+        @await Html.PartialAsync("_CatalogSelectors", Model.CatalogProductsModel)
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductsByTagBeforeProductList, additionalData = Model })
-        @if (Model.Products.Count > 0)
-        {
-            <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
-                <div class="item-grid">
-                    @foreach (var product in Model.Products)
-                    {
-                        <div class="item-box">
-                            @await Html.PartialAsync("_ProductBox", product)
-                        </div>
-                    }
-                </div>
-            </div>
-        }
         @{
-            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+            var catalogProductsViewData = new ViewDataDictionary(ViewData);
+            catalogProductsViewData["fetchUrl"] = Html.Raw(Url.Action("GetTagProducts", "Catalog", new { tagId = Model.Id }));
         }
-        @if (!(await pager.IsEmpty()))
-        {
-            <div class="pager">
-                @pager
-            </div>
-        }
+        @await Html.PartialAsync("_CatalogProducts", Model.CatalogProductsModel, catalogProductsViewData)
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductsByTagBottom, additionalData = Model })
     </div>
 </div>

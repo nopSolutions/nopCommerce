@@ -271,7 +271,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.CurrentStoreTheme.Name.Should().Be("DefaultClean");
             model.CurrentStoreTheme.Title.Should().Be("Default clean");
             model.AvailableStoreThemes.Should().NotBeNull();
-            model.AvailableStoreThemes.Count.Should().Be(1);
+            model.AvailableStoreThemes.Count.Should().BeGreaterThan(0);
         }
 
         [Test]

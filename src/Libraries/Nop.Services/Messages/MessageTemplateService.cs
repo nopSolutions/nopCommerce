@@ -126,9 +126,8 @@ namespace Nop.Services.Messages
         {
             return await _messageTemplateRepository.GetAllAsync(async query =>
             {
-                //store mapping
-                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<MessageTemplate>(storeId))
-                    query = query.Where(_storeMappingService.ApplyStoreMapping<MessageTemplate>(storeId));
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 return query.OrderBy(t => t.Name);
             }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));

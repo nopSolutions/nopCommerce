@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -14,12 +13,22 @@ namespace Nop.Services.Security
     public partial interface IAclService
     {
         /// <summary>
-        /// Get an expression predicate to apply the ACL
+        /// Apply ACL to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
+        /// <param name="query">Query to filter</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Filtered query</returns>
+        Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, Customer customer) where TEntity : BaseEntity, IAclSupported;
+
+        /// <summary>
+        /// Apply ACL to the passed query
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
+        /// <param name="query">Query to filter</param>
         /// <param name="customerRoleIds">Identifiers of customer's roles</param>
-        /// <returns>Lambda expression</returns>
-        Expression<Func<TEntity, bool>> ApplyAcl<TEntity>(int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported;
+        /// <returns>Filtered query</returns>
+        Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Deletes an ACL record
@@ -42,14 +51,6 @@ namespace Nop.Services.Security
         /// <param name="entity">Entity</param>
         /// <param name="customerRoleId">Customer role id</param>
         Task InsertAclRecordAsync<TEntity>(TEntity entity, int customerRoleId) where TEntity : BaseEntity, IAclSupported;
-
-        /// <summary>
-        /// Get a value indicating whether any ACL records exist for entity type are related to customer roles
-        /// </summary>
-        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
-        /// <param name="customerRoleIds">Customer's role identifiers</param>
-        /// <returns>True if exist; otherwise false</returns>
-        Task<bool> IsEntityAclMappingExistAsync<TEntity>(int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Find customer role identifiers with granted access

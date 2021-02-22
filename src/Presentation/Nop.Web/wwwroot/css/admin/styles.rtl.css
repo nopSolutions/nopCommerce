@@ -887,7 +887,7 @@ table .btn {
 .k-numeric-wrap.k-state-default {
   border-radius: 0;
   border: none;
-  height: 34px;
+  height: 38px;
   padding-left: 23px;
   background: #fff;
 }
@@ -962,9 +962,15 @@ td.k-state-focused.k-state-selected {
 
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused {
-  border-color: #00c0ef;
-  box-shadow: none;
-  padding-bottom: 0;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+  border-radius: 0;
+  border: 1px solid #80bdff;
+}
+
+.k-picker-wrap.k-state-focused .k-input,
+.k-numeric-wrap.k-state-focused .k-input {
+  border: none;
 }
 
 .k-numerictextbox .k-link {
@@ -1116,13 +1122,29 @@ td.k-state-focused.k-state-selected {
     border-radius: 0;
   }
 
-    .k-multiselect.k-header.k-state-hover, .k-multiselect.k-header.k-state-focused {
+    .k-multiselect.k-header.k-state-hover {
       border-color: #3c8dbc !important;
       box-shadow: none !important;
     }
 
+    .k-multiselect.k-state-focused {
+      color: #495057;
+      background-color: #fff;
+      border-color: #80bdff;
+      border-width: 0;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+      border-radius: 0;
+    }
+
+    .k-state-focused > .k-multiselect-wrap {
+      box-shadow: none;
+      border: 1px solid #80bdff;
+      border-radius: 0;
+    }
+
 .k-multiselect-wrap {
-  min-height: 34px;
+  min-height: 36px;
   border-radius: 0;
 }
 
@@ -1142,7 +1164,7 @@ td.k-state-focused.k-state-selected {
 .form-horizontal .form-group .k-dropdown {
   cursor: default;
   width: 100% !important;
-  height: 32px;
+  height: 38px;
 }
 
   .form-horizontal .form-group .k-dropdown .k-dropdown-wrap {
@@ -1162,8 +1184,8 @@ td.k-state-focused.k-state-selected {
     }
 
     .form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input {
-      height: 32px;
-      line-height: 32px;
+      height: 36px;
+      line-height: 36px;
       display: block;
       padding: 0;
     }
@@ -1454,12 +1476,13 @@ div.dataTables_wrapper {
     color: #0076BB;
     font-weight: normal;
     margin-right: 6px;
+    font-size: 65%;
   }
 
-    .content-header > h1 > small .fa-arrow-circle-left {
-      font-size: 18px;
-      margin-left: 1px;
-    }
+  .content-header > h1 > small i {
+    font-size: 0.8em;
+    padding-right: 2px;
+  }
 
 .content-header .btn {
   margin-bottom: 5px;
@@ -1479,6 +1502,15 @@ div.dataTables_wrapper {
   white-space: nowrap;
 }
 
+.documentation-reference {
+  margin-bottom: 10px;
+}
+
+.documentation-reference i {
+  font-size: 0.9em;
+  color: #4d4d4d;
+}
+
 /* FORM ELEMENTS */
 .form-horizontal .label-wrapper {
   float: left;
@@ -1486,8 +1518,13 @@ div.dataTables_wrapper {
   align-items: flex-start;
 }
 
+.form-horizontal .multi-store-override-option + .label-wrapper {
+  width: 90%;
+}
+
   .form-horizontal .label-wrapper .col-form-label {
     text-align: left;
+    flex-grow: 2;
   }
 
   .form-horizontal .label-wrapper .ico-help {
@@ -1530,6 +1567,13 @@ div.dataTables_wrapper {
 
   .form-group input[type=checkbox] {
     margin-top: 13px;
+  }
+
+  .form-group input[type=checkbox]:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255/25%);
+    border-radius: 0;
+    border: 1px solid #80bdff;
   }
 
   .form-group .checkbox input[type=checkbox] {
@@ -2002,14 +2046,14 @@ span.grid-report-item {
 
   .parent-setting.opened + .nested-setting .form-group.parent-setting div[class^="col-md-"] + div[class^="col-md-"]:before {
     position: absolute;
-    height: 46px;
+    height: 36px;
     content: "";
     margin-right: -10px;
     margin-top: -18px;
   }
 
-  .parent-setting.opened + .nested-setting .form-group.parent-setting.opened > div[class^="col-md-"] + div[class^="col-md-"]:after {
-    display: none;
+  .basic-settings-mode .parent-setting.parent-setting-advanced.opened div[class^="col-md-"] + div[class^="col-md-"]:before {
+    height: 110%;
   }
 
   .parent-setting.opened + .nested-setting .form-group:last-child {
@@ -2026,13 +2070,17 @@ span.grid-report-item {
     top: 17px;
   }
 
+  .parent-setting.opened + .nested-setting .form-group.parent-setting.opened > div[class^="col-md-"] + div[class^="col-md-"]:after {
+    display: none;
+  }
+
   .parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"] {
     border-right: none;
   }
 
     .parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"]:before {
       position: absolute;
-      height: 17px;
+      height: 18px;
       content: "";
       margin-right: -10px;
     }
@@ -2315,6 +2363,21 @@ div.dataTables_wrapper .data-tables-refresh > div {
   .table-bordered > tbody > tr > th,
   .table-bordered > tfoot > tr > th {
     border: 1px solid #e3e3e3;
+  }
+
+  .table-bordered > thead > tr > th label,
+  .table-bordered > tbody > tr > th label,
+  .table-bordered > tfoot > tr > th label{
+    font-weight: bold !important;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .table-bordered > thead > tr > th label input[type=checkbox],
+  .table-bordered > tbody > tr > th label input[type=checkbox],
+  .table-bordered > tfoot > tr > th label input[type=checkbox]{
+    margin-left: 5px;
   }
 
   .table-bordered > thead > tr > td,

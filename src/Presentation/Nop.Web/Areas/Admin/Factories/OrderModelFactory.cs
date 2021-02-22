@@ -193,47 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
-
-            //set some of address fields as enabled and required
-            model.FirstNameEnabled = true;
-            model.FirstNameRequired = true;
-            model.LastNameEnabled = true;
-            model.LastNameRequired = true;
-            model.EmailEnabled = true;
-            model.EmailRequired = true;
-            model.CompanyEnabled = _addressSettings.CompanyEnabled;
-            model.CompanyRequired = _addressSettings.CompanyRequired;
-            model.CountryEnabled = _addressSettings.CountryEnabled;
-            model.CountryRequired = _addressSettings.CountryEnabled;
-            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-            model.CountyEnabled = _addressSettings.CountyEnabled;
-            model.CountyRequired = _addressSettings.CountyRequired;
-            model.CityEnabled = _addressSettings.CityEnabled;
-            model.CityRequired = _addressSettings.CityRequired;
-            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
-            model.PhoneEnabled = _addressSettings.PhoneEnabled;
-            model.PhoneRequired = _addressSettings.PhoneRequired;
-            model.FaxEnabled = _addressSettings.FaxEnabled;
-            model.FaxRequired = _addressSettings.FaxRequired;
-        }
-
+        
         /// <summary>
         /// Prepare order item models
         /// </summary>
@@ -295,21 +255,27 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //unit price
                 orderItemModel.UnitPriceInclTax = await _priceFormatter
-                    .FormatPriceAsync(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, languageId, true, true);
+                    .FormatOrderPriceAsync(orderItem.UnitPriceInclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, true, true);
                 orderItemModel.UnitPriceExclTax = await _priceFormatter
-                    .FormatPriceAsync(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, languageId, false, true);
+                    .FormatOrderPriceAsync(orderItem.UnitPriceExclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, false, true);
 
                 //discounts
-                orderItemModel.DiscountInclTax = await _priceFormatter.FormatPriceAsync(orderItem.DiscountAmountInclTax, true,
-                    primaryStoreCurrency, languageId, true, true);
-                orderItemModel.DiscountExclTax = await _priceFormatter.FormatPriceAsync(orderItem.DiscountAmountExclTax, true,
-                    primaryStoreCurrency, languageId, false, true);
+                orderItemModel.DiscountInclTax = await _priceFormatter
+                    .FormatOrderPriceAsync(orderItem.DiscountAmountInclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, true, true);
+                orderItemModel.DiscountExclTax = await _priceFormatter
+                    .FormatOrderPriceAsync(orderItem.DiscountAmountExclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, false, true);
 
                 //subtotal
-                orderItemModel.SubTotalInclTax = await _priceFormatter.FormatPriceAsync(orderItem.PriceInclTax, true, primaryStoreCurrency,
-                    languageId, true, true);
-                orderItemModel.SubTotalExclTax = await _priceFormatter.FormatPriceAsync(orderItem.PriceExclTax, true, primaryStoreCurrency,
-                    languageId, false, true);
+                orderItemModel.SubTotalInclTax = await _priceFormatter
+                    .FormatOrderPriceAsync(orderItem.PriceInclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, true, true);
+                orderItemModel.SubTotalExclTax = await _priceFormatter
+                    .FormatOrderPriceAsync(orderItem.PriceExclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, false, true);
 
                 //recurring info
                 if (product.IsRecurring)
@@ -381,18 +347,22 @@ namespace Nop.Web.Areas.Admin.Factories
             var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
 
             //subtotal
-            model.OrderSubtotalInclTax = await _priceFormatter.FormatPriceAsync(order.OrderSubtotalInclTax, true, primaryStoreCurrency,
-                languageId, true);
-            model.OrderSubtotalExclTax = await _priceFormatter.FormatPriceAsync(order.OrderSubtotalExclTax, true, primaryStoreCurrency,
-                languageId, false);
+            model.OrderSubtotalInclTax = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderSubtotalInclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, true);
+            model.OrderSubtotalExclTax = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderSubtotalExclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, false);
             model.OrderSubtotalInclTaxValue = order.OrderSubtotalInclTax;
             model.OrderSubtotalExclTaxValue = order.OrderSubtotalExclTax;
 
             //discount (applied to order subtotal)
-            var orderSubtotalDiscountInclTaxStr = await _priceFormatter.FormatPriceAsync(order.OrderSubTotalDiscountInclTax, true,
-                primaryStoreCurrency, languageId, true);
-            var orderSubtotalDiscountExclTaxStr = await _priceFormatter.FormatPriceAsync(order.OrderSubTotalDiscountExclTax, true,
-                primaryStoreCurrency, languageId, false);
+            var orderSubtotalDiscountInclTaxStr = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderSubTotalDiscountInclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, true);
+            var orderSubtotalDiscountExclTaxStr = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderSubTotalDiscountExclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, false);
             if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
                 model.OrderSubTotalDiscountInclTax = orderSubtotalDiscountInclTaxStr;
             if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
@@ -401,27 +371,37 @@ namespace Nop.Web.Areas.Admin.Factories
             model.OrderSubTotalDiscountExclTaxValue = order.OrderSubTotalDiscountExclTax;
 
             //shipping
-            model.OrderShippingInclTax = await _priceFormatter.FormatShippingPriceAsync(order.OrderShippingInclTax, true,
-                primaryStoreCurrency, languageId, true);
-            model.OrderShippingExclTax = await _priceFormatter.FormatShippingPriceAsync(order.OrderShippingExclTax, true,
-                primaryStoreCurrency, languageId, false);
+            model.OrderShippingInclTax = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderShippingInclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, true,
+                _taxSettings.ShippingIsTaxable && _taxSettings.DisplayTaxSuffix);
+            model.OrderShippingExclTax = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderShippingExclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, false,
+                _taxSettings.ShippingIsTaxable && _taxSettings.DisplayTaxSuffix);
             model.OrderShippingInclTaxValue = order.OrderShippingInclTax;
             model.OrderShippingExclTaxValue = order.OrderShippingExclTax;
 
             //payment method additional fee
             if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
             {
-                model.PaymentMethodAdditionalFeeInclTax = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(
-                    order.PaymentMethodAdditionalFeeInclTax, true, primaryStoreCurrency, languageId, true);
-                model.PaymentMethodAdditionalFeeExclTax = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(
-                    order.PaymentMethodAdditionalFeeExclTax, true, primaryStoreCurrency, languageId, false);
+                model.PaymentMethodAdditionalFeeInclTax = await _priceFormatter
+                    .FormatOrderPriceAsync(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, true,
+                    _taxSettings.PaymentMethodAdditionalFeeIsTaxable && _taxSettings.DisplayTaxSuffix);
+                model.PaymentMethodAdditionalFeeExclTax = await _priceFormatter
+                    .FormatOrderPriceAsync(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, false,
+                    _taxSettings.PaymentMethodAdditionalFeeIsTaxable && _taxSettings.DisplayTaxSuffix);
             }
 
             model.PaymentMethodAdditionalFeeInclTaxValue = order.PaymentMethodAdditionalFeeInclTax;
             model.PaymentMethodAdditionalFeeExclTaxValue = order.PaymentMethodAdditionalFeeExclTax;
 
             //tax
-            model.Tax = await _priceFormatter.FormatPriceAsync(order.OrderTax, true, false);
+            model.Tax = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderTax, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false);
             var taxRates = _orderService.ParseTaxRates(order, order.TaxRates);
             var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
             var displayTax = !displayTaxRates;
@@ -430,7 +410,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.TaxRates.Add(new OrderModel.TaxRate
                 {
                     Rate = _priceFormatter.FormatTaxRate(tr.Key),
-                    Value = await _priceFormatter.FormatPriceAsync(tr.Value, true, false)
+                    Value = await _priceFormatter
+                        .FormatOrderPriceAsync(tr.Value, order.CurrencyRate, order.CustomerCurrencyCode,
+                        _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false)
                 });
             }
 
@@ -441,7 +423,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //discount
             if (order.OrderDiscount > 0)
-                model.OrderTotalDiscount = await _priceFormatter.FormatPriceAsync(-order.OrderDiscount, true, false);
+            {
+                model.OrderTotalDiscount = await _priceFormatter
+                    .FormatOrderPriceAsync(-order.OrderDiscount, order.CurrencyRate, order.CustomerCurrencyCode,
+                    _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false);
+            }
             model.OrderTotalDiscountValue = order.OrderDiscount;
 
             //gift cards
@@ -463,7 +449,9 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //total
-            model.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
+            model.OrderTotal = await _priceFormatter
+                .FormatOrderPriceAsync(order.OrderTotal, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false);
             model.OrderTotalValue = order.OrderTotal;
 
             //refunded amount
@@ -488,7 +476,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 return;
 
             var profit = await _orderReportService.ProfitReportAsync(orderId: order.Id);
-            model.Profit = await _priceFormatter.FormatPriceAsync(profit, true, false);
+            model.Profit = await _priceFormatter
+                .FormatOrderPriceAsync(profit, order.CurrencyRate, order.CustomerCurrencyCode,
+                _orderSettings.DisplayCustomerCurrencyOnOrders, primaryStoreCurrency, languageId, null, false);
         }
 
         /// <summary>
@@ -512,7 +502,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
             model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
 
-            await PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -598,7 +588,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ShippingAddress = shippingAddress.ToModel(model.ShippingAddress);
                 model.ShippingAddress.CountryName = shippingCountry?.Name;
                 model.ShippingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress))?.Name;
-                await PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
+                await _baseAdminModelFactory.PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
                 model.ShippingAddressGoogleMapsUrl = "https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
                     $"{WebUtility.UrlEncode(shippingAddress.Address1 + " " + shippingAddress.ZipPostalCode + " " + shippingAddress.City + " " + (shippingCountry?.Name ?? string.Empty))}";
             }
@@ -1209,9 +1199,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
                 keywords: searchModel.SearchProductName,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
@@ -1304,7 +1294,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare address model
             model.Address = address.ToModel(model.Address);
-            await PrepareAddressModelAsync(model.Address, address);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             //prepare available countries
             await _baseAdminModelFactory.PrepareCountriesAsync(model.Address.AvailableCountries);

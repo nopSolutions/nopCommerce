@@ -28,19 +28,13 @@
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">
-            <div class="card card-default card-search">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <p>
-                                @T("Admin.Configuration.Shipping.Methods.Description")
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="card card-default">
                 <div class="card-body">
+                    <p>
+                        @T("Admin.Configuration.Shipping.Methods.Description")
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ShippingManagement", Docs.ShippingManagement + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                    </p>
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "shippingmethod-grid",

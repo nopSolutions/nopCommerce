@@ -11,7 +11,7 @@
 
         function toggleEnableCondition() {
             if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
-                $('#pnlAttributes').showField();
+                $('#pnlAttributes').show();
             } else {
                 $('#pnlAttributes').hide();
             }
@@ -110,7 +110,7 @@
             else
             {
                 <div class="form-group row">
-                    <div class="col-md-9 offset-md-3">
+                    <div class="col-md-9 offset-md-3 mt-3">
                         @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
                     </div>
                 </div>

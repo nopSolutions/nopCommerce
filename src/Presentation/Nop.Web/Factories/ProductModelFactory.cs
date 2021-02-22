@@ -1205,6 +1205,59 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
+        /// Prepare the product combination models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Product combination models</returns>
+        public virtual async Task<IList<ProductCombinationModel>> PrepareProductCombinationModelsAsync(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            var result = new List<ProductCombinationModel>();
+
+            var combinations = await _productAttributeService
+                .GetAllProductAttributeCombinationsAsync(product.Id);
+            if (combinations?.Any() == true)
+            {
+                foreach (var combination in combinations)
+                {
+                    var combinationModel = new ProductCombinationModel
+                    {
+                        InStock = combination.StockQuantity > 0 || combination.AllowOutOfStockOrders
+                    };
+
+                    var mappings = await _productAttributeParser
+                        .ParseProductAttributeMappingsAsync(combination.AttributesXml);
+                    if (mappings == null || mappings.Count == 0)
+                        continue;
+
+                    foreach (var mapping in mappings)
+                    {
+                        var attributeModel = new ProductAttributeModel
+                        {
+                            Id = mapping.Id
+                        };
+
+                        var values = await _productAttributeParser
+                            .ParseProductAttributeValuesAsync(combination.AttributesXml, mapping.Id);
+                        if (values == null || values.Count == 0)
+                            continue;
+
+                        foreach (var value in values)
+                            attributeModel.ValueIds.Add(value.Id);
+
+                        combinationModel.Attributes.Add(attributeModel);
+                    }
+
+                    result.Add(combinationModel);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Prepare the product details model
         /// </summary>
         /// <param name="product">Product</param>
@@ -1241,7 +1294,8 @@ namespace Nop.Web.Factories
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
                 AvailableEndDate = product.AvailableEndDateTimeUtc,
-                VisibleIndividually = product.VisibleIndividually
+                VisibleIndividually = product.VisibleIndividually,
+                AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations
             };
 
             //automatically generate product description?

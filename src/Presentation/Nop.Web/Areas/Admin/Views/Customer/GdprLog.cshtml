@@ -72,6 +72,8 @@
 
                         <div class="card card-default">
                             <div class="card-body">
+                                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Gdpr", Docs.Gdpr + Utm.OnAdmin)" />
+
                                 @await Html.PartialAsync("Table", new DataTablesModel
                                 {
                                     Name = "log-grid",

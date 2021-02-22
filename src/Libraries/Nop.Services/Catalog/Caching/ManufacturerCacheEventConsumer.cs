@@ -14,9 +14,18 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCacheAsync(Manufacturer entity)
+        /// <param name="entityEventType">Entity event type</param>
+        protected override async Task ClearCacheAsync(Manufacturer entity, EntityEventType entityEventType)
         {
             await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsPrefix);
+
+            if (entityEventType != EntityEventType.Insert)
+                await RemoveByPrefixAsync(NopCatalogDefaults.ManufacturersByCategoryPrefix);
+
+            if (entityEventType == EntityEventType.Delete)
+                await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByManufacturerCacheKey, entity);
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

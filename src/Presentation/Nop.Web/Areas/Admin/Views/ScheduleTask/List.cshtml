@@ -33,6 +33,7 @@
                 <div class="card-body">
                     <p>
                         @T("Admin.System.ScheduleTasks.24days")
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ScheduleTasks", Docs.ScheduleTasks + Utm.OnAdmin)" asp-add-wrapper="false"/>
                     </p>
                     <p>
                         <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
@@ -108,7 +109,7 @@
                                 }
                             }
                     })
-                    
+
                     <script>
                         function renderColumnRunNow(data, type, row, meta) {
                             return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn btn-success">@T("Admin.System.ScheduleTasks.RunNow")</a>';

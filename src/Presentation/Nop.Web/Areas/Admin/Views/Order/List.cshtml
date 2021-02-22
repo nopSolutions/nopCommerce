@@ -279,6 +279,8 @@
 
                     <div class="card card-default">
                         <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Orders", Docs.Orders + Utm.OnAdmin)" />
+
                             @{
                                 var gridModel = new DataTablesModel
                                 {
@@ -290,7 +292,7 @@
                                     FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
                                     FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                     Filters = new List<FilterParameter>
-                                    {
+                                                        {
                                         new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
                                         new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                         new FilterParameter(nameof(Model.OrderStatusIds)),
@@ -309,7 +311,7 @@
                                     }
                                 };
                                 gridModel.ColumnCollection = new List<ColumnProperty>
-                                {
+                                                    {
                                     new ColumnProperty(nameof(OrderModel.Id))
                                     {
                                         IsMasterCheckBox = true,

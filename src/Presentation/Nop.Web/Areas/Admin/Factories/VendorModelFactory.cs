@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
@@ -26,6 +27,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressService _addressService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -44,7 +47,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public VendorModelFactory(IAddressAttributeModelFactory addressAttributeModelFactory,
+        public VendorModelFactory(CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
@@ -58,6 +63,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
             _addressAttributeModelFactory = addressAttributeModelFactory;
             _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -196,37 +203,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set some of address fields as enabled and required
-            model.CountryEnabled = true;
-            model.StateProvinceEnabled = true;
-            model.CountyEnabled = true;
-            model.CityEnabled = true;
-            model.StreetAddressEnabled = true;
-            model.StreetAddress2Enabled = true;
-            model.ZipPostalCodeEnabled = true;
-            model.PhoneEnabled = true;
-            model.FaxEnabled = true;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-
-            //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
-        }
-
-        /// <summary>
         /// Prepare vendor note search model
         /// </summary>
         /// <param name="searchModel">Vendor note search model</param>
@@ -346,7 +322,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Active = true;
                 model.AllowCustomersToSelectPageSize = true;
                 model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
+                model.PriceRangeFiltering = true;
+                model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
+
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //prepare localized models
             if (!excludeProperties)
@@ -359,7 +340,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressByIdAsync(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await PrepareAddressModelAsync(model.Address, address);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             return model;
         }
