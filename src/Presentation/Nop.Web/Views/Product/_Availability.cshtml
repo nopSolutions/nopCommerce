@@ -1,4 +1,7 @@
 ﻿@model ProductDetailsModel
+
+@using Nop.Core.Domain.Catalog
+
 @if (!string.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
 {
     <div class="availability">

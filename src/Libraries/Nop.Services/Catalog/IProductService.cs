@@ -337,7 +337,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>In stock status</returns>
-        ProductStockStatus? GetInStockStatus(Product product);
+        Task<ProductStockStatus?> GetInStockStatusAsync(Product product);
 
         /// <summary>
         /// Get number of rental periods (price ratio)

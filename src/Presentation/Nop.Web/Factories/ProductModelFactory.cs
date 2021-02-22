@@ -1237,7 +1237,7 @@ namespace Nop.Web.Factories
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockStatus = _productService.GetInStockStatus(product),
+                StockStatus = await _productService.GetInStockStatusAsync(product),
                 StockAvailability = await _productService.FormatStockMessageAsync(product, string.Empty),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,

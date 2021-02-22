@@ -291,16 +291,16 @@ namespace Nop.Services.Catalog
                 if (product.DisplayStockQuantity)
                 {
                     //display "in stock" with stock quantity
-                    stockMessage = string.Format(_localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity);
+                    stockMessage = string.Format(
+                        await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity);
                 }
                 else
                 {
-                    stockMessage = (stockQuantity > product.LowStockQuantity) ?
+                    stockMessage = (stockQuantity > product.LowStockQuantity)
                         //display "in stock" without stock quantity
-                        _localizationService.GetResource("Products.Availability.InStock")
-                                                :
+                        ? await _localizationService.GetResourceAsync("Products.Availability.InStock")
                         //display "low stock" without stock quantity
-                        _localizationService.GetResource("Products.Availability.LowStock");
+                        : await _localizationService.GetResourceAsync("Products.Availability.LowStock");
                 }
             }
             else
@@ -1371,7 +1371,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>In stock status</returns>
-        public virtual ProductStockStatus? GetInStockStatus(Product product)
+        public virtual async Task<ProductStockStatus?> GetInStockStatusAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1379,7 +1379,7 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
                 return null;
 
-            var totalStockQuantity = GetTotalStockQuantity(product);
+            var totalStockQuantity = await GetTotalStockQuantityAsync(product);
 
             if (totalStockQuantity > product.LowStockQuantity)
                 return ProductStockStatus.InStock;

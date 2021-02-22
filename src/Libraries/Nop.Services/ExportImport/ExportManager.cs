@@ -1306,11 +1306,11 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses, await IgnoreExportProductPropertyAsync(p => p.UseMultipleWarehouses)),
                 new PropertyByName<Product>("WarehouseId", p => p.WarehouseId, await IgnoreExportProductPropertyAsync(p => p.Warehouse)),
                 new PropertyByName<Product>("StockQuantity", p => p.StockQuantity),
-                new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability, IgnoreExportPoductProperty(p => p.DisplayStockAvailability)),
-                new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, IgnoreExportPoductProperty(p => p.DisplayStockAvailability)),
-                new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, IgnoreExportPoductProperty(p => p.MinimumStockQuantity)),
-                new PropertyByName<Product>("LowStockQuantity", p => p.LowStockQuantity, IgnoreExportPoductProperty(p => p.LowStockQuantity)),
-                new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, IgnoreExportPoductProperty(p => p.LowStockActivity))
+                new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
+                new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
+                new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumStockQuantity)),
+                new PropertyByName<Product>("LowStockQuantity", p => p.LowStockQuantity, await IgnoreExportProductPropertyAsync(p => p.LowStockQuantity)),
+                new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, await IgnoreExportProductPropertyAsync(p => p.LowStockActivity))
                 {
                     DropDownElements = await LowStockActivity.Nothing.ToSelectListAsync(useLocalization: false)
                 },
