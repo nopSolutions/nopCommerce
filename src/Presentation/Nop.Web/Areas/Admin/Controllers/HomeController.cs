@@ -82,8 +82,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var progress = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute);
             if (!string.IsNullOrEmpty(progress))
             {
-                _notificationService.SuccessNotification(
-                    string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage"), progress), false);
+                var locale = await _localizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage");
+                _notificationService.SuccessNotification(string.Format(locale, progress, NopLinksDefaults.OfficialSite.Translations), false);
                 await _genericAttributeService.SaveAttributeAsync(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
             }
 

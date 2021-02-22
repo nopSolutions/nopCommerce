@@ -26,7 +26,8 @@
                 <div class="card card-default">
                     <div class="card-body">
                         <p>
-                            @T("Admin.Configuration.Payment.Methods.DownloadMorePlugins")
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PaymentMethods", Docs.PaymentMethods + Utm.OnAdmin)" asp-add-wrapper="false"/>
+                            @T("Admin.Configuration.Payment.Methods.DownloadMorePlugins", OfficialSite.PaymentPlugins + Utm.OnAdminPaymentPlugins.Replace('?', '&'))
                         </p>
 
                         <div id="payment-methods-area">

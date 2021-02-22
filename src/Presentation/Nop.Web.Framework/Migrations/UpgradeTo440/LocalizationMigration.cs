@@ -146,7 +146,17 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys",
                 "Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys.Hint",
                 "Admin.System.SystemInfo.UseRedisToStorePluginsInfo",
-                "Admin.System.SystemInfo.UseRedisToStorePluginsInfo.Hint"
+                "Admin.System.SystemInfo.UseRedisToStorePluginsInfo.Hint",
+                "Admin.Catalog.Categories.Fields.PriceRanges",
+                "Admin.Catalog.Categories.Fields.PriceRanges.Hint",
+                "Admin.Catalog.Manufacturers.Fields.PriceRanges",
+                "Admin.Catalog.Manufacturers.Fields.PriceRanges.Hint",
+                "Filtering.PriceRangeFilter.Under",
+                "Filtering.PriceRangeFilter.Over",
+                "Filtering.PriceRangeFilter.Remove",
+                "Filtering.SpecificationFilter.CurrentlyFilteredBy",
+                "Filtering.SpecificationFilter.Remove",
+                "Filtering.SpecificationFilter.Separator",
             }).Wait();
 
             localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
@@ -232,7 +242,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Products.SpecificationAttributes.NameFormat"] = "{0} >> {1}",
                 ["Admin.System.Warnings.PluginsOverrideSameService"] = "The \"{0}\" interface/class has been overridden in those assemblies: {1}. This situation may cause errors because there is only one of them will be used (Please contact the assembly(ies) developers to solve this problem.)",
 
-                //<MFA #475>
+                //#475
                 ["Admin.Configuration.Authentication"] = "Authentication",
                 ["Admin.Configuration.Authentication.MultiFactorMethods"] = "Multi-factor authentication",
                 ["Admin.Configuration.Authentication.MultiFactorMethods.BackToList"] = "back to multi-factor authentication method list",
@@ -241,11 +251,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Authentication.MultiFactorMethods.Fields.FriendlyName"] = "Friendly name",
                 ["Admin.Configuration.Authentication.MultiFactorMethods.Fields.IsActive"] = "Is active",
                 ["Admin.Configuration.Authentication.MultiFactorMethods.Fields.SystemName"] = "System name",
-
                 ["Permission.Authentication.ManageMultifactorMethods"] = "Admin area. Manage Multi-factor Authentication Methods",
-
                 ["MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"] = "The multi-factor authentication provider specified in your account settings has been deactivated. Please contact your administrator.",
-
                 ["PageTitle.MultiFactorAuthentication"] = "Multi-factor authentication",
                 ["PageTitle.MultiFactorVerification"] = "Multi-factor verification",
                 ["Account.MultiFactorAuthentication.Fields.IsEnabled"] = "Is enabled",
@@ -253,18 +260,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Account.MultiFactorAuthentication.Providers"] = "Authentication providers",
                 ["Account.MultiFactorAuthentication.Providers.NoActive"] = "No active providers",
                 ["Account.MultiFactorAuthentication.Description"] = "<p>To activate multi-factor authentication for your account, you need: </p></br><ol><li>1. Activate the ’Is enabled’ setting.</li><li>2. Choose one of the multi-factor authentication providers.</li><li>3. Save.</li><li>4. Configure the selected multi-factor authentication provider by following the instructions on the individual settings page of the selected provider.</li></ol></br><p> WARNING. After saving the selected provider, be sure to configure it, otherwise you will be denied access the next time you try to enter your account.</p>",
-
                 ["Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider"] = "Multi-factor authentication provider",
                 ["Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider.Hint"] = "Name of the multi-factor authentication provider to which the customer is associated.",
                 ["Admin.Customers.Customers.UnbindMFAProvider"] = "The customer has unbinded from the multifactor authentication provider successfully.",
-                //</MFA #475>
 
-                ["Admin.Configuration.Plugins.Description.DownloadMorePlugins"] = "You can download more nopCommerce plugins in our <a href=\"https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=all-plugins\" target=\"_blank\">marketplace</a>",
-                ["Admin.Configuration.Payment.Methods.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"https://www.nopcommerce.com/extensions?category=payment-modules&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=payment-plugins\" target=\"_blank\">marketplace</a>",
-                ["Admin.Configuration.Shipping.Providers.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"https://www.nopcommerce.com/extensions?category=shipping-delivery&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=shipping-plugins\" target=\"_blank\">marketplace</a>",
-                ["Admin.Configuration.Tax.Providers.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"https://www.nopcommerce.com/extensions?category=taxes&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=tax-plugins\" target=\"_blank\">marketplace</a>",
-                ["Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore"] = "You can get more themes in our <a href=\"https://www.nopcommerce.com/themes?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=general-common-theme\" target=\"_blank\">marketplace</a>",
-                ["Admin.Configuration.Plugins.OfficialFeed.Instructions"] = "Here you can find third-party extensions and themes which are developed by our community and partners. They are also available in our <a href=\"https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=official-plugins\" target=\"_blank\">marketplace</a>",
+                ["Admin.Configuration.Plugins.Description.DownloadMorePlugins"] = "You can download more nopCommerce plugins in our <a href=\"{0}\" target=\"_blank\">marketplace</a>",
+                ["Admin.Configuration.Payment.Methods.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"{0}\" target=\"_blank\">marketplace</a>",
+                ["Admin.Configuration.Shipping.Providers.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"{0}\" target=\"_blank\">marketplace</a>",
+                ["Admin.Configuration.Tax.Providers.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"{0}\" target=\"_blank\">marketplace</a>",
+                ["Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore"] = "You can get more themes in our <a href=\"{0}\" target=\"_blank\">marketplace</a>",
+                ["Admin.Configuration.Plugins.OfficialFeed.Instructions"] = "Here you can find third-party extensions and themes which are developed by our community and partners. They are also available in our <a href=\"{0}\" target=\"_blank\">marketplace</a>",
                 ["Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew"] = "Add a new checkout attribute value",
 
                 ["Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer"] = "One review per product from customer",
@@ -292,8 +297,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Installation.InstallRegionalResources.Hint"] = "Enable this setting to download and setup the regional language pack during installation.",
 
                 //#5213
-                ["Admin.System.Log.List.PremiumSupport"] = "Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href=\"https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list\" target=\"_blank\">here</a>.",
-                ["Admin.System.Log.PremiumSupport"] = "Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href=\"https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-details\" target=\"_blank\">here</a>.",
+                ["Admin.System.Log.List.PremiumSupport"] = "Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href=\"{0}\" target=\"_blank\">here</a>.",
+                ["Admin.System.Log.PremiumSupport"] = "Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href=\"{0}\" target=\"_blank\">here</a>.",
 
                 //#4699
                 ["Admin.Configuration.AppSettings.DistributedCache"] = "Distributed cache configuration",
@@ -340,7 +345,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Title"] = "“Basic/Advanced” modes",
                 ["Admin.ConfigurationSteps.PersonalizeStore.BasicAdvanced.Text"] = "This two-position <b>Basic/Advanced</b> switch allows you to switch between the page display modes. For convenience of use, the most frequent settings are shown in the Basic mode. If you cannot find a required setting on a page, switch to the Advanced mode to see all the available settings.",
                 ["Admin.ConfigurationSteps.PersonalizeStore.Theme.Title"] = "Choose a theme",
-                ["Admin.ConfigurationSteps.PersonalizeStore.Theme.Text"] = "On this page, you can set up your store theme. After you choose a theme on our <a href=\"https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=all-plugins\" target=\"_blank\">marketplace</a>, upload it on your site following <a href=\"https://docs.nopcommerce.com/getting-started/design-your-store/choose-and-install-a-theme.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">these instructions</a>. Then refresh this page, and you will see all the available themes. Choose one and click the <b>Save</b> button in the top right.",
+                ["Admin.ConfigurationSteps.PersonalizeStore.Theme.Text"] = "On this page, you can set up your store theme. After you choose a theme on our <a href=\"{0}\" target=\"_blank\">marketplace</a>, upload it on your site following <a href=\"{1}\" target=\"_blank\">these instructions</a>. Then refresh this page, and you will see all the available themes. Choose one and click the <b>Save</b> button in the top right.",
                 ["Admin.ConfigurationSteps.PersonalizeStore.Logo.Title"] = "Upload your logo",
                 ["Admin.ConfigurationSteps.PersonalizeStore.Logo.Text"] = "In this field, click the <b>Upload a file</b> button, then choose your logo file.",
                 ["Admin.ConfigurationSteps.EmailAccount.EmailAddress.Title"] = "Email address",
@@ -376,7 +381,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.PaymentMethods.Manual.Title"] = "Credit card (manual)",
                 ["Admin.ConfigurationSteps.PaymentMethods.Manual.Text"] = "This is a special payment plugin that allows all orders to be successfully entered on the website, but it does NOT really charge a customer or make any calls to any live payment gateway. This payment method is recommended if you want to perform one of the following: <ul><li>Process all orders offline</li><li>Process them manually via another back-office system</li><li>Test the site end-to-end before going live</li></ul>",
                 ["Admin.ConfigurationSteps.PaymentMethods.PayPal.Title"] = "PayPal Smart Payment Buttons",
-                ["Admin.ConfigurationSteps.PaymentMethods.PayPal.Text"] = "If you want to process payments online, we’d recommend you to set up the PayPal Smart Payment Buttons payment method. PayPal Checkout with Smart Payment Buttons gives your buyers a simplified and secure checkout experience. Read more about how to set this plugin <a href=\"https://docs.nopcommerce.com/getting-started/configure-payments/payment-methods/paypal-smart-payment-buttons.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">here</a>.",
+                ["Admin.ConfigurationSteps.PaymentMethods.PayPal.Text"] = "If you want to process payments online, we’d recommend you to set up the PayPal Smart Payment Buttons payment method. PayPal Checkout with Smart Payment Buttons gives your buyers a simplified and secure checkout experience. Read more about how to set this plugin <a href=\"{0}\" target=\"_blank\">here</a>.",
                 ["Admin.ConfigurationSteps.PaymentMethods.Configure.Title"] = "Configure a payment method",
                 ["Admin.ConfigurationSteps.PaymentMethods.Configure.Text"] = "You can configure each payment method by clicking the appropriate <b>Configure</b> button.",
                 ["Admin.ConfigurationSteps.Product.SettingsButton.Title"] = "“Settings” button",
@@ -384,7 +389,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.Product.Details.Title"] = "Product details",
                 ["Admin.ConfigurationSteps.Product.Details.Text"] = "Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src=\"../../js/admintour/images/product-page.jpg\"/></div>",
                 ["Admin.ConfigurationSteps.Product.Price.Title"] = "Product price",
-                ["Admin.ConfigurationSteps.Product.Price.Text"] = "Enter the product price in a predefined currency here. Read more on how to manage currencies <a href=\"https://docs.nopcommerce.com/getting-started/configure-payments/advanced-configuration/currencies.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">here</a>.",
+                ["Admin.ConfigurationSteps.Product.Price.Text"] = "Enter the product price in a predefined currency here. Read more on how to manage currencies <a href=\"{0}\" target=\"_blank\">here</a>.",
                 ["Admin.ConfigurationSteps.Product.Tax.Title"] = "Product tax category",
                 ["Admin.ConfigurationSteps.Product.Tax.Text"] = "Select the product tax category or tick the <b>Tax exempt</b> if needed.",
                 ["Admin.ConfigurationSteps.Product.Shipping.Title"] = "Product shipping info",
@@ -406,11 +411,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.ConfigureManual.Manage.Title"] = "Manage shipping methods",
                 ["Admin.ConfigurationSteps.ConfigureManual.Manage.Text"] = "Using this button, you can add new shipping methods or delete the existing ones.",
                 ["Admin.ConfigurationSteps.ShippingProviders.Providers.Title"] = "Shipping providers",
-                ["Admin.ConfigurationSteps.ShippingProviders.Providers.Text"] = "You can see all the shipping providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href=\"https://www.nopcommerce.com/extensions?category=shipping-delivery&utm_source=admin-panel&utm_medium=tour&utm_campaign=marketplace&utm_content=tooltip\" target=\"_blank\">marketplace</a>.",
+                ["Admin.ConfigurationSteps.ShippingProviders.Providers.Text"] = "You can see all the shipping providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href=\"{0}\" target=\"_blank\">marketplace</a>.",
                 ["Admin.ConfigurationSteps.ShippingProviders.Manual.Title"] = "Manual shipping provider",
                 ["Admin.ConfigurationSteps.ShippingProviders.Manual.Text"] = "The only active shipping plugin by default is <b>Manual</b>. This provider allows you to configure shipping methods and rates manually.",
                 ["Admin.ConfigurationSteps.ShippingProviders.ShipStation.Title"] = "ShipStation",
-                ["Admin.ConfigurationSteps.ShippingProviders.ShipStation.Text"] = "If you want to provide more accurate shipping rates, we recommend using shipping services such as ShipStation. Read how to configure it in <a href=\"https://docs.nopcommerce.com/getting-started/configure-shipping/shipping-providers/shipstation.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">this article</a>.",
+                ["Admin.ConfigurationSteps.ShippingProviders.ShipStation.Text"] = "If you want to provide more accurate shipping rates, we recommend using shipping services such as ShipStation. Read how to configure it in <a href=\"{0}\" target=\"_blank\">this article</a>.",
                 ["Admin.ConfigurationSteps.ShippingProviders.Configure.Title"] = "Configure Manual",
                 ["Admin.ConfigurationSteps.ShippingProviders.Configure.Text"] = "Now we’ll configure the Manual shipping provider. Click this button to proceed to the plugin configuration page.",
                 ["Admin.ConfigurationSteps.Store.Name.Title"] = "Your store name",
@@ -418,7 +423,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.Store.Url.Title"] = "Your store URL",
                 ["Admin.ConfigurationSteps.Store.Url.Text"] = "Enter your store URL in this field. For example, it could be http://www.yourstore.com/ or https://www.yourstore.com/mystore/ if you installed your store in a subdirectory.",
                 ["Admin.ConfigurationSteps.Store.Ssl.Title"] = "Enable SSL",
-                ["Admin.ConfigurationSteps.Store.Ssl.Text"] = "If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href=\"https://docs.nopcommerce.com/getting-started/advanced-configuration/how-to-install-and-configure-ssl-certification.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">here</a>.",
+                ["Admin.ConfigurationSteps.Store.Ssl.Text"] = "If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href=\"{0}\" target=\"_blank\">here</a>.",
                 ["Admin.ConfigurationSteps.TaxManual.Switch.Title"] = "“Fixed rate/By country” switch",
                 ["Admin.ConfigurationSteps.TaxManual.Switch.Text"] = "The “Fixed rate/By country” switch allows you to choose the type of tax rates you’d like to use in your store.",
                 ["Admin.ConfigurationSteps.TaxManual.Fixed.Title"] = "“Fixed rate” option",
@@ -430,9 +435,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.TaxManual.Edit.Title"] = "Edit tax rate",
                 ["Admin.ConfigurationSteps.TaxManual.Edit.Text"] = "Click the <b>Edit</b> button to edit a tax rate for the specific tax category.",
                 ["Admin.ConfigurationSteps.TaxProviders.TaxProviders.Title"] = "Tax providers",
-                ["Admin.ConfigurationSteps.TaxProviders.TaxProviders.Text"] = "You can see all the tax providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href=\"https://www.nopcommerce.com/extensions?category=taxes&utm_source=admin-panel&utm_medium=tour&utm_campaign=marketplace&utm_content=tooltip\" target=\"_blank\">marketplace</a>.",
+                ["Admin.ConfigurationSteps.TaxProviders.TaxProviders.Text"] = "You can see all the tax providers (plugins) allowed to use in your store on this page. However, you can always find much more in our <a href=\"{0}\" target=\"_blank\">marketplace</a>.",
                 ["Admin.ConfigurationSteps.TaxProviders.Avalara.Title"] = "Avalara tax provider",
-                ["Admin.ConfigurationSteps.TaxProviders.Avalara.Text"] = "You can automate the tax compliance in your store. Set up the Avalara tax provider, and you won’t need to worry about taxes anymore. Avalara is an automated tax compliance software. Read how to configure it in <a href=\"https://docs.nopcommerce.com/getting-started/configure-taxes/tax-providers/avalara.html?utm_source=admin-panel&utm_medium=tour&utm_campaign=documentation&utm_content=tooltip\" target=\"_blank\">this article</a>.",
+                ["Admin.ConfigurationSteps.TaxProviders.Avalara.Text"] = "You can automate the tax compliance in your store. Set up the Avalara tax provider, and you won’t need to worry about taxes anymore. Avalara is an automated tax compliance software. Read how to configure it in <a href=\"{0}\" target=\"_blank\">this article</a>.",
                 ["Admin.ConfigurationSteps.TaxProviders.Manual.Title"] = "Manual tax provider",
                 ["Admin.ConfigurationSteps.TaxProviders.Manual.Text"] = "Manual tax provider allows you to set up fixed tax rates depending on the country/state/zip.",
                 ["Admin.ConfigurationSteps.TaxProviders.PrimaryProvider.Title"] = "Mark as a primary provider",
@@ -461,7 +466,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 //#5216
                 ["Admin.Reports.SalesSummary"] = "Sales summary",
                 ["Admin.Reports.SalesSummary.BillingCountry"] = "Billing country",
-                ["Admin.Reports.SalesSummary.BillingCountry.Hint"] = "Filter by order billing country.",  
+                ["Admin.Reports.SalesSummary.BillingCountry.Hint"] = "Filter by order billing country.",
                 ["Admin.Reports.SalesSummary.Category"] = "Category",
                 ["Admin.Reports.SalesSummary.Category.Hint"] = "Search in a specific category.",
                 ["Admin.Reports.SalesSummary.EndDate"] = "End date",
@@ -500,6 +505,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl.Hint"] = "Specify a value of 'Cache - Control' header value for static content (in seconds).",
                 ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions"] = "Support previous nopCommerce versions",
                 ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint"] = "Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).",
+                ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"{0}\" target=\"_blank\">our documentation.</a>",
 
                 //#3015
                 ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle"] = "Home page title",
@@ -507,7 +513,60 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription"] = "Home page description",
                 ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint"] = "The description for home page in your store.",
 
-                ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html\" target=\"_blank\">our documentation.</a>",
+                //#5210
+                ["Admin.Documentation.Reference.Products"] = "Learn more about <a target=\"_blank\" href=\"{0}\">products</a>",
+                ["Admin.Documentation.Reference.Categories"] = "Learn more about <a target=\"_blank\" href=\"{0}\">categories</a>",
+                ["Admin.Documentation.Reference.Manufacturers"] = "Learn more about <a target=\"_blank\" href=\"{0}\">manufacturers</a>",
+                ["Admin.Documentation.Reference.ProductReviews"] = "Learn more about <a target=\"_blank\" href=\"{0}\">product reviews</a>",
+                ["Admin.Documentation.Reference.ProductTags"] = "Learn more about <a target=\"_blank\" href=\"{0}\">product tags</a>",
+                ["Admin.Documentation.Reference.ProductAttributes"] = "Learn more about <a target=\"_blank\" href=\"{0}\">product attributes</a>",
+                ["Admin.Documentation.Reference.SpecificationAttributes"] = "Learn more about <a target=\"_blank\" href=\"{0}\">specification attributes</a>",
+                ["Admin.Documentation.Reference.CheckoutAttributes"] = "Learn more about <a target=\"_blank\" href=\"{0}\">checkout attributes</a>",
+                ["Admin.Documentation.Reference.Orders"] = "Learn more about <a target=\"_blank\" href=\"{0}\">orders</a>",
+                ["Admin.Documentation.Reference.ShippingManagement"] = "Learn more about <a target=\"_blank\" href=\"{0}\">shipping management</a>",
+                ["Admin.Documentation.Reference.ReturnRequests"] = "Learn more about <a target=\"_blank\" href=\"{0}\">return requests</a>",
+                ["Admin.Documentation.Reference.RecurringPayments"] = "Learn more about <a target=\"_blank\" href=\"{0}\">recurring products</a>",
+                ["Admin.Documentation.Reference.ShoppingCartsAndWishlists"] = "Learn more about <a target=\"_blank\" href=\"{0}\">shopping carts and wishlists</a>",
+                ["Admin.Documentation.Reference.GiftCards"] = "Learn more about <a target=\"_blank\" href=\"{0}\">gift cards</a>",
+                ["Admin.Documentation.Reference.Customers"] = "Learn more about <a target=\"_blank\" href=\"{0}\">customers</a>",
+                ["Admin.Documentation.Reference.CustomerRoles"] = "Learn more about <a target=\"_blank\" href=\"{0}\">customer roles</a>",
+                ["Admin.Documentation.Reference.OnlineCustomers"] = "Learn more about <a target=\"_blank\" href=\"{0}\">online customers</a>",
+                ["Admin.Documentation.Reference.VendorManagement"] = "Learn more about <a target=\"_blank\" href=\"{0}\">vendor management</a>",
+                ["Admin.Documentation.Reference.ActivityLog"] = "Learn more about <a target=\"_blank\" href=\"{0}\">activity log</a>",
+                ["Admin.Documentation.Reference.Gdpr"] = "Learn more about <a target=\"_blank\" href=\"{0}\">GDPR in nopCommerce</a>",
+                ["Admin.Documentation.Reference.Discounts"] = "Learn more about <a target=\"_blank\" href=\"{0}\">discounts</a>",
+                ["Admin.Documentation.Reference.Affiliates"] = "Learn more about <a target=\"_blank\" href=\"{0}\">affiliates</a>",
+                ["Admin.Documentation.Reference.EmailCampaigns"] = "Learn more about <a target=\"_blank\" href=\"{0}\">email campaigns</a>",
+                ["Admin.Documentation.Reference.TopicsPages"] = "Learn more about <a target=\"_blank\" href=\"{0}\">topics (pages)</a>",
+                ["Admin.Documentation.Reference.MessageTemplates"] = "Learn more about <a target=\"_blank\" href=\"{0}\">message templates</a>",
+                ["Admin.Documentation.Reference.News"] = "Learn more about <a target=\"_blank\" href=\"{0}\">news</a>",
+                ["Admin.Documentation.Reference.Blog"] = "Learn more about <a target=\"_blank\" href=\"{0}\">blog</a>",
+                ["Admin.Documentation.Reference.Polls"] = "Learn more about <a target=\"_blank\" href=\"{0}\">polls</a>",
+                ["Admin.Documentation.Reference.Forums"] = "Learn more about <a target=\"_blank\" href=\"{0}\">forums</a>",
+                ["Admin.Documentation.Reference.EmailAccounts"] = "Learn more about <a target=\"_blank\" href=\"{0}\">email accounts</a>",
+                ["Admin.Documentation.Reference.MultiStore"] = "Learn more about <a target=\"_blank\" href=\"{0}\">multi-store</a>",
+                ["Admin.Documentation.Reference.CountriesStates"] = "Learn more about <a target=\"_blank\" href=\"{0}\">countries and states</a>",
+                ["Admin.Documentation.Reference.Localization"] = "Learn more about <a target=\"_blank\" href=\"{0}\">localization</a>",
+                ["Admin.Documentation.Reference.Currencies"] = "Learn more about <a target=\"_blank\" href=\"{0}\">currencies</a>",
+                ["Admin.Documentation.Reference.PaymentMethods"] = "Learn more about <a target=\"_blank\" href=\"{0}\">payment methods</a>.",
+                ["Admin.Documentation.Reference.PaymentMethodRestrictions"] = "Learn more about <a target=\"_blank\" href=\"{0}\">payment method restrictions</a>",
+                ["Admin.Documentation.Reference.TaxProviders"] = "Learn more about <a target=\"_blank\" href=\"{0}\">tax providers</a>.",
+                ["Admin.Documentation.Reference.ShippingProviders"] = "Learn more about <a target=\"_blank\" href=\"{0}\">shipping providers</a>.",
+                ["Admin.Documentation.Reference.Warehouses"] = "Learn more about <a target=\"_blank\" href=\"{0}\">warehouses</a>",
+                ["Admin.Documentation.Reference.PickupPoints"] = "Learn more about <a target=\"_blank\" href=\"{0}\">pickup points</a>",
+                ["Admin.Documentation.Reference.DatesAndRanges"] = "Learn more about <a target=\"_blank\" href=\"{0}\">dates and ranges</a>",
+                ["Admin.Documentation.Reference.Measures"] = "Learn more about <a target=\"_blank\" href=\"{0}\">measures</a>",
+                ["Admin.Documentation.Reference.Acl"] = "Learn more about <a target=\"_blank\" href=\"{0}\">access control list</a>",
+                ["Admin.Documentation.Reference.ExternalAuthentication"] = "Learn more about <a target=\"_blank\" href=\"{0}\">external authentication methods</a>",
+                ["Admin.Documentation.Reference.Plugins"] = "Learn more about <a target=\"_blank\" href=\"{0}\">plugins in nopCommerce</a>",
+                ["Admin.Documentation.Reference.Log"] = "Learn more about <a target=\"_blank\" href=\"{0}\">log</a>",
+                ["Admin.Documentation.Reference.Maintenance"] = "Learn more about <a target=\"_blank\" href=\"{0}\">maintenance</a>",
+                ["Admin.Documentation.Reference.MessageQueue"] = "Learn more about <a target=\"_blank\" href=\"{0}\">message queue</a>",
+                ["Admin.Documentation.Reference.ScheduleTasks"] = "Learn more about <a target=\"_blank\" href=\"{0}\">scheduled tasks</a>",
+                ["Admin.Documentation.Reference.SeoOptimization"] = "Learn more about <a target=\"_blank\" href=\"{0}\">search engine optimization</a>",
+                ["Admin.Documentation.Reference.Templates"] = "Learn more about <a target=\"_blank\" href=\"{0}\">templates</a>",
+                ["Admin.Documentation.Reference.Reports"] = "Learn more about <a target=\"_blank\" href=\"{0}\">reports</a>",
+                ["Admin.Documentation.Reference.TaxManagement"] = "Learn more about <a target=\"_blank\" href=\"{0}\">tax management</a>",
 
                 //#3950
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute is already exists into combination: '{0}'.",
@@ -533,7 +592,99 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                         <br />10. Click <b>Save</b> button on this page.
 	                    <br />
                     </p>",
-                ["Admin.Configuration.LanguagePackProgressMessage"] = "The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href=\"https://www.nopcommerce.com/translations\" target=\"_blank\">translations page.</a>",
+
+                ["Admin.Configuration.LanguagePackProgressMessage"] = "The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href=\"{1}\" target=\"_blank\">translations page.</a>",
+
+                //#5144
+                ["Admin.GiftCards.RecipientNotified"] = "The recipient has been notified successfully.",
+
+                //#5319
+                ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
+
+                //#5245
+                ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories",
+
+                //#3353
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity"] = "Minimum stock qty",
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint"] = "If you have enabled 'Manage stock by attributes' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).",
+
+                //#276
+                ["Filtering.ManufacturerFilter"] = "Filter by manufacturer",
+                ["Admin.Configuration.Settings.Catalog.UseAjaxCatalogProductsLoading"] = "Use AJAX products loading",
+                ["Admin.Configuration.Settings.Catalog.UseAjaxCatalogProductsLoading.Hint"] = "Check to load products asynchronously (applicable to 'paging', 'filtering', 'view modes') on catalog pages.",
+                ["Admin.Catalog.Categories.Fields.PriceRangeFiltering"] = "Price range filtering",
+                ["Admin.Catalog.Categories.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
+                ["Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering"] = "Price range filtering",
+                ["Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
+                ["Admin.Vendors.Fields.PriceRangeFiltering"] = "Price range filtering",
+                ["Admin.Vendors.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
+                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
+                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
+                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
+                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
+                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
+                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering"] = "Search page. Price range filtering",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Search' page.",
+                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange"] = "Search page. Calculate price range automatically",
+                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation on 'Search' page.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering"] = "'Products by tag' page. Price range filtering",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Products by tag' page.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange"] = "'Products by tag' page. Calculate price range automatically",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation on 'Products by tag' page.",
+                ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering"] = "Enable manufacturer filtering",
+                ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering.Hint"] = "Check to enable the manufacturer filtering on catalog pages.",
+                ["Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering"] = "Enable price range filtering",
+                ["Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering.Hint"] = "Check to enable the price range filtering on catalog pages.",
+                ["Admin.Catalog.Categories.Fields.PriceFrom"] = "Price 'from'",
+                ["Admin.Catalog.Categories.Fields.PriceFrom.Hint"] = "Enter the price 'from'.",
+                ["Admin.Catalog.Categories.Fields.PriceFrom.GreaterThanOrEqualZero"] = "The price 'from' should be greater than or equal '0'.",
+                ["Admin.Catalog.Categories.Fields.PriceTo"] = "Price 'to'",
+                ["Admin.Catalog.Categories.Fields.PriceTo.Hint"] = "Enter the price 'to'.",
+                ["Admin.Catalog.Categories.Fields.PriceTo.GreaterThanZeroOrPriceFrom"] = "The price 'to' should be greater than '{0}'.",
+                ["Admin.Catalog.Manufacturers.Fields.PriceFrom"] = "Price 'from'",
+                ["Admin.Catalog.Manufacturers.Fields.PriceFrom.Hint"] = "Enter the price 'from'.",
+                ["Admin.Catalog.Manufacturers.Fields.PriceFrom.GreaterThanOrEqualZero"] = "The price 'from' should be greater than or equal '0'.",
+                ["Admin.Catalog.Manufacturers.Fields.PriceTo"] = "Price 'to'",
+                ["Admin.Catalog.Manufacturers.Fields.PriceTo.Hint"] = "Enter the price 'to'.",
+                ["Admin.Catalog.Manufacturers.Fields.PriceTo.GreaterThanZeroOrPriceFrom"] = "The price 'to' should be greater than '{0}'.",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceFrom"] = "Search page. Price 'from'",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceFrom.Hint"] = "Enter the price 'from' on 'Search' page.",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceFrom.GreaterThanOrEqualZero"] = "The price 'from' should be greater than or equal '0'.",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceTo"] = "Search page. Price 'to'",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceTo.Hint"] = "Enter the price 'to' on 'Search' page.",
+                ["Admin.Configuration.Settings.Catalog.SearchPagePriceTo.GreaterThanZeroOrPriceFrom"] = "The price 'to' should be greater than '{0}'.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom"] = "'Products by tag' page. Price 'from'",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom.Hint"] = "Enter the price 'from' on 'Products by tag' page.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom.GreaterThanOrEqualZero"] = "The price 'from' should be greater than or equal '0'.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo"] = "'Products by tag' page. Price 'to'",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.Hint"] = "Enter the price 'to' on 'Products by tag' page.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.GreaterThanZeroOrPriceFrom"] = "The price 'to' should be greater than '{0}'.",
+                ["Admin.Vendors.Fields.PriceFrom"] = "Price 'from'",
+                ["Admin.Vendors.Fields.PriceFrom.Hint"] = "Enter the price 'from'.",
+                ["Admin.Vendors.Fields.PriceFrom.GreaterThanOrEqualZero"] = "The price 'from' should be greater than or equal '0'.",
+                ["Admin.Vendors.Fields.PriceTo"] = "Price 'to'",
+                ["Admin.Vendors.Fields.PriceTo.Hint"] = "Enter the price 'to'.",
+                ["Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom"] = "The price 'to' should be greater than '{0}'.",
+
+                //#5209
+                ["Admin.ShoppingCartType.StartDate.Hint"] = "The start date for the search (when a product was added to the cart).",
+                ["Admin.ShoppingCartType.EndDate.Hint"] = "The end date for the search (when a product was added to the cart).",
+
+                //#5206
+                ["Admin.GiftCards.Fields.IsRecipientNotified.Hint"] = "Indicates whether the gift card recipient is notified by email. Click the \"Notify recipient\" button to send an email notification.",
+
+                //#4939
+                ["Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions"] = "CAPTCHA is a program that can tell whether it is a human or a computer is trying to access your web site. nopCommerce uses <a href=\"http://www.google.com/recaptcha\" target=\"_blank\">reCAPTCHA</a> by Google. reCAPTCHA is a free service that protects your website from spam and abuse. reCAPTCHA uses an advanced risk analysis engine and adaptive challenges to keep automated software from engaging in abusive activities on your site. It does this while letting your valid users pass through with ease.",
+                ["Admin.Configuration.AppSettings.EnvironmentVariablesWarning"] = "Warning! The current setting value is overridden in environment variables",
+
+                //#16 #2909
+                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType"] = "Display type for attribute value when out of stock",
+                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint"] = "Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.",
+                ["Products.ProductAttributes.DropdownList.DefaultItem"] = "Please select",
+                ["Products.ProductAttributes.NotAvailable"] = "Not available",
+                ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.Disable"] = "Disable",
+                ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.AlwaysDisplay"] = "Always display",
             }).Wait();
 
             // rename locales
@@ -568,7 +719,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published" },
-                //<MFA #475>
+                
+                //#475
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder"},
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName"},
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive"},
@@ -577,10 +729,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Configure", NewName = "Admin.Configuration.Authentication.ExternalMethods.Configure"},
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods", NewName = "Admin.Configuration.Authentication.ExternalMethods"},
                 new { Name = "Permission.ManageExternalAuthenticationMethods", NewName = "Permission.Authentication.ManageExternalMethods"},
-                //</MFA #475>
                 
                 //#4564
                 new { Name = "Nop.Web.Framework.Validators.MaxDecimal", NewName = "Admin.Common.Validation.Decimal.Max"},
+
+                //#5321
+                new { Name = "Common.Wait...", NewName = "Common.Wait"}
             };
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();

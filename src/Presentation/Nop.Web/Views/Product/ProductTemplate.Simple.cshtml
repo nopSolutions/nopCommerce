@@ -92,7 +92,7 @@
                         @{
                             var dataDictAttributes = new ViewDataDictionary(ViewData);
                             dataDictAttributes.TemplateInfo.HtmlFieldPrefix = $"attributes_{Model.Id}";
-                            @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes, dataDictAttributes)
+                            @await Html.PartialAsync("_ProductAttributes", Model, dataDictAttributes)
                         }
                         <!--gift card-->
                         @{

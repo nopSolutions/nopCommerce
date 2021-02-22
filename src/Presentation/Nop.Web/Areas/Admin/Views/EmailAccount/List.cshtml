@@ -40,6 +40,8 @@
             <div class="card card-default">
                 <div class="card-body">
                     <div id="email-accounts-area">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.EmailAccounts", Docs.EmailAccounts + Utm.OnAdmin)" />
+
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "email-accounts-grid",

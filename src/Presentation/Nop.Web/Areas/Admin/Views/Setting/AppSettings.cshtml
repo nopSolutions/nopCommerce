@@ -42,7 +42,7 @@
                     <div class="card card-default">
                         <div class="card-body">
                             <p>
-                                @T("Admin.Configuration.AppSettings.Description")
+                                @T("Admin.Configuration.AppSettings.Description", Docs.AppSettings)
                             </p>
                         </div>
                     </div>
@@ -60,4 +60,30 @@
             </nop-cards>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            checkEnvironmentVariables();
+        });
+
+        function checkEnvironmentVariables() {
+            var warningElem = "<span class='field-validation-custom warning'>@T("Admin.Configuration.AppSettings.EnvironmentVariablesWarning")</span>";
+            
+            @foreach (var controlId in Model.EnvironmentVariables)
+            {
+                <text>
+                var control = $("#@controlId");
+                var widget = kendo.widgetInstance(control);
+                if (widget)
+                {
+                    //because kendo fields have a original structure of elements, we are forced to add a warning for them in a special way
+                    control.parent().parent().after(warningElem);
+                }
+                else
+                {
+                    control.after(warningElem);
+                }
+                </text>
+            }
+        }
+    </script>
 </form>

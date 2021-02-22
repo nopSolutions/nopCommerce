@@ -56,7 +56,7 @@ namespace Nop.Services.Authentication
             });
 
             // Give any IAuthenticationRequestHandler schemes a chance to handle the request
-            var handlers = context.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
+            var handlers = EngineContext.Current.Resolve<IAuthenticationHandlerProvider>();
             foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
             {
                 try

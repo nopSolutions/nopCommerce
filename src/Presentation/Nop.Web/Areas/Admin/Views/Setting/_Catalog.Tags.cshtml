@@ -43,6 +43,46 @@
             </div>
         </div>
     </nop-nested-setting>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="ProductsByTagPriceRangeFiltering" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductsByTagPriceRangeFiltering" />
+            <span asp-validation-for="ProductsByTagPriceRangeFiltering"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ProductsByTagPriceRangeFiltering">
+        <div id="pnlProductsByTagAutomaticallyCalculatePriceRange" class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="ProductsByTagAutomaticallyCalculatePriceRange" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagAutomaticallyCalculatePriceRange" />
+                <span asp-validation-for="ProductsByTagAutomaticallyCalculatePriceRange"></span>
+            </div>
+        </div>
+        <div id="pnlProductsByTagPriceRange" class="advanced-setting">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ProductsByTagPriceFrom" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductsByTagPriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="ProductsByTagPriceFrom"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ProductsByTagPriceTo" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductsByTagPriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="ProductsByTagPriceTo"></span>
+                </div>
+            </div>
+        </div>
+    </nop-nested-setting>
 </div>
 
 <script>
@@ -54,6 +94,8 @@
         $("#@Html.IdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
         $("#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
         $("#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
+        $("#@Html.IdFor(model => model.ProductsByTagPriceRangeFiltering)").click(toggleProductsByTagAutomaticallyCalculatePriceRange);
+        $("#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)").click(toggleProductsByTagPriceRange);
 
         toggleShowCategoryProductNumberIncludingSubcategories();
         toggleEmailAFriend();
@@ -62,6 +104,8 @@
         toggleBestsellersOnHomepage();
         toggleProductsAlsoPurchasedNumber();
         toggleProductsByTagPageSize();
+        toggleProductsByTagPriceRange();
+        toggleProductsByTagAutomaticallyCalculatePriceRange();
     });
 
     function toggleShowCategoryProductNumberIncludingSubcategories() {
@@ -119,6 +163,26 @@
         } else {
             $('#pnlProductsByTagPageSize').showField();
             $('#pnlProductsByTagPageSizeOptions').hide();
+        }
+    }
+
+    function toggleProductsByTagPriceRange() {
+        if ($('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').is(':checked')) {
+            $('#pnlProductsByTagPriceRange').hide();
+        } else {
+            $('#pnlProductsByTagPriceRange').show();
+        }
+    }
+
+    function toggleProductsByTagAutomaticallyCalculatePriceRange() {
+        if ($('#@Html.IdFor(model => model.ProductsByTagPriceRangeFiltering)').is(':checked')) {
+            if (!$('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').is(':checked')) {
+                $('#pnlProductsByTagPriceRange').show();
+            }
+            $('#pnlProductsByTagAutomaticallyCalculatePriceRange').show();
+        } else {
+            $('#pnlProductsByTagPriceRange').hide();
+            $('#pnlProductsByTagAutomaticallyCalculatePriceRange').hide();
         }
     }
 </script>

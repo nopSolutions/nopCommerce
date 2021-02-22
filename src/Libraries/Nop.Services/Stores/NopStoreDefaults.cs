@@ -31,10 +31,9 @@ namespace Nop.Services.Stores
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : store ID
-        /// {1} : entity name
+        /// {0} : entity name
         /// </remarks>
-        public static CacheKey StoreMappingExistsCacheKey => new CacheKey("Nop.storemapping.exists.{0}-{1}");
+        public static CacheKey StoreMappingExistsCacheKey => new CacheKey("Nop.storemapping.exists.{0}");
 
         #endregion
     }

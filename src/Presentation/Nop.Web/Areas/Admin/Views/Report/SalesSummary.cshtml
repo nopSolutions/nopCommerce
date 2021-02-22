@@ -161,6 +161,8 @@
 
                 <div class="card card-default">
                     <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Reports", Docs.Reports + Utm.OnAdmin)" />
+
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "salessummary-grid",
@@ -207,7 +209,7 @@
                                 new ColumnProperty(nameof(SalesSummaryModel.OrderTotal))
                                 {
                                     Title = T("Admin.Reports.SalesSummary.Fields.OrderTotal").Text
-                                },                            
+                                },
                             }
                         })
                     </div>

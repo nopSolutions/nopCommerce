@@ -48,7 +48,7 @@ namespace Nop.Web.Framework.Controllers
             if (string.IsNullOrEmpty(componentName))
                 throw new ArgumentNullException(nameof(componentName));
 
-            if (HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) is not IActionContextAccessor actionContextAccessor)
+            if (EngineContext.Current.Resolve<IActionContextAccessor>() is not IActionContextAccessor actionContextAccessor)
                 throw new Exception("IActionContextAccessor cannot be resolved");
 
             var context = actionContextAccessor.ActionContext;
@@ -67,7 +67,7 @@ namespace Nop.Web.Framework.Controllers
             var viewContext = new ViewContext(context, NullView.Instance, viewData, tempData, writer, new HtmlHelperOptions());
 
             // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
-            var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
+            var viewComponentHelper = EngineContext.Current.Resolve<IViewComponentHelper>();
             (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
             var result = viewComponentResult.ViewComponentType == null ?

@@ -57,16 +57,6 @@ namespace Nop.Web.Infrastructure.Cache
         public static string CategoryXmlAllPrefixCacheKey => "Nop.pres.categoryXml.all";
 
         /// <summary>
-        /// Key for SpecificationAttributeOptionFilter caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : list of specification attribute option IDs
-        /// {1} : language id
-        /// </remarks>
-        public static CacheKey SpecsFilterModelKey => new CacheKey("Nop.pres.filter.specs-{0}-{1}", SpecsFilterPrefixCacheKey);
-        public static string SpecsFilterPrefixCacheKey => "Nop.pres.filter.specs";
-
-        /// <summary>
         /// Key for bestsellers identifiers displayed on the home page
         /// </summary>
         /// <remarks>

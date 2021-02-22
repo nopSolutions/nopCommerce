@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Affiliates;
-using Nop.Core.Domain.Common;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -67,48 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address = null)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set all address fields as enabled and required
-            model.FirstNameEnabled = true;
-            model.FirstNameRequired = true;
-            model.LastNameEnabled = true;
-            model.LastNameRequired = true;
-            model.EmailEnabled = true;
-            model.EmailRequired = true;
-            model.CompanyEnabled = true;
-            model.CountryEnabled = true;
-            model.CountryRequired = true;
-            model.StateProvinceEnabled = true;
-            model.CountyEnabled = true;
-            model.CountyRequired = true;
-            model.CityEnabled = true;
-            model.CityRequired = true;
-            model.StreetAddressEnabled = true;
-            model.StreetAddressRequired = true;
-            model.StreetAddress2Enabled = true;
-            model.ZipPostalCodeEnabled = true;
-            model.ZipPostalCodeRequired = true;
-            model.PhoneEnabled = true;
-            model.PhoneRequired = true;
-            model.FaxEnabled = true;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-        }
-
+        
         /// <summary>
         /// Prepare affiliated order search model
         /// </summary>
@@ -239,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //prepare address model
                 var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
                 model.Address = address.ToModel(model.Address);
-                await PrepareAddressModelAsync(model.Address, address);
+                await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
@@ -251,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
             else
             {
-                await PrepareAddressModelAsync(model.Address);
+                await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address);
             }
 
             return model;

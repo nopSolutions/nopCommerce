@@ -534,10 +534,10 @@ namespace Nop.Web.Factories
 
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
-                language, customerRolesIds, store);
+                language, customerRoleIds, store);
 
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -733,10 +733,10 @@ namespace Nop.Web.Factories
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey,
-                id, language, customerRolesIds, store);
+                id, language, customerRoleIds, store);
 
             var siteMap = await _staticCacheManager.GetAsync(cacheKey, async () => await _sitemapGenerator.GenerateAsync(id));
 

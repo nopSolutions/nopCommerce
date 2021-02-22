@@ -29,6 +29,8 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="form-horizontal">
+                <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.DatesAndRanges", Docs.DatesAndRanges + Utm.OnAdmin)" />
+
                 <div class="cards-group">
                     <nop-cards id="datesandranges-cards">
                         <nop-card asp-name="datesandranges-dates" asp-icon="far fa-calendar-alt" asp-title="@T("Admin.Configuration.Shipping.DeliveryDates")" asp-hide-block-attribute-name="@hideDatesBlockAttributeName" asp-hide="@hideDatesBlock" asp-advanced="false">@await Html.PartialAsync("_DatesAndRanges.Dates", Model)</nop-card>

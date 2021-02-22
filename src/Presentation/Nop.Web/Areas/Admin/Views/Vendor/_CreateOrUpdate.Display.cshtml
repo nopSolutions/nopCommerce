@@ -34,6 +34,47 @@
 
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
+            <nop-label asp-for="PriceRangeFiltering" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PriceRangeFiltering" />
+            <span asp-validation-for="PriceRangeFiltering"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="PriceRangeFiltering">
+        <div id="pnlAutomaticallyCalculatePriceRange" class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="AutomaticallyCalculatePriceRange" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AutomaticallyCalculatePriceRange" />
+                <span asp-validation-for="AutomaticallyCalculatePriceRange"></span>
+            </div>
+        </div>
+        <div id="pnlPriceRange" class="advanced-setting">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="PriceFrom" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="PriceFrom"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="PriceTo" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="PriceTo"></span>
+                </div>
+            </div>
+        </div>
+    </nop-nested-setting>
+
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
             <nop-label asp-for="DisplayOrder" />
         </div>
         <div class="col-md-9">
@@ -46,7 +87,12 @@
 <script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        $("#@Html.IdFor(model => model.PriceRangeFiltering)").click(toggleAutomaticallyCalculatePriceRange);
+        $("#@Html.IdFor(model => model.AutomaticallyCalculatePriceRange)").click(togglePriceRange);
+
         togglePageSize();
+        togglePriceRange();
+        toggleAutomaticallyCalculatePriceRange();
     });
 
     function togglePageSize() {
@@ -56,6 +102,26 @@
         } else {
             $('#pnlPageSize').showField();
             $('#pnlPageSizeOptions').hide();
+        }
+    }
+
+    function togglePriceRange() {
+        if ($('#@Html.IdFor(model => model.AutomaticallyCalculatePriceRange)').is(':checked')) {
+            $('#pnlPriceRange').hide();
+        } else {
+            $('#pnlPriceRange').show();
+        }
+    }
+
+    function toggleAutomaticallyCalculatePriceRange() {
+        if ($('#@Html.IdFor(model => model.PriceRangeFiltering)').is(':checked')) {
+            if (!$('#@Html.IdFor(model => model.AutomaticallyCalculatePriceRange)').is(':checked')) {
+                $('#pnlPriceRange').show();
+            }
+            $('#pnlAutomaticallyCalculatePriceRange').show();
+        } else {
+            $('#pnlPriceRange').hide();
+            $('#pnlAutomaticallyCalculatePriceRange').hide();
         }
     }
 </script>

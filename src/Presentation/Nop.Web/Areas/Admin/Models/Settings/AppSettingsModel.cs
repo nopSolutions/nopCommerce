@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Nop.Core.Configuration;
+using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -20,6 +21,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             InstallationConfigModel = new InstallationConfigModel();
             PluginConfigModel = new PluginConfigModel();
             CommonConfigModel = new CommonConfigModel();
+            EnvironmentVariables = new List<string>();
         }
 
         #endregion
@@ -39,6 +41,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public PluginConfigModel PluginConfigModel { get; set; }
 
         public CommonConfigModel CommonConfigModel { get; set; }
+
+        public List<string> EnvironmentVariables { get; set; }
 
         #endregion
     }

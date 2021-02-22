@@ -67,11 +67,13 @@
                 <div class="cards-group">
                     <div class="card card-default">
                         <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductTags", Docs.ProductTags + Utm.OnAdmin)" />
+
                             @await Html.PartialAsync("Table", new DataTablesModel
                             {
                                 Name = "product-tags-grid",
                                 UrlRead = new DataUrl("ProductTags", "Product", null),
-                                SearchButtonId = "search-product-tags",                                
+                                SearchButtonId = "search-product-tags",
                                 Length = Model.PageSize,
                                 LengthMenu = Model.AvailablePageSizes,
                                 Filters = new List<FilterParameter>
@@ -106,9 +108,9 @@
                                     }
                                 }
                             })
-                            
+
                             <script>
-                        $(document).ready(function() {                           
+                        $(document).ready(function() {
                             $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
                                 var postData = {
                                     selectedIds: selectedIds

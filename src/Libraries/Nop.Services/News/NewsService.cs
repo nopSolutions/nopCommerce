@@ -96,9 +96,8 @@ namespace Nop.Services.News
                     query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
                 }
 
-                //Store mapping 
-                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<NewsItem>(storeId))
-                    query = query.Where(_storeMappingService.ApplyStoreMapping<NewsItem>(storeId));
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }, pageIndex, pageSize);

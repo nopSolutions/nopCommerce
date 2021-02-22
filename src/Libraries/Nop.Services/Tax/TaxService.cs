@@ -735,7 +735,7 @@ namespace Nop.Services.Tax
         }
 
         #endregion
-        
+
         #region Tax total
 
         /// <summary>
@@ -752,16 +752,17 @@ namespace Nop.Services.Tax
                 return null;
 
             //get result by using primary tax provider
-            var taxTotalResult = await activeTaxProvider.GetTaxTotalAsync(new TaxTotalRequest
+            var taxTotalRequest = new TaxTotalRequest
             {
                 ShoppingCart = cart,
                 Customer = customer,
                 StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                 UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
-            });
+            };
+            var taxTotalResult = await activeTaxProvider.GetTaxTotalAsync(taxTotalRequest);
 
             //tax total is calculated, now consumers can adjust it
-            await _eventPublisher.PublishAsync(new TaxTotalCalculatedEvent(taxTotalResult));
+            await _eventPublisher.PublishAsync(new TaxTotalCalculatedEvent(taxTotalRequest, taxTotalResult));
 
             //error logging
             if (taxTotalResult != null && !taxTotalResult.Success && _taxSettings.LogErrors)

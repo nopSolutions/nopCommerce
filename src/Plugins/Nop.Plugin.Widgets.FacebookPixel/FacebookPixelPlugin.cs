@@ -95,6 +95,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
                 ["Plugins.Widgets.FacebookPixel.Configuration"] = "Configuration",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents"] = "Configure custom events",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.SaveBeforeEdit"] = "You need to save the configuration before edit custom events.",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName"] = "Event name",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName.Hint"] = "Enter a name of the custom event (e.g. BlogView).",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones"] = "Widget zones",

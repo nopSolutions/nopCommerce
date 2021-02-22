@@ -287,6 +287,18 @@ namespace Nop.Web.Controllers
             return Json(result);
         }
 
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        public virtual async Task<IActionResult> GetProductCombinations(int productId)
+        {
+            var product = await _productService.GetProductByIdAsync(productId);
+            if (product == null)
+                return NotFound();
+
+            var model = await _productModelFactory.PrepareProductCombinationModelsAsync(product);
+            return Ok(model);
+        }
+
         #endregion
 
         #region Recently viewed products

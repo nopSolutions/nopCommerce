@@ -137,7 +137,7 @@
                                     @{
                                         var dataDictAttributes = new ViewDataDictionary(ViewData);
                                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = $"attributes_{variant.Id}";
-                                        @await Html.PartialAsync("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                        @await Html.PartialAsync("_ProductAttributes", variant, dataDictAttributes)
                                     }
                                     <!--gift card-->
                                     @{

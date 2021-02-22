@@ -76,6 +76,8 @@
 
                     <div class="card card-default">
                         <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Blog", Docs.Blog + Utm.OnAdmin)" />
+
                             @await Html.PartialAsync("Table", new DataTablesModel
                             {
                                 Name = "blogpost-grid",
@@ -86,7 +88,7 @@
                                 Filters = new List<FilterParameter>
                                 {
                                     new FilterParameter(nameof(Model.BlogPosts.SearchStoreId), nameof(Model.BlogPosts)),
-									new FilterParameter(nameof(Model.SearchTitle))
+                                    new FilterParameter(nameof(Model.SearchTitle))
                                 },
                                 ColumnCollection = new List<ColumnProperty>
                                 {

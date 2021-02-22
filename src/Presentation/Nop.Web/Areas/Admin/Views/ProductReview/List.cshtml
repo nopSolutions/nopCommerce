@@ -150,6 +150,8 @@
 
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ProductReviews", Docs.ProductReviews + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "productreviews-grid",
@@ -201,7 +203,7 @@
                             },
                             new ColumnProperty(nameof(ProductReviewModel.ReviewText))
                             {
-                                Title = T("Admin.Catalog.ProductReviews.Fields.ReviewText").Text,                                
+                                Title = T("Admin.Catalog.ProductReviews.Fields.ReviewText").Text,
                                 Encode = false
                             },
                             new ColumnProperty(nameof(ProductReviewModel.ReplyText))

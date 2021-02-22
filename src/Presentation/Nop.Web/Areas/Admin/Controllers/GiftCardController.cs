@@ -257,6 +257,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     await _giftCardService.UpdateGiftCardAsync(giftCard);
                     model.IsRecipientNotified = true;
                 }
+
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.GiftCards.RecipientNotified"));
             }
             catch (Exception exc)
             {

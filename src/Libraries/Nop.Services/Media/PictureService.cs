@@ -366,7 +366,8 @@ namespace Nop.Services.Media
                 using var resizedBitmap = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Medium);
                 using var cropImage = SKImage.FromBitmap(resizedBitmap);
 
-                return cropImage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray();
+                //In order to exclude saving pictures in low quality at the time of installation, we will set the value of this parameter to 80 (as by default)
+                return cropImage.Encode(format, _mediaSettings.DefaultImageQuality > 0 ? _mediaSettings.DefaultImageQuality : 80).ToArray();
             }
             catch
             {

@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Security
 
 <div class="card-body">
-    @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
+    <p>@T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")</p>
     <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="CaptchaSettings.Enabled_OverrideForStore" asp-input="CaptchaSettings.Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

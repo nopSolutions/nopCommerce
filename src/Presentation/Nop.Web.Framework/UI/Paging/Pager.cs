@@ -497,6 +497,7 @@ namespace Nop.Web.Framework.UI.Paging
 
             var aBuilder = new TagBuilder("a");
             aBuilder.InnerHtml.AppendHtml(text);
+            aBuilder.MergeAttribute("data-page", pageNumber.ToString());
             aBuilder.MergeAttribute("href", CreateDefaultUrl(pageNumber));
 
             liBuilder.InnerHtml.AppendHtml(aBuilder);

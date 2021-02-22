@@ -69,7 +69,7 @@ namespace Nop.Tests
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            ExecuteNonQuery("PRAGMA journal_mode=WAL;");
+            Task.FromResult(ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;"));
         }
 
         /// <summary>
@@ -360,21 +360,21 @@ namespace Nop.Tests
         }
 
         /// <summary>
-        /// Executes command returns number of affected records.
+        /// Executes command asynchronously and returns number of affected records
         /// </summary>
-        /// <param name="sqlStatement">Command text</param>
+        /// <param name="sql">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
+        public Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = new CommandInfo(DataContext, sqlStatement, dataParameters);
+                var command = new CommandInfo(DataContext, sql, dataParameters);
                 var affectedRecords = command.Execute();
 
                 UpdateOutputParameters(DataContext, dataParameters);
 
-                return affectedRecords;
+                return  Task.FromResult<int>(affectedRecords);
             }
         }
 

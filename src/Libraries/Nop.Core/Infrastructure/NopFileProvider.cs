@@ -395,8 +395,14 @@ namespace Nop.Core.Infrastructure
             if (string.IsNullOrEmpty(searchPattern))
                 searchPattern = "*.*";
 
-            return Directory.GetFiles(directoryPath, searchPattern,
-                topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
+            return Directory.GetFileSystemEntries(directoryPath, searchPattern, 
+                new EnumerationOptions 
+                { 
+                    IgnoreInaccessible = true,
+                    MatchCasing = MatchCasing.CaseInsensitive,
+                    RecurseSubdirectories = !topDirectoryOnly,
+
+                });
         }
 
         /// <summary>

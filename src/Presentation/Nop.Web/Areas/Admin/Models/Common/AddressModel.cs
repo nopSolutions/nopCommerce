@@ -74,32 +74,6 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 
-        public bool FirstNameEnabled { get; set; }
-        public bool FirstNameRequired { get; set; }
-        public bool LastNameEnabled { get; set; }
-        public bool LastNameRequired { get; set; }
-        public bool EmailEnabled { get; set; }
-        public bool EmailRequired { get; set; }
-        public bool CompanyEnabled { get; set; }
-        public bool CompanyRequired { get; set; }
-        public bool CountryEnabled { get; set; }
-        public bool CountryRequired { get; set; }
-        public bool StateProvinceEnabled { get; set; }
-        public bool CityEnabled { get; set; }
-        public bool CityRequired { get; set; }
-        public bool CountyEnabled { get; set; }
-        public bool CountyRequired { get; set; }
-        public bool StreetAddressEnabled { get; set; }
-        public bool StreetAddressRequired { get; set; }
-        public bool StreetAddress2Enabled { get; set; }
-        public bool StreetAddress2Required { get; set; }
-        public bool ZipPostalCodeEnabled { get; set; }
-        public bool ZipPostalCodeRequired { get; set; }
-        public bool PhoneEnabled { get; set; }
-        public bool PhoneRequired { get; set; }
-        public bool FaxEnabled { get; set; }
-        public bool FaxRequired { get; set; }
-
         #region Nested classes
 
         public partial record AddressAttributeModel : BaseNopEntityModel

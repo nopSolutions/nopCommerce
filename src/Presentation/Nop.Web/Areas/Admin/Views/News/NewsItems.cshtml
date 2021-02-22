@@ -73,6 +73,8 @@
 
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.News", Docs.News + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "newsitem-grid",
@@ -145,7 +147,7 @@
                             var countComments = row.ApprovedComments + row.NotApprovedComments;
                             return '<a class="btn btn-default" href="' + link + '">' + title + ' - ' + countComments + ' (' + row.NotApprovedComments + ')' + '</a>';
                         }
-                    </script>                    
+                    </script>
                 </div>
             </div>
         </div>
