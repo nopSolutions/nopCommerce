@@ -184,7 +184,7 @@ namespace Nop.Web.Controllers
                     NewsItemId = newsItem.Id,
                     CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     CommentTitle = model.AddNewComment.CommentTitle,
-                    CommentText = model.AddNewComment.CommentText,
+                    CommentText = _newsSettings.NewsCommentsMustBeApproved ==true? model.AddNewComment.CommentText : "Automatically approved: "+ model.AddNewComment.CommentText,
                     IsApproved = !_newsSettings.NewsCommentsMustBeApproved,
                     StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                     CreatedOnUtc = DateTime.UtcNow,
