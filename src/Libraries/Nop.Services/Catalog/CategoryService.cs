@@ -596,8 +596,10 @@ namespace Nop.Services.Catalog
                 .Where(c => queryFilter.Contains(c))
                 .ToListAsync();
 
+             queryFilter = queryFilter.Except(filter).ToArray();
+
             //if some names not found
-            if (!queryFilter.Except(filter).ToArray().Any())
+            if (!queryFilter.Any())
                 return queryFilter.ToArray();
 
             //filtering by IDs
