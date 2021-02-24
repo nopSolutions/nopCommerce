@@ -1936,7 +1936,7 @@ span.grid-report-item {
 
   .parent-setting.opened div + div:before {
     position: absolute;
-    height: 100%;
+    height: 105%;
     content: "";
     margin-left: -10px;
     top: 15px;
@@ -1982,6 +1982,10 @@ span.grid-report-item {
     height: 100%;
     content: "";
     margin-left: -10px;
+  }
+
+  .parent-setting.opened + .nested-setting .form-group.parent-setting-reversed.parent-setting-ticked div[class^="col-md-"] + div[class^="col-md-"]:before {
+    display: none;
   }
 
   .parent-setting.opened + .nested-setting .form-group.parent-setting div[class^="col-md-"] + div[class^="col-md-"]:before {
