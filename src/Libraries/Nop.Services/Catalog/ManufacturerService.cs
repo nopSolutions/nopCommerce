@@ -224,12 +224,13 @@ namespace Nop.Services.Catalog
                 return new List<Manufacturer>();
 
             // get available products in category
-            var productsQuery = from p in _productRepository.Table
-                                where !p.Deleted && p.Published &&
-                                      (p.ParentGroupedProductId == 0 || p.VisibleIndividually) &&
-                                      (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc <= DateTime.UtcNow) &&
-                                      (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc >= DateTime.UtcNow)
-                                select p;
+            var productsQuery = 
+                from p in _productRepository.Table
+                where !p.Deleted && p.Published &&
+                      (p.ParentGroupedProductId == 0 || p.VisibleIndividually) &&
+                      (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc <= DateTime.UtcNow) &&
+                      (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc >= DateTime.UtcNow)
+                select p;
 
             var store = await _storeContext.GetCurrentStoreAsync();
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
@@ -244,19 +245,22 @@ namespace Nop.Services.Catalog
                 ? await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id)
                 : null;
 
-            var productCategoryQuery = from pc in _productCategoryRepository.Table
-                                       where (pc.CategoryId == categoryId || (_catalogSettings.ShowProductsFromSubcategories && subCategoryIds.Contains(pc.CategoryId))) &&
-                                             (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)
-                                       select pc;
+            var productCategoryQuery = 
+                from pc in _productCategoryRepository.Table
+                where (pc.CategoryId == categoryId || (_catalogSettings.ShowProductsFromSubcategories && subCategoryIds.Contains(pc.CategoryId))) &&
+                      (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)
+                select pc;
 
             // get manufacturers of the products
-            var manufacturersQuery = from m in _manufacturerRepository.Table
-                                     join pm in _productManufacturerRepository.Table on m.Id equals pm.ManufacturerId
-                                     join p in productsQuery on pm.ProductId equals p.Id
-                                     join pc in productCategoryQuery on p.Id equals pc.ProductId
-                                     orderby
-                                        pm.DisplayOrder, m.Name
-                                     select m;
+            var manufacturersQuery =
+                from m in _manufacturerRepository.Table
+                join pm in _productManufacturerRepository.Table on m.Id equals pm.ManufacturerId
+                join p in productsQuery on pm.ProductId equals p.Id
+                join pc in productCategoryQuery on p.Id equals pc.ProductId
+                where !m.Deleted
+                orderby
+                   m.DisplayOrder, m.Name
+                select m;
 
             var key = _staticCacheManager
                 .PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturersByCategoryCacheKey, categoryId.ToString());

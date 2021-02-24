@@ -394,26 +394,30 @@ namespace Nop.Services.Catalog
                 subCategoryIds = await _categoryService.GetChildCategoryIdsAsync(categoryId, store.Id);
             }
             
-            var productCategoryQuery = from pc in _productCategoryRepository.Table
-                                       where (pc.CategoryId == categoryId || (_catalogSettings.ShowProductsFromSubcategories && subCategoryIds.Contains(pc.CategoryId))) &&
-                                             (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)
-                                       select pc;
+            var productCategoryQuery = 
+                from pc in _productCategoryRepository.Table
+                where (pc.CategoryId == categoryId || (_catalogSettings.ShowProductsFromSubcategories && subCategoryIds.Contains(pc.CategoryId))) &&
+                      (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pc.IsFeaturedProduct)
+                select pc;
 
-            var result = from sao in _specificationAttributeOptionRepository.Table
-                         join psa in _productSpecificationAttributeRepository.Table on sao.Id equals psa.SpecificationAttributeOptionId
-                         join p in productsQuery on psa.ProductId equals p.Id
-                         join pc in productCategoryQuery on p.Id equals pc.ProductId
-                         join sa in _specificationAttributeRepository.Table on sao.SpecificationAttributeId equals sa.Id
-                         where psa.AllowFiltering
-                         orderby
-                            sa.DisplayOrder, sa.Name,
-                            sao.DisplayOrder, sao.Name
-                         select sao;
+            var result = 
+                from sao in _specificationAttributeOptionRepository.Table
+                join psa in _productSpecificationAttributeRepository.Table on sao.Id equals psa.SpecificationAttributeOptionId
+                join p in productsQuery on psa.ProductId equals p.Id
+                join pc in productCategoryQuery on p.Id equals pc.ProductId
+                join sa in _specificationAttributeRepository.Table on sao.SpecificationAttributeId equals sa.Id
+                where psa.AllowFiltering
+                orderby
+                    sa.DisplayOrder, sa.Name,
+                    sao.DisplayOrder, sao.Name
+                //linq2db don't specify 'sa' in 'SELECT' statement
+                //see also https://github.com/nopSolutions/nopCommerce/issues/5425
+                select new { sa, sao };
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
                 NopCatalogDefaults.SpecificationAttributeOptionsByCategoryCacheKey, categoryId.ToString());
 
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await result.Distinct().ToListAsync());
+            return await _staticCacheManager.GetAsync(cacheKey, async () => (await result.Distinct().ToListAsync()).Select(query => query.sao).ToList());
         }
 
         /// <summary>
@@ -428,26 +432,30 @@ namespace Nop.Services.Catalog
 
             var productsQuery = await GetAvailableProductsQueryAsync();
 
-            var productManufacturerQuery = from pm in _productManufacturerRepository.Table
-                                           where pm.ManufacturerId == manufacturerId && 
-                                                 (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pm.IsFeaturedProduct)
-                                           select pm;
+            var productManufacturerQuery = 
+                from pm in _productManufacturerRepository.Table
+                where pm.ManufacturerId == manufacturerId && 
+                      (_catalogSettings.IncludeFeaturedProductsInNormalLists || !pm.IsFeaturedProduct)
+                select pm;
 
-            var result = from sao in _specificationAttributeOptionRepository.Table
-                         join psa in _productSpecificationAttributeRepository.Table on sao.Id equals psa.SpecificationAttributeOptionId
-                         join p in productsQuery on psa.ProductId equals p.Id
-                         join pm in productManufacturerQuery on p.Id equals pm.ProductId
-                         join sa in _specificationAttributeRepository.Table on sao.SpecificationAttributeId equals sa.Id
-                         where psa.AllowFiltering
-                         orderby
-                            sa.DisplayOrder, sa.Name,
-                            sao.DisplayOrder, sao.Name
-                         select sao;
+            var result = 
+                from sao in _specificationAttributeOptionRepository.Table
+                join psa in _productSpecificationAttributeRepository.Table on sao.Id equals psa.SpecificationAttributeOptionId
+                join p in productsQuery on psa.ProductId equals p.Id
+                join pm in productManufacturerQuery on p.Id equals pm.ProductId
+                join sa in _specificationAttributeRepository.Table on sao.SpecificationAttributeId equals sa.Id
+                where psa.AllowFiltering
+                orderby
+                   sa.DisplayOrder, sa.Name,
+                   sao.DisplayOrder, sao.Name
+                //linq2db don't specify 'sa' in 'SELECT' statement
+                //see also https://github.com/nopSolutions/nopCommerce/issues/5425
+                select new { sa, sao };
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
                 NopCatalogDefaults.SpecificationAttributeOptionsByManufacturerCacheKey, manufacturerId.ToString());
 
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await result.Distinct().ToListAsync());
+            return await _staticCacheManager.GetAsync(cacheKey, async () => (await result.Distinct().ToListAsync()).Select(query => query.sao).ToList());
         }
 
         #endregion
