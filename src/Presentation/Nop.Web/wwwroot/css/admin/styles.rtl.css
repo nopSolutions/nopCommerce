@@ -2486,7 +2486,7 @@ div.dataTables_wrapper div.dataTables_paginate {
   }
 
   .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] {
-    padding-right: 15px;
+    padding-right: 7.5px;
     height: auto;
   }
 
@@ -2505,7 +2505,7 @@ div.dataTables_wrapper div.dataTables_paginate {
 
   .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
     position: static;
-    padding-right: 15px;
+    padding-right: 7.5px;
     height: auto;
   }
 
@@ -2560,6 +2560,10 @@ div.dataTables_wrapper div.dataTables_paginate {
   /*FORM ELEMENTS*/
   .form-horizontal .label-wrapper {
     float: none;
+  }
+
+  .form-horizontal .label-wrapper .col-form-label {
+    text-align: right;
   }
 
   .form-horizontal .card-popup .label-wrapper {
