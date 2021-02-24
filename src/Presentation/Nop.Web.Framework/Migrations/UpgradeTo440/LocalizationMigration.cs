@@ -687,6 +687,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.AlwaysDisplay"] = "Always display",
 
                 ["Checkout.PickupPoints.NullName"] = "Pickup",
+
+                //#5400
+                ["Admin.ContentManagement.Forums.Forum.Fields.Name.Required"] = "Forum name is required.",
             }).Wait();
 
             // rename locales

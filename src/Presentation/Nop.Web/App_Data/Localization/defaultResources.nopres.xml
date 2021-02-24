@@ -10084,7 +10084,7 @@
     <Value>The name of this forum. This is the name that the customer will see.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Name.Required">
-    <Value>Forum group name is required.</Value>
+    <Value>Forum name is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Updated">
     <Value>The forum has been updated successfully.</Value>
