@@ -1295,13 +1295,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare address model
             model.Address = address.ToModel(model.Address);
             await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.Address.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.Address.AvailableStates, model.Address.CountryId);
-
+            
             //prepare custom address attributes
             await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.Address.CustomAddressAttributes, address);
 
