@@ -409,7 +409,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 //insert special item for the default value
-                if (items.Any())
+                if (items.Count > 1)
                     await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.SelectState"));
             }
 
