@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Domain.Common;
-using Nop.Web.Areas.Admin.Models.Common;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -52,20 +50,13 @@ namespace Nop.Web.Areas.Admin.Factories
         Task PrepareCountriesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
 
         /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        Task PrepareAddressModelAsync(AddressModel model, Address address = null);
-
-        /// <summary>
         /// Prepare available states and provinces
         /// </summary>
         /// <param name="items">State and province items</param>
         /// <param name="countryId">Country identifier; pass null to don't load states and provinces</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        Task PrepareStatesAndProvincesAsync(IList<SelectListItem> items, int? countryId, 
+        Task PrepareStatesAndProvincesAsync(IList<SelectListItem> items, int? countryId,
             bool withSpecialDefaultItem = true, string defaultItemText = null);
 
         /// <summary>

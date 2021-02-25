@@ -34,7 +34,6 @@ using Nop.Services.Media;
 using Nop.Services.Stores;
 using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Factories;
@@ -51,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly AppSettings _appSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressService _addressService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -78,6 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public SettingModelFactory(AppSettings appSettings,
             CurrencySettings currencySettings,
+            IAddressModelFactory addressModelFactory,
             IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -101,6 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             _appSettings = appSettings;
             _currencySettings = currencySettings;
+            _addressModelFactory = addressModelFactory;
             _addressAttributeModelFactory = addressAttributeModelFactory;
             _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -126,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare store theme models
         /// </summary>
@@ -186,22 +188,6 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.SetGridPageSize();
 
             return Task.FromResult(searchModel);
-        }
-
-        /// <summary>
-        /// Prepare required address fields with data by default
-        /// </summary>
-        /// <param name="model"></param>
-        protected virtual void PrepareRequiredFieldsWithDefaultsData(AddressModel model)
-        {
-            if (string.IsNullOrEmpty(model.FirstName))
-                model.FirstName = NopAddressDefaults.FirstName;
-
-            if (string.IsNullOrEmpty(model.LastName))
-                model.LastName = NopAddressDefaults.LastName;
-
-            if (string.IsNullOrEmpty(model.Email))
-                model.Email = NopAddressDefaults.Email;
         }
 
         /// <summary>
@@ -743,7 +729,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.DistributedCacheConfig.DistributedCacheType.ToSelectListAsync();
-            
+
             model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
                                                 where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
                                                 from pp in property.PropertyType.GetProperties()
@@ -945,9 +931,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var originAddress = await _addressService.GetAddressByIdAsync(shippingSettings.ShippingOriginAddressId);
             if (originAddress != null)
                 model.ShippingOriginAddress = originAddress.ToModel(model.ShippingOriginAddress);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
-
-            PrepareRequiredFieldsWithDefaultsData(model.ShippingOriginAddress);
+            await _addressModelFactory.PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
+            model.ShippingOriginAddress.ZipPostalCodeRequired = true;
 
             return model;
         }
@@ -1009,8 +994,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var defaultAddress = await _addressService.GetAddressByIdAsync(taxSettings.DefaultTaxAddressId);
             if (defaultAddress != null)
                 model.DefaultTaxAddress = defaultAddress.ToModel(model.DefaultTaxAddress);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
-            PrepareRequiredFieldsWithDefaultsData(model.DefaultTaxAddress);
+            await _addressModelFactory.PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
+            model.DefaultTaxAddress.ZipPostalCodeRequired = true;
 
             return model;
         }

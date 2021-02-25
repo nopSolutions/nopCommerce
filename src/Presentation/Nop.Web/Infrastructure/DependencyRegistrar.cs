@@ -33,6 +33,7 @@ namespace Nop.Web.Infrastructure
             //admin factories
             services.AddScoped<IBaseAdminModelFactory, BaseAdminModelFactory>();
             services.AddScoped<IActivityLogModelFactory, ActivityLogModelFactory>();
+            services.AddScoped<IAddressModelFactory, AddressModelFactory>();
             services.AddScoped<IAddressAttributeModelFactory, AddressAttributeModelFactory>();
             services.AddScoped<IAffiliateModelFactory, AffiliateModelFactory>();
             services.AddScoped<IBlogModelFactory, BlogModelFactory>();

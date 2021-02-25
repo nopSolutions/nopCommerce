@@ -54,8 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -103,8 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
-            IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressModelFactory addressModelFactory,
             IAddressService addressService,
             IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -148,8 +146,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
-            _addressAttributeFormatter = addressAttributeFormatter;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
             _affiliateService = affiliateService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -193,7 +190,26 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
+        /// <summary>
+        /// Set some address fields as required
+        /// </summary>
+        /// <param name="model">Address model</param>
+        protected virtual void SetAddressFieldsAsRequired(AddressModel model)
+        {
+            model.FirstNameRequired = true;
+            model.LastNameRequired = true;
+            model.EmailRequired = true;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.CountyRequired = _addressSettings.CountyRequired;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxRequired = _addressSettings.FaxRequired;
+        }
+
         /// <summary>
         /// Prepare order item models
         /// </summary>
@@ -502,7 +518,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
             model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
 
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            SetAddressFieldsAsRequired(model.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -588,7 +605,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ShippingAddress = shippingAddress.ToModel(model.ShippingAddress);
                 model.ShippingAddress.CountryName = shippingCountry?.Name;
                 model.ShippingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress))?.Name;
-                await _baseAdminModelFactory.PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
+                await _addressModelFactory.PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
+                SetAddressFieldsAsRequired(model.ShippingAddress);
                 model.ShippingAddressGoogleMapsUrl = "https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
                     $"{WebUtility.UrlEncode(shippingAddress.Address1 + " " + shippingAddress.ZipPostalCode + " " + shippingAddress.City + " " + (shippingCountry?.Name ?? string.Empty))}";
             }
@@ -1294,10 +1312,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare address model
             model.Address = address.ToModel(model.Address);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
-            
-            //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.Address.CustomAddressAttributes, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            SetAddressFieldsAsRequired(model.Address);
 
             return model;
         }

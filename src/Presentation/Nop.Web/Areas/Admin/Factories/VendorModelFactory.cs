@@ -29,9 +29,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -49,9 +48,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public VendorModelFactory(CurrencySettings currencySettings,
             ICurrencyService currencyService,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressModelFactory addressModelFactory,
             IAddressService addressService,
-            IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
@@ -65,9 +63,8 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             _currencySettings = currencySettings;
             _currencyService = currencyService;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
-            _baseAdminModelFactory = baseAdminModelFactory;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
@@ -340,7 +337,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressByIdAsync(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             return model;
         }
