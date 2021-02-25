@@ -1303,7 +1303,6 @@ input[type="text"].k-input {
 
 /* HEADER */
 .main-header {
-  max-height: 150px;
   border-bottom: none;
 }
 
@@ -2538,11 +2537,6 @@ div.dataTables_wrapper div.dataTables_paginate {
   /* COMMON */
   .modal-dialog {
     margin-top: 30px;
-  }
-
-  /* HEADER */
-  .main-header {
-    max-height: 200px;
   }
 
   /* FORM ELEMENTS */
