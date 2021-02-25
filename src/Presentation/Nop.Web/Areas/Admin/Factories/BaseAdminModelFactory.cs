@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Logging;
@@ -15,7 +14,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -30,7 +28,6 @@ using Nop.Services.Tax;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
-using Nop.Web.Areas.Admin.Models.Common;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -41,8 +38,6 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICountryService _countryService;
@@ -71,9 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public BaseAdminModelFactory(IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
-            ICategoryService categoryService,
+        public BaseAdminModelFactory(ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICountryService countryService,
             ICurrencyService currencyService,
@@ -97,8 +90,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ITopicTemplateService topicTemplateService,
             IVendorService vendorService)
         {
-            _addressAttributeFormatter = addressAttributeFormatter;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
             _countryService = countryService;
@@ -359,31 +350,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //insert special item for the default value
             await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"));
-        }
-
-        /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        public virtual async Task PrepareAddressModelAsync(AddressModel model, Address address = null)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //prepare available countries
-            await PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-
-            //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
-            
-            if (address == null)
-                return;
-
-            model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
         }
 
         /// <summary>
@@ -830,7 +796,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available plugin groups
             var availablePluginGroups = (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                 .Select(plugin => plugin.Group).Distinct().OrderBy(groupName => groupName).ToList();
-            foreach (var group in availablePluginGroups) 
+            foreach (var group in availablePluginGroups)
                 items.Add(new SelectListItem { Value = @group, Text = @group });
 
             //insert special item for the default value
