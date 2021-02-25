@@ -739,7 +739,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Nop.Web.Framework.Validators.MaxDecimal", NewName = "Admin.Common.Validation.Decimal.Max"},
 
                 //#5321
-                new { Name = "Common.Wait...", NewName = "Common.Wait"}
+                new { Name = "Common.Wait...", NewName = "Common.Wait"},
+
+                //#5429
+                new { Name = "Search.NoResultsText", NewName = "Catalog.Products.NoResult"},
+
             };
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();

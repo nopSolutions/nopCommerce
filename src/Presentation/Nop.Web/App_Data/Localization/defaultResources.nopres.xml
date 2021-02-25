@@ -15870,6 +15870,9 @@
   <LocaleResource Name="Catalog.PageSize.PerPage">
     <Value>per page</Value>
   </LocaleResource>
+  <LocaleResource Name="Catalog.Products.NoResult">
+    <Value>No products were found that matched your criteria.</Value>
+  </LocaleResource>
   <LocaleResource Name="Catalog.ViewMode">
     <Value>View as</Value>
   </LocaleResource>
@@ -18776,9 +18779,6 @@
   </LocaleResource>
   <LocaleResource Name="Search.Manufacturer">
     <Value>Manufacturer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Search.NoResultsText">
-    <Value>No products were found that matched your criteria.</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchBox.SearchPageLink">
     <Value>View all results...</Value>

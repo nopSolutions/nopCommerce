@@ -592,6 +592,25 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepares catalog products
+        /// </summary>
+        /// <param name="model">Catalog products model</param>
+        /// <param name="products">The products</param>
+        protected virtual async Task PrepareCatalogProductsAsync(CatalogProductsModel model, IPagedList<Product> products)
+        {
+            if (!string.IsNullOrEmpty(model.WarningMessage))
+                return;
+
+            if (products.Count == 0)
+                model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
+            else
+            {
+                model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
+                model.LoadPagedList(products);
+            }
+        }
+
         #endregion
 
         #region Categories
@@ -978,8 +997,7 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
-            model.LoadPagedList(products);
+            await PrepareCatalogProductsAsync(model, products);
 
             return model;
         }
@@ -1117,8 +1135,7 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
-            model.LoadPagedList(products);
+            await PrepareCatalogProductsAsync(model, products);
 
             return model;
         }
@@ -1345,8 +1362,7 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
-            model.LoadPagedList(products);
+            await PrepareCatalogProductsAsync(model, products);
 
             return model;
         }
@@ -1576,8 +1592,7 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
-            model.LoadPagedList(products);
+            await PrepareCatalogProductsAsync(model, products);
 
             return model;
         }
@@ -1823,11 +1838,6 @@ namespace Nop.Web.Factories
                         orderBy: (ProductSortingEnum)command.OrderBy,
                         vendorId: vendorId);
 
-                    model.Products = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
-
-                    if (model.Products.Count == 0)
-                        model.NoResultMessage = await _localizationService.GetResourceAsync("Search.NoResultsText");
-
                     //search term statistics
                     if (!string.IsNullOrEmpty(searchTerms))
                     {
@@ -1863,7 +1873,7 @@ namespace Nop.Web.Factories
                 }
             }
 
-            model.LoadPagedList(products);
+            await PrepareCatalogProductsAsync(model, products);
 
             return model;
         }
