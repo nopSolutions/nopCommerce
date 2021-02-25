@@ -509,9 +509,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //#3015
                 ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle"] = "Home page title",
-                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint"] = "The title for home page in your store.",
-                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription"] = "Home page description",
-                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint"] = "The description for home page in your store.",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint"] = "The title for the home page in your store.",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription"] = "Home page meta description",
+                ["Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint"] = "The description for the home page in your store.",
 
                 //#5210
                 ["Admin.Documentation.Reference.Products"] = "Learn more about <a target=\"_blank\" href=\"{0}\">products</a>",

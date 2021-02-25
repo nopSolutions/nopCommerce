@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -40,7 +41,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public AffiliateModelFactory(IAddressService addressService,
+        public AffiliateModelFactory(IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
@@ -51,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IStateProvinceService stateProvinceService)
         {
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
             _affiliateService = affiliateService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -66,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare affiliated order search model
         /// </summary>
@@ -194,11 +197,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 await PrepareAffiliatedOrderSearchModelAsync(model.AffiliatedOrderSearchModel, affiliate);
                 PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
 
-                //prepare address model
-                var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
-                model.Address = address.ToModel(model.Address);
-                await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
-
                 //whether to fill in some of properties
                 if (!excludeProperties)
                 {
@@ -207,10 +205,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Active = affiliate.Active;
                 }
             }
-            else
-            {
-                await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address);
-            }
+
+            //prepare address model
+            var address = await _addressService.GetAddressByIdAsync(affiliate?.AddressId ?? 0);
+            if (!excludeProperties && address != null)
+                model.Address = address.ToModel(model.Address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailRequired = true;
+            model.Address.CountryRequired = true;
+            model.Address.CountyRequired = true;
+            model.Address.CityRequired = true;
+            model.Address.StreetAddressRequired = true;
+            model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneRequired = true;
 
             return model;
         }
