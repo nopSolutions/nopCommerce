@@ -9,13 +9,13 @@
 
     function toggleRecurring() {
         if ($('#@Html.IdFor(model => model.IsRecurring)').is(':checked')) {
-            $('#pnlCycleLength').showField();
-            $('#pnlCyclePeriod').showField();
-            $('#pnlTotalCycles').showField();
+            $('#pnlCycleLength').showElement();
+            $('#pnlCyclePeriod').showElement();
+            $('#pnlTotalCycles').showElement();
         } else {
-            $('#pnlCycleLength').hide();
-            $('#pnlCyclePeriod').hide();
-            $('#pnlTotalCycles').hide();
+            $('#pnlCycleLength').hideElement();
+            $('#pnlCyclePeriod').hideElement();
+            $('#pnlTotalCycles').hideElement();
         }
     }
 </script>

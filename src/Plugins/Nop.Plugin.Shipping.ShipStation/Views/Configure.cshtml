@@ -127,17 +127,17 @@
     function togglePackingType() {
         var selectedPackingTypeId = $("#PackingType").val();
         if (selectedPackingTypeId == @(((int) PackingType.PackByDimensions).ToString())) {
-            $('#pnlPackingPackageVolume').hide();
+            $('#pnlPackingPackageVolume').hideElement();
         } else if (selectedPackingTypeId == @(((int) PackingType.PackByVolume).ToString())) {
-            $('#pnlPackingPackageVolume').showField();
+            $('#pnlPackingPackageVolume').showElement();
         }
     }
 
     function togglePassDimensions() {
         if ($(@Html.IdFor(model => model.PassDimensions)).is(':checked')) {
-            $('#pnlPackingType').showField();
+            $('#pnlPackingType').showElement();
         } else {
-            $('#pnlPackingType').hide();
+            $('#pnlPackingType').hideElement();
         }
         togglePackingType();
     }

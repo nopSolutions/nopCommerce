@@ -149,34 +149,34 @@
 
     function toggleSearchPagePageSize() {
         if ($('#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
-            $('#pnlSearchPageProductsPerPage').hide();
-            $('#pnlSearchPagePageSizeOptions').showField();
+            $('#pnlSearchPageProductsPerPage').hideElement();
+            $('#pnlSearchPagePageSizeOptions').showElement();
         } else {
-            $('#pnlSearchPageProductsPerPage').showField();
-            $('#pnlSearchPagePageSizeOptions').hide();
+            $('#pnlSearchPageProductsPerPage').showElement();
+            $('#pnlSearchPagePageSizeOptions').hideElement();
         }
     }
 
     function toggleProductSearchAutoComplete() {
         if ($('#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
-            $('#pnlProductSearchAutoCompleteNumberOfProducts').showField();
-            $('#pnlShowProductImagesInSearchAutoComplete').showField();
-            $('#pnlShowLinkToAllResultInSearchAutoComplete').showField();
+            $('#pnlProductSearchAutoCompleteNumberOfProducts').showElement();
+            $('#pnlShowProductImagesInSearchAutoComplete').showElement();
+            $('#pnlShowLinkToAllResultInSearchAutoComplete').showElement();
         } else {
-            $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
-            $('#pnlShowProductImagesInSearchAutoComplete').hide();
-            $('#pnlShowLinkToAllResultInSearchAutoComplete').hide();
+            $('#pnlProductSearchAutoCompleteNumberOfProducts').hideElement();
+            $('#pnlShowProductImagesInSearchAutoComplete').hideElement();
+            $('#pnlShowLinkToAllResultInSearchAutoComplete').hideElement();
         }
     }
 
     function toggleSearchPagePriceRange() {
         if ($('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').is(':checked')) {
-            $('#pnlSearchPagePriceRangeFrom').hide();
-            $('#pnlSearchPagePriceRangeTo').hide();
+            $('#pnlSearchPagePriceRangeFrom').hideElement();
+            $('#pnlSearchPagePriceRangeTo').hideElement();
             $('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').addClass('parent-setting-ticked');
         } else {
-            $('#pnlSearchPagePriceRangeFrom').showField();
-            $('#pnlSearchPagePriceRangeTo').showField();
+            $('#pnlSearchPagePriceRangeFrom').showElement();
+            $('#pnlSearchPagePriceRangeTo').showElement();
             $('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').removeClass('parent-setting-ticked');
         }
     }
@@ -184,14 +184,14 @@
     function toggleSearchPageAutomaticallyCalculatePriceRange() {
         if ($('#@Html.IdFor(model => model.SearchPagePriceRangeFiltering)').is(':checked')) {
             if (!$('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').is(':checked')) {
-                $('#pnlSearchPagePriceRangeFrom').showField();
-                $('#pnlSearchPagePriceRangeTo').showField();
+                $('#pnlSearchPagePriceRangeFrom').showElement();
+                $('#pnlSearchPagePriceRangeTo').showElement();
             }
-            $('#pnlSearchPageAutomaticallyCalculatePriceRange').showField();
+            $('#pnlSearchPageAutomaticallyCalculatePriceRange').showElement();
         } else {
-            $('#pnlSearchPagePriceRangeFrom').hide();
-            $('#pnlSearchPagePriceRangeTo').hide();
-            $('#pnlSearchPageAutomaticallyCalculatePriceRange').hide();
+            $('#pnlSearchPagePriceRangeFrom').hideElement();
+            $('#pnlSearchPagePriceRangeTo').hideElement();
+            $('#pnlSearchPageAutomaticallyCalculatePriceRange').hideElement();
         }
     }
 

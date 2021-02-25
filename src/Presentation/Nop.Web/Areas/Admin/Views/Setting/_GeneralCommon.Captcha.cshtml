@@ -176,44 +176,44 @@
     function toggleReCaptchaV3ScoreThreshold() {
         var reCaptchaV3 = "@((int)CaptchaType.ReCaptchaV3)";
         if ($('#@Html.IdFor(model => model.CaptchaSettings.CaptchaType)').val() === reCaptchaV3)
-            $('#ssReCaptchaV3ScoreThresholdpnl').showField();
+            $('#ssReCaptchaV3ScoreThresholdpnl').showElement();
         else
-            $('#ssReCaptchaV3ScoreThresholdpnl').hide();
+            $('#ssReCaptchaV3ScoreThresholdpnl').hideElement();
     }
 
     function toggleReCaptcha() {
         if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
-            $('#ssCaptchaTypepnl').showField();
-            $('#ssCaptchaShowOnLoginPagepnl').showField();
-            $('#ssCaptchaShowOnRegistrationPagepnl').showField();
-            $('#ssCaptchaShowOnForgotPassworPagepnl').showField();
-            $('#ssCaptchaShowOnContactUsPagepnl').showField();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').showField();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').showField();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').showField();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').showField();
-            $('#ssCaptchaShowOnProductReviewPagepnl').showField();
-            $('#ssCaptchaShowOnApplyVendorPagepnl').showField();
-            $('#ssCaptchaShowOnForumpnl').showField();
-            $('#ssReCaptchaPublicKeypnl').showField();
-            $('#ssReCaptchaPrivateKeypnl').showField();
+            $('#ssCaptchaTypepnl').showElement();
+            $('#ssCaptchaShowOnLoginPagepnl').showElement();
+            $('#ssCaptchaShowOnRegistrationPagepnl').showElement();
+            $('#ssCaptchaShowOnForgotPassworPagepnl').showElement();
+            $('#ssCaptchaShowOnContactUsPagepnl').showElement();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').showElement();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').showElement();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').showElement();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').showElement();
+            $('#ssCaptchaShowOnProductReviewPagepnl').showElement();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').showElement();
+            $('#ssCaptchaShowOnForumpnl').showElement();
+            $('#ssReCaptchaPublicKeypnl').showElement();
+            $('#ssReCaptchaPrivateKeypnl').showElement();
             toggleReCaptchaV3ScoreThreshold();
         } else {
-            $('#ssCaptchaTypepnl').hide();
-            $('#ssReCaptchaV3ScoreThresholdpnl').hide();
-            $('#ssCaptchaShowOnLoginPagepnl').hide();
-            $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-            $('#ssCaptchaShowOnForgotPassworPagepnl').hide();
-            $('#ssCaptchaShowOnContactUsPagepnl').hide();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-            $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-            $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
-            $('#ssCaptchaShowOnForumpnl').hide();
-            $('#ssReCaptchaPublicKeypnl').hide();
-            $('#ssReCaptchaPrivateKeypnl').hide();
+            $('#ssCaptchaTypepnl').hideElement();
+            $('#ssReCaptchaV3ScoreThresholdpnl').hideElement();
+            $('#ssCaptchaShowOnLoginPagepnl').hideElement();
+            $('#ssCaptchaShowOnRegistrationPagepnl').hideElement();
+            $('#ssCaptchaShowOnForgotPassworPagepnl').hideElement();
+            $('#ssCaptchaShowOnContactUsPagepnl').hideElement();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hideElement();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hideElement();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').hideElement();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').hideElement();
+            $('#ssCaptchaShowOnProductReviewPagepnl').hideElement();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').hideElement();
+            $('#ssCaptchaShowOnForumpnl').hideElement();
+            $('#ssReCaptchaPublicKeypnl').hideElement();
+            $('#ssReCaptchaPrivateKeypnl').hideElement();
         }
     }
 </script>

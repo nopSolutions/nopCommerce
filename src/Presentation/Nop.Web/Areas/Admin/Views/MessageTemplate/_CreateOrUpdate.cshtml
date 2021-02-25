@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
-                                <div id="pnlAllowedTokens" style="display: none; white-space: pre-line">
+                                <div id="pnlAllowedTokens" class="d-none" style="white-space: pre-line">
                                     <div class="form-text-row">@Model.AllowedTokens</div>
                                 </div>
                             </div>
@@ -39,8 +39,8 @@
                         </div>
                         <script>
                         function toggleLoadedAllowedTokens() {
-                            $('#pnlAllowedTokens').toggle();
-                            if ($('#pnlAllowedTokens').css('display') == 'none') {
+                            $('#pnlAllowedTokens').toggleClass('d-none');
+                            if ($('#pnlAllowedTokens').hasClass('d-none')) {
                                 $('#allowedTokensShowHide').text('@T("Admin.Common.Show")');
                             } else {
                                 $('#allowedTokensShowHide').text('@T("Admin.Common.Hide")');
@@ -295,17 +295,17 @@
 
                 function toggleHasAttachedDownload() {
                     if ($('#@Html.IdFor(model => model.HasAttachedDownload)').is(':checked')) {
-                        $('#pnlAttachedDownload').showField();
+                        $('#pnlAttachedDownload').showElement();
                     } else {
-                        $('#pnlAttachedDownload').hide();
+                        $('#pnlAttachedDownload').hideElement();
                     }
                 }
 
                 function sendImmediately() {
                     if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
-                        $('#pnl-send-after').hide();
+                        $('#pnl-send-after').hideElement();
                     else
-                        $('#pnl-send-after').showField();
+                        $('#pnl-send-after').showElement();
                 }
             </script>
         </div>

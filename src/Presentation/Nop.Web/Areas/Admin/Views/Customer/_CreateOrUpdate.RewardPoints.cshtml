@@ -165,9 +165,9 @@
 
         function activatePointsImmediately() {
             if ($('#@Html.IdFor(model => Model.AddRewardPoints.ActivatePointsImmediately)').is(':checked'))
-                $('#pnl-activating-delay').hide();
+                $('#pnl-activating-delay').hideElement();
             else
-                $('#pnl-activating-delay').showField();
+                $('#pnl-activating-delay').showElement();
         }
         </script>
     </div>

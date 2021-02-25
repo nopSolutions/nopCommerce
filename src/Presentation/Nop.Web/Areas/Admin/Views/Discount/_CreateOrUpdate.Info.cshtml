@@ -18,29 +18,29 @@
     function toggleDiscountType() {
         var selectedDiscountTypeId = $("#@Html.IdFor(model => model.DiscountTypeId)").val();
         if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
-            $('[data-card-name=discount-applied-to-categories]').showField();
-            $('[data-card-name=discount-applied-to-manufacturers]').hide();
-            $('[data-card-name=discount-applied-to-products]').hide();
-            $('#pnlMaximumDiscountedQuantity').showField();
-            $('#pnlAppliedToSubCategories').showField();
+            $('[data-card-name=discount-applied-to-categories]').showElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').showElement();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
-            $('[data-card-name=discount-applied-to-categories]').hide();
-            $('[data-card-name=discount-applied-to-manufacturers]').showField();
-            $('[data-card-name=discount-applied-to-products]').hide();
-            $('#pnlMaximumDiscountedQuantity').showField();
-            $('#pnlAppliedToSubCategories').hide();
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').showElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').hideElement();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
-            $('[data-card-name=discount-applied-to-categories]').hide();
-            $('[data-card-name=discount-applied-to-manufacturers]').hide();
-            $('[data-card-name=discount-applied-to-products]').showField();
-            $('#pnlMaximumDiscountedQuantity').showField();
-            $('#pnlAppliedToSubCategories').hide();
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').showElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').hideElement();
     } else {
-            $('[data-card-name=discount-applied-to-categories]').hide();
-            $('[data-card-name=discount-applied-to-manufacturers]').hide();
-            $('[data-card-name=discount-applied-to-products]').hide();
-            $('#pnlMaximumDiscountedQuantity').hide();
-            $('#pnlAppliedToSubCategories').hide();
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').hideElement();
+            $('#pnlAppliedToSubCategories').hideElement();
     }
     }
 
@@ -48,38 +48,38 @@
         var selectedDiscountLimitationId = $("#@Html.IdFor(model => model.DiscountLimitationId)").val();
         if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
             //'N Times Only' or 'N Times Per Customer'
-            $('#pnlLimitationTimes').showField();
+            $('#pnlLimitationTimes').showElement();
     } else {
-            $('#pnlLimitationTimes').hide();
+            $('#pnlLimitationTimes').hideElement();
     }
     }
 
     function toggleUsePercentage() {
         if ($('#@Html.IdFor(model => model.UsePercentage)').is(':checked')) {
-            $('#pnlDiscountPercentage').showField();
-            $('#pnlDiscountAmount').hide();
-            $('#pnlMaximumDiscountAmount').showField();
+            $('#pnlDiscountPercentage').showElement();
+            $('#pnlDiscountAmount').hideElement();
+            $('#pnlMaximumDiscountAmount').showElement();
         } else {
-            $('#pnlDiscountPercentage').hide();
-            $('#pnlDiscountAmount').showField();
-            $('#pnlMaximumDiscountAmount').hide();
+            $('#pnlDiscountPercentage').hideElement();
+            $('#pnlDiscountAmount').showElement();
+            $('#pnlMaximumDiscountAmount').hideElement();
         }
     }
 
     function toggleRequiresCouponCode() {
         if ($('#@Html.IdFor(model => model.RequiresCouponCode)').is(':checked')) {
-            $('#pnlCouponCode').showField();
+            $('#pnlCouponCode').showElement();
             @if (!string.IsNullOrEmpty(Model.DiscountUrl))
             {
-                <text>$('#pnlDiscountUrl').showField();</text>
+                <text>$('#pnlDiscountUrl').showElement();</text>
             }
             else
             {
-                <text>$('#pnlDiscountUrl').hide();</text>
+                <text>$('#pnlDiscountUrl').hideElement();</text>
             }
         } else {
-            $('#pnlCouponCode').hide();
-            $('#pnlDiscountUrl').hide();
+            $('#pnlCouponCode').hideElement();
+            $('#pnlDiscountUrl').hideElement();
         }
     }
 </script>

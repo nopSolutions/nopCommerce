@@ -7,23 +7,23 @@
 
     function toggleShipping() {
         if ($('#@Html.IdFor(model => model.IsShipEnabled)').is(':checked')) {
-            $('#pnlFreeShipping').showField();
-            $('#pnlShipSeparately').showField();
-            $('#pnlAdditionalShippingCharge').showField();
-            $('#pnlWeight').showField();
-            $('#pnlLength').showField();
-            $('#pnlWidth').showField();
-            $('#pnlHeight').showField();
-            $('#pnlDeliveryDate').showField();
+            $('#pnlFreeShipping').showElement();
+            $('#pnlShipSeparately').showElement();
+            $('#pnlAdditionalShippingCharge').showElement();
+            $('#pnlWeight').showElement();
+            $('#pnlLength').showElement();
+            $('#pnlWidth').showElement();
+            $('#pnlHeight').showElement();
+            $('#pnlDeliveryDate').showElement();
         } else {
-            $('#pnlFreeShipping').hide();
-            $('#pnlShipSeparately').hide();
-            $('#pnlAdditionalShippingCharge').hide();
-            $('#pnlWeight').hide();
-            $('#pnlLength').hide();
-            $('#pnlWidth').hide();
-            $('#pnlHeight').hide();
-            $('#pnlDeliveryDate').hide();
+            $('#pnlFreeShipping').hideElement();
+            $('#pnlShipSeparately').hideElement();
+            $('#pnlAdditionalShippingCharge').hideElement();
+            $('#pnlWeight').hideElement();
+            $('#pnlLength').hideElement();
+            $('#pnlWidth').hideElement();
+            $('#pnlHeight').hideElement();
+            $('#pnlDeliveryDate').hideElement();
         }
     }
 </script>

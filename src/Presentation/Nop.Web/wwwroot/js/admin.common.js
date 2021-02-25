@@ -1,5 +1,13 @@
-$.fn.showField = function () {
-  this.css('display', 'flex');
+//this method is used to show an element by removing the appropriate hiding class
+//we don't use the jquery show/hide methods since they don't work with "display: flex" properly
+$.fn.showElement = function () {
+  this.removeClass('d-none');
+}
+
+//this method is used to hide an element by adding the appropriate hiding class
+//we don't use the jquery show/hide methods since they don't work with "display: flex" properly
+$.fn.hideElement = function () {
+  this.addClass('d-none');
 }
 
 function setLocation(url) {

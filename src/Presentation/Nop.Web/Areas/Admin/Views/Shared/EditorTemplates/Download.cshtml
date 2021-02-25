@@ -56,11 +56,11 @@
 
     function toggleDownloadRecordType@(randomNumber)() {
         if ($('#cbUseDownloadURL@(randomNumber)').is(':checked')) {
-            $('#pnlDownloadURL@(randomNumber)').showField();
-            $('#pnlDownloadFile@(randomNumber)').hide();
+            $('#pnlDownloadURL@(randomNumber)').showElement();
+            $('#pnlDownloadFile@(randomNumber)').hideElement();
         } else {
-            $('#pnlDownloadURL@(randomNumber)').hide();
-            $('#pnlDownloadFile@(randomNumber)').showField();
+            $('#pnlDownloadURL@(randomNumber)').hideElement();
+            $('#pnlDownloadFile@(randomNumber)').showElement();
         }
     }
 

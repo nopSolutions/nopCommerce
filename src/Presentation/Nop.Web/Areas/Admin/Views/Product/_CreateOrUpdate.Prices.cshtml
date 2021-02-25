@@ -20,42 +20,42 @@
 
     function togglePreOrder() {
         if ($('#@Html.IdFor(model => model.AvailableForPreOrder)').is(':checked')) {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').showField();
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').showElement();
         } else {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').hideElement();
         }
     }
 
 
     function toggleCustomerEntersPrice() {
         if ($('#@Html.IdFor(model => model.CustomerEntersPrice)').is(':checked')) {
-            $('#pnlMinimumCustomerEnteredPrice').showField();
-            $('#pnlMaximumCustomerEnteredPrice').showField();
+            $('#pnlMinimumCustomerEnteredPrice').showElement();
+            $('#pnlMaximumCustomerEnteredPrice').showElement();
         } else {
-            $('#pnlMinimumCustomerEnteredPrice').hide();
-            $('#pnlMaximumCustomerEnteredPrice').hide();
+            $('#pnlMinimumCustomerEnteredPrice').hideElement();
+            $('#pnlMaximumCustomerEnteredPrice').hideElement();
         }
     }
 
     function toggleBasepriceEnabled() {
         if ($('#@Html.IdFor(model => model.BasepriceEnabled)').is(':checked')) {
-            $('#pnlBasepriceAmount').showField();
-            $('#pnlBasepriceUnit').showField();
-            $('#pnlBasepriceBaseAmount').showField();
-            $('#pnlBasepriceBaseUnit').showField();
+            $('#pnlBasepriceAmount').showElement();
+            $('#pnlBasepriceUnit').showElement();
+            $('#pnlBasepriceBaseAmount').showElement();
+            $('#pnlBasepriceBaseUnit').showElement();
         } else {
-            $('#pnlBasepriceAmount').hide();
-            $('#pnlBasepriceUnit').hide();
-            $('#pnlBasepriceBaseAmount').hide();
-            $('#pnlBasepriceBaseUnit').hide();
+            $('#pnlBasepriceAmount').hideElement();
+            $('#pnlBasepriceUnit').hideElement();
+            $('#pnlBasepriceBaseAmount').hideElement();
+            $('#pnlBasepriceBaseUnit').hideElement();
         }
     }
 
     function toggleTax() {
         if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
-            $('#pnlTaxCategory').hide();
+            $('#pnlTaxCategory').hideElement();
         } else {
-            $('#pnlTaxCategory').showField();
+            $('#pnlTaxCategory').showElement();
         }
     }
 </script>
