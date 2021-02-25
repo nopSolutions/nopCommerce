@@ -2,10 +2,14 @@
 
 @if (Model.Id > 0)
 {
-    <script>
-        $(document).ready(function() {
-            $('#@Model.PrecedingElementId').closest('.form-group').after(`@await  Html.PartialAsync("~/Plugins/Tax.Avalara/Views/EntityUseCode/_EntityUseCodeField.cshtml", Model)`);
-            $("#AvalaraEntityUseCode_label > .ico-help").css("color", "#f39c12")
-        });
-    </script>
+    var field = await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/EntityUseCode/_EntityUseCodeField.cshtml", Model);
+
+    <text>
+        <script>
+            $(document).ready(function() {
+                $('#@Model.PrecedingElementId').closest('.form-group').after(`@field`);
+                $("#AvalaraEntityUseCode_label > .ico-help").css("color", "#f39c12")
+            });
+        </script>
+    </text>
 }
