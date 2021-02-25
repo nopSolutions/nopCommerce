@@ -1480,7 +1480,7 @@ namespace Nop.Services.Messages
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
             await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, returnRequest.CustomerId);
-            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem);
+            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1531,7 +1531,7 @@ namespace Nop.Services.Messages
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
             await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem);
+            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
@@ -1588,7 +1588,7 @@ namespace Nop.Services.Messages
             var commonTokens = new List<Token>();
             await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
             await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
-            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem);
+            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
             return await messageTemplates.SelectAwait(async messageTemplate =>
             {
