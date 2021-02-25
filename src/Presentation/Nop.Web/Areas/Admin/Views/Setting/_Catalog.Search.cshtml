@@ -105,7 +105,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="SearchPagePriceRangeFiltering">
-        <div id="pnlSearchPageAutomaticallyCalculatePriceRange" class="form-group row advanced-setting">
+        <div class="form-group row advanced-setting parent-setting-reversed" id="pnlSearchPageAutomaticallyCalculatePriceRange">
             <div class="col-md-3">
                 <nop-label asp-for="SearchPageAutomaticallyCalculatePriceRange" />
             </div>
@@ -114,24 +114,22 @@
                 <span asp-validation-for="SearchPageAutomaticallyCalculatePriceRange"></span>
             </div>
         </div>
-        <div id="pnlSearchPagePriceRange" class="advanced-setting">
-            <div class="form-group row">
-                <div class="col-md-3">
-                    <nop-label asp-for="SearchPagePriceFrom" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="SearchPagePriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                    <span asp-validation-for="SearchPagePriceFrom"></span>
-                </div>
+        <div class="form-group row advanced-setting" id="pnlSearchPagePriceRangeFrom">
+            <div class="col-md-3">
+                <nop-label asp-for="SearchPagePriceFrom"/>
             </div>
-            <div class="form-group row">
-                <div class="col-md-3">
-                    <nop-label asp-for="SearchPagePriceTo" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="SearchPagePriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                    <span asp-validation-for="SearchPagePriceTo"></span>
-                </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SearchPagePriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                <span asp-validation-for="SearchPagePriceFrom"></span>
+            </div>
+        </div>
+        <div class="form-group row advanced-setting" id="pnlSearchPagePriceRangeTo">
+            <div class="col-md-3">
+                <nop-label asp-for="SearchPagePriceTo"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SearchPagePriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                <span asp-validation-for="SearchPagePriceTo"></span>
             </div>
         </div>
     </nop-nested-setting>
@@ -173,20 +171,26 @@
 
     function toggleSearchPagePriceRange() {
         if ($('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').is(':checked')) {
-            $('#pnlSearchPagePriceRange').hide();
+            $('#pnlSearchPagePriceRangeFrom').hide();
+            $('#pnlSearchPagePriceRangeTo').hide();
+            $('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').addClass('parent-setting-ticked');
         } else {
-            $('#pnlSearchPagePriceRange').show();
+            $('#pnlSearchPagePriceRangeFrom').showField();
+            $('#pnlSearchPagePriceRangeTo').showField();
+            $('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').removeClass('parent-setting-ticked');
         }
     }
 
     function toggleSearchPageAutomaticallyCalculatePriceRange() {
         if ($('#@Html.IdFor(model => model.SearchPagePriceRangeFiltering)').is(':checked')) {
             if (!$('#@Html.IdFor(model => model.SearchPageAutomaticallyCalculatePriceRange)').is(':checked')) {
-                $('#pnlSearchPagePriceRange').show();
+                $('#pnlSearchPagePriceRangeFrom').showField();
+                $('#pnlSearchPagePriceRangeTo').showField();
             }
-            $('#pnlSearchPageAutomaticallyCalculatePriceRange').show();
+            $('#pnlSearchPageAutomaticallyCalculatePriceRange').showField();
         } else {
-            $('#pnlSearchPagePriceRange').hide();
+            $('#pnlSearchPagePriceRangeFrom').hide();
+            $('#pnlSearchPagePriceRangeTo').hide();
             $('#pnlSearchPageAutomaticallyCalculatePriceRange').hide();
         }
     }

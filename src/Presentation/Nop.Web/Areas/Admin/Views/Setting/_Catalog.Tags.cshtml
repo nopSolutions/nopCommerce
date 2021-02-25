@@ -43,7 +43,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group row advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="ProductsByTagPriceRangeFiltering" />
         </div>
@@ -53,7 +53,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ProductsByTagPriceRangeFiltering">
-        <div id="pnlProductsByTagAutomaticallyCalculatePriceRange" class="form-group row advanced-setting">
+        <div class="form-group row parent-setting-reversed" id="pnlProductsByTagAutomaticallyCalculatePriceRange">
             <div class="col-md-3">
                 <nop-label asp-for="ProductsByTagAutomaticallyCalculatePriceRange" />
             </div>
@@ -62,24 +62,22 @@
                 <span asp-validation-for="ProductsByTagAutomaticallyCalculatePriceRange"></span>
             </div>
         </div>
-        <div id="pnlProductsByTagPriceRange" class="advanced-setting">
-            <div class="form-group row">
-                <div class="col-md-3">
-                    <nop-label asp-for="ProductsByTagPriceFrom" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="ProductsByTagPriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                    <span asp-validation-for="ProductsByTagPriceFrom"></span>
-                </div>
+        <div class="form-group row" id="pnlProductsByTagPriceRangeFrom">
+            <div class="col-md-3">
+                <nop-label asp-for="ProductsByTagPriceFrom" />
             </div>
-            <div class="form-group row">
-                <div class="col-md-3">
-                    <nop-label asp-for="ProductsByTagPriceTo" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="ProductsByTagPriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                    <span asp-validation-for="ProductsByTagPriceTo"></span>
-                </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagPriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                <span asp-validation-for="ProductsByTagPriceFrom"></span>
+            </div>
+        </div>
+        <div class="form-group row" id="pnlProductsByTagPriceRangeTo">
+            <div class="col-md-3">
+                <nop-label asp-for="ProductsByTagPriceTo" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductsByTagPriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                <span asp-validation-for="ProductsByTagPriceTo"></span>
             </div>
         </div>
     </nop-nested-setting>
@@ -168,20 +166,26 @@
 
     function toggleProductsByTagPriceRange() {
         if ($('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').is(':checked')) {
-            $('#pnlProductsByTagPriceRange').hide();
+            $('#pnlProductsByTagPriceRangeFrom').hide();
+            $('#pnlProductsByTagPriceRangeTo').hide();
+            $('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').addClass('parent-setting-ticked');
         } else {
-            $('#pnlProductsByTagPriceRange').show();
+            $('#pnlProductsByTagPriceRangeFrom').showField();
+            $('#pnlProductsByTagPriceRangeTo').showField();
+            $('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').removeClass('parent-setting-ticked');
         }
     }
 
     function toggleProductsByTagAutomaticallyCalculatePriceRange() {
         if ($('#@Html.IdFor(model => model.ProductsByTagPriceRangeFiltering)').is(':checked')) {
             if (!$('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').is(':checked')) {
-                $('#pnlProductsByTagPriceRange').show();
+                $('#pnlProductsByTagPriceRangeFrom').showField();
+                $('#pnlProductsByTagPriceRangeTo').showField();
             }
-            $('#pnlProductsByTagAutomaticallyCalculatePriceRange').show();
+            $('#pnlProductsByTagAutomaticallyCalculatePriceRange').showField();
         } else {
-            $('#pnlProductsByTagPriceRange').hide();
+            $('#pnlProductsByTagPriceRangeFrom').hide();
+            $('#pnlProductsByTagPriceRangeTo').hide();
             $('#pnlProductsByTagAutomaticallyCalculatePriceRange').hide();
         }
     }

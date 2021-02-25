@@ -1995,14 +1995,14 @@ span.grid-report-item.red {
   border-right: 1px solid #c1c1c1;
 }
 
-.parent-setting.opened div + div:before {
-  position: absolute;
-  height: 100%;
-  content: "";
-  margin-right: -10px;
-  top: 15px;
-  z-index: 10;
-}
+  .parent-setting.opened div + div:before {
+    position: absolute;
+    height: 105%;
+    content: "";
+    margin-right: -10px;
+    top: 15px;
+    z-index: 10;
+  }
 
 .parent-setting.opened div + div input[type=checkbox] {
   margin-right: -15px;
@@ -2045,13 +2045,17 @@ span.grid-report-item.red {
   margin-right: -10px;
 }
 
-.parent-setting.opened + .nested-setting .form-group.parent-setting div[class^="col-md-"] + div[class^="col-md-"]:before {
-  position: absolute;
-  height: 36px;
-  content: "";
-  margin-right: -10px;
-  margin-top: -18px;
-}
+  .parent-setting.opened + .nested-setting .form-group.parent-setting-reversed.parent-setting-ticked div[class^="col-md-"] + div[class^="col-md-"]:before {
+    display: none;
+  }
+
+  .parent-setting.opened + .nested-setting .form-group.parent-setting div[class^="col-md-"] + div[class^="col-md-"]:before {
+    position: absolute;
+    height: 36px;
+    content: "";
+    margin-right: -10px;
+    margin-top: -18px;
+  }
 
 .basic-settings-mode .parent-setting.parent-setting-advanced.opened div[class^="col-md-"] + div[class^="col-md-"]:before {
   height: 110%;
