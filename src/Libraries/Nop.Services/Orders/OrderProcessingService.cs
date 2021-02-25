@@ -1663,7 +1663,10 @@ namespace Nop.Services.Orders
                 await _addressService.InsertAddressAsync(pickupAddress);
 
                 updatedOrder.PickupAddressId = pickupAddress.Id;
-                updatedOrder.ShippingMethod = string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name);
+                var shippingMethod = !string.IsNullOrEmpty(updateOrderParameters.PickupPoint.Name) ?
+                    string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name) :
+                    await _localizationService.GetResourceAsync("Checkout.PickupPoints.NullName");
+                updatedOrder.ShippingMethod = shippingMethod;
                 updatedOrder.ShippingRateComputationMethodSystemName = updateOrderParameters.PickupPoint.ProviderSystemName;
             }
 
