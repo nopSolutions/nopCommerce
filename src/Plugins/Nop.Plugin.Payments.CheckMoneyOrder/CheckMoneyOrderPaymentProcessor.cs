@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
+using System.Linq;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder
 {
@@ -24,6 +26,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWebHelper _webHelper;
+        private readonly IOrderService _orderService;
+        private readonly IDateTimeHelper _dateTime;
 
         #endregion
 
@@ -34,7 +38,9 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             IPaymentService paymentService,
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IOrderService orderService,
+            IDateTimeHelper dateTime)
         {
             _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
             _localizationService = localizationService;
@@ -42,6 +48,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService = settingService;
             _shoppingCartService = shoppingCartService;
             _webHelper = webHelper;
+            _orderService = orderService;
+            _dateTime = dateTime;
         }
 
         #endregion
@@ -55,8 +63,29 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
+            var result = new ProcessPaymentResult();
 
-            return new ProcessPaymentResult();
+            var storeDateTime = _dateTime.ConvertToUserTime(DateTime.Now);
+            var todayStart = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 0, 0, 1);
+            var todayEnd = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 23, 59, 59);
+
+            var customerTodayOrders = 
+                _orderService.SearchOrders(processPaymentRequest.StoreId, 
+                customerId: processPaymentRequest.CustomerId,
+                createdFromUtc: _dateTime.ConvertToUtcTime(todayStart),
+                createdToUtc: _dateTime.ConvertToUtcTime(todayEnd));
+            var customersOrdersTotal = customerTodayOrders.Sum(x => x.OrderTotal);
+
+            if(processPaymentRequest.OrderTotal > 4000)
+            {
+                result.AddError($"Your current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
+            }
+            else if (customersOrdersTotal + processPaymentRequest.OrderTotal > 4000)
+            {
+                result.AddError($"Your today's existing orders ({customersOrdersTotal} AMD) + current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
+            }
+
+            return result;
         }
 
         /// <summary>
