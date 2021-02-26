@@ -83,7 +83,7 @@ namespace Nop.Data.DataProviders
 
             using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
-                var query = $"CREATE DATABASE IF NOT EXISTS {databaseName};";
+                var query = $"CREATE DATABASE IF NOT EXISTS {databaseName}";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
