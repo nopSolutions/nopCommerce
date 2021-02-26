@@ -4808,7 +4808,7 @@ label, label + * {
 }
 
 .payment-method .payment-details {
-  min-width: 180px;
+  width: 200px;
   display: inline-block;
   margin: 0 0 0 10px;
   text-align: left;
