@@ -2361,6 +2361,7 @@ span.grid-report-item.red {
   margin-top: 1px;
   margin-bottom: 1px;
   padding: 5px 12px;
+  white-space: nowrap;
 }
 
 div.dataTables_wrapper div.dataTables_length {
