@@ -83,7 +83,7 @@ namespace Nop.Data.DataProviders
 
             using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
-                var query = $"CREATE DATABASE IF NOT EXISTS {databaseName};";
+                var query = $"CREATE DATABASE IF NOT EXISTS {databaseName}";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
@@ -313,7 +313,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => MySqlTools.GetDataProvider();
+        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider(ProviderName.MySql);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
