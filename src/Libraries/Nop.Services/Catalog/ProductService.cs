@@ -904,15 +904,26 @@ namespace Nop.Services.Catalog
 
             if (filteredSpecOptions?.Count > 0)
             {
-                var optionIds = filteredSpecOptions.Select(sao => sao.Id);
-                var specAttributeCount = filteredSpecOptions.Select(sao => sao.SpecificationAttributeId).Distinct().Count();
+                var specificationAttributeIds = filteredSpecOptions
+                    .Select(sao => sao.SpecificationAttributeId)
+                    .Distinct();
 
-                productsQuery =
-                    from p in productsQuery
-                    join psm in _productSpecificationAttributeRepository.Table.Where(psa => psa.AllowFiltering && optionIds.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
-                    group p by p into groupedProduct
-                    where groupedProduct.Count() == specAttributeCount
-                    select groupedProduct.Key;
+                foreach (var specificationAttributeId in specificationAttributeIds)
+                {
+                    var optionIdsBySpecificationAttribute = filteredSpecOptions
+                        .Where(o => o.SpecificationAttributeId == specificationAttributeId)
+                        .Select(o => o.Id);
+
+                    var productSpecificationQuery =
+                        from psa in _productSpecificationAttributeRepository.Table
+                        where psa.AllowFiltering && optionIdsBySpecificationAttribute.Contains(psa.SpecificationAttributeOptionId)
+                        select psa;
+
+                    productsQuery =
+                        from p in productsQuery
+                        where productSpecificationQuery.Any(pc => pc.ProductId == p.Id)
+                        select p;
+                }
             }
             
             return await productsQuery.OrderBy(orderBy).ToPagedListAsync(pageIndex, pageSize);
