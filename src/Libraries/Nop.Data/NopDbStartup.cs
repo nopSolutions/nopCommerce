@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
@@ -7,6 +7,7 @@ using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 
@@ -63,7 +64,6 @@ namespace Nop.Data
                             {
                                 throw new NopException($"Not supported data provider name: '{dataSettings.DataProvider}'");
                             }
-
                             break;
                     }
 
