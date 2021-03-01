@@ -12,6 +12,10 @@ namespace Nop.Plugin.Widgets.AccessiBe.Models
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
+        [NopResourceDisplayName("Plugins.Widgets.AccessiBe.Fields.Enabled")]
+        public bool Enabled { get; set; }
+        public bool Enabled_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Plugins.Widgets.AccessiBe.Fields.Script")]
         public string Script { get; set; }
         public bool Script_OverrideForStore { get; set; }

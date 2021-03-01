@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Cms;
 using Nop.Plugin.Widgets.AccessiBe.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -60,14 +61,19 @@ namespace Nop.Plugin.Widgets.AccessiBe.Controllers
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var settings = await _settingService.LoadSettingAsync<AccessiBeSettings>(storeId);
+            var widgetSettings = await _settingService.LoadSettingAsync<WidgetSettings>(storeId);
+
             var model = new ConfigurationModel
             {
                 Script = settings.Script,
+                Enabled = widgetSettings.ActiveWidgetSystemNames.Contains(AccessiBeDefaults.SystemName),
                 ActiveStoreScopeConfiguration = storeId
             };
+
             if (storeId > 0)
             {
                 model.Script_OverrideForStore = await _settingService.SettingExistsAsync(settings, setting => setting.Script, storeId);
+                model.Enabled_OverrideForStore = await _settingService.SettingExistsAsync(widgetSettings, setting => setting.ActiveWidgetSystemNames, storeId);
             }
 
             //prepare store URL
@@ -89,8 +95,17 @@ namespace Nop.Plugin.Widgets.AccessiBe.Controllers
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var settings = await _settingService.LoadSettingAsync<AccessiBeSettings>(storeId);
+            var widgetSettings = await _settingService.LoadSettingAsync<WidgetSettings>(storeId);
+
             settings.Script = model.Script;
             await _settingService.SaveSettingOverridablePerStoreAsync(settings, setting => setting.Script, model.Script_OverrideForStore, storeId, false);
+
+            if (model.Enabled && !widgetSettings.ActiveWidgetSystemNames.Contains(AccessiBeDefaults.SystemName))
+                widgetSettings.ActiveWidgetSystemNames.Add(AccessiBeDefaults.SystemName);
+            if (!model.Enabled && widgetSettings.ActiveWidgetSystemNames.Contains(AccessiBeDefaults.SystemName))
+                widgetSettings.ActiveWidgetSystemNames.Remove(AccessiBeDefaults.SystemName);
+            await _settingService.SaveSettingOverridablePerStoreAsync(widgetSettings, setting => setting.ActiveWidgetSystemNames, model.Enabled_OverrideForStore, storeId, false);
+
             await _settingService.ClearCacheAsync();
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
