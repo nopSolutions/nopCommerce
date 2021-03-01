@@ -156,7 +156,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Filtering.PriceRangeFilter.Remove",
                 "Filtering.SpecificationFilter.CurrentlyFilteredBy",
                 "Filtering.SpecificationFilter.Remove",
-                "Filtering.SpecificationFilter.Separator",
+                "Filtering.SpecificationFilter.Separator"
             }).Wait();
 
             localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
@@ -690,6 +690,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //#5400
                 ["Admin.ContentManagement.Forums.Forum.Fields.Name.Required"] = "Forum name is required.",
+
+                //#5475
+                ["Admin.Orders.Fields.ShippingMethod.Hint"] = "The customers chosen shipping method for this order. You can manage shipping methods from Configuration > Shipping > Shipping providers."
             }).Wait();
 
             // rename locales
