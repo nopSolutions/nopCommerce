@@ -25,6 +25,8 @@ namespace Nop.Services.Media
     {
         #region Fields
 
+        private static BlobContainerClient _blobContainerClient;
+        private static BlobServiceClient _blobServiceClient;
         private static bool _azureBlobStorageAppendContainerName;
         private static bool _isInitialized;
         private static string _azureBlobStorageConnectionString;
@@ -34,10 +36,7 @@ namespace Nop.Services.Media
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly MediaSettings _mediaSettings;
 
-        private readonly object _locker = new object();
-
-        private BlobContainerClient _blobContainerClient;
-        private BlobServiceClient _blobServiceClient;
+        private readonly object _locker = new();
 
         #endregion
 
