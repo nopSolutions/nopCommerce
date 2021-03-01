@@ -313,20 +313,29 @@
             <nop-antiforgery-token />
             @RenderBody()
         </div>
-        <div class="main-footer clearfix">
-            @if (!storeInformationSettings.HidePoweredByNopCommerce)
-            {
-                @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                    Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
-                <div class="float-left">
-                    Powered by <a href="@(OfficialSite.Main + Utm.OnAdminFooter)" target="_blank">nopCommerce</a>
-                </div>
-            }
-            <div class="float-right hidden-xs">
-                <b>nopCommerce version @NopVersion.FULL_VERSION</b>
-            </div>
-            <div class="text-center">
-                @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", currentCulture))
+        <div class="main-footer">
+            <div class="container-fluid">
+                <div class="col-md-12">
+                        <div class="row">
+                            @if (!storeInformationSettings.HidePoweredByNopCommerce)
+                            {
+                                <div class="col-md-4 col-xs-12 text-md-left text-center">
+                                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                        Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
+                                    Powered by <a href="@(OfficialSite.Main + Utm.OnAdminFooter)" target="_blank">nopCommerce</a>
+                                </div>
+                            }else
+                            {
+                                <div class="col-md-4 col-xs-12"></div>
+                            }
+                            <div class="col-md-4 col-xs-12 text-center">
+                                @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", currentCulture))
+                            </div>
+                            <div class="col-md-4 col-xs-12 text-md-right text-center">
+                                <b>nopCommerce version @NopVersion.FULL_VERSION</b>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
