@@ -685,6 +685,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Products.ProductAttributes.NotAvailable"] = "Not available",
                 ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.Disable"] = "Disable",
                 ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.AlwaysDisplay"] = "Always display",
+
+                ["Checkout.PickupPoints.NullName"] = "Pickup",
             }).Wait();
 
             // rename locales

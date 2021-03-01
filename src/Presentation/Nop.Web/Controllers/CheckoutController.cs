@@ -173,9 +173,12 @@ namespace Nop.Web.Controllers
         /// <param name="pickupPoint">The pickup option</param>
         protected virtual async Task SavePickupOptionAsync(PickupPoint pickupPoint)
         {
+            var name = !string.IsNullOrEmpty(pickupPoint.Name) ?
+                string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), pickupPoint.Name) :
+                await _localizationService.GetResourceAsync("Checkout.PickupPoints.NullName");
             var pickUpInStoreShippingOption = new ShippingOption
             {
-                Name = string.Format(await _localizationService.GetResourceAsync("Checkout.PickupPoints.Name"), pickupPoint.Name),
+                Name = name,
                 Rate = pickupPoint.PickupFee,
                 Description = pickupPoint.Description,
                 ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName,
