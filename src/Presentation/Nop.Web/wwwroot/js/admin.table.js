@@ -24,7 +24,7 @@ var selectedIds = [];
 
 function clearMasterCheckbox(tableSelector) {
   var selector = '.mastercheckbox';
-  $(selector, tableSelector).prop('checked', false).change();
+  $(tableSelector).closest('.dataTables_scroll').find(selector).prop('checked', false).change();
   selectedIds = [];
 }
 
@@ -37,21 +37,23 @@ function updateMasterCheckbox(tableSelector) {
   $('.mastercheckbox', $(tableSelector)).prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
 }
 
-function updateTableSrc(tableSelector, isMasterCheckBoxUsed) {
+function updateTableSrc(tableSelector) {
   var dataSrc = $(tableSelector).DataTable().data();
   $(tableSelector).DataTable().clear().rows.add(dataSrc).draw();
   $(tableSelector).DataTable().columns.adjust();
-  
+  var selector = '.mastercheckbox';
+  var isMasterCheckBoxUsed = $(tableSelector).closest('.dataTables_scroll').find(selector).length > 0;
   if (isMasterCheckBoxUsed) {
     clearMasterCheckbox(tableSelector);
   }
 }
 
 
-function updateTable(tableSelector, isMasterCheckBoxUsed) {
+function updateTable(tableSelector) {
   $(tableSelector).DataTable().ajax.reload();
   $(tableSelector).DataTable().columns.adjust();
-
+  var selector = '.mastercheckbox';
+  var isMasterCheckBoxUsed = $(tableSelector).closest('.dataTables_scroll').find(selector).length > 0;
   if (isMasterCheckBoxUsed) {
     clearMasterCheckbox(tableSelector);
   }
