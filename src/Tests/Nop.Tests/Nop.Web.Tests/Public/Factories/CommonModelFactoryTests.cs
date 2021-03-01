@@ -140,6 +140,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.WishlistEnabled.Should().BeTrue();
             model.ShoppingCartEnabled.Should().BeTrue();
             model.SitemapEnabled.Should().BeTrue();
+            model.SearchEnabled.Should().BeTrue();
             model.WorkingLanguageId.Should().Be(1);
             model.BlogEnabled.Should().BeTrue();
             model.CompareProductsEnabled.Should().Be(_catalogSettings.CompareProductsEnabled);
