@@ -10,13 +10,13 @@
     <Value>Password amministratore</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Inserisci la password dell'amministratore</Value>
+    <Value>Inserire la password dell'amministratore</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>All'account '{0}' non sono concessi i permessi di Modifica per la cartella '{1}'. Si prega di configurare correttamente i permessi.</Value>
+    <Value>All'account '{0}' non è concessa l'autorizzazione Modifica alla cartella '{1}'. Si prega di configurare queste autorizzazioni.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>All'account '{0}' non sono concessi i permessi di Modifica per il file '{1}'. Si prega di configurare correttamente i permessi.</Value>
+    <Value>All'account '{0}' non è concessa l'autorizzazione Modifica al file '{1}'. Si prega di configurare queste autorizzazioni.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>Conferma la password</Value>
@@ -34,10 +34,10 @@
     <Value>Formato stringa di connessione SQL sbagliato</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Nazione</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Seleziona la tua nazione</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Crea il database se non esiste</Value>
@@ -64,7 +64,7 @@
     <Value>Il database non esiste o non si dispone delle autorizzazioni per connettersi ad esso</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Seleziona il provider database</Value>
+    <Value>Seleziona il fornitore di dati</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
     <Value>Se avete bisogno di informazioni su come utilizzare nopCommerce, visitare</Value>
@@ -118,7 +118,7 @@
     <Value>Password SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>La password SQL è obbligatoria</Value>
+    <Value>La password SQLè obbligatoria</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>

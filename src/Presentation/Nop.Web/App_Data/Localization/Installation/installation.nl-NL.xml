@@ -34,10 +34,10 @@
     <Value>Verkeerd SQL connectie string formaat</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Land</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Selecteer uw land...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Maak de database aan als deze niet bestaat</Value>
