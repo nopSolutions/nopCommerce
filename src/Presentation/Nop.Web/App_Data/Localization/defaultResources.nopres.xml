@@ -12724,7 +12724,7 @@
     <Value>Shipping method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingMethod.Hint">
-    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping Methods.</Value>
+    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping providers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingStatus">
     <Value>Shipping status</Value>
