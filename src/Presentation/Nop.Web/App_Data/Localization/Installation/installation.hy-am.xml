@@ -13,10 +13,10 @@
     <Value>Մուտքագրեք ադմինիստրատորի գաղտնաբառը</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Համակարգի '{0}' օգտագործողը չունի '{1}' թղթապանակում գրելու համար անհրաժեշտ իրավասություն: Խնդրում ենք կարգավորել այդ իրավասությունները:</Value>
+    <Value>Համակարգի '{0}' օգտագործողը չունի '{1}' թղթապանակում գրելու համար անհրաժեշտ թույլտվություններ: Խնդրում ենք կարգավորել այդ թույլտվությունները:</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Համակարգի '{0}' օգտագործողը չունի '{1}' ֆայլում գրելու համար անհրաժեշտ իրավասություն: Խնդրում ենք կարգավորել այդ իրավասությունները:</Value>
+    <Value>Համակարգի '{0}' օգտագործողը չունի '{1}' ֆայլում գրելու համար անհրաժեշտ թույլտվություններ: Խնդրում ենք կարգավորել այդ թույլտվությունները:</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>Գաղտնաբառի հաստատում</Value>
@@ -28,10 +28,10 @@
     <Value>Տվյալների բազայի կարգավորումներ</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>Անհրաժեշտ է մուտքագրել տվյալների բազայի հետ կապի կարգավորումները</Value>
+    <Value>Մուտքագրեք տվյալների բազայի հետ կապի կարգավորումների տողը</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Տվյալների բազայի կարգավորումների ձևաչափի սխալ</Value>
+    <Value>Տվյալների բազայի կարգավորումների տողը սխալ է</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
     <Value>Country</Value>
@@ -58,13 +58,13 @@
     <Value>Ինֆորմացիա տվյալների բազայի մասին</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>Տվյալների բազայի անվանումը</Value>
+    <Value>Բազայի անվանում</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Տվյալների բազան գոյություն չունի, կամ դուք իրավասություն չունեք կապ հաստատել այդ բազայի հետ</Value>
+    <Value>Նշված տվյալների բազան գոյություն չունի, կամ հնարավոր չէ կապ հաստատել այդ բազայի հետ</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Ընտրեք տվյալների մատակարարը</Value>
+    <Value>Մուտքագրեք տվյալների բազայի պրովայդերը</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
     <Value>Եթե ցանկանում եք իմանալ ինչպես կարգավորել և օգտագործել nopCommerce համակարգը, ապա խնդրում ենք այցելել</Value>
@@ -82,7 +82,7 @@
     <Value>nopCommerce տեղադրում...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Օգտագործել Windows վավերացումը</Value>
+    <Value>Windows համակարգի ստուգում</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
@@ -94,13 +94,13 @@
     <Value>PostgreSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
-    <Value>Մուտքագրել տվյալների բազայի հետ կապի տողը (ընդլայնված)</Value>
+    <Value>Մուտքագրել տվյալների բազայի հետ կապի raw տողը</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Վերագործարկել տեղադրումը</Value>
+    <Value>Վերսկսել տեղադրման գործընթացը</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Սեղմեք, եթե ցանկանում եք վերագործարկել տեղադրումը (մաքրում է բոլոր քեշավորված տվյալները)</Value>
+    <Value>Սեղմեք, եթե ցանկանում եք վերսկսել տեղադրման գործընթացը (մաքրում է բոլոր քեշավորված տվյալները)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
     <Value>Restarting...</Value>
@@ -118,7 +118,7 @@
     <Value>SQL Server գաղտնաբառ</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>Անհրաժեշտ է մուտքագրել SQL Server գաղտնաբառը</Value>
+    <Value>Մուտքագրեք SQL Server գաղտնաբառը</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
@@ -127,7 +127,7 @@
     <Value>SQL Server գաղտնանուն</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>Անհրաժեշտ է մուտքագրել SQL Server գաղտնանունը</Value>
+    <Value>Մուտքագրեք SQL Server գաղտնանունը</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Ինֆորմացիա խանութի մասին</Value>
@@ -136,6 +136,6 @@
     <Value>nopCommerce տեղադրում</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>nopCommerce համակարգը հաջողությամբ տեղադրելու համար Դուք պետք է իմանաք տվյալների բազային միանալու կարգավորումների տողը: Եթե դուք չունեք այդ ինֆորմացիան, ապա կարող եք հարցնել ձեր հոսթինգ պրովայդերից: Եթե տեղադրում եք լոկալ համակարգչի վրա, ապա կարող եք իմանալ ձեր ադմինիստրատորից:</Value>
+    <Value>nopCommerce համակարգը հաջողությամբ տեղադրելու համար Դուք պետք է իմանաք տվյալների բազային միանալու կարգավորումների տողը: Եթե Դուք չունեք այդ ինֆորմացիան, ապա կարող եք հարցնել Ձեր հոսթինգ պրովայդերից: Եթե տեղադրում եք լոկալ համակարգչի վրա, ապա կարող եք իմանալ Ձեր ադմինիստրատորից:</Value>
   </LocaleResource>
 </Language>

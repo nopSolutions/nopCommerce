@@ -438,6 +438,7 @@ namespace Nop.Web.Factories
                 WishlistEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist),
                 ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _sitemapSettings.SitemapEnabled,
+                SearchEnabled = _catalogSettings.ProductSearchEnabled,
                 WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
                 BlogEnabled = _blogSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,

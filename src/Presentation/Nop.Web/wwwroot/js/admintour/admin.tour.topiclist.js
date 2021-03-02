@@ -15,52 +15,65 @@
       buttons: [AdminTourNextButton]
     });
 
-    //'Topics (pages)' step
-    tour.addStep({
-      title: AdminTourDataProvider.localized_data.TopicListTopics2Title,
-      text: AdminTourDataProvider.localized_data.TopicListTopics2Text,
-      attachTo: {
-        element: '#topics-area',
-        on: 'bottom'
-      },
-      buttons: [AdminTourBackButton, AdminTourNextButton]
-    });
+    var topicRowId = 'row_shippinginfo';
 
-    var shippingTopicRowId = 'row_shippinginfo';
+    if ($('#' + topicRowId).length) {
+      //'Topics (pages)' step
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.TopicListTopics2Title,
+        text: AdminTourDataProvider.localized_data.TopicListTopics2Text,
+        attachTo: {
+          element: '#topics-area',
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, AdminTourNextButton]
+      });
 
-    //'Shipping info' step
-    tour.addStep({
-      title: AdminTourDataProvider.localized_data.TopicListShippingTitle,
-      text: AdminTourDataProvider.localized_data.TopicListShippingText,
-      attachTo: {
-        element: '#' + shippingTopicRowId,
-        on: 'bottom'
-      },
-      buttons: [AdminTourBackButton, AdminTourNextButton]
-    });
+      //'Topic row' step
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.TopicListShippingTitle,
+        text: AdminTourDataProvider.localized_data.TopicListShippingText,
+        attachTo: {
+          element: '#' + topicRowId,
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, AdminTourNextButton]
+      });
 
-    //'Link location' step
-    tour.addStep({
-      title: AdminTourDataProvider.localized_data.TopicListLocationTitle,
-      text: AdminTourDataProvider.localized_data.TopicListLocationText,
-      attachTo: {
-        element: '#' + shippingTopicRowId + ' .column-footer-column1',
-        on: 'bottom'
-      },
-      buttons: [AdminTourBackButton, AdminTourNextButton]
-    });
+      //'Link location' step
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.TopicListLocationTitle,
+        text: AdminTourDataProvider.localized_data.TopicListLocationText,
+        attachTo: {
+          element: '#' + topicRowId + ' .column-footer-column1',
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, AdminTourNextButton]
+      });
 
-    //'Edit the page' step
-    tour.addStep({
-      canClickTarget: true,
-      title: AdminTourDataProvider.localized_data.TopicListEditTitle,
-      text: AdminTourDataProvider.localized_data.TopicListEditText,
-      attachTo: {
-        element: '#' + shippingTopicRowId + ' .column-edit .btn',
-        on: 'bottom'
-      },
-      buttons: [AdminTourBackButton, AdminTourNextPageButton]
-    });
+      //'Edit the page' step
+      tour.addStep({
+        canClickTarget: true,
+        title: AdminTourDataProvider.localized_data.TopicListEditTitle,
+        text: AdminTourDataProvider.localized_data.TopicListEditText,
+        attachTo: {
+          element: '#' + topicRowId + ' .column-edit .btn',
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, AdminTourNextPageButton]
+      });
+    } else {
+      //'Topics (pages)' step
+      tour.addStep({
+        title: AdminTourDataProvider.localized_data.TopicListTopics2Title,
+        text: AdminTourDataProvider.localized_data.TopicListTopics2Text,
+        attachTo: {
+          element: '#topics-area',
+          on: 'bottom'
+        },
+        buttons: [AdminTourBackButton, AdminTourDoneButton]
+      });
+    }
 
     tour.start();
   });

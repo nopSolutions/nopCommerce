@@ -34,10 +34,10 @@
     <Value>รูปแบบค่า SQL connection string ไม่ถูกต้อง</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>ประเทศ *</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>เลือกประเทศของคุณ ...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>หากยังไม่มีฐานข้อมูลเก่า ให้สร้างขึ้นด้วย</Value>

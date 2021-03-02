@@ -1,5 +1,9 @@
 ﻿@model PriceRangeFilterModel
 
+@{
+    Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js");
+}
+
 <div class="product-filter price-range-filter">
     <div class="filter-title">
         <strong>@T("Filtering.PriceRangeFilter")</strong>

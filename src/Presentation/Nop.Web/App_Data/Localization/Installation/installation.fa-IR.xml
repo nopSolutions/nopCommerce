@@ -34,10 +34,10 @@
     <Value>فرمت اطلاعات اتصال به پایگاه داده صحیح نمی باشد</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>کشور</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>کشور خود را انتخاب کنید...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>در صورت وجود نداشتن پایگاه داده آن را ایجاد کن</Value>

@@ -34,10 +34,10 @@
     <Value>SQL কানেকশন স্ট্রিং-এর ফরম্যাটটি ভুল</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>দেশ</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>আপনার দেশ নির্বাচন করুন...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>ডাটাবেস না থাকলে তৈরি করুন</Value>
@@ -91,7 +91,7 @@
     <Value>পাসওয়ার্ড মিলছে না</Value>
   </LocaleResource>
   <LocaleResource Name="PostgreSQL">
-    <Value>PostgreSQL</Value>
+    <Value>পোস্টগ্রেSQL</Value>
   </LocaleResource>
   <LocaleResource Name="RawConnectionString">
     <Value>Raw কানেকশন স্ট্রিং লিখুন (এক্সপার্ট ব্যবহারকারীর জন্য)</Value>
