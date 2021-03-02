@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Localization;
@@ -18,7 +17,6 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -30,7 +28,7 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public MessageTemplateService(CatalogSettings catalogSettings,
+        public MessageTemplateService(
             IStaticCacheManager staticCacheManager,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -38,7 +36,6 @@ namespace Nop.Services.Messages
             IRepository<MessageTemplate> messageTemplateRepository,
             IStoreMappingService storeMappingService)
         {
-            _catalogSettings = catalogSettings;
             _staticCacheManager = staticCacheManager;
             _languageService = languageService;
             _localizationService = localizationService;

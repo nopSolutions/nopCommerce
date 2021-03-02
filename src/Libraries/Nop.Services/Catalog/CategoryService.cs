@@ -23,7 +23,6 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
@@ -40,7 +39,7 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public CategoryService(CatalogSettings catalogSettings,
+        public CategoryService(
             IAclService aclService,
             ICustomerService customerService,
             ILocalizationService localizationService,
@@ -53,7 +52,6 @@ namespace Nop.Services.Catalog
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _aclService = aclService;
             _customerService = customerService;
             _localizationService = localizationService;

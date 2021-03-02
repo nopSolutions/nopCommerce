@@ -32,7 +32,6 @@ namespace Nop.Services.Catalog
         private readonly IProductService _productService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -48,8 +47,7 @@ namespace Nop.Services.Catalog
             IProductAttributeParser productAttributeParser,
             IProductService productService,
             IStaticCacheManager staticCacheManager,
-            IStoreContext storeContext,
-            IWorkContext workContext)
+            IStoreContext storeContext)
         {
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
@@ -62,7 +60,6 @@ namespace Nop.Services.Catalog
             _productService = productService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
-            _workContext = workContext;
         }
 
         #endregion

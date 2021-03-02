@@ -20,7 +20,6 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly IRepository<Product> _productRepository;
@@ -35,7 +34,7 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public ProductTagService(CatalogSettings catalogSettings,
+        public ProductTagService(
             IAclService aclService,
             ICustomerService customerService,
             IRepository<Product> productRepository,
@@ -46,7 +45,6 @@ namespace Nop.Services.Catalog
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _aclService = aclService;
             _customerService = customerService;
             _productRepository = productRepository;

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Services.Stores;
 
@@ -18,7 +17,6 @@ namespace Nop.Services.Blogs
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -28,13 +26,12 @@ namespace Nop.Services.Blogs
 
         #region Ctor
 
-        public BlogService(CatalogSettings catalogSettings,
+        public BlogService(
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogPost> blogPostRepository,
             IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService)
         {
-            _catalogSettings = catalogSettings;
             _blogCommentRepository = blogCommentRepository;
             _blogPostRepository = blogPostRepository;
             _staticCacheManager = staticCacheManager;

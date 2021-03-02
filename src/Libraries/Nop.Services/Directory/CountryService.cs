@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
@@ -19,7 +18,6 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
@@ -30,14 +28,13 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
-        public CountryService(CatalogSettings catalogSettings,
+        public CountryService(
             IStaticCacheManager staticCacheManager,
             ILocalizationService localizationService,
             IRepository<Country> countryRepository,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService)
         {
-            _catalogSettings = catalogSettings;
             _staticCacheManager = staticCacheManager;
             _localizationService = localizationService;
             _countryRepository = countryRepository;

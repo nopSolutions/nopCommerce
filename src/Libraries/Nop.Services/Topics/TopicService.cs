@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -20,7 +19,6 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly IRepository<Topic> _topicRepository;
@@ -32,7 +30,7 @@ namespace Nop.Services.Topics
 
         #region Ctor
 
-        public TopicService(CatalogSettings catalogSettings,
+        public TopicService(
             IAclService aclService,
             ICustomerService customerService,
             IRepository<Topic> topicRepository,
@@ -40,7 +38,6 @@ namespace Nop.Services.Topics
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _aclService = aclService;
             _customerService = customerService;
             _topicRepository = topicRepository;

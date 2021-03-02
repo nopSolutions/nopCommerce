@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Data;
 using Nop.Services.Stores;
@@ -18,7 +17,6 @@ namespace Nop.Services.News
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -28,13 +26,12 @@ namespace Nop.Services.News
 
         #region Ctor
 
-        public NewsService(CatalogSettings catalogSettings,
+        public NewsService(
             IRepository<NewsComment> newsCommentRepository,
             IRepository<NewsItem> newsItemRepository,
             IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService)
         {
-            _catalogSettings = catalogSettings;
             _newsCommentRepository = newsCommentRepository;
             _newsItemRepository = newsItemRepository;
             _staticCacheManager = staticCacheManager;

@@ -25,7 +25,6 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -45,7 +44,7 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public OrderReportService(CatalogSettings catalogSettings,
+        public OrderReportService(
             CurrencySettings currencySettings,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
@@ -61,7 +60,6 @@ namespace Nop.Services.Orders
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;

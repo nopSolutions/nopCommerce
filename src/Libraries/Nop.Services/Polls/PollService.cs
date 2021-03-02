@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Polls;
 using Nop.Data;
 using Nop.Services.Stores;
@@ -16,7 +15,6 @@ namespace Nop.Services.Polls
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<PollAnswer> _pollAnswerRepository;
         private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
@@ -26,13 +24,12 @@ namespace Nop.Services.Polls
 
         #region Ctor
 
-        public PollService(CatalogSettings catalogSettings,
+        public PollService(
             IRepository<Poll> pollRepository,
             IRepository<PollAnswer> pollAnswerRepository,
             IRepository<PollVotingRecord> pollVotingRecordRepository,
             IStoreMappingService storeMappingService)
         {
-            _catalogSettings = catalogSettings;
             _pollRepository = pollRepository;
             _pollAnswerRepository = pollAnswerRepository;
             _pollVotingRecordRepository = pollVotingRecordRepository;
