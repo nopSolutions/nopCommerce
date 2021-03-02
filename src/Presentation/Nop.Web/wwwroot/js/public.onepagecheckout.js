@@ -123,7 +123,6 @@ var Billing = {
     $('#save-address-button').hide();
 
     if (isNew) {
-      this.resetSelectedAddress();
       $('#billing-new-address-form').show();
       $('#edit-address-button').hide();
       $('#delete-address-button').hide();
@@ -289,6 +288,7 @@ var Billing = {
       .not(':checkbox, :radio, select')
       .val('');
 
+    $('.address-id', '#billing-new-address-form').val('0');
     $('select option[value="0"]', '#billing-new-address-form').prop('selected', true);
   }
 };
