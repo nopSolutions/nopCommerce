@@ -1315,6 +1315,10 @@ input[type="text"].k-input {
   max-height: 45px;
 }
 
+.layout-fixed .brand-link {
+  width: auto;
+}
+
 .nav-sidebar .nav-link p {
   white-space: normal;
   display: inline-flex;
