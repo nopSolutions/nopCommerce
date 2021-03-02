@@ -548,7 +548,7 @@ label, label + * {
   height: 11px;
   border: 0;
   background: #ffffffab url(../images/remove.png) center no-repeat;
-} 
+}
 
 .cart td.unit-price,
 .data-table td.unit-price {
@@ -2613,6 +2613,7 @@ label, label + * {
 .attributes .option-list:not(.attribute-squares) .disabled {
   opacity: .5;
 }
+
 .attributes .attribute-squares .disabled .attribute-square {
   cursor: default;
   opacity: .25;
@@ -2623,16 +2624,18 @@ label, label + * {
 }
 
 .attributes .attribute-squares .tooltip-container .not-available-text {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .attributes .attribute-squares.color-squares .tooltip-container .not-available-text {
   margin: 5px;
 }
+
 .attributes .attribute-squares.color-squares .tooltip-container {
   width: 120px;
   display: none;
 }
+
 .attributes .attribute-squares.color-squares li:hover .tooltip-container {
   margin-left: -42px;
 }
@@ -2645,6 +2648,7 @@ label, label + * {
   margin-bottom: 5px;
   display: none;
 }
+
 .attributes .attribute-squares.image-squares .disabled .tooltip-container .not-available-text {
   display: block;
 }
@@ -4815,7 +4819,7 @@ label, label + * {
 }
 
 .payment-method .payment-details {
-  min-width: 180px;
+  width: 200px;
   display: inline-block;
   margin: 0 0 0 10px;
   text-align: left;
@@ -5266,8 +5270,7 @@ label, label + * {
   margin: 30px 0 0;
 }
 
-.search-results .warning,
-.search-results .no-result {
+.search-results .warning {
   margin: 10px 0;
   color: #e4434b;
 }

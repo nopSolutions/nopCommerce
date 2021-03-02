@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Data;

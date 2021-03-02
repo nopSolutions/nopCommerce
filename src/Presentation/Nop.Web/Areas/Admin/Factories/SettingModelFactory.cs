@@ -34,7 +34,6 @@ using Nop.Services.Media;
 using Nop.Services.Stores;
 using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Factories;
@@ -51,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly AppSettings _appSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressService _addressService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -78,6 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public SettingModelFactory(AppSettings appSettings,
             CurrencySettings currencySettings,
+            IAddressModelFactory addressModelFactory,
             IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -101,6 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             _appSettings = appSettings;
             _currencySettings = currencySettings;
+            _addressModelFactory = addressModelFactory;
             _addressAttributeModelFactory = addressAttributeModelFactory;
             _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -126,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare store theme models
         /// </summary>
@@ -186,22 +188,6 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.SetGridPageSize();
 
             return Task.FromResult(searchModel);
-        }
-
-        /// <summary>
-        /// Prepare required address fields with data by default
-        /// </summary>
-        /// <param name="model"></param>
-        protected virtual void PrepareRequiredFieldsWithDefaultsData(AddressModel model)
-        {
-            if (string.IsNullOrEmpty(model.FirstName))
-                model.FirstName = NopAddressDefaults.FirstName;
-
-            if (string.IsNullOrEmpty(model.LastName))
-                model.LastName = NopAddressDefaults.LastName;
-
-            if (string.IsNullOrEmpty(model.Email))
-                model.Email = NopAddressDefaults.Email;
         }
 
         /// <summary>
@@ -728,10 +714,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare app settings model
         /// </summary>
+        /// <param name="model">AppSettings model</param>
         /// <returns>App settings model</returns>
-        public virtual async Task<AppSettingsModel> PrepareAppSettingsModel()
+        public virtual async Task<AppSettingsModel> PrepareAppSettingsModel(AppSettingsModel model = null)
         {
-            var model = new AppSettingsModel
+            model ??= new AppSettingsModel
             {
                 CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
                 HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
@@ -743,7 +730,7 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.DistributedCacheConfig.DistributedCacheType.ToSelectListAsync();
-            
+
             model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
                                                 where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
                                                 from pp in property.PropertyType.GetProperties()
@@ -755,15 +742,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare blog settings model
         /// </summary>
+        /// <param name="model">Blog settings model</param>
         /// <returns>Blog settings model</returns>
-        public virtual async Task<BlogSettingsModel> PrepareBlogSettingsModelAsync()
+        public virtual async Task<BlogSettingsModel> PrepareBlogSettingsModelAsync(BlogSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var blogSettings = await _settingService.LoadSettingAsync<BlogSettings>(storeId);
 
             //fill in model values from the entity
-            var model = blogSettings.ToSettingsModel<BlogSettingsModel>();
+            model ??= blogSettings.ToSettingsModel<BlogSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -786,15 +774,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare vendor settings model
         /// </summary>
+        /// <param name="model">Vendor settings model</param>
         /// <returns>Vendor settings model</returns>
-        public virtual async Task<VendorSettingsModel> PrepareVendorSettingsModelAsync()
+        public virtual async Task<VendorSettingsModel> PrepareVendorSettingsModelAsync(VendorSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var vendorSettings = await _settingService.LoadSettingAsync<VendorSettings>(storeId);
 
             //fill in model values from the entity
-            var model = vendorSettings.ToSettingsModel<VendorSettingsModel>();
+            model ??= vendorSettings.ToSettingsModel<VendorSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -824,15 +813,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare forum settings model
         /// </summary>
+        /// <param name="model">Forum settings model</param>
         /// <returns>Forum settings model</returns>
-        public virtual async Task<ForumSettingsModel> PrepareForumSettingsModelAsync()
+        public virtual async Task<ForumSettingsModel> PrepareForumSettingsModelAsync(ForumSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var forumSettings = await _settingService.LoadSettingAsync<ForumSettings>(storeId);
 
             //fill in model values from the entity
-            var model = forumSettings.ToSettingsModel<ForumSettingsModel>();
+            model ??= forumSettings.ToSettingsModel<ForumSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -872,15 +862,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare news settings model
         /// </summary>
+        /// <param name="model">News settings model</param>
         /// <returns>News settings model</returns>
-        public virtual async Task<NewsSettingsModel> PrepareNewsSettingsModelAsync()
+        public virtual async Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var newsSettings = await _settingService.LoadSettingAsync<NewsSettings>(storeId);
 
             //fill in model values from the entity
-            var model = newsSettings.ToSettingsModel<NewsSettingsModel>();
+            model ??= newsSettings.ToSettingsModel<NewsSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -904,15 +895,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shipping settings model
         /// </summary>
+        /// <param name="model">Shipping settings model</param>
         /// <returns>Shipping settings model</returns>
-        public virtual async Task<ShippingSettingsModel> PrepareShippingSettingsModelAsync()
+        public virtual async Task<ShippingSettingsModel> PrepareShippingSettingsModelAsync(ShippingSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var shippingSettings = await _settingService.LoadSettingAsync<ShippingSettings>(storeId);
 
             //fill in model values from the entity
-            var model = shippingSettings.ToSettingsModel<ShippingSettingsModel>();
+            model ??= shippingSettings.ToSettingsModel<ShippingSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -945,9 +937,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var originAddress = await _addressService.GetAddressByIdAsync(shippingSettings.ShippingOriginAddressId);
             if (originAddress != null)
                 model.ShippingOriginAddress = originAddress.ToModel(model.ShippingOriginAddress);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
-
-            PrepareRequiredFieldsWithDefaultsData(model.ShippingOriginAddress);
+            await _addressModelFactory.PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
+            model.ShippingOriginAddress.ZipPostalCodeRequired = true;
 
             return model;
         }
@@ -955,15 +946,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare tax settings model
         /// </summary>
+        /// <param name="model">Tax settings model</param>
         /// <returns>Tax settings model</returns>
-        public virtual async Task<TaxSettingsModel> PrepareTaxSettingsModelAsync()
+        public virtual async Task<TaxSettingsModel> PrepareTaxSettingsModelAsync(TaxSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var taxSettings = await _settingService.LoadSettingAsync<TaxSettings>(storeId);
 
             //fill in model values from the entity
-            var model = taxSettings.ToSettingsModel<TaxSettingsModel>();
+            model ??= taxSettings.ToSettingsModel<TaxSettingsModel>();
             model.TaxBasedOnValues = await taxSettings.TaxBasedOn.ToSelectListAsync();
             model.TaxDisplayTypeValues = await taxSettings.TaxDisplayType.ToSelectListAsync();
 
@@ -1009,8 +1001,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var defaultAddress = await _addressService.GetAddressByIdAsync(taxSettings.DefaultTaxAddressId);
             if (defaultAddress != null)
                 model.DefaultTaxAddress = defaultAddress.ToModel(model.DefaultTaxAddress);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
-            PrepareRequiredFieldsWithDefaultsData(model.DefaultTaxAddress);
+            await _addressModelFactory.PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
+            model.DefaultTaxAddress.ZipPostalCodeRequired = true;
 
             return model;
         }
@@ -1018,15 +1010,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare catalog settings model
         /// </summary>
+        /// <param name="model">Catalog settings model</param>
         /// <returns>Catalog settings model</returns>
-        public virtual async Task<CatalogSettingsModel> PrepareCatalogSettingsModelAsync()
+        public virtual async Task<CatalogSettingsModel> PrepareCatalogSettingsModelAsync(CatalogSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(storeId);
 
             //fill in model values from the entity
-            var model = catalogSettings.ToSettingsModel<CatalogSettingsModel>();
+            model ??= catalogSettings.ToSettingsModel<CatalogSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1176,15 +1169,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare reward points settings model
         /// </summary>
+        /// <param name="model">Reward points settings model</param>
         /// <returns>Reward points settings model</returns>
-        public virtual async Task<RewardPointsSettingsModel> PrepareRewardPointsSettingsModelAsync()
+        public virtual async Task<RewardPointsSettingsModel> PrepareRewardPointsSettingsModelAsync(RewardPointsSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var rewardPointsSettings = await _settingService.LoadSettingAsync<RewardPointsSettings>(storeId);
 
             //fill in model values from the entity
-            var model = rewardPointsSettings.ToSettingsModel<RewardPointsSettingsModel>();
+            model ??= rewardPointsSettings.ToSettingsModel<RewardPointsSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1215,15 +1209,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order settings model
         /// </summary>
+        /// <param name="model">Order settings model</param>
         /// <returns>Order settings model</returns>
-        public virtual async Task<OrderSettingsModel> PrepareOrderSettingsModelAsync()
+        public virtual async Task<OrderSettingsModel> PrepareOrderSettingsModelAsync(OrderSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var orderSettings = await _settingService.LoadSettingAsync<OrderSettings>(storeId);
 
             //fill in model values from the entity
-            var model = orderSettings.ToSettingsModel<OrderSettingsModel>();
+            model ??= orderSettings.ToSettingsModel<OrderSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1270,15 +1265,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare shopping cart settings model
         /// </summary>
+        /// <param name="model">Shopping cart settings model</param>
         /// <returns>Shopping cart settings model</returns>
-        public virtual async Task<ShoppingCartSettingsModel> PrepareShoppingCartSettingsModelAsync()
+        public virtual async Task<ShoppingCartSettingsModel> PrepareShoppingCartSettingsModelAsync(ShoppingCartSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var shoppingCartSettings = await _settingService.LoadSettingAsync<ShoppingCartSettings>(storeId);
 
             //fill in model values from the entity
-            var model = shoppingCartSettings.ToSettingsModel<ShoppingCartSettingsModel>();
+            model ??= shoppingCartSettings.ToSettingsModel<ShoppingCartSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1313,15 +1309,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare media settings model
         /// </summary>
+        /// <param name="model">Media settings model</param>
         /// <returns>Media settings model</returns>
-        public virtual async Task<MediaSettingsModel> PrepareMediaSettingsModelAsync()
+        public virtual async Task<MediaSettingsModel> PrepareMediaSettingsModelAsync(MediaSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var mediaSettings = await _settingService.LoadSettingAsync<MediaSettings>(storeId);
 
             //fill in model values from the entity
-            var model = mediaSettings.ToSettingsModel<MediaSettingsModel>();
+            model ??= mediaSettings.ToSettingsModel<MediaSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1353,10 +1350,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer user settings model
         /// </summary>
+        /// <param name="model">Customer user settings model</param>
         /// <returns>Customer user settings model</returns>
-        public virtual async Task<CustomerUserSettingsModel> PrepareCustomerUserSettingsModelAsync()
+        public virtual async Task<CustomerUserSettingsModel> PrepareCustomerUserSettingsModelAsync(CustomerUserSettingsModel model = null)
         {
-            var model = new CustomerUserSettingsModel
+            model ??= new CustomerUserSettingsModel
             {
                 ActiveStoreScopeConfiguration = await _storeContext.GetActiveStoreScopeConfigurationAsync()
             };
@@ -1386,15 +1384,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare GDPR settings model
         /// </summary>
+        /// <param name="model">Gdpr settings model</param>
         /// <returns>GDPR settings model</returns>
-        public virtual async Task<GdprSettingsModel> PrepareGdprSettingsModelAsync()
+        public virtual async Task<GdprSettingsModel> PrepareGdprSettingsModelAsync(GdprSettingsModel model = null)
         {
             //load settings for a chosen store scope
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var gdprSettings = await _settingService.LoadSettingAsync<GdprSettings>(storeId);
 
             //fill in model values from the entity
-            var model = gdprSettings.ToSettingsModel<GdprSettingsModel>();
+            model ??= gdprSettings.ToSettingsModel<GdprSettingsModel>();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1483,10 +1482,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare general and common settings model
         /// </summary>
+        /// <param name="model">General common settings model</param>
         /// <returns>General and common settings model</returns>
-        public virtual async Task<GeneralCommonSettingsModel> PrepareGeneralCommonSettingsModelAsync()
+        public virtual async Task<GeneralCommonSettingsModel> PrepareGeneralCommonSettingsModelAsync(GeneralCommonSettingsModel model = null)
         {
-            var model = new GeneralCommonSettingsModel
+            model ??= new GeneralCommonSettingsModel
             {
                 ActiveStoreScopeConfiguration = await _storeContext.GetActiveStoreScopeConfigurationAsync()
             };

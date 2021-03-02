@@ -73,6 +73,19 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
+        
+        public bool FirstNameRequired { get; set; }
+        public bool LastNameRequired { get; set; }
+        public bool EmailRequired { get; set; }
+        public bool CompanyRequired { get; set; }
+        public bool CountryRequired { get; set; }
+        public bool CityRequired { get; set; }
+        public bool CountyRequired { get; set; }
+        public bool StreetAddressRequired { get; set; }
+        public bool StreetAddress2Required { get; set; }
+        public bool ZipPostalCodeRequired { get; set; }
+        public bool PhoneRequired { get; set; }
+        public bool FaxRequired { get; set; }
 
         #region Nested classes
 

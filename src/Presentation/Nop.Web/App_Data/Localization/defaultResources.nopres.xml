@@ -7363,16 +7363,16 @@
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription">
-    <Value>Home page description</Value>
+    <Value>Home page meta description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint">
-    <Value>The description for home page in your store.</Value>
+    <Value>The description for the home page in your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageTitle">
     <Value>Home page title</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint">
-    <Value>The title for home page in your store.</Value>
+    <Value>The title for the home page in your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
     <Value>Enable honeypot</Value>
@@ -10093,7 +10093,7 @@
     <Value>The name of this forum. This is the name that the customer will see.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Name.Required">
-    <Value>Forum group name is required.</Value>
+    <Value>Forum name is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Updated">
     <Value>The forum has been updated successfully.</Value>
@@ -12733,7 +12733,7 @@
     <Value>Shipping method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingMethod.Hint">
-    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping Methods.</Value>
+    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping providers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingStatus">
     <Value>Shipping status</Value>
@@ -15879,6 +15879,9 @@
   <LocaleResource Name="Catalog.PageSize.PerPage">
     <Value>per page</Value>
   </LocaleResource>
+  <LocaleResource Name="Catalog.Products.NoResult">
+    <Value>No products were found that matched your criteria.</Value>
+  </LocaleResource>
   <LocaleResource Name="Catalog.ViewMode">
     <Value>View as</Value>
   </LocaleResource>
@@ -15989,6 +15992,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.Name">
     <Value>Pickup at {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.NullName">
+    <Value>Pickup</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.NotAvailable">
     <Value>Pickup points could not be loaded</Value>
@@ -18785,9 +18791,6 @@
   </LocaleResource>
   <LocaleResource Name="Search.Manufacturer">
     <Value>Manufacturer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Search.NoResultsText">
-    <Value>No products were found that matched your criteria.</Value>
   </LocaleResource>
   <LocaleResource Name="Search.SearchBox.SearchPageLink">
     <Value>View all results...</Value>

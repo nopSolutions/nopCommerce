@@ -52,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ForumSettings _forumSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAffiliateService _affiliateService;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ForumSettings forumSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressModelFactory addressModelFactory,
             IAffiliateService affiliateService,
             IAuthenticationPluginManager authenticationPluginManager,
             IBackInStockSubscriptionService backInStockSubscriptionService,
@@ -134,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _forumSettings = forumSettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _addressAttributeFormatter = addressAttributeFormatter;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressModelFactory = addressModelFactory;
             _affiliateService = affiliateService;
             _authenticationPluginManager = authenticationPluginManager;
             _backInStockSubscriptionService = backInStockSubscriptionService;
@@ -904,7 +904,18 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CustomerId = customer.Id;
 
             //prepare address model
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailRequired = true;
+            model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.CityRequired = _addressSettings.CityRequired;
+            model.Address.CountyRequired = _addressSettings.CountyRequired;
+            model.Address.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.Address.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.Address.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.Address.PhoneRequired = _addressSettings.PhoneRequired;
+            model.Address.FaxRequired = _addressSettings.FaxRequired;
 
             return model;
         }

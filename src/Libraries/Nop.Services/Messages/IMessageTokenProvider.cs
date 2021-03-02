@@ -71,7 +71,8 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem);
+        /// <param name="languageId">Language identifier</param>
+        Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem, int languageId);
 
         /// <summary>
         /// Add gift card tokens

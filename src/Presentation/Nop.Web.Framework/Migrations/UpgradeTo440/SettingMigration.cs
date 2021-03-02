@@ -11,6 +11,7 @@ using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
@@ -57,13 +58,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                     setting.Name == "securitysettings.pluginstaticfileextensionsBlacklist")
                 .Wait();
 
+            //#5384
             var seoSettings = settingService.LoadSettingAsync<SeoSettings>().Result;
-            var newUrlRecord = "products";
-            if (!seoSettings.ReservedUrlRecordSlugs.Contains(newUrlRecord))
+            foreach (var slug in NopSeoDefaults.ReservedUrlRecordSlugs)
             {
-                seoSettings.ReservedUrlRecordSlugs.Add(newUrlRecord);
-                settingService.SaveSettingAsync(seoSettings).Wait();
+                if (!seoSettings.ReservedUrlRecordSlugs.Contains(slug))
+                    seoSettings.ReservedUrlRecordSlugs.Add(slug);
             }
+            settingService.SaveSettingAsync(seoSettings).Wait();
 
             //#3015
             if (!settingService.SettingExistsAsync(seoSettings, settings => settings.HomepageTitle).Result)

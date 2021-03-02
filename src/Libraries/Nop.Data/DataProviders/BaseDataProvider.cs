@@ -347,9 +347,9 @@ namespace Nop.Data.DataProviders
         {
             using var dataContext = await CreateDataConnectionAsync();
             var command = new CommandInfo(dataContext, procedureName, parameters);
-            var rez = command.QueryProc<T>()?.ToList();
+            var rez = await command.QueryProcAsync<T>();
             UpdateOutputParameters(dataContext, parameters);
-            return rez ?? new List<T>();
+            return rez?.ToList() ?? new List<T>();
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Nop.Data.DataProviders
         public virtual async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using var dataContext = await CreateDataConnectionAsync();
-            return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+            return await dataContext.QueryToListAsync<T>(sql, parameters) ?? new List<T>();
         }
 
         #endregion

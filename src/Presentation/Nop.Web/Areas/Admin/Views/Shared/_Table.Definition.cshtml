@@ -88,8 +88,10 @@
         var rowId = '';
         if (item.hasOwnProperty('@(Model.RowIdBasedOnField)'))
         {
-        var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-        rowId = 'row_' + val;
+            if(item.@(Model.RowIdBasedOnField)){
+                var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+                rowId = 'row_' + val;
+            } else return;
         }
         return rowId;
         },

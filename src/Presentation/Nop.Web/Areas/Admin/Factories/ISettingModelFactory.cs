@@ -12,50 +12,58 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare app settings model
         /// </summary>
+        /// <param name="model">AppSettings model</param>
         /// <returns>App settings model</returns>
-        Task<AppSettingsModel> PrepareAppSettingsModel();
+        Task<AppSettingsModel> PrepareAppSettingsModel(AppSettingsModel model = null);
 
         /// <summary>
         /// Prepare blog settings model
         /// </summary>
+        /// <param name="model">Blog settings model</param>
         /// <returns>Blog settings model</returns>
-        Task<BlogSettingsModel> PrepareBlogSettingsModelAsync();
+        Task<BlogSettingsModel> PrepareBlogSettingsModelAsync(BlogSettingsModel model = null);
 
         /// <summary>
         /// Prepare vendor settings model
         /// </summary>
+        /// <param name="model">Vendor settings model</param>
         /// <returns>Vendor settings model</returns>
-        Task<VendorSettingsModel> PrepareVendorSettingsModelAsync();
+        Task<VendorSettingsModel> PrepareVendorSettingsModelAsync(VendorSettingsModel model = null);
 
         /// <summary>
         /// Prepare forum settings model
         /// </summary>
+        /// <param name="model">Forum settings model</param>
         /// <returns>Forum settings model</returns>
-        Task<ForumSettingsModel> PrepareForumSettingsModelAsync();
+        Task<ForumSettingsModel> PrepareForumSettingsModelAsync(ForumSettingsModel model = null);
 
         /// <summary>
         /// Prepare news settings model
         /// </summary>
+        /// <param name="model">News settings model</param>
         /// <returns>News settings model</returns>
-        Task<NewsSettingsModel> PrepareNewsSettingsModelAsync();
+        Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null);
 
         /// <summary>
         /// Prepare shipping settings model
         /// </summary>
+        /// <param name="model">Shipping settings model</param>
         /// <returns>Shipping settings model</returns>
-        Task<ShippingSettingsModel> PrepareShippingSettingsModelAsync();
+        Task<ShippingSettingsModel> PrepareShippingSettingsModelAsync(ShippingSettingsModel model = null);
 
         /// <summary>
         /// Prepare tax settings model
         /// </summary>
+        /// <param name="model">Tax settings model</param>
         /// <returns>Tax settings model</returns>
-        Task<TaxSettingsModel> PrepareTaxSettingsModelAsync();
+        Task<TaxSettingsModel> PrepareTaxSettingsModelAsync(TaxSettingsModel model = null);
 
         /// <summary>
         /// Prepare catalog settings model
         /// </summary>
+        /// <param name="model">Catalog settings model</param>
         /// <returns>Catalog settings model</returns>
-        Task<CatalogSettingsModel> PrepareCatalogSettingsModelAsync();
+        Task<CatalogSettingsModel> PrepareCatalogSettingsModelAsync(CatalogSettingsModel model = null);
 
         /// <summary>
         /// Prepare paged sort option list model
@@ -67,38 +75,44 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare reward points settings model
         /// </summary>
+        ///<param name="model">Reward points settings model</param>
         /// <returns>Reward points settings model</returns>
-        Task<RewardPointsSettingsModel> PrepareRewardPointsSettingsModelAsync();
+        Task<RewardPointsSettingsModel> PrepareRewardPointsSettingsModelAsync(RewardPointsSettingsModel model = null);
 
         /// <summary>
         /// Prepare order settings model
         /// </summary>
+        /// <param name="model">Order settings model</param>
         /// <returns>Order settings model</returns>
-        Task<OrderSettingsModel> PrepareOrderSettingsModelAsync();
+        Task<OrderSettingsModel> PrepareOrderSettingsModelAsync(OrderSettingsModel model = null);
 
         /// <summary>
         /// Prepare shopping cart settings model
         /// </summary>
+        /// <param name="model">Shopping cart settings model</param>
         /// <returns>Shopping cart settings model</returns>
-        Task<ShoppingCartSettingsModel> PrepareShoppingCartSettingsModelAsync();
+        Task<ShoppingCartSettingsModel> PrepareShoppingCartSettingsModelAsync(ShoppingCartSettingsModel model = null);
 
         /// <summary>
         /// Prepare media settings model
         /// </summary>
+        /// <param name="model">Media settings model</param>
         /// <returns>Media settings model</returns>
-        Task<MediaSettingsModel> PrepareMediaSettingsModelAsync();
+        Task<MediaSettingsModel> PrepareMediaSettingsModelAsync(MediaSettingsModel model = null);
 
         /// <summary>
         /// Prepare customer user settings model
         /// </summary>
+        /// <param name="model">Customer user settings model</param>
         /// <returns>Customer user settings model</returns>
-        Task<CustomerUserSettingsModel> PrepareCustomerUserSettingsModelAsync();
+        Task<CustomerUserSettingsModel> PrepareCustomerUserSettingsModelAsync(CustomerUserSettingsModel model = null);
 
         /// <summary>
         /// Prepare GDPR settings model
         /// </summary>
+        /// <param name="model">Gdpr settings model</param>
         /// <returns>GDPR settings model</returns>
-        Task<GdprSettingsModel> PrepareGdprSettingsModelAsync();
+        Task<GdprSettingsModel> PrepareGdprSettingsModelAsync(GdprSettingsModel model = null);
 
         /// <summary>
         /// Prepare paged GDPR consent list model
@@ -119,8 +133,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare general and common settings model
         /// </summary>
+        /// <param name="model">General common settings model</param>
         /// <returns>General and common settings model</returns>
-        Task<GeneralCommonSettingsModel> PrepareGeneralCommonSettingsModelAsync();
+        Task<GeneralCommonSettingsModel> PrepareGeneralCommonSettingsModelAsync(GeneralCommonSettingsModel model = null);
 
         /// <summary>
         /// Prepare product editor settings model

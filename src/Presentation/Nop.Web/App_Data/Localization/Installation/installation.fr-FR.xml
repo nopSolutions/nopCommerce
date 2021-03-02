@@ -34,10 +34,10 @@
     <Value>Mauvaise format de chaîne de connexion SQL</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Pays</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Sélectionnez votre pays...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Créer base de données si elle n'existe pas</Value>
@@ -55,10 +55,10 @@
     <Value>Une erreur s'est produite lors de la création de base de données: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
-    <Value>Informations sur la base de données</Value>
+    <Value>base de données des informations</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseName">
-    <Value>Nom de la base de données</Value>
+    <Value>nom de la base</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
     <Value>Base de données n'existe pas ou vous ne disposez pas des autorisations pour se connecter à l'</Value>
@@ -70,13 +70,13 @@
     <Value>Si vous avez besoin d'informations sur la façon d'utiliser nopCommerce, visitez le site</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>Section de la documentation sur nopCommerce.com</Value>
+    <Value>la section de documentation sur nopCommerce.com</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>Exemple</Value>
+    <Value>exemple</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
-    <Value>Installer</Value>
+    <Value>installer</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
     <Value>Installation nopCommerce ...</Value>
@@ -97,7 +97,7 @@
     <Value>Entrez la chaîne de connexion brut (avancé)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Redémarrer l'installation</Value>
+    <Value>redémarrez l'installation</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Cliquez ici pour redémarrer le processus d'installation (effacer toutes les valeurs mises en cache)</Value>
@@ -130,10 +130,10 @@
     <Value>Nom d'utilisateur SQL est requise</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Informations sur la boutique</Value>
+    <Value>informations sur le magasin</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>Installation nopCommerce</Value>
+    <Value>l'installation nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Pour compléter cet assistant, vous devez connaître certaines informations concernant votre serveur de base de données ("chaîne de connexion"). S'il vous plaît contactez votre FAI si nécessaire. Si vous installez sur une machine locale ou serveur que vous pourriez avoir besoin d'informations à partir de votre système d'administration</Value>

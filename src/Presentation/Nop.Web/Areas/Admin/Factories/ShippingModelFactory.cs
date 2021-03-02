@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -11,7 +10,6 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Shipping.Pickup;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Framework.Factories;
@@ -26,8 +24,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICountryService _countryService;
         private readonly IDateRangeService _dateRangeService;
         private readonly ILocalizationService _localizationService;
@@ -41,8 +39,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ShippingModelFactory(IAddressService addressService,
-            IBaseAdminModelFactory baseAdminModelFactory,
+        public ShippingModelFactory(IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             ICountryService countryService,
             IDateRangeService dateRangeService,
             ILocalizationService localizationService,
@@ -52,8 +50,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IShippingService shippingService,
             IStateProvinceService stateProvinceService)
         {
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
-            _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
             _dateRangeService = dateRangeService;
             _localizationService = localizationService;
@@ -67,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare delivery date search model
         /// </summary>
@@ -461,7 +459,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressByIdAsync(warehouse?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            model.Address.CountryRequired = true;
+            model.Address.ZipPostalCodeRequired = true;
 
             return model;
         }

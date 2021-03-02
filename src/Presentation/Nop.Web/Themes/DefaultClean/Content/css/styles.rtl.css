@@ -4853,7 +4853,7 @@ label, label + * {
 }
 
 .payment-method .payment-details {
-  min-width: 180px;
+  width: 200px;
   display: inline-block;
   margin: 0 10px 0 0;
   text-align: right;
@@ -5304,8 +5304,7 @@ label, label + * {
   margin: 30px 0 0;
 }
 
-.search-results .warning,
-.search-results .no-result {
+.search-results .warning {
   margin: 10px 0;
   color: #e4434b;
 }

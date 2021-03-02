@@ -1816,11 +1816,21 @@ VN, Hậu Giang, HG, TRUE, 6
 VN, Sóc Trăng, ST, TRUE, 6
 VN, Bạc Liêu, BL, TRUE, 6
 VN, Cà Mau, CM, TRUE, 6
-ZA,Free State,,True,0
-ZA,Gauteng,,True,0
-ZA,KwaZulu-Natal,,True,0
-ZA,Limpopo,,True,0
-ZA,Mpumalanga,,True,0
-ZA,Northern Cape,,True,0
-ZA,North West,,True,0
-ZA,The Western Cape,,True,0
+ZA,Free State,FS,True,0
+ZA,Gauteng,GP,True,0
+ZA,KwaZulu-Natal,KZN,True,0
+ZA,Limpopo,LP,True,0
+ZA,Mpumalanga,MP,True,0
+ZA,Northern Cape,NC,True,0
+ZA,North West,NW,True,0
+ZA,Western Cape,WC,True,0
+ZW,Bulawayo,BU,True,0
+ZW,Harare,HA,True,0
+ZW,Manicaland,MA,True,0
+ZW,Mashonaland Central,MC,True,0
+ZW,Mashonaland East,ME,True,0
+ZW,Mashonaland West,MW,True,0
+ZW,Masvingo,MV,True,0
+ZW,Matabeleland North,MN,True,0
+ZW,Matabeleland South,MS,True,0
+ZW,Midlands,MI,True,0
