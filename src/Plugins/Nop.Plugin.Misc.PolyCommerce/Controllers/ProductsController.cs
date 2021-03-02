@@ -19,12 +19,14 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly IRepository<Product> _productRepository;
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
 
-        public ProductsController(IRepository<Product> productRepository, IPictureService pictureService, IProductAttributeParser productAttributeParser)
+        public ProductsController(IRepository<Product> productRepository, IPictureService pictureService, IProductAttributeParser productAttributeParser, IProductService productService)
         {
             _productRepository = productRepository;
             _pictureService = pictureService;
             _productAttributeParser = productAttributeParser;
+            _productService = productService;
         }
 
         [Route("api/polycommerce/products")]
@@ -104,6 +106,15 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             };
 
             return Ok(response);
+        }
+
+        [Route("api/polycommerce/decrease_stock")]
+        [HttpPost]
+        public IActionResult DecreaseStock([FromBody]PolyCommerceDecreaseStockModel model)
+        {
+            var product = _productRepository.GetById(model.ProductId);
+            _productService.AdjustInventory(product, model.Quantity * -1);
+            return Ok(new { Success = true });
         }
 
         private PolyCommerceProduct PreparePolyCommerceModel(Product product)
