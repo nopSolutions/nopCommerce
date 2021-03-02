@@ -119,9 +119,9 @@ var Billing = {
     this.guest = guest;
   },
 
-  newAddress: function(isNew) {
-    this.resetBillingForm();
+  newAddress: function(isNew) { 
     $('#save-address-button').hide();
+
     if (isNew) {
       this.resetSelectedAddress();
       $('#billing-new-address-form').show();
@@ -248,6 +248,7 @@ var Billing = {
       success: function(response) {
         selectedId = response.selected_id;
         Checkout.setStepResponse(response);
+        Billing.resetBillingForm();
       },
       complete: function() {
         var selectElement = $('#billing-address-select');
@@ -282,10 +283,13 @@ var Billing = {
 
   resetBillingForm: function() {
     $(':input', '#billing-new-address-form')
-      .not(':button, :submit, :reset, :hidden').removeAttr('checked').removeAttr('selected')
-      .not(':checkbox, :radio, select').val('');
+      .not(':button, :submit, :reset, :hidden')
+      .removeAttr('checked').removeAttr('selected')
+    $(':input', '#billing-new-address-form')
+      .not(':checkbox, :radio, select')
+      .val('');
 
-    $('select option[value="0"]').prop('selected', true);
+    $('select option[value="0"]', '#billing-new-address-form').prop('selected', true);
   }
 };
 
