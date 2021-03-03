@@ -423,7 +423,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ConfigurationSteps.Store.Url.Title"] = "Your store URL",
                 ["Admin.ConfigurationSteps.Store.Url.Text"] = "Enter your store URL in this field. For example, it could be http://www.yourstore.com/ or https://www.yourstore.com/mystore/ if you installed your store in a subdirectory.",
                 ["Admin.ConfigurationSteps.Store.Ssl.Title"] = "Enable SSL",
-                ["Admin.ConfigurationSteps.Store.Ssl.Text"] = "If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href=\"{0}\" target=\"_blank\">here</a>.",
+                ["Admin.ConfigurationSteps.Store.Ssl.Text"] = "If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certificates <a href=\"{0}\" target=\"_blank\">here</a>.",
                 ["Admin.ConfigurationSteps.TaxManual.Switch.Title"] = "“Fixed rate/By country” switch",
                 ["Admin.ConfigurationSteps.TaxManual.Switch.Text"] = "The “Fixed rate/By country” switch allows you to choose the type of tax rates you’d like to use in your store.",
                 ["Admin.ConfigurationSteps.TaxManual.Fixed.Title"] = "“Fixed rate” option",
@@ -474,9 +474,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Reports.SalesSummary.Manufacturer"] = "Manufacturer",
                 ["Admin.Reports.SalesSummary.Manufacturer.Hint"] = "Search in a specific manufacturer.",
                 ["Admin.Reports.SalesSummary.OrderStatus"] = "Order status",
-                ["Admin.Reports.SalesSummary.OrderStatus.Hint"] = "Search by a specific order status e.g.Complete.",
+                ["Admin.Reports.SalesSummary.OrderStatus.Hint"] = "Search by a specific order status e.g. Complete.",
                 ["Admin.Reports.SalesSummary.PaymentStatus"] = "Payment status",
-                ["Admin.Reports.SalesSummary.PaymentStatus.Hint"] = "Search by a specific payment status e.g.Paid.",
+                ["Admin.Reports.SalesSummary.PaymentStatus.Hint"] = "Search by a specific payment status e.g. Paid.",
                 ["Admin.Reports.SalesSummary.RunReport"] = "Run report",
                 ["Admin.Reports.SalesSummary.StartDate"] = "Start date",
                 ["Admin.Reports.SalesSummary.StartDate.Hint"] = "The start date for the search.",
@@ -500,11 +500,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist"] = "Plugin static file extensions blacklist",
                 ["Admin.Configuration.AppSettings.Common.PluginStaticFileExtensionsBlacklist.Hint"] = "Specify the blacklist of static file extension for plugin directories.",
                 ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout"] = "Schedule task run timeout",
-                ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint"] = "The length of time, in milliseconds, before the running schedule task times out. Set null to use default value.",
+                ["Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint"] = "The length of time, in milliseconds, a running schedule task timeouts. Set null to use a default value.",
                 ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl"] = "Static files cache control",
                 ["Admin.Configuration.AppSettings.Common.StaticFilesCacheControl.Hint"] = "Specify a value of 'Cache - Control' header value for static content (in seconds).",
                 ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions"] = "Support previous nopCommerce versions",
-                ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint"] = "Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).",
+                ["Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint"] = "Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance). In this case, old URLs (from previous nopCommerce versions) will redirect to new ones. Enable it only if you upgraded from one of the previous nopCommerce versions.",
                 ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"{0}\" target=\"_blank\">our documentation.</a>",
 
                 //#3015
@@ -569,7 +569,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Documentation.Reference.TaxManagement"] = "Learn more about <a target=\"_blank\" href=\"{0}\">tax management</a>",
 
                 //#3950
-                ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute is already exists into combination: '{0}'.",
+                ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute already exists in combination: '{0}'.",
 
                 //#4564
                 ["Admin.Common.Validation.NotEmpty"] = "Please provide a {0}",
@@ -596,7 +596,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.LanguagePackProgressMessage"] = "The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href=\"{1}\" target=\"_blank\">translations page.</a>",
 
                 //#5144
-                ["Admin.GiftCards.RecipientNotified"] = "The recipient has been notified successfully.",
+                ["Admin.GiftCards.RecipientNotified"] = "The recipient has been successfully notified.",
 
                 //#5319
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
@@ -619,19 +619,19 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Vendors.Fields.PriceRangeFiltering"] = "Price range filtering",
                 ["Admin.Vendors.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
                 ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
+                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
+                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation.",
+                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering"] = "Search page. Price range filtering",
                 ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Search' page.",
                 ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange"] = "Search page. Calculate price range automatically",
-                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation on 'Search' page.",
+                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range on the 'Search' page (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering"] = "'Products by tag' page. Price range filtering",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Products by tag' page.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange"] = "'Products by tag' page. Calculate price range automatically",
-                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatically price range calculation on 'Products by tag' page.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range on the 'Products by tag' page (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering"] = "Enable manufacturer filtering",
                 ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering.Hint"] = "Check to enable the manufacturer filtering on catalog pages.",
                 ["Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering"] = "Enable price range filtering",
@@ -680,7 +680,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //#16 #2909
                 ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType"] = "Display type for attribute value when out of stock",
-                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint"] = "Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.",
+                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint"] = "Select the display type for attribute value when an attribute combination is out of stock. Please note that the 'Allow only existing attribute combinations'option should be enabled for a product.",
                 ["Products.ProductAttributes.DropdownList.DefaultItem"] = "Please select",
                 ["Products.ProductAttributes.NotAvailable"] = "Not available",
                 ["Enums.Nop.Core.Domain.Catalog.AttributeValueOutOfStockDisplayType.Disable"] = "Disable",
@@ -692,7 +692,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ContentManagement.Forums.Forum.Fields.Name.Required"] = "Forum name is required.",
 
                 //#5475
-                ["Admin.Orders.Fields.ShippingMethod.Hint"] = "The customers chosen shipping method for this order. You can manage shipping methods from Configuration > Shipping > Shipping providers."
+                ["Admin.Orders.Fields.ShippingMethod.Hint"] = "A chosen shipping method for this order. You can manage shipping methods from Configuration > Shipping > Shipping providers."
             }).Wait();
 
             // rename locales

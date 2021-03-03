@@ -2086,7 +2086,7 @@
     <Value>Calculate price range automatically</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
+    <Value>Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
     <Value>Category template</Value>
@@ -2332,7 +2332,7 @@
     <Value>Calculate price range automatically</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
+    <Value>Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Deleted">
     <Value>Deleted</Value>
@@ -3649,7 +3649,7 @@
     <Value>This attribute is already added to this product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination">
-    <Value>This attribute is already exists into combination: '{0}'.</Value>
+    <Value>This attribute already exists in combination: '{0}'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct">
     <Value>back to product details</Value>
@@ -4420,7 +4420,7 @@
     <Value>Schedule task run timeout</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint">
-    <Value>The length of time, in milliseconds, before the running schedule task times out. Set null to use default value.</Value>
+    <Value>The length of time, in milliseconds, a running schedule task timeouts. Set null to use a default value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.StaticFilesCacheControl">
     <Value>Static files cache control</Value>
@@ -4432,7 +4432,7 @@
     <Value>Support previous nopCommerce versions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint">
-    <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).</Value>
+    <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance). In this case, old URLs (from previous nopCommerce versions) will redirect to new ones. Enable it only if you upgraded from one of the previous nopCommerce versions.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath">
     <Value>User agent strings path</Value>
@@ -5590,7 +5590,7 @@
     <Value>Display type for attribute value when out of stock</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint">
-    <Value>Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.</Value>
+    <Value>Select the display type for attribute value when an attribute combination is out of stock. Please note that the 'Allow only existing attribute combinations'option should be enabled for a product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
     <Value>Additional sections</Value>
@@ -5905,7 +5905,7 @@
     <Value>'Products by tag' page. Calculate price range automatically</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation on 'Products by tag' page.</Value>
+    <Value>"Check to enable automatic calculation of price range on the 'Products by tag' page (based on prices of available products). Do not enable if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize">
     <Value>'Products by tag' page. Products per page</Value>
@@ -5995,7 +5995,7 @@
     <Value>Search page. Calculate price range automatically</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation on 'Search' page.</Value>
+    <Value>Check to enable automatic calculation of price range  on the 'Search' page (based on prices of available products). Do not enable if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options</Value>
@@ -9706,7 +9706,7 @@
     <Value>Your store name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Text">
-    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href="{0}" target="_blank">here</a>]]>.</Value>
+    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certificates <a href="{0}" target="_blank">here</a>]]>.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Title">
     <Value>Enable SSL</Value>
@@ -12286,7 +12286,7 @@
     <Value>Search by recipient name. Leave empty to load all records.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.RecipientNotified">
-    <Value>The recipient has been notified successfully.</Value>
+    <Value>The recipient has been successfully notified.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Updated">
     <Value>The gift card has been updated successfully.</Value>
@@ -12724,7 +12724,7 @@
     <Value>Shipping method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingMethod.Hint">
-    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping providers.</Value>
+    <Value>A chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping providers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingStatus">
     <Value>Shipping status</Value>
@@ -15529,7 +15529,7 @@
     <Value>Calculate price range automatically</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
+    <Value>Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Description">
     <Value>Description</Value>
