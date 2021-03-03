@@ -66,12 +66,10 @@ namespace Nop.Web.Factories
         /// Prepare the estimate shipping result model
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
-        /// <param name="countryId">Country identifier</param>
-        /// <param name="stateProvinceId">State or province identifier</param>
-        /// <param name="zipPostalCode">Zip postal code</param>
+        /// <param name="request">Request to get shipping options</param>
         /// <param name="cacheOfferedShippingOptions">Indicates whether to cache offered shipping options</param>
         /// <returns>Estimate shipping result model</returns>
-        Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheOfferedShippingOptions);
+        Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, EstimateShippingModel request, bool cacheOfferedShippingOptions);
 
         /// <summary>
         /// Prepare the wishlist email a friend model

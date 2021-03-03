@@ -697,6 +697,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 //#5482
                 ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly"] = "Tax rates by address only",
                 ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly.Hint"] = "Determine whether to get tax rates by the address only. This may lead to not entirely accurate results (for example, when a customer is exempt to tax, or the product belongs to a tax category that has a specific rate), but it will significantly reduce the number of GetTax API calls. This applies only to tax rates in the catalog, on the checkout full information is always used in requests.",
+
+                //#5349
+                ["Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled"] = "Use a city name for estimate shipping",
+                ["Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled.Hint"] = "Check to allow customers to enter a city name instead of zip postal code.",
+                ["Shipping.EstimateShippingPopUp.City"] = "City",
+                ["Shipping.EstimateShipping.City.Required"] = "City is required",
             }).Wait();
 
             // rename locales

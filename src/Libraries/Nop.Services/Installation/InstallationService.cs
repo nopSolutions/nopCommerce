@@ -3300,6 +3300,7 @@ namespace Nop.Services.Installation
                 FreeShippingOverXIncludingTax = false,
                 EstimateShippingProductPageEnabled = true,
                 EstimateShippingCartPageEnabled = true,
+                EstimateShippingCityNameEnabled = false,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
                 HideShippingTotal = false,

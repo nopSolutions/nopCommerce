@@ -31,10 +31,20 @@
     </div>
     <div class="estimate-shipping-row-item address-item">
         <div class="estimate-shipping-row">
-            <input asp-for="ZipPostalCode"
-                   class="estimate-shipping-address-control"
-                   placeholder="@T("Shipping.EstimateShippingPopUp.ZipPostalCode")" />
-            <nop-required />
+            @if (Model.UseCity)
+            {
+                <input asp-for="City"
+                       class="estimate-shipping-address-control"
+                       placeholder="@T("Shipping.EstimateShippingPopUp.City")" />
+                <nop-required />
+            }
+            else
+            {
+                <input asp-for="ZipPostalCode"
+                       class="estimate-shipping-address-control"
+                       placeholder="@T("Shipping.EstimateShippingPopUp.ZipPostalCode")" />
+                <nop-required />
+            }
         </div>
     </div>
 </div>

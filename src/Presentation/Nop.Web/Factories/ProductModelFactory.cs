@@ -1476,6 +1476,8 @@ namespace Nop.Web.Factories
                 model.ProductEstimateShipping.CountryId = estimateShippingModel.CountryId;
                 model.ProductEstimateShipping.StateProvinceId = estimateShippingModel.StateProvinceId;
                 model.ProductEstimateShipping.ZipPostalCode = estimateShippingModel.ZipPostalCode;
+                model.ProductEstimateShipping.UseCity = estimateShippingModel.UseCity;
+                model.ProductEstimateShipping.City = estimateShippingModel.City;
                 model.ProductEstimateShipping.AvailableCountries = estimateShippingModel.AvailableCountries;
                 model.ProductEstimateShipping.AvailableStates = estimateShippingModel.AvailableStates;
             }

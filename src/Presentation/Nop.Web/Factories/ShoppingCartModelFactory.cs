@@ -730,6 +730,7 @@ namespace Nop.Web.Factories
             var model = new EstimateShippingModel
             {
                 RequestDelay = _shippingSettings.RequestDelay,
+                UseCity = _shippingSettings.EstimateShippingCityNameEnabled,
                 Enabled = cart.Any() && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart)
             };
             if (model.Enabled)
@@ -789,7 +790,12 @@ namespace Nop.Web.Factories
                 }
 
                 if (setEstimateShippingDefaultAddress && shippingAddress != null)
-                    model.ZipPostalCode = shippingAddress.ZipPostalCode;
+                {
+                    if (!_shippingSettings.EstimateShippingCityNameEnabled)
+                        model.ZipPostalCode = shippingAddress.ZipPostalCode;
+                    else
+                        model.City = shippingAddress.City;
+                }
             }
 
             return model;
@@ -1228,22 +1234,24 @@ namespace Nop.Web.Factories
         /// Prepare the estimate shipping result model
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
-        /// <param name="countryId">Country identifier</param>
-        /// <param name="stateProvinceId">State or province identifier</param>
-        /// <param name="zipPostalCode">Zip postal code</param>
+        /// <param name="request">Request to get shipping options</param>
         /// <param name="cacheShippingOptions">Indicates whether to cache offered shipping options</param>
         /// <returns>Estimate shipping result model</returns>
-        public virtual async Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheShippingOptions)
+        public virtual async Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, EstimateShippingModel request, bool cacheShippingOptions)
         {
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
+
             var model = new EstimateShippingResultModel();
 
             if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             {
                 var address = new Address
                 {
-                    CountryId = countryId,
-                    StateProvinceId = stateProvinceId,
-                    ZipPostalCode = zipPostalCode,
+                    CountryId = request.CountryId,
+                    StateProvinceId = request.StateProvinceId,
+                    ZipPostalCode = request.ZipPostalCode,
+                    City = request.City
                 };
 
                 var rawShippingOptions = new List<ShippingOption>();
