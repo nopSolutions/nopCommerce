@@ -692,7 +692,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.ContentManagement.Forums.Forum.Fields.Name.Required"] = "Forum name is required.",
 
                 //#5475
-                ["Admin.Orders.Fields.ShippingMethod.Hint"] = "The customers chosen shipping method for this order. You can manage shipping methods from Configuration > Shipping > Shipping providers."
+                ["Admin.Orders.Fields.ShippingMethod.Hint"] = "The customers chosen shipping method for this order. You can manage shipping methods from Configuration > Shipping > Shipping providers.",
+
+                //#5482
+                ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly"] = "Tax rates by address only",
+                ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly.Hint"] = "Determine whether to get tax rates by the address only. This may lead to not entirely accurate results (for example, when the cusotmer exempt to tax, or the product belongs to a tax category that has a specific rate), but it will significantly reduce the number of GetTax API calls. This applies only to tax rates in the catalog, on the checkout full information is always used in requests.",
             }).Wait();
 
             // rename locales

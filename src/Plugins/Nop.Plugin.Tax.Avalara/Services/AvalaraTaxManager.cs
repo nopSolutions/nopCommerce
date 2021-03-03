@@ -967,20 +967,19 @@ namespace Nop.Plugin.Tax.Avalara.Services
             //prepare cache key
             var address = await _addressService.GetAddressByIdAsync(taxRateRequest.Address.Id);
             var customer = taxRateRequest.Customer ?? await _workContext.GetCurrentCustomerAsync();
-            var taxCode = (await _taxCategoryService.GetTaxCategoryByIdAsync(taxRateRequest.TaxCategoryId > 0
+            var taxCategoryId = taxRateRequest.TaxCategoryId > 0
                 ? taxRateRequest.TaxCategoryId
-                : taxRateRequest.Product?.TaxCategoryId
-                ?? 0))?.Name;
-            var itemCode = taxRateRequest.Product?.Sku;
-            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(AvalaraTaxDefaults.TaxRateCacheKey,
-                customer,
-                taxCode,
-                itemCode,
+                : taxRateRequest.Product?.TaxCategoryId ?? 0;
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxRateCacheKey,
+                _avalaraTaxSettings.GetTaxRateByAddressOnly ? null : customer,
+                _avalaraTaxSettings.GetTaxRateByAddressOnly ? 0 : taxCategoryId,
                 taxRateRequest.Address.Address1,
                 taxRateRequest.Address.City,
                 taxRateRequest.Address.StateProvinceId ?? 0,
                 taxRateRequest.Address.CountryId ?? 0,
                 taxRateRequest.Address.ZipPostalCode);
+            if (_avalaraTaxSettings.GetTaxRateByAddressOnly && _avalaraTaxSettings.TaxRateByAddressCacheTime > 0)
+                cacheKey.CacheTime = _avalaraTaxSettings.TaxRateByAddressCacheTime;
 
             //get tax rate
             return await _staticCacheManager.GetAsync(cacheKey, async () =>
@@ -989,21 +988,25 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 {
                     //create tax transaction for a single item and without saving
                     var model = await PrepareTransactionModelAsync(address, customer.Id.ToString(), DocumentType.SalesOrder);
+                    var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(taxCategoryId);
                     model.lines = new List<LineItemModel>
                     {
                         new LineItemModel
                         {
                             amount = 100,
                             quantity = 1,
-                            itemCode = CommonHelper.EnsureMaximumLength(itemCode, 50),
-                            taxCode = CommonHelper.EnsureMaximumLength(taxCode, 25),
-                            exemptionCode = (taxRateRequest.Product?.IsTaxExempt ?? false)
+                            itemCode = CommonHelper.EnsureMaximumLength(taxRateRequest.Product?.Sku, 50),
+                            taxCode = CommonHelper.EnsureMaximumLength(taxCategory?.Name, 25),
+                            exemptionCode = !_avalaraTaxSettings.GetTaxRateByAddressOnly && (taxRateRequest.Product?.IsTaxExempt ?? false)
                                 ? CommonHelper.EnsureMaximumLength($"Exempt-product-#{taxRateRequest.Product.Id}", 25)
                                 : string.Empty,
                         }
                     };
 
-                    await PrepareModelTaxExemptionAsync(model, customer);
+                    //prepare tax exemption 
+                    if (!_avalaraTaxSettings.GetTaxRateByAddressOnly)
+                        await PrepareModelTaxExemptionAsync(model, customer);
+
                     var transaction = CreateTransaction(model);
 
                     //we return the tax total, since we used the amount of 100 when requesting, so the total is the same as the rate
