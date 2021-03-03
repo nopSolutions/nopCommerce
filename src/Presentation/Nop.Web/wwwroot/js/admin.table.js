@@ -22,8 +22,8 @@ function escapeHtml(string) {
 var selectedIds = [];
 
 
-function clearMasterCheckbox(tableName) {
-  $($('#' + tableName).parents('.dataTables_scroll').find('input.mastercheckbox')).prop('checked', false).change();
+function clearMasterCheckbox(tableSelector) {
+  $($(tableSelector).parents('.dataTables_scroll').find('input.mastercheckbox')).prop('checked', false).change();
   selectedIds = [];
 }
 
