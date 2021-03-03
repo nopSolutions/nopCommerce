@@ -288,13 +288,20 @@ namespace Nop.Services.Catalog
             var stockQuantity = await GetTotalStockQuantityAsync(product);
             if (stockQuantity > 0)
             {
-                stockMessage = product.DisplayStockQuantity
-                    ?
+                if (product.DisplayStockQuantity)
+                {
                     //display "in stock" with stock quantity
-                    string.Format(await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity)
-                    :
-                    //display "in stock" without stock quantity
-                    await _localizationService.GetResourceAsync("Products.Availability.InStock");
+                    stockMessage = string.Format(
+                        await _localizationService.GetResourceAsync("Products.Availability.InStockWithQuantity"), stockQuantity);
+                }
+                else
+                {
+                    stockMessage = (stockQuantity > product.LowStockQuantity)
+                        //display "in stock" without stock quantity
+                        ? await _localizationService.GetResourceAsync("Products.Availability.InStock")
+                        //display "low stock" without stock quantity
+                        : await _localizationService.GetResourceAsync("Products.Availability.LowStock");
+                }
             }
             else
             {
@@ -1290,6 +1297,29 @@ namespace Nop.Services.Catalog
                 result -= await pwi.SumAsync(x => x.ReservedQuantity);
 
             return result;
+        }
+        
+        /// <summary>
+        /// Get product's in stock status. If value is <see langword="null"/> it means produt don't have managed stock.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>In stock status</returns>
+        public virtual async Task<ProductStockStatus?> GetInStockStatusAsync(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+                return null;
+
+            var totalStockQuantity = await GetTotalStockQuantityAsync(product);
+
+            if (totalStockQuantity > product.LowStockQuantity)
+                return ProductStockStatus.InStock;
+            else if (totalStockQuantity > 0 && totalStockQuantity <= product.LowStockQuantity)
+                return ProductStockStatus.LowStock;
+
+            return ProductStockStatus.OutOfStock;
         }
 
         /// <summary>

@@ -273,6 +273,13 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         Task<int> GetTotalStockQuantityAsync(Product product, bool useReservedQuantity = true, int warehouseId = 0);
 
+        /// <summary>
+        /// Get product's in stock status. If value is <see langword="null"/> it means produt don't have managed stock.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>In stock status</returns>
+        Task<ProductStockStatus?> GetInStockStatusAsync(Product product);
+
         //TODO: migrate to an extension method
         /// <summary>
         /// Get number of rental periods (price ratio)

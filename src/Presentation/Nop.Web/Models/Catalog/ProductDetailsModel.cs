@@ -76,6 +76,8 @@ namespace Nop.Web.Models.Catalog
         public DateTime? AvailableEndDate { get; set; }
 
         public ManageInventoryMethod ManageInventoryMethod { get; set; }
+        
+        public ProductStockStatus? StockStatus { get; set; }
 
         public string StockAvailability { get; set; }
 

@@ -1320,6 +1320,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
                 new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, await IgnoreExportProductPropertyAsync(p => p.DisplayStockAvailability)),
                 new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumStockQuantity)),
+                new PropertyByName<Product>("LowStockQuantity", p => p.LowStockQuantity, await IgnoreExportProductPropertyAsync(p => p.LowStockQuantity)),
                 new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, await IgnoreExportProductPropertyAsync(p => p.LowStockActivity))
                 {
                     DropDownElements = await LowStockActivity.Nothing.ToSelectListAsync(useLocalization: false)

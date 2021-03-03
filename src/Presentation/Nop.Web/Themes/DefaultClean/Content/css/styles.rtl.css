@@ -2258,6 +2258,20 @@ label, label + * {
 .variant-overview .availability .stock {
   margin: 0 0 10px;
 }
+.overview .availability .stock.in-stock .value,
+.variant-overview .availability .stock.in-stock .value {
+  color: #007716;
+}
+
+.overview .availability .stock.low-stock .value,
+.variant-overview .availability .stock.low-stock .value {
+  color: #9e5200;
+}
+
+.overview .availability .stock.out-of-stock .value,
+.variant-overview .availability .stock.out-of-stock .value {
+  color: #d00000;
+}
 
 .overview .availability .back-in-stock-subscription,
 .variant-overview .availability .back-in-stock-subscription {
