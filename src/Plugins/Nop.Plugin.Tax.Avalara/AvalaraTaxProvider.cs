@@ -176,7 +176,9 @@ namespace Nop.Plugin.Tax.Avalara
                 UseSandbox = true,
                 CommitTransactions = true,
                 TaxOriginAddressType = TaxOriginAddressType.DefaultTaxAddress,
-                EnableLogging = true
+                EnableLogging = true,
+                GetTaxRateByAddressOnly = true,
+                TaxRateByAddressCacheTime = 480
             });
 
             if (!_widgetSettings.ActiveWidgetSystemNames.Contains(AvalaraTaxDefaults.SystemName))
@@ -214,6 +216,8 @@ namespace Nop.Plugin.Tax.Avalara
                 ["Plugins.Tax.Avalara.Fields.EntityUseCode"] = "Entity use code",
                 ["Plugins.Tax.Avalara.Fields.EntityUseCode.Hint"] = "Choose a code that can be used to designate the reason for a particular sale being exempt. Each entity use code stands for a different exemption reason, the logic of which can be found in Avalara exemption reason documentation.",
                 ["Plugins.Tax.Avalara.Fields.EntityUseCode.None"] = "None",
+                ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly"] = "Tax rates by address only",
+                ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly.Hint"] = "Determine whether to get tax rates by the address only. This may lead to not entirely accurate results (for example, when the cusotmer exempt to tax, or the product belongs to a tax category that has a specific rate), but it will significantly reduce the number of GetTax API calls. This applies only to tax rates in the catalog, on the checkout full information is always used in requests.",
                 ["Plugins.Tax.Avalara.Fields.LicenseKey"] = "License key",
                 ["Plugins.Tax.Avalara.Fields.LicenseKey.Hint"] = "Specify Avalara account license key.",
                 ["Plugins.Tax.Avalara.Fields.LicenseKey.Required"] = "Account license key is required",

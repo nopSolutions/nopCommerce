@@ -44,27 +44,27 @@
 
     function toggleAllowPickupInStore() {
         if ($('#@Html.IdFor(model => model.AllowPickupInStore)').is(':checked')) {
-            $('#pnlDisplayPickupPointsOnMap').showField();
-            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').showField();
+            $('#pnlDisplayPickupPointsOnMap').showElement();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').showElement();
             if ($('#@Html.IdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
-                $('#pnlGoogleMapsApiKey').showField();
+                $('#pnlGoogleMapsApiKey').showElement();
             } else {
-                $('#pnlGoogleMapsApiKey').hide();
+                $('#pnlGoogleMapsApiKey').hideElement();
             }
         } else {
-            $('#pnlDisplayPickupPointsOnMap').hide();
-            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').hide();
-            $('#pnlGoogleMapsApiKey').hide();
+            $('#pnlDisplayPickupPointsOnMap').hideElement();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').hideElement();
+            $('#pnlGoogleMapsApiKey').hideElement();
         }
     }
 
     function toggleFreeShippingOverX() {
         if ($('#@Html.IdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
-            $('#pnlValueOfX').showField();
-            $('#pnlValueOfXincltax').showField();
+            $('#pnlValueOfX').showElement();
+            $('#pnlValueOfXincltax').showElement();
         } else {
-            $('#pnlValueOfX').hide();
-            $('#pnlValueOfXincltax').hide();
+            $('#pnlValueOfX').hideElement();
+            $('#pnlValueOfXincltax').hideElement();
         }
     }
 </script>

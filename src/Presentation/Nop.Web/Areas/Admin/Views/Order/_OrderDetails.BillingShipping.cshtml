@@ -371,17 +371,17 @@
 
                                 function toggleEditShippingMethod(editmode) {
                                     if (editmode) {
-                                        $('#lblShippingMethod').hide();
-                                        $('#divShippingMethod').showField();
-                                        $('#btnEditShippingMethod').hide();
-                                        $('#btnSaveShippingMethod').showField();
-                                        $('#btnCancelShippingMethod').showField();
+                                        $('#lblShippingMethod').hideElement();
+                                        $('#divShippingMethod').showElement();
+                                        $('#btnEditShippingMethod').hideElement();
+                                        $('#btnSaveShippingMethod').showElement();
+                                        $('#btnCancelShippingMethod').showElement();
                                     } else {
-                                        $('#lblShippingMethod').show();
-                                        $('#divShippingMethod').hide();
-                                        $('#btnEditShippingMethod').show();
-                                        $('#btnSaveShippingMethod').hide();
-                                        $('#btnCancelShippingMethod').hide();
+                                        $('#lblShippingMethod').showElement();
+                                        $('#divShippingMethod').hideElement();
+                                        $('#btnEditShippingMethod').showElement();
+                                        $('#btnSaveShippingMethod').hideElement();
+                                        $('#btnCancelShippingMethod').hideElement();
                                     }
                                 }
                             </script>

@@ -80,9 +80,9 @@
 
     function toggleTaxDisplayType() {
         if ($('#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
-            $('#pnlTaxDisplayType').hide();
+            $('#pnlTaxDisplayType').hideElement();
         } else {
-            $('#pnlTaxDisplayType').showField();
+            $('#pnlTaxDisplayType').showElement();
         }
     }
 </script>

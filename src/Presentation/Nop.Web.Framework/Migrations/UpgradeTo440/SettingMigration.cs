@@ -178,6 +178,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 catalogSettings.AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay;
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
+
+            //#5482
+            settingService.SetSettingAsync("avalarataxsettings.gettaxratebyaddressonly", true).Wait();
+            settingService.SetSettingAsync("avalarataxsettings.taxratebyaddresscachetime", 480).Wait();
         }
 
         public override void Down()

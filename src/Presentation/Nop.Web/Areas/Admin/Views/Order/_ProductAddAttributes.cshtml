@@ -208,7 +208,7 @@
                                                     $("#@(controlId)").val(responseJSON.downloadGuid);
                                                     if (responseJSON.success) {
                                                         $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
-                                                        $("#@(controlId + "remove")").showField();
+                                                        $("#@(controlId + "remove")").show();
                                                     }
 
                                                     if (responseJSON.message) {
@@ -295,7 +295,7 @@
                         success: function (data, textStatus, jqXHR) {
                             if (data.enabledattributemappingids) {
                                 for (var i = 0; i < data.enabledattributemappingids.length; i++) {
-                                    $('#product_attribute_row_' + data.enabledattributemappingids[i]).showField();
+                                    $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
                                 }
                             }
                             if (data.disabledattributemappingids) {

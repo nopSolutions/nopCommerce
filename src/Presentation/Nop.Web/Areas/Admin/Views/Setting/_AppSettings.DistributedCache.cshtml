@@ -58,28 +58,28 @@
 
     function toggleDistributedCache() {
         if ($('#@Html.IdFor(model => model.DistributedCacheConfigModel.Enabled)').is(':checked')) {
-            $('#distributed-cache-connection-string').showField();
-            $('#distributed-cache-type').showField();
+            $('#distributed-cache-connection-string').showElement();
+            $('#distributed-cache-type').showElement();
 
             var cacheType = $('#@Html.IdFor(model => model.DistributedCacheConfigModel.DistributedCacheType)').val();
 
             if (cacheType == @((int)DistributedCacheType.Memory))
             {
-                $('#distributed-cache-connection-string').hide();
+                $('#distributed-cache-connection-string').hideElement();
             }
 
             if (cacheType == @((int)DistributedCacheType.SqlServer)) {
-                $('#distributed-cache-schema-name').showField();
-                $('#distributed-cache-table-name').showField();
+                $('#distributed-cache-schema-name').showElement();
+                $('#distributed-cache-table-name').showElement();
             } else {
-                $('#distributed-cache-schema-name').hide();
-                $('#distributed-cache-table-name').hide();
+                $('#distributed-cache-schema-name').hideElement();
+                $('#distributed-cache-table-name').hideElement();
             }
         } else {
-            $('#distributed-cache-connection-string').hide();
-            $('#distributed-cache-schema-name').hide();
-            $('#distributed-cache-table-name').hide();
-            $('#distributed-cache-type').hide();
+            $('#distributed-cache-connection-string').hideElement();
+            $('#distributed-cache-schema-name').hideElement();
+            $('#distributed-cache-table-name').hideElement();
+            $('#distributed-cache-type').hideElement();
         }
     }
 </script>

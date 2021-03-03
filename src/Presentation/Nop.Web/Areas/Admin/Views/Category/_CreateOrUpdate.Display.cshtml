@@ -128,22 +128,22 @@
 
     function togglePageSize() {
         if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
-            $('#pnlPageSize').hide();
-            $('#pnlPageSizeOptions').showField();
+            $('#pnlPageSize').hideElement();
+            $('#pnlPageSizeOptions').showElement();
         } else {
-            $('#pnlPageSize').showField();
-            $('#pnlPageSizeOptions').hide();
+            $('#pnlPageSize').showElement();
+            $('#pnlPageSizeOptions').hideElement();
         }
     }
 
     function togglePriceRange() {
         if ($('#@Html.IdFor(model => model.AutomaticallyCalculatePriceRange)').is(':checked')) {
-            $('#pnlPriceRangeFrom').hide();
-            $('#pnlPriceRangeTo').hide();
+            $('#pnlPriceRangeFrom').hideElement();
+            $('#pnlPriceRangeTo').hideElement();
             $('#@Html.IdFor(model => model.AutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').addClass('parent-setting-ticked');
         } else {
-            $('#pnlPriceRangeFrom').showField();
-            $('#pnlPriceRangeTo').showField();
+            $('#pnlPriceRangeFrom').showElement();
+            $('#pnlPriceRangeTo').showElement();
             $('#@Html.IdFor(model => model.AutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').removeClass('parent-setting-ticked');
         }
     }
@@ -151,14 +151,14 @@
     function toggleAutomaticallyCalculatePriceRange() {
         if ($('#@Html.IdFor(model => model.PriceRangeFiltering)').is(':checked')) {
             if (!$('#@Html.IdFor(model => model.AutomaticallyCalculatePriceRange)').is(':checked')) {
-                $('#pnlPriceRangeFrom').showField();
-                $('#pnlPriceRangeTo').showField();
+                $('#pnlPriceRangeFrom').showElement();
+                $('#pnlPriceRangeTo').showElement();
             }
-            $('#pnlAutomaticallyCalculatePriceRange').showField();
+            $('#pnlAutomaticallyCalculatePriceRange').showElement();
         } else {
-            $('#pnlPriceRangeFrom').hide();
-            $('#pnlPriceRangeTo').hide();
-            $('#pnlAutomaticallyCalculatePriceRange').hide();
+            $('#pnlPriceRangeFrom').hideElement();
+            $('#pnlPriceRangeTo').hideElement();
+            $('#pnlAutomaticallyCalculatePriceRange').hideElement();
         }
     }
 </script>

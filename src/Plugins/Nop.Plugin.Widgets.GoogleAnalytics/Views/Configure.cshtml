@@ -13,12 +13,12 @@
     
     function toggleEnableEcommerce() {
         if ($('#@Html.IdFor(model => model.EnableEcommerce)').is(':checked')) {
-            $('#pnlUseJsToSendEcommerceInfo').showField();
-            $('#pnlIncludingTax').showField();
+            $('#pnlUseJsToSendEcommerceInfo').showElement();
+            $('#pnlIncludingTax').showElement();
         }
         else {
-            $('#pnlUseJsToSendEcommerceInfo').hide();
-            $('#pnlIncludingTax').hide();
+            $('#pnlUseJsToSendEcommerceInfo').hideElement();
+            $('#pnlIncludingTax').hideElement();
         }
     }
 </script>

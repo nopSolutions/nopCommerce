@@ -13,17 +13,17 @@
     
     function toggleTaxDisplayType() {
         if ($('#@Html.IdFor(model => model.OverrideTaxDisplayType)').is(':checked')) {
-            $('#pnlDefaultTaxDisplayType').showField();
+            $('#pnlDefaultTaxDisplayType').showElement();
         } else {
-            $('#pnlDefaultTaxDisplayType').hide();
+            $('#pnlDefaultTaxDisplayType').hideElement();
         }
     }
 
     function toggleRemoveButton() {
         if ($('#@Html.IdFor(model => model.PurchasedWithProductId)').val() > 0) {
-            $('#purchased-with-product-name-remove').showField();
+            $('#purchased-with-product-name-remove').showElement();
         } else {
-            $('#purchased-with-product-name-remove').hide();
+            $('#purchased-with-product-name-remove').hideElement();
         }
     }
 </script>

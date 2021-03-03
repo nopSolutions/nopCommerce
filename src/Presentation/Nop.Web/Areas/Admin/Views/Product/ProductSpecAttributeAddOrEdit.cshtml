@@ -120,20 +120,20 @@
 
                                             var values = Object.values(valueContainers);
                                             values.forEach(function(value) {
-                                                value.hide();
+                                                value.hideElement();
                                                 value.find("input").prop("disabled", true);
                                             });
-                                            valueContainers[attrTypeId].show();
+                                            valueContainers[attrTypeId].showElement();
                                             valueContainers[attrTypeId].find("input").prop("disabled", false);
 
                                             var allowFilteringSection = $('#AllowFilteringSection');
                                             var allowFilteringField = $('#@Html.IdFor(model => model.AllowFiltering)');
 
                                             if (attrTypeId == '@((int) SpecificationAttributeType.Option)') {
-                                                allowFilteringSection.showField();
+                                                allowFilteringSection.showElement();
                                             } else {
                                                 allowFilteringField.prop('checked', false);
-                                                allowFilteringSection.hide();
+                                                allowFilteringSection.hideElement();
                                             }
                                         });
 

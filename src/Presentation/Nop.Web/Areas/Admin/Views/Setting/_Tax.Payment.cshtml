@@ -44,11 +44,11 @@
 
     function togglePayment() {
         if ($('#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
-            $('#pnlPaymentMethodAdditionalFeeIncludesTax').showField();
-            $('#pnlPaymentMethodAdditionalFeeTaxClass').showField();
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').showElement();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').showElement();
         } else {
-            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
-            $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hideElement();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').hideElement();
         }
     }
 </script>

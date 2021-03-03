@@ -17,23 +17,23 @@
                 <script>
                     function toggleOrderItemEdit@(item.Id)(editMode) {
                         if (editMode) {
-                            $('#pnlEditPvUnitPrice@(item.Id)').show();
-                            $('#pnlEditPvQuantity@(item.Id)').show();
-                            $('#pnlEditPvDiscount@(item.Id)').show();
-                            $('#pnlEditPvPrice@(item.Id)').show();
-                            $('#btnEditOrderItem@(item.Id)').hide();
-                            $('#btnDeleteOrderItem@(item.Id)').hide();
-                            $('#btnSaveOrderItem@(item.Id)').show();
-                            $('#btnCancelOrderItem@(item.Id)').show();
+                            $('#pnlEditPvUnitPrice@(item.Id)').showElement();
+                            $('#pnlEditPvQuantity@(item.Id)').showElement();
+                            $('#pnlEditPvDiscount@(item.Id)').showElement();
+                            $('#pnlEditPvPrice@(item.Id)').showElement();
+                            $('#btnEditOrderItem@(item.Id)').hideElement();
+                            $('#btnDeleteOrderItem@(item.Id)').hideElement();
+                            $('#btnSaveOrderItem@(item.Id)').showElement();
+                            $('#btnCancelOrderItem@(item.Id)').showElement();
                         } else {
-                            $('#pnlEditPvUnitPrice@(item.Id)').hide();
-                            $('#pnlEditPvQuantity@(item.Id)').hide();
-                            $('#pnlEditPvDiscount@(item.Id)').hide();
-                            $('#pnlEditPvPrice@(item.Id)').hide();
-                            $('#btnEditOrderItem@(item.Id)').show();
-                            $('#btnDeleteOrderItem@(item.Id)').show();
-                            $('#btnSaveOrderItem@(item.Id)').hide();
-                            $('#btnCancelOrderItem@(item.Id)').hide();
+                            $('#pnlEditPvUnitPrice@(item.Id)').hideElement();
+                            $('#pnlEditPvQuantity@(item.Id)').hideElement();
+                            $('#pnlEditPvDiscount@(item.Id)').hideElement();
+                            $('#pnlEditPvPrice@(item.Id)').hideElement();
+                            $('#btnEditOrderItem@(item.Id)').showElement();
+                            $('#btnDeleteOrderItem@(item.Id)').showElement();
+                            $('#btnSaveOrderItem@(item.Id)').hideElement();
+                            $('#btnCancelOrderItem@(item.Id)').hideElement();
                         }
                     }
                 </script>
