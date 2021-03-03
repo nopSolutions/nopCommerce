@@ -178,13 +178,13 @@
     function toggleGiftCardType() {
         var selectedGiftCardTypeId = $("#@Html.IdFor(model => model.GiftCardTypeId)").val();
         if (selectedGiftCardTypeId == @(((int) GiftCardType.Virtual).ToString())) {
-            $('#pnlRecipientEmail').showField();
-            $('#pnlSenderEmail').showField();
-            $('#pnlNotifyRecipient').showField();
+            $('#pnlRecipientEmail').showElement();
+            $('#pnlSenderEmail').showElement();
+            $('#pnlNotifyRecipient').showElement();
         } else {
-            $('#pnlRecipientEmail').hide();
-            $('#pnlSenderEmail').hide();
-            $('#pnlNotifyRecipient').hide();
+            $('#pnlRecipientEmail').hideElement();
+            $('#pnlSenderEmail').hideElement();
+            $('#pnlNotifyRecipient').hideElement();
         }
     }
 </script>

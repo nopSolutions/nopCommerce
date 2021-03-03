@@ -33,30 +33,30 @@
     function toggleProductType() {
         var selectedProductTypeId = $("#@Html.IdFor(model => model.AttributeValueTypeId)").val();
         if (selectedProductTypeId == @(((int) AttributeValueType.Simple).ToString())) {
-            $('#group-associated-product').hide();
-        $('#group-customer-enters-qty').hide();
-        $('#group-quantity').hide();
-        $('#group-price-adjustment').showField();
-        $('#group-price-adjustment-percentage').showField();
-        $('#group-weight-adjustment').showField();
-        $('#group-cost').showField();
+            $('#group-associated-product').hideElement();
+        $('#group-customer-enters-qty').hideElement();
+        $('#group-quantity').hideElement();
+        $('#group-price-adjustment').showElement();
+        $('#group-price-adjustment-percentage').showElement();
+        $('#group-weight-adjustment').showElement();
+        $('#group-cost').showElement();
     } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
-        $('#group-associated-product').showField();
-        $('#group-customer-enters-qty').showField();
-        $('#group-price-adjustment').hide();
-        $('#group-price-adjustment-percentage').hide();
-        $('#group-weight-adjustment').hide();
-        $('#group-cost').hide();
+        $('#group-associated-product').showElement();
+        $('#group-customer-enters-qty').showElement();
+        $('#group-price-adjustment').hideElement();
+        $('#group-price-adjustment-percentage').hideElement();
+        $('#group-weight-adjustment').hideElement();
+        $('#group-cost').hideElement();
         toggleCustomerEntersQty();
     }
     };
 
     function toggleCustomerEntersQty() {
         if ($("#@Html.IdFor(model => model.CustomerEntersQty)").is(':checked')) {
-            $('#group-quantity').hide();
+            $('#group-quantity').hideElement();
         }
         else {
-            $('#group-quantity').showField();
+            $('#group-quantity').showElement();
         }
     }
 </script>

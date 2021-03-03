@@ -113,9 +113,9 @@
 
     function toggleProductReviewsPageSizeOnAccountPage() {
         if ($('#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
-            $('#pnlProductReviewsPageSizeOnAccountPage').showField();
+            $('#pnlProductReviewsPageSizeOnAccountPage').showElement();
         } else {
-            $('#pnlProductReviewsPageSizeOnAccountPage').hide();
+            $('#pnlProductReviewsPageSizeOnAccountPage').hideElement();
         }
     }
 </script>

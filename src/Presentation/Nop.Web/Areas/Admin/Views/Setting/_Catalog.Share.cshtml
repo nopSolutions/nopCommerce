@@ -53,9 +53,9 @@
 
         function togglePageShareCode() {
             if ($('#@Html.IdFor(model => model.ShowShareButton)').is(':checked')) {
-                $('#pnlPageShareCode').showField();
+                $('#pnlPageShareCode').showElement();
             } else {
-                $('#pnlPageShareCode').hide();
+                $('#pnlPageShareCode').hideElement();
             }
         }
     </script>

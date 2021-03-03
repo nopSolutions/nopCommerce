@@ -30,12 +30,12 @@
 
     function toggleCustomerCountryFormField() {
         if ($('#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
-            $('#pnlCustomerCountryRequired').showField();
-            $('#pnlCustomerStateProvinceEnabled').showField();
+            $('#pnlCustomerCountryRequired').showElement();
+            $('#pnlCustomerStateProvinceEnabled').showElement();
             toggleCustomerStateProvinceFormField();
         } else {
-            $('#pnlCustomerCountryRequired').hide();
-            $('#pnlCustomerStateProvinceEnabled').hide();
+            $('#pnlCustomerCountryRequired').hideElement();
+            $('#pnlCustomerStateProvinceEnabled').hideElement();
             toggleCustomerStateProvinceFormField();
         }
     }
@@ -43,101 +43,101 @@
     function toggleCustomerStateProvinceFormField() {
         if ($('#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked') &&
             $('#@Html.IdFor(model => model.CustomerSettings.StateProvinceEnabled)').is(':checked')) {
-            $('#pnlCustomerStateProvinceRequired').showField();
+            $('#pnlCustomerStateProvinceRequired').showElement();
         } else {
-            $('#pnlCustomerStateProvinceRequired').hide();
+            $('#pnlCustomerStateProvinceRequired').hideElement();
         }
     }
 
     function toggleCustomerRequiredFormField() {
         if ($('#@Html.IdFor(model => model.CustomerSettings.FirstNameEnabled)').is(':checked')) {
-            $('#pnlCustomerFirstNameRequired').showField();
+            $('#pnlCustomerFirstNameRequired').showElement();
         } else {
-            $('#pnlCustomerFirstNameRequired').hide();
+            $('#pnlCustomerFirstNameRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.LastNameEnabled)').is(':checked')) {
-            $('#pnlCustomerLastNameRequired').showField();
+            $('#pnlCustomerLastNameRequired').showElement();
         } else {
-            $('#pnlCustomerLastNameRequired').hide();
+            $('#pnlCustomerLastNameRequired').hideElement();
         }
 		
 		if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
-            $('#pnlCustomerDateOfBirthRequired').showField();
+            $('#pnlCustomerDateOfBirthRequired').showElement();
         } else {
-            $('#pnlCustomerDateOfBirthRequired').hide();
+            $('#pnlCustomerDateOfBirthRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked') &&
             $('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)').is(':checked')) {
-            $('#pnlDateOfBirthMinimumAge').showField();
+            $('#pnlDateOfBirthMinimumAge').showElement();
         } else {
-            $('#pnlDateOfBirthMinimumAge').hide();
+            $('#pnlDateOfBirthMinimumAge').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
-            $('#pnlCustomerCompanyRequired').showField();
+            $('#pnlCustomerCompanyRequired').showElement();
         } else {
-            $('#pnlCustomerCompanyRequired').hide();
+            $('#pnlCustomerCompanyRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.StreetAddressEnabled)').is(':checked')) {
-            $('#pnlCustomerStreetAddressRequired').showField();
+            $('#pnlCustomerStreetAddressRequired').showElement();
         } else {
-            $('#pnlCustomerStreetAddressRequired').hide();
+            $('#pnlCustomerStreetAddressRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.StreetAddress2Enabled)').is(':checked')) {
-            $('#pnlCustomerStreetAddress2Required').showField();
+            $('#pnlCustomerStreetAddress2Required').showElement();
         } else {
-            $('#pnlCustomerStreetAddress2Required').hide();
+            $('#pnlCustomerStreetAddress2Required').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)').is(':checked')) {
-            $('#pnlCustomerZipPostalCodeRequired').showField();
+            $('#pnlCustomerZipPostalCodeRequired').showElement();
         } else {
-            $('#pnlCustomerZipPostalCodeRequired').hide();
+            $('#pnlCustomerZipPostalCodeRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.CityEnabled)').is(':checked')) {
-            $('#pnlCustomerCityRequired').showField();
+            $('#pnlCustomerCityRequired').showElement();
         } else {
-            $('#pnlCustomerCityRequired').hide();
+            $('#pnlCustomerCityRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.CountyEnabled)').is(':checked')) {
-            $('#pnlCustomerCountyRequired').showField();
+            $('#pnlCustomerCountyRequired').showElement();
         } else {
-            $('#pnlCustomerCountyRequired').hide();
+            $('#pnlCustomerCountyRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.PhoneEnabled)').is(':checked')) {
-            $('#pnlCustomerPhoneRequired').showField();
+            $('#pnlCustomerPhoneRequired').showElement();
         } else {
-            $('#pnlCustomerPhoneRequired').hide();
+            $('#pnlCustomerPhoneRequired').hideElement();
         }
 
         if ($('#@Html.IdFor(model => model.CustomerSettings.FaxEnabled)').is(':checked')) {
-            $('#pnlCustomerFaxRequired').showField();
+            $('#pnlCustomerFaxRequired').showElement();
         } else {
-            $('#pnlCustomerFaxRequired').hide();
+            $('#pnlCustomerFaxRequired').hideElement();
         }
     }
 
     function toggleNewsletterEnabledField() {
         if ($('#@Html.IdFor(model => model.CustomerSettings.NewsletterEnabled)').is(':checked')) {
-            $('#pnlCustomerNewsletterTickedByDefault').showField();
+            $('#pnlCustomerNewsletterTickedByDefault').showElement();
         } else {
-            $('#pnlCustomerNewsletterTickedByDefault').hide();
+            $('#pnlCustomerNewsletterTickedByDefault').hideElement();
         }
     }
 
     function toggleHideNewsletterBlock() {
         if ($('#@Html.IdFor(model => model.CustomerSettings.HideNewsletterBlock)').is(':checked')) {
-            $('#pnlNewsletterBlockAllowToUnsubscribe').hide();
+            $('#pnlNewsletterBlockAllowToUnsubscribe').hideElement();
         }
         else {
-            $('#pnlNewsletterBlockAllowToUnsubscribe').showField();
+            $('#pnlNewsletterBlockAllowToUnsubscribe').showElement();
         }
     }
 </script>

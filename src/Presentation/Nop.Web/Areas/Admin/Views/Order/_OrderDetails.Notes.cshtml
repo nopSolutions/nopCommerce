@@ -60,10 +60,10 @@
 
             function toggleAddOrderNoteHasDownload() {
                 if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
-                    $('#pnlAddOrderNoteDownloadId').showField();
+                    $('#pnlAddOrderNoteDownloadId').showElement();
                 }
                 else {
-                    $('#pnlAddOrderNoteDownloadId').hide();
+                    $('#pnlAddOrderNoteDownloadId').hideElement();
                 }
             }
         </script>

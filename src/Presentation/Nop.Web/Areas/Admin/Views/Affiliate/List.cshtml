@@ -34,11 +34,11 @@
 
     function toggleLoadOnlyWithOrders() {
         if ($('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
-            $('#pnlOrdersCreatedFromUtc').showField();
-            $('#pnlOrdersCreatedToUtc').showField();
+            $('#pnlOrdersCreatedFromUtc').showElement();
+            $('#pnlOrdersCreatedToUtc').showElement();
         } else {
-            $('#pnlOrdersCreatedFromUtc').hide();
-            $('#pnlOrdersCreatedToUtc').hide();
+            $('#pnlOrdersCreatedFromUtc').hideElement();
+            $('#pnlOrdersCreatedToUtc').hideElement();
         }
     }
 </script>
