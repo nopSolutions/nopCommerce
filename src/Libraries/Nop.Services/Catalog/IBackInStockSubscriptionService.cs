@@ -54,5 +54,16 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <returns>Number of sent email</returns>
         Task<int> SendNotificationsToSubscribersAsync(Product product);
+        
+        /// <summary>
+        /// Gets all subscriptions
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Subscriptions</returns>
+        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductIdAsync(int productId,
+            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
     }
 }

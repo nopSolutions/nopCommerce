@@ -124,5 +124,22 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         Task<decimal> ConvertFromPrimaryMeasureWeightAsync(decimal value,
             MeasureWeight targetMeasureWeight);
-    }
+
+        /// <summary>
+        /// Converts to primary measure dimension
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="sourceMeasureDimension">Source dimension</param>
+        /// <returns>Converted value</returns>
+        Task<decimal> ConvertToPrimaryMeasureDimensionAsync(decimal value,
+            MeasureDimension sourceMeasureDimension);
+
+        /// <summary>
+        /// Converts to primary measure weight
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="sourceMeasureWeight">Source weight</param>
+        /// <returns>Converted value</returns>
+        Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight);
+    }   
 }

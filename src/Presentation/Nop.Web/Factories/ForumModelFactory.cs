@@ -131,67 +131,7 @@ namespace Nop.Web.Factories
 
             return forumsList;
         }
-
-        /// <summary>
-        /// Prepare the forum topic row model
-        /// </summary>
-        /// <param name="topic">Forum topic</param>
-        /// <returns>Forum topic row model</returns>
-        protected virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
-        {
-            if (topic == null)
-                throw new ArgumentNullException(nameof(topic));
-
-            var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId);
-
-            var topicModel = new ForumTopicRowModel
-            {
-                Id = topic.Id,
-                Subject = topic.Subject,
-                SeName = await _forumService.GetTopicSeNameAsync(topic),
-                LastPostId = topic.LastPostId,
-                NumPosts = topic.NumPosts,
-                Views = topic.Views,
-                NumReplies = topic.NumPosts > 0 ? topic.NumPosts - 1 : 0,
-                ForumTopicType = topic.ForumTopicType,
-                CustomerId = topic.CustomerId,
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customer),
-                CustomerName = await _customerService.FormatUsernameAsync(customer)
-            };
-
-            var forumPosts = await _forumService.GetAllPostsAsync(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
-            topicModel.TotalPostPages = forumPosts.TotalPages;
-
-            var firstPost = await _forumService.GetFirstPostAsync(topic);
-            topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
-
-            return topicModel;
-        }
-
-        /// <summary>
-        /// Prepare the forum row model
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum row model</returns>
-        protected virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
-        {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
-
-            var forumModel = new ForumRowModel
-            {
-                Id = forum.Id,
-                Name = forum.Name,
-                SeName = await _forumService.GetForumSeNameAsync(forum),
-                Description = forum.Description,
-                NumTopics = forum.NumTopics,
-                NumPosts = forum.NumPosts,
-                LastPostId = forum.LastPostId,
-            };
-
-            return forumModel;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -1008,6 +948,66 @@ namespace Nop.Web.Factories
             };
 
             return model;
+        }
+
+        /// <summary>
+        /// Prepare the forum topic row model
+        /// </summary>
+        /// <param name="topic">Forum topic</param>
+        /// <returns>Forum topic row model</returns>
+        public virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
+        {
+            if (topic == null)
+                throw new ArgumentNullException(nameof(topic));
+
+            var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId);
+
+            var topicModel = new ForumTopicRowModel
+            {
+                Id = topic.Id,
+                Subject = topic.Subject,
+                SeName = await _forumService.GetTopicSeNameAsync(topic),
+                LastPostId = topic.LastPostId,
+                NumPosts = topic.NumPosts,
+                Views = topic.Views,
+                NumReplies = topic.NumPosts > 0 ? topic.NumPosts - 1 : 0,
+                ForumTopicType = topic.ForumTopicType,
+                CustomerId = topic.CustomerId,
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customer),
+                CustomerName = await _customerService.FormatUsernameAsync(customer)
+            };
+
+            var forumPosts = await _forumService.GetAllPostsAsync(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
+            topicModel.TotalPostPages = forumPosts.TotalPages;
+
+            var firstPost = await _forumService.GetFirstPostAsync(topic);
+            topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
+
+            return topicModel;
+        }
+
+        /// <summary>
+        /// Prepare the forum row model
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum row model</returns>
+        public virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
+        {
+            if (forum == null)
+                throw new ArgumentNullException(nameof(forum));
+
+            var forumModel = new ForumRowModel
+            {
+                Id = forum.Id,
+                Name = forum.Name,
+                SeName = await _forumService.GetForumSeNameAsync(forum),
+                Description = forum.Description,
+                NumTopics = forum.NumTopics,
+                NumPosts = forum.NumPosts,
+                LastPostId = forum.LastPostId,
+            };
+
+            return forumModel;
         }
 
         #endregion

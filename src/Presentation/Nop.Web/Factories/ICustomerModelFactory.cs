@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -122,5 +123,13 @@ namespace Nop.Web.Factories
         /// <param name="isLogin">Is login page</param>
         /// <returns>Multi-factor authentication model</returns>
         Task<MultiFactorAuthenticationProviderModel> PrepareMultiFactorAuthenticationProviderModelAsync(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false);
+
+        /// <summary>
+        /// Prepare the custom customer attribute models
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
+        /// <returns>List of the customer attribute model</returns>
+        Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "");
     }
 }

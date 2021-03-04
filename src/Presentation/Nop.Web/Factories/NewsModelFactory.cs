@@ -73,44 +73,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare the news comment model
-        /// </summary>
-        /// <param name="newsComment">News comment</param>
-        /// <returns>News comment model</returns>
-        protected virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
-        {
-            if (newsComment == null)
-                throw new ArgumentNullException(nameof(newsComment));
-
-            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
-
-            var model = new NewsCommentModel
-            {
-                Id = newsComment.Id,
-                CustomerId = newsComment.CustomerId,
-                CustomerName = await _customerService.FormatUsernameAsync(customer),
-                CommentTitle = newsComment.CommentTitle,
-                CommentText = newsComment.CommentText,
-                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuestAsync(customer),
-            };
-
-            if (_customerSettings.AllowCustomersToUploadAvatars)
-            {
-                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
-                    await _genericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-            }
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -224,6 +187,39 @@ namespace Nop.Web.Factories
                 }).ToListAsync()
             };
             model.PagingFilteringContext.LoadPagedList(newsItems);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the news comment model
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        /// <returns>News comment model</returns>
+        public virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
+        {
+            if (newsComment == null)
+                throw new ArgumentNullException(nameof(newsComment));
+
+            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
+
+            var model = new NewsCommentModel
+            {
+                Id = newsComment.Id,
+                CustomerId = newsComment.CustomerId,
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CommentTitle = newsComment.CommentTitle,
+                CommentText = newsComment.CommentText,
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuestAsync(customer),
+            };
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                    await _genericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+            }
 
             return model;
         }

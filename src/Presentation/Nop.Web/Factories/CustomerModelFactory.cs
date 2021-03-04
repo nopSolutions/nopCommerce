@@ -179,103 +179,6 @@ namespace Nop.Web.Factories
             };
         }
 
-        /// <summary>
-        /// Prepare the custom customer attribute models
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
-        /// <returns>List of the customer attribute model</returns>
-        protected virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
-        {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            var result = new List<CustomerAttributeModel>();
-
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
-            foreach (var attribute in customerAttributes)
-            {
-                var attributeModel = new CustomerAttributeModel
-                {
-                    Id = attribute.Id,
-                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
-                    IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType,
-                };
-
-                if (attribute.ShouldHaveValues())
-                {
-                    //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
-                    foreach (var attributeValue in attributeValues)
-                    {
-                        var valueModel = new CustomerAttributeValueModel
-                        {
-                            Id = attributeValue.Id,
-                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
-                            IsPreSelected = attributeValue.IsPreSelected
-                        };
-                        attributeModel.Values.Add(valueModel);
-                    }
-                }
-
-                //set already selected attributes
-                var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
-                    overrideAttributesXml :
-                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.Checkboxes:
-                        {
-                            if (!string.IsNullOrEmpty(selectedAttributesXml))
-                            {
-                                //clear default selection
-                                foreach (var item in attributeModel.Values)
-                                    item.IsPreSelected = false;
-
-                                //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
-                                foreach (var attributeValue in selectedValues)
-                                    foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!string.IsNullOrEmpty(selectedAttributesXml))
-                            {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
-                                if (enteredText.Any())
-                                    attributeModel.DefaultValue = enteredText[0];
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.FileUpload:
-                    default:
-                        //not supported attribute control types
-                        break;
-                }
-
-                result.Add(attributeModel);
-            }
-
-            return result;
-        }
-
         #endregion
 
         #region Methods
@@ -991,6 +894,103 @@ namespace Nop.Web.Factories
             }
 
             return providerModel;
+        }
+
+        /// <summary>
+        /// Prepare the custom customer attribute models
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
+        /// <returns>List of the customer attribute model</returns>
+        public virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var result = new List<CustomerAttributeModel>();
+
+            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
+            foreach (var attribute in customerAttributes)
+            {
+                var attributeModel = new CustomerAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var valueModel = new CustomerAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
+                            IsPreSelected = attributeValue.IsPreSelected
+                        };
+                        attributeModel.Values.Add(valueModel);
+                    }
+                }
+
+                //set already selected attributes
+                var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
+                    overrideAttributesXml :
+                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                        {
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
+                            {
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
+                            {
+                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    default:
+                        //not supported attribute control types
+                        break;
+                }
+
+                result.Add(attributeModel);
+            }
+
+            return result;
         }
 
         #endregion

@@ -22,5 +22,12 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>Customer return requests model</returns>
         Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync();
+
+        /// <summary>
+        /// Prepare the order item model
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Order item model</returns>
+        Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem);
     }
 }

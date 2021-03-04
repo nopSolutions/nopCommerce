@@ -333,5 +333,112 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             Assert.Throws<AggregateException>(() =>
                 _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), null).Wait());
         }
+
+        [Test]
+        public async Task CanPrepareSortingOptions()
+        {
+            var model = new CatalogProductsModel();
+            var command = new CatalogProductsCommand();
+            await _catalogModelFactory.PrepareSortingOptionsAsync(model, command);
+
+            model.AllowProductSorting.Should().BeTrue();
+            model.AvailableSortOptions.Count.Should().Be(6);
+            command.OrderBy.Should().Be(0);
+        }
+
+        [Test]
+        public void PrepareSortingOptionsShouldRaiseExceptionIfPagingFilteringModelOrCommandIsNull()
+        {
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareSortingOptionsAsync(null, new CatalogProductsCommand()).Wait());
+
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareSortingOptionsAsync(new CatalogProductsModel(), null).Wait());
+        }
+
+        [Test]
+        public async Task CanPrepareViewModes()
+        {
+            var model = new CatalogProductsModel();
+            await _catalogModelFactory.PrepareViewModesAsync(model, new CatalogProductsCommand());
+
+            model.AllowProductViewModeChanging.Should().BeTrue();
+            model.AvailableViewModes.Count.Should().Be(2);
+            model.ViewMode.Should().Be("grid");
+        }
+
+        [Test]
+        public void PrepareViewModesShouldRaiseExceptionIfPagingFilteringModelOrCommandIsNull()
+        {
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareViewModesAsync(null, new CatalogProductsCommand()).Wait());
+
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareViewModesAsync(new CatalogProductsModel(), null).Wait());
+        }
+
+        [Test]
+        public async Task CanPreparePageSizeOptions()
+        {
+            var pageSizes = "10, 20, 30";
+            var model = new CatalogProductsModel();
+            var command = new CatalogProductsCommand();
+            await _catalogModelFactory.PreparePageSizeOptionsAsync(model, command, true, pageSizes, 0);
+
+            model.AllowCustomersToSelectPageSize.Should().BeTrue();
+            model.PageSizeOptions.Count.Should().Be(3);
+
+            foreach (var modelPageSizeOption in model.PageSizeOptions)
+            {
+                int.TryParse(modelPageSizeOption.Text, out _).Should().BeTrue();
+                pageSizes.Contains(modelPageSizeOption.Text).Should().BeTrue();
+
+                modelPageSizeOption.Value.Should().Be(modelPageSizeOption.Text);
+            }
+
+            command.PageSize.Should().Be(10);
+
+            await _catalogModelFactory.PreparePageSizeOptionsAsync(model, command, false, "10, 20, 30", 15);
+
+            model.AllowCustomersToSelectPageSize.Should().BeFalse();
+            command.PageSize.Should().Be(15);
+            model.PageSizeOptions.Count.Should().Be(3);
+        }
+
+        [Test]
+        public void PreparePageSizeOptionsShouldRaiseExceptionIfPagingFilteringModelOrCommandIsNull()
+        {
+            Assert.Throws<NullReferenceException>(() =>
+                _catalogModelFactory.PreparePageSizeOptionsAsync(null, new CatalogProductsCommand(), true, string.Empty, 15).Wait());
+
+            Assert.Throws<NullReferenceException>(() =>
+                _catalogModelFactory.PreparePageSizeOptionsAsync(new CatalogProductsModel(), null, false, "10, 15, 20", 0).Wait());
+        }
+
+        [Test]
+        public async Task CanPrepareCategorySimpleModels()
+        {
+            var model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(7);
+
+            model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync(_category.Id);
+
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(3);
+
+            var categories = new[] { "Desktops", "Notebooks", "Software" };
+
+            foreach (var categoryModel in model)
+                categoryModel.Name.Should().BeOneOf(categories);
+
+            model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync(_category.Id, false);
+
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(3);
+
+            foreach (var categoryModel in model)
+                categoryModel.Name.Should().BeOneOf(categories);
+        }
     }
 }

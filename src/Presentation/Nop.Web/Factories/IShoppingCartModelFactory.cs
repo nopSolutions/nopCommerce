@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Orders;
+using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Factories
@@ -79,5 +80,15 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <returns>Wishlist email a friend model</returns>
         Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties);
+
+        /// <summary>
+        /// Prepare the cart item picture model
+        /// </summary>
+        /// <param name="sci">Shopping cart item</param>
+        /// <param name="pictureSize">Picture size</param>
+        /// <param name="showDefaultPicture">Whether to show the default picture</param>
+        /// <param name="productName">Product name</param>
+        /// <returns>Picture model</returns>
+        Task<PictureModel> PrepareCartItemPictureModelAsync(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName);
     }
 }

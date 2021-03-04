@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
@@ -66,6 +67,26 @@ namespace Nop.Web.Factories
         /// <param name="command">Model to get the catalog products</param>
         /// <returns>The category products model</returns>
         Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category, CatalogProductsCommand command);
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <returns>List of category (simple) models</returns>
+        Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync();
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <param name="rootCategoryId">Root category identifier</param>
+        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
+        /// <returns>List of category (simple) models</returns>
+        Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true);
+
+        /// <summary>
+        /// Prepare category (simple) xml document
+        /// </summary>
+        /// <returns>Xml document of category (simple) models</returns>
+        Task<XDocument> PrepareCategoryXmlDocumentAsync();
 
         #endregion
 
@@ -191,6 +212,35 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>Search box model</returns>
         Task<SearchBoxModel> PrepareSearchBoxModelAsync();
+
+        #endregion
+
+        #region Common
+
+        /// <summary>
+        /// Prepare sorting options
+        /// </summary>
+        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        Task PrepareSortingOptionsAsync(CatalogProductsModel pagingFilteringModel, CatalogProductsCommand command);
+
+        /// <summary>
+        /// Prepare view modes
+        /// </summary>
+        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        Task PrepareViewModesAsync(CatalogProductsModel pagingFilteringModel, CatalogProductsCommand command);
+
+        /// <summary>
+        /// Prepare page size options
+        /// </summary>
+        /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
+        /// <param name="command">Catalog paging filtering command</param>
+        /// <param name="allowCustomersToSelectPageSize">Are customers allowed to select page size?</param>
+        /// <param name="pageSizeOptions">Page size options</param>
+        /// <param name="fixedPageSize">Fixed page size</param>
+        Task PreparePageSizeOptionsAsync(CatalogProductsModel pagingFilteringModel, CatalogProductsCommand command,
+            bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize);
 
         #endregion
     }

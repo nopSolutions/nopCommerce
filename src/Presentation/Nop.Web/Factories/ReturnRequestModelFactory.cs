@@ -67,53 +67,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare the order item model
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Order item model</returns>
-        protected virtual async Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem)
-        {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
-            var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
-            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
-
-            var model = new SubmitReturnRequestModel.OrderItemModel
-            {
-                Id = orderItem.Id,
-                ProductId = product.Id,
-                ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-                ProductSeName = await _urlRecordService.GetSeNameAsync(product),
-                AttributeInfo = orderItem.AttributeDescription,
-                Quantity = orderItem.Quantity
-            };
-
-            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
-
-            //unit price
-            if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-            {
-                //including tax
-                var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
-            }
-            else
-            {
-                //excluding tax
-                var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
-            }
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -198,6 +152,48 @@ namespace Nop.Web.Factories
                     };
                     model.Items.Add(itemModel);
                 }
+            }
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the order item model
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <returns>Order item model</returns>
+        public virtual async Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
+            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+
+            var model = new SubmitReturnRequestModel.OrderItemModel
+            {
+                Id = orderItem.Id,
+                ProductId = product.Id,
+                ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                AttributeInfo = orderItem.AttributeDescription,
+                Quantity = orderItem.Quantity
+            };
+
+            var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+
+            //unit price
+            if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+            {
+                //including tax
+                var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+            }
+            else
+            {
+                //excluding tax
+                var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                model.UnitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
             }
 
             return model;

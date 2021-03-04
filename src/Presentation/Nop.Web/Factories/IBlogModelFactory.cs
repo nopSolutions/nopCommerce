@@ -36,5 +36,12 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>List of blog post year model</returns>
         Task<List<BlogPostYearModel>> PrepareBlogPostYearModelAsync();
+
+        /// <summary>
+        /// Prepare blog comment model
+        /// </summary>
+        /// <param name="blogComment">Blog comment entity</param>
+        /// <returns>Blog comment model</returns>
+        Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment);
     }
 }

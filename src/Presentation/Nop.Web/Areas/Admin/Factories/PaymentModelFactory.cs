@@ -40,66 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare payment method search model
-        /// </summary>
-        /// <param name="searchModel">Payment method search model</param>
-        /// <returns>Payment method search model</returns>
-        protected virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return Task.FromResult(searchModel);
-        }
-
-        /// <summary>
-        /// Prepare payment method restriction model
-        /// </summary>
-        /// <param name="model">Payment method restriction model</param>
-        /// <returns>Payment method restriction model</returns>
-        protected virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
-            model.AvailableCountries = await countries.SelectAwait(async country =>
-            {
-                var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
-
-                return countryModel;
-            }).ToListAsync();
-
-            foreach (var method in await _paymentPluginManager.LoadAllPluginsAsync())
-            {
-                var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
-                paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
-
-                model.AvailablePaymentMethods.Add(paymentMethodModel);
-
-                var restrictedCountries = await _paymentPluginManager.GetRestrictedCountryIdsAsync(method);
-                foreach (var country in countries)
-                {
-                    if (!model.Restricted.ContainsKey(method.PluginDescriptor.SystemName))
-                        model.Restricted[method.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
-
-                    model.Restricted[method.PluginDescriptor.SystemName][country.Id] = restrictedCountries.Contains(country.Id);
-                }
-            }
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -150,6 +91,61 @@ namespace Nop.Web.Areas.Admin.Factories
                     return paymentMethodModel;
                 });
             });
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare payment method search model
+        /// </summary>
+        /// <param name="searchModel">Payment method search model</param>
+        /// <returns>Payment method search model</returns>
+        public virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return Task.FromResult(searchModel);
+        }
+
+        /// <summary>
+        /// Prepare payment method restriction model
+        /// </summary>
+        /// <param name="model">Payment method restriction model</param>
+        /// <returns>Payment method restriction model</returns>
+        public virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
+            model.AvailableCountries = await countries.SelectAwait(async country =>
+            {
+                var countryModel = country.ToModel<CountryModel>();
+                countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
+
+                return countryModel;
+            }).ToListAsync();
+
+            foreach (var method in await _paymentPluginManager.LoadAllPluginsAsync())
+            {
+                var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
+                paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
+
+                model.AvailablePaymentMethods.Add(paymentMethodModel);
+
+                var restrictedCountries = await _paymentPluginManager.GetRestrictedCountryIdsAsync(method);
+                foreach (var country in countries)
+                {
+                    if (!model.Restricted.ContainsKey(method.PluginDescriptor.SystemName))
+                        model.Restricted[method.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
+
+                    model.Restricted[method.PluginDescriptor.SystemName][country.Id] = restrictedCountries.Contains(country.Id);
+                }
+            }
 
             return model;
         }

@@ -33,60 +33,7 @@ namespace Nop.Services.Directory
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Converts to primary measure dimension
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureDimension">Source dimension</param>
-        /// <returns>Converted value</returns>
-        protected virtual async Task<decimal> ConvertToPrimaryMeasureDimensionAsync(decimal value,
-            MeasureDimension sourceMeasureDimension)
-        {
-            if (sourceMeasureDimension == null)
-                throw new ArgumentNullException(nameof(sourceMeasureDimension));
-
-            var result = value;
-            var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
-            if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id)
-                return result;
-
-            var exchangeRatio = sourceMeasureDimension.Ratio;
-            if (exchangeRatio == decimal.Zero)
-                throw new NopException($"Exchange ratio not set for dimension [{sourceMeasureDimension.Name}]");
-            result = result / exchangeRatio;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Converts to primary measure weight
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureWeight">Source weight</param>
-        /// <returns>Converted value</returns>
-        protected virtual async Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight)
-        {
-            if (sourceMeasureWeight == null)
-                throw new ArgumentNullException(nameof(sourceMeasureWeight));
-
-            var result = value;
-            var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
-            if (result == decimal.Zero || sourceMeasureWeight.Id == baseWeightIn.Id)
-                return result;
-
-            var exchangeRatio = sourceMeasureWeight.Ratio;
-            if (exchangeRatio == decimal.Zero)
-                throw new NopException($"Exchange ratio not set for weight [{sourceMeasureWeight.Name}]");
-            result = result / exchangeRatio;
-
-            return result;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         #region Dimensions
@@ -215,6 +162,32 @@ namespace Nop.Services.Directory
 
             return result;
         }
+        
+        /// <summary>
+        /// Converts to primary measure dimension
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="sourceMeasureDimension">Source dimension</param>
+        /// <returns>Converted value</returns>
+        public virtual async Task<decimal> ConvertToPrimaryMeasureDimensionAsync(decimal value,
+            MeasureDimension sourceMeasureDimension)
+        {
+            if (sourceMeasureDimension == null)
+                throw new ArgumentNullException(nameof(sourceMeasureDimension));
+
+            var result = value;
+            var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
+            if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id)
+                return result;
+
+            var exchangeRatio = sourceMeasureDimension.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for dimension [{sourceMeasureDimension.Name}]");
+            result = result / exchangeRatio;
+
+            return result;
+        }
+
 
         #endregion
 
@@ -341,6 +314,30 @@ namespace Nop.Services.Directory
             if (exchangeRatio == decimal.Zero)
                 throw new NopException($"Exchange ratio not set for weight [{targetMeasureWeight.Name}]");
             result *= exchangeRatio;
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Converts to primary measure weight
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="sourceMeasureWeight">Source weight</param>
+        /// <returns>Converted value</returns>
+        public virtual async Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight)
+        {
+            if (sourceMeasureWeight == null)
+                throw new ArgumentNullException(nameof(sourceMeasureWeight));
+
+            var result = value;
+            var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
+            if (result == decimal.Zero || sourceMeasureWeight.Id == baseWeightIn.Id)
+                return result;
+
+            var exchangeRatio = sourceMeasureWeight.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for weight [{sourceMeasureWeight.Name}]");
+            result = result / exchangeRatio;
 
             return result;
         }

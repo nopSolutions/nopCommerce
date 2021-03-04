@@ -66,32 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare news item search model
-        /// </summary>
-        /// <param name="searchModel">News item search model</param>
-        /// <returns>News item search model</returns>
-        protected virtual async Task<NewsItemSearchModel> PrepareNewsItemSearchModelAsync(NewsItemSearchModel searchModel)
-        {
-            if (searchModel == null)
-                throw new ArgumentNullException(nameof(searchModel));
-
-            //prepare available stores
-            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
-
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
-
-            //prepare page parameters
-            searchModel.SetGridPageSize();
-
-            return searchModel;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -292,6 +267,27 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             return model;
+        }
+        
+        /// <summary>
+        /// Prepare news item search model
+        /// </summary>
+        /// <param name="searchModel">News item search model</param>
+        /// <returns>News item search model</returns>
+        public virtual async Task<NewsItemSearchModel> PrepareNewsItemSearchModelAsync(NewsItemSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare available stores
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         #endregion

@@ -48,5 +48,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="blogPostId">Blog post ID</param>
         /// <returns>Blog comment list model</returns>
         Task<BlogCommentListModel> PrepareBlogCommentListModelAsync(BlogCommentSearchModel searchModel, int? blogPostId);
+        
+        /// <summary>
+        /// Prepare blog post search model
+        /// </summary>
+        /// <param name="searchModel">Blog post search model</param>
+        /// <returns>Blog post search model</returns>
+        Task<BlogPostSearchModel> PrepareBlogPostSearchModelAsync(BlogPostSearchModel searchModel);
     }
 }

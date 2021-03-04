@@ -30,5 +30,12 @@ namespace Nop.Web.Factories
         /// <param name="command">News paging filtering model</param>
         /// <returns>News item list model</returns>
         Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command);
+
+        /// <summary>
+        /// Prepare the news comment model
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        /// <returns>News comment model</returns>
+        Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment);
     }
 }

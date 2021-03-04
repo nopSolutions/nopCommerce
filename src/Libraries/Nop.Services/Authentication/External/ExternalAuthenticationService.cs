@@ -220,64 +220,7 @@ namespace Nop.Services.Authentication.External
 
             return new RedirectToRouteResult("Homepage", null);
         }
-
-        /// <summary>
-        /// Associate external account with customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="parameters">External authentication parameters</param>
-        protected virtual async Task AssociateExternalAccountWithUserAsync(Customer customer, ExternalAuthenticationParameters parameters)
-        {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            var externalAuthenticationRecord = new ExternalAuthenticationRecord
-            {
-                CustomerId = customer.Id,
-                Email = parameters.Email,
-                ExternalIdentifier = parameters.ExternalIdentifier,
-                ExternalDisplayIdentifier = parameters.ExternalDisplayIdentifier,
-                OAuthAccessToken = parameters.AccessToken,
-                ProviderSystemName = parameters.ProviderSystemName
-            };
-
-            await _externalAuthenticationRecordRepository.InsertAsync(externalAuthenticationRecord, false);
-        }
-
-        /// <summary>
-        /// Get the particular user with specified parameters
-        /// </summary>
-        /// <param name="parameters">External authentication parameters</param>
-        /// <returns>Customer</returns>
-        protected virtual async Task<Customer> GetUserByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
-
-            var associationRecord = _externalAuthenticationRecordRepository.Table.FirstOrDefault(record =>
-                record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
-            if (associationRecord == null)
-                return null;
-
-            return await _customerService.GetCustomerByIdAsync(associationRecord.CustomerId);
-        }
-
-        /// <summary>
-        /// Remove the association
-        /// </summary>
-        /// <param name="parameters">External authentication parameters</param>
-        protected virtual async Task RemoveAssociationAsync(ExternalAuthenticationParameters parameters)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
-
-            var associationRecord = await _externalAuthenticationRecordRepository.Table.FirstOrDefaultAsync(record =>
-                record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
-
-            if (associationRecord != null)
-                await _externalAuthenticationRecordRepository.DeleteAsync(associationRecord, false);
-        }
-
+        
         #endregion
 
         #region Methods
@@ -348,6 +291,64 @@ namespace Nop.Services.Authentication.External
 
             await _externalAuthenticationRecordRepository.DeleteAsync(externalAuthenticationRecord, false);
         }
+        
+        /// <summary>
+        /// Associate external account with customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="parameters">External authentication parameters</param>
+        public virtual async Task AssociateExternalAccountWithUserAsync(Customer customer, ExternalAuthenticationParameters parameters)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var externalAuthenticationRecord = new ExternalAuthenticationRecord
+            {
+                CustomerId = customer.Id,
+                Email = parameters.Email,
+                ExternalIdentifier = parameters.ExternalIdentifier,
+                ExternalDisplayIdentifier = parameters.ExternalDisplayIdentifier,
+                OAuthAccessToken = parameters.AccessToken,
+                ProviderSystemName = parameters.ProviderSystemName
+            };
+
+            await _externalAuthenticationRecordRepository.InsertAsync(externalAuthenticationRecord, false);
+        }
+
+        /// <summary>
+        /// Get the particular user with specified parameters
+        /// </summary>
+        /// <param name="parameters">External authentication parameters</param>
+        /// <returns>Customer</returns>
+        public virtual async Task<Customer> GetUserByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
+
+            var associationRecord = _externalAuthenticationRecordRepository.Table.FirstOrDefault(record =>
+                record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
+            if (associationRecord == null)
+                return null;
+
+            return await _customerService.GetCustomerByIdAsync(associationRecord.CustomerId);
+        }
+
+        /// <summary>
+        /// Remove the association
+        /// </summary>
+        /// <param name="parameters">External authentication parameters</param>
+        public virtual async Task RemoveAssociationAsync(ExternalAuthenticationParameters parameters)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
+
+            var associationRecord = await _externalAuthenticationRecordRepository.Table.FirstOrDefaultAsync(record =>
+                record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
+
+            if (associationRecord != null)
+                await _externalAuthenticationRecordRepository.DeleteAsync(associationRecord, false);
+        }
+
 
         #endregion
     }

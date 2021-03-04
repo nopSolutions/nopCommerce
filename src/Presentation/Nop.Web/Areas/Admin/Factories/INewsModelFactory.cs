@@ -48,5 +48,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="newsItemId">News item ID; pass null to prepare comment models for all news items</param>
         /// <returns>News comment list model</returns>
         Task<NewsCommentListModel> PrepareNewsCommentListModelAsync(NewsCommentSearchModel searchModel, int? newsItemId);
+        
+        /// <summary>
+        /// Prepare news item search model
+        /// </summary>
+        /// <param name="searchModel">News item search model</param>
+        /// <returns>News item search model</returns>
+        Task<NewsItemSearchModel> PrepareNewsItemSearchModelAsync(NewsItemSearchModel searchModel);
     }
 }

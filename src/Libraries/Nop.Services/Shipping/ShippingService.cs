@@ -174,58 +174,6 @@ namespace Nop.Services.Shipping
             return (width, length, height);
         }
 
-        /// <summary>
-        /// Get the nearest warehouse for the specified address
-        /// </summary>
-        /// <param name="address">Address</param>
-        /// <param name="warehouses">List of warehouses, if null all warehouses are used.</param>
-        /// <returns></returns>
-        protected virtual async Task<Warehouse> GetNearestWarehouseAsync(Address address, IList<Warehouse> warehouses = null)
-        {
-            warehouses ??= await GetAllWarehousesAsync();
-
-            //no address specified. return any
-            if (address == null)
-                return warehouses.FirstOrDefault();
-
-            //of course, we should use some better logic to find nearest warehouse
-            //but we don't have a built-in geographic database which supports "distance" functionality
-            //that's why we simply look for exact matches
-
-            //find by country
-            var matchedByCountry = new List<Warehouse>();
-            foreach (var warehouse in warehouses)
-            {
-                var warehouseAddress = await _addressService.GetAddressByIdAsync(warehouse.AddressId);
-                if (warehouseAddress == null)
-                    continue;
-
-                if (warehouseAddress.CountryId == address.CountryId)
-                    matchedByCountry.Add(warehouse);
-            }
-            //no country matches. return any
-            if (!matchedByCountry.Any())
-                return warehouses.FirstOrDefault();
-
-            //find by state
-            var matchedByState = new List<Warehouse>();
-            foreach (var warehouse in matchedByCountry)
-            {
-                var warehouseAddress = await _addressService.GetAddressByIdAsync(warehouse.AddressId);
-                if (warehouseAddress == null)
-                    continue;
-
-                if (warehouseAddress.StateProvinceId == address.StateProvinceId)
-                    matchedByState.Add(warehouse);
-            }
-
-            if (matchedByState.Any())
-                return matchedByState.FirstOrDefault();
-
-            //no state matches. return any
-            return matchedByCountry.FirstOrDefault();
-        }
-
         #endregion
 
         #region Methods
@@ -413,6 +361,58 @@ namespace Nop.Services.Shipping
         public virtual async Task UpdateWarehouseAsync(Warehouse warehouse)
         {
             await _warehouseRepository.UpdateAsync(warehouse);
+        }
+
+        /// <summary>
+        /// Get the nearest warehouse for the specified address
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="warehouses">List of warehouses, if null all warehouses are used.</param>
+        /// <returns></returns>
+        public virtual async Task<Warehouse> GetNearestWarehouseAsync(Address address, IList<Warehouse> warehouses = null)
+        {
+            warehouses ??= await GetAllWarehousesAsync();
+
+            //no address specified. return any
+            if (address == null)
+                return warehouses.FirstOrDefault();
+
+            //of course, we should use some better logic to find nearest warehouse
+            //but we don't have a built-in geographic database which supports "distance" functionality
+            //that's why we simply look for exact matches
+
+            //find by country
+            var matchedByCountry = new List<Warehouse>();
+            foreach (var warehouse in warehouses)
+            {
+                var warehouseAddress = await _addressService.GetAddressByIdAsync(warehouse.AddressId);
+                if (warehouseAddress == null)
+                    continue;
+
+                if (warehouseAddress.CountryId == address.CountryId)
+                    matchedByCountry.Add(warehouse);
+            }
+            //no country matches. return any
+            if (!matchedByCountry.Any())
+                return warehouses.FirstOrDefault();
+
+            //find by state
+            var matchedByState = new List<Warehouse>();
+            foreach (var warehouse in matchedByCountry)
+            {
+                var warehouseAddress = await _addressService.GetAddressByIdAsync(warehouse.AddressId);
+                if (warehouseAddress == null)
+                    continue;
+
+                if (warehouseAddress.StateProvinceId == address.StateProvinceId)
+                    matchedByState.Add(warehouse);
+            }
+
+            if (matchedByState.Any())
+                return matchedByState.FirstOrDefault();
+
+            //no state matches. return any
+            return matchedByCountry.FirstOrDefault();
         }
 
         #endregion

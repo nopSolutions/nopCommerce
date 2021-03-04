@@ -86,6 +86,31 @@ namespace Nop.Services.Directory
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
         Task<decimal> ConvertFromPrimaryStoreCurrencyAsync(decimal amount, Currency targetCurrencyCode);
+        
+        /// <summary>
+        /// Converts currency
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="sourceCurrencyCode">Source currency code</param>
+        /// <param name="targetCurrencyCode">Target currency code</param>
+        /// <returns>Converted value</returns>
+        Task<decimal> ConvertCurrencyAsync(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode);
+
+        /// <summary>
+        /// Converts to primary exchange rate currency 
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="sourceCurrencyCode">Source currency code</param>
+        /// <returns>Converted value</returns>
+        Task<decimal> ConvertToPrimaryExchangeRateCurrencyAsync(decimal amount, Currency sourceCurrencyCode);
+
+        /// <summary>
+        /// Converts from primary exchange rate currency
+        /// </summary>
+        /// <param name="amount">Amount</param>
+        /// <param name="targetCurrencyCode">Target currency code</param>
+        /// <returns>Converted value</returns>
+        Task<decimal> ConvertFromPrimaryExchangeRateCurrencyAsync(decimal amount, Currency targetCurrencyCode);
 
         #endregion
     }

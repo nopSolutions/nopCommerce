@@ -130,5 +130,19 @@ namespace Nop.Web.Factories
         /// <param name="page">Number of items page; pass null to load the first page</param>
         /// <returns>customer forum subscriptions model</returns>
         Task<CustomerForumSubscriptionsModel> PrepareCustomerForumSubscriptionsModelAsync(int? page);
+
+        /// <summary>
+        /// Prepare the forum topic row model
+        /// </summary>
+        /// <param name="topic">Forum topic</param>
+        /// <returns>Forum topic row model</returns>
+        Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic);
+
+        /// <summary>
+        /// Prepare the forum row model
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>Forum row model</returns>
+        Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum);
     }
 }

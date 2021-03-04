@@ -112,6 +112,14 @@ namespace Nop.Services.Shipping
         /// <param name="warehouse">Warehouse</param>
         Task UpdateWarehouseAsync(Warehouse warehouse);
 
+        /// <summary>
+        /// Get the nearest warehouse for the specified address
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="warehouses">List of warehouses, if null all warehouses are used.</param>
+        /// <returns></returns>
+        Task<Warehouse> GetNearestWarehouseAsync(Address address, IList<Warehouse> warehouses = null);
+
         #endregion
 
         #region Workflow

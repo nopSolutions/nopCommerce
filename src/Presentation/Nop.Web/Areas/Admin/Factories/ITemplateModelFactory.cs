@@ -42,5 +42,33 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Topic template search model</param>
         /// <returns>Topic template list model</returns>
         Task<TopicTemplateListModel> PrepareTopicTemplateListModelAsync(TopicTemplateSearchModel searchModel);
+        
+        /// <summary>
+        /// Prepare category template search model
+        /// </summary>
+        /// <param name="searchModel">Category template search model</param>
+        /// <returns>Category template search model</returns>
+        Task<CategoryTemplateSearchModel> PrepareCategoryTemplateSearchModelAsync(CategoryTemplateSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare manufacturer template search model
+        /// </summary>
+        /// <param name="searchModel">Manufacturer template search model</param>
+        /// <returns>Manufacturer template search model</returns>
+        Task<ManufacturerTemplateSearchModel> PrepareManufacturerTemplateSearchModelAsync(ManufacturerTemplateSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare product template search model
+        /// </summary>
+        /// <param name="searchModel">Product template search model</param>
+        /// <returns>Product template search model</returns>
+        Task<ProductTemplateSearchModel> PrepareProductTemplateSearchModelAsync(ProductTemplateSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare topic template search model
+        /// </summary>
+        /// <param name="searchModel">Topic template search model</param>
+        /// <returns>Topic template search model</returns>
+        Task<TopicTemplateSearchModel> PrepareTopicTemplateSearchModelAsync(TopicTemplateSearchModel searchModel);
     }
 }
