@@ -33,7 +33,7 @@
             /// <summary>
             /// Gets the premium support services page
             /// </summary>
-            public static string PremiumSupportServices => "https://www.nopcommerce.com/nopcommerce-premium-support-services/";
+            public static string PremiumSupportServices => "https://www.nopcommerce.com/nopcommerce-premium-support-services";
 
             /// <summary>
             /// Gets the marketplace page
