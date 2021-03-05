@@ -14,6 +14,7 @@ namespace Nop.Web.Components
             _commonModelFactory = commonModelFactory;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = await _commonModelFactory.PrepareAdminHeaderLinksModelAsync();

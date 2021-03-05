@@ -152,7 +152,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare plugin search model
         /// </summary>
         /// <param name="searchModel">Plugin search model</param>
-        /// <returns>Plugin search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin search model
+        /// </returns>
         public virtual async Task<PluginSearchModel> PreparePluginSearchModelAsync(PluginSearchModel searchModel)
         {
             if (searchModel == null)
@@ -176,7 +179,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged plugin list model
         /// </summary>
         /// <param name="searchModel">Plugin search model</param>
-        /// <returns>Plugin list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin list model
+        /// </returns>
         public virtual async Task<PluginListModel> PreparePluginListModelAsync(PluginSearchModel searchModel)
         {
             if (searchModel == null)
@@ -221,7 +227,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Plugin model</param>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Plugin model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin model
+        /// </returns>
         public virtual async Task<PluginModel> PreparePluginModelAsync(PluginModel model, PluginDescriptor pluginDescriptor, bool excludeProperties = false)
         {
             Action<PluginLocalizedModel, int> localizedModelConfiguration = null;
@@ -262,7 +271,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare search model of plugins of the official feed
         /// </summary>
         /// <param name="searchModel">Search model of plugins of the official feed</param>
-        /// <returns>Search model of plugins of the official feed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search model of plugins of the official feed
+        /// </returns>
         public virtual async Task<OfficialFeedPluginSearchModel> PrepareOfficialFeedPluginSearchModelAsync(OfficialFeedPluginSearchModel searchModel)
         {
             if (searchModel == null)
@@ -332,7 +344,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged list model of plugins of the official feed
         /// </summary>
         /// <param name="searchModel">Search model of plugins of the official feed</param>
-        /// <returns>List model of plugins of the official feed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list model of plugins of the official feed
+        /// </returns>
         public virtual async Task<OfficialFeedPluginListModel> PrepareOfficialFeedPluginListModelAsync(OfficialFeedPluginSearchModel searchModel)
         {
             if (searchModel == null)
@@ -366,7 +381,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare plugin models for admin navigation
         /// </summary>
-        /// <returns>List of models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of models
+        /// </returns>
         public virtual async Task<IList<AdminNavigationPluginModel>> PrepareAdminNavigationPluginModelsAsync()
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, await _workContext.GetCurrentCustomerAsync());

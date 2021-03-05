@@ -11,6 +11,7 @@ namespace Nop.Core
         /// <summary>
         /// Gets the current store
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<Store> GetCurrentStoreAsync();
 
         /// <summary>
@@ -21,6 +22,7 @@ namespace Nop.Core
         /// <summary>
         /// Gets active store scope configuration
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<int> GetActiveStoreScopeConfigurationAsync();
     }
 }

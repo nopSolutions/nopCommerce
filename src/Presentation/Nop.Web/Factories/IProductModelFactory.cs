@@ -16,7 +16,10 @@ namespace Nop.Web.Factories
         /// Get the product template view path
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>View path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view path
+        /// </returns>
         Task<string> PrepareProductTemplateViewPathAsync(Product product);
 
         /// <summary>
@@ -28,7 +31,10 @@ namespace Nop.Web.Factories
         /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
         /// <param name="prepareSpecificationAttributes">Whether to prepare the specification attribute models</param>
         /// <param name="forceRedirectionAfterAddingToCart">Whether to force redirection after adding to cart</param>
-        /// <returns>Collection of product overview model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of product overview model
+        /// </returns>
         Task<IEnumerable<ProductOverviewModel>> PrepareProductOverviewModelsAsync(IEnumerable<Product> products,
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
@@ -38,7 +44,10 @@ namespace Nop.Web.Factories
         /// Prepare the product combination models
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Product combination models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product combination models
+        /// </returns>
         Task<IList<ProductCombinationModel>> PrepareProductCombinationModelsAsync(Product product);
 
         /// <summary>
@@ -47,7 +56,10 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="updatecartitem">Updated shopping cart item</param>
         /// <param name="isAssociatedProduct">Whether the product is associated</param>
-        /// <returns>Product details model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product details model
+        /// </returns>
         Task<ProductDetailsModel> PrepareProductDetailsModelAsync(Product product, ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false);
 
         /// <summary>
@@ -55,14 +67,20 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Product reviews model</param>
         /// <param name="product">Product</param>
-        /// <returns>Product reviews model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product reviews model
+        /// </returns>
         Task<ProductReviewsModel> PrepareProductReviewsModelAsync(ProductReviewsModel model, Product product);
 
         /// <summary>
         /// Prepare the customer product reviews model
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
-        /// <returns>Customer product reviews model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer product reviews model
+        /// </returns>
         Task<CustomerProductReviewsModel> PrepareCustomerProductReviewsModelAsync(int? page);
 
         /// <summary>
@@ -71,14 +89,20 @@ namespace Nop.Web.Factories
         /// <param name="model">Product email a friend model</param>
         /// <param name="product">Product</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        /// <returns>product email a friend model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product email a friend model
+        /// </returns>
         Task<ProductEmailAFriendModel> PrepareProductEmailAFriendModelAsync(ProductEmailAFriendModel model, Product product, bool excludeProperties);
 
         /// <summary>
         /// Prepare the product specification model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>The product specification model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product specification model
+        /// </returns>
         Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product);
     }
 }

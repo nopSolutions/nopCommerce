@@ -83,6 +83,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             return text;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<Order> GetLastOrderAsync()
         {
             var order = (await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
@@ -90,6 +91,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             return order;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<string> GetEcommerceScriptAsync(Order order)
         {
             var analyticsTrackingScript = _googleAnalyticsSettings.TrackingScript + "\n";
@@ -187,6 +189,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var script = "";

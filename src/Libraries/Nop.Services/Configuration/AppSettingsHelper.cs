@@ -20,6 +20,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="appSettings">App settings</param>
         /// <param name="fileProvider">File provider</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task SaveAppSettingsAsync(AppSettings appSettings, INopFileProvider fileProvider = null)
         {
             Singleton<AppSettings>.Instance = appSettings ?? throw new ArgumentNullException(nameof(appSettings));

@@ -15,19 +15,24 @@ namespace Nop.Services.Orders
         /// Updates a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateReturnRequestAsync(ReturnRequest returnRequest);
 
         /// <summary>
         /// Deletes a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteReturnRequestAsync(ReturnRequest returnRequest);
 
         /// <summary>
         /// Gets a return request
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
-        /// <returns>Return request</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request
+        /// </returns>
         Task<ReturnRequest> GetReturnRequestByIdAsync(int returnRequestId);
 
         /// <summary>
@@ -43,7 +48,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Return requests</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return requests
+        /// </returns>
         Task<IPagedList<ReturnRequest>> SearchReturnRequestsAsync(int storeId = 0, int customerId = 0,
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null, DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
@@ -52,68 +60,87 @@ namespace Nop.Services.Orders
         /// Delete a return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteReturnRequestActionAsync(ReturnRequestAction returnRequestAction);
 
         /// <summary>
         /// Gets all return request actions
         /// </summary>
-        /// <returns>Return request actions</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request actions
+        /// </returns>
         Task<IList<ReturnRequestAction>> GetAllReturnRequestActionsAsync();
 
         /// <summary>
         /// Gets a return request action
         /// </summary>
         /// <param name="returnRequestActionId">Return request action identifier</param>
-        /// <returns>Return request action</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request action
+        /// </returns>
         Task<ReturnRequestAction> GetReturnRequestActionByIdAsync(int returnRequestActionId);
 
         /// <summary>
         /// Inserts a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertReturnRequestAsync(ReturnRequest returnRequest);
 
         /// <summary>
         /// Inserts a return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertReturnRequestActionAsync(ReturnRequestAction returnRequestAction);
 
         /// <summary>
         /// Updates the  return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateReturnRequestActionAsync(ReturnRequestAction returnRequestAction);
 
         /// <summary>
         /// Delete a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteReturnRequestReasonAsync(ReturnRequestReason returnRequestReason);
 
         /// <summary>
         /// Gets all return request reasons
         /// </summary>
-        /// <returns>Return request reasons</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request reasons
+        /// </returns>
         Task<IList<ReturnRequestReason>> GetAllReturnRequestReasonsAsync();
 
         /// <summary>
         /// Gets a return request reason
         /// </summary>
         /// <param name="returnRequestReasonId">Return request reason identifier</param>
-        /// <returns>Return request reason</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return request reason
+        /// </returns>
         Task<ReturnRequestReason> GetReturnRequestReasonByIdAsync(int returnRequestReasonId);
 
         /// <summary>
         /// Inserts a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertReturnRequestReasonAsync(ReturnRequestReason returnRequestReason);
 
         /// <summary>
         /// Updates the  return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateReturnRequestReasonAsync(ReturnRequestReason returnRequestReason);
     }
 }

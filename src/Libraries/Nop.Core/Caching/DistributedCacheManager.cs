@@ -66,7 +66,10 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
-        /// <returns>Flag which indicate is the key exists in the cache, cached item or default value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the flag which indicate is the key exists in the cache, cached item or default value
+        /// </returns>
         private async Task<(bool isSet, T item)> TryGetItem<T>(CacheKey key)
         {
             var json = await _distributedCache.GetStringAsync(key.Key);
@@ -98,7 +101,10 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <returns>The cached value associated with the specified key</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key
+        /// </returns>
         public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
             //little performance workaround here:
@@ -129,7 +135,10 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <returns>The cached value associated with the specified key</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key
+        /// </returns>
         public async Task<T> GetAsync<T>(CacheKey key, Func<T> acquire)
         {
             //little performance workaround here:
@@ -159,6 +168,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
@@ -175,6 +185,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task SetAsync(CacheKey key, object data)
         {
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
@@ -192,6 +203,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
             prefix = PrepareKeyPrefix(prefix, prefixParameters);
@@ -209,6 +221,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Clear all cache data
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task ClearAsync()
         {
             //we can't use _perRequestCache.Clear(),

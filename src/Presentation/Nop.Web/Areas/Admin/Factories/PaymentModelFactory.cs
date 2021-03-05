@@ -47,7 +47,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare payment methods model
         /// </summary>
         /// <param name="methodsModel">Payment methods model</param>
-        /// <returns>Payment methods model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment methods model
+        /// </returns>
         public virtual async Task<PaymentMethodsModel> PreparePaymentMethodsModelAsync(PaymentMethodsModel methodsModel)
         {
             if (methodsModel == null)
@@ -64,7 +67,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged payment method list model
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
-        /// <returns>Payment method list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method list model
+        /// </returns>
         public virtual async Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
@@ -99,7 +105,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare payment method search model
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
-        /// <returns>Payment method search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method search model
+        /// </returns>
         public virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
@@ -115,7 +124,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare payment method restriction model
         /// </summary>
         /// <param name="model">Payment method restriction model</param>
-        /// <returns>Payment method restriction model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method restriction model
+        /// </returns>
         public virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model)
         {
             if (model == null)

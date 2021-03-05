@@ -124,6 +124,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             SetDatabaseValidationRules<Customer>(dataProvider);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> IsRegisteredCustomerRoleCheckedAsync(CustomerModel model, ICustomerService customerService)
         {
             var allCustomerRoles = await customerService.GetAllCustomerRolesAsync(true);

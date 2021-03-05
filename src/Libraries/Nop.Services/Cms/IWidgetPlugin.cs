@@ -17,7 +17,10 @@ namespace Nop.Services.Cms
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         Task<IList<string>> GetWidgetZonesAsync();
 
         /// <summary>

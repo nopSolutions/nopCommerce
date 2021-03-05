@@ -93,6 +93,7 @@ namespace Nop.Web.Controllers
 
         #region Categories
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Category(int categoryId, CatalogProductsCommand command)
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -124,6 +125,7 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -138,6 +140,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetCatalogRoot()
         {
             var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
@@ -147,6 +150,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
         {
             var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);
@@ -158,6 +162,7 @@ namespace Nop.Web.Controllers
 
         #region Manufacturers
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Manufacturer(int manufacturerId, CatalogProductsCommand command)
         {
             var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
@@ -190,6 +195,7 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetManufacturerProducts(int manufacturerId, CatalogProductsCommand command)
         {
             var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
@@ -202,6 +208,7 @@ namespace Nop.Web.Controllers
             return PartialView("_ProductsInGridOrLines", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ManufacturerAll()
         {
             var model = await _catalogModelFactory.PrepareManufacturerAllModelsAsync();
@@ -213,6 +220,7 @@ namespace Nop.Web.Controllers
 
         #region Vendors
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Vendor(int vendorId, CatalogProductsCommand command)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
@@ -238,6 +246,7 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetVendorProducts(int vendorId, CatalogProductsCommand command)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
@@ -250,6 +259,7 @@ namespace Nop.Web.Controllers
             return PartialView("_ProductsInGridOrLines", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
@@ -264,6 +274,7 @@ namespace Nop.Web.Controllers
 
         #region Product tags
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductsByTag(int productTagId, CatalogProductsCommand command)
         {
             var productTag = await _productTagService.GetProductTagByIdAsync(productTagId);
@@ -277,6 +288,7 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetTagProducts(int tagId, CatalogProductsCommand command)
         {
             var productTag = await _productTagService.GetProductTagByIdAsync(tagId);
@@ -288,6 +300,7 @@ namespace Nop.Web.Controllers
             return PartialView("_ProductsInGridOrLines", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductTagsAll()
         {
             var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
@@ -299,6 +312,7 @@ namespace Nop.Web.Controllers
 
         #region Searching
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
         {
             //'Continue shopping' URL
@@ -316,6 +330,7 @@ namespace Nop.Web.Controllers
         }
 
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
             term = term.Trim();
@@ -350,6 +365,7 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SearchProducts(SearchModel searchModel, CatalogProductsCommand command)
         {
             if (searchModel == null)
@@ -364,6 +380,7 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
         {
             var isAvailable = true;
@@ -387,6 +404,7 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
         {
             var isAvailable = true;
@@ -410,6 +428,7 @@ namespace Nop.Web.Controllers
             return isAvailable;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
         {
             var isAvailable = true;

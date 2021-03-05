@@ -45,7 +45,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare activity log type models
         /// </summary>
-        /// <returns>List of activity log type models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of activity log type models
+        /// </returns>
         protected virtual async Task<IList<ActivityLogTypeModel>> PrepareActivityLogTypeModelsAsync()
         {
             //prepare available activity log types
@@ -63,7 +66,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare activity log types search model
         /// </summary>
         /// <param name="searchModel">Activity log types search model</param>
-        /// <returns>Activity log types search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log types search model
+        /// </returns>
         public virtual async Task<ActivityLogTypeSearchModel> PrepareActivityLogTypeSearchModelAsync(ActivityLogTypeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -81,7 +87,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare activity log search model
         /// </summary>
         /// <param name="searchModel">Activity log search model</param>
-        /// <returns>Activity log search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log search model
+        /// </returns>
         public virtual async Task<ActivityLogSearchModel> PrepareActivityLogSearchModelAsync(ActivityLogSearchModel searchModel)
         {
             if (searchModel == null)
@@ -100,7 +109,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged activity log list model
         /// </summary>
         /// <param name="searchModel">Activity log search model</param>
-        /// <returns>Activity log list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log list model
+        /// </returns>
         public virtual async Task<ActivityLogListModel> PrepareActivityLogListModelAsync(ActivityLogSearchModel searchModel)
         {
             if (searchModel == null)

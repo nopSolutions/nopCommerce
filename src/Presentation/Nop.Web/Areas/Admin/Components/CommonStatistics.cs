@@ -38,7 +38,10 @@ namespace Nop.Web.Areas.Admin.Components
         /// <summary>
         /// Invoke view component
         /// </summary>
-        /// <returns>View component result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) ||

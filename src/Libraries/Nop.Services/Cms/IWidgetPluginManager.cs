@@ -16,7 +16,10 @@ namespace Nop.Services.Cms
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <param name="widgetZone">Widget zone; pass null to load all plugins</param>
-        /// <returns>List of active widget</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of active widget
+        /// </returns>
         Task<IList<IWidgetPlugin>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, string widgetZone = null);
 
         /// <summary>
@@ -32,7 +35,10 @@ namespace Nop.Services.Cms
         /// <param name="systemName">System name of widget to check</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0);
     }
 }

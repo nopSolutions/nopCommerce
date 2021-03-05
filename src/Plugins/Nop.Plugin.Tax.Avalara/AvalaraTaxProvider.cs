@@ -65,7 +65,10 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets tax rate
         /// </summary>
         /// <param name="taxRateRequest">Tax rate request</param>
-        /// <returns>Tax</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax
+        /// </returns>
         public async Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
             if (taxRateRequest.Address == null)
@@ -83,7 +86,10 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets tax total
         /// </summary>
         /// <param name="taxTotalRequest">Tax total request</param>
-        /// <returns>Tax total</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax total
+        /// </returns>
         public async Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest)
         {
             //cache tax total within the request
@@ -126,7 +132,10 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
             return Task.FromResult<IList<string>>(new List<string>
@@ -167,6 +176,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Install the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //settings
@@ -282,6 +292,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //generic attributes

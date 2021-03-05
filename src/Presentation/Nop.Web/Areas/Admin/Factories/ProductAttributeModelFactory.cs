@@ -96,7 +96,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product attribute search model
         /// </summary>
         /// <param name="searchModel">Product attribute search model</param>
-        /// <returns>Product attribute search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute search model
+        /// </returns>
         public virtual Task<ProductAttributeSearchModel> PrepareProductAttributeSearchModelAsync(ProductAttributeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -112,7 +115,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product attribute list model
         /// </summary>
         /// <param name="searchModel">Product attribute search model</param>
-        /// <returns>Product attribute list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute list model
+        /// </returns>
         public virtual async Task<ProductAttributeListModel> PrepareProductAttributeListModelAsync(ProductAttributeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -139,7 +145,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product attribute model</param>
         /// <param name="productAttribute">Product attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product attribute model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute model
+        /// </returns>
         public virtual async Task<ProductAttributeModel> PrepareProductAttributeModelAsync(ProductAttributeModel model,
             ProductAttribute productAttribute, bool excludeProperties = false)
         {
@@ -174,7 +183,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Predefined product attribute value search model</param>
         /// <param name="productAttribute">Product attribute</param>
-        /// <returns>Predefined product attribute value list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the predefined product attribute value list model
+        /// </returns>
         public virtual async Task<PredefinedProductAttributeValueListModel> PreparePredefinedProductAttributeValueListModelAsync(
             PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute)
         {
@@ -214,7 +226,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAttribute">Product attribute</param>
         /// <param name="productAttributeValue">Predefined product attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Predefined product attribute value model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the predefined product attribute value model
+        /// </returns>
         public virtual async Task<PredefinedProductAttributeValueModel> PreparePredefinedProductAttributeValueModelAsync(PredefinedProductAttributeValueModel model,
             ProductAttribute productAttribute, PredefinedProductAttributeValue productAttributeValue, bool excludeProperties = false)
         {
@@ -252,7 +267,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Search model of products that use the product attribute</param>
         /// <param name="productAttribute">Product attribute</param>
-        /// <returns>List model of products that use the product attribute</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list model of products that use the product attribute
+        /// </returns>
         public virtual async Task<ProductAttributeProductListModel> PrepareProductAttributeProductListModelAsync(ProductAttributeProductSearchModel searchModel,
             ProductAttribute productAttribute)
         {

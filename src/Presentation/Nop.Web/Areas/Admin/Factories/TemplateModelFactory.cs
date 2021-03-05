@@ -44,7 +44,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare templates model
         /// </summary>
         /// <param name="model">Templates model</param>
-        /// <returns>Templates model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the mplates model
+        /// </returns>
         public virtual async Task<TemplatesModel> PrepareTemplatesModelAsync(TemplatesModel model)
         {
             if (model == null)
@@ -63,7 +66,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged category template list model
         /// </summary>
         /// <param name="searchModel">Category template search model</param>
-        /// <returns>Category template list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category template list model
+        /// </returns>
         public virtual async Task<CategoryTemplateListModel> PrepareCategoryTemplateListModelAsync(CategoryTemplateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -83,7 +89,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged manufacturer template list model
         /// </summary>
         /// <param name="searchModel">Manufacturer template search model</param>
-        /// <returns>Manufacturer template list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer template list model
+        /// </returns>
         public virtual async Task<ManufacturerTemplateListModel> PrepareManufacturerTemplateListModelAsync(ManufacturerTemplateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -103,7 +112,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product template list model
         /// </summary>
         /// <param name="searchModel">Product template search model</param>
-        /// <returns>Product template list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product template list model
+        /// </returns>
         public virtual async Task<ProductTemplateListModel> PrepareProductTemplateListModelAsync(ProductTemplateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -123,7 +135,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged topic template list model
         /// </summary>
         /// <param name="searchModel">Topic template search model</param>
-        /// <returns>Topic template list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic template list model
+        /// </returns>
         public virtual async Task<TopicTemplateListModel> PrepareTopicTemplateListModelAsync(TopicTemplateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -143,7 +158,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare category template search model
         /// </summary>
         /// <param name="searchModel">Category template search model</param>
-        /// <returns>Category template search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category template search model
+        /// </returns>
         public virtual Task<CategoryTemplateSearchModel> PrepareCategoryTemplateSearchModelAsync(CategoryTemplateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -159,7 +177,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare manufacturer template search model
         /// </summary>
         /// <param name="searchModel">Manufacturer template search model</param>
-        /// <returns>Manufacturer template search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer template search model
+        /// </returns>
         public virtual Task<ManufacturerTemplateSearchModel> PrepareManufacturerTemplateSearchModelAsync(ManufacturerTemplateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -175,7 +196,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product template search model
         /// </summary>
         /// <param name="searchModel">Product template search model</param>
-        /// <returns>Product template search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product template search model
+        /// </returns>
         public virtual Task<ProductTemplateSearchModel> PrepareProductTemplateSearchModelAsync(ProductTemplateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -191,7 +215,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare topic template search model
         /// </summary>
         /// <param name="searchModel">Topic template search model</param>
-        /// <returns>Topic template search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic template search model
+        /// </returns>
         public virtual Task<TopicTemplateSearchModel> PrepareTopicTemplateSearchModelAsync(TopicTemplateSearchModel searchModel)
         {
             if (searchModel == null)

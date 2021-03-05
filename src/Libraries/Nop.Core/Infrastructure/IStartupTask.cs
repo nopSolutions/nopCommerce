@@ -10,6 +10,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Executes a task
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ExecuteAsync();
 
         /// <summary>

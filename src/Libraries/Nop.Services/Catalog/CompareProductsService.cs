@@ -112,7 +112,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a "compare products" list
         /// </summary>
-        /// <returns>"Compare products" list</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the "Compare products" list
+        /// </returns>
         public virtual async Task<IList<Product>> GetComparedProductsAsync()
         {
             //get list of compared product identifiers
@@ -127,6 +130,7 @@ namespace Nop.Services.Catalog
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task RemoveProductFromCompareListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
@@ -152,6 +156,7 @@ namespace Nop.Services.Catalog
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task AddProductToCompareListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)

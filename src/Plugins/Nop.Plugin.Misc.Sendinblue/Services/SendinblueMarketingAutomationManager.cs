@@ -139,6 +139,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle shopping cart changed event
         /// </summary>
         /// <param name="cartItem">Shopping cart item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleShoppingCartChangedEventAsync(ShoppingCartItem cartItem)
         {
             //whether marketing automation is enabled
@@ -267,6 +268,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle order completed event
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleOrderCompletedEventAsync(Order order)
         {
             //whether marketing automation is enabled
@@ -400,6 +402,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// Handle order placed event
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleOrderPlacedEventAsync(Order order)
         {
             //whether marketing automation is enabled

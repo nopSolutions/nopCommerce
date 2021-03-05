@@ -39,6 +39,7 @@ namespace System.Linq
         /// A Task containing the first element in the sequence that satisfies the predicate,
         /// or a default value if no element satisfies the predicate
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<TSource> FirstOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
@@ -55,6 +56,7 @@ namespace System.Linq
         /// A Task containing a value indicating whether all elements in the sequence
         /// pass the test in the specified predicate
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<bool> AllAwaitAsync<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
@@ -138,6 +140,7 @@ namespace System.Linq
         /// A Task containing a value indicating whether any elements in the source
         /// sequence pass the test in the specified predicate
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<bool> AnyAwaitAsync<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
@@ -158,6 +161,7 @@ namespace System.Linq
         /// the condition in the asynchronous predicate, or a default value if no such element
         /// exists
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<TSource> SingleOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
@@ -173,6 +177,7 @@ namespace System.Linq
         /// An async-enumerable sequence containing a single element with a list containing
         /// all the elements of the source sequence
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<List<TSource>> ToListAsync<TSource>(this IEnumerable<TSource> source)
         {
             return source.ToAsyncEnumerable().ToListAsync().AsTask();

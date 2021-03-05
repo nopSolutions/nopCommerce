@@ -38,7 +38,10 @@ namespace Nop.Web.Framework.Controllers
         /// </summary>
         /// <param name="componentName">Component name</param>
         /// <param name="arguments">Arguments</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         protected virtual async Task<string> RenderViewComponentToStringAsync(string componentName, object arguments = null)
         {
             //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
@@ -82,7 +85,10 @@ namespace Nop.Web.Framework.Controllers
         /// </summary>
         /// <param name="viewName">View name</param>
         /// <param name="model">Model</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         protected virtual async Task<string> RenderPartialViewToStringAsync(string viewName, object model)
         {
             //get Razor view engine
@@ -164,6 +170,7 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
@@ -177,6 +184,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
@@ -212,7 +220,10 @@ namespace Nop.Web.Framework.Controllers
         /// <summary>
         /// Access denied JSON data for DataTables
         /// </summary>
-        /// <returns>Access denied JSON data</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the access denied JSON data
+        /// </returns>
         protected async Task<JsonResult> AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();

@@ -34,7 +34,10 @@ namespace Nop.Services.Media
         /// Gets a download
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
-        /// <returns>Download</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the download
+        /// </returns>
         public virtual async Task<Download> GetDownloadByIdAsync(int downloadId)
         {
             return await _downloadRepository.GetByIdAsync(downloadId);
@@ -44,7 +47,10 @@ namespace Nop.Services.Media
         /// Gets a download by GUID
         /// </summary>
         /// <param name="downloadGuid">Download GUID</param>
-        /// <returns>Download</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the download
+        /// </returns>
         public virtual async Task<Download> GetDownloadByGuidAsync(Guid downloadGuid)
         {
             if (downloadGuid == Guid.Empty)
@@ -61,6 +67,7 @@ namespace Nop.Services.Media
         /// Deletes a download
         /// </summary>
         /// <param name="download">Download</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDownloadAsync(Download download)
         {
             await _downloadRepository.DeleteAsync(download);
@@ -70,6 +77,7 @@ namespace Nop.Services.Media
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDownloadAsync(Download download)
         {
             await _downloadRepository.InsertAsync(download);
@@ -79,7 +87,10 @@ namespace Nop.Services.Media
         /// Gets the download binary array
         /// </summary>
         /// <param name="file">File</param>
-        /// <returns>Download binary array</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the download binary array
+        /// </returns>
         public virtual async Task<byte[]> GetDownloadBitsAsync(IFormFile file)
         {
             await using var fileStream = file.OpenReadStream();

@@ -90,6 +90,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Creates the database connection
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<DataConnection> CreateDataConnectionAsync()
         {
             return await CreateDataConnectionAsync(LinqToDbDataProvider);
@@ -107,7 +108,10 @@ namespace Nop.Data.DataProviders
         /// Creates the database connection
         /// </summary>
         /// <param name="dataProvider">Data provider</param>
-        /// <returns>Database connection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the database connection
+        /// </returns>
         protected virtual async Task<DataConnection> CreateDataConnectionAsync(IDataProvider dataProvider)
         {
             if (dataProvider is null)
@@ -143,7 +147,10 @@ namespace Nop.Data.DataProviders
         /// Creates a connection to a database
         /// </summary>
         /// <param name="connectionString">Connection string</param>
-        /// <returns>Connection to a database</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the connection to a database
+        /// </returns>
         protected virtual async Task<IDbConnection> CreateDbConnectionAsync(string connectionString = null)
         {
             var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : await GetCurrentConnectionStringAsync());
@@ -173,7 +180,10 @@ namespace Nop.Data.DataProviders
         /// <param name="storeKey">Name of temporary storage</param>
         /// <param name="query">Query to get records to populate created storage with initial data</param>
         /// <typeparam name="TItem">Storage record mapping class</typeparam>
-        /// <returns>IQueryable instance of temporary storage</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the iQueryable instance of temporary storage
+        /// </returns>
         public virtual async Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
             where TItem : class
         {
@@ -195,7 +205,10 @@ namespace Nop.Data.DataProviders
         /// mapped to database table or view.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Queryable source</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queryable source
+        /// </returns>
         public virtual async Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity
         {
             return new DataContext(LinqToDbDataProvider, await GetCurrentConnectionStringAsync()) { MappingSchema = GetMappingSchema() }
@@ -219,7 +232,10 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="entity"></param>
         /// <typeparam name="TEntity"></typeparam>
-        /// <returns>Inserted entity</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the inserted entity
+        /// </returns>
         public virtual async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -246,6 +262,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="entity">Entity with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -258,6 +275,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="entities">Entities with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             //we don't use the Merge API on this level, because this API not support all databases.
@@ -272,6 +290,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="entity">Entity for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -283,6 +302,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -300,7 +320,10 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Number of deleted records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of deleted records
+        /// </returns>
         public virtual async Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -314,6 +337,7 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
@@ -325,7 +349,10 @@ namespace Nop.Data.DataProviders
         /// </summary>
         /// <param name="sql">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of records, affected by command execution.
+        /// </returns>
         public virtual async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -342,7 +369,10 @@ namespace Nop.Data.DataProviders
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
-        /// <returns>Returns collection of query result records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns collection of query result records
+        /// </returns>
         public virtual async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -358,7 +388,10 @@ namespace Nop.Data.DataProviders
         /// <typeparam name="T">Type of result items</typeparam>
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
-        /// <returns>Collection of values of specified type</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of values of specified type
+        /// </returns>
         public virtual async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using var dataContext = await CreateDataConnectionAsync();
@@ -383,6 +416,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Database connection string
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task<string> GetCurrentConnectionStringAsync()
         {
             return (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;

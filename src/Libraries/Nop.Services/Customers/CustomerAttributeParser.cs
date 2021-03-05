@@ -76,7 +76,10 @@ namespace Nop.Services.Customers
         /// Gets selected customer attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected customer attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected customer attributes
+        /// </returns>
         public virtual async Task<IList<CustomerAttribute>> ParseCustomerAttributesAsync(string attributesXml)
         {
             var result = new List<CustomerAttribute>();
@@ -98,7 +101,10 @@ namespace Nop.Services.Customers
         /// Get customer attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Customer attribute values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer attribute values
+        /// </returns>
         public virtual async Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValuesAsync(string attributesXml)
         {
             var values = new List<CustomerAttributeValue>();
@@ -248,7 +254,10 @@ namespace Nop.Services.Customers
         /// Validates customer attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Warnings</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
         public virtual async Task<IList<string>> GetAttributeWarningsAsync(string attributesXml)
         {
             var warnings = new List<string>();

@@ -69,7 +69,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task ValidateVendorAsync(AuthorizationFilterContext context)
             {
                 if (context == null)
@@ -108,6 +108,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
             {
                 await ValidateVendorAsync(context);

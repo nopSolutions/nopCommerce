@@ -14,7 +14,10 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Search term</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search term
+        /// </returns>
         Task<SearchTerm> GetSearchTermByKeywordAsync(string keyword, int storeId);
 
         /// <summary>
@@ -22,19 +25,24 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>A list search term report lines</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a list search term report lines
+        /// </returns>
         Task<IPagedList<SearchTermReportLine>> GetStatsAsync(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertSearchTermAsync(SearchTerm searchTerm);
 
         /// <summary>
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateSearchTermAsync(SearchTerm searchTerm);
     }
 }

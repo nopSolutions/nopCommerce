@@ -46,6 +46,7 @@ namespace Nop.Services.Directory
         /// Deletes currency
         /// </summary>
         /// <param name="currency">Currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCurrencyAsync(Currency currency)
         {
             await _currencyRepository.DeleteAsync(currency);
@@ -55,7 +56,10 @@ namespace Nop.Services.Directory
         /// Gets a currency
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
-        /// <returns>Currency</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency
+        /// </returns>
         public virtual async Task<Currency> GetCurrencyByIdAsync(int currencyId)
         {
             return await _currencyRepository.GetByIdAsync(currencyId, cache => default);
@@ -65,7 +69,10 @@ namespace Nop.Services.Directory
         /// Gets a currency by code
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
-        /// <returns>Currency</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency
+        /// </returns>
         public virtual async Task<Currency> GetCurrencyByCodeAsync(string currencyCode)
         {
             if (string.IsNullOrEmpty(currencyCode))
@@ -80,7 +87,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Currencies</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currencies
+        /// </returns>
         public virtual async Task<IList<Currency>> GetAllCurrenciesAsync(bool showHidden = false, int storeId = 0)
         {
             var currencies = await _currencyRepository.GetAllAsync(query =>
@@ -106,6 +116,7 @@ namespace Nop.Services.Directory
         /// Inserts a currency
         /// </summary>
         /// <param name="currency">Currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCurrencyAsync(Currency currency)
         {
             await _currencyRepository.InsertAsync(currency);
@@ -115,6 +126,7 @@ namespace Nop.Services.Directory
         /// Updates the currency
         /// </summary>
         /// <param name="currency">Currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCurrencyAsync(Currency currency)
         {
             await _currencyRepository.UpdateAsync(currency);
@@ -128,7 +140,10 @@ namespace Nop.Services.Directory
         /// Gets live rates regarding the passed currency
         /// </summary>
         /// <param name="currencyCode">Currency code; pass null to use primary exchange rate currency</param>
-        /// <returns>Exchange rates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the exchange rates
+        /// </returns>
         public virtual async Task<IList<ExchangeRate>> GetCurrencyLiveRatesAsync(string currencyCode = null)
         {
             var exchangeRateProvider = await _exchangeRatePluginManager.LoadPrimaryPluginAsync()
@@ -159,7 +174,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertToPrimaryStoreCurrencyAsync(decimal amount, Currency sourceCurrencyCode)
         {
             if (sourceCurrencyCode == null)
@@ -176,7 +194,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertFromPrimaryStoreCurrencyAsync(decimal amount, Currency targetCurrencyCode)
         {
             var primaryStoreCurrency = await GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
@@ -191,7 +212,10 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertCurrencyAsync(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
             if (sourceCurrencyCode == null)
@@ -215,7 +239,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertToPrimaryExchangeRateCurrencyAsync(decimal amount, Currency sourceCurrencyCode)
         {
             if (sourceCurrencyCode == null)
@@ -242,7 +269,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertFromPrimaryExchangeRateCurrencyAsync(decimal amount, Currency targetCurrencyCode)
         {
             if (targetCurrencyCode == null)

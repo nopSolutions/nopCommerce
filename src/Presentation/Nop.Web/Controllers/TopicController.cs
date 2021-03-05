@@ -44,6 +44,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicDetails(int topicId)
         {
             //allow administrators to preview any topic
@@ -63,6 +64,7 @@ namespace Nop.Web.Controllers
         }
 
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
             var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
@@ -78,6 +80,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Authenticate(int id, string password)
         {
             var authResult = false;

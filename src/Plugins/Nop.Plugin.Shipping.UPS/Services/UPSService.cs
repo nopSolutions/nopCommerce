@@ -103,7 +103,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <summary>
         /// Get the weight limit for the selected weight measure
         /// </summary>
-        /// <returns>Value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the value
+        /// </returns>
         private async Task<decimal> GetWeightLimitAsync()
         {
             return await _measureService.ConvertWeightAsync(WEIGHT_LIMIT, _lbWeight, _measureWeight);
@@ -112,7 +115,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <summary>
         /// Get the size limit for the selected dimension measure
         /// </summary>
-        /// <returns>Value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the value
+        /// </returns>
         private async Task<decimal> GetSizeLimitAsync()
         {
             return await _measureService.ConvertDimensionAsync(SIZE_LIMIT, _inchesDimension, _measureDimension);
@@ -121,7 +127,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <summary>
         /// Get the length limit for the selected dimension measure
         /// </summary>
-        /// <returns>Value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the value
+        /// </returns>
         private async Task<decimal> GetLengthLimitAsync()
         {
             return await _measureService.ConvertDimensionAsync(LENGTH_LIMIT, _inchesDimension, _measureDimension);
@@ -160,7 +169,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Get tracking info
         /// </summary>
         /// <param name="request">Request details</param>
-        /// <returns>The asynchronous task whose result contains the tracking info</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the tracking info
+        /// </returns>
         private async Task<UPSTrack.TrackResponse> TrackAsync(UPSTrack.TrackRequest request)
         {
             try
@@ -236,7 +248,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Prepare shipment status event by the passed track activity
         /// </summary>
         /// <param name="activity">Track activity</param>
-        /// <returns>Shipment status event </returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment status event 
+        /// </returns>
         private async Task<ShipmentStatusEvent> PrepareShipmentStatusEventAsync(UPSTrack.ActivityType activity)
         {
             var shipmentStatusEvent = new ShipmentStatusEvent();
@@ -310,7 +325,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Get rates
         /// </summary>
         /// <param name="request">Request details</param>
-        /// <returns>The asynchronous task whose result contains the rates info</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the rates info
+        /// </returns>
         private async Task<UPSRate.RateResponse> GetRatesAsync(UPSRate.RateRequest request)
         {
             try
@@ -368,7 +386,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="shippingOptionRequest">Shipping option request</param>
         /// <param name="saturdayDelivery">Whether to get rates for Saturday Delivery</param>
-        /// <returns>Rate request details</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rate request details
+        /// </returns>
         private async Task<UPSRate.RateRequest> CreateRateRequestAsync(GetShippingOptionRequest shippingOptionRequest, bool saturdayDelivery = false)
         {
             //set request details
@@ -473,7 +494,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <param name="height">Height</param>
         /// <param name="weight">Weight</param>
         /// <param name="insuranceAmount">Insurance amount</param>
-        /// <returns>Package details</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the package details
+        /// </returns>
         private async Task<UPSRate.PackageType> CreatePackageAsync(decimal width, decimal length, decimal height, decimal weight, decimal insuranceAmount)
         {
             //set package details
@@ -525,7 +549,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Create packages (each shopping cart item is a separate package)
         /// </summary>
         /// <param name="shippingOptionRequest">shipping option request</param>
-        /// <returns>Packages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the packages
+        /// </returns>
         private async Task<IEnumerable<UPSRate.PackageType>> GetPackagesForOneItemPerPackageAsync(GetShippingOptionRequest shippingOptionRequest)
         {
             return await shippingOptionRequest.Items.SelectManyAwait(async packageItem =>
@@ -552,7 +579,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Create packages (total dimensions of shopping cart items determines number of packages)
         /// </summary>
         /// <param name="shippingOptionRequest">shipping option request</param>
-        /// <returns>Packages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the packages
+        /// </returns>
         private async Task<IEnumerable<UPSRate.PackageType>> GetPackagesByDimensionsAsync(GetShippingOptionRequest shippingOptionRequest)
         {
             //get dimensions and weight of the whole package
@@ -620,7 +650,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Create packages (total volume of shopping cart items determines number of packages)
         /// </summary>
         /// <param name="shippingOptionRequest">shipping option request</param>
-        /// <returns>Packages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the packages
+        /// </returns>
         private async Task<IEnumerable<UPSRate.PackageType>> GetPackagesByCubicRootAsync(GetShippingOptionRequest shippingOptionRequest)
         {
             //Dimensional weight is based on volume (the amount of space a package occupies in relation to its actual weight). 
@@ -704,7 +737,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Get dimensions values of the single shopping cart item
         /// </summary>
         /// <param name="item">Shopping cart item</param>
-        /// <returns>Dimensions values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dimensions values
+        /// </returns>
         private async Task<(decimal width, decimal length, decimal height)> GetDimensionsForSingleItemAsync(ShoppingCartItem item, Product product)
         {
             var items = new[] { new GetShippingOptionRequest.PackageItem(item, product, 1) };
@@ -716,7 +752,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Get dimensions values of the package
         /// </summary>
         /// <param name="items">Package items</param>
-        /// <returns>Dimensions values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dimensions values
+        /// </returns>
         private async Task<(decimal width, decimal length, decimal height)> GetDimensionsAsync(IList<GetShippingOptionRequest.PackageItem> items)
         {
             async Task<decimal> convertAndRoundDimensionAsync(decimal dimension)
@@ -738,7 +777,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Get weight value of the single shopping cart item
         /// </summary>
         /// <param name="item">Shopping cart item</param>
-        /// <returns>Weight value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the weight value
+        /// </returns>
         private async Task<decimal> GetWeightForSingleItemAsync(ShoppingCartItem item, Customer customer, Product product)
         {
             var shippingOptionRequest = new GetShippingOptionRequest
@@ -754,7 +796,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Get weight value of the package
         /// </summary>
         /// <param name="shippingOptionRequest">Shipping option request</param>
-        /// <returns>Weight value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the weight value
+        /// </returns>
         private async Task<decimal> GetWeightAsync(GetShippingOptionRequest shippingOptionRequest)
         {
             var weight = await _shippingService.GetTotalWeightAsync(shippingOptionRequest, ignoreFreeShippedItems: true);
@@ -781,7 +826,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="shippingOptionRequest">Shipping option request details</param>
         /// <param name="saturdayDelivery">Whether to get rates for Saturday Delivery</param>
-        /// <returns>Shipping options; errors if exist</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping options; errors if exist
+        /// </returns>
         private async Task<(IList<ShippingOption> shippingOptions, string error)> GetShippingOptionsAsync(GetShippingOptionRequest shippingOptionRequest,
             bool saturdayDelivery = false)
         {
@@ -822,7 +870,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Prepare shipping options
         /// </summary>
         /// <param name="rateResponse">Rate response</param>
-        /// <returns>Shipping options</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping options
+        /// </returns>
         private async Task<IEnumerable<ShippingOption>> PrepareShippingOptionsAsync(UPSRate.RateResponse rateResponse)
         {
             var shippingOptions = new List<ShippingOption>();
@@ -897,7 +948,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Gets all events for a tracking number
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
-        /// <returns>Shipment events</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment events
+        /// </returns>
         public virtual async Task<IEnumerable<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber)
         {
             try
@@ -930,7 +984,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// Gets shipping rates
         /// </summary>
         /// <param name="shippingOptionRequest">Shipping option request details</param>
-        /// <returns>Represents a response of getting shipping rate options</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the represents a response of getting shipping rate options
+        /// </returns>
         public virtual async Task<GetShippingOptionResponse> GetRatesAsync(GetShippingOptionRequest shippingOptionRequest)
         {
             var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };

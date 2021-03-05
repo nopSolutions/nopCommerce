@@ -34,7 +34,10 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         /// </summary>
         /// <param name="url">URL to request</param>
         /// <param name="httpClient">HTTP client</param>
-        /// <returns>The asynchronous task whose result determines that request is completed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result determines that request is completed
+        /// </returns>
         private async Task RequestAsync(string url, HttpClient httpClient)
         {
             //limit request number
@@ -145,6 +148,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         /// </summary>
         /// <param name="transaction">A corresponding transaction</param>
         /// <param name="httpClient">HTTP client</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task SendRequest(Transaction transaction, HttpClient httpClient)
         {
             var requestUrl = BASE_URL + CreateParameterString() + "&" + transaction.CreateParameterString();

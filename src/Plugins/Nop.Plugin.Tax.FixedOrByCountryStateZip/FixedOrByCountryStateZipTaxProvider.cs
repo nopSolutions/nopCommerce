@@ -82,7 +82,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// Gets tax rate
         /// </summary>
         /// <param name="taxRateRequest">Tax rate request</param>
-        /// <returns>Tax</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax
+        /// </returns>
         public async Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
             var result = new TaxRateResult();
@@ -146,7 +149,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// Gets tax total
         /// </summary>
         /// <param name="taxTotalRequest">Tax total request</param>
-        /// <returns>Tax total</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax total
+        /// </returns>
         public async Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest)
         {
             if (_httpContextAccessor.HttpContext.Items.TryGetValue("nop.TaxTotal", out var result)
@@ -267,6 +273,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //settings
@@ -303,6 +310,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings
