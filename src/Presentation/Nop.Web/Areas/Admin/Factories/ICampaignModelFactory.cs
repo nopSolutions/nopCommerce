@@ -13,14 +13,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare campaign search model
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
-        /// <returns>Campaign search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaign search model
+        /// </returns>
         Task<CampaignSearchModel> PrepareCampaignSearchModelAsync(CampaignSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged campaign list model
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
-        /// <returns>Campaign list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaign list model
+        /// </returns>
         Task<CampaignListModel> PrepareCampaignListModelAsync(CampaignSearchModel searchModel);
 
         /// <summary>
@@ -29,7 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Campaign model</param>
         /// <param name="campaign">Campaign</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Campaign model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the campaign model
+        /// </returns>
         Task<CampaignModel> PrepareCampaignModelAsync(CampaignModel model, Campaign campaign, bool excludeProperties = false);
     }
 }

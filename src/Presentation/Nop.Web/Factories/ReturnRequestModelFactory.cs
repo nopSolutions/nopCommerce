@@ -75,7 +75,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Submit return request model</param>
         /// <param name="order">Order</param>
-        /// <returns>Submit return request model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the submit return request model
+        /// </returns>
         public virtual async Task<SubmitReturnRequestModel> PrepareSubmitReturnRequestModelAsync(SubmitReturnRequestModel model,
             Order order)
         {
@@ -120,7 +123,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the customer return requests model
         /// </summary>
-        /// <returns>Customer return requests model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer return requests model
+        /// </returns>
         public virtual async Task<CustomerReturnRequestsModel> PrepareCustomerReturnRequestsModelAsync()
         {
             var model = new CustomerReturnRequestsModel();
@@ -161,7 +167,10 @@ namespace Nop.Web.Factories
         /// Prepare the order item model
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Order item model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order item model
+        /// </returns>
         public virtual async Task<SubmitReturnRequestModel.OrderItemModel> PrepareSubmitReturnRequestOrderItemModelAsync(OrderItem orderItem)
         {
             if (orderItem == null)

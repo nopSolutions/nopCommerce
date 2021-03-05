@@ -48,7 +48,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// </summary>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of the shipping by weight record</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the shipping by weight record
+        /// </returns>
         public virtual async Task<IPagedList<ShippingByWeightByTotalRecord>> GetAllAsync(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var rez = await _sbwtRepository.GetAllAsync(query =>
@@ -77,7 +80,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="orderSubtotal">Order subtotal</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of the shipping by weight record</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the shipping by weight record
+        /// </returns>
         public virtual async Task<IPagedList<ShippingByWeightByTotalRecord>> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal? weight, decimal? orderSubtotal, int pageIndex, int pageSize)
         {
@@ -138,7 +144,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="zip">Zip postal code</param>
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
-        /// <returns>Shipping by weight record</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping by weight record
+        /// </returns>
         public virtual async Task<ShippingByWeightByTotalRecord> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId, 
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal)
         {
@@ -151,7 +160,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// Get a shipping by weight record by identifier
         /// </summary>
         /// <param name="shippingByWeightRecordId">Record identifier</param>
-        /// <returns>Shipping by weight record</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping by weight record
+        /// </returns>
         public virtual async Task<ShippingByWeightByTotalRecord> GetByIdAsync(int shippingByWeightRecordId)
         {
             return await _sbwtRepository.GetByIdAsync(shippingByWeightRecordId);
@@ -161,6 +173,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// Insert the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord)
         {
             await _sbwtRepository.InsertAsync(shippingByWeightRecord, false);
@@ -172,6 +185,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// Update the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord)
         {
             await _sbwtRepository.UpdateAsync(shippingByWeightRecord, false);
@@ -183,6 +197,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// Delete the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord)
         {
             await _sbwtRepository.DeleteAsync(shippingByWeightRecord, false);

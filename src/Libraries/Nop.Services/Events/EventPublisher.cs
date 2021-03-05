@@ -19,6 +19,7 @@ namespace Nop.Services.Events
         /// </summary>
         /// <typeparam name="TEvent">Type of event</typeparam>
         /// <param name="event">Event object</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PublishAsync<TEvent>(TEvent @event)
         {
             //get all event consumers

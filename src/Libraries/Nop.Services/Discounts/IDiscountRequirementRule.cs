@@ -12,7 +12,10 @@ namespace Nop.Services.Discounts
         /// Check discount requirement
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<DiscountRequirementValidationResult> CheckRequirementAsync(DiscountRequirementValidationRequest request);
 
         /// <summary>

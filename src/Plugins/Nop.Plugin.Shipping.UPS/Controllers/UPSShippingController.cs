@@ -59,6 +59,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             //whether user has the authority to manage configuration
@@ -122,6 +123,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(UPSShippingModel model)
         {
             //whether user has the authority to manage configuration

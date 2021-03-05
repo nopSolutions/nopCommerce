@@ -114,7 +114,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get HTTP protocol
         /// </summary>
-        /// <returns>Protocol name as string</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the protocol name as string
+        /// </returns>
         protected virtual async Task<string> GetHttpProtocolAsync()
         {
             return (await _storeContext.GetCurrentStoreAsync()).SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
@@ -123,7 +126,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Generate URLs for the sitemap
         /// </summary>
-        /// <returns>List of sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of sitemap URLs
+        /// </returns>
         protected virtual async Task<IList<SitemapUrl>> GenerateUrlsAsync()
         {
             var sitemapUrls = new List<SitemapUrl>
@@ -191,7 +197,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get news item URLs for the sitemap
         /// </summary>
-        /// <returns>Sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap URLs
+        /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetNewsItemUrlsAsync()
         {
             return await (await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
@@ -203,7 +212,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get category URLs for the sitemap
         /// </summary>
-        /// <returns>Sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap URLs
+        /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetCategoryUrlsAsync()
         {
             return await (await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
@@ -213,7 +225,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get manufacturer URLs for the sitemap
         /// </summary>
-        /// <returns>Sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap URLs
+        /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrlsAsync()
         {
             return await (await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
@@ -223,7 +238,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get product URLs for the sitemap
         /// </summary>
-        /// <returns>Sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap URLs
+        /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetProductUrlsAsync()
         {
             return await (await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
@@ -234,7 +252,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get product tag URLs for the sitemap
         /// </summary>
-        /// <returns>Sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap URLs
+        /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetProductTagUrlsAsync()
         {
             return await (await _productTagService.GetAllProductTagsAsync())
@@ -244,7 +265,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get topic URLs for the sitemap
         /// </summary>
-        /// <returns>Sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap URLs
+        /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrlsAsync()
         {
             return await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).Where(t => t.IncludeInSitemap)
@@ -254,7 +278,10 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get blog post URLs for the sitemap
         /// </summary>
-        /// <returns>Sitemap URLs</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap URLs
+        /// </returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostUrlsAsync()
         {
             return await (await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
@@ -281,7 +308,10 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <typeparam name="T">Model type</typeparam>
         /// <param name="model">Model</param>
-        /// <returns>Lambda for route params</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the lambda for route params
+        /// </returns>
         protected virtual Func<int?, Task<object>> GetSeoRouteParamsAwait<T>(T model)
             where T : BaseEntity, ISlugSupported
         {
@@ -293,6 +323,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="sitemapNumber">The number of sitemaps</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteSitemapIndexAsync(Stream stream, int sitemapNumber)
         {
             var urlHelper = GetUrlHelper();
@@ -328,6 +359,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="sitemapUrls">List of sitemap URLs</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteSitemapAsync(Stream stream, IList<SitemapUrl> sitemapUrls)
         {
             await using var writer = new XmlTextWriter(stream, Encoding.UTF8)
@@ -363,6 +395,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="writer">XML stream writer</param>
         /// <param name="sitemapUrl">Sitemap URL</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteSitemapUrlAsync(XmlTextWriter writer, SitemapUrl sitemapUrl)
         {
             if (string.IsNullOrEmpty(sitemapUrl.Location))
@@ -405,6 +438,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task GenerateAsync(Stream stream, int? id)
         {
             //generate all URLs for the sitemap
@@ -455,7 +489,10 @@ namespace Nop.Services.Seo
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
-        /// <returns>Sitemap.xml as string</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap.xml as string
+        /// </returns>
         public virtual async Task<string> GenerateAsync(int? id)
         {
             await using var stream = new MemoryStream();
@@ -471,6 +508,7 @@ namespace Nop.Services.Seo
         /// <param name="getRouteParamsAwait">Lambda for route params object</param>
         /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
         /// <param name="updateFreq">How often to update url</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
             Func<int?, Task<object>> getRouteParamsAwait = null,
             DateTime? dateTimeUpdatedOn = null,

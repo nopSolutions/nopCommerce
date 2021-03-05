@@ -101,7 +101,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>List of message templates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of message templates
+        /// </returns>
         protected virtual async Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId)
         {
             //get message templates by the name
@@ -122,7 +125,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>EmailAccount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the emailAccount
+        /// </returns>
         protected virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId)
         {
             var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
@@ -140,7 +146,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Return a value language identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return a value language identifier
+        /// </returns>
         protected virtual async Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId)
         {
             //load language by specified ID
@@ -175,7 +184,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendCustomerRegisteredNotificationMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
@@ -215,7 +227,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendCustomerWelcomeMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
@@ -255,7 +270,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendCustomerEmailValidationMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
@@ -295,7 +313,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendCustomerEmailRevalidationMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
@@ -336,7 +357,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendCustomerPasswordRecoveryMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
@@ -381,7 +405,10 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPlacedVendorNotificationAsync(Order order, Vendor vendor, int languageId)
         {
             if (order == null)
@@ -425,7 +452,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPlacedStoreOwnerNotificationAsync(Order order, int languageId)
         {
             if (order == null)
@@ -466,7 +496,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPlacedAffiliateNotificationAsync(Order order, int languageId)
         {
             if (order == null)
@@ -513,7 +546,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPaidStoreOwnerNotificationAsync(Order order, int languageId)
         {
             if (order == null)
@@ -554,7 +590,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPaidAffiliateNotificationAsync(Order order, int languageId)
         {
             if (order == null)
@@ -603,7 +642,10 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPaidCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
@@ -649,7 +691,10 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPaidVendorNotificationAsync(Order order, Vendor vendor, int languageId)
         {
             if (order == null)
@@ -695,7 +740,10 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderPlacedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
@@ -740,7 +788,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendShipmentSentCustomerNotificationAsync(Shipment shipment, int languageId)
         {
             if (shipment == null)
@@ -788,7 +839,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendShipmentDeliveredCustomerNotificationAsync(Shipment shipment, int languageId)
         {
             if (shipment == null)
@@ -839,7 +893,10 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderCompletedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
@@ -884,7 +941,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderCancelledCustomerNotificationAsync(Order order, int languageId)
         {
             if (order == null)
@@ -928,7 +988,10 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderRefundedStoreOwnerNotificationAsync(Order order, decimal refundedAmount, int languageId)
         {
             if (order == null)
@@ -971,7 +1034,10 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendOrderRefundedCustomerNotificationAsync(Order order, decimal refundedAmount, int languageId)
         {
             if (order == null)
@@ -1015,7 +1081,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="orderNote">Order note</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewOrderNoteAddedCustomerNotificationAsync(OrderNote orderNote, int languageId)
         {
             if (orderNote == null)
@@ -1064,7 +1133,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendRecurringPaymentCancelledStoreOwnerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
             if (recurringPayment == null)
@@ -1111,7 +1183,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendRecurringPaymentCancelledCustomerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
             if (recurringPayment == null)
@@ -1160,7 +1235,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendRecurringPaymentFailedCustomerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
             if (recurringPayment == null)
@@ -1213,7 +1291,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewsLetterSubscriptionActivationMessageAsync(NewsLetterSubscription subscription, int languageId)
         {
             if (subscription == null)
@@ -1250,7 +1331,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewsLetterSubscriptionDeactivationMessageAsync(NewsLetterSubscription subscription, int languageId)
         {
             if (subscription == null)
@@ -1295,7 +1379,10 @@ namespace Nop.Services.Messages
         /// <param name="customerEmail">Customer's email</param>
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendProductEmailAFriendMessageAsync(Customer customer, int languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage)
         {
@@ -1342,7 +1429,10 @@ namespace Nop.Services.Messages
         /// <param name="customerEmail">Customer's email</param>
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId,
              string customerEmail, string friendsEmail, string personalMessage)
         {
@@ -1388,7 +1478,10 @@ namespace Nop.Services.Messages
         /// <param name="orderItem">Order item</param>
         /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewReturnRequestStoreOwnerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order, int languageId)
         {
             if (returnRequest == null)
@@ -1437,7 +1530,10 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
         /// <param name="order">Order</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewReturnRequestCustomerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
             if (returnRequest == null)
@@ -1494,7 +1590,10 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
         /// <param name="order">Order</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendReturnRequestStatusChangedCustomerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
             if (returnRequest == null)
@@ -1556,7 +1655,10 @@ namespace Nop.Services.Messages
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewForumTopicMessageAsync(Customer customer, ForumTopic forumTopic, Forum forum, int languageId)
         {
             if (customer == null)
@@ -1601,7 +1703,10 @@ namespace Nop.Services.Messages
         /// <param name="forum">Forum</param>
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex, int languageId)
         {
@@ -1644,7 +1749,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="privateMessage">Private message</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendPrivateMessageNotificationAsync(PrivateMessage privateMessage, int languageId)
         {
             if (privateMessage == null)
@@ -1690,7 +1798,10 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer</param>
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewVendorAccountApplyStoreOwnerNotificationAsync(Customer customer, Vendor vendor, int languageId)
         {
             if (customer == null)
@@ -1734,7 +1845,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendVendorInformationChangeNotificationAsync(Vendor vendor, int languageId)
         {
             if (vendor == null)
@@ -1774,7 +1888,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendGiftCardNotificationAsync(GiftCard giftCard, int languageId)
         {
             if (giftCard == null)
@@ -1817,7 +1934,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendProductReviewNotificationMessageAsync(ProductReview productReview, int languageId)
         {
             if (productReview == null)
@@ -1858,7 +1978,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendProductReviewReplyCustomerNotificationMessageAsync(ProductReview productReview, int languageId)
         {
             if (productReview == null)
@@ -1901,7 +2024,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendQuantityBelowStoreOwnerNotificationAsync(Product product, int languageId)
         {
             if (product == null)
@@ -1940,7 +2066,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendQuantityBelowStoreOwnerNotificationAsync(ProductAttributeCombination combination, int languageId)
         {
             if (combination == null)
@@ -1984,7 +2113,10 @@ namespace Nop.Services.Messages
         /// <param name="vatName">Received VAT name</param>
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewVatSubmittedStoreOwnerNotificationAsync(Customer customer,
             string vatName, string vatAddress, int languageId)
         {
@@ -2026,7 +2158,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>List of queued email identifiers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of queued email identifiers
+        /// </returns>
         public virtual async Task<IList<int>> SendBlogCommentNotificationMessageAsync(BlogComment blogComment, int languageId)
         {
             if (blogComment == null)
@@ -2067,7 +2202,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsComment">News comment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendNewsCommentNotificationMessageAsync(NewsComment newsComment, int languageId)
         {
             if (newsComment == null)
@@ -2108,7 +2246,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="subscription">Subscription</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendBackInStockNotificationAsync(BackInStockSubscription subscription, int languageId)
         {
             if (subscription == null)
@@ -2161,7 +2302,10 @@ namespace Nop.Services.Messages
         /// <param name="senderName">Sender name</param>
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendContactUsMessageAsync(int languageId, string senderEmail,
             string senderName, string subject, string body)
         {
@@ -2227,7 +2371,10 @@ namespace Nop.Services.Messages
         /// <param name="senderName">Sender name</param>
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<IList<int>> SendContactVendorMessageAsync(Vendor vendor, int languageId, string senderEmail,
             string senderName, string subject, string body)
         {
@@ -2294,7 +2441,10 @@ namespace Nop.Services.Messages
         /// <param name="sendToEmail">Send to email</param>
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<int> SendTestEmailAsync(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId)
         {
             var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(messageTemplateId);
@@ -2333,7 +2483,10 @@ namespace Nop.Services.Messages
         /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         public virtual async Task<int> SendNotificationAsync(MessageTemplate messageTemplate,
             EmailAccount emailAccount, int languageId, IList<Token> tokens,
             string toEmailAddress, string toName,

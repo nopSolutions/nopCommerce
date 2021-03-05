@@ -79,7 +79,10 @@ namespace Nop.Services.Authentication.External
         /// <param name="associatedUser">Associated with passed external authentication parameters user</param>
         /// <param name="currentLoggedInUser">Current logged-in user</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
-        /// <returns>Result of an authentication</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of an authentication
+        /// </returns>
         protected virtual async Task<IActionResult> AuthenticateExistingUserAsync(Customer associatedUser, Customer currentLoggedInUser, string returnUrl)
         {
             //log in guest user
@@ -100,7 +103,10 @@ namespace Nop.Services.Authentication.External
         /// <param name="currentLoggedInUser">Current logged-in user</param>
         /// <param name="parameters">Authentication parameters received from external authentication method</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
-        /// <returns>Result of an authentication</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of an authentication
+        /// </returns>
         protected virtual async Task<IActionResult> AuthenticateNewUserAsync(Customer currentLoggedInUser, ExternalAuthenticationParameters parameters, string returnUrl)
         {
             //associate external account with logged-in user
@@ -124,7 +130,10 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="parameters">Authentication parameters received from external authentication method</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
-        /// <returns>Result of an authentication</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of an authentication
+        /// </returns>
         protected virtual async Task<IActionResult> RegisterNewUserAsync(ExternalAuthenticationParameters parameters, string returnUrl)
         {
             //check whether the specified email has been already registered
@@ -232,7 +241,10 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
-        /// <returns>Result of an authentication</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of an authentication
+        /// </returns>
         public virtual async Task<IActionResult> AuthenticateAsync(ExternalAuthenticationParameters parameters, string returnUrl = null)
         {
             if (parameters == null)
@@ -259,7 +271,10 @@ namespace Nop.Services.Authentication.External
         /// Get the external authentication records by identifier
         /// </summary>
         /// <param name="externalAuthenticationRecordId">External authentication record identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<ExternalAuthenticationRecord> GetExternalAuthenticationRecordByIdAsync(int externalAuthenticationRecordId)
         {
             return await _externalAuthenticationRecordRepository.GetByIdAsync(externalAuthenticationRecordId, cache => default);
@@ -269,7 +284,10 @@ namespace Nop.Services.Authentication.External
         /// Get list of the external authentication records by customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<ExternalAuthenticationRecord>> GetCustomerExternalAuthenticationRecordsAsync(Customer customer)
         {
             if (customer == null)
@@ -284,6 +302,7 @@ namespace Nop.Services.Authentication.External
         /// Delete the external authentication record
         /// </summary>
         /// <param name="externalAuthenticationRecord">External authentication record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteExternalAuthenticationRecordAsync(ExternalAuthenticationRecord externalAuthenticationRecord)
         {
             if (externalAuthenticationRecord == null)
@@ -297,6 +316,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="parameters">External authentication parameters</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AssociateExternalAccountWithUserAsync(Customer customer, ExternalAuthenticationParameters parameters)
         {
             if (customer == null)
@@ -319,7 +339,10 @@ namespace Nop.Services.Authentication.External
         /// Get the particular user with specified parameters
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
-        /// <returns>Customer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer
+        /// </returns>
         public virtual async Task<Customer> GetUserByExternalAuthenticationParametersAsync(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)
@@ -337,6 +360,7 @@ namespace Nop.Services.Authentication.External
         /// Remove the association
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RemoveAssociationAsync(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)

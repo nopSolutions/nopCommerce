@@ -8,6 +8,7 @@ namespace Nop.Web
 {
     public class Program
     {
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task Main(string[] args)
         {
             //initialize the host

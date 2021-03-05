@@ -40,6 +40,7 @@ namespace Nop.Services.Directory
         /// Deletes a state/province
         /// </summary>
         /// <param name="stateProvince">The state/province</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteStateProvinceAsync(StateProvince stateProvince)
         {
             await _stateProvinceRepository.DeleteAsync(stateProvince);
@@ -49,7 +50,10 @@ namespace Nop.Services.Directory
         /// Gets a state/province
         /// </summary>
         /// <param name="stateProvinceId">The state/province identifier</param>
-        /// <returns>State/province</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the state/province
+        /// </returns>
         public virtual async Task<StateProvince> GetStateProvinceByIdAsync(int stateProvinceId)
         {
             return await _stateProvinceRepository.GetByIdAsync(stateProvinceId, cache => default);
@@ -60,7 +64,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="abbreviation">The state/province abbreviation</param>
         /// <param name="countryId">Country identifier; pass null to load the state regardless of a country</param>
-        /// <returns>State/province</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the state/province
+        /// </returns>
         public virtual async Task<StateProvince> GetStateProvinceByAbbreviationAsync(string abbreviation, int? countryId = null)
         {
             if (string.IsNullOrEmpty(abbreviation))
@@ -82,7 +89,10 @@ namespace Nop.Services.Directory
         /// Gets a state/province by address 
         /// </summary>
         /// <param name="address">Address</param>
-        /// <returns>Country</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country
+        /// </returns>
         public virtual async Task<StateProvince> GetStateProvinceByAddressAsync(Address address)
         {
             return await GetStateProvinceByIdAsync(address?.StateProvinceId ?? 0);
@@ -94,7 +104,10 @@ namespace Nop.Services.Directory
         /// <param name="countryId">Country identifier</param>
         /// <param name="languageId">Language identifier. It's used to sort states by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>States</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the states
+        /// </returns>
         public virtual async Task<IList<StateProvince>> GetStateProvincesByCountryIdAsync(int countryId, int languageId = 0, bool showHidden = false)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByCountryCacheKey, countryId, languageId, showHidden);
@@ -123,7 +136,10 @@ namespace Nop.Services.Directory
         /// Gets all states/provinces
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>States</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the states
+        /// </returns>
         public virtual async Task<IList<StateProvince>> GetStateProvincesAsync(bool showHidden = false)
         {
             var query = from sp in _stateProvinceRepository.Table
@@ -141,6 +157,7 @@ namespace Nop.Services.Directory
         /// Inserts a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertStateProvinceAsync(StateProvince stateProvince)
         {
             await _stateProvinceRepository.InsertAsync(stateProvince);
@@ -150,6 +167,7 @@ namespace Nop.Services.Directory
         /// Updates a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateStateProvinceAsync(StateProvince stateProvince)
         {
             await _stateProvinceRepository.UpdateAsync(stateProvince);

@@ -25,7 +25,10 @@ namespace Nop.Services.Shipping.Pickup
         /// Get pickup points for the address
         /// </summary>
         /// <param name="address">Address</param>
-        /// <returns>Represents a response of getting pickup points</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the represents a response of getting pickup points
+        /// </returns>
         Task<GetPickupPointsResponse> GetPickupPointsAsync(Address address);
         
         #endregion

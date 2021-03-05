@@ -57,6 +57,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets the current store
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<Store> GetCurrentStoreAsync()
         {
             if (_cachedStore != null)
@@ -103,6 +104,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets active store scope configuration
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<int> GetActiveStoreScopeConfigurationAsync()
         {
             if (_cachedActiveStoreScopeConfiguration.HasValue)

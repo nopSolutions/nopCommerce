@@ -41,6 +41,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Methods
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ExportProducts(string selectedIds)
         {
             //ensure that Avalara tax provider is active

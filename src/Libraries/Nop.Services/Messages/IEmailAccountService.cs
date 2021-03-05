@@ -13,31 +13,40 @@ namespace Nop.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertEmailAccountAsync(EmailAccount emailAccount);
 
         /// <summary>
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateEmailAccountAsync(EmailAccount emailAccount);
 
         /// <summary>
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteEmailAccountAsync(EmailAccount emailAccount);
 
         /// <summary>
         /// Gets an email account by identifier
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
-        /// <returns>Email account</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account
+        /// </returns>
         Task<EmailAccount> GetEmailAccountByIdAsync(int emailAccountId);
 
         /// <summary>
         /// Gets all email accounts
         /// </summary>
-        /// <returns>Email accounts list</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email accounts list
+        /// </returns>
         Task<IList<EmailAccount>> GetAllEmailAccountsAsync();
     }
 }

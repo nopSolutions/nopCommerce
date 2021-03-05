@@ -17,6 +17,7 @@ namespace Nop.Services.Tasks
     /// <summary>
     /// Represents task thread
     /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
     public partial class TaskThread : IDisposable
     {
         #region Fields

@@ -138,7 +138,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the customer order list model
         /// </summary>
-        /// <returns>Customer order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer order list model
+        /// </returns>
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync()
         {
             var model = new CustomerOrderListModel();
@@ -193,7 +196,10 @@ namespace Nop.Web.Factories
         /// Prepare the order details model
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Order details model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order details model
+        /// </returns>
         public virtual async Task<OrderDetailsModel> PrepareOrderDetailsModelAsync(Order order)
         {
             if (order == null)
@@ -484,7 +490,10 @@ namespace Nop.Web.Factories
         /// Prepare the shipment details model
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        /// <returns>Shipment details model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment details model
+        /// </returns>
         public virtual async Task<ShipmentDetailsModel> PrepareShipmentDetailsModelAsync(Shipment shipment)
         {
             if (shipment == null)
@@ -574,7 +583,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer reward points model
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
-        /// <returns>Customer reward points model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer reward points model
+        /// </returns>
         public virtual async Task<CustomerRewardPointsModel> PrepareCustomerRewardPointsAsync(int? page)
         {
             //get reward points history

@@ -42,7 +42,10 @@ namespace Nop.Services.Tasks
         /// Gets a task
         /// </summary>
         /// <param name="taskId">Task identifier</param>
-        /// <returns>Task</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the schedule task
+        /// </returns>
         public virtual async Task<ScheduleTask> GetTaskByIdAsync(int taskId)
         {
             return await _taskRepository.GetByIdAsync(taskId, cache => default);
@@ -52,7 +55,10 @@ namespace Nop.Services.Tasks
         /// Gets a task by its type
         /// </summary>
         /// <param name="type">Task type</param>
-        /// <returns>Task</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the schedule task
+        /// </returns>
         public virtual async Task<ScheduleTask> GetTaskByTypeAsync(string type)
         {
             if (string.IsNullOrWhiteSpace(type))
@@ -71,7 +77,10 @@ namespace Nop.Services.Tasks
         /// Gets all tasks
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Tasks</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of schedule task
+        /// </returns>
         public virtual async Task<IList<ScheduleTask>> GetAllTasksAsync(bool showHidden = false)
         {
             var tasks = await _taskRepository.GetAllAsync(query =>

@@ -163,6 +163,7 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<GdprConsentModel> PrepareGdprConsentModelAsync(GdprConsent consent, bool accepted)
         {
             if (consent == null)
@@ -190,7 +191,10 @@ namespace Nop.Web.Factories
         /// <param name="customer">Customer</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
-        /// <returns>Customer info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer info model
+        /// </returns>
         public virtual async Task<CustomerInfoModel> PrepareCustomerInfoModelAsync(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
@@ -371,7 +375,10 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
-        /// <returns>Customer register model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer register model
+        /// </returns>
         public virtual async Task<RegisterModel> PrepareRegisterModelAsync(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
@@ -489,7 +496,10 @@ namespace Nop.Web.Factories
         /// Prepare the login model
         /// </summary>
         /// <param name="checkoutAsGuest">Whether to checkout as guest is enabled</param>
-        /// <returns>Login model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the login model
+        /// </returns>
         public virtual Task<LoginModel> PrepareLoginModelAsync(bool? checkoutAsGuest)
         {
             var model = new LoginModel
@@ -507,7 +517,10 @@ namespace Nop.Web.Factories
         /// Prepare the password recovery model
         /// </summary>
         /// <param name="model">Password recovery model</param>
-        /// <returns>Password recovery model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the password recovery model
+        /// </returns>
         public virtual Task<PasswordRecoveryModel> PreparePasswordRecoveryModelAsync(PasswordRecoveryModel model)
         {
             if (model == null)
@@ -523,7 +536,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="resultId">Value of UserRegistrationType enum</param>
         /// <param name="returnUrl">URL to redirect</param>
-        /// <returns>Register result model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the register result model
+        /// </returns>
         public virtual async Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId, string returnUrl)
         {
             var resultText = (UserRegistrationType)resultId switch
@@ -548,7 +564,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer navigation model
         /// </summary>
         /// <param name="selectedTabId">Identifier of the selected tab</param>
-        /// <returns>Customer navigation model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer navigation model
+        /// </returns>
         public virtual async Task<CustomerNavigationModel> PrepareCustomerNavigationModelAsync(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
@@ -713,7 +732,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the customer address list model
         /// </summary>
-        /// <returns>Customer address list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer address list model
+        /// </returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
@@ -738,7 +760,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the customer downloadable products model
         /// </summary>
-        /// <returns>Customer downloadable products model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer downloadable products model
+        /// </returns>
         public virtual async Task<CustomerDownloadableProductsModel> PrepareCustomerDownloadableProductsModelAsync()
         {
             var model = new CustomerDownloadableProductsModel();
@@ -776,7 +801,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <param name="product">Product</param>
-        /// <returns>User agreement model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the user agreement model
+        /// </returns>
         public virtual Task<UserAgreementModel> PrepareUserAgreementModelAsync(OrderItem orderItem, Product product)
         {
             if (orderItem == null)
@@ -797,7 +825,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the change password model
         /// </summary>
-        /// <returns>Change password model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the change password model
+        /// </returns>
         public virtual Task<ChangePasswordModel> PrepareChangePasswordModelAsync()
         {
             var model = new ChangePasswordModel();
@@ -809,7 +840,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer avatar model
         /// </summary>
         /// <param name="model">Customer avatar model</param>
-        /// <returns>Customer avatar model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer avatar model
+        /// </returns>
         public virtual async Task<CustomerAvatarModel> PrepareCustomerAvatarModelAsync(CustomerAvatarModel model)
         {
             if (model == null)
@@ -826,7 +860,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the GDPR tools model
         /// </summary>
-        /// <returns>GDPR tools model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR tools model
+        /// </returns>
         public virtual Task<GdprToolsModel> PrepareGdprToolsModelAsync()
         {
             var model = new GdprToolsModel();
@@ -837,7 +874,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the check gift card balance madel
         /// </summary>
-        /// <returns>Check gift card balance madel</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the check gift card balance madel
+        /// </returns>
         public virtual Task<CheckGiftCardBalanceModel> PrepareCheckGiftCardBalanceModelAsync()
         {
             var model = new CheckGiftCardBalanceModel();
@@ -849,7 +889,10 @@ namespace Nop.Web.Factories
         /// Prepare the multi-factor authentication model
         /// </summary>
         /// <param name="model">Multi-factor authentication model</param>
-        /// <returns>Multi-factor authentication model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the multi-factor authentication model
+        /// </returns>
         public virtual async Task<MultiFactorAuthenticationModel> PrepareMultiFactorAuthenticationModelAsync(MultiFactorAuthenticationModel model)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -874,7 +917,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="providerModel">Multi-factor authentication provider model</param>
         /// <param name="sysName">Multi-factor authentication provider system name</param>
-        /// <returns>Multi-factor authentication model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the multi-factor authentication model
+        /// </returns>
         public virtual async Task<MultiFactorAuthenticationProviderModel> PrepareMultiFactorAuthenticationProviderModelAsync(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -901,7 +947,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
-        /// <returns>List of the customer attribute model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the customer attribute model
+        /// </returns>
         public virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
         {
             if (customer == null)

@@ -111,7 +111,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="settings">Plugin settings</param>
         /// <param name="function">Function</param>
-        /// <returns>Result; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result; error message if exists
+        /// </returns>
         private async Task<(TResult Result, string ErrorMessage)> HandleFunctionAsync<TResult>(PayPalSmartPaymentButtonsSettings settings, Func<Task<TResult>> function)
         {
             try
@@ -155,7 +158,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="settings">Plugin settings</param>
         /// <param name="request">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         private async Task<TResult> HandleCheckoutRequestAsync<TRequest, TResult>(PayPalSmartPaymentButtonsSettings settings, TRequest request)
             where TRequest : HttpRequest where TResult : class
         {
@@ -189,7 +195,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="settings">Plugin settings</param>
         /// <param name="request">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         private async Task<TResult> HandleCoreRequestAsync<TRequest, TResult>(PayPalSmartPaymentButtonsSettings settings, TRequest request)
             where TRequest : BraintreeHttp.HttpRequest where TResult : class
         {
@@ -224,7 +233,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// Prepare service script
         /// </summary>
         /// <param name="settings">Plugin settings</param>
-        /// <returns>Script; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script; error message if exists
+        /// </returns>
         public async Task<(string Script, string ErrorMessage)> GetScriptAsync(PayPalSmartPaymentButtonsSettings settings)
         {
             return await HandleFunctionAsync(settings, async () =>
@@ -258,7 +270,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="orderGuid">Order GUID</param>
-        /// <returns>Created order; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the created order; error message if exists
+        /// </returns>
         public async Task<(Order Order, string ErrorMessage)> CreateOrderAsync(PayPalSmartPaymentButtonsSettings settings, Guid orderGuid)
         {
             return await HandleFunctionAsync(settings, async () =>
@@ -419,7 +434,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="orderId">Order id</param>
-        /// <returns>Authorized order; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the authorized order; error message if exists
+        /// </returns>
         public async Task<(Order Order, string ErrorMessage)> AuthorizeAsync(PayPalSmartPaymentButtonsSettings settings, string orderId)
         {
             return await HandleFunctionAsync(settings, async () =>
@@ -435,7 +453,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="orderId">Order id</param>
-        /// <returns>Captured order; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the captured order; error message if exists
+        /// </returns>
         public async Task<(Order Order, string ErrorMessage)> CaptureAsync(PayPalSmartPaymentButtonsSettings settings, string orderId)
         {
             return await HandleFunctionAsync(settings, async () =>
@@ -451,7 +472,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="authorizationId">Authorization id</param>
-        /// <returns>Capture details; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the capture details; error message if exists
+        /// </returns>
         public async Task<(PayPalCheckoutSdk.Payments.Capture Capture, string ErrorMessage)> CaptureAuthorizationAsync
             (PayPalSmartPaymentButtonsSettings settings, string authorizationId)
         {
@@ -468,7 +492,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="authorizationId">Authorization id</param>
-        /// <returns>Voided order; Error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the voided order; Error message if exists
+        /// </returns>
         public async Task<(object Order, string ErrorMessage)> VoidAsync(PayPalSmartPaymentButtonsSettings settings, string authorizationId)
         {
             return await HandleFunctionAsync(settings, async () =>
@@ -486,7 +513,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="captureId">Capture id</param>
         /// <param name="currency">Currency code</param>
         /// <param name="amount">Amount to refund</param>
-        /// <returns>Refund details; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the refund details; error message if exists
+        /// </returns>
         public async Task<(PayPalCheckoutSdk.Payments.Refund refund, string errorMessage)> RefundAsync
             (PayPalSmartPaymentButtonsSettings settings, string captureId, string currency, decimal? amount = null)
         {
@@ -505,7 +535,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// Get access token
         /// </summary>
         /// <param name="settings">Plugin settings</param>
-        /// <returns>Access token; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the access token; error message if exists
+        /// </returns>
         public async Task<(AccessToken AccessToken, string ErrorMessage)> GetAccessTokenAsync(PayPalSmartPaymentButtonsSettings settings)
         {
             //try to get access token
@@ -525,7 +558,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="url">Webhook listener URL</param>
-        /// <returns>Webhook; error message if exists</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the webhook; error message if exists
+        /// </returns>
         public async Task<(Webhook webhook, string errorMessage)> CreateWebHookAsync(PayPalSmartPaymentButtonsSettings settings, string url)
         {
             return await HandleFunctionAsync(settings, async () =>
@@ -557,6 +593,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// Delete webhook
         /// </summary>
         /// <param name="settings">Plugin settings</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DeleteWebhookAsync(PayPalSmartPaymentButtonsSettings settings)
         {
             await HandleFunctionAsync(settings, () =>
@@ -572,6 +609,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="request">HTTP request</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleWebhookAsync(PayPalSmartPaymentButtonsSettings settings, Microsoft.AspNetCore.Http.HttpRequest request)
         {
             await HandleFunctionAsync(settings, async () =>

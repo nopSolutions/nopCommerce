@@ -77,6 +77,7 @@ namespace Nop.Services.Catalog
         /// Clean up manufacturer references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearDiscountManufacturerMappingAsync(Discount discount)
         {
             if (discount is null)
@@ -91,6 +92,7 @@ namespace Nop.Services.Catalog
         /// Deletes a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteManufacturerAsync(Manufacturer manufacturer)
         {
             await _manufacturerRepository.DeleteAsync(manufacturer);
@@ -100,6 +102,7 @@ namespace Nop.Services.Catalog
         /// Delete manufacturers
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteManufacturersAsync(IList<Manufacturer> manufacturers)
         {
             await _manufacturerRepository.DeleteAsync(manufacturers);
@@ -118,7 +121,10 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
-        /// <returns>Manufacturers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturers
+        /// </returns>
         public virtual async Task<IPagedList<Manufacturer>> GetAllManufacturersAsync(string manufacturerName = "",
             int storeId = 0,
             int pageIndex = 0,
@@ -157,7 +163,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Manufacturer identifiers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer identifiers
+        /// </returns>
         public virtual async Task<IList<int>> GetAppliedManufacturerIdsAsync(Discount discount, Customer customer)
         {
             if (discount == null)
@@ -180,7 +189,10 @@ namespace Nop.Services.Catalog
         /// Gets a manufacturer
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <returns>Manufacturer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer
+        /// </returns>
         public virtual async Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId)
         {
             return await _manufacturerRepository.GetByIdAsync(manufacturerId, cache => default);
@@ -193,7 +205,10 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of manufacturers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of manufacturers
+        /// </returns>
         public virtual async Task<IPagedList<Manufacturer>> GetManufacturersWithAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -217,7 +232,10 @@ namespace Nop.Services.Catalog
         /// Gets the manufacturers by category identifier
         /// </summary>
         /// <param name="categoryId">Cateogry identifier</param>
-        /// <returns>Manufacturers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturers
+        /// </returns>
         public virtual async Task<IList<Manufacturer>> GetManufacturersByCategoryIdAsync(int categoryId)
         {
             if (categoryId <= 0)
@@ -272,7 +290,10 @@ namespace Nop.Services.Catalog
         /// Gets manufacturers by identifier
         /// </summary>
         /// <param name="manufacturerIds">manufacturer identifiers</param>
-        /// <returns>Manufacturers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturers
+        /// </returns>
         public virtual async Task<IList<Manufacturer>> GetManufacturersByIdsAsync(int[] manufacturerIds)
         {
             return await _manufacturerRepository.GetByIdsAsync(manufacturerIds, includeDeleted: false);
@@ -282,6 +303,7 @@ namespace Nop.Services.Catalog
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertManufacturerAsync(Manufacturer manufacturer)
         {
             await _manufacturerRepository.InsertAsync(manufacturer);
@@ -291,6 +313,7 @@ namespace Nop.Services.Catalog
         /// Updates the manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateManufacturerAsync(Manufacturer manufacturer)
         {
             await _manufacturerRepository.UpdateAsync(manufacturer);
@@ -300,6 +323,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductManufacturerAsync(ProductManufacturer productManufacturer)
         {
             await _productManufacturerRepository.DeleteAsync(productManufacturer);
@@ -312,7 +336,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product manufacturer collection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product manufacturer collection
+        /// </returns>
         public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerIdAsync(int manufacturerId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
@@ -348,7 +375,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product manufacturer mapping collection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product manufacturer mapping collection
+        /// </returns>
         public virtual async Task<IList<ProductManufacturer>> GetProductManufacturersByProductIdAsync(int productId,
             bool showHidden = false)
         {
@@ -387,7 +417,10 @@ namespace Nop.Services.Catalog
         /// Gets a product manufacturer mapping 
         /// </summary>
         /// <param name="productManufacturerId">Product manufacturer mapping identifier</param>
-        /// <returns>Product manufacturer mapping</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product manufacturer mapping
+        /// </returns>
         public virtual async Task<ProductManufacturer> GetProductManufacturerByIdAsync(int productManufacturerId)
         {
             return await _productManufacturerRepository.GetByIdAsync(productManufacturerId, cache => default);
@@ -397,6 +430,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductManufacturerAsync(ProductManufacturer productManufacturer)
         {
             await _productManufacturerRepository.InsertAsync(productManufacturer);
@@ -406,6 +440,7 @@ namespace Nop.Services.Catalog
         /// Updates the product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductManufacturerAsync(ProductManufacturer productManufacturer)
         {
             await _productManufacturerRepository.UpdateAsync(productManufacturer);
@@ -415,7 +450,10 @@ namespace Nop.Services.Catalog
         /// Get manufacturer IDs for products
         /// </summary>
         /// <param name="productIds">Products IDs</param>
-        /// <returns>Manufacturer IDs for products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer IDs for products
+        /// </returns>
         public virtual async Task<IDictionary<int, int[]>> GetProductManufacturerIdsAsync(int[] productIds)
         {
             var query = _productManufacturerRepository.Table;
@@ -431,7 +469,10 @@ namespace Nop.Services.Catalog
         /// Returns a list of names of not existing manufacturers
         /// </summary>
         /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
-        /// <returns>List of names and/or IDs not existing manufacturers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of names and/or IDs not existing manufacturers
+        /// </returns>
         public virtual async Task<string[]> GetNotExistingManufacturersAsync(string[] manufacturerIdsNames)
         {
             if (manufacturerIdsNames == null)
@@ -476,7 +517,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public async Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturerAsync(int manufacturerId, int discountId)
         {
             return await _discountManufacturerMappingRepository.Table
@@ -487,6 +531,7 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task InsertDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
         {
             await _discountManufacturerMappingRepository.InsertAsync(discountManufacturerMapping);
@@ -496,6 +541,7 @@ namespace Nop.Services.Catalog
         /// Deletes a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DeleteDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
         {
             await _discountManufacturerMappingRepository.DeleteAsync(discountManufacturerMapping);

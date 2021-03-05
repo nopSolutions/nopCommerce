@@ -162,16 +162,19 @@ namespace Nop.Services.Installation
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<T> InsertInstallationDataAsync<T>(T entity) where T : BaseEntity
         {
             return await _dataProvider.InsertEntityAsync(entity);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertInstallationDataAsync<T>(params T[] entities) where T : BaseEntity
         {
             await _dataProvider.BulkInsertEntitiesAsync(entities);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertInstallationDataAsync<T>(IList<T> entities) where T : BaseEntity
         {
             if (!entities.Any())
@@ -180,11 +183,13 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(entities.ToArray());
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateInstallationDataAsync<T>(T entity) where T : BaseEntity
         {
             await _dataProvider.UpdateEntityAsync(entity);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateInstallationDataAsync<T>(IList<T> entities) where T : BaseEntity
         {
             if (!entities.Any())
@@ -194,6 +199,7 @@ namespace Nop.Services.Installation
                 await _dataProvider.UpdateEntityAsync(entity);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<int> GetSpecificationAttributeOptionIdAsync(string specAttributeName, string specAttributeOptionName)
         {
             var specificationAttribute = await _specificationAttributeRepository.Table
@@ -211,7 +217,10 @@ namespace Nop.Services.Installation
         /// <param name="product"></param>
         /// <param name="fileName"></param>
         /// <param name="displayOrder"></param>
-        /// <returns>Identifier of inserted picture</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the identifier of inserted picture
+        /// </returns>
         protected virtual async Task<int> InsertProductPictureAsync(Product product, string fileName, int displayOrder = 1)
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
@@ -230,6 +239,7 @@ namespace Nop.Services.Installation
             return pic.Id;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> ValidateSeNameAsync<T>(T entity, string seName) where T : BaseEntity
         {
             //duplicate of ValidateSeName method of \Nop.Services\Seo\UrlRecordService.cs (we cannot inject it here)
@@ -289,6 +299,7 @@ namespace Nop.Services.Installation
             return _fileProvider.GetAbsolutePath(NopInstallationDefaults.SampleImagesPath);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallStoresAsync()
         {
             var storeUrl = _webHelper.GetStoreLocation();
@@ -312,6 +323,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(stores);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallMeasuresAsync(RegionInfo regionInfo)
         {
             var isMetric = regionInfo?.IsMetric ?? false;
@@ -385,6 +397,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(measureWeights);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallTaxCategoriesAsync()
         {
             var taxCategories = new List<TaxCategory>
@@ -399,6 +412,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(taxCategories);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallLanguagesAsync((string languagePackDownloadLink, int languagePackProgress) languagePackInfo, CultureInfo cultureInfo, RegionInfo regionInfo)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -470,6 +484,7 @@ namespace Nop.Services.Installation
             catch { }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallCurrenciesAsync(CultureInfo cultureInfo, RegionInfo regionInfo)
         {
             //set some currencies with a rate against the USD
@@ -652,6 +667,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(currencies);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallCountriesAndStatesAsync()
         {
             var countries = ISO3166.GetCollection().Select(country => new Country
@@ -684,6 +700,7 @@ namespace Nop.Services.Installation
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallShippingMethodsAsync()
         {
             var shippingMethods = new List<ShippingMethod>
@@ -712,6 +729,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(shippingMethods);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallDeliveryDatesAsync()
         {
             var deliveryDates = new List<DeliveryDate>
@@ -736,6 +754,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(deliveryDates);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallProductAvailabilityRangesAsync()
         {
             var productAvailabilityRanges = new List<ProductAvailabilityRange>
@@ -760,6 +779,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(productAvailabilityRanges);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallSampleCustomersAsync()
         {
             var crRegistered = await _customerRoleRepository.Table
@@ -1116,6 +1136,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallCustomersAndUsersAsync(string defaultUserEmail, string defaultUserPassword)
         {
             var crAdministrators = new CustomerRole
@@ -1276,6 +1297,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(new CustomerCustomerRoleMapping { CustomerId = backgroundTaskUser.Id, CustomerRoleId = crGuests.Id });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallOrdersAsync()
         {
             static Address cloneAddress(Address address)
@@ -2128,6 +2150,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(fifthOrderShipment1Item1);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallActivityLogAsync(string defaultUserEmail)
         {
             //default customer/user
@@ -2181,6 +2204,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallSearchTermsAsync()
         {
             //default store
@@ -2231,6 +2255,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallEmailAccountsAsync()
         {
             var emailAccounts = new List<EmailAccount>
@@ -2251,6 +2276,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(emailAccounts);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallMessageTemplatesAsync()
         {
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
@@ -2640,6 +2666,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(messageTemplates);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallTopicsAsync()
         {
             var defaultTopicTemplate =
@@ -2810,6 +2837,7 @@ namespace Nop.Services.Installation
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallSettingsAsync(RegionInfo regionInfo)
         {
             var isMetric = regionInfo?.IsMetric ?? false;
@@ -3530,6 +3558,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallCheckoutAttributesAsync()
         {
             var ca1 = await InsertInstallationDataAsync(new CheckoutAttribute
@@ -3559,6 +3588,7 @@ namespace Nop.Services.Installation
                 });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallSpecificationAttributesAsync()
         {
             var sag1 = await InsertInstallationDataAsync(
@@ -3715,6 +3745,7 @@ namespace Nop.Services.Installation
                 });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallProductAttributesAsync()
         {
             var productAttributes = new List<ProductAttribute>
@@ -3760,6 +3791,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(productAttributes);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallCategoriesAsync()
         {
             //pictures
@@ -4108,6 +4140,7 @@ namespace Nop.Services.Installation
                 });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallManufacturersAsync()
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
@@ -4191,6 +4224,7 @@ namespace Nop.Services.Installation
                 });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallComputersAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             var productBuildComputer = new Product
@@ -5372,6 +5406,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallElectronicsAsync(ProductTemplate productTemplateSimple, ProductTemplate productTemplateGrouped, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             //this one is a grouped product with two associated ones
@@ -5992,6 +6027,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallApparelAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, ProductAvailabilityRange productAvailabilityRange)
         {
             var productNikeFloral = new Product
@@ -6931,6 +6967,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallDigitalDownloadsAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, string sampleDownloadsPath, IDownloadService downloadService)
         {
             var downloadNightVision1 = new Download
@@ -7158,6 +7195,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallBooksAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             var productFahrenheit = new Product
@@ -7339,6 +7377,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallJewelryAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts)
         {
             var productElegantGemstoneNecklace = new Product
@@ -7522,6 +7561,7 @@ namespace Nop.Services.Installation
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallGiftCardsAsync(ProductTemplate productTemplateSimple, List<Product> allProducts, string sampleImagesPath, IPictureService pictureService, List<RelatedProduct> relatedProducts, DeliveryDate deliveryDate)
         {
             var product25GiftCard = new Product
@@ -7654,6 +7694,7 @@ namespace Nop.Services.Installation
             await InsertProductPictureAsync(product100GiftCard, "product_100giftcart.jpeg");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallProductsAsync(string defaultUserEmail)
         {
             var productTemplateSimple = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
@@ -7777,6 +7818,7 @@ namespace Nop.Services.Installation
                     });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallForumsAsync()
         {
             var forumGroup = new ForumGroup
@@ -7837,6 +7879,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(packagingShippingForum);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallDiscountsAsync()
         {
             var discounts = new List<Discount>
@@ -7868,6 +7911,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(discounts);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallBlogPostsAsync(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
@@ -7938,6 +7982,7 @@ namespace Nop.Services.Installation
             await UpdateInstallationDataAsync(blogPosts);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallNewsAsync(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
@@ -8019,6 +8064,7 @@ namespace Nop.Services.Installation
             await UpdateInstallationDataAsync(news);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallPollsAsync()
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
@@ -8069,6 +8115,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(answers);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallActivityLogTypesAsync()
         {
             var activityLogTypes = new List<ActivityLogType>
@@ -8998,6 +9045,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(activityLogTypes);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallProductTemplatesAsync()
         {
             var productTemplates = new List<ProductTemplate>
@@ -9021,6 +9069,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(productTemplates);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallCategoryTemplatesAsync()
         {
             var categoryTemplates = new List<CategoryTemplate>
@@ -9036,6 +9085,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(categoryTemplates);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallManufacturerTemplatesAsync()
         {
             var manufacturerTemplates = new List<ManufacturerTemplate>
@@ -9051,6 +9101,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(manufacturerTemplates);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallTopicTemplatesAsync()
         {
             var topicTemplates = new List<TopicTemplate>
@@ -9066,6 +9117,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(topicTemplates);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallScheduleTasksAsync()
         {
             var tasks = new List<ScheduleTask>
@@ -9125,6 +9177,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(tasks);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallReturnRequestReasonsAsync()
         {
             var returnRequestReasons = new List<ReturnRequestReason>
@@ -9149,6 +9202,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(returnRequestReasons);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallReturnRequestActionsAsync()
         {
             var returnRequestActions = new List<ReturnRequestAction>
@@ -9173,6 +9227,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(returnRequestActions);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallWarehousesAsync()
         {
             var warehouse1address = new Address
@@ -9216,6 +9271,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(warehouses);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallVendorsAsync()
         {
             var vendors = new List<Vendor>
@@ -9265,6 +9321,7 @@ namespace Nop.Services.Installation
                 });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InstallAffiliatesAsync()
         {
             var affiliateAddress = new Address
@@ -9293,6 +9350,7 @@ namespace Nop.Services.Installation
             await InsertInstallationDataAsync(affilate);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task AddProductTagAsync(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
@@ -9332,6 +9390,7 @@ namespace Nop.Services.Installation
         /// <param name="languagePackInfo">Language pack info</param>
         /// <param name="regionInfo">RegionInfo</param>
         /// <param name="cultureInfo">CultureInfo</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InstallRequiredDataAsync(string defaultUserEmail, string defaultUserPassword,
             (string languagePackDownloadLink, int languagePackProgress) languagePackInfo, RegionInfo regionInfo, CultureInfo cultureInfo)
         {
@@ -9363,6 +9422,7 @@ namespace Nop.Services.Installation
         /// Install sample data
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InstallSampleDataAsync(string defaultUserEmail)
         {
             await InstallSampleCustomersAsync();

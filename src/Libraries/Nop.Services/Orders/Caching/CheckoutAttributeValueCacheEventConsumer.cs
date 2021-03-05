@@ -13,6 +13,7 @@ namespace Nop.Services.Orders.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(CheckoutAttributeValue entity)
         {
             await RemoveAsync(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, entity.CheckoutAttributeId);

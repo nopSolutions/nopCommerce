@@ -64,6 +64,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GeneralRedirect()
         {
             // use Request.RawUrl, for instance to parse out what was invoked
@@ -163,6 +164,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("Homepage");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectProduct(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -174,6 +176,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectCategory(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -185,6 +188,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Category", new { SeName = await _urlRecordService.GetSeNameAsync(category) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectManufacturer(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -196,6 +200,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Manufacturer", new { SeName = await _urlRecordService.GetSeNameAsync(manufacturer) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectProductTag(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -207,6 +212,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("ProductsByTag", new { productTagId = tag.Id });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectNewsItem(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -218,6 +224,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectBlogPost(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -229,6 +236,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectTopic(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -240,6 +248,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("Topic", new { SeName = await _urlRecordService.GetSeNameAsync(topic) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectForumGroup(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -251,6 +260,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = await _forumService.GetForumGroupSeNameAsync(forumGroup) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectForum(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -262,6 +272,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = await _forumService.GetForumSeNameAsync(forum) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectForumTopic(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
@@ -273,6 +284,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectUserProfile(string id)
         {
             //we can't use dash in MVC

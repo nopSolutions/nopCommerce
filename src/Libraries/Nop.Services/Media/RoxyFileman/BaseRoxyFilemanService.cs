@@ -54,7 +54,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Check whether there are any restrictions on handling the file
         /// </summary>
         /// <param name="path">Path to the file</param>
-        /// <returns>True if the file can be handled; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if the file can be handled; otherwise false
+        /// </returns>
         protected virtual async Task<bool> CanHandleFileAsync(string path)
         {
             var result = false;
@@ -82,7 +85,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get directories in the passed parent directory
         /// </summary>
         /// <param name="parentDirectoryPath">Path to the parent directory</param>
-        /// <returns>Array of the paths to the directories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the array of the paths to the directories
+        /// </returns>
         protected virtual async Task<ArrayList> GetDirectoriesByParentDirectoryAsync(string parentDirectoryPath)
         {
             var directories = new ArrayList();
@@ -164,7 +170,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Get the absolute path to the language resources file
         /// </summary>
-        /// <returns>Path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the path
+        /// </returns>
         protected virtual async Task<string> GetLanguageFileAsync()
         {
             var languageCode = await GetSettingAsync("LANG");
@@ -190,7 +199,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Get the virtual path to root directory of uploaded files 
         /// </summary>
-        /// <returns>Path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the path
+        /// </returns>
         protected virtual async Task<string> GetRootDirectoryAsync()
         {
             var filesRoot = await GetSettingAsync("FILES_ROOT");
@@ -209,7 +221,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get a value of the configuration setting
         /// </summary>
         /// <param name="key">Setting key</param>
-        /// <returns>Setting value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the setting value
+        /// </returns>
         protected virtual async Task<string> GetSettingAsync(string key)
         {
             if (_settings == null)
@@ -254,7 +269,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get a virtual path with the root directory
         /// </summary>
         /// <param name="path">Path</param>
-        /// <returns>Path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the path
+        /// </returns>
         protected virtual async Task<string> GetVirtualPathAsync(string path)
         {
             path ??= string.Empty;
@@ -270,7 +288,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Parse the JSON file
         /// </summary>
         /// <param name="file">Path to the file</param>
-        /// <returns>Collection of keys and values from the parsed file</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of keys and values from the parsed file
+        /// </returns>
         protected virtual async Task<Dictionary<string, string>> ParseJsonAsync(string file)
         {
             var result = new Dictionary<string, string>();
@@ -326,6 +347,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Create configuration file for RoxyFileman
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CreateConfigurationAsync()
         {
             var filePath = GetConfigurationFilePath();
@@ -438,7 +460,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get the language resource value
         /// </summary>
         /// <param name="key">Language resource key</param>
-        /// <returns>Language resource value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language resource value
+        /// </returns>
         public virtual async Task<string> GetLanguageResourceAsync(string key)
         {
             if (_languageResources == null)

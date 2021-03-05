@@ -210,7 +210,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="function">Function</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         private async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
         {
             try
@@ -276,7 +279,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="address">Tax address</param>
         /// <param name="customerCode">Customer code</param>
         /// <param name="documentType">Transaction document type</param>
-        /// <returns>Model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the model
+        /// </returns>
         private async Task<CreateTransactionModel> PrepareTransactionModelAsync(Address address, string customerCode, DocumentType documentType)
         {
             var model = new CreateTransactionModel
@@ -318,7 +324,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Get a tax address of the passed order
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Address</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address
+        /// </returns>
         private async Task<Address> GetTaxAddressAsync(Order order)
         {
             Address address = null;
@@ -357,7 +366,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Map address model
         /// </summary>
         /// <param name="address">Address</param>
-        /// <returns>Address model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address model
+        /// </returns>
         private async Task<AddressLocationInfo> MapAddressAsync(Address address)
         {
             return address == null ? null : new AddressLocationInfo
@@ -376,7 +388,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="orderItems">Order items</param>
-        /// <returns>List of item lines</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of item lines
+        /// </returns>
         private async Task<List<LineItemModel>> GetItemLinesAsync(Order order, IList<OrderItem> orderItems)
         {
             //get purchased products details
@@ -402,7 +417,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="orderItems">Order items</param>
-        /// <returns>Collection of item lines</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of item lines
+        /// </returns>
         private async Task<List<LineItemModel>> CreateLinesForOrderItems(Order order, IList<OrderItem> orderItems)
         {
             return await orderItems.SelectAwait(async orderItem =>
@@ -470,7 +488,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Create a separate item line for the order payment method additional fee
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Item line</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the item line
+        /// </returns>
         private async Task<LineItemModel> CreateLineForPaymentMethodAsync(Order order)
         {
             var paymentItem = new LineItemModel
@@ -506,7 +527,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Create a separate item line for the order shipping charge
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Item line</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the item line
+        /// </returns>
         private async Task<LineItemModel> CreateLineForShippingAsync(Order order)
         {
             var shippingItem = new LineItemModel
@@ -542,7 +566,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Create item lines for order checkout attributes
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Collection of item lines</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of item lines
+        /// </returns>
         private async Task<IEnumerable<LineItemModel>> CreateLinesForCheckoutAttributes(Order order)
         {
             //get checkout attributes values
@@ -593,7 +620,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="model">Model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the model
+        /// </returns>
         private async Task<CreateTransactionModel> PrepareModelTaxExemptionAsync(CreateTransactionModel model, Customer customer)
         {
             if (customer.IsTaxExempt)
@@ -630,7 +660,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Ping service (test conection)
         /// </summary>
-        /// <returns>Ping result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ping result
+        /// </returns>
         public async Task<PingResultModel> PingAsync()
         {
             return await HandleFunctionAsync(() => Task.FromResult(ServiceClient.Ping() ?? throw new NopException("No response from the service")));
@@ -639,7 +672,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Get account companies
         /// </summary>
-        /// <returns>List of companies</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of companies
+        /// </returns>
         public async Task<List<CompanyModel>> GetAccountCompaniesAsync()
         {
             return await HandleFunctionAsync(() =>
@@ -654,7 +690,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Get pre-defined entity use codes
         /// </summary>
-        /// <returns>List of entity use codes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of entity use codes
+        /// </returns>
         public async Task<List<EntityUseCodeModel>> GetEntityUseCodesAsync()
         {
             return await HandleFunctionAsync(() =>
@@ -669,7 +708,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Get pre-defined tax code types
         /// </summary>
-        /// <returns>Key-value pairs of tax code types</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the key-value pairs of tax code types
+        /// </returns>
         public async Task<Dictionary<string, string>> GetTaxCodeTypesAsync()
         {
             return await HandleFunctionAsync(() =>
@@ -684,7 +726,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Import tax codes from Avalara services
         /// </summary>
-        /// <returns>Number of imported tax codes; null in case of error</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of imported tax codes; null in case of error
+        /// </returns>
         public async Task<int?> ImportTaxCodesAsync()
         {
             return await HandleFunctionAsync<int?>(async () =>
@@ -729,7 +774,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Export current tax codes to Avalara services
         /// </summary>
-        /// <returns>Number of exported tax codes; null in case of error</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of exported tax codes; null in case of error
+        /// </returns>
         public async Task<int?> ExportTaxCodesAsync()
         {
             return await HandleFunctionAsync<int?>(async () =>
@@ -789,7 +837,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Delete pre-defined system tax codes
         /// </summary>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public async Task<bool> DeleteSystemTaxCodesAsync()
         {
             return await HandleFunctionAsync(async () =>
@@ -823,6 +874,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Delete generic attributes used in the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DeleteAttributesAsync()
         {
             await DeleteSystemTaxCodesAsync();
@@ -834,7 +886,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <summary>
         /// Export items (products) with the passed ids to Avalara services
         /// </summary>
-        /// <returns>Number of exported items; null in case of error</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of exported items; null in case of error
+        /// </returns>
         public async Task<int?> ExportProductsAsync(string selectedIds)
         {
             return await HandleFunctionAsync<int?>(async () =>
@@ -922,7 +977,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Resolve the passed address against Avalara's address-validation system
         /// </summary>
         /// <param name="address">Address to validate</param>
-        /// <returns>Validated address</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the validated address
+        /// </returns>
         public async Task<AddressResolutionModel> ValidateAddressAsync(Address address)
         {
             return (await HandleFunctionAsync(async () => await ServiceClient.ResolveAddressPostAsync(new AddressValidationInfo
@@ -945,7 +1003,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Create test tax transaction
         /// </summary>
         /// <param name="address">Tax address</param>
-        /// <returns>Transaction</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ransaction
+        /// </returns>
         public async Task<TransactionModel> CreateTestTaxTransactionAsync(Address address)
         {
             return await HandleFunctionAsync(async () =>
@@ -961,7 +1022,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Create transaction to get tax rate
         /// </summary>
         /// <param name="taxRateRequest">Tax rate request</param>
-        /// <returns>Transaction</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ransaction
+        /// </returns>
         public async Task<decimal?> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
             //prepare cache key
@@ -1019,7 +1083,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Create transaction to get tax total for the passed request
         /// </summary>
         /// <param name="taxTotalRequest">Tax total request</param>
-        /// <returns>Transaction</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ransaction
+        /// </returns>
         public async Task<TransactionModel> CreateTaxTotalTransactionAsync(TaxTotalRequest taxTotalRequest)
         {
             return await HandleFunctionAsync(async () =>
@@ -1104,7 +1171,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Create tax transaction for the placed order
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Transaction</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ransaction
+        /// </returns>
         public async Task<TransactionModel> CreateOrderTaxTransactionAsync(Order order)
         {
             return await HandleFunctionAsync(async () =>
@@ -1133,6 +1203,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Void tax transaction
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task VoidTaxTransactionAsync(Order order)
         {
             await HandleFunctionAsync(() =>
@@ -1152,6 +1223,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Delete tax transaction
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DeleteTaxTransactionAsync(Order order)
         {
             await HandleFunctionAsync(() =>
@@ -1172,6 +1244,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task RefundTaxTransactionAsync(Order order, decimal amountToRefund)
         {
             await HandleFunctionAsync(() =>

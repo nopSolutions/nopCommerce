@@ -177,6 +177,7 @@ namespace Nop.Services.ExportImport
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteCategoriesAsync(XmlWriter xmlWriter, int parentCategoryId)
         {
             var categories = await _categoryService.GetAllCategoriesByParentCategoryIdAsync(parentCategoryId, true);
@@ -243,7 +244,10 @@ namespace Nop.Services.ExportImport
         /// Returns the path to the image file by ID
         /// </summary>
         /// <param name="pictureId">Picture ID</param>
-        /// <returns>Path to the image file</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the path to the image file
+        /// </returns>
         protected virtual async Task<string> GetPicturesAsync(int pictureId)
         {
             var picture = await _pictureService.GetPictureByIdAsync(pictureId);
@@ -255,7 +259,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of categories for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of categories
+        /// </returns>
         protected virtual async Task<object> GetCategoriesAsync(Product product)
         {
             string categoryNames = null;
@@ -283,7 +290,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of manufacturer for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of manufacturer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of manufacturer
+        /// </returns>
         protected virtual async Task<object> GetManufacturersAsync(Product product)
         {
             string manufacturerNames = null;
@@ -309,7 +319,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of limited to stores for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of store</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of store
+        /// </returns>
         protected virtual async Task<object> GetLimitedToStoresAsync(Product product)
         {
             string limitedToStores = null;
@@ -329,7 +342,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of product tag for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of product tag</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of product tag
+        /// </returns>
         protected virtual async Task<object> GetProductTagsAsync(Product product)
         {
             string productTagNames = null;
@@ -356,7 +372,10 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="pictureIndex">Picture index to get</param>
-        /// <returns>image thumb local path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the image thumb local path
+        /// </returns>
         protected virtual async Task<string> GetPictureAsync(Product product, short pictureIndex)
         {
             // we need only the picture at a specific index, no need to get more pictures than that
@@ -366,6 +385,7 @@ namespace Nop.Services.ExportImport
             return pictures.Count > pictureIndex ? await _pictureService.GetThumbLocalPathAsync(pictures[pictureIndex]) : null;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportProductPropertyAsync(Func<ProductEditorSettings, bool> func)
         {
             var productAdvancedMode = true;
@@ -380,6 +400,7 @@ namespace Nop.Services.ExportImport
             return !productAdvancedMode && !func(_productEditorSettings);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportCategoryPropertyAsync()
         {
             try
@@ -392,6 +413,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportManufacturerPropertyAsync()
         {
             try
@@ -404,6 +426,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportLimitedToStoreAsync()
         {
             return _catalogSettings.IgnoreStoreLimitations ||
@@ -411,6 +434,7 @@ namespace Nop.Services.ExportImport
                    (await _storeService.GetAllStoresAsync()).Count == 1;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManagerAsync()
         {
             var attributeProperties = new[]
@@ -447,6 +471,7 @@ namespace Nop.Services.ExportImport
             return new PropertyManager<ExportProductAttribute>(attributeProperties, _catalogSettings);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<PropertyManager<ExportSpecificationAttribute>> GetSpecificationAttributeManagerAsync()
         {
             var attributeProperties = new[]
@@ -469,6 +494,7 @@ namespace Nop.Services.ExportImport
             return new PropertyManager<ExportSpecificationAttribute>(attributeProperties, _catalogSettings);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
         {
             var productAttributeManager = await GetProductAttributeManagerAsync();
@@ -513,6 +539,7 @@ namespace Nop.Services.ExportImport
             return stream.ToArray();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
             var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
@@ -589,6 +616,7 @@ namespace Nop.Services.ExportImport
             return row + 1;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
@@ -623,6 +651,7 @@ namespace Nop.Services.ExportImport
             return row + 1;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
         {
             var orderItemProperties = new[]
@@ -690,6 +719,7 @@ namespace Nop.Services.ExportImport
             return stream.ToArray();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
         {
             var selectedCustomerAttributes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
@@ -705,7 +735,10 @@ namespace Nop.Services.ExportImport
         /// Export manufacturer list to XML
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportManufacturersToXmlAsync(IList<Manufacturer> manufacturers)
         {
             var settings = new XmlWriterSettings
@@ -782,6 +815,7 @@ namespace Nop.Services.ExportImport
         /// Export manufacturers to XLSX
         /// </summary>
         /// <param name="manufacturers">Manufactures</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportManufacturersToXlsxAsync(IEnumerable<Manufacturer> manufacturers)
         {
             //property manager 
@@ -813,7 +847,10 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export category list to XML
         /// </summary>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportCategoriesToXmlAsync()
         {
             var settings = new XmlWriterSettings
@@ -840,6 +877,7 @@ namespace Nop.Services.ExportImport
         /// Export categories to XLSX
         /// </summary>
         /// <param name="categories">Categories</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportCategoriesToXlsxAsync(IList<Category> categories)
         {
             var parentCategories = new List<Category>();
@@ -886,7 +924,10 @@ namespace Nop.Services.ExportImport
         /// Export product list to XML
         /// </summary>
         /// <param name="products">Products</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportProductsToXmlAsync(IList<Product> products)
         {
             var settings = new XmlWriterSettings
@@ -1216,6 +1257,7 @@ namespace Nop.Services.ExportImport
         /// Export products to XLSX
         /// </summary>
         /// <param name="products">Products</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportProductsToXlsxAsync(IEnumerable<Product> products)
         {
             var properties = new[]
@@ -1400,7 +1442,10 @@ namespace Nop.Services.ExportImport
         /// Export order list to XML
         /// </summary>
         /// <param name="orders">Orders</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportOrdersToXmlAsync(IList<Order> orders)
         {
             //a vendor should have access only to part of order information
@@ -1537,6 +1582,7 @@ namespace Nop.Services.ExportImport
         /// Export orders to XLSX
         /// </summary>
         /// <param name="orders">Orders</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders)
         {
             //a vendor should have access only to part of order information
@@ -1616,6 +1662,7 @@ namespace Nop.Services.ExportImport
         /// Export customer list to XLSX
         /// </summary>
         /// <param name="customers">Customers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportCustomersToXlsxAsync(IList<Customer> customers)
         {
             async Task<object> getPasswordFormat(Customer customer)
@@ -1726,7 +1773,10 @@ namespace Nop.Services.ExportImport
         /// Export customer list to XML
         /// </summary>
         /// <param name="customers">Customers</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportCustomersToXmlAsync(IList<Customer> customers)
         {
             var settings = new XmlWriterSettings
@@ -1818,7 +1868,10 @@ namespace Nop.Services.ExportImport
         /// Export newsletter subscribers to TXT
         /// </summary>
         /// <param name="subscriptions">Subscriptions</param>
-        /// <returns>Result in TXT (string) format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in TXT (string) format
+        /// </returns>
         public virtual async Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
         {
             if (subscriptions == null)
@@ -1851,7 +1904,10 @@ namespace Nop.Services.ExportImport
         /// Export states to TXT
         /// </summary>
         /// <param name="states">States</param>
-        /// <returns>Result in TXT (string) format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in TXT (string) format
+        /// </returns>
         public virtual async Task<string> ExportStatesToTxtAsync(IList<StateProvince> states)
         {
             if (states == null)
@@ -1881,7 +1937,10 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Customer GDPR info</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer GDPR info
+        /// </returns>
         public virtual async Task<byte[]> ExportCustomerGdprInfoToXlsxAsync(Customer customer, int storeId)
         {
             if (customer == null)

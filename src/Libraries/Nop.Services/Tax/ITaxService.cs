@@ -19,7 +19,10 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="price">Price</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, decimal price);
 
         /// <summary>
@@ -28,7 +31,10 @@ namespace Nop.Services.Tax
         /// <param name="product">Product</param>
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, decimal price, Customer customer);
 
         /// <summary>
@@ -38,7 +44,10 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, decimal price,
             bool includingTax, Customer customer);
 
@@ -51,7 +60,10 @@ namespace Nop.Services.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, int taxCategoryId, decimal price,
             bool includingTax, Customer customer,
             bool priceIncludesTax);
@@ -65,7 +77,10 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetShippingPriceAsync(decimal price, Customer customer);
 
         /// <summary>
@@ -74,7 +89,10 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetShippingPriceAsync(decimal price, bool includingTax, Customer customer);
 
         #endregion
@@ -86,7 +104,10 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, Customer customer);
 
         /// <summary>
@@ -95,7 +116,10 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, bool includingTax, Customer customer);
 
         #endregion
@@ -107,7 +131,10 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav);
 
         /// <summary>
@@ -116,7 +143,10 @@ namespace Nop.Services.Tax
         /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer);
 
         /// <summary>
@@ -126,7 +156,10 @@ namespace Nop.Services.Tax
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Price. Tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price. Tax rate
+        /// </returns>
         Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer);
 
@@ -138,7 +171,10 @@ namespace Nop.Services.Tax
         /// Gets VAT Number status
         /// </summary>
         /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
-        /// <returns>VAT Number status</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vAT Number status
+        /// </returns>
         Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatusAsync(string fullVatNumber);
 
         #endregion
@@ -150,7 +186,10 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<TaxTotalResult> GetTaxTotalAsync(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true);
 
         #endregion

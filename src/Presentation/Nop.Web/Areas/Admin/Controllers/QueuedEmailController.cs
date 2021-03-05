@@ -55,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
@@ -67,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> QueuedEmailList(QueuedEmailSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
@@ -80,6 +82,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-email-by-number")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GoToEmailByNumber(QueuedEmailSearchModel model)
         {
             //try to get a queued email with the specified id
@@ -90,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Edit(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
@@ -109,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Edit(QueuedEmailModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
@@ -139,6 +144,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Requeue(QueuedEmailModel queuedEmailModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
@@ -178,6 +184,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
@@ -196,6 +203,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))
@@ -209,6 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-all")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteAll()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageQueue))

@@ -54,6 +54,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
         /// <param name="headers">Headers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task SendEmailAsync(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
             string replyTo = null, string replyToName = null,

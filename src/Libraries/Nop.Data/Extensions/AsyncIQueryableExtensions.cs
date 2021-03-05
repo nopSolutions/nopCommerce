@@ -18,6 +18,7 @@ namespace System.Linq
         /// true if every element of the source sequence passes the test in the specified
         /// predicate, or if the sequence is empty; otherwise, false
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<bool> AllAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate)
         {
@@ -34,6 +35,7 @@ namespace System.Linq
         /// true if any elements in the source sequence pass the test in the specified predicate;
         /// otherwise, false
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate = null)
         {
             return predicate == null ? AsyncExtensions.AnyAsync(source) : AsyncExtensions.AnyAsync(source, predicate);
@@ -48,7 +50,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<double> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, int>> predicate)
         {
@@ -62,7 +67,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<double?> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, int?>> predicate)
         {
@@ -76,7 +84,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<double> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, long>> predicate)
         {
@@ -90,7 +101,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<double?> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, long?>> predicate)
         {
@@ -104,7 +118,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<float> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, float>> predicate)
         {
@@ -118,7 +135,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<float?> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, float?>> predicate)
         {
@@ -132,7 +152,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<double> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, double>> predicate)
         {
@@ -146,7 +169,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<double?> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, double?>> predicate)
         {
@@ -160,7 +186,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<decimal> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, decimal>> predicate)
         {
@@ -174,7 +203,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to calculate the average of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The average of the sequence of values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the average of the sequence of values
+        /// </returns>
         public static Task<decimal?> AverageAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, decimal?>> predicate)
         {
@@ -194,6 +226,7 @@ namespace System.Linq
         /// true if the input sequence contains an element that has the specified value;
         /// otherwise, false
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item)
         {
             return AsyncExtensions.ContainsAsync(source, item);
@@ -209,6 +242,7 @@ namespace System.Linq
         /// The number of elements in the sequence that satisfies the condition in the predicate
         /// function
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate = null)
         {
@@ -221,7 +255,10 @@ namespace System.Linq
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source">An sequence to return an element from</param>
         /// <param name="predicate">A function to test each element for a condition</param>
-        /// <returns>The first element in source that passes the test in predicate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the first element in source that passes the test in predicate
+        /// </returns>
         public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate = null)
         {
@@ -234,7 +271,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">Source</param>
         /// <param name="predicate">Predicate</param>
-        /// <returns>default(TSource) if source is empty; otherwise, the first element in source</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the default(TSource) if source is empty; otherwise, the first element in source
+        /// </returns>
         public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate = null)
         {
@@ -252,6 +292,7 @@ namespace System.Linq
         /// The number of elements in source that satisfy the condition in the predicate
         /// function
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate = null)
         {
@@ -263,7 +304,10 @@ namespace System.Linq
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to determine the maximum of</param>
-        /// <returns>The maximum value in the sequence</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the maximum value in the sequence
+        /// </returns>
         public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source)
         {
             return AsyncExtensions.MaxAsync(source);
@@ -277,7 +321,10 @@ namespace System.Linq
         /// <typeparam name="TResult">The type of the value returned by the function represented by selector</typeparam>
         /// <param name="source">A sequence of values to determine the maximum of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The maximum value in the sequence</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the maximum value in the sequence
+        /// </returns>
         public static Task<TResult> MaxAsync<TSource, TResult>(this IQueryable<TSource> source,
             Expression<Func<TSource, TResult>> predicate)
         {
@@ -289,7 +336,10 @@ namespace System.Linq
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values to determine the minimum of</param>
-        /// <returns>The minimum value in the sequence</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the minimum value in the sequence
+        /// </returns>
         public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source)
         {
             return AsyncExtensions.MinAsync(source);
@@ -303,7 +353,10 @@ namespace System.Linq
         /// <typeparam name="TResult">The type of the value returned by the function represented by selector</typeparam>
         /// <param name="source">A sequence of values to determine the minimum of</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The minimum value in the sequence</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the minimum value in the sequence
+        /// </returns>
         public static Task<TResult> MinAsync<TSource, TResult>(this IQueryable<TSource> source,
             Expression<Func<TSource, TResult>> predicate)
         {
@@ -317,7 +370,10 @@ namespace System.Linq
         /// <typeparam name="TSource"></typeparam>
         /// <param name="source">An sequence to return a single element from</param>
         /// <param name="predicate">A function to test an element for a condition</param>
-        /// <returns>The single element of the input sequence that satisfies the condition in predicate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the single element of the input sequence that satisfies the condition in predicate
+        /// </returns>
         public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate = null)
         {
@@ -336,6 +392,7 @@ namespace System.Linq
         /// The single element of the input sequence that satisfies the condition in predicate,
         /// or default(TSource) if no such element is found
         /// </returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, bool>> predicate = null)
         {
@@ -351,7 +408,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<decimal> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, decimal>> predicate)
         {
@@ -365,7 +425,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<decimal?> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, decimal?>> predicate)
         {
@@ -379,7 +442,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<double?> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, double?>> predicate)
         {
@@ -393,7 +459,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<float?> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, float?>> predicate)
         {
@@ -407,7 +476,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<double> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, double>> predicate)
         {
@@ -421,7 +493,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<int> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, int>> predicate)
         {
@@ -435,7 +510,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<int?> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, int?>> predicate)
         {
@@ -449,7 +527,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<long> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, long>> predicate)
         {
@@ -463,7 +544,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<long?> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, long?>> predicate)
         {
@@ -477,7 +561,10 @@ namespace System.Linq
         /// <typeparam name="TSource">The type of the elements of source</typeparam>
         /// <param name="source">A sequence of values of type TSource</param>
         /// <param name="predicate">A projection function to apply to each element</param>
-        /// <returns>The sum of the projected values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sum of the projected values
+        /// </returns>
         public static Task<float> SumAsync<TSource>(this IQueryable<TSource> source,
             Expression<Func<TSource, float>> predicate)
         {
@@ -496,7 +583,10 @@ namespace System.Linq
         /// <param name="keySelector">Source element key selector</param>
         /// <param name="elementSelector">Dictionary element selector</param>
         /// <param name="comparer">Dictionary key comparer</param>
-        /// <returns>Dictionary with query results</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dictionary with query results
+        /// </returns>
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             IEqualityComparer<TKey> comparer = null) where TKey : notnull
@@ -514,7 +604,10 @@ namespace System.Linq
         /// <param name="source">Source query</param>
         /// <param name="keySelector">Source element key selector</param>
         /// <param name="comparer">Dictionary key comparer</param>
-        /// <returns>Dictionary with query results</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dictionary with query results
+        /// </returns>
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(this IQueryable<TSource> source,
             Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer = null) where TKey : notnull
         {
@@ -528,7 +621,10 @@ namespace System.Linq
         /// </summary>
         /// <typeparam name="TSource">Query element type</typeparam>
         /// <param name="source">Source query</param>
-        /// <returns>List with query results</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list with query results
+        /// </returns>
         public static Task<List<TSource>> ToListAsync<TSource>(this IQueryable<TSource> source)
         {
             return AsyncExtensions.ToListAsync(source);
@@ -541,6 +637,7 @@ namespace System.Linq
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int pageIndex, int pageSize, bool getOnlyTotalCount = false)
         {
             if (source == null)

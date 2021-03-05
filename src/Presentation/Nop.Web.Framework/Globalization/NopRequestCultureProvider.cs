@@ -17,6 +17,7 @@ namespace Nop.Web.Framework.Globalization
             Options = options;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
             //set working language culture

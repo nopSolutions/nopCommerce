@@ -38,6 +38,7 @@ namespace Nop.Services.Common
         /// Deletes an attribute
         /// </summary>
         /// <param name="attribute">Attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAttributeAsync(GenericAttribute attribute)
         {
             await _genericAttributeRepository.DeleteAsync(attribute);
@@ -47,6 +48,7 @@ namespace Nop.Services.Common
         /// Deletes an attributes
         /// </summary>
         /// <param name="attributes">Attributes</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAttributesAsync(IList<GenericAttribute> attributes)
         {
             await _genericAttributeRepository.DeleteAsync(attributes);
@@ -56,6 +58,7 @@ namespace Nop.Services.Common
         /// Inserts an attribute
         /// </summary>
         /// <param name="attribute">attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAttributeAsync(GenericAttribute attribute)
         {
             if (attribute == null)
@@ -70,6 +73,7 @@ namespace Nop.Services.Common
         /// Updates the attribute
         /// </summary>
         /// <param name="attribute">Attribute</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAttributeAsync(GenericAttribute attribute)
         {
             if (attribute == null)
@@ -85,7 +89,10 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
         /// <param name="keyGroup">Key group</param>
-        /// <returns>Get attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the get attributes
+        /// </returns>
         public virtual async Task<IList<GenericAttribute>> GetAttributesForEntityAsync(int entityId, string keyGroup)
         {
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
@@ -107,6 +114,7 @@ namespace Nop.Services.Common
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SaveAttributeAsync<TPropType>(BaseEntity entity, string key, TPropType value, int storeId = 0)
         {
             if (entity == null)
@@ -164,7 +172,10 @@ namespace Nop.Services.Common
         /// <param name="key">Key</param>
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <param name="defaultValue">Default value</param>
-        /// <returns>Attribute</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attribute
+        /// </returns>
         public virtual async Task<TPropType> GetAttributeAsync<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default)
         {
             if (entity == null)
@@ -200,7 +211,10 @@ namespace Nop.Services.Common
         /// <param name="key">Key</param>
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <param name="defaultValue">Default value</param>
-        /// <returns>Attribute</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attribute
+        /// </returns>
         public virtual async Task<TPropType> GetAttributeAsync<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default)
             where TEntity : BaseEntity
         {

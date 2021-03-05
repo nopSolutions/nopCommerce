@@ -30,7 +30,10 @@ namespace Nop.Data
         /// <param name="storeKey">Name of temporary storage</param>
         /// <param name="query">Query to get records to populate created storage with initial data</param>
         /// <typeparam name="TItem">Storage record mapping class</typeparam>
-        /// <returns>IQueryable instance of temporary storage</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the iQueryable instance of temporary storage
+        /// </returns>
         Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
             where TItem : class;
 
@@ -44,7 +47,10 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>Entity</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the entity
+        /// </returns>
         Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
@@ -61,6 +67,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
@@ -69,6 +76,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
         /// <summary>
@@ -77,6 +85,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
@@ -84,6 +93,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity;
 
         /// <summary>
@@ -91,7 +101,10 @@ namespace Nop.Data
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Number of deleted records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of deleted records
+        /// </returns>
         Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
 
         /// <summary>
@@ -99,6 +112,7 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entities">Collection of Entities</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
         /// <summary>
@@ -124,7 +138,10 @@ namespace Nop.Data
         /// mapped to database table or view.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Queryable source</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queryable source
+        /// </returns>
         Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
@@ -139,13 +156,19 @@ namespace Nop.Data
         /// Get the current identity value
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
-        /// <returns>Integer identity; null if cannot get the result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the integer identity; null if cannot get the result
+        /// </returns>
         Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
-        /// <returns>Returns true if the database exists.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns true if the database exists.
+        /// </returns>
         Task<bool> DatabaseExistsAsync();
 
         /// <summary>
@@ -157,17 +180,20 @@ namespace Nop.Data
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task BackupDatabaseAsync(string fileName);
 
         /// <summary>
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task RestoreDatabaseAsync(string backupFileName);
 
         /// <summary>
         /// Re-index database tables
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ReIndexTablesAsync();
 
         /// <summary>
@@ -182,6 +208,7 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity;
 
         /// <summary>
@@ -196,7 +223,10 @@ namespace Nop.Data
         /// </summary>
         /// <param name="sql">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of records, affected by command execution.
+        /// </returns>
         Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters);
 
         /// <summary>
@@ -206,7 +236,10 @@ namespace Nop.Data
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
-        /// <returns>Returns collection of query result records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns collection of query result records
+        /// </returns>
         Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters);
 
         /// <summary>
@@ -215,7 +248,10 @@ namespace Nop.Data
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="sql">Command text</param>
         /// <param name="parameters">Command parameters</param>
-        /// <returns>Returns collection of query result records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns collection of query result records
+        /// </returns>
         Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters);
 
         #endregion

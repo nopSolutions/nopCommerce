@@ -13,26 +13,34 @@ namespace Nop.Services.Security
         /// <summary>
         /// Gets all permissions
         /// </summary>
-        /// <returns>Permissions</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the permissions
+        /// </returns>
         Task<IList<PermissionRecord>> GetAllPermissionRecordsAsync();
 
         /// <summary>
         /// Updates the permission
         /// </summary>
         /// <param name="permission">Permission</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdatePermissionRecordAsync(PermissionRecord permission);
 
         /// <summary>
         /// Install permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InstallPermissionsAsync(IPermissionProvider permissionProvider);
 
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permission">Permission record</param>
-        /// <returns>true - authorized; otherwise, false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
         Task<bool> AuthorizeAsync(PermissionRecord permission);
 
         /// <summary>
@@ -40,14 +48,20 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="permission">Permission record</param>
         /// <param name="customer">Customer</param>
-        /// <returns>true - authorized; otherwise, false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
         Task<bool> AuthorizeAsync(PermissionRecord permission, Customer customer);
 
         /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <returns>true - authorized; otherwise, false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
         Task<bool> AuthorizeAsync(string permissionRecordSystemName);
 
         /// <summary>
@@ -55,7 +69,10 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="customer">Customer</param>
-        /// <returns>true - authorized; otherwise, false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
         Task<bool> AuthorizeAsync(string permissionRecordSystemName, Customer customer);
 
         /// <summary>
@@ -63,13 +80,17 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>
         /// <param name="customerRoleId">Customer role identifier</param>
-        /// <returns>true - authorized; otherwise, false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
         Task<bool> AuthorizeAsync(string permissionRecordSystemName, int customerRoleId);
 
         /// <summary>
         /// Gets a permission record-customer role mapping
         /// </summary>
         /// <param name="permissionId">Permission identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<IList<PermissionRecordCustomerRoleMapping>> GetMappingByPermissionRecordIdAsync(int permissionId);
 
         /// <summary>
@@ -77,12 +98,14 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="permissionId">Permission identifier</param>
         /// <param name="customerRoleId">Customer role identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeletePermissionRecordCustomerRoleMappingAsync(int permissionId, int customerRoleId);
 
         /// <summary>
         /// Inserts a permission record-customer role mapping
         /// </summary>
         /// <param name="permissionRecordCustomerRoleMapping">Permission record-customer role mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertPermissionRecordCustomerRoleMappingAsync(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping);
     }
 }

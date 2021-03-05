@@ -13,7 +13,10 @@ namespace Nop.Services.Seo
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
-        /// <returns>Sitemap.xml as string</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap.xml as string
+        /// </returns>
         Task<string> GenerateAsync(int? id);
 
         /// <summary>
@@ -23,6 +26,7 @@ namespace Nop.Services.Seo
         /// <param name="getRouteParamsAwait">Lambda for route params object</param>
         /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
         /// <param name="updateFreq">How often to update url</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
             Func<int?, Task<object>> getRouteParamsAwait = null,
             DateTime? dateTimeUpdatedOn = null,

@@ -137,7 +137,10 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Get language from the requested page URL
         /// </summary>
-        /// <returns>The found language</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found language
+        /// </returns>
         protected virtual async Task<Language> GetLanguageFromUrlAsync()
         {
             if (_httpContextAccessor.HttpContext?.Request == null)
@@ -160,7 +163,10 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Get language from the request
         /// </summary>
-        /// <returns>The found language</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found language
+        /// </returns>
         protected virtual async Task<Language> GetLanguageFromRequestAsync()
         {
             if (_httpContextAccessor.HttpContext?.Request == null)
@@ -189,6 +195,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets the current customer
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<Customer> GetCurrentCustomerAsync()
         {
             //whether there is a cached value
@@ -204,6 +211,7 @@ namespace Nop.Web.Framework
         /// Sets the current customer
         /// </summary>
         /// <param name="customer">Current customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetCurrentCustomerAsync(Customer customer = null)
         {
             if (customer == null)
@@ -287,6 +295,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets the current vendor (logged-in manager)
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<Vendor> GetCurrentVendorAsync()
         {
             //whether there is a cached value
@@ -312,6 +321,7 @@ namespace Nop.Web.Framework
         /// Sets current user working language
         /// </summary>
         /// <param name="language">Language</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetWorkingLanguageAsync(Language language)
         {
             //save passed language identifier
@@ -326,6 +336,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets current user working language
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<Language> GetWorkingLanguageAsync()
         {
             //whether there is a cached value
@@ -407,6 +418,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets current user working currency
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<Currency> GetWorkingCurrencyAsync()
         {
             //whether there is a cached value
@@ -463,6 +475,7 @@ namespace Nop.Web.Framework
         /// Sets current user working currency
         /// </summary>
         /// <param name="currency">Currency</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetWorkingCurrencyAsync(Currency currency)
         {
             //save passed currency identifier
@@ -477,6 +490,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets or sets current tax display type
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<TaxDisplayType> GetTaxDisplayTypeAsync()
         {
             //whether there is a cached value
@@ -522,6 +536,7 @@ namespace Nop.Web.Framework
             return _cachedTaxDisplayType.Value;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType)
         {
             //whether customers are allowed to select tax display type
