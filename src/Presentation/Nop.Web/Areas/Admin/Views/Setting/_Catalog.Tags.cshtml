@@ -45,6 +45,7 @@
     </nop-nested-setting>
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductsByTagPriceRangeFiltering_OverrideForStore" asp-input="ProductsByTagPriceRangeFiltering" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ProductsByTagPriceRangeFiltering" />
         </div>
         <div class="col-md-9">
@@ -53,32 +54,39 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ProductsByTagPriceRangeFiltering">
-        <div class="form-group row parent-setting-reversed" id="pnlProductsByTagAutomaticallyCalculatePriceRange">
+        <div class="form-group row advanced-setting" id="pnlProductsByTagManuallyPriceRange">
             <div class="col-md-3">
-                <nop-label asp-for="ProductsByTagAutomaticallyCalculatePriceRange" />
+                <nop-override-store-checkbox asp-for="ProductsByTagManuallyPriceRange_OverrideForStore" asp-input="ProductsByTagManuallyPriceRange" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductsByTagManuallyPriceRange" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="ProductsByTagAutomaticallyCalculatePriceRange" />
-                <span asp-validation-for="ProductsByTagAutomaticallyCalculatePriceRange"></span>
+                <nop-editor asp-for="ProductsByTagManuallyPriceRange" />
+                <span asp-validation-for="ProductsByTagManuallyPriceRange"></span>
             </div>
         </div>
-        <div class="form-group row" id="pnlProductsByTagPriceRangeFrom">
-            <div class="col-md-3">
-                <nop-label asp-for="ProductsByTagPriceFrom" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="ProductsByTagPriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                <span asp-validation-for="ProductsByTagPriceFrom"></span>
-            </div>
-        </div>
-        <div class="form-group row" id="pnlProductsByTagPriceRangeTo">
-            <div class="col-md-3">
-                <nop-label asp-for="ProductsByTagPriceTo" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="ProductsByTagPriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-                <span asp-validation-for="ProductsByTagPriceTo"></span>
-            </div>
+        <div id="pnlProductsByTagPriceRange">
+            <nop-nested-setting asp-for="ProductsByTagManuallyPriceRange">
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ProductsByTagPriceFrom_OverrideForStore" asp-input="ProductsByTagPriceFrom" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ProductsByTagPriceFrom" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ProductsByTagPriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                        <span asp-validation-for="ProductsByTagPriceFrom"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ProductsByTagPriceTo_OverrideForStore" asp-input="ProductsByTagPriceTo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ProductsByTagPriceTo" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ProductsByTagPriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                        <span asp-validation-for="ProductsByTagPriceTo"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
         </div>
     </nop-nested-setting>
 </div>
@@ -92,8 +100,8 @@
         $("#@Html.IdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
         $("#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
         $("#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
-        $("#@Html.IdFor(model => model.ProductsByTagPriceRangeFiltering)").click(toggleProductsByTagAutomaticallyCalculatePriceRange);
-        $("#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)").click(toggleProductsByTagPriceRange);
+        $("#@Html.IdFor(model => model.ProductsByTagPriceRangeFiltering)").click(toggleProductsByTagPriceRangeFiltering);
+        $("#@Html.IdFor(model => model.ProductsByTagManuallyPriceRange)").click(toggleProductsByTagPriceRangeFiltering);
 
         toggleShowCategoryProductNumberIncludingSubcategories();
         toggleEmailAFriend();
@@ -102,8 +110,7 @@
         toggleBestsellersOnHomepage();
         toggleProductsAlsoPurchasedNumber();
         toggleProductsByTagPageSize();
-        toggleProductsByTagPriceRange();
-        toggleProductsByTagAutomaticallyCalculatePriceRange();
+        toggleProductsByTagPriceRangeFiltering();
     });
 
     function toggleShowCategoryProductNumberIncludingSubcategories() {
@@ -165,28 +172,29 @@
     }
 
     function toggleProductsByTagPriceRange() {
-        if ($('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.ProductsByTagManuallyPriceRange)').is(':checked')) {
             $('#pnlProductsByTagPriceRangeFrom').hideElement();
             $('#pnlProductsByTagPriceRangeTo').hideElement();
-            $('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').addClass('parent-setting-ticked');
+            $('#@Html.IdFor(model => model.ProductsByTagManuallyPriceRange)').closest('.parent-setting-reversed').addClass('parent-setting-ticked');
         } else {
             $('#pnlProductsByTagPriceRangeFrom').showElement();
             $('#pnlProductsByTagPriceRangeTo').showElement();
-            $('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').closest('.parent-setting-reversed').removeClass('parent-setting-ticked');
+            $('#@Html.IdFor(model => model.ProductsByTagManuallyPriceRange)').closest('.parent-setting-reversed').removeClass('parent-setting-ticked');
         }
     }
 
-    function toggleProductsByTagAutomaticallyCalculatePriceRange() {
+    function toggleProductsByTagPriceRangeFiltering() {
         if ($('#@Html.IdFor(model => model.ProductsByTagPriceRangeFiltering)').is(':checked')) {
-            if (!$('#@Html.IdFor(model => model.ProductsByTagAutomaticallyCalculatePriceRange)').is(':checked')) {
-                $('#pnlProductsByTagPriceRangeFrom').showElement();
-                $('#pnlProductsByTagPriceRangeTo').showElement();
+            $('#pnlProductsByTagManuallyPriceRange').showElement();
+
+            if ($('#@Html.IdFor(model => model.ProductsByTagManuallyPriceRange)').is(':checked')) {
+                $('#pnlProductsByTagPriceRange').showElement();
+            } else {
+                $('#pnlProductsByTagPriceRange').hideElement();
             }
-            $('#pnlProductsByTagAutomaticallyCalculatePriceRange').showElement();
         } else {
-            $('#pnlProductsByTagPriceRangeFrom').hideElement();
-            $('#pnlProductsByTagPriceRangeTo').hideElement();
-            $('#pnlProductsByTagAutomaticallyCalculatePriceRange').hideElement();
+            $('#pnlProductsByTagPriceRange').hideElement();
+            $('#pnlProductsByTagManuallyPriceRange').hideElement();
         }
     }
 </script>

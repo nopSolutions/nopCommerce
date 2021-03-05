@@ -229,6 +229,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Published = true;
                 model.AllowCustomersToSelectPageSize = true;
                 model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
                 model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
                 model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }

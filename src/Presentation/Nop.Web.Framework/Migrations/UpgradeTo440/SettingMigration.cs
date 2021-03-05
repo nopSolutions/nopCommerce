@@ -134,9 +134,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPageAutomaticallyCalculatePriceRange).Result)
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPageManuallyPriceRange).Result)
             {
-                catalogSettings.SearchPageAutomaticallyCalculatePriceRange = true;
+                catalogSettings.SearchPageManuallyPriceRange = false;
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
@@ -158,9 +158,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagAutomaticallyCalculatePriceRange).Result)
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.ProductsByTagManuallyPriceRange).Result)
             {
-                catalogSettings.ProductsByTagAutomaticallyCalculatePriceRange = true;
+                catalogSettings.ProductsByTagManuallyPriceRange = false;
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
