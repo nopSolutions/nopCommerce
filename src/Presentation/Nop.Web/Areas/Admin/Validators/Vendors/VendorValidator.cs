@@ -31,12 +31,12 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
             RuleFor(x => x.PriceFrom)
                 .GreaterThanOrEqualTo(0)
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceFrom.GreaterThanOrEqualZero"))
-                .When(x => x.PriceRangeFiltering && !x.AutomaticallyCalculatePriceRange);
+                .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
             RuleFor(x => x.PriceTo)
                 .GreaterThan(x => x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero)
                 .WithMessageAwait(async x => string.Format(await localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom"), x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
-                .When(x => x.PriceRangeFiltering && !x.AutomaticallyCalculatePriceRange);
+                .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
             SetDatabaseValidationRules<Vendor>(dataProvider);
         }

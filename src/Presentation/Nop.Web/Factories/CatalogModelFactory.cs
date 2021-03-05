@@ -298,12 +298,8 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="selectedPriceRange">The selected price range to filter the products</param>
         /// <param name="availablePriceRange">The available price range to filter the products</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the price range filter
-        /// </returns>
-        protected virtual async Task<PriceRangeFilterModel> PreparePriceRangeFilterAsync(
-            PriceRangeModel selectedPriceRange, PriceRangeModel availablePriceRange, bool automaticallyCalculated)
+        /// <returns>The price range filter</returns>
+        protected virtual async Task<PriceRangeFilterModel> PreparePriceRangeFilterAsync(PriceRangeModel selectedPriceRange, PriceRangeModel availablePriceRange)
         {
             var model = new PriceRangeFilterModel();
 
@@ -720,7 +716,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (category.AutomaticallyCalculatePriceRange)
+                if (!category.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -749,8 +745,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, category.AutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             //filterable options
@@ -988,7 +983,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (manufacturer.AutomaticallyCalculatePriceRange)
+                if (!manufacturer.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -1017,8 +1012,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, manufacturer.AutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             // filterable options
@@ -1241,7 +1235,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (vendor.AutomaticallyCalculatePriceRange)
+                if (!vendor.ManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -1269,8 +1263,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, vendor.AutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             //products
@@ -1486,7 +1479,7 @@ namespace Nop.Web.Factories
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                 PriceRangeModel availablePriceRange = null;
-                if (_catalogSettings.ProductsByTagAutomaticallyCalculatePriceRange)
+                if (!_catalogSettings.ProductsByTagManuallyPriceRange)
                 {
                     async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                     {
@@ -1514,8 +1507,7 @@ namespace Nop.Web.Factories
                     };
                 }
 
-                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                    selectedPriceRange, availablePriceRange, _catalogSettings.ProductsByTagAutomaticallyCalculatePriceRange);
+                model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
             }
 
             //products
@@ -1726,7 +1718,7 @@ namespace Nop.Web.Factories
                         selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
                         PriceRangeModel availablePriceRange = null;
-                        if (_catalogSettings.SearchPageAutomaticallyCalculatePriceRange)
+                        if (!_catalogSettings.SearchPageManuallyPriceRange)
                         {
                             async Task<decimal?> getProductPriceAsync(ProductSortingEnum orderBy)
                             {
@@ -1760,8 +1752,7 @@ namespace Nop.Web.Factories
                             };
                         }
 
-                        model.PriceRangeFilter = await PreparePriceRangeFilterAsync(
-                            selectedPriceRange, availablePriceRange, _catalogSettings.SearchPageAutomaticallyCalculatePriceRange);
+                        model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
                     }
 
                     //products
