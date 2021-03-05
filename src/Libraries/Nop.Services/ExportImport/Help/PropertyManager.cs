@@ -126,7 +126,6 @@ namespace Nop.Services.ExportImport.Help
             foreach (var prop in _properties.Values)
             {
                 var cell = xlRrow.Cell(prop.PropertyOrderPosition + cellOffset);
-                cell.Style.Alignment.WrapText = false;
                 if (prop.IsDropDownCell && _catalogSettings.ExportImportRelatedEntitiesByName)
                 {
                     var dropDownElements = prop.GetDropDownElements();
@@ -186,6 +185,7 @@ namespace Nop.Services.ExportImport.Help
                         cell.Value = value;
                     }
                 }
+                cell.Style.Alignment.WrapText = false;
             }
         }
 
