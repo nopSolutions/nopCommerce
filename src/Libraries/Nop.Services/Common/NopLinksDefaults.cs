@@ -450,7 +450,7 @@
             /// <summary>
             /// Gets parameters used on admin area configuration steps block
             /// </summary>
-            public static string OnAdminConfigurationSteps => "?utm_source=admin-panel&utm_medium=dashboard&utm_campaign=powered_by_nopcommerce";
+            public static string OnAdminConfigurationSteps => "?utm_source=admin-panel&utm_medium=tour&utm_campaign=powered_by_nopcommerce&utm_content=dashboard";
         }
     }
 }
