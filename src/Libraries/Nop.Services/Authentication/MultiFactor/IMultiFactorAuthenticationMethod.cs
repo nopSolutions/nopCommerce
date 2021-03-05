@@ -30,6 +30,7 @@ namespace Nop.Services.Authentication.MultiFactor
         /// <summary>
         /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task<string> GetDescriptionAsync();
 
         #endregion

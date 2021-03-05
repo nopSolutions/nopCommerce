@@ -75,6 +75,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task<IActionResult> Categories()
         {
             //ensure that Avalara tax provider is active
@@ -102,6 +103,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task<IActionResult> Categories(TaxCategorySearchModel searchModel)
         {
             //ensure that Avalara tax provider is active
@@ -153,12 +155,14 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> TaxCategoryUpdate(Models.Tax.TaxCategoryModel model)
         {
             return await base.CategoryUpdate(model);
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> TaxCategoryAdd(Models.Tax.TaxCategoryModel model)
         {
             //ensure that Avalara tax provider is active
@@ -183,6 +187,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task<IActionResult> CategoryDelete(int id)
         {
             //ensure that Avalara tax provider is active
@@ -208,6 +213,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost, ActionName("Categories")]
         [FormValueRequired("importTaxCodes")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ImportTaxCodes()
         {
             //ensure that Avalara tax provider is active
@@ -233,6 +239,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost, ActionName("Categories")]
         [FormValueRequired("exportTaxCodes")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ExportTaxCodes()
         {
             //ensure that Avalara tax provider is active
@@ -259,6 +266,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost, ActionName("Categories")]
         [FormValueRequired("deleteTaxCodes")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> DeleteSystemTaxCodes()
         {
             //ensure that Avalara tax provider is active

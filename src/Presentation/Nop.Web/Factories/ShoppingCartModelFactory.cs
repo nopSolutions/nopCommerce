@@ -202,7 +202,10 @@ namespace Nop.Web.Factories
         /// Prepare the checkout attribute models
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
-        /// <returns>List of the checkout attribute model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the checkout attribute model
+        /// </returns>
         protected virtual async Task<IList<ShoppingCartModel.CheckoutAttributeModel>> PrepareCheckoutAttributeModelsAsync(
             IList<ShoppingCartItem> cart)
         {
@@ -362,7 +365,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="sci">Shopping cart item</param>
-        /// <returns>Shopping cart item model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart item model
+        /// </returns>
         protected virtual async Task<ShoppingCartModel.ShoppingCartItemModel> PrepareShoppingCartItemModelAsync(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
             if (cart == null)
@@ -502,7 +508,10 @@ namespace Nop.Web.Factories
         /// Prepare the wishlist item model
         /// </summary>
         /// <param name="sci">Shopping cart item</param>
-        /// <returns>Shopping cart item model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart item model
+        /// </returns>
         protected virtual async Task<WishlistModel.ShoppingCartItemModel> PrepareWishlistItemModelAsync(ShoppingCartItem sci)
         {
             if (sci == null)
@@ -634,7 +643,10 @@ namespace Nop.Web.Factories
         /// Prepare the order review data model
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
-        /// <returns>Order review data model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order review data model
+        /// </returns>
         protected virtual async Task<ShoppingCartModel.OrderReviewDataModel> PrepareOrderReviewDataModelAsync(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
@@ -721,7 +733,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
-        /// <returns>Estimate shipping model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the estimate shipping model
+        /// </returns>
         public virtual async Task<EstimateShippingModel> PrepareEstimateShippingModelAsync(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
         {
             if (cart == null)
@@ -730,6 +745,7 @@ namespace Nop.Web.Factories
             var model = new EstimateShippingModel
             {
                 RequestDelay = _shippingSettings.RequestDelay,
+                UseCity = _shippingSettings.EstimateShippingCityNameEnabled,
                 Enabled = cart.Any() && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart)
             };
             if (model.Enabled)
@@ -789,7 +805,12 @@ namespace Nop.Web.Factories
                 }
 
                 if (setEstimateShippingDefaultAddress && shippingAddress != null)
-                    model.ZipPostalCode = shippingAddress.ZipPostalCode;
+                {
+                    if (!_shippingSettings.EstimateShippingCityNameEnabled)
+                        model.ZipPostalCode = shippingAddress.ZipPostalCode;
+                    else
+                        model.City = shippingAddress.City;
+                }
             }
 
             return model;
@@ -803,7 +824,10 @@ namespace Nop.Web.Factories
         /// <param name="isEditable">Whether model is editable</param>
         /// <param name="validateCheckoutAttributes">Whether to validate checkout attributes</param>
         /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
-        /// <returns>Shopping cart model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart model
+        /// </returns>
         public virtual async Task<ShoppingCartModel> PrepareShoppingCartModelAsync(ShoppingCartModel model,
             IList<ShoppingCartItem> cart, bool isEditable = true,
             bool validateCheckoutAttributes = false,
@@ -913,7 +937,10 @@ namespace Nop.Web.Factories
         /// <param name="model">Wishlist model</param>
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="isEditable">Whether model is editable</param>
-        /// <returns>Wishlist model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the wishlist model
+        /// </returns>
         public virtual async Task<WishlistModel> PrepareWishlistModelAsync(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true)
         {
             if (cart == null)
@@ -956,7 +983,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the mini shopping cart model
         /// </summary>
-        /// <returns>Mini shopping cart model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the mini shopping cart model
+        /// </returns>
         public virtual async Task<MiniShoppingCartModel> PrepareMiniShoppingCartModelAsync()
         {
             var model = new MiniShoppingCartModel
@@ -1056,7 +1086,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare selected checkout attributes
         /// </summary>
-        /// <returns>Formatted attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the formatted attributes
+        /// </returns>
         public virtual async Task<string> FormatSelectedCheckoutAttributesAsync()
         {
             var checkoutAttributesXml = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(),
@@ -1070,7 +1103,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="isEditable">Whether model is editable</param>
-        /// <returns>Order totals model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order totals model
+        /// </returns>
         public virtual async Task<OrderTotalsModel> PrepareOrderTotalsModelAsync(IList<ShoppingCartItem> cart, bool isEditable)
         {
             var model = new OrderTotalsModel
@@ -1228,22 +1264,27 @@ namespace Nop.Web.Factories
         /// Prepare the estimate shipping result model
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
-        /// <param name="countryId">Country identifier</param>
-        /// <param name="stateProvinceId">State or province identifier</param>
-        /// <param name="zipPostalCode">Zip postal code</param>
+        /// <param name="request">Request to get shipping options</param>
         /// <param name="cacheShippingOptions">Indicates whether to cache offered shipping options</param>
-        /// <returns>Estimate shipping result model</returns>
-        public virtual async Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheShippingOptions)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the estimate shipping result model
+        /// </returns>
+        public virtual async Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, EstimateShippingModel request, bool cacheShippingOptions)
         {
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
+
             var model = new EstimateShippingResultModel();
 
             if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             {
                 var address = new Address
                 {
-                    CountryId = countryId,
-                    StateProvinceId = stateProvinceId,
-                    ZipPostalCode = zipPostalCode,
+                    CountryId = request.CountryId,
+                    StateProvinceId = request.StateProvinceId,
+                    ZipPostalCode = request.ZipPostalCode,
+                    City = request.City
                 };
 
                 var rawShippingOptions = new List<ShippingOption>();
@@ -1369,7 +1410,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Wishlist email a friend model</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        /// <returns>Wishlist email a friend model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the wishlist email a friend model
+        /// </returns>
         public virtual async Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties)
         {
             if (model == null)
@@ -1391,7 +1435,10 @@ namespace Nop.Web.Factories
         /// <param name="pictureSize">Picture size</param>
         /// <param name="showDefaultPicture">Whether to show the default picture</param>
         /// <param name="productName">Product name</param>
-        /// <returns>Picture model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture model
+        /// </returns>
         public virtual async Task<PictureModel> PrepareCartItemPictureModelAsync(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
             var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey

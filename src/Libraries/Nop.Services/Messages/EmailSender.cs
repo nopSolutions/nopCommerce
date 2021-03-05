@@ -58,7 +58,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="filePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name</param>
-        /// <returns>A leaf-node MIME part that contains an attachment.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a leaf-node MIME part that contains an attachment.
+        /// </returns>
         protected async Task<MimePart> CreateMimeAttachmentAsync(string filePath, string attachmentFileName = null)
         {
             if (string.IsNullOrWhiteSpace(filePath))
@@ -124,6 +127,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachment)</param>
         /// <param name="headers">Headers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SendEmailAsync(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
             string replyTo = null, string replyToName = null,

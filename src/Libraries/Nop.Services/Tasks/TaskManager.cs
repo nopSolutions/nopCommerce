@@ -10,6 +10,7 @@ namespace Nop.Services.Tasks
     /// <summary>
     /// Represents task manager
     /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
     public partial class TaskManager
     {
         #region Fields
@@ -20,6 +21,7 @@ namespace Nop.Services.Tasks
 
         #region Ctor
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private TaskManager()
         {
         }
@@ -105,11 +107,13 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Gets the task manger instance
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static TaskManager Instance { get; } = new TaskManager();
 
         /// <summary>
         /// Gets a list of task threads of this task manager
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public IList<TaskThread> TaskThreads => new ReadOnlyCollection<TaskThread>(_taskThreads);
 
         #endregion

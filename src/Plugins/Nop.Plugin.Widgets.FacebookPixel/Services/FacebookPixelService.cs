@@ -116,7 +116,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="function">Function</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         private async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
         {
             try
@@ -149,7 +152,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Check whether the plugin is active for the current user and the current store
         /// </summary>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         private async Task<bool> PluginActiveAsync()
         {
             return await _widgetPluginManager
@@ -160,7 +166,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare scripts
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         private async Task<string> PrepareScriptsAsync(IList<FacebookPixelConfiguration> configurations)
         {
             return await PrepareInitScriptAsync(configurations) +
@@ -172,7 +181,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare user info (used with Advanced Matching feature)
         /// </summary>
-        /// <returns>User info</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the user info
+        /// </returns>
         private async Task<string> GetUserObjectAsync()
         {
             //prepare user object
@@ -211,7 +223,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to init Facebook Pixel
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         private async Task<string> PrepareInitScriptAsync(IList<FacebookPixelConfiguration> configurations)
         {
             //prepare init script
@@ -230,7 +245,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to pass user properties
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         private async Task<string> PrepareUserPropertiesScriptAsync(IList<FacebookPixelConfiguration> configurations)
         {
             //filter active configurations
@@ -271,7 +289,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "PageView" event
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         private async Task<string> PreparePageViewScriptAsync(IList<FacebookPixelConfiguration> configurations)
         {
             //a single active configuration is enough to track PageView event
@@ -284,7 +305,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare scripts to track events
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         private async Task<string> PrepareTrackedEventsScriptAsync(IList<FacebookPixelConfiguration> configurations)
         {
             //get previously stored events and remove them from the session data
@@ -346,6 +370,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="customerId">Customer identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="isCustomEvent">Whether the event is a custom one</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task PrepareTrackedEventScriptAsync(string eventName, string eventObject,
             int? customerId = null, int? storeId = null, bool isCustomEvent = false)
         {
@@ -424,7 +449,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
         /// <param name="getScript">Function to get script for the passed configuration</param>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         private async Task<string> FormatScriptAsync(IList<FacebookPixelConfiguration> configurations, Func<FacebookPixelConfiguration, Task<string>> getScript)
         {
             if (!configurations.Any())
@@ -442,7 +470,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Get configurations
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
-        /// <returns>List of configurations</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of configurations
+        /// </returns>
         private async Task<IList<FacebookPixelConfiguration>> GetConfigurationsAsync(int storeId = 0)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationsCacheKey, storeId);
@@ -467,7 +498,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare Facebook Pixel script
         /// </summary>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         public async Task<string> PrepareScriptAsync()
         {
             return await HandleFunctionAsync(async () =>
@@ -522,7 +556,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare Facebook Pixel script
         /// </summary>
         /// <param name="widgetZone">Widget zone to place script</param>
-        /// <returns>Script code</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the script code
+        /// </returns>
         public async Task<string> PrepareCustomEventsScriptAsync(string widgetZone)
         {
             return await HandleFunctionAsync(async () =>
@@ -539,6 +576,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "AddToCart" and "AddToWishlist" events
         /// </summary>
         /// <param name="item">Shopping cart item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PrepareAddToCartScriptAsync(ShoppingCartItem item)
         {
             await HandleFunctionAsync(async () =>
@@ -583,6 +621,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "Purchase" event
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PreparePurchaseScriptAsync(Order order)
         {
             await HandleFunctionAsync(async () =>
@@ -619,6 +658,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "ViewContent" event
         /// </summary>
         /// <param name="model">Product details model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PrepareViewContentScriptAsync(ProductDetailsModel model)
         {
             await HandleFunctionAsync(async () =>
@@ -651,6 +691,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare script to track "InitiateCheckout" event
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PrepareInitiateCheckoutScriptAsync()
         {
             await HandleFunctionAsync(async () =>
@@ -688,6 +729,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "Search" event
         /// </summary>
         /// <param name="searchTerm">Search term</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PrepareSearchScriptAsync(string searchTerm)
         {
             await HandleFunctionAsync(async () =>
@@ -708,6 +750,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare script to track "Contact" event
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PrepareContactScriptAsync()
         {
             await HandleFunctionAsync(async () =>
@@ -722,6 +765,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare script to track "CompleteRegistration" event
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PrepareCompleteRegistrationScriptAsync()
         {
             await HandleFunctionAsync(async () =>
@@ -749,7 +793,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Paged list of configurations</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paged list of configurations
+        /// </returns>
         public async Task<IPagedList<FacebookPixelConfiguration>> GetPagedConfigurationsAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _facebookPixelConfigurationRepository.Table;
@@ -767,7 +814,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Get a configuration by the identifier
         /// </summary>
         /// <param name="configurationId">Configuration identifier</param>
-        /// <returns>Configuration</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the configuration
+        /// </returns>
         public async Task<FacebookPixelConfiguration> GetConfigurationByIdAsync(int configurationId)
         {
             if (configurationId == 0)
@@ -781,6 +831,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Insert the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task InsertConfigurationAsync(FacebookPixelConfiguration configuration)
         {
             if (configuration == null)
@@ -794,6 +845,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Update the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UpdateConfigurationAsync(FacebookPixelConfiguration configuration)
         {
             if (configuration == null)
@@ -807,6 +859,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Delete the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DeleteConfigurationAsync(FacebookPixelConfiguration configuration)
         {
             if (configuration == null)
@@ -821,7 +874,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="configurationId">Configuration identifier</param>
         /// <param name="widgetZone">Widget zone name; pass null to load all records</param>
-        /// <returns>List of custom events</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of custom events
+        /// </returns>
         public async Task<IList<CustomEvent>> GetCustomEventsAsync(int configurationId, string widgetZone = null)
         {
             var cachedCustomEvents = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.CustomEventsCacheKey, configurationId), async () =>
@@ -846,6 +902,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="configurationId">Configuration identifier</param>
         /// <param name="eventName">Event name</param>
         /// <param name="widgetZones">Widget zones names</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task SaveCustomEventsAsync(int configurationId, string eventName, IList<string> widgetZones)
         {
             if (string.IsNullOrEmpty(eventName))
@@ -886,7 +943,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Get used widget zones for all custom events
         /// </summary>
-        /// <returns>List of widget zones names</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of widget zones names
+        /// </returns>
         public async Task<IList<string>> GetCustomEventsWidgetZonesAsync()
         {
             return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.WidgetZonesCacheKey), async () =>

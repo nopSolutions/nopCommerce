@@ -16,6 +16,7 @@ namespace Nop.Services.Catalog.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(Product entity, EntityEventType entityEventType)
         {
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity);

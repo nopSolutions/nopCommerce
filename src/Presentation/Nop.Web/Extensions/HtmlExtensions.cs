@@ -24,6 +24,7 @@ namespace Nop.Web.Extensions
         /// <param name="model">Pager model</param>
         /// <returns>Pager</returns>
         /// <remarks>We have two pagers: The first one can have custom routes. The second one just adds query string parameter</remarks>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task<IHtmlContent> PagerAsync<TModel>(this IHtmlHelper<TModel> html, PagerModel model)
         {
             if (model.TotalRecords == 0)
@@ -214,7 +215,10 @@ namespace Nop.Web.Extensions
         /// <typeparam name="TModel">Model type</typeparam>
         /// <param name="html">HTML helper</param>
         /// <param name="model">Model</param>
-        /// <returns>Pager</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pager
+        /// </returns>
         public static async Task<IHtmlContent> ForumTopicSmallPagerAsync<TModel>(this IHtmlHelper<TModel> html, ForumTopicRowModel model)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -276,7 +280,10 @@ namespace Nop.Web.Extensions
         /// <typeparam name="TModel">Model type</typeparam>
         /// <param name="html">HTML helper</param>
         /// <param name="systemName">System name</param>
-        /// <returns>Topic SEO Name</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic SEO Name
+        /// </returns>
         public static async Task<string> GetTopicSeNameAsync<TModel>(this IHtmlHelper<TModel> html, string systemName)
         {
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();

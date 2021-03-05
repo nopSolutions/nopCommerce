@@ -66,6 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(BlogPost blogPost, BlogPostModel model)
         {
             blogPost.LimitedToStores = model.SelectedStoreIds.Any();
@@ -102,6 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("BlogPosts");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogPosts(int? filterByBlogPostId)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -114,6 +116,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List(BlogPostSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -125,6 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogPostCreate()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -137,6 +141,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogPostCreate(BlogPostModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -174,6 +179,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogPostEdit(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -191,6 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogPostEdit(BlogPostModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -233,6 +240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -258,6 +266,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Comments
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogComments(int? filterByBlogPostId)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -275,6 +284,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Comments(BlogCommentSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -287,6 +297,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CommentUpdate(BlogCommentModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -314,6 +325,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CommentDelete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -333,6 +345,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteSelectedComments(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -355,6 +368,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
@@ -384,6 +398,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))

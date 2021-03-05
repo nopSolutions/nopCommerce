@@ -68,6 +68,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
@@ -86,6 +87,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         [HttpPost]        
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
@@ -105,6 +107,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> GoogleAuthenticatorList(GoogleAuthenticatorSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
@@ -128,6 +131,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> GoogleAuthenticatorDelete (GoogleAuthenticatorModel model)
         {
             if (!ModelState.IsValid)

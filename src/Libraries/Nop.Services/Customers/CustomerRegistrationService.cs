@@ -130,7 +130,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="usernameOrEmail">Username or email</param>
         /// <param name="password">Password</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<CustomerLoginResults> ValidateCustomerAsync(string usernameOrEmail, string password)
         {
             var customer = _customerSettings.UsernamesEnabled ?
@@ -189,7 +192,10 @@ namespace Nop.Services.Customers
         /// Register customer
         /// </summary>
         /// <param name="request">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<CustomerRegistrationResult> RegisterCustomerAsync(CustomerRegistrationRequest request)
         {
             if (request == null)
@@ -315,7 +321,10 @@ namespace Nop.Services.Customers
         /// Change password
         /// </summary>
         /// <param name="request">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<ChangePasswordResult> ChangePasswordAsync(ChangePasswordRequest request)
         {
             if (request == null)
@@ -399,7 +408,10 @@ namespace Nop.Services.Customers
         /// <param name="customer">User to login</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <param name="isPersist">Is remember me</param>
-        /// <returns>Result of an authentication</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of an authentication
+        /// </returns>
         public virtual async Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false)
         {
             if ((await _workContext.GetCurrentCustomerAsync())?.Id != customer.Id)
@@ -433,6 +445,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="newEmail">New email</param>
         /// <param name="requireValidation">Require validation of new email address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetEmailAsync(Customer customer, string newEmail, bool requireValidation)
         {
             if (customer == null)
@@ -491,6 +504,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="newUsername">New Username</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetUsernameAsync(Customer customer, string newUsername)
         {
             if (customer == null)

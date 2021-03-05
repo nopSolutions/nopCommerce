@@ -15,6 +15,7 @@ namespace Nop.Plugin.Tax.Avalara.Services.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(Customer entity)
         {
             await RemoveByPrefixAsync(AvalaraTaxDefaults.TaxRateCacheKeyByCustomerPrefix, entity);

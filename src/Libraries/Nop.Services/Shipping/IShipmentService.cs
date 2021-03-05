@@ -17,6 +17,7 @@ namespace Nop.Services.Shipping
         /// Deletes a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task DeleteShipmentAsync(Shipment shipment);
 
         /// <summary>
@@ -36,7 +37,10 @@ namespace Nop.Services.Shipping
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Shipments</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipments
+        /// </returns>
         Task<IPagedList<Shipment>> GetAllShipmentsAsync(int vendorId = 0, int warehouseId = 0,
             int shippingCountryId = 0,
             int shippingStateId = 0,
@@ -53,14 +57,20 @@ namespace Nop.Services.Shipping
         /// Get shipment by identifiers
         /// </summary>
         /// <param name="shipmentIds">Shipment identifiers</param>
-        /// <returns>Shipments</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipments
+        /// </returns>
         Task<IList<Shipment>> GetShipmentsByIdsAsync(int[] shipmentIds);
 
         /// <summary>
         /// Gets a shipment
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
-        /// <returns>Shipment</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment
+        /// </returns>
         Task<Shipment> GetShipmentByIdAsync(int shipmentId);
 
         /// <summary>
@@ -69,32 +79,41 @@ namespace Nop.Services.Shipping
         /// <param name="orderId">Order identifier</param>
         /// <param name="shipped">A value indicating whether to count only shipped or not shipped shipments; pass null to ignore</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<IList<Shipment>> GetShipmentsByOrderIdAsync(int orderId, bool? shipped = null, int vendorId = 0);
 
         /// <summary>
         /// Inserts a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertShipmentAsync(Shipment shipment);
 
         /// <summary>
         /// Updates the shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateShipmentAsync(Shipment shipment);
 
         /// <summary>
         /// Gets a shipment items of shipment
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
-        /// <returns>Shipment items</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment items
+        /// </returns>
         Task<IList<ShipmentItem>> GetShipmentItemsByShipmentIdAsync(int shipmentId);
 
         /// <summary>
         /// Inserts a shipment item
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertShipmentItemAsync(ShipmentItem shipmentItem);
 
         /// <summary>
@@ -104,7 +123,10 @@ namespace Nop.Services.Shipping
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
-        /// <returns>Quantity</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the quantity
+        /// </returns>
         Task<int> GetQuantityInShipmentsAsync(Product product, int warehouseId,
             bool ignoreShipped, bool ignoreDelivered);
 
@@ -112,7 +134,10 @@ namespace Nop.Services.Shipping
         /// Get the tracker of the shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        /// <returns>Shipment tracker</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
         Task<IShipmentTracker> GetShipmentTrackerAsync(Shipment shipment);
     }
 }

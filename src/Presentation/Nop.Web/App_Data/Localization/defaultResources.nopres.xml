@@ -8475,6 +8475,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled.Hint">
     <Value>Check to allow customers to estimate shipping on the shopping cart page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled">
+    <Value>Use a city name for estimate shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled.Hint">
+    <Value>Check to allow customers to enter a city name instead of zip postal code.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled">
     <Value>Estimate shipping enabled (product page)</Value>
   </LocaleResource>
@@ -15984,11 +15990,11 @@
   <LocaleResource Name="Checkout.PickupPoints.Name">
     <Value>Pickup at {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.PickupPoints.NullName">
-    <Value>Pickup</Value>
-  </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.NotAvailable">
     <Value>Pickup points could not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.NullName">
+    <Value>Pickup</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.SelectPickupPoint">
     <Value>Select pickup point</Value>
@@ -18801,6 +18807,9 @@
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShipping.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShipping.Country.Required">
     <Value>Country is required</Value>
   </LocaleResource>
@@ -18809,6 +18818,9 @@
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ChooseShippingTitle">
     <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.City">
+    <Value>City</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.Country">
     <Value>Country</Value>

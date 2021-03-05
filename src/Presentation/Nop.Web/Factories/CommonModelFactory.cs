@@ -195,7 +195,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Get the number of unread private messages
         /// </summary>
-        /// <returns>Number of private messages</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of private messages
+        /// </returns>
         protected virtual async Task<int> GetUnreadPrivateMessagesAsync()
         {
             var result = 0;
@@ -221,7 +224,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the logo model
         /// </summary>
-        /// <returns>Logo model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the logo model
+        /// </returns>
         public virtual async Task<LogoModel> PrepareLogoModelAsync()
         {
             var model = new LogoModel
@@ -256,7 +262,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the language selector model
         /// </summary>
-        /// <returns>Language selector model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language selector model
+        /// </returns>
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModelAsync()
         {
             var availableLanguages = (await _languageService
@@ -281,7 +290,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the currency selector model
         /// </summary>
-        /// <returns>Currency selector model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency selector model
+        /// </returns>
         public virtual async Task<CurrencySelectorModel> PrepareCurrencySelectorModelAsync()
         {
             var availableCurrencies = await (await _currencyService
@@ -316,7 +328,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the tax type selector model
         /// </summary>
-        /// <returns>Tax type selector model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax type selector model
+        /// </returns>
         public virtual async Task<TaxTypeSelectorModel> PrepareTaxTypeSelectorModelAsync()
         {
             var model = new TaxTypeSelectorModel
@@ -330,7 +345,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the header links model
         /// </summary>
-        /// <returns>Header links model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the header links model
+        /// </returns>
         public virtual async Task<HeaderLinksModel> PrepareHeaderLinksModelAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -378,7 +396,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the admin header links model
         /// </summary>
-        /// <returns>Admin header links model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the admin header links model
+        /// </returns>
         public virtual async Task<AdminHeaderLinksModel> PrepareAdminHeaderLinksModelAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -397,7 +418,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the social model
         /// </summary>
-        /// <returns>Social model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the social model
+        /// </returns>
         public virtual async Task<SocialModel> PrepareSocialModelAsync()
         {
             var model = new SocialModel
@@ -415,7 +439,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the footer model
         /// </summary>
-        /// <returns>Footer model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the footer model
+        /// </returns>
         public virtual async Task<FooterModel> PrepareFooterModelAsync()
         {
             //footer topics
@@ -476,7 +503,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Contact us model</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        /// <returns>Contact us model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the contact us model
+        /// </returns>
         public virtual async Task<ContactUsModel> PrepareContactUsModelAsync(ContactUsModel model, bool excludeProperties)
         {
             if (model == null)
@@ -500,7 +530,10 @@ namespace Nop.Web.Factories
         /// <param name="model">Contact vendor model</param>
         /// <param name="vendor">Vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        /// <returns>Contact vendor model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the contact vendor model
+        /// </returns>
         public virtual async Task<ContactVendorModel> PrepareContactVendorModelAsync(ContactVendorModel model, Vendor vendor, bool excludeProperties)
         {
             if (model == null)
@@ -527,7 +560,10 @@ namespace Nop.Web.Factories
         /// Prepare the sitemap model
         /// </summary>
         /// <param name="pageModel">Sitemap page model</param>
-        /// <returns>Sitemap model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap model
+        /// </returns>
         public virtual async Task<SitemapModel> PrepareSitemapModelAsync(SitemapPageModel pageModel)
         {
             if (pageModel == null)
@@ -729,7 +765,10 @@ namespace Nop.Web.Factories
         /// Get the sitemap in XML format
         /// </summary>
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
-        /// <returns>Sitemap as string in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap as string in XML format
+        /// </returns>
         public virtual async Task<string> PrepareSitemapXmlAsync(int? id)
         {
             var language = await _workContext.GetWorkingLanguageAsync();
@@ -747,7 +786,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the store theme selector model
         /// </summary>
-        /// <returns>Store theme selector model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store theme selector model
+        /// </returns>
         public virtual async Task<StoreThemeSelectorModel> PrepareStoreThemeSelectorModelAsync()
         {
             var model = new StoreThemeSelectorModel();
@@ -771,7 +813,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the favicon model
         /// </summary>
-        /// <returns>Favicon model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the favicon model
+        /// </returns>
         public virtual Task<FaviconAndAppIconsModel> PrepareFaviconAndAppIconsModelAsync()
         {
             var model = new FaviconAndAppIconsModel
@@ -785,7 +830,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Get robots.txt file
         /// </summary>
-        /// <returns>Robots.txt file as string</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the robots.txt file as string
+        /// </returns>
         public virtual async Task<string> PrepareRobotsTextFileAsync()
         {
             var sb = new StringBuilder();

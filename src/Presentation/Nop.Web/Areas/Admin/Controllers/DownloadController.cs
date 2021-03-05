@@ -38,6 +38,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DownloadFile(Guid downloadGuid)
         {
             var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
@@ -66,6 +67,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SaveDownloadUrl(string downloadUrl)
         {
             //don't allow to save empty download object
@@ -94,6 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AsyncUpload()
         {
             var httpPostedFile = Request.Form.Files.FirstOrDefault();

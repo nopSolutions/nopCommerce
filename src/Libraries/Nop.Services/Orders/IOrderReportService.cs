@@ -23,7 +23,10 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<IList<OrderByCountryReportLine>> GetCountryReportAsync(int storeId = 0, OrderStatus? os = null,
             PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null);
@@ -47,7 +50,10 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<OrderAverageReportLine> GetOrderAverageReportLineAsync(int storeId = 0, int vendorId = 0, int productId = 0,
             int warehouseId = 0, int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
@@ -59,7 +65,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<OrderAverageReportLineSummary> OrderAverageReportAsync(int storeId, OrderStatus os);
 
         /// <summary>
@@ -78,7 +87,10 @@ namespace Nop.Services.Orders
         /// <param name="groupBy">0 - group by day, 1 - group by week, 2 - group by total month</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<IPagedList<SalesSummaryReportLine>> SalesSummaryReportAsync(
             int categoryId = 0,
             int productId = 0,
@@ -111,7 +123,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<IPagedList<BestsellersReportLine>> BestSellersReportAsync(
             int categoryId = 0,
             int manufacturerId = 0, 
@@ -142,7 +157,10 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<decimal> BestSellersReportTotalAmountAsync(
             int categoryId = 0,
             int manufacturerId = 0,
@@ -164,7 +182,10 @@ namespace Nop.Services.Orders
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<int[]> GetAlsoPurchasedProductsIdsAsync(int storeId, int productId,
             int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false);
 
@@ -180,7 +201,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
         Task<IPagedList<Product>> ProductsNeverSoldAsync(int vendorId = 0, int storeId = 0,
             int categoryId = 0, int manufacturerId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
@@ -205,7 +229,10 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         Task<decimal> ProfitReportAsync(int storeId = 0, int vendorId = 0, int productId = 0,
             int warehouseId = 0, int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,

@@ -79,6 +79,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
@@ -116,6 +117,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         [AutoValidateAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
@@ -157,6 +159,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         //action displaying notification (warning) to a store owner about inaccurate PayPal rounding
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> RoundingWarning(bool passProductNamesAndTotals)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
@@ -169,6 +172,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             return Json(new { Result = string.Empty });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> PDTHandler()
         {
             var tx = _webHelper.QueryString<string>("tx");
@@ -313,6 +317,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> CancelOrder()
         {
             var order = (await _orderService.SearchOrdersAsync((await _storeContext.GetCurrentStoreAsync()).Id,

@@ -159,6 +159,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> GetSpecificationAttributeNameAsync(SpecificationAttribute specificationAttribute)
         {
             var name = specificationAttribute.Name;
@@ -178,7 +179,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Copy product model</param>
         /// <param name="product">Product</param>
-        /// <returns>Copy product model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the copy product model
+        /// </returns>
         protected virtual async Task<CopyProductModel> PrepareCopyProductModelAsync(CopyProductModel model, Product product)
         {
             if (model == null)
@@ -197,6 +201,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of product warehouse inventory models</param>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProductWarehouseInventoryModelsAsync(IList<ProductWarehouseInventoryModel> models, Product product)
         {
             if (models == null)
@@ -230,7 +235,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product attribute mapping validation rules string
         /// </summary>
         /// <param name="attributeMapping">Product attribute mapping</param>
-        /// <returns>Validation rules string</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the validation rules string
+        /// </returns>
         protected virtual async Task<string> PrepareProductAttributeMappingValidationRulesStringAsync(ProductAttributeMapping attributeMapping)
         {
             if (!attributeMapping.ValidationRulesAllowed())
@@ -280,6 +288,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Product attribute condition model</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProductAttributeConditionModelAsync(ProductAttributeConditionModel model,
             ProductAttributeMapping productAttributeMapping)
         {
@@ -514,7 +523,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Stock quantity history search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Stock quantity history search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the stock quantity history search model
+        /// </returns>
         protected virtual async Task<StockQuantityHistorySearchModel> PrepareStockQuantityHistorySearchModelAsync(StockQuantityHistorySearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -634,7 +646,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product search model
         /// </summary>
         /// <param name="searchModel">Product search model</param>
-        /// <returns>Product search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model
+        /// </returns>
         public virtual async Task<ProductSearchModel> PrepareProductSearchModelAsync(ProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -691,7 +706,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product list model
         /// </summary>
         /// <param name="searchModel">Product search model</param>
-        /// <returns>Product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product list model
+        /// </returns>
         public virtual async Task<ProductListModel> PrepareProductListModelAsync(ProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -752,7 +770,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product model</param>
         /// <param name="product">Product</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product model
+        /// </returns>
         public virtual async Task<ProductModel> PrepareProductModelAsync(ProductModel model, Product product, bool excludeProperties = false)
         {
             Action<ProductLocalizedModel, int> localizedModelConfiguration = null;
@@ -947,7 +968,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare required product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Required product search model to add to the product</param>
-        /// <returns>Required product search model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the required product search model to add to the product
+        /// </returns>
         public virtual async Task<AddRequiredProductSearchModel> PrepareAddRequiredProductSearchModelAsync(AddRequiredProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -980,7 +1004,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare required product list model to add to the product
         /// </summary>
         /// <param name="searchModel">Required product search model to add to the product</param>
-        /// <returns>Required product list model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the required product list model to add to the product
+        /// </returns>
         public virtual async Task<AddRequiredProductListModel> PrepareAddRequiredProductListModelAsync(AddRequiredProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1021,7 +1048,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Related product search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Related product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the related product list model
+        /// </returns>
         public virtual async Task<RelatedProductListModel> PrepareRelatedProductListModelAsync(RelatedProductSearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -1055,7 +1085,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare related product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Related product search model to add to the product</param>
-        /// <returns>Related product search model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the related product search model to add to the product
+        /// </returns>
         public virtual async Task<AddRelatedProductSearchModel> PrepareAddRelatedProductSearchModelAsync(AddRelatedProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1088,7 +1121,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged related product list model to add to the product
         /// </summary>
         /// <param name="searchModel">Related product search model to add to the product</param>
-        /// <returns>Related product list model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the related product list model to add to the product
+        /// </returns>
         public virtual async Task<AddRelatedProductListModel> PrepareAddRelatedProductListModelAsync(AddRelatedProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1129,7 +1165,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Cross-sell product search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Cross-sell product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sell product list model
+        /// </returns>
         public virtual async Task<CrossSellProductListModel> PrepareCrossSellProductListModelAsync(CrossSellProductSearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -1168,7 +1207,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare cross-sell product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Cross-sell product search model to add to the product</param>
-        /// <returns>Cross-sell product search model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cross-sell product search model to add to the product
+        /// </returns>
         public virtual async Task<AddCrossSellProductSearchModel> PrepareAddCrossSellProductSearchModelAsync(AddCrossSellProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1201,7 +1243,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged crossSell product list model to add to the product
         /// </summary>
         /// <param name="searchModel">CrossSell product search model to add to the product</param>
-        /// <returns>CrossSell product list model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the crossSell product list model to add to the product
+        /// </returns>
         public virtual async Task<AddCrossSellProductListModel> PrepareAddCrossSellProductListModelAsync(AddCrossSellProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1242,7 +1287,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Associated product search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Associated product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the associated product list model
+        /// </returns>
         public virtual async Task<AssociatedProductListModel> PrepareAssociatedProductListModelAsync(AssociatedProductSearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -1275,7 +1323,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare associated product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Associated product search model to add to the product</param>
-        /// <returns>Associated product search model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the associated product search model to add to the product
+        /// </returns>
         public virtual async Task<AddAssociatedProductSearchModel> PrepareAddAssociatedProductSearchModelAsync(AddAssociatedProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1308,7 +1359,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged associated product list model to add to the product
         /// </summary>
         /// <param name="searchModel">Associated product search model to add to the product</param>
-        /// <returns>Associated product list model to add to the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the associated product list model to add to the product
+        /// </returns>
         public virtual async Task<AddAssociatedProductListModel> PrepareAddAssociatedProductListModelAsync(AddAssociatedProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1358,7 +1412,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product picture search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Product picture list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product picture list model
+        /// </returns>
         public virtual async Task<ProductPictureListModel> PrepareProductPictureListModelAsync(ProductPictureSearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -1399,7 +1456,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product specification attribute search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Product specification attribute list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product specification attribute list model
+        /// </returns>
         public virtual async Task<ProductSpecificationAttributeListModel> PrepareProductSpecificationAttributeListModelAsync(
             ProductSpecificationAttributeSearchModel searchModel, Product product)
         {
@@ -1462,7 +1522,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="productId">Product id</param>
         /// <param name="specificationId">Specification attribute id</param>
-        /// <returns>Product specification attribute model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product specification attribute model
+        /// </returns>
         public virtual async Task<AddSpecificationAttributeModel> PrepareAddSpecificationAttributeModelAsync(int productId, int? specificationId)
         {
             if (!specificationId.HasValue)
@@ -1561,7 +1624,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product tag search model
         /// </summary>
         /// <param name="searchModel">Product tag search model</param>
-        /// <returns>Product tag search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tag search model
+        /// </returns>
         public virtual Task<ProductTagSearchModel> PrepareProductTagSearchModelAsync(ProductTagSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1577,7 +1643,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product tag list model
         /// </summary>
         /// <param name="searchModel">Product tag search model</param>
-        /// <returns>Product tag list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tag list model
+        /// </returns>
         public virtual async Task<ProductTagListModel> PrepareProductTagListModelAsync(ProductTagSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1612,7 +1681,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product tag model</param>
         /// <param name="productTag">Product tag</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product tag model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tag model
+        /// </returns>
         public virtual async Task<ProductTagModel> PrepareProductTagModelAsync(ProductTagModel model, ProductTag productTag, bool excludeProperties = false)
         {
             Action<ProductTagLocalizedModel, int> localizedModelConfiguration = null;
@@ -1646,7 +1718,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product order search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Product order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product order list model
+        /// </returns>
         public virtual async Task<ProductOrderListModel> PrepareProductOrderListModelAsync(ProductOrderSearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -1695,7 +1770,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tier price search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Tier price list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ier price list model
+        /// </returns>
         public virtual async Task<TierPriceListModel> PrepareTierPriceListModelAsync(TierPriceSearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -1740,7 +1818,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="product">Product</param>
         /// <param name="tierPrice">Tier price</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Tier price model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ier price model
+        /// </returns>
         public virtual async Task<TierPriceModel> PrepareTierPriceModelAsync(TierPriceModel model,
             Product product, TierPrice tierPrice, bool excludeProperties = false)
         {
@@ -1768,7 +1849,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Stock quantity history search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Stock quantity history list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the stock quantity history list model
+        /// </returns>
         public virtual async Task<StockQuantityHistoryListModel> PrepareStockQuantityHistoryListModelAsync(StockQuantityHistorySearchModel searchModel, Product product)
         {
             if (searchModel == null)
@@ -1818,7 +1902,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product attribute mapping search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Product attribute mapping list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute mapping list model
+        /// </returns>
         public virtual async Task<ProductAttributeMappingListModel> PrepareProductAttributeMappingListModelAsync(ProductAttributeMappingSearchModel searchModel,
             Product product)
         {
@@ -1875,7 +1962,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="product">Product</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product attribute mapping model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute mapping model
+        /// </returns>
         public virtual async Task<ProductAttributeMappingModel> PrepareProductAttributeMappingModelAsync(ProductAttributeMappingModel model,
             Product product, ProductAttributeMapping productAttributeMapping, bool excludeProperties = false)
         {
@@ -1945,7 +2035,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product attribute value search model</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
-        /// <returns>Product attribute value list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute value list model
+        /// </returns>
         public virtual async Task<ProductAttributeValueListModel> PrepareProductAttributeValueListModelAsync(ProductAttributeValueSearchModel searchModel,
             ProductAttributeMapping productAttributeMapping)
         {
@@ -2006,7 +2099,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="productAttributeValue">Product attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product attribute value model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute value model
+        /// </returns>
         public virtual async Task<ProductAttributeValueModel> PrepareProductAttributeValueModelAsync(ProductAttributeValueModel model,
             ProductAttributeMapping productAttributeMapping, ProductAttributeValue productAttributeValue, bool excludeProperties = false)
         {
@@ -2079,7 +2175,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product model to associate to the product attribute value
         /// </summary>
         /// <param name="searchModel">Product model to associate to the product attribute value</param>
-        /// <returns>Product model to associate to the product attribute value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product model to associate to the product attribute value
+        /// </returns>
         public virtual async Task<AssociateProductToAttributeValueSearchModel> PrepareAssociateProductToAttributeValueSearchModelAsync(
             AssociateProductToAttributeValueSearchModel searchModel)
         {
@@ -2113,7 +2212,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product model to associate to the product attribute value
         /// </summary>
         /// <param name="searchModel">Product model to associate to the product attribute value</param>
-        /// <returns>Product model to associate to the product attribute value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product model to associate to the product attribute value
+        /// </returns>
         public virtual async Task<AssociateProductToAttributeValueListModel> PrepareAssociateProductToAttributeValueListModelAsync(
             AssociateProductToAttributeValueSearchModel searchModel)
         {
@@ -2156,7 +2258,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product attribute combination search model</param>
         /// <param name="product">Product</param>
-        /// <returns>Product attribute combination list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute combination list model
+        /// </returns>
         public virtual async Task<ProductAttributeCombinationListModel> PrepareProductAttributeCombinationListModelAsync(
             ProductAttributeCombinationSearchModel searchModel, Product product)
         {
@@ -2209,7 +2314,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="product">Product</param>
         /// <param name="productAttributeCombination">Product attribute combination</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product attribute combination model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute combination model
+        /// </returns>
         public virtual async Task<ProductAttributeCombinationModel> PrepareProductAttributeCombinationModelAsync(ProductAttributeCombinationModel model,
             Product product, ProductAttributeCombination productAttributeCombination, bool excludeProperties = false)
         {

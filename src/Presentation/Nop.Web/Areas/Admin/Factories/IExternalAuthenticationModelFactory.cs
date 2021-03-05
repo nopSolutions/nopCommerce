@@ -20,7 +20,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged external authentication method list model
         /// </summary>
         /// <param name="searchModel">External authentication method search model</param>
-        /// <returns>External authentication method list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the external authentication method list model
+        /// </returns>
         Task<ExternalAuthenticationMethodListModel> PrepareExternalAuthenticationMethodListModelAsync(
             ExternalAuthenticationMethodSearchModel searchModel);
     }

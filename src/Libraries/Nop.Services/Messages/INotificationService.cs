@@ -42,6 +42,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="exception">Exception</param>
         /// <param name="logException">A value indicating whether exception should be logged</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task ErrorNotificationAsync(Exception exception, bool logException = true);
     }
 }

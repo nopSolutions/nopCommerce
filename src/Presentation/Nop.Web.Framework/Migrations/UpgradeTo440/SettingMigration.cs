@@ -188,6 +188,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             //#5482
             await settingService.SetSettingAsync("avalarataxsettings.gettaxratebyaddressonly", true);
             await settingService.SetSettingAsync("avalarataxsettings.taxratebyaddresscachetime", 480);
+
+            //#5349
+            if (!await settingService.SettingExistsAsync(shippingSettings, settings => settings.EstimateShippingCityNameEnabled))
+            {
+                shippingSettings.EstimateShippingCityNameEnabled = false;
+                await settingService.SaveSettingAsync(shippingSettings);
+            }
         }
 
         public override void Down()

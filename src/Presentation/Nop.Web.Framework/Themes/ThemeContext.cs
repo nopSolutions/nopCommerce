@@ -56,6 +56,7 @@ namespace Nop.Web.Framework.Themes
         /// <summary>
         /// Get or set current theme system name
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<string> GetWorkingThemeNameAsync()
         {
             if (!string.IsNullOrEmpty(_cachedThemeName))
@@ -92,6 +93,7 @@ namespace Nop.Web.Framework.Themes
         /// <summary>
         /// Set current theme system name
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task SetWorkingThemeNameAsync(string workingThemeName)
         {
             //whether customers are allowed to select a theme

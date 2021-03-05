@@ -33,6 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SearchAutoComplete(string term)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))

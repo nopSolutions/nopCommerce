@@ -48,6 +48,7 @@ namespace Nop.Services.Catalog
         /// Delete a back in stock subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteSubscriptionAsync(BackInStockSubscription subscription)
         {
             await _backInStockSubscriptionRepository.DeleteAsync(subscription);
@@ -60,7 +61,10 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Subscriptions</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the subscriptions
+        /// </returns>
         public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerIdAsync(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -91,7 +95,10 @@ namespace Nop.Services.Catalog
         /// <param name="customerId">Customer id</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Subscriptions</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the subscriptions
+        /// </returns>
         public virtual async Task<BackInStockSubscription> FindSubscriptionAsync(int customerId, int productId, int storeId)
         {
             var query = from biss in _backInStockSubscriptionRepository.Table
@@ -110,7 +117,10 @@ namespace Nop.Services.Catalog
         /// Gets a subscription
         /// </summary>
         /// <param name="subscriptionId">Subscription identifier</param>
-        /// <returns>Subscription</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the subscription
+        /// </returns>
         public virtual async Task<BackInStockSubscription> GetSubscriptionByIdAsync(int subscriptionId)
         {
             return await _backInStockSubscriptionRepository.GetByIdAsync(subscriptionId, cache => default);
@@ -120,6 +130,7 @@ namespace Nop.Services.Catalog
         /// Inserts subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertSubscriptionAsync(BackInStockSubscription subscription)
         {
             await _backInStockSubscriptionRepository.InsertAsync(subscription);
@@ -129,7 +140,10 @@ namespace Nop.Services.Catalog
         /// Send notification to subscribers
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Number of sent email</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of sent email
+        /// </returns>
         public virtual async Task<int> SendNotificationsToSubscribersAsync(Product product)
         {
             if (product == null)
@@ -157,7 +171,10 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Subscriptions</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the subscriptions
+        /// </returns>
         public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductIdAsync(int productId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {

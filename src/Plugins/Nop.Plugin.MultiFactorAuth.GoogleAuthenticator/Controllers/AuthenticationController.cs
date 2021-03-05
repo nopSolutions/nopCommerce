@@ -51,6 +51,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         #region Methods
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> RegisterGoogleAuthenticator(AuthModel model)
         {
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
@@ -79,6 +80,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> VerifyGoogleAuthenticator(TokenModel model)
         {
             var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);

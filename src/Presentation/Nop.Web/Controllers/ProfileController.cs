@@ -26,6 +26,7 @@ namespace Nop.Web.Controllers
             _profileModelFactory = profileModelFactory;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Index(int? id, int? pageNumber)
         {
             if (!_customerSettings.AllowViewingProfiles)

@@ -81,7 +81,10 @@ namespace Nop.Services.Common
         /// Gets selected address attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected address attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected address attributes
+        /// </returns>
         public virtual async Task<IList<AddressAttribute>> ParseAddressAttributesAsync(string attributesXml)
         {
             var result = new List<AddressAttribute>();
@@ -103,7 +106,10 @@ namespace Nop.Services.Common
         /// Get address attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Address attribute values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute values
+        /// </returns>
         public virtual async Task<IList<AddressAttributeValue>> ParseAddressAttributeValuesAsync(string attributesXml)
         {
             var values = new List<AddressAttributeValue>();
@@ -253,7 +259,10 @@ namespace Nop.Services.Common
         /// Validates address attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Warnings</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
         public virtual async Task<IList<string>> GetAttributeWarningsAsync(string attributesXml)
         {
             var warnings = new List<string>();
@@ -296,7 +305,10 @@ namespace Nop.Services.Common
         /// Get custom address attributes from the passed form
         /// </summary>
         /// <param name="form">Form values</param>
-        /// <returns>Attributes in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attributes in XML format
+        /// </returns>
         public virtual async Task<string> ParseCustomAddressAttributesAsync(IFormCollection form)
         {
             if (form == null)

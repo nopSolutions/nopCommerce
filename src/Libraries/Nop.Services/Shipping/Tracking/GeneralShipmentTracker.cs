@@ -48,7 +48,10 @@ namespace Nop.Services.Shipping.Tracking
         /// Get tracker by tracking number
         /// </summary>
         /// <param name="trackingNumber">Tracking number</param>
-        /// <returns>Tracker (IShipmentTracker)</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the racker (IShipmentTracker)
+        /// </returns>
         protected virtual async Task<IShipmentTracker> GetTrackerByTrackingNumberAsync(string trackingNumber)
         {
             return await GetAllTrackers().FirstOrDefaultAwaitAsync(async c => await c.IsMatchAsync(trackingNumber));
@@ -62,7 +65,10 @@ namespace Nop.Services.Shipping.Tracking
         /// Gets if the current tracker can track the tracking number.
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>True if the tracker can track, otherwise false.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if the tracker can track, otherwise false.
+        /// </returns>
         public virtual async Task<bool> IsMatchAsync(string trackingNumber)
         {
             var tracker = await GetTrackerByTrackingNumberAsync(trackingNumber);
@@ -75,7 +81,10 @@ namespace Nop.Services.Shipping.Tracking
         /// Gets an URL for a page to show tracking info (third party tracking page).
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>URL of a tracking page.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the uRL of a tracking page.
+        /// </returns>
         public virtual async Task<string> GetUrlAsync(string trackingNumber)
         {
             var tracker = await GetTrackerByTrackingNumberAsync(trackingNumber);
@@ -90,7 +99,10 @@ namespace Nop.Services.Shipping.Tracking
         /// Gets all events for a tracking number.
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
-        /// <returns>List of Shipment Events.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of Shipment Events.
+        /// </returns>
         public virtual async Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber)
         {
             if (string.IsNullOrEmpty(trackingNumber))

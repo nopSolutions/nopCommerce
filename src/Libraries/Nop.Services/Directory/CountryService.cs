@@ -50,6 +50,7 @@ namespace Nop.Services.Directory
         /// Deletes a country
         /// </summary>
         /// <param name="country">Country</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCountryAsync(Country country)
         {
             await _countryRepository.DeleteAsync(country);
@@ -60,7 +61,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Countries</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the countries
+        /// </returns>
         public virtual async Task<IList<Country>> GetAllCountriesAsync(int languageId = 0, bool showHidden = false)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
@@ -100,7 +104,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Countries</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the countries
+        /// </returns>
         public virtual async Task<IList<Country>> GetAllCountriesForBillingAsync(int languageId = 0, bool showHidden = false)
         {
             return (await GetAllCountriesAsync(languageId, showHidden)).Where(c => c.AllowsBilling).ToList();
@@ -111,7 +118,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Countries</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the countries
+        /// </returns>
         public virtual async Task<IList<Country>> GetAllCountriesForShippingAsync(int languageId = 0, bool showHidden = false)
         {
             return (await GetAllCountriesAsync(languageId, showHidden)).Where(c => c.AllowsShipping).ToList();
@@ -121,7 +131,10 @@ namespace Nop.Services.Directory
         /// Gets a country by address 
         /// </summary>
         /// <param name="address">Address</param>
-        /// <returns>Country</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country
+        /// </returns>
         public virtual async Task<Country> GetCountryByAddressAsync(Address address)
         {
             return await GetCountryByIdAsync(address?.CountryId ?? 0);
@@ -131,7 +144,10 @@ namespace Nop.Services.Directory
         /// Gets a country 
         /// </summary>
         /// <param name="countryId">Country identifier</param>
-        /// <returns>Country</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country
+        /// </returns>
         public virtual async Task<Country> GetCountryByIdAsync(int countryId)
         {
             return await _countryRepository.GetByIdAsync(countryId, cache => default);
@@ -141,7 +157,10 @@ namespace Nop.Services.Directory
         /// Get countries by identifiers
         /// </summary>
         /// <param name="countryIds">Country identifiers</param>
-        /// <returns>Countries</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the countries
+        /// </returns>
         public virtual async Task<IList<Country>> GetCountriesByIdsAsync(int[] countryIds)
         {
             return await _countryRepository.GetByIdsAsync(countryIds);
@@ -151,7 +170,10 @@ namespace Nop.Services.Directory
         /// Gets a country by two letter ISO code
         /// </summary>
         /// <param name="twoLetterIsoCode">Country two letter ISO code</param>
-        /// <returns>Country</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country
+        /// </returns>
         public virtual async Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode)
         {
             if (string.IsNullOrEmpty(twoLetterIsoCode))
@@ -170,7 +192,10 @@ namespace Nop.Services.Directory
         /// Gets a country by three letter ISO code
         /// </summary>
         /// <param name="threeLetterIsoCode">Country three letter ISO code</param>
-        /// <returns>Country</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country
+        /// </returns>
         public virtual async Task<Country> GetCountryByThreeLetterIsoCodeAsync(string threeLetterIsoCode)
         {
             if (string.IsNullOrEmpty(threeLetterIsoCode))
@@ -189,6 +214,7 @@ namespace Nop.Services.Directory
         /// Inserts a country
         /// </summary>
         /// <param name="country">Country</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCountryAsync(Country country)
         {
             await _countryRepository.InsertAsync(country);
@@ -198,6 +224,7 @@ namespace Nop.Services.Directory
         /// Updates the country
         /// </summary>
         /// <param name="country">Country</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCountryAsync(Country country)
         {
             await _countryRepository.UpdateAsync(country);

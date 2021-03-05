@@ -48,7 +48,10 @@ namespace Nop.Web.Framework.Mvc.Razor
         /// <summary>
         /// Return a value indicating whether the working language and theme support RTL (right-to-left)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         public async Task<bool> ShouldUseRtlThemeAsync()
         {
             var workContext = EngineContext.Current.Resolve<IWorkContext>();

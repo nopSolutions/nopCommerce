@@ -33,6 +33,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
             _webHelper = webHelper;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var nivoSliderSettings = await _settingService.LoadSettingAsync<NivoSliderSettings>((await _storeContext.GetCurrentStoreAsync()).Id);
@@ -74,6 +75,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
             return View("~/Plugins/Widgets.NivoSlider/Views/PublicInfo.cshtml", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected async Task<string> GetPictureUrlAsync(int pictureId)
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 

@@ -147,7 +147,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareEstimateShippingResultModel()
         {
-            var model = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new List<ShoppingCartItem> { _shoppingCartItem }, null, null, string.Empty, true);
+            var model = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new List<ShoppingCartItem> { _shoppingCartItem }, new EstimateShippingModel(), true);
             model.Errors.Any().Should().BeFalse();
         }
 

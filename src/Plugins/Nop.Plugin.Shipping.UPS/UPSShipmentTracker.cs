@@ -32,7 +32,10 @@ namespace Nop.Plugin.Shipping.UPS
         /// Gets if the current tracker can track the tracking number.
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>True if the tracker can track, otherwise false.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if the tracker can track, otherwise false.
+        /// </returns>
         public virtual Task<bool> IsMatchAsync(string trackingNumber)
         {
             if (string.IsNullOrEmpty(trackingNumber))
@@ -49,7 +52,10 @@ namespace Nop.Plugin.Shipping.UPS
         /// Gets an URL for a page to show tracking info (third party tracking page).
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>URL of a tracking page.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the uRL of a tracking page.
+        /// </returns>
         public virtual Task<string> GetUrlAsync(string trackingNumber)
         {
             return Task.FromResult($"https://www.ups.com/track?&tracknum={trackingNumber}");
@@ -59,7 +65,10 @@ namespace Nop.Plugin.Shipping.UPS
         /// Gets all events for a tracking number.
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
-        /// <returns>List of Shipment Events.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of Shipment Events.
+        /// </returns>
         public virtual async Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber)
         {
             var result = new List<ShipmentStatusEvent>();

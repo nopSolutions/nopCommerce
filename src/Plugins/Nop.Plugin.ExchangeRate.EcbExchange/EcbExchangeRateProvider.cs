@@ -43,7 +43,10 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// Gets currency live rates
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
-        /// <returns>Exchange rates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the exchange rates
+        /// </returns>
         public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRatesAsync(string exchangeRateCurrencyCode)
         {
             if (exchangeRateCurrencyCode == null)
@@ -120,6 +123,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <summary>
         /// Install the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //locales
@@ -131,6 +135,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //locales

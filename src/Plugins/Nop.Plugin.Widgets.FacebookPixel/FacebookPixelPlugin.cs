@@ -63,7 +63,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         public async Task<IList<string>> GetWidgetZonesAsync()
         {
             var widgetZones = new List<string> { PublicWidgetZones.HeadHtmlTag };
@@ -88,6 +91,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
@@ -145,6 +149,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             _widgetSettings.ActiveWidgetSystemNames.Remove(FacebookPixelDefaults.SystemName);

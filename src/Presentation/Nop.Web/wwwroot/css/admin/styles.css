@@ -1307,6 +1307,11 @@ input[type="text"].k-input {
 }
 
 /* SIDE BAR */
+
+.sidebar {
+  overflow:hidden;
+}
+
 .nav-sidebar {
   padding-bottom: 40px;
 }

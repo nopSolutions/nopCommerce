@@ -92,6 +92,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         /// Prepare SendinblueModel
         /// </summary>
         /// <param name="model">Model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task PrepareModelAsync(ConfigurationModel model)
         {
             //load settings for active store scope
@@ -204,6 +205,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             var model = new ConfigurationModel();
@@ -216,6 +218,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [Area(AreaNames.Admin)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("save")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -238,6 +241,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [Area(AreaNames.Admin)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveSync")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> SaveSynchronization(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -266,6 +270,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [Area(AreaNames.Admin)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("sync")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Synchronization(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -288,6 +293,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetSynchronizationInfo()
         {
             var res = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinblueDefaults.SyncKeyCache), () => string.Empty);
@@ -300,6 +306,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [Area(AreaNames.Admin)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveSMTP")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ConfigureSMTP(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -358,6 +365,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> MessageList(SendinblueMessageTemplateSearchModel searchModel)
         {
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -396,6 +404,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> MessageUpdate(SendinblueMessageTemplateModel model)
         {
             if (!ModelState.IsValid)
@@ -437,6 +446,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [Area(AreaNames.Admin)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveSMS")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ConfigureSMS(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -463,6 +473,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> SMSList(SmsSearchModel searchModel)
         {
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -529,6 +540,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> SMSAdd(SmsModel model)
         {
             if (!ModelState.IsValid)
@@ -548,6 +560,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> SMSDelete(SmsModel model)
         {
             if (!ModelState.IsValid)
@@ -569,6 +582,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [Area(AreaNames.Admin)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("submitCampaign")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> SubmitCampaign(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -587,6 +601,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         [Area(AreaNames.Admin)]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("saveMA")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ConfigureMA(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -615,6 +630,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
             return await Configure();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ImportContacts(BaseNopModel model, IFormCollection form)
         {
             try
@@ -637,6 +653,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> UnsubscribeWebHook()
         {
             try
