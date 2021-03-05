@@ -94,7 +94,7 @@ namespace Nop.Tests
         {
             var objectProperties = typeof(T).GetProperties();
             var modelProperties = typeof(Tm).GetProperties();
-            
+
             foreach (var objectProperty in objectProperties)
             {
                 var name = objectProperty.Name;
@@ -109,7 +109,7 @@ namespace Nop.Tests
 
                 var objectPropertyValue = objectProperty.GetValue(entity);
                 var modelPropertyValue = modelProperty.GetValue(model);
-                
+
                 objectPropertyValue.Should().Be(modelPropertyValue, $"The property \"{typeof(T).Name}.{objectProperty.Name}\" of these objects is not equal");
             }
 
@@ -160,10 +160,10 @@ namespace Nop.Tests
             webHostEnvironment.Setup(p => p.EnvironmentName).Returns("test");
             webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
             services.AddSingleton(webHostEnvironment.Object);
-            
+
             var httpContext = new DefaultHttpContext
             {
-                Request = {Headers = {{HeaderNames.Host, NopTestsDefaults.HostIpAddress}}}
+                Request = { Headers = { { HeaderNames.Host, NopTestsDefaults.HostIpAddress } } }
             };
 
             var httpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -343,17 +343,17 @@ namespace Nop.Tests
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
             foreach (var setting in settings)
                 services.AddTransient(setting,
-                    context => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result);
+                    context => AsyncHelper.RunSync(() => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting)));
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
             foreach (var consumer in consumers)
-            foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
-            {
-                var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                return isMatch;
-            }, typeof(IConsumer<>)))
-                services.AddTransient(findInterface, consumer);
+                foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
+                {
+                    var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                    return isMatch;
+                }, typeof(IConsumer<>)))
+                    services.AddTransient(findInterface, consumer);
 
             services.AddSingleton<IInstallationService, InstallationService>();
 
@@ -472,12 +472,12 @@ namespace Nop.Tests
 
             var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
 
-            _serviceProvider.GetService<IInstallationService>()
-                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null).Wait();
-            _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail).Wait();
+            AsyncHelper.RunSync(() => _serviceProvider.GetService<IInstallationService>()
+                .InstallRequiredDataAsync(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, languagePackInfo, null, null));
+            AsyncHelper.RunSync(() => _serviceProvider.GetService<IInstallationService>().InstallSampleDataAsync(NopTestsDefaults.AdminEmail));
 
             var provider = (IPermissionProvider)Activator.CreateInstance(typeof(StandardPermissionProvider));
-            EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
+            AsyncHelper.RunSync(() => EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider));
         }
 
         public T GetService<T>()
@@ -612,19 +612,11 @@ namespace Nop.Tests
 
                     pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
-                    //the named mutex helps to avoid creating the same files in different threads,
+                    //the named ResourcesLocker helps to avoid creating the same files in different threads,
                     //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                    //you should be very careful, mutexes cannot be used in with the await operation
-                    //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                    using var mutex = new Mutex(false, thumbFileName);
-                    mutex.WaitOne();
-                    try
+                    using (await ResourcesLocker.GetLocker(thumbFileName).LockAsync())
                     {
-                        SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
-                    }
-                    finally
-                    {
-                        mutex.ReleaseMutex();
+                        await SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary);
                     }
                 }
                 else
@@ -639,13 +631,9 @@ namespace Nop.Tests
 
                     pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
-                    //the named mutex helps to avoid creating the same files in different threads,
+                    //the named ResourcesLocker helps to avoid creating the same files in different threads,
                     //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                    //you should be very careful, mutexes cannot be used in with the await operation
-                    //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                    using var mutex = new Mutex(false, thumbFileName);
-                    mutex.WaitOne();
-                    try
+                    using (await ResourcesLocker.GetLocker(thumbFileName).LockAsync())
                     {
                         if (pictureBinary != null)
                         {
@@ -660,11 +648,7 @@ namespace Nop.Tests
                             }
                         }
 
-                        SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
-                    }
-                    finally
-                    {
-                        mutex.ReleaseMutex();
+                        await SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary);
                     }
                 }
 

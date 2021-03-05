@@ -202,11 +202,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareContactUsModelShouldRaiseExceptionIfModelIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _commonModelFactory.PrepareContactUsModelAsync(null, true).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _commonModelFactory.PrepareContactUsModelAsync(null, true)));
 
-            Assert.Throws<AggregateException>(() =>
-                _commonModelFactory.PrepareContactUsModelAsync(null, false).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _commonModelFactory.PrepareContactUsModelAsync(null, false)));
         }
 
         [Test]
@@ -236,17 +236,17 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareContactVendorModelShouldRaiseExceptionIfModelOrVendorIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _commonModelFactory.PrepareContactVendorModelAsync(null, _vendor, true).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _commonModelFactory.PrepareContactVendorModelAsync(null, _vendor, true)));
 
-            Assert.Throws<AggregateException>(() =>
-                _commonModelFactory.PrepareContactVendorModelAsync(null, _vendor, false).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _commonModelFactory.PrepareContactVendorModelAsync(null, _vendor, false)));
 
-            Assert.Throws<AggregateException>(() =>
-                _commonModelFactory.PrepareContactVendorModelAsync(new ContactVendorModel(), null, true).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _commonModelFactory.PrepareContactVendorModelAsync(new ContactVendorModel(), null, true)));
 
-            Assert.Throws<AggregateException>(() =>
-                _commonModelFactory.PrepareContactVendorModelAsync(new ContactVendorModel(), null, false).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+               AsyncHelper.RunSync(() => _commonModelFactory.PrepareContactVendorModelAsync(new ContactVendorModel(), null, false)));
         }
 
         [Test]
@@ -260,8 +260,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareSitemapModelShouldRaiseExceptionIfModelIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _commonModelFactory.PrepareSitemapModelAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _commonModelFactory.PrepareSitemapModelAsync(null)));
         }
 
         [Test]

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Nop.Core;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
 using Nop.Services.Localization;
@@ -34,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
 
             RuleFor(x => x.PriceTo)
                 .GreaterThan(x => x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero)
-                .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom").Result, x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
+                .WithMessageAwait(async x => string.Format(await localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom"), x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
                 .When(x => x.PriceRangeFiltering && !x.AutomaticallyCalculatePriceRange);
 
             SetDatabaseValidationRules<Vendor>(dataProvider);

@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 {
     [TestFixture]
-    public class AddressModelFactoryTests: BaseNopTest
+    public class AddressModelFactoryTests : BaseNopTest
     {
         private IAddressModelFactory _addressModelFactory;
         private IGenericAttributeService _genericAttributeService;
@@ -104,9 +104,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = new AddressModel();
 
-            Assert.Throws<AggregateException>(() =>
-                _addressModelFactory.PrepareAddressModelAsync(model, null, false, _addressSettings,
-                    prePopulateWithCustomerFields: true).Wait());
+            Assert.Throws<Exception>(() =>
+                AsyncHelper.RunSync(() => _addressModelFactory.PrepareAddressModelAsync(model, null, false, _addressSettings,
+                    prePopulateWithCustomerFields: true)));
         }
 
         [Test]

@@ -366,7 +366,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 throw new ArgumentNullException(nameof(appSettings));
 
             PluginsInfo = new PluginsInfo(_fileProvider);
-            PluginsInfo.LoadPluginInfoAsync().Wait();
+            AsyncHelper.RunSync(() => PluginsInfo.LoadPluginInfoAsync());
 
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))

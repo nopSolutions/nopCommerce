@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Nop.Core;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Validators;
@@ -16,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Validators.Settings
 
             RuleFor(x => x.SearchPagePriceTo)
                 .GreaterThan(x => x.SearchPagePriceFrom > decimal.Zero ? x.SearchPagePriceFrom : decimal.Zero)
-                .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.SearchPagePriceTo.GreaterThanZeroOrPriceFrom").Result, x.SearchPagePriceFrom > decimal.Zero ? x.SearchPagePriceFrom : decimal.Zero))
+                .WithMessageAwait(async x => string.Format(await localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.SearchPagePriceTo.GreaterThanZeroOrPriceFrom"), x.SearchPagePriceFrom > decimal.Zero ? x.SearchPagePriceFrom : decimal.Zero))
                 .When(x => x.SearchPagePriceRangeFiltering && !x.SearchPageAutomaticallyCalculatePriceRange);
 
             RuleFor(x => x.ProductsByTagPriceFrom)
@@ -26,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Validators.Settings
 
             RuleFor(x => x.ProductsByTagPriceTo)
                 .GreaterThan(x => x.ProductsByTagPriceFrom > decimal.Zero ? x.ProductsByTagPriceFrom : decimal.Zero)
-                .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.GreaterThanZeroOrPriceFrom").Result, x.ProductsByTagPriceFrom > decimal.Zero ? x.ProductsByTagPriceFrom : decimal.Zero))
+                .WithMessageAwait(async x => string.Format(await localizationService.GetResourceAsync("Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo.GreaterThanZeroOrPriceFrom"), x.ProductsByTagPriceFrom > decimal.Zero ? x.ProductsByTagPriceFrom : decimal.Zero))
                 .When(x => x.ProductsByTagPriceRangeFiltering && !x.ProductsByTagAutomaticallyCalculatePriceRange);
         }
     }

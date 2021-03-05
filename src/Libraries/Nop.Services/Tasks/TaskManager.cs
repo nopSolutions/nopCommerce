@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Tasks
@@ -36,8 +37,8 @@ namespace Nop.Services.Tasks
 
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
 
-            var scheduleTasks = taskService
-                .GetAllTasksAsync().Result
+            var scheduleTasks = AsyncHelper.RunSync(() => taskService
+                .GetAllTasksAsync())
                 .OrderBy(x => x.Seconds)
                 .ToList();
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.ComponentModel;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -173,15 +174,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.FileExists(thumbFilePath))
                 return;
 
-            //the named mutex helps to avoid creating the same files in different threads,
+            //the named ResourcesLocker helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
-            //you should be very careful, mutexes cannot be used in with the await operation
-            //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-            using var mutex = new Mutex(false, thumbFileName);
-
-            mutex.WaitOne();
-
-            try
+            using (await ResourcesLocker.GetLocker(thumbFileName).LockAsync())
             {
                 //check, if the file was created, while we were waiting for the release of the mutex.
                 if (!_fileProvider.FileExists(thumbFilePath))
@@ -201,12 +196,8 @@ namespace Nop.Services.Media.RoxyFileman
                     }
 
                     //save
-                    _fileProvider.WriteAllBytesAsync(thumbFilePath, pictureBinaryResized).Wait();
+                    await _fileProvider.WriteAllBytesAsync(thumbFilePath, pictureBinaryResized);
                 }
-            }
-            finally
-            {
-                mutex.ReleaseMutex();
             }
         }
 

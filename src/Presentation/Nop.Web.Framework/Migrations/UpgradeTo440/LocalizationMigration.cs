@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentMigrator;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -14,6 +16,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
         /// <summary>Collect the UP migration expressions</summary>
         public override void Up()
         {
+            AsyncHelper.RunSync(() => UpAsync());
+        }
+
+        protected virtual async Task UpAsync()
+        {
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
@@ -21,7 +28,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResourcesAsync(new List<string>
+            await localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
                 "Account.Fields.VatNumber.Status",
                 "Account.Fields.VatNumberStatus",
@@ -157,9 +164,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Filtering.SpecificationFilter.CurrentlyFilteredBy",
                 "Filtering.SpecificationFilter.Remove",
                 "Filtering.SpecificationFilter.Separator"
-            }).Wait();
+            });
 
-            localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
+            await localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["Admin.Configuration.AppSettings"] = "App settings",
@@ -697,7 +704,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 //#5482
                 ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly"] = "Tax rates by address only",
                 ["Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly.Hint"] = "Determine whether to get tax rates by the address only. This may lead to not entirely accurate results (for example, when a customer is exempt to tax, or the product belongs to a tax category that has a specific rate), but it will significantly reduce the number of GetTax API calls. This applies only to tax rates in the catalog, on the checkout full information is always used in requests.",
-            }).Wait();
+            });
 
             // rename locales
             var localesToRename = new[]
@@ -754,16 +761,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             };
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
+            var languages = await languageService.GetAllLanguagesAsync(true);
             foreach (var lang in languages)
             {
                 foreach (var locale in localesToRename)
                 {
-                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
+                    var lsr = await localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false);
                     if (lsr != null)
                     {
                         lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
+                        await localizationService.UpdateLocaleStringResourceAsync(lsr);
                     }
                 }
             }

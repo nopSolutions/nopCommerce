@@ -234,11 +234,14 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 services.AddScoped(setting, serviceProvider =>
                 {
-                    var storeId = DataSettingsManager.IsDatabaseInstalled()
-                        ? serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStore()?.Id ?? 0
-                        : 0;
+                    return AsyncHelper.RunSync(async () =>
+                    {
+                        var storeId = DataSettingsManager.IsDatabaseInstalled() 
+                            ? (await serviceProvider.GetRequiredService<IStoreContext>().GetCurrentStoreAsync())?.Id ?? 0
+                            : 0;
 
-                    return serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting, storeId).Result;
+                        return await serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting, storeId);
+                    });
                 });
             }
 
@@ -254,7 +257,7 @@ namespace Nop.Web.Framework.Infrastructure
 
             services.AddScoped<IRoxyFilemanService>(serviceProvider =>
             {
-                return serviceProvider.GetRequiredService<IPictureService>().IsStoreInDbAsync().Result
+                return AsyncHelper.RunSync(() => serviceProvider.GetRequiredService<IPictureService>().IsStoreInDbAsync())
                     ? serviceProvider.GetRequiredService<DatabaseRoxyFilemanService>()
                     : serviceProvider.GetRequiredService<FileRoxyFilemanService>();
             });

@@ -358,7 +358,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>HTML control</returns>
 	    public override string ToString()
         {
-            return GenerateHtmlStringAsync().Result;
+            return AsyncHelper.RunSync(() => GenerateHtmlStringAsync());
         }
 
         /// <summary>

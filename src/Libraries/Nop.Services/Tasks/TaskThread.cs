@@ -34,7 +34,7 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
+            _scheduleTaskUrl = $"{AsyncHelper.RunSync(EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync).Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
             _timeout = EngineContext.Current.Resolve<AppSettings>().CommonConfig.ScheduleTaskRunTimeout;
         }
 
@@ -106,7 +106,7 @@ namespace Nop.Services.Tasks
             {
                 _timer.Change(-1, -1);
 
-                RunAsync().Wait();
+                AsyncHelper.RunSync(() => RunAsync());
             }
             catch
             {

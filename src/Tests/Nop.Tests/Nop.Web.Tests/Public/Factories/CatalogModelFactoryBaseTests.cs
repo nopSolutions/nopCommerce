@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
@@ -121,11 +122,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareCategoryModelShouldRaiseExceptionIfCategoryOrCommandIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareCategoryModelAsync(null, new CatalogProductsCommand()).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareCategoryModelAsync(null, new CatalogProductsCommand())));
 
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareCategoryModelAsync(_category, null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareCategoryModelAsync(_category, null)));
         }
         
         [Test]
@@ -207,11 +208,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareManufacturerModelShouldRaiseExceptionIfManufacturerOrCommandIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareManufacturerModelAsync(null, new CatalogProductsCommand()).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareManufacturerModelAsync(null, new CatalogProductsCommand())));
 
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareManufacturerModelAsync(_manufacturer, null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareManufacturerModelAsync(_manufacturer, null)));
         }
 
         [Test]
@@ -266,11 +267,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareVendorModelShouldRaiseExceptionIfVendorOrCommandIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareVendorModelAsync(null, new CatalogProductsCommand()).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareVendorModelAsync(null, new CatalogProductsCommand())));
 
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareVendorModelAsync(_vendor, null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareVendorModelAsync(_vendor, null)));
         }
 
         [Test]
@@ -310,11 +311,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareVendorModelShouldRaiseExceptionIfProductTagOrCommandIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareProductsByTagModelAsync(null, new CatalogProductsCommand()).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareProductsByTagModelAsync(null, new CatalogProductsCommand())));
 
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareProductsByTagModelAsync(_productTag, null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareProductsByTagModelAsync(_productTag, null)));
         }
 
         [Test]
@@ -327,11 +328,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareSearchModelShouldRaiseExceptionIfSearchModelOrCommandIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareSearchModelAsync(null, new CatalogProductsCommand()).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareSearchModelAsync(null, new CatalogProductsCommand())));
 
-            Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), null)));
         }
 
         [Test]

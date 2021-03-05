@@ -56,12 +56,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 Services.Tasks.TaskManager.Instance.Start();
 
                 //log application start
-                engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
+                AsyncHelper.RunSync(() => engine.Resolve<ILogger>().InformationAsync("Application started"));
 
                 //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();
-                pluginService.InstallPluginsAsync().Wait();
-                pluginService.UpdatePluginsAsync().Wait();
+                AsyncHelper.RunSync(() => pluginService.InstallPluginsAsync());
+                AsyncHelper.RunSync(() => pluginService.UpdatePluginsAsync());
 
                 //update nopCommerce core and db
                 var migrationManager = engine.Resolve<IMigrationManager>();

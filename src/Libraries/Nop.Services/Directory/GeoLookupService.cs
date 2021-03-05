@@ -4,6 +4,7 @@ using System;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Exceptions;
 using MaxMind.GeoIP2.Responses;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 
@@ -74,7 +75,7 @@ namespace Nop.Services.Directory
             catch (Exception exc)
             {
                 //do not throw exceptions
-                _logger.WarningAsync("Cannot load MaxMind record", exc).Wait();
+                AsyncHelper.RunSync(() => _logger.WarningAsync("Cannot load MaxMind record", exc));
                 return null;
             }
         }

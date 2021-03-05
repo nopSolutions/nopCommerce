@@ -44,10 +44,10 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
             get
             {
                 //get working language identifier
-                var workingLanguageId = EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync().Result.Id;
+                var workingLanguageId = AsyncHelper.RunSync(() => EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Id;
 
                 //get locale resource value
-                _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync(ResourceKey, workingLanguageId, true, ResourceKey).Result;
+                _resourceValue = AsyncHelper.RunSync(() => EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync(ResourceKey, workingLanguageId, true, ResourceKey));
 
                 return _resourceValue;
             }

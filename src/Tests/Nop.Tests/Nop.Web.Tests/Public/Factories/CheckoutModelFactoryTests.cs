@@ -216,7 +216,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public void PrepareCheckoutCompletedModelShouldRaiseExceptionIfOrderIsNull()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(null).Wait());
+                AsyncHelper.RunSync(() => _checkoutModelFactory.PrepareCheckoutCompletedModelAsync(null)));
         }
 
         [Test]
@@ -242,8 +242,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareOnePageCheckoutModelShouldRaiseExceptionIfCartIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _checkoutModelFactory.PrepareOnePageCheckoutModelAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _checkoutModelFactory.PrepareOnePageCheckoutModelAsync(null)));
         }
 
     }
