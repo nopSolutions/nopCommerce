@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using ClosedXML.Excel;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -37,7 +38,6 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using OfficeOpenXml;
 
 namespace Nop.Services.ExportImport
 {
@@ -476,19 +476,20 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                var fbaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductAttributesFilters");
-                fbaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                var fsaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForSpecificationAttributesFilters");
-                fsaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var worksheet = workbook.Worksheets.Add(typeof(Product).Name);
+                var fpWorksheet = workbook.Worksheets.Add("ProductsFilters");
+                fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+                var fbaWorksheet = workbook.Worksheets.Add("ProductAttributesFilters");
+                fbaWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+                var fsaWorksheet = workbook.Worksheets.Add("SpecificationAttributesFilters");
+                fsaWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
                 var manager = new PropertyManager<Product>(properties, _catalogSettings);
@@ -507,13 +508,13 @@ namespace Nop.Services.ExportImport
                         row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, row, fsaWorksheet);
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();
         }
 
-        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
+        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
                 .SelectManyAwait(async pam =>
@@ -575,7 +576,7 @@ namespace Nop.Services.ExportImport
 
             attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
-            worksheet.Row(row).Collapsed = true;
+            worksheet.Row(row).Collapse();
 
             foreach (var exportProductAttribute in attributes)
             {
@@ -583,13 +584,13 @@ namespace Nop.Services.ExportImport
                 attributeManager.CurrentObject = exportProductAttribute;
                 await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
-                worksheet.Row(row).Collapsed = true;
+                worksheet.Row(row).Collapse();
             }
 
             return row + 1;
         }
 
-        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
+        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
@@ -609,7 +610,7 @@ namespace Nop.Services.ExportImport
 
             attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
-            worksheet.Row(row).Collapsed = true;
+            worksheet.Row(row).Collapse();
 
             foreach (var exportProductAttribute in attributes)
             {
@@ -617,7 +618,7 @@ namespace Nop.Services.ExportImport
                 attributeManager.CurrentObject = exportProductAttribute;
                 await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
-                worksheet.Row(row).Collapsed = true;
+                worksheet.Row(row).Collapse();
             }
 
             return row + 1;
@@ -642,15 +643,16 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Order).Name);
-                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var worksheet = workbook.Worksheets.Add(typeof(Order).Name);
+                var fpWorksheet = workbook.Worksheets.Add("DataForProductsFilters");
+                fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
                 var manager = new PropertyManager<Order>(properties, _catalogSettings);
@@ -670,7 +672,7 @@ namespace Nop.Services.ExportImport
 
                     orderItemsManager.WriteCaption(worksheet, row, 2);
                     worksheet.Row(row).OutlineLevel = 1;
-                    worksheet.Row(row).Collapsed = true;
+                    worksheet.Row(row).Collapse();
 
                     foreach (var orderItem in orderItems)
                     {
@@ -678,13 +680,13 @@ namespace Nop.Services.ExportImport
                         orderItemsManager.CurrentObject = orderItem;
                         await orderItemsManager.WriteToXlsxAsync(worksheet, row, 2, fpWorksheet);
                         worksheet.Row(row).OutlineLevel = 1;
-                        worksheet.Row(row).Collapsed = true;
+                        worksheet.Row(row).Collapse();
                     }
 
                     row++;
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();
@@ -1578,7 +1580,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p => p.ShippingRateComputationMethodSystemName, ignore),
                 new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
                 new PropertyByName<Order>("VatNumber", p => p.VatNumber, ignore),
-                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc.ToOADate()),
+                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc),
                 new PropertyByName<Order>("BillingFirstName", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
                 new PropertyByName<Order>("BillingLastName", async p => (await orderBillingAddress(p))?.LastName ?? string.Empty),
                 new PropertyByName<Order>("BillingEmail", async p => (await orderBillingAddress(p))?.Email ?? string.Empty),
@@ -2010,15 +2012,16 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var customerInfoWorksheet = xlPackage.Workbook.Worksheets.Add("Customer info");
-                var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
-                fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var customerInfoWorksheet = workbook.Worksheets.Add("Customer info");
+                var fWorksheet = workbook.Worksheets.Add("DataForFilters");
+                fWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //customer info and customer attributes
                 var customerInfoRow = 2;
@@ -2031,7 +2034,7 @@ namespace Nop.Services.ExportImport
                 {
                     customerInfoRow += 2;
 
-                    var cell = customerInfoWorksheet.Cells[customerInfoRow, 1];
+                    var cell = customerInfoWorksheet.Row(customerInfoRow).Cell(1);
                     cell.Value = "Address List";
                     customerInfoRow += 1;
                     addressManager.SetCaptionStyle(cell);
@@ -2048,7 +2051,7 @@ namespace Nop.Services.ExportImport
                 //customer orders
                 if (orders.Any())
                 {
-                    var ordersWorksheet = xlPackage.Workbook.Worksheets.Add("Orders");
+                    var ordersWorksheet = workbook.Worksheets.Add("Orders");
 
                     orderManager.WriteCaption(ordersWorksheet);
 
@@ -2070,7 +2073,7 @@ namespace Nop.Services.ExportImport
 
                         orderItemsManager.WriteCaption(ordersWorksheet, orderRow, 2);
                         ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                        ordersWorksheet.Row(orderRow).Collapsed = true;
+                        ordersWorksheet.Row(orderRow).Collapse();
 
                         foreach (var orederItem in orederItems)
                         {
@@ -2078,7 +2081,7 @@ namespace Nop.Services.ExportImport
                             orderItemsManager.CurrentObject = orederItem;
                             await orderItemsManager.WriteToXlsxAsync(ordersWorksheet, orderRow, 2, fWorksheet);
                             ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                            ordersWorksheet.Row(orderRow).Collapsed = true;
+                            ordersWorksheet.Row(orderRow).Collapse();
                         }
                     }
                 }
@@ -2086,7 +2089,7 @@ namespace Nop.Services.ExportImport
                 //customer private messages
                 if (pmList?.Any() ?? false)
                 {
-                    var privateMessageWorksheet = xlPackage.Workbook.Worksheets.Add("Private messages");
+                    var privateMessageWorksheet = workbook.Worksheets.Add("Private messages");
                     privateMessageManager.WriteCaption(privateMessageWorksheet);
 
                     var privateMessageRow = 1;
@@ -2103,7 +2106,7 @@ namespace Nop.Services.ExportImport
                 //customer GDPR logs
                 if (gdprLog.Any())
                 {
-                    var gdprLogWorksheet = xlPackage.Workbook.Worksheets.Add("GDPR requests (log)");
+                    var gdprLogWorksheet = workbook.Worksheets.Add("GDPR requests (log)");
                     gdprLogManager.WriteCaption(gdprLogWorksheet);
 
                     var gdprLogRow = 1;
@@ -2117,7 +2120,7 @@ namespace Nop.Services.ExportImport
                     }
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();
