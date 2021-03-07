@@ -383,6 +383,11 @@ namespace Nop.Data
                 return;
 
             await _dataProvider.UpdateEntitiesAsync(entities);
+            if (!publishEvent)
+                return;
+
+            foreach (var entity in entities)
+                await _eventPublisher.EntityUpdatedAsync(entity);
         }
 
         /// <summary>
