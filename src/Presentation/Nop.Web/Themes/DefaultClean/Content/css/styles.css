@@ -4766,6 +4766,18 @@ label, label + * {
   margin-bottom: 5px;
 }
 
+.checkout-page .edit-address-button {
+  float: right; 
+  margin: 20px 10px 10px 12px;
+  display: none;
+}
+
+.checkout-page .delete-address-button {
+  float: right; 
+  margin: 20px 0 10px 0;
+  display: none;
+}
+
 .shipping-method .method-list,
 .payment-method .method-list {
   margin: 0 auto 30px;
