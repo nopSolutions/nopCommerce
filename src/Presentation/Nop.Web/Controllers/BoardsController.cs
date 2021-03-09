@@ -919,13 +919,13 @@ namespace Nop.Web.Controllers
         }
 
         /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<IActionResult> Search(string searchterms, bool? adv, string forumId,
+        public virtual async Task<IActionResult> Search(string searchterms, bool? advs, string forumId,
             string within, string limitDays, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _forumModelFactory.PrepareSearchModelAsync(searchterms, adv, forumId, within, limitDays, pageNumber);
+            var model = await _forumModelFactory.PrepareSearchModelAsync(searchterms, advs, forumId, within, limitDays, pageNumber);
             
             return View(model);
         }

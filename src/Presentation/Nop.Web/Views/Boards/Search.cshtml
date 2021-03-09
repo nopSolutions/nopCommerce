@@ -11,12 +11,12 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         toggleAdvancedSearch();
-        $('#adv').on('click', function () {
+        $('#advs').on('click', function () {
             toggleAdvancedSearch();
         });
     });
     function toggleAdvancedSearch() {
-        if ($('#adv').is(':checked')) {
+        if ($('#advs').is(':checked')) {
             $('#advanced-search').show();
         }
         else {
@@ -41,8 +41,8 @@
                                 <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms" />
                             </div>
                             <div class="inputs reversed">
-                                <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="adv" name="adv" type="checkbox" value="true">
-                                <label for="adv">@T("Forum.Search.AdvancedSearch")</label>
+                                <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="advs" name="advs" type="checkbox" value="true">
+                                <label for="advs">@T("Forum.Search.AdvancedSearch")</label>
                             </div>
                         </div>
                         <div class="advanced-search" id="advanced-search" style="display: none;">
@@ -73,14 +73,14 @@
         <div class="search-results">
             @{
                 var searchterms = Model.SearchTerms;
-                string adv = null;
+                string advs = null;
                 string within = null;
                 string limitDays = null;
                 string forumId = null;
 
                 if (Model.ShowAdvancedSearch)
                 {
-                    adv = "true";
+                    advs = "true";
                     within = Model.WithinSelected.ToString();
                     limitDays = Model.LimitDaysSelected.ToString();
                     forumId = Model.ForumIdSelected.ToString();
@@ -93,7 +93,7 @@
                     PageIndex = Model.TopicPageIndex,
                     ShowTotalSummary = false,
                     RouteActionName = "Search",
-                    RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
+                    RouteValues = new ForumSearchRouteValues { advs = advs, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
                 });
             }
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults })

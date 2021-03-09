@@ -1689,7 +1689,7 @@ namespace Nop.Web.Factories
                     var manufacturerId = 0;
                     var searchInDescriptions = false;
                     var vendorId = 0;
-                    if (searchModel.adv)
+                    if (searchModel.advs)
                     {
                         //advanced search
                         var categoryId = searchModel.cid;

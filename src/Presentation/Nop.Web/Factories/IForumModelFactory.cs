@@ -126,7 +126,7 @@ namespace Nop.Web.Factories
         /// Prepare the search model
         /// </summary>
         /// <param name="searchterms">Search terms</param>
-        /// <param name="adv">Whether to use the advanced search</param>
+        /// <param name="advs">Whether to use the advanced search</param>
         /// <param name="forumId">Forum identifier</param>
         /// <param name="within">String representation of int value of ForumSearchType</param>
         /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
@@ -135,7 +135,7 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the search model
         /// </returns>
-        Task<SearchModel> PrepareSearchModelAsync(string searchterms, bool? adv, string forumId,
+        Task<SearchModel> PrepareSearchModelAsync(string searchterms, bool? advs, string forumId,
             string within, string limitDays, int page);
 
         /// <summary>

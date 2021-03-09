@@ -309,7 +309,7 @@ namespace Nop.Web.Models.Common
     public partial record ForumSearchRouteValues : IRouteValues
     {
         public string searchterms { get; set; }
-        public string adv { get; set; }
+        public string advs { get; set; }
         public string forumId { get; set; }
         public string within { get; set; }
         public string limitDays { get; set; }
