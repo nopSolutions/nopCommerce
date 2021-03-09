@@ -354,13 +354,14 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Catalog products model</param>
         /// <param name="products">The products</param>
+        /// <param name="isFiltering">A value indicating that filtering has been applied</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task PrepareCatalogProductsAsync(CatalogProductsModel model, IPagedList<Product> products)
+        protected virtual async Task PrepareCatalogProductsAsync(CatalogProductsModel model, IPagedList<Product> products, bool isFiltering = false)
         {
             if (!string.IsNullOrEmpty(model.WarningMessage))
                 return;
 
-            if (products.Count == 0)
+            if (products.Count == 0 && isFiltering)
                 model.NoResultMessage = await _localizationService.GetResourceAsync("Catalog.Products.NoResult");
             else
             {
@@ -778,7 +779,8 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = filterableOptions.Any() || selectedPriceRange is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1036,7 +1038,8 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = filterableOptions.Any() || selectedPriceRange is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1277,7 +1280,8 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = selectedPriceRange is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1521,7 +1525,8 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = selectedPriceRange is not null;
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
@@ -1807,7 +1812,8 @@ namespace Nop.Web.Factories
                 }
             }
 
-            await PrepareCatalogProductsAsync(model, products);
+            var isFiltering = !string.IsNullOrEmpty(searchTerms);
+            await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
         }
