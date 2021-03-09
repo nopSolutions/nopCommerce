@@ -383,6 +383,8 @@ namespace Nop.Data
                 return;
 
             await _dataProvider.UpdateEntitiesAsync(entities);
+
+            //event notification
             if (!publishEvent)
                 return;
 
