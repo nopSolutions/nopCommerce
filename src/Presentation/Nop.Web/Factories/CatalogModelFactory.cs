@@ -779,7 +779,7 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            var isFiltering = filterableOptions.Any() || selectedPriceRange is not null;
+            var isFiltering = filterableOptions.Any() || selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
@@ -1038,7 +1038,7 @@ namespace Nop.Web.Factories
                 filteredSpecOptions: filteredSpecs,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            var isFiltering = filterableOptions.Any() || selectedPriceRange is not null;
+            var isFiltering = filterableOptions.Any() || selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
@@ -1280,7 +1280,7 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            var isFiltering = selectedPriceRange is not null;
+            var isFiltering = selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
@@ -1525,7 +1525,7 @@ namespace Nop.Web.Factories
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy);
 
-            var isFiltering = selectedPriceRange is not null;
+            var isFiltering = selectedPriceRange?.From is not null;
             await PrepareCatalogProductsAsync(model, products, isFiltering);
 
             return model;
