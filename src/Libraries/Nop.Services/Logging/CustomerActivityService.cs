@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Logging
 {
@@ -18,8 +16,6 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IWebHelper _webHelper;
@@ -29,15 +25,11 @@ namespace Nop.Services.Logging
 
         #region Ctor
 
-        public CustomerActivityService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<ActivityLog> activityLogRepository,
+        public CustomerActivityService(IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
             _webHelper = webHelper;
@@ -49,60 +41,30 @@ namespace Nop.Services.Logging
         #region Methods
 
         /// <summary>
-        /// Inserts an activity log type item
-        /// </summary>
-        /// <param name="activityLogType">Activity log type item</param>
-        public virtual void InsertActivityType(ActivityLogType activityLogType)
-        {
-            if (activityLogType == null)
-                throw new ArgumentNullException(nameof(activityLogType));
-
-            _activityLogTypeRepository.Insert(activityLogType);
-
-            //event notification
-            _eventPublisher.EntityInserted(activityLogType);
-        }
-
-        /// <summary>
         /// Updates an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        public virtual void UpdateActivityType(ActivityLogType activityLogType)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateActivityTypeAsync(ActivityLogType activityLogType)
         {
-            if (activityLogType == null)
-                throw new ArgumentNullException(nameof(activityLogType));
-
-            _activityLogTypeRepository.Update(activityLogType);
-
-            //event notification
-            _eventPublisher.EntityUpdated(activityLogType);
-        }
-
-        /// <summary>
-        /// Deletes an activity log type item
-        /// </summary>
-        /// <param name="activityLogType">Activity log type</param>
-        public virtual void DeleteActivityType(ActivityLogType activityLogType)
-        {
-            if (activityLogType == null)
-                throw new ArgumentNullException(nameof(activityLogType));
-
-            _activityLogTypeRepository.Delete(activityLogType);
-
-            //event notification
-            _eventPublisher.EntityDeleted(activityLogType);
+            await _activityLogTypeRepository.UpdateAsync(activityLogType);
         }
 
         /// <summary>
         /// Gets all activity log type items
         /// </summary>
-        /// <returns>Activity log type items</returns>
-        public virtual IList<ActivityLogType> GetAllActivityTypes()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log type items
+        /// </returns>
+        public virtual async Task<IList<ActivityLogType>> GetAllActivityTypesAsync()
         {
-            var query = from alt in _activityLogTypeRepository.Table
-                        orderby alt.Name
-                        select alt;
-            var activityLogTypes = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopLoggingDefaults.ActivityTypeAllCacheKey));
+            var activityLogTypes = await _activityLogTypeRepository.GetAllAsync(query=>
+            {
+                return from alt in query
+                    orderby alt.Name
+                    select alt;
+            }, cache => default);
 
             return activityLogTypes;
         }
@@ -111,13 +73,13 @@ namespace Nop.Services.Logging
         /// Gets an activity log type item
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
-        /// <returns>Activity log type item</returns>
-        public virtual ActivityLogType GetActivityTypeById(int activityLogTypeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log type item
+        /// </returns>
+        public virtual async Task<ActivityLogType> GetActivityTypeByIdAsync(int activityLogTypeId)
         {
-            if (activityLogTypeId == 0)
-                return null;
-
-            return _activityLogTypeRepository.ToCachedGetById(activityLogTypeId);
+            return await _activityLogTypeRepository.GetByIdAsync(activityLogTypeId, cache => default);
         }
 
         /// <summary>
@@ -126,10 +88,13 @@ namespace Nop.Services.Logging
         /// <param name="systemKeyword">System keyword</param>
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
-        /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, string comment, BaseEntity entity = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log item
+        /// </returns>
+        public virtual async Task<ActivityLog> InsertActivityAsync(string systemKeyword, string comment, BaseEntity entity = null)
         {
-            return InsertActivity(_workContext.CurrentCustomer, systemKeyword, comment, entity);
+            return await InsertActivityAsync(await _workContext.GetCurrentCustomerAsync(), systemKeyword, comment, entity);
         }
 
         /// <summary>
@@ -139,14 +104,17 @@ namespace Nop.Services.Logging
         /// <param name="systemKeyword">System keyword</param>
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
-        /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(Customer customer, string systemKeyword, string comment, BaseEntity entity = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log item
+        /// </returns>
+        public virtual async Task<ActivityLog> InsertActivityAsync(Customer customer, string systemKeyword, string comment, BaseEntity entity = null)
         {
             if (customer == null)
                 return null;
 
             //try to get activity log type by passed system keyword
-            var activityLogType = GetAllActivityTypes().FirstOrDefault(type => type.SystemKeyword.Equals(systemKeyword));
+            var activityLogType = (await GetAllActivityTypesAsync()).FirstOrDefault(type => type.SystemKeyword.Equals(systemKeyword));
             if (!activityLogType?.Enabled ?? true)
                 return null;
 
@@ -161,10 +129,7 @@ namespace Nop.Services.Logging
                 CreatedOnUtc = DateTime.UtcNow,
                 IpAddress = _webHelper.GetCurrentIpAddress()
             };
-            _activityLogRepository.Insert(logItem);
-
-            //event notification
-            _eventPublisher.EntityInserted(logItem);
+            await _activityLogRepository.InsertAsync(logItem);
 
             return logItem;
         }
@@ -173,15 +138,10 @@ namespace Nop.Services.Logging
         /// Deletes an activity log item
         /// </summary>
         /// <param name="activityLog">Activity log type</param>
-        public virtual void DeleteActivity(ActivityLog activityLog)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteActivityAsync(ActivityLog activityLog)
         {
-            if (activityLog == null)
-                throw new ArgumentNullException(nameof(activityLog));
-
-            _activityLogRepository.Delete(activityLog);
-
-            //event notification
-            _eventPublisher.EntityDeleted(activityLog);
+            await _activityLogRepository.DeleteAsync(activityLog);
         }
 
         /// <summary>
@@ -196,61 +156,66 @@ namespace Nop.Services.Logging
         /// <param name="entityId">Entity identifier; pass null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null, DateTime? createdOnTo = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log items
+        /// </returns>
+        public virtual async Task<IPagedList<ActivityLog>> GetAllActivitiesAsync(DateTime? createdOnFrom = null, DateTime? createdOnTo = null,
             int? customerId = null, int? activityLogTypeId = null, string ipAddress = null, string entityName = null, int? entityId = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _activityLogRepository.Table;
+            return await _activityLogRepository.GetAllPagedAsync(query =>
+            {
+                //filter by IP
+                if (!string.IsNullOrEmpty(ipAddress))
+                    query = query.Where(logItem => logItem.IpAddress.Contains(ipAddress));
 
-            //filter by IP
-            if (!string.IsNullOrEmpty(ipAddress))
-                query = query.Where(logItem => logItem.IpAddress.Contains(ipAddress));
+                //filter by creation date
+                if (createdOnFrom.HasValue)
+                    query = query.Where(logItem => createdOnFrom.Value <= logItem.CreatedOnUtc);
+                if (createdOnTo.HasValue)
+                    query = query.Where(logItem => createdOnTo.Value >= logItem.CreatedOnUtc);
 
-            //filter by creation date
-            if (createdOnFrom.HasValue)
-                query = query.Where(logItem => createdOnFrom.Value <= logItem.CreatedOnUtc);
-            if (createdOnTo.HasValue)
-                query = query.Where(logItem => createdOnTo.Value >= logItem.CreatedOnUtc);
+                //filter by log type
+                if (activityLogTypeId.HasValue && activityLogTypeId.Value > 0)
+                    query = query.Where(logItem => activityLogTypeId == logItem.ActivityLogTypeId);
 
-            //filter by log type
-            if (activityLogTypeId.HasValue && activityLogTypeId.Value > 0)
-                query = query.Where(logItem => activityLogTypeId == logItem.ActivityLogTypeId);
+                //filter by customer
+                if (customerId.HasValue && customerId.Value > 0)
+                    query = query.Where(logItem => customerId.Value == logItem.CustomerId);
 
-            //filter by customer
-            if (customerId.HasValue && customerId.Value > 0)
-                query = query.Where(logItem => customerId.Value == logItem.CustomerId);
+                //filter by entity
+                if (!string.IsNullOrEmpty(entityName))
+                    query = query.Where(logItem => logItem.EntityName.Equals(entityName));
+                if (entityId.HasValue && entityId.Value > 0)
+                    query = query.Where(logItem => entityId.Value == logItem.EntityId);
 
-            //filter by entity
-            if (!string.IsNullOrEmpty(entityName))
-                query = query.Where(logItem => logItem.EntityName.Equals(entityName));
-            if (entityId.HasValue && entityId.Value > 0)
-                query = query.Where(logItem => entityId.Value == logItem.EntityId);
+                query = query.OrderByDescending(logItem => logItem.CreatedOnUtc).ThenBy(logItem => logItem.Id);
 
-            query = query.OrderByDescending(logItem => logItem.CreatedOnUtc).ThenBy(logItem => logItem.Id);
-
-            return new PagedList<ActivityLog>(query, pageIndex, pageSize);
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
         /// Gets an activity log item
         /// </summary>
         /// <param name="activityLogId">Activity log identifier</param>
-        /// <returns>Activity log item</returns>
-        public virtual ActivityLog GetActivityById(int activityLogId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the activity log item
+        /// </returns>
+        public virtual async Task<ActivityLog> GetActivityByIdAsync(int activityLogId)
         {
-            if (activityLogId == 0)
-                return null;
-
-            return _activityLogRepository.GetById(activityLogId);
+            return await _activityLogRepository.GetByIdAsync(activityLogId);
         }
 
         /// <summary>
         /// Clears activity log
         /// </summary>
-        public virtual void ClearAllActivities()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ClearAllActivitiesAsync()
         {
-            _activityLogRepository.Truncate();
+            await _activityLogRepository.TruncateAsync();
         }
 
         #endregion

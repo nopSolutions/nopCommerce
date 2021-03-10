@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -44,22 +45,25 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <param name="addSelectStateItem">Whether to add "Select state" item to list of states</param>
-        /// <returns>List of identifiers and names of states and provinces</returns>
-        public virtual IList<StateProvinceModel> GetStatesByCountryId(string countryId, bool addSelectStateItem)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of identifiers and names of states and provinces
+        /// </returns>
+        public virtual async Task<IList<StateProvinceModel>> GetStatesByCountryIdAsync(string countryId, bool addSelectStateItem)
         {
             if (string.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException(nameof(countryId));
 
-            var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
-            var states = _stateProvinceService
-                .GetStateProvincesByCountryId(country?.Id ?? 0, _workContext.WorkingLanguage.Id)
+            var country = await _countryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
+            var states = (await _stateProvinceService
+                .GetStateProvincesByCountryIdAsync(country?.Id ?? 0, (await _workContext.GetWorkingLanguageAsync()).Id))
                 .ToList();
             var result = new List<StateProvinceModel>();
             foreach (var state in states)
                 result.Add(new StateProvinceModel
                 {
                     id = state.Id,
-                    name = _localizationService.GetLocalized(state, x => x.Name)
+                    name = await _localizationService.GetLocalizedAsync(state, x => x.Name)
                 });
 
             if (country == null)
@@ -70,7 +74,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = _localizationService.GetResource("Address.SelectState")
+                        name = await _localizationService.GetResourceAsync("Address.SelectState")
                     });
                 }
                 else
@@ -78,7 +82,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = _localizationService.GetResource("Address.Other")
+                        name = await _localizationService.GetResourceAsync("Address.Other")
                     });
                 }
             }
@@ -91,7 +95,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = _localizationService.GetResource("Address.Other")
+                        name = await _localizationService.GetResourceAsync("Address.Other")
                     });
                 }
                 else
@@ -102,7 +106,7 @@ namespace Nop.Web.Factories
                         result.Insert(0, new StateProvinceModel
                         {
                             id = 0,
-                            name = _localizationService.GetResource("Address.SelectState")
+                            name = await _localizationService.GetResourceAsync("Address.SelectState")
                         });
                     }
                 }

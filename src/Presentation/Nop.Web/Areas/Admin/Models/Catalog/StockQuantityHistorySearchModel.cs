@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a stock quantity history search model
     /// </summary>
-    public partial class StockQuantityHistorySearchModel : BaseSearchModel
+    public partial record StockQuantityHistorySearchModel : BaseSearchModel
     {
         #region Ctor
 

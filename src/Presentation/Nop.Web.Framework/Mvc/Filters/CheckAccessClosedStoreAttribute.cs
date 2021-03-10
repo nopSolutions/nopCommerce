@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Data;
@@ -17,12 +17,6 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public sealed class CheckAccessClosedStoreAttribute : TypeFilterAttribute
     {
-        #region Fields
-
-        private readonly bool _ignoreFilter;
-
-        #endregion
-
         #region Ctor
 
         /// <summary>
@@ -31,7 +25,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
-            _ignoreFilter = ignore;
+            IgnoreFilter = ignore;
             Arguments = new object[] { ignore };
         }
 
@@ -42,7 +36,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Gets a value indicating whether to ignore the execution of filter actions
         /// </summary>
-        public bool IgnoreFilter => _ignoreFilter;
+        public bool IgnoreFilter { get; }
 
         #endregion
 
@@ -51,7 +45,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that confirms access to closed store
         /// </summary>
-        private class CheckAccessClosedStoreFilter : IActionFilter
+        private class CheckAccessClosedStoreFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -59,7 +53,6 @@ namespace Nop.Web.Framework.Mvc.Filters
             private readonly IPermissionService _permissionService;
             private readonly IStoreContext _storeContext;
             private readonly ITopicService _topicService;
-            private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly StoreInformationSettings _storeInformationSettings;
 
             #endregion
@@ -70,40 +63,41 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IPermissionService permissionService,
                 IStoreContext storeContext,
                 ITopicService topicService,
-                IUrlHelperFactory urlHelperFactory,
                 StoreInformationSettings storeInformationSettings)
             {
                 _ignoreFilter = ignoreFilter;
                 _permissionService = permissionService;
                 _storeContext = storeContext;
                 _topicService = topicService;
-                _urlHelperFactory = urlHelperFactory;
                 _storeInformationSettings = storeInformationSettings;
             }
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task CheckAccessClosedStoreAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    return;
+
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
-                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<CheckAccessClosedStoreAttribute>().FirstOrDefault();
+                    .Select(filterDescriptor => filterDescriptor.Filter)
+                    .OfType<CheckAccessClosedStoreAttribute>()
+                    .FirstOrDefault();
 
                 //ignore filter (the action is available even if a store is closed)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //store isn't closed
@@ -118,13 +112,21 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
 
+                //two factor verification accessible when a store is closed
+                if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("MultiFactorVerification", StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
                 //topics accessible when a store is closed
                 if (controllerName.Equals("Topic", StringComparison.InvariantCultureIgnoreCase) &&
                     actionName.Equals("TopicDetails", StringComparison.InvariantCultureIgnoreCase))
                 {
                     //get identifiers of topics are accessible when a store is closed
-                    var allowedTopicIds = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
-                        .Where(topic => topic.AccessibleWhenStoreClosed).Select(topic => topic.Id);
+
+                    var store = await _storeContext.GetCurrentStoreAsync();
+                    var allowedTopicIds = (await _topicService.GetAllTopicsAsync(store.Id))
+                        .Where(topic => topic.AccessibleWhenStoreClosed)
+                        .Select(topic => topic.Id);
 
                     //check whether requested topic is allowed
                     var requestedTopicId = context.RouteData.Values["topicId"] as int?;
@@ -133,21 +135,28 @@ namespace Nop.Web.Framework.Mvc.Filters
                 }
 
                 //check whether current customer has access to a closed store
-                if (_permissionService.Authorize(StandardPermissionProvider.AccessClosedStore))
+                if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessClosedStore))
                     return;
 
                 //store is closed and no access, so redirect to 'StoreClosed' page
-                var storeClosedUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("StoreClosed");
-                context.Result = new RedirectResult(storeClosedUrl);
+                context.Result = new RedirectToRouteResult("StoreClosed", null);
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await CheckAccessClosedStoreAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

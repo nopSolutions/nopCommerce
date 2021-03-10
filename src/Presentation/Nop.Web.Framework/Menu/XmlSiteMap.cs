@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Infrastructure;
@@ -34,12 +35,13 @@ namespace Nop.Web.Framework.Menu
         /// Load sitemap
         /// </summary>
         /// <param name="physicalPath">Filepath to load a sitemap</param>
-        public virtual void LoadFrom(string physicalPath)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task LoadFromAsync(string physicalPath)
         {
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             var filePath = fileProvider.MapPath(physicalPath);
-            var content = fileProvider.ReadAllText(filePath, Encoding.UTF8);
+            var content = await fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
 
             if (!string.IsNullOrEmpty(content))
             {
@@ -60,14 +62,15 @@ namespace Nop.Web.Framework.Menu
                 if ((doc.DocumentElement != null) && doc.HasChildNodes)
                 {
                     var xmlRootNode = doc.DocumentElement.FirstChild;
-                    Iterate(RootNode, xmlRootNode);
+                    await IterateAsync(RootNode, xmlRootNode);
                 }
             }
         }
 
-        private static void Iterate(SiteMapNode siteMapNode, XmlNode xmlNode)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private static async Task IterateAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
-            PopulateNode(siteMapNode, xmlNode);
+            await PopulateNodeAsync(siteMapNode, xmlNode);
 
             foreach (XmlNode xmlChildNode in xmlNode.ChildNodes)
             {
@@ -76,12 +79,13 @@ namespace Nop.Web.Framework.Menu
                     var siteMapChildNode = new SiteMapNode();
                     siteMapNode.ChildNodes.Add(siteMapChildNode);
 
-                    Iterate(siteMapChildNode, xmlChildNode);
+                    await IterateAsync(siteMapChildNode, xmlChildNode);
                 }
             }
         }
 
-        private static void PopulateNode(SiteMapNode siteMapNode, XmlNode xmlNode)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private static async Task PopulateNodeAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
             //system name
             siteMapNode.SystemName = GetStringValueFromAttribute(xmlNode, "SystemName");
@@ -89,7 +93,7 @@ namespace Nop.Web.Framework.Menu
             //title
             var nopResource = GetStringValueFromAttribute(xmlNode, "nopResource");
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            siteMapNode.Title = localizationService.GetResource(nopResource);
+            siteMapNode.Title = await localizationService.GetResourceAsync(nopResource);
 
             //routes, url
             var controllerName = GetStringValueFromAttribute(xmlNode, "controller");
@@ -116,8 +120,8 @@ namespace Nop.Web.Framework.Menu
             if (!string.IsNullOrEmpty(permissionNames))
             {
                 var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-                siteMapNode.Visible = permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                   .Any(permissionName => permissionService.Authorize(permissionName.Trim()));
+                siteMapNode.Visible = await permissionNames.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .AnyAwaitAsync(async permissionName => await permissionService.AuthorizeAsync(permissionName.Trim()));
             }
             else
             {

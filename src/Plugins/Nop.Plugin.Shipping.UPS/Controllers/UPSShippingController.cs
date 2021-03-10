@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Shipping.UPS.Domain;
@@ -58,10 +59,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
         #region Methods
 
-        public IActionResult Configure()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> Configure()
         {
             //whether user has the authority to manage configuration
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare common model
@@ -91,15 +93,16 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 .Select(idValue => idValue.Trim('[', ']')).ToList();
 
             //prepare available options
-            model.AvailableCustomerClassifications = CustomerClassification.DailyRates.ToSelectList(false)
+            model.AvailableCustomerClassifications = (await CustomerClassification.DailyRates.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
-            model.AvailablePickupTypes = PickupType.DailyPickup.ToSelectList(false)
+            model.AvailablePickupTypes = (await PickupType.DailyPickup.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
-            model.AvailablePackagingTypes = PackagingType.CustomerSuppliedPackage.ToSelectList(false)
+            model.AvailablePackagingTypes = (await PackagingType.CustomerSuppliedPackage.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text?.TrimStart('_'), item.Value)).ToList();
-            model.AvaliablePackingTypes = PackingType.PackByDimensions.ToSelectList(false)
+            model.AvaliablePackingTypes = (await PackingType.PackByDimensions.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
-            model.AvailableCarrierServices = DeliveryService.Standard.ToSelectList(false).Select(item =>
+            model.AvailableCarrierServices = (await DeliveryService.Standard.ToSelectListAsync(false))
+                .Select(item =>
             {
                 var serviceCode = _upsService.GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new SelectListItem($"UPS {item.Text?.TrimStart('_')}", serviceCode, servicesCodes.Contains(serviceCode));
@@ -109,25 +112,26 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             //check measures
             var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
-            if (_measureService.GetMeasureWeightBySystemKeyword(weightSystemName) == null)
+            if (await _measureService.GetMeasureWeightBySystemKeywordAsync(weightSystemName) == null)
                 _notificationService.ErrorNotification($"Could not load '{weightSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure weight</a>", false);
 
             var dimensionSystemName = _upsSettings.DimensionsType switch { "IN" => "inches", "CM" => "centimeters", _ => null };
-            if (_measureService.GetMeasureDimensionBySystemKeyword(dimensionSystemName) == null)
+            if (await _measureService.GetMeasureDimensionBySystemKeywordAsync(dimensionSystemName) == null)
                 _notificationService.ErrorNotification($"Could not load '{dimensionSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure dimension</a>", false);
 
             return View("~/Plugins/Shipping.UPS/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        public IActionResult Configure(UPSShippingModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> Configure(UPSShippingModel model)
         {
             //whether user has the authority to manage configuration
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //save settings
             _upsSettings.AccountNumber = model.AccountNumber;
@@ -161,11 +165,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             }
             _upsSettings.CarrierServicesOffered = string.Join(':', model.CarrierServices.Select(service => $"[{service}]"));
 
-            _settingService.SaveSetting(_upsSettings);
+            await _settingService.SaveSettingAsync(_upsSettings);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         #endregion

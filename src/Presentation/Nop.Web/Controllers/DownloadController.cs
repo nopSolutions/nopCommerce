@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -6,6 +7,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -33,16 +35,19 @@ namespace Nop.Web.Controllers
             _workContext = workContext;
         }
         
-        public virtual IActionResult Sample(int productId)
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Sample(int productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
             if (product == null)
                 return InvokeHttp404();
 
             if (!product.HasSampleDownload)
                 return Content("Product doesn't have a sample download.");
 
-            var download = _downloadService.GetDownloadById(product.SampleDownloadId);
+            var download = await _downloadService.GetDownloadByIdAsync(product.SampleDownloadId);
             if (download == null)
                 return Content("Sample download is not available any more.");
 
@@ -59,29 +64,32 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension }; 
         }
 
-        public virtual IActionResult GetDownload(Guid orderItemId, bool agree = false)
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetDownload(Guid orderItemId, bool agree = false)
         {
-            var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
+            var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderById(orderItem.OrderId);
+            var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
             
-            if (!_orderService.IsDownloadAllowed(orderItem))
+            if (!await _orderService.IsDownloadAllowedAsync(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
             {
-                if (_workContext.CurrentCustomer == null)
+                if (await _workContext.GetCurrentCustomerAsync() == null)
                     return Challenge();
 
-                if (order.CustomerId != _workContext.CurrentCustomer.Id)
+                if (order.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
                     return Content("This is not your order");
             }
 
-            var product = _productService.GetProductById(orderItem.ProductId);
+            var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
-            var download = _downloadService.GetDownloadById(product.DownloadId);
+            var download = await _downloadService.GetDownloadByIdAsync(product.DownloadId);
             if (download == null)
                 return Content("Download is not available any more.");
 
@@ -90,13 +98,13 @@ namespace Nop.Web.Controllers
 
 
             if (!product.UnlimitedDownloads && orderItem.DownloadCount >= product.MaxNumberOfDownloads)
-                return Content(string.Format(_localizationService.GetResource("DownloadableProducts.ReachedMaximumNumber"), product.MaxNumberOfDownloads));
+                return Content(string.Format(await _localizationService.GetResourceAsync("DownloadableProducts.ReachedMaximumNumber"), product.MaxNumberOfDownloads));
            
             if (download.UseDownloadUrl)
             {
                 //increase download
                 orderItem.DownloadCount++;
-                _orderService.UpdateOrderItem(orderItem);
+                await _orderService.UpdateOrderItemAsync(orderItem);
 
                 //return result
                 //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
@@ -110,7 +118,7 @@ namespace Nop.Web.Controllers
 
             //increase download
             orderItem.DownloadCount++;
-            _orderService.UpdateOrderItem(orderItem);
+            await _orderService.UpdateOrderItemAsync(orderItem);
 
             //return result
             var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
@@ -118,24 +126,27 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };  
         }
 
-        public virtual IActionResult GetLicense(Guid orderItemId)
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetLicense(Guid orderItemId)
         {
-            var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
+            var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderById(orderItem.OrderId);
+            var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
 
-            if (!_orderService.IsLicenseDownloadAllowed(orderItem))
+            if (!await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
             {
-                if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+                if (await _workContext.GetCurrentCustomerAsync() == null || order.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
                     return Challenge();
             }
 
-            var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId ?? 0);
+            var download = await _downloadService.GetDownloadByIdAsync(orderItem.LicenseDownloadId ?? 0);
             if (download == null)
                 return Content("Download is not available any more.");
 
@@ -144,7 +155,7 @@ namespace Nop.Web.Controllers
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-                //binary download
+            //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 
@@ -154,9 +165,10 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual IActionResult GetFileUpload(Guid downloadId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetFileUpload(Guid downloadId)
         {
-            var download = _downloadService.GetDownloadByGuid(downloadId);
+            var download = await _downloadService.GetDownloadByGuidAsync(downloadId);
             if (download == null)
                 return Content("Download is not available any more.");
 
@@ -165,7 +177,7 @@ namespace Nop.Web.Controllers
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-                //binary download
+            //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 
@@ -175,18 +187,21 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual IActionResult GetOrderNoteFile(int orderNoteId)
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetOrderNoteFile(int orderNoteId)
         {
-            var orderNote = _orderService.GetOrderNoteById(orderNoteId);
+            var orderNote = await _orderService.GetOrderNoteByIdAsync(orderNoteId);
             if (orderNote == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderById(orderNote.OrderId);
+            var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
 
-            if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+            if (await _workContext.GetCurrentCustomerAsync() == null || order.CustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
                 return Challenge();
 
-            var download = _downloadService.GetDownloadById(orderNote.DownloadId);
+            var download = await _downloadService.GetDownloadByIdAsync(orderNote.DownloadId);
             if (download == null)
                 return Content("Download is not available any more.");
             
@@ -195,7 +210,7 @@ namespace Nop.Web.Controllers
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-                //binary download
+            //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 

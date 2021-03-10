@@ -1,11 +1,11 @@
 ﻿@model ConfigurationModel
 
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-4">
                             <nop-label asp-for="@Model.TaxTransactionLogSearchModel.CreatedFrom" />
                         </div>
@@ -13,7 +13,7 @@
                             <nop-editor asp-for="@Model.TaxTransactionLogSearchModel.CreatedFrom" />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-4">
                             <nop-label asp-for="@Model.TaxTransactionLogSearchModel.CreatedTo" />
                         </div>
@@ -21,10 +21,10 @@
                             <nop-editor asp-for="@Model.TaxTransactionLogSearchModel.CreatedTo" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-8 col-md-offset-4">
+                    <div class="form-group row">
+                        <div class="col-md-8 offset-md-4">
                             <button type="button" id="search-log" class="btn btn-primary btn-search">
-                                <i class="fa fa-search"></i>
+                                <i class="fas fa-search"></i>
                                 @T("Admin.Common.Search")
                             </button>
                         </div>
@@ -34,8 +34,8 @@
         </div>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "log-grid",
@@ -111,9 +111,9 @@
                 });
             </script>
         </div>
-        <div class="panel-footer">
-            <button type="button" id="delete-selected" class="btn bg-red">
-                <i class="fa fa-trash-o"></i>
+        <div class="card-footer">
+            <button type="button" id="delete-selected" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
                 @T("Admin.System.Log.DeleteSelected")
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />

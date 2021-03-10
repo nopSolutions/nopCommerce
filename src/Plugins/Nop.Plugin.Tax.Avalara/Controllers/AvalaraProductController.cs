@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -40,26 +41,27 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Methods
 
         [HttpPost]
-        public IActionResult ExportProducts(string selectedIds)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> ExportProducts(string selectedIds)
         {
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return RedirectToAction("List", "Product");
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //export items
-            var exportedItems = _avalaraTaxManager.ExportProducts(selectedIds);
+            var exportedItems = await _avalaraTaxManager.ExportProductsAsync(selectedIds);
             if (exportedItems.HasValue)
             {
                 if (exportedItems > 0)
-                    _notificationService.SuccessNotification(string.Format(_localizationService.GetResource("Plugins.Tax.Avalara.Items.Export.Success"), exportedItems));
+                    _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Items.Export.Success"), exportedItems));
                 else
-                    _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.Items.Export.AlreadyExported"));
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Items.Export.AlreadyExported"));
             }
             else
-                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.Items.Export.Error"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Items.Export.Error"));
 
             return RedirectToAction("List", "Product");
         }

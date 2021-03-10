@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Customers;
@@ -27,25 +28,27 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         #region Methods
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _customerModelFactory.PrepareOnlineCustomerSearchModel(new OnlineCustomerSearchModel());
+            var model = await _customerModelFactory.PrepareOnlineCustomerSearchModelAsync(new OnlineCustomerSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(OnlineCustomerSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List(OnlineCustomerSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _customerModelFactory.PrepareOnlineCustomerListModel(searchModel);
+            var model = await _customerModelFactory.PrepareOnlineCustomerListModelAsync(searchModel);
 
             return Json(model);
         }

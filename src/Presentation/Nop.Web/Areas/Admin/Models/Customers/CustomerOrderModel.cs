@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer order model
     /// </summary>
-    public partial class CustomerOrderModel : BaseNopEntityModel
+    public partial record CustomerOrderModel : BaseNopEntityModel
     {
         #region Properties
 

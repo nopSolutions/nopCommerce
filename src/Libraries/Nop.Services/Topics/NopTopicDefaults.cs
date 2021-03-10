@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Topics;
 
 namespace Nop.Services.Topics
 {
@@ -17,7 +18,7 @@ namespace Nop.Services.Topics
         /// {1} : show hidden?
         /// {2} : include in top menu?
         /// </remarks>
-        public static CacheKey TopicsAllCacheKey => new CacheKey("Nop.topics.all-{0}-{1}-{2}", TopicsAllPrefixCacheKey);
+        public static CacheKey TopicsAllCacheKey => new CacheKey("Nop.topic.all.{0}-{1}-{2}", NopEntityCacheDefaults<Topic>.AllPrefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -28,12 +29,7 @@ namespace Nop.Services.Topics
         /// {2} : include in top menu?
         /// {3} : customer role IDs hash
         /// </remarks>
-        public static CacheKey TopicsAllWithACLCacheKey => new CacheKey("Nop.topics.all.acl-{0}-{1}-{2}-{3}", TopicsAllPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a pattern to clear cache
-        /// </summary>
-        public static string TopicsAllPrefixCacheKey => "Nop.topics.all";
+        public static CacheKey TopicsAllWithACLCacheKey => new CacheKey("Nop.topic.all.withacl.{0}-{1}-{2}-{3}", NopEntityCacheDefaults<Topic>.AllPrefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -43,20 +39,15 @@ namespace Nop.Services.Topics
         /// {1} : store id
         /// {2} : customer roles Ids hash
         /// </remarks>
-        public static CacheKey TopicBySystemNameCacheKey => new CacheKey("Nop.topics.systemName-{0}-{1}-{2}", TopicBySystemNamePrefixCacheKey);
+        public static CacheKey TopicBySystemNameCacheKey => new CacheKey("Nop.topic.bysystemname.{0}-{1}-{2}", TopicBySystemNamePrefix);
 
         /// <summary>
-        /// Gets a key for caching
+        /// Gets a key pattern to clear cache
         /// </summary>
         /// <remarks>
         /// {0} : topic system name
         /// </remarks>
-        public static string TopicBySystemNamePrefixCacheKey => "Nop.topics.systemName-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey TopicTemplatesAllCacheKey => new CacheKey("Nop.topictemplates.all");
+        public static string TopicBySystemNamePrefix => "Nop.topic.bysystemname.{0}";
 
         #endregion
     }

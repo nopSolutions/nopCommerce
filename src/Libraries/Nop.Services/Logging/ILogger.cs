@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
@@ -22,18 +23,21 @@ namespace Nop.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
-        void DeleteLog(Log log);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteLogAsync(Log log);
 
         /// <summary>
         /// Deletes a log items
         /// </summary>
         /// <param name="logs">Log items</param>
-        void DeleteLogs(IList<Log> logs);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteLogsAsync(IList<Log> logs);
 
         /// <summary>
         /// Clears a log
         /// </summary>
-        void ClearLog();
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ClearLogAsync();
 
         /// <summary>
         /// Gets all log items
@@ -44,8 +48,11 @@ namespace Nop.Services.Logging
         /// <param name="logLevel">Log level; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Log item items</returns>
-        IPagedList<Log> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log item items
+        /// </returns>
+        Task<IPagedList<Log>> GetAllLogsAsync(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -53,15 +60,21 @@ namespace Nop.Services.Logging
         /// Gets a log item
         /// </summary>
         /// <param name="logId">Log item identifier</param>
-        /// <returns>Log item</returns>
-        Log GetLogById(int logId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log item
+        /// </returns>
+        Task<Log> GetLogByIdAsync(int logId);
 
         /// <summary>
         /// Get log items by identifiers
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
-        /// <returns>Log items</returns>
-        IList<Log> GetLogByIds(int[] logIds);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log items
+        /// </returns>
+        Task<IList<Log>> GetLogByIdsAsync(int[] logIds);
 
         /// <summary>
         /// Inserts a log item
@@ -70,8 +83,11 @@ namespace Nop.Services.Logging
         /// <param name="shortMessage">The short message</param>
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
-        /// <returns>A log item</returns>
-        Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a log item
+        /// </returns>
+        Task<Log> InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null);
 
         /// <summary>
         /// Information
@@ -79,7 +95,8 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
-        void Information(string message, Exception exception = null, Customer customer = null);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InformationAsync(string message, Exception exception = null, Customer customer = null);
 
         /// <summary>
         /// Warning
@@ -87,7 +104,8 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
-        void Warning(string message, Exception exception = null, Customer customer = null);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task WarningAsync(string message, Exception exception = null, Customer customer = null);
 
         /// <summary>
         /// Error
@@ -95,6 +113,7 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
-        void Error(string message, Exception exception = null, Customer customer = null);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ErrorAsync(string message, Exception exception = null, Customer customer = null);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -53,39 +54,42 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult AccessDenied(string pageUrl)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> AccessDenied(string pageUrl)
         {
-            var currentCustomer = _workContext.CurrentCustomer;
-            if (currentCustomer == null || _customerService.IsGuest(currentCustomer))
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            if (currentCustomer == null || await _customerService.IsGuestAsync(currentCustomer))
             {
-                _logger.Information($"Access denied to anonymous request on {pageUrl}");
+                await _logger.InformationAsync($"Access denied to anonymous request on {pageUrl}");
                 return View();
             }
 
-            _logger.Information($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
+            await _logger.InformationAsync($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
 
             return View();
         }
 
-        public virtual IActionResult Permissions()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Permissions()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _securityModelFactory.PreparePermissionMappingModel(new PermissionMappingModel());
+            var model = await _securityModelFactory.PreparePermissionMappingModelAsync(new PermissionMappingModel());
 
             return View(model);
         }
 
         [HttpPost, ActionName("Permissions")]
-        public virtual IActionResult PermissionsSave(PermissionMappingModel model, IFormCollection form)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> PermissionsSave(PermissionMappingModel model, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
-            var permissionRecords = _permissionService.GetAllPermissionRecords();
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var permissionRecords = await _permissionService.GetAllPermissionRecordsAsync();
+            var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
 
             foreach (var cr in customerRoles)
             {
@@ -98,23 +102,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
 
-                    if (allow == _permissionService.Authorize(pr.SystemName, cr.Id))
+                    if (allow == await _permissionService.AuthorizeAsync(pr.SystemName, cr.Id))
                         continue;
 
                     if (allow)
                     {
-                        _permissionService.InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
+                        await _permissionService.InsertPermissionRecordCustomerRoleMappingAsync(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
                     }
                     else
                     {
-                        _permissionService.DeletePermissionRecordCustomerRoleMapping(pr.Id, cr.Id);                        
+                        await _permissionService.DeletePermissionRecordCustomerRoleMappingAsync(pr.Id, cr.Id);                        
                     }
 
-                    _permissionService.UpdatePermissionRecord(pr);
+                    await _permissionService.UpdatePermissionRecordAsync(pr);
                 }
             }
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.ACL.Updated"));
 
             return RedirectToAction("Permissions");
         }

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -42,12 +44,13 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public virtual IActionResult TopicDetails(int topicId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> TopicDetails(int topicId)
         {
             //allow administrators to preview any topic
-            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics);
+            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics);
 
-            var model = _topicModelFactory.PrepareTopicModelById(topicId, hasAdminAccess);
+            var model = await _topicModelFactory.PrepareTopicModelByIdAsync(topicId, hasAdminAccess);
             if (model == null)
                 return InvokeHttp404();
 
@@ -56,51 +59,54 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = AreaNames.Admin }));
 
             //template
-            var templateViewPath = _topicModelFactory.PrepareTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = await _topicModelFactory.PrepareTemplateViewPathAsync(model.TopicTemplateId);
             return View(templateViewPath, model);
         }
 
-        public virtual IActionResult TopicDetailsPopup(string systemName)
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
-            var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
+            var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
             if (model == null)
                 return InvokeHttp404();
 
             ViewBag.IsPopup = true;
 
             //template
-            var templateViewPath = _topicModelFactory.PrepareTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = await _topicModelFactory.PrepareTemplateViewPathAsync(model.TopicTemplateId);
             return PartialView(templateViewPath, model);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public virtual IActionResult Authenticate(int id, string password)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Authenticate(int id, string password)
         {
             var authResult = false;
             var title = string.Empty;
             var body = string.Empty;
             var error = string.Empty;
 
-            var topic = _topicService.GetTopicById(id);
+            var topic = await _topicService.GetTopicByIdAsync(id);
             if (topic != null &&
                 topic.Published &&
                 //password protected?
                 topic.IsPasswordProtected &&
                 //store mapping
-                _storeMappingService.Authorize(topic) &&
+                await _storeMappingService.AuthorizeAsync(topic) &&
                 //ACL (access control list)
-                _aclService.Authorize(topic))
+                await _aclService.AuthorizeAsync(topic))
             {
                 if (topic.Password != null && topic.Password.Equals(password))
                 {
                     authResult = true;
-                    title = _localizationService.GetLocalized(topic, x => x.Title);
-                    body = _localizationService.GetLocalized(topic, x => x.Body);
+                    title = await _localizationService.GetLocalizedAsync(topic, x => x.Title);
+                    body = await _localizationService.GetLocalizedAsync(topic, x => x.Body);
                 }
                 else
                 {
-                    error = _localizationService.GetResource("Topic.WrongPassword");
+                    error = await _localizationService.GetResourceAsync("Topic.WrongPassword");
                 }
             }
 

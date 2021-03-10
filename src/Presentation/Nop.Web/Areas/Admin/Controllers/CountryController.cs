@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -77,49 +78,52 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void UpdateLocales(Country country, CountryModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task UpdateLocalesAsync(Country country, CountryModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(country,
+                await _localizedEntityService.SaveLocalizedValueAsync(country,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
             }
         }
 
-        protected virtual void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task UpdateLocalesAsync(StateProvince stateProvince, StateProvinceModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(stateProvince,
+                await _localizedEntityService.SaveLocalizedValueAsync(stateProvince,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
             }
         }
 
-        protected virtual void SaveStoreMappings(Country country, CountryModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task SaveStoreMappingsAsync(Country country, CountryModel model)
         {
             country.LimitedToStores = model.SelectedStoreIds.Any();
-            _countryService.UpdateCountry(country);
+            await _countryService.UpdateCountryAsync(country);
 
-            var existingStoreMappings = _storeMappingService.GetStoreMappings(country);
-            var allStores = _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(country);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        _storeMappingService.InsertStoreMapping(country, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(country, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -133,62 +137,66 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _countryModelFactory.PrepareCountrySearchModel(new CountrySearchModel());
+            var model = await _countryModelFactory.PrepareCountrySearchModelAsync(new CountrySearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult CountryList(CountrySearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CountryList(CountrySearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _countryModelFactory.PrepareCountryListModel(searchModel);
+            var model = await _countryModelFactory.PrepareCountryListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _countryModelFactory.PrepareCountryModel(new CountryModel(), null);
+            var model = await _countryModelFactory.PrepareCountryModelAsync(new CountryModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(CountryModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create(CountryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var country = model.ToEntity<Country>();
-                _countryService.InsertCountry(country);
+                await _countryService.InsertCountryAsync(country);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCountry",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCountry"), country.Id), country);
+                await _customerActivityService.InsertActivityAsync("AddNewCountry",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewCountry"), country.Id), country);
 
                 //locales
-                UpdateLocales(country, model);
+                await UpdateLocalesAsync(country, model);
 
                 //Stores
-                SaveStoreMappings(country, model);
+                await SaveStoreMappingsAsync(country, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -197,55 +205,57 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _countryModelFactory.PrepareCountryModel(model, null, true);
+            model = await _countryModelFactory.PrepareCountryModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(id);
+            var country = await _countryService.GetCountryByIdAsync(id);
             if (country == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _countryModelFactory.PrepareCountryModel(null, country);
+            var model = await _countryModelFactory.PrepareCountryModelAsync(null, country);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(CountryModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(CountryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(model.Id);
+            var country = await _countryService.GetCountryByIdAsync(model.Id);
             if (country == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 country = model.ToEntity(country);
-                _countryService.UpdateCountry(country);
+                await _countryService.UpdateCountryAsync(country);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCountry",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditCountry"), country.Id), country);
+                await _customerActivityService.InsertActivityAsync("EditCountry",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditCountry"), country.Id), country);
 
                 //locales
-                UpdateLocales(country, model);
+                await UpdateLocalesAsync(country, model);
 
                 //stores
-                SaveStoreMappings(country, model);
+                await SaveStoreMappingsAsync(country, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -254,78 +264,81 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _countryModelFactory.PrepareCountryModel(model, country, true);
+            model = await _countryModelFactory.PrepareCountryModelAsync(model, country, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(id);
+            var country = await _countryService.GetCountryByIdAsync(id);
             if (country == null)
                 return RedirectToAction("List");
 
             try
             {
-                if (_addressService.GetAddressTotalByCountryId(country.Id) > 0)
+                if (await _addressService.GetAddressTotalByCountryIdAsync(country.Id) > 0)
                     throw new NopException("The country can't be deleted. It has associated addresses");
 
-                _countryService.DeleteCountry(country);
+                await _countryService.DeleteCountryAsync(country);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCountry",
-                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCountry"), country.Id), country);
+                await _customerActivityService.InsertActivityAsync("DeleteCountry",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteCountry"), country.Id), country);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.Deleted"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = country.Id });
             }
         }
 
         [HttpPost]
-        public virtual IActionResult PublishSelected(ICollection<int> selectedIds)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> PublishSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
-            var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+            var countries = await _countryService.GetCountriesByIdsAsync(selectedIds.ToArray());
             foreach (var country in countries)
             {
                 country.Published = true;
-                _countryService.UpdateCountry(country);
+                await _countryService.UpdateCountryAsync(country);
             }
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult UnpublishSelected(ICollection<int> selectedIds)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> UnpublishSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
-            var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+            var countries = await _countryService.GetCountriesByIdsAsync(selectedIds.ToArray());
             foreach (var country in countries)
             {
                 country.Published = false;
-                _countryService.UpdateCountry(country);
+                await _countryService.UpdateCountryAsync(country);
             }
 
             return Json(new { Result = true });
@@ -336,45 +349,48 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region States / provinces
 
         [HttpPost]
-        public virtual IActionResult States(StateProvinceSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> States(StateProvinceSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(searchModel.CountryId)
+            var country = await _countryService.GetCountryByIdAsync(searchModel.CountryId)
                 ?? throw new ArgumentException("No country found with the specified id");
 
             //prepare model
-            var model = _countryModelFactory.PrepareStateProvinceListModel(searchModel, country);
+            var model = await _countryModelFactory.PrepareStateProvinceListModelAsync(searchModel, country);
 
             return Json(model);
         }
 
-        public virtual IActionResult StateCreatePopup(int countryId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> StateCreatePopup(int countryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(countryId);
+            var country = await _countryService.GetCountryByIdAsync(countryId);
             if (country == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _countryModelFactory.PrepareStateProvinceModel(new StateProvinceModel(), country, null);
+            var model = await _countryModelFactory.PrepareStateProvinceModelAsync(new StateProvinceModel(), country, null);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult StateCreatePopup(StateProvinceModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> StateCreatePopup(StateProvinceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(model.CountryId);
+            var country = await _countryService.GetCountryByIdAsync(model.CountryId);
             if (country == null)
                 return RedirectToAction("List");
 
@@ -382,13 +398,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var sp = model.ToEntity<StateProvince>();
 
-                _stateProvinceService.InsertStateProvince(sp);
+                await _stateProvinceService.InsertStateProvinceAsync(sp);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewStateProvince",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewStateProvince"), sp.Id), sp);
+                await _customerActivityService.InsertActivityAsync("AddNewStateProvince",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewStateProvince"), sp.Id), sp);
 
-                UpdateLocales(sp, model);
+                await UpdateLocalesAsync(sp, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -396,59 +412,61 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _countryModelFactory.PrepareStateProvinceModel(model, country, null, true);
+            model = await _countryModelFactory.PrepareStateProvinceModelAsync(model, country, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult StateEditPopup(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> StateEditPopup(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a state with the specified id
-            var state = _stateProvinceService.GetStateProvinceById(id);
+            var state = await _stateProvinceService.GetStateProvinceByIdAsync(id);
             if (state == null)
                 return RedirectToAction("List");
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(state.CountryId);
+            var country = await _countryService.GetCountryByIdAsync(state.CountryId);
             if (country == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _countryModelFactory.PrepareStateProvinceModel(null, country, state);
+            var model = await _countryModelFactory.PrepareStateProvinceModelAsync(null, country, state);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult StateEditPopup(StateProvinceModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> StateEditPopup(StateProvinceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a state with the specified id
-            var state = _stateProvinceService.GetStateProvinceById(model.Id);
+            var state = await _stateProvinceService.GetStateProvinceByIdAsync(model.Id);
             if (state == null)
                 return RedirectToAction("List");
 
             //try to get a country with the specified id
-            var country = _countryService.GetCountryById(state.CountryId);
+            var country = await _countryService.GetCountryByIdAsync(state.CountryId);
             if (country == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 state = model.ToEntity(state);
-                _stateProvinceService.UpdateStateProvince(state);
+                await _stateProvinceService.UpdateStateProvinceAsync(state);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditStateProvince",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditStateProvince"), state.Id), state);
+                await _customerActivityService.InsertActivityAsync("EditStateProvince",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditStateProvince"), state.Id), state);
 
-                UpdateLocales(state, model);
+                await UpdateLocalesAsync(state, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -456,38 +474,40 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _countryModelFactory.PrepareStateProvinceModel(model, country, state, true);
+            model = await _countryModelFactory.PrepareStateProvinceModelAsync(model, country, state, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult StateDelete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> StateDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             //try to get a state with the specified id
-            var state = _stateProvinceService.GetStateProvinceById(id)
+            var state = await _stateProvinceService.GetStateProvinceByIdAsync(id)
                 ?? throw new ArgumentException("No state found with the specified id");
 
-            if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
+            if (await _addressService.GetAddressTotalByStateProvinceIdAsync(state.Id) > 0)
             {
-                return ErrorJson(_localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
+                return ErrorJson(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
             }
 
             //int countryId = state.CountryId;
-            _stateProvinceService.DeleteStateProvince(state);
+            await _stateProvinceService.DeleteStateProvinceAsync(state);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteStateProvince",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteStateProvince"), state.Id), state);
+            await _customerActivityService.InsertActivityAsync("DeleteStateProvince",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteStateProvince"), state.Id), state);
 
             return new NullJsonResult();
         }
 
-        public virtual IActionResult GetStatesByCountryId(string countryId, bool? addSelectStateItem, bool? addAsterisk)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool? addSelectStateItem, bool? addAsterisk)
         {
             //permission validation is not required here
 
@@ -495,8 +515,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException(nameof(countryId));
 
-            var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
-            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
+            var country = await _countryService.GetCountryByIdAsync(Convert.ToInt32(countryId));
+            var states = country != null ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id, showHidden: true)).ToList() : new List<StateProvince>();
             var result = (from s in states
                           select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
@@ -511,11 +531,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //country is not selected ("choose country" item)
                     if (addSelectStateItem.HasValue && addSelectStateItem.Value)
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.SelectState") });
+                        result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.SelectState") });
                     }
                     else
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.Other") });
+                        result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.Other") });
                     }
                 }
                 else
@@ -524,14 +544,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!result.Any())
                     {
                         //country does not have states
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.Other") });
+                        result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.Other") });
                     }
                     else
                     {
                         //country has some states
                         if (addSelectStateItem.HasValue && addSelectStateItem.Value)
                         {
-                            result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.SelectState") });
+                            result.Insert(0, new { id = 0, name = await _localizationService.GetResourceAsync("Admin.Address.SelectState") });
                         }
                     }
                 }
@@ -544,43 +564,45 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Export / import
 
-        public virtual IActionResult ExportCsv()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ExportCsv()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             var fileName = $"states_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.csv";
 
-            var states = _stateProvinceService.GetStateProvinces(true);
-            var result = _exportManager.ExportStatesToTxt(states);
+            var states = await _stateProvinceService.GetStateProvincesAsync(true);
+            var result = await _exportManager.ExportStatesToTxtAsync(states);
 
             return File(Encoding.UTF8.GetBytes(result), MimeTypes.TextCsv, fileName);
         }
 
         [HttpPost]
-        public virtual IActionResult ImportCsv(IFormFile importcsvfile)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ImportCsv(IFormFile importcsvfile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             try
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    var count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
+                    var count = await _importManager.ImportStatesFromTxtAsync(importcsvfile.OpenReadStream());
 
-                    _notificationService.SuccessNotification(string.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
+                    _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Countries.ImportSuccess"), count));
 
                     return RedirectToAction("List");
                 }
 
-                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
 
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }

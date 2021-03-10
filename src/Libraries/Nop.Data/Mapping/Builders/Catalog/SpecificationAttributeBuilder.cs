@@ -1,5 +1,6 @@
 ﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Catalog;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Catalog
 {
@@ -17,6 +18,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table.WithColumn(nameof(SpecificationAttribute.Name)).AsString(int.MaxValue).NotNullable();
+            table.WithColumn(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).AsInt32().Nullable().ForeignKey<SpecificationAttributeGroup>();
         }
 
         #endregion

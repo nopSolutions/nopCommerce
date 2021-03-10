@@ -1,0 +1,1836 @@
+﻿AM,Երևան,,True,0
+AM,Արարատի մարզ,,True,1
+AM,Արմավիրի մարզ,,True,2
+AM,Կոտայքի մարզ,,True,3
+AM,Արագածոտնի մարտ,,True,4
+AM,Գեղարքունիքի մարզ,,True,5
+AM,Շիրակի մարզ,,True,6
+AM,Լոռու մարզ,,True,7
+AM,Վայոց ձորի մարզ,,True,8
+AM,Սյունիքի մարզ,,True,9
+AM,Տավուշի մարզ,,True,10
+AR,Ciudad Autonoma de Buenos Aires,CABA,True,1
+AR,Buenos Aires,BA,True,2
+AR,Catamarca,CA,True,3
+AR,Chaco,CH,True,3
+AR,Chubut,CT,True,3
+AR,Cordoba,CB,True,3
+AR,Corrientes,CR,True,3
+AR,Entre Rios,ER,True,3
+AR,Formosa,FO,True,3
+AR,Jujuy,JY,True,3
+AR,La Pampa,LP,True,3
+AR,La Rioja,LR,True,3
+AR,Mendoza,MZ,True,3
+AR,Misiones,MI,True,3
+AR,Neuquen,NQ,True,3
+AR,Rio Negro,RN,True,3
+AR,Salta,SA,True,3
+AR,San Juan,SJ,True,3
+AR,San Luis,SL,True,3
+AR,Santa Cruz,SC,True,3
+AR,Santa Fe,SF,True,3
+AR,Santiago del Estero,SE,True,3
+AR,Tierra del Fuego,TF,True,3
+AR,Tucuman,TU,True,3
+AT,Wien,W,True,1
+AT,Niederösterreich,NÖ,True,2
+AT,Oberösterreich,OÖ,True,3
+AT,Salzburg,S,True,4
+AT,Tirol,T,True,5
+AT,Vorarlberg,V,True,6
+AT,Burgenland,B,True,7
+AT,Steiermark,ST,True,8
+AT,Kärnten,K,True,9
+AU, Australian Capital Territory,,True,0
+AU, New South Wales,,True,0
+AU, Northern Territory,,True,0
+AU, Queensland,,True,0
+AU, South Australia,,True,0
+AU, Tasmania,,True,0
+AU, Victoria,,True,0
+AU, Western Australia,,True,0
+BD,বরগুনা,,TRUE,2
+BD,বরিশাল,,TRUE,2
+BD,ভোলা,,TRUE,2
+BD,ঝালকাঠি,,TRUE,2
+BD,পটুয়াখালী,,TRUE,2
+BD,পিরোজপুর,,TRUE,2
+BD,বান্দরবান,,TRUE,2
+BD,ব্রাহ্মণবাড়ীয়া,,TRUE,2
+BD,চাঁদপুর,,TRUE,2
+BD,চট্টগ্রাম,,TRUE,2
+BD,কুমিল্লা,,TRUE,2
+BD,কক্সবাজার,,TRUE,2
+BD,ফেনী,,TRUE,2
+BD,খাগড়াছড়ি,,TRUE,2
+BD,লক্ষ্মীপুর,,TRUE,2
+BD,নোয়াখালী,,TRUE,2
+BD,রাঙ্গামাটি,,TRUE,2
+BD,ঢাকা,,TRUE,1
+BD,ফরিদপুর,,TRUE,2
+BD,গাজীপুর,,TRUE,2
+BD,গোপালগঞ্জ,,TRUE,2
+BD,কিশোরগঞ্জ,,TRUE,2
+BD,মাদারীপুর,,TRUE,2
+BD,মানিকগঞ্জ,,TRUE,2
+BD,মুন্সীগঞ্জ,,TRUE,2
+BD,নারায়ণগঞ্জ,,TRUE,2
+BD,নরসিংদী,,TRUE,2
+BD,রাজবাড়ী,,TRUE,2
+BD,শরীয়তপুর,,TRUE,2
+BD,টাঙ্গাইল,,TRUE,2
+BD,বাগেরহাট,,TRUE,2
+BD,চুয়াডাঙ্গা,,TRUE,2
+BD,যশোর,,TRUE,2
+BD,ঝিনাইদহ,,TRUE,2
+BD,খুলনা,,TRUE,2
+BD,কুষ্টিয়া,,TRUE,2
+BD,মাগুরা,,TRUE,2
+BD,মেহেরপুর,,TRUE,2
+BD,নড়াইল,,TRUE,2
+BD,সাতক্ষিরা,,TRUE,2
+BD,জামালপুর,,TRUE,2
+BD,ময়মনসিংহ,,TRUE,2
+BD,নেত্রকোনা,,TRUE,2
+BD,শেরপুর,,TRUE,2
+BD,বগুড়া,,TRUE,2
+BD,জয়পুরহাট,,TRUE,2
+BD,নওগাঁ,,TRUE,2
+BD,নাটোর,,TRUE,2
+BD,চাঁপাই নবাবগঞ্জ,,TRUE,2
+BD,পাবনা,,TRUE,2
+BD,রাজশাহী,,TRUE,2
+BD,সিরাজগঞ্জ,,TRUE,2
+BD,দিনাজপুর,,TRUE,2
+BD,গাইবান্ধা,,TRUE,2
+BD,কুড়িগ্রাম,,TRUE,2
+BD,লালমনিরহাট,,TRUE,2
+BD,নীলফামারী,,TRUE,2
+BD,পঞ্চগড়,,TRUE,2
+BD,রংপুর,,TRUE,2
+BD,ঠাকুরগাঁও,,TRUE,2
+BD,হবিগঞ্জ,,TRUE,2
+BD,মৌলভীবাজার,,TRUE,2
+BD,সুনামগঞ্জ,,TRUE,2
+BD,সিলেট,,TRUE,2
+BE,Antwerpen,ANT,True,0
+BE,Brabant wallon,VBR,True,0
+BE,Hainaut,HAI,True,0
+BE,Liège,LIE,True,0
+BE,Limburg,LIM,True,0
+BE,Luxembourg,LUX,True,0
+BE,Namur,NAM,True,0
+BE,Oost-Vlaanderen,OVL,True,0
+BE,Vlaams-Brabant,VBR,True,0
+BE,West-Vlaanderen,WVL,True,0
+BG,Blagoevgrad,,True,0
+BG,Burgas,,True,0
+BG,Dobrich,,True,0
+BG,Gabrovo,,True,0
+BG,Haskovo,,True,0
+BG,Kardzhali,,True,0
+BG,Kyustendil,,True,0
+BG,Lovech,,True,0
+BG,Montana,,True,0
+BG,Pazardzhik,,True,0
+BG,Pernik,,True,0
+BG,Pleven,,True,0
+BG,Plovdiv,,True,0
+BG,Razgrad,,True,0
+BG,Ruse,,True,0
+BG,Shumen,,True,0
+BG,Silistra,,True,0
+BG,Sliven,,True,0
+BG,Smolyan,,True,0
+BG,Sofia,,True,0
+BG,Sofia city,,True,0
+BG,Stara Zagora,,True,0
+BG,Targovishte,,True,0
+BG,Varna,,True,0
+BG,Veliko Tarnovo,,True,0
+BG,Vidin,,True,0
+BG,Vratsa,,True,0
+BG,Yambol,,True,0
+BN,Belait,,True,1
+BN,Brunei-Muara ,,True,2
+BN,Temburong,,True,3
+BN,Tutong,,True,4
+BR,Acre,AC,True,0
+BR,Alagoas,AL,True,0
+BR,Amapá,AP,True,0
+BR,Amazonas,AM,True,0
+BR,Bahia,BA,True,0
+BR,Ceará,CE,True,0
+BR,Distrito Federal,DF,True,0
+BR,Espírito Santo,ES,True,0
+BR,Goiás,GO,True,0
+BR,Maranhão,MA,True,0
+BR,Mato Grosso,MT,True,0
+BR,Mato Grosso do Sul,MS,True,0
+BR,Minas Gerais,MG,True,0
+BR,Pará,PA,True,0 
+BR,Paraíba,PB,True,0
+BR,Paraná,PR,True,0
+BR,Pernambuco,PE,True,0
+BR,Piauí,PI,True,0
+BR,Rio de Janeiro,RJ,True,0
+BR,Rio Grande do Norte,RN,True,0
+BR,Rio Grande do Sul,RS,True,0
+BR,Rondônia,RO,True,0
+BR,Roraima,RR,True,0
+BR,Santa Catarina,SC,True,0
+BR,São Paulo,SP,True,0
+BR,Sergipe,SE,True,0
+BR,Tocantins,TO,True,0
+BY,Брестская область,1,True,1
+BY,Витебская область,2,True,1
+BY,Гомельская область,3,True,1
+BY,Гродненская область,4,True,1
+BY,Минская область,5,True,1
+BY,Могилёвская область,6,True,1
+BY,Минск,7,True,1
+CA,Alberta,AB,True,1
+CA,British Columbia,BC,True,1
+CA,Manitoba,MB,True,1
+CA,New Brunswick,NB,True,1
+CA,Newfoundland and Labrador,NL,True,1
+CA,Northwest Territories,NT,True,1
+CA,Nova Scotia,NS,True,1
+CA,Nunavut,NU,True,1
+CA,Ontario,ON,True,1
+CA,Prince Edward Island,PE,True,1
+CA,Quebec,QC,True,1
+CA,Saskatchewan,SK,True,1
+CA,Yukon Territory,YU,True,1
+CH,Aargau,AG,TRUE,0
+CH,Appenzell Ausserrhoden,AR,TRUE,0
+CH,Appenzell Innerrhoden,AI,TRUE,0
+CH,Basel-Landschaft,BL,TRUE,0
+CH,Basel-Stadt,BS,TRUE,0
+CH,Bern,BE,TRUE,0
+CH,Fribourg/Freiburg,FR,TRUE,0
+CH,Genève,GE,TRUE,0
+CH,Glarus,GL,TRUE,0
+CH,Graubünden/Grischun,GR,TRUE,0
+CH,Jura,JU,TRUE,0
+CH,Luzern,LU,TRUE,0
+CH,Neuchâtel,NE,TRUE,0
+CH,Nidwalden,NW,TRUE,0
+CH,Obwalden,OW,TRUE,0
+CH,Schaffhausen,SH,TRUE,0
+CH,Schwyz,SZ,TRUE,0
+CH,Solothurn,SO,TRUE,0
+CH,St. Gallen,SG,TRUE,0
+CH,Ticino,TI,TRUE,0
+CH,Thurgau,TG,TRUE,0
+CH,Uri,UR,TRUE,0
+CH,Vaud,VD,TRUE,0
+CH,Valais/Wallis,VS,TRUE,0
+CH,Zug,ZG,TRUE,0
+CH,Zürich,ZH,TRUE,0
+CN,北京市,北京市,true,1
+CN,天津市,天津市,true,2
+CN,河北省,河北省,true,3
+CN,山西省,山西省,true,4
+CN,内蒙古自治区,内蒙古自治区,true,5
+CN,辽宁省,辽宁省,true,6
+CN,吉林省,吉林省,true,7
+CN,黑龙江省,黑龙江省,true,8
+CN,上海市,上海市,true,9
+CN,江苏省,江苏省,true,10
+CN,浙江省,浙江省,true,11
+CN,安徽省,安徽省,true,12
+CN,福建省,福建省,true,13
+CN,江西省,江西省,true,14
+CN,山东省,山东省,true,15
+CN,河南省,河南省,true,16
+CN,湖北省,湖北省,true,17
+CN,湖南省,湖南省,true,18
+CN,广东省,广东省,true,19
+CN,广西壮族自治区,广西壮族自治区,true,20
+CN,海南省,海南省,true,21
+CN,重庆市,重庆市,true,22
+CN,四川省,四川省,true,23
+CN,贵州省,贵州省,true,24
+CN,云南省,云南省,true,25
+CN,西藏自治区,西藏自治区,true,26
+CN,陕西省,陕西省,true,27
+CN,甘肃省,甘肃省,true,28
+CN,青海省,青海省,true,29
+CN,宁夏回族自治区,宁夏回族自治区,true,30
+CN,新疆维吾尔自治区,新疆维吾尔自治区,true,31
+CN,香港特别行政区,香港特别行政区,true,32
+CN,澳门特别行政区,澳门特别行政区,true,33
+CN,台湾省,台湾省,true,34
+CO,Amazonas,,True,0
+CO,Antioquia,,True,0
+CO,Arauca,,True,0
+CO,Atlántico,,True,0
+CO,Bolívar,,True,0
+CO,Boyacá,,True,0
+CO,Caldas,,True,0
+CO,Caquetá,,True,0
+CO,Casanare,,True,0
+CO,Cauca,,True,0
+CO,Cesar,,True,0
+CO,Chocó,,True,0
+CO,Córdoba,,True,0
+CO,Cundinamarca,,True,0
+CO,Guainía,,True,0
+CO,Guaviare,,True,0
+CO,Huila,,True,0
+CO,La Guajira,,True,0
+CO,Magdalena,,True,0
+CO,Meta,,True,0
+CO,Nariño,,True,0
+CO,Norte de Santander,,True,0
+CO,Putumayo,,True,0
+CO,Quindío,,True,0
+CO,Risaralda,,True,0
+CO,San Andrés y Providencia,,True,0
+CO,Santander,,True,0
+CO,Sucre,,True,0
+CO,Tolima,,True,0
+CO,Valle del Cauca,,True,0
+CO,Vaupés,,True,0
+CO,Vichada,,True,0
+CR,Alajuela,CR-A,TRUE,1
+CR,Cartago,CR-C,TRUE,1
+CR,Guanacaste,CR-G,TRUE,1
+CR,Heredia,CR-H,TRUE,1
+CR,Limón,CR-L,TRUE,1
+CR,Puntarenas,CR-P,TRUE,1
+CR,San José,CR-SJ,TRUE,1
+CU,Pinar del Río,,True,1
+CU,Artemisa,,True,2
+CU,La Habana,,True,3
+CU,Mayabeque,,True,4
+CU,Matanzas,,True,5
+CU,Cienfuegos,,True,6
+CU,Villa Clara,,True,7
+CU,Sancti Spíritus,,True,8
+CU,Ciego de Ávila,,True,9
+CU,Camagüey,,True,10
+CU,Las Tunas,,True,11
+CU,Holguín,,True,12
+CU,Granma,,True,13
+CU,Santiago de Cuba,,True,14
+CU,Guantánamo,,True,15
+CU,Isla de la Juventud,,True,16
+CY,Famagusta district,,True,0
+CY,Kyrenia district,,True,0
+CY,Limassol district,,True,0
+CY,Larnaca district,,True,0
+CY,Nicosia district,,True,0
+CY,Paphos district,,True,0
+CZ,Hlavní město Praha,,True,0
+CZ,Středočeský kraj,,True,0
+CZ,Jihočeský kraj,,True,0
+CZ,Plzeňský kraj,,True,0
+CZ,Karlovarský kraj,,True,0
+CZ,Ústecký kraj,,True,0
+CZ,Liberecký kraj,,True,0
+CZ,Královéhradecký kraj,,True,0
+CZ,Pardubický kraj,,True,0
+CZ,Kraj Vysočina,,True,0
+CZ,Jihomoravský kraj,,True,0
+CZ,Olomoucký kraj,,True,0
+CZ,Zlínský kraj,,True,0
+CZ,Moravskoslezský kraj,,True,0
+DK,Hovedstaden,84,TRUE,1
+DK,Midtjylland,82,TRUE,2
+DK,Nordjylland,81,TRUE,3
+DK,Sjælland,85,TRUE,4
+DK,Syddanmark,83,TRUE,5
+DE,Baden-Württemberg,BW,TRUE,0
+DE,Bayern,BY,TRUE,0
+DE,Berlin,BE,TRUE,0
+DE,Brandenburg,BB,TRUE,0
+DE,Bremen,HB,TRUE,0
+DE,Hamburg,HH,TRUE,0
+DE,Hessen,HE,TRUE,0
+DE,Mecklenburg-Vorpommern,MV,TRUE,0
+DE,Niedersachsen,NI,TRUE,0
+DE,Nordrhein-Westfalen,NW,TRUE,0
+DE,Rheinland-Pfalz,RP,TRUE,0
+DE,Saarland,SL,TRUE,0
+DE,Sachsen,SN,TRUE,0
+DE,Sachsen-Anhalt,ST,TRUE,0
+DE,Schleswig-Holstein,SH,TRUE,0
+DE,Thüringen,TH,TRUE,0
+EE,Harjumaa,37,TRUE,1
+EE,Hiiumaa,39,TRUE,2
+EE,Ida-Virumaa,44,TRUE,3
+EE,Jõgevamaa,49,TRUE,4
+EE,Järvamaa,51,TRUE,5
+EE,Läänemaa,57,TRUE,6
+EE,Lääne-Virumaa,59,TRUE,7
+EE,Põlvamaa,65,TRUE,8
+EE,Pärnumaa,67,TRUE,9
+EE,Raplamaa,70,TRUE,10
+EE,Saaremaa,74,TRUE,11
+EE,Tartumaa,78,TRUE,12
+EE,Valgamaa,82,TRUE,13
+EE,Viljandimaa,84,TRUE,14
+EE,Võrumaa,86,TRUE,15
+EG,Cairo,,TRUE,1
+EG,Alexandria,,TRUE,2
+EG,Ismailia,,TRUE,3
+EG,Aswan,,TRUE,4
+EG,Asyut,,TRUE,5
+EG,Beheira,,TRUE,6
+EG,Beni Suef,,TRUE,7
+EG,Dakahlia,,TRUE,8
+EG,Damietta,,TRUE,9
+EG,Faiyum,,TRUE,10
+EG,Gharbia,,TRUE,11
+EG,Giza,,TRUE,12
+EG,Kafr El Sheikh,,TRUE,13
+EG,Luxor,,TRUE,14
+EG,Matruh,,TRUE,15
+EG,Minya,,TRUE,16
+EG,Monufia,,TRUE,17
+EG,New Valley,,TRUE,18
+EG,North Sinai,,TRUE,19
+EG,Port Said,,TRUE,20
+EG,Qalyubia,,TRUE,21
+EG,Qena,,TRUE,22
+EG,Red Sea,,TRUE,23
+EG,Sharqia,,TRUE,24
+EG,Sohag,,TRUE,25
+EG,South Sinai,,TRUE,26
+EG,Suez,,TRUE,27
+ES,Álava,,True,1
+ES,Albacete,,True,2
+ES,Alicante,,True,3
+ES,Almería,,True,4
+ES,Ávila,,True,5
+ES,Badajoz,,True,6
+ES,Baleares (Illes),,True,7
+ES,Barcelona,,True,8
+ES,Burgos,,True,9
+ES,Cáceres,,True,10
+ES,Cádiz,,True,11
+ES,Castellón,,True,12
+ES,Ciudad Real,,True,13
+ES,Córdoba,,True,14
+ES,A Coruña,,True,15
+ES,Cuenca,,True,16
+ES,Girona,,True,17
+ES,Granada,,True,18
+ES,Guadalajara,,True,19
+ES,Guipúzcoa,,True,20
+ES,Huelva,,True,21
+ES,Huesca,,True,22
+ES,Jaén,,True,23
+ES,León,,True,24
+ES,Lleida,,True,25
+ES,La Rioja,,True,26
+ES,Lugo,,True,27
+ES,Madrid,,True,28
+ES,Málaga,,True,29
+ES,Murcia,,True,30
+ES,Navarra,,True,31
+ES,Ourense,,True,32
+ES,Asturias,,True,33
+ES,Palencia,,True,34
+ES,Las Palmas,,True,35
+ES,Pontevedra,,True,36
+ES,Salamanca,,True,37
+ES,Santa Cruz de Tenerife,,True,38
+ES,Cantabria,,True,39
+ES,Segovia,,True,40
+ES,Sevilla,,True,41
+ES,Soria,,True,42
+ES,Tarragona,,True,43
+ES,Teruel,,True,44
+ES,Toledo,,True,45
+ES,Valencia,,True,46
+ES,Valladolid,,True,47
+ES,Vizcaya,,True,48
+ES,Zamora,,True,49
+ES,Zaragoza,,True,50
+ES,Ceuta,,True,51
+ES,Melilla,,True,52
+FI,Ahvenanmaan maakunta/Landskapet Åland,01,True,1
+FI,Etelä-Karjala/Södra Karelen,02,True,2
+FI,Etelä-Pohjanmaa/Södra Österbotten,03,True,3
+FI,Etelä-Savo/Södra Savolax,04,True,4
+FI,Kainuu/Kajanaland,05,True,5
+FI,Kanta-Häme/Egentliga Tavastland,06,True,6
+FI,Keski-Pohjanmaa/Mellersta Österbotten,07,True,7
+FI,Keski-Suomi/Mellersta Finland,08,True,8
+FI,Kymenlaakso/Kymmenedalen,09,True,9
+FI,Lappi/Lappland,10,True,10
+FI,Pirkanmaa/Birkaland,11,True,11
+FI,Pohjanmaa/Österbotten,12,True,12
+FI,Pohjois-Karjala/Norra Karelen,13,True,13
+FI,Pohjois-Pohjanmaa/Norra Österbotten,14,True,14
+FI,Pohjois-Savo/Norra Savolax,15,True,15
+FI,Päijät-Häme/Päijänne-Tavastland,16,True,16
+FI,Satakunta/Satakunda,17,True,17
+FI,Uusimaa/Nyland,18,True,18
+FI,Varsinais-Suomi/Egentliga Finland,19,True,19
+FR,Ain,01,True,1
+FR,Aisne,02,True,2
+FR,Allier,03,True,3
+FR,Alpes de Hautes-Provence,04,True,4
+FR,Alpes (Hautes),05,True,5
+FR,Alpes Maritimes,06,True,6
+FR,Ardèche,07,True,7
+FR,Ardennes,08,True,8
+FR,Ariège,09,True,9
+FR,Aube,10,True,10
+FR,Aude,11,True,11
+FR,Aveyron,12,True,12
+FR,Bouches du Rhône,13,True,13
+FR,Calvados,14,True,14
+FR,Cantal,15,True,15
+FR,Charente,16,True,16
+FR,Charente Maritime,17,True,17
+FR,Cher,18,True,18
+FR,Corrèze,19,True,19
+FR,Corse du sud,2A,True,20
+FR,Haute corse,2B,True,21
+FR,Côte-d'Or,21,True,22
+FR,Côtes d'Armor,22,True,24
+FR,Creuse,23,True,26
+FR,Dordogne,24,True,27
+FR,Doubs,25,True,28
+FR,Drôme,26,True,29
+FR,Eure,27,True,30
+FR,Eure et Loir,28,True,31
+FR,Finistère,29,True,32
+FR,Gard,30,True,33
+FR,Garonne (Haute),31,True,34
+FR,Gers,32,True,35
+FR,Gironde,33,True,36
+FR,Hérault,34,True,37
+FR,Ille et Vilaine,35,True,38
+FR,Indre,36,True,39
+FR,Indre et Loire,37,True,40
+FR,Isère,38,True,41
+FR,Jura,39,True,42
+FR,Landes,40,True,43
+FR,Loir et Cher,41,True,44
+FR,Loire,42,True,45
+FR,Loire (Haute),43,True,46
+FR,Loire Atlantique,44,True,47
+FR,Loiret,45,True,48
+FR,Lot,46,True,49
+FR,Lot et Garonne,47,True,50
+FR,Lozère,48,True,51
+FR,Maine et Loire,49,True,52
+FR,Manche,50,True,53
+FR,Marne,51,True,54
+FR,Marne (Haute),52,True,55
+FR,Mayenne,53,True,56
+FR,Meurthe et Moselle,54,True,57
+FR,Meuse,55,True,58
+FR,Morbihan,56,True,59
+FR,Moselle,57,True,60
+FR,Nièvre,58,True,61
+FR,Nord,59,True,62
+FR,Oise,60,True,63
+FR,Orne,61,True,64
+FR,Pas de Calais,62,True,65
+FR,Puy de Dôme,63,True,66
+FR,Pyrénées Atlantiques,64,True,67
+FR,Pyrénées (Hautes),65,True,68
+FR,Pyrénées Orientales,66,True,69
+FR,Rhin (Bas),67,True,70
+FR,Rhin (Haut),68,True,71
+FR,Rhône,69,True,72
+FR,Saône (Haute),70,True,73
+FR,Saône et Loire,71,True,74
+FR,Sarthe,72,True,75
+FR,Savoie,73,True,76
+FR,Savoie (Haute),74,True,77
+FR,Paris,75,True,78
+FR,Seine Maritime,76,True,79
+FR,Seine et Marne,77,True,80
+FR,Yvelines,78,True,81
+FR,Sèvres (Deux),79,True,82
+FR,Somme,80,True,83
+FR,Tarn,81,True,84
+FR,Tarn et Garonne,82,True,85
+FR,Var,83,True,86
+FR,Vaucluse,84,True,87
+FR,Vendée,85,True,88
+FR,Vienne,86,True,89
+FR,Vienne (Haute),87,True,90
+FR,Vosges,88,True,91
+FR,Yonne,89,True,92
+FR,Belfort (Territoire de),90,True,93
+FR,Essonne,91,True,94
+FR,Hauts de Seine,92,True,95
+FR,Seine Saint Denis,93,True,96
+FR,Val de Marne,94,True,97
+FR,Val d'oise,95,True,98
+FR,Guadeloupe,971,True,99
+FR,Martinique,972,True,100
+FR,Guyane,973,True,101
+FR,Réunion,974,True,102
+FR,Saint-Pierre-et-Miquelon,975,True,103
+FR,Mayotte,976,True,104
+FR,Terres Australes et Antarctiques,984,True,105
+FR,Wallis et futuna,986,True,106
+FR,Polynésie Française,987,True,107
+FR,Nouvelle-Calédonie,988,True,108
+GB,Aberdeenshire,,True,1
+GB,Anglesey/Sir Fon,,True,1
+GB,Angus,,True,1
+GB,Argyll and Bute,,True,1
+GB,Ayrshire,,True,1
+GB,Berkshire,,True,1
+GB,Blaenau Gwent,,True,1
+GB,Bridgend,,True,1
+GB,Bristol,,True,1
+GB,Buckinghamshire,,True,1
+GB,Caerphilly,,True,1
+GB,Cambridgeshire,,True,1
+GB,Cardiff,,True,1
+GB,Carmarthenshire,,True,1
+GB,Ceredigion,,True,1
+GB,Cheshire,,True,1
+GB,Clackmannanshire,,True,1
+GB,Conwy,,True,1
+GB,Cornwall,,True,1
+GB,County Antrim,,True,1
+GB,County Armagh,,True,1
+GB,County Down,,True,1
+GB,County Fermanagh,,True,1
+GB,County Londonderry,,True,1
+GB,County Tyrone,,True,1
+GB,Cumbria,,True,1
+GB,Denbighshire,,True,1
+GB,Derbyshire,,True,1
+GB,Devon,,True,1
+GB,Dorset,,True,1
+GB,Dumfries and Galloway,,True,1
+GB,Dunbartonshire,,True,1
+GB,Dundee,,True,1
+GB,Durham,,True,1
+GB,East Lothian,,True,1
+GB,East Riding of Yorkshire,,True,1
+GB,East Sussex,,True,1
+GB,Edinburgh,,True,1
+GB,Essex,,True,1
+GB,Falkirk,,True,1
+GB,Fife,,True,1
+GB,Flintshire,,True,1
+GB,Glamorgan,,True,1
+GB,Glasgow,,True,1
+GB,Gloucestershire,,True,1
+GB,Greater Manchester,,True,1
+GB,Gwynedd,,True,1
+GB,Hampshire,,True,1
+GB,Hereford and Worcester,,True,1
+GB,Hertfordshire,,True,1
+GB,Highland,,True,1
+GB,Inverclyde,,True,1
+GB,Isle of Man,,True,1
+GB,Isle of Wight,,True,1
+GB,Kent,,True,1
+GB,Lanarkshire,,True,1
+GB,Lancashire,,True,1
+GB,Leicestershire,,True,1
+GB,Lincolnshire,,True,1
+GB,London,,True,1
+GB,Merseyside,,True,1
+GB,Merthyr Tydfil,,True,1
+GB,Middlesex,,True,1
+GB,Midlothian,,True,1
+GB,Monmouthshire,,True,1
+GB,Moray,,True,1
+GB,Neath Port Talbot,,True,1
+GB,Newport,,True,1
+GB,Norfolk,,True,1
+GB,North Yorkshire,,True,1
+GB,Northamptonshire,,True,1
+GB,Northumberland,,True,1
+GB,Nottinghamshire,,True,1
+GB,Orkney,,True,1
+GB,Oxfordshire,,True,1
+GB,Pembrokeshire,,True,1
+GB,Perth and Kinross,,True,1
+GB,Powys,,True,1
+GB,Renfrewshire,,True,1
+GB,Rhondda Cynon Taff,,True,1
+GB,Rutland,,True,1
+GB,Scottish Borders,,True,1
+GB,Shetland Isles,,True,1
+GB,Shropshire,,True,1
+GB,Somerset,,True,1
+GB,South Yorkshire,,True,1
+GB,Staffordshire,,True,1
+GB,Stirlingshire,,True,1
+GB,Suffolk,,True,1
+GB,Surrey,,True,1
+GB,Swansea,,True,1
+GB,Torfaen,,True,1
+GB,Tyne and Wear,,True,1
+GB,Warwickshire,,True,1
+GB,West Lothian,,True,1
+GB,West Midlands,,True,1
+GB,West Sussex,,True,1
+GB,West Yorkshire,,True,1
+GB,Western Isles,,True,1
+GB,Wiltshire,,True,1
+GB,Wrexham,,True,1 
+GR,ΑΙΤΩΛΟΑΚΑΡΝΑΝΙΑΣ,ΑΙΤ,TRUE,1
+GR,ΑΡΓΟΛΙΔΑΣ,ΑΡΓ,TRUE,2
+GR,ΑΡΚΑΔΙΑΣ,ΑΡΚ,TRUE,3
+GR,ΑΡΤΑΣ,ΑΡΤ,TRUE,4
+GR,ΑΤΤΙΚΗΣ,ΑΤΤ,TRUE,5
+GR,ΑΧΑΙΑΣ,ΑΧΑ,TRUE,6
+GR,ΒΟΙΩΤΙΑΣ,ΒΟΙ,TRUE,7
+GR,ΓΡΕΒΕΝΩΝ,ΓΡΕ,TRUE,8
+GR,ΔΡΑΜΑΣ,ΔΡΑ,TRUE,9
+GR,ΔΩΔΕΚΑΝΗΣΟΥ,ΔΩΔ,TRUE,10
+GR,ΕΒΡΟΥ,ΕΒΡ,TRUE,11
+GR,ΕΥΒΟΙΑΣ,ΕΥΒ,TRUE,12
+GR,ΕΥΡΥΤΑΝΙΑΣ,ΕΥΡ,TRUE,13
+GR,ΖΑΚΥΝΘΟΥ,ΖΑΚ,TRUE,14
+GR,ΗΛΕΙΑΣ,ΗΛΕ,TRUE,15
+GR,ΗΜΑΘΙΑΣ,ΗΜΑ,TRUE,16
+GR,ΗΡΑΚΛΕΙΟΥ,ΗΡΑ,TRUE,17
+GR,ΘΕΣΠΡΩΤΙΑΣ,ΘΕΣ,TRUE,18
+GR,ΘΕΣΣΑΛΟΝΙΚΗΣ,ΘΕΣ,TRUE,19
+GR,ΙΩΑΝΝΙΝΩΝ,ΙΩΑ,TRUE,20
+GR,ΚΑΒΑΛΑΣ,ΚΑΒ,TRUE,21
+GR,ΚΑΡΔΙΤΣΑΣ,ΚΑΡ,TRUE,22
+GR,ΚΑΣΤΟΡΙΑΣ,ΚΑΣ,TRUE,23
+GR,ΚΕΡΚΥΡΑΣ,ΚΕΡ,TRUE,24
+GR,ΚΕΦΑΛΛΗΝΙΑΣ,ΚΕΦ,TRUE,25
+GR,ΚΙΛΚΙΣ,ΚΙΛ,TRUE,26
+GR,ΚΟΖΑΝΗΣ,ΚΟΖ,TRUE,27
+GR,ΚΟΡΙΝΘΙΑΣ,ΚΟΡ,TRUE,28
+GR,ΚΥΚΛΑΔΩΝ,ΚΥΚ,TRUE,29
+GR,ΛΑΚΩΝΙΑΣ,ΛΑΚ,TRUE,30
+GR,ΛΑΡΙΣΑΣ,ΛΑΡ,TRUE,31
+GR,ΛΑΣΙΘΙΟΥ,ΛΑΣ,TRUE,32
+GR,ΛΕΣΒΟΥ,ΛΕΣ,TRUE,33
+GR,ΛΕΥΚΑΔΑΣ,ΛΕΥ,TRUE,34
+GR,ΜΑΓΝΗΣΙΑΣ,ΜΑΓ,TRUE,35
+GR,ΜΕΣΣΗΝΙΑΣ,ΜΕΣ,TRUE,36
+GR,ΞΑΝΘΗΣ,ΞΑΝ,TRUE,37
+GR,ΠΕΛΛΗΣ,ΠΕΛ,TRUE,38
+GR,ΠΙΕΡΙΑΣ,ΠΙΕ,TRUE,39
+GR,ΠΡΕΒΕΖΑΣ,ΠΡΕ,TRUE,40
+GR,ΡΕΘΥΜΝΗΣ,ΡΕΘ,TRUE,41
+GR,ΡΟΔΟΠΗΣ,ΡΟΔ,TRUE,42
+GR,ΣΑΜΟΥ,ΣΑΜ,TRUE,43
+GR,ΣΕΡΡΩΝ,ΣΕΡ,TRUE,44
+GR,ΤΡΙΚΑΛΩΝ,ΤΡΙ,TRUE,45
+GR,ΦΘΙΩΤΙΔΑΣ,ΦΘΙ,TRUE,46
+GR,ΦΛΩΡΙΝΑΣ,ΦΛΩ,TRUE,47
+GR,ΦΩΚΙΔΑΣ,ΦΩΚ,TRUE,48
+GR,ΧΑΛΚΙΔΙΚΗΣ,ΧΑΛ,TRUE,49
+GR,ΧΑΝΙΩΝ,ΧΑΝ,TRUE,50
+GR,ΧΙΟΥ,ΧΙΟ,TRUE,51
+HR,Grad Zagreb,GZG,True,0
+HR,Bjelovarsko-bilogorska,BBŽ,True,1
+HR,Brodsko-posavska,BPŽ,True,1
+HR,Dubrovačko-neretvanska,DNŽ,True,1
+HR,Istarska,IŽ,True,1
+HR,Karlovačka,KŽ,True,1
+HR,Koprivničko-križevačka,KKŽ,True,1
+HR,Krapinsko-zagorska,KZŽ,True,1
+HR,Ličko-senjska,LSŽ,True,1
+HR,Međimurska,MŽ,True,1
+HR,Osječko-baranjska,OBŽ,True,1
+HR,Požeško-slavonska,PSŽ,True,1
+HR,Primorsko-goranska,PGŽ,True,1
+HR,Sisačko-moslavačka,SMŽ,True,1
+HR,Splitsko-dalmatinska,SDŽ,True,1
+HR,Šibensko-kninska,ŠKŽ,True,1
+HR,Varaždinska,VŽ,True,1
+HR,Virovitičko-podravska,VPŽ,True,1
+HR,Vukovarsko-srijemska,VSŽ,True,1
+HR,Zadarska,ZDŽ,True,1
+HR,Zagrebačka,ZGŽ,True,1
+HU,Budapest,BU,TRUE,1
+HU,Bács-Kiskun,BK,TRUE,2
+HU,Baranya,BA,TRUE,3
+HU,Békés,BE,TRUE,4
+HU,Borsod-Abaúj-Zemplén,BZ,TRUE,5
+HU,Csongrád,CS,TRUE,6
+HU,Fejér,FE,TRUE,7
+HU,Győr-Moson-Sopron,GS,TRUE,8
+HU,Hajdú-Bihar,HB,TRUE,9
+HU,Heves,HE,TRUE,10
+HU,Jász-Nagykun-Szolnok,JN,TRUE,11
+HU,Komárom-Esztergom,KE,TRUE,12
+HU,Nógrád,NO,TRUE,13
+HU,Pest,PE,TRUE,14
+HU,Somogy,SO,TRUE,15
+HU,Szabolcs-Szatmár-Bereg,SZ,TRUE,16
+HU,Tolna,TO,TRUE,17
+HU,Vas,VA,TRUE,18
+HU,Veszprém,VE,TRUE,19
+HU,Zala,ZA,TRUE,20
+ID,Aceh,,True,1
+ID,Bali,,True,2
+ID,Banten,,True,3
+ID,Bengkulu,,True,4
+ID,Gorontalo,,True,5
+ID,Jakarta,,True,6
+ID,Jambi,,True,7
+ID,Jawa Barat,,True,8
+ID,Jawa Tengah,,True,9
+ID,Jawa Timur,,True,10
+ID,Kalimantan Barat,,True,11
+ID,Kalimantan Selatan,,True,12
+ID,Kalimantan Tengah,,True,13
+ID,Kalimantan Timur,,True,14
+ID,Kalimantan Utara,,True,15
+ID,Kepulauan Bangka Belitung,,True,16
+ID,Kepulauan Riau,,True,17
+ID,Lampung,,True,18
+ID,Maluku,,True,19
+ID,Maluku Utara,,True,20
+ID,Nusa Tenggara Barat,,True,21
+ID,Nusa Tenggara Timur,,True,22
+ID,Papua,,True,23
+ID,Papua Barat,,True,24
+ID,Riau,,True,25
+ID,Sulawesi Barat,,True,26
+ID,Sulawesi Selatan,,True,27
+ID,Sulawesi Tengah,,True,28
+ID,Sulawesi Tenggara,,True,29
+ID,Sulawesi Utara,,True,30
+ID,Sumatera Barat,,True,31
+ID,Sumatera Selatan,,True,32
+ID,Sumatera Utara,,True,33
+ID,Yogyakarta,,True,34
+IE,County Carlow,,True,1
+IE,County Cavan,,True,2
+IE,County Clare,,True,3
+IE,County Cork,,True,4
+IE,County Donegal,,True,5
+IE,County Dublin,,True,6
+IE,County Galway,,True,7
+IE,County Kerry,,True,8
+IE,County Kildare,,True,9
+IE,County Kilkenny,,True,10
+IE,County Laois,,True,11
+IE,County Leitrim,,True,12
+IE,County Limerick,,True,13
+IE,County Longford,,True,14
+IE,County Louth,,True,15
+IE,County Mayo,,True,16
+IE,County Meath,,True,17
+IE,County Monaghan,,True,18
+IE,County Offaly,,True,19
+IE,County Roscommon,,True,20
+IE,County Sligo,,True,21
+IE,County Tipperary,,True,22
+IE,County Waterford,,True,23
+IE,County Westmeath,,True,24
+IE,County Wexford,,True,25
+IE,County Wicklow,,True,26
+IN,Andhra Pradesh,AP,TRUE,1
+IN,Arunachal Pradesh,AR,TRUE,1
+IN,Assam,AS,TRUE,1
+IN,Bihar,BR,TRUE,1
+IN,Chhattisgarh,CT,TRUE,1
+IN,Goa,GA,TRUE,1
+IN,Gujarat,GJ,TRUE,1
+IN,Haryana,HR,TRUE,1
+IN,Himachal Pradesh,HP,TRUE,1
+IN,Jammu and Kashmir,JK,TRUE,1
+IN,Jharkhand,JH,TRUE,1
+IN,Karnataka,KA,TRUE,1
+IN,Kerala,KL,TRUE,1
+IN,Madhya Pradesh,MP,TRUE,1
+IN,Maharashtra,MH,TRUE,1
+IN,Manipur,MN,TRUE,1
+IN,Meghalaya,ML,TRUE,1
+IN,Mizoram,MZ,TRUE,1
+IN,Nagaland,NL,TRUE,1
+IN,Odisha,OR,TRUE,1
+IN,Punjab,PB,TRUE,1
+IN,Rajasthan,RJ,TRUE,1
+IN,Sikkim,SK,TRUE,1
+IN,Tamil Nadu,TN,TRUE,1
+IN,Telangana,TG,TRUE,1
+IN,Tripura,TR,TRUE,1
+IN,Uttarakhand ,UT,TRUE,1
+IN,Uttar Pradesh,UP,TRUE,1
+IN,West Bengal,WB,TRUE,1
+IN,Andaman and Nicobar Islands,AN,TRUE,1
+IN,Chandigarh,CH,TRUE,1
+IN,Dadra and Nagar Haveli,DN,TRUE,1
+IN,Daman and Diu,DD,TRUE,1
+IN,Delhi,DL,TRUE,1
+IN,Lakshadweep,LD,TRUE,1
+IN,Puducherry,PY,TRUE,1
+IR,آذربایجان شرقی,,True,0
+IR,آذربایجان غربی,,True,0
+IR,اردبیل,,True,0
+IR,اصفهان,,True,0
+IR,البرز,,True,0
+IR,ایلام,,True,0
+IR,بوشهر,,True,0
+IR,تهران,,True,0
+IR,چهارمحال و بختیاری,,True,0
+IR,خراسان جنوبی,,True,0
+IR,خراسان رضوی,,True,0
+IR,خراسان شمالی,,True,0
+IR,خوزستان,,True,0
+IR,زنجان,,True,0
+IR,سمنان,,True,0
+IR,سیستان و بلوچستان,,True,0
+IR,فارس,,True,0
+IR,قزوین,,True,0
+IR,قم,,True,0
+IR,کردستان,,True,0
+IR,کرمان,,True,0
+IR,کرمانشاه,,True,0
+IR,کهگیلویه و بویراحمد,,True,0
+IR,گلستان,,True,0
+IR,گیلان,,True,0
+IR,لرستان,,True,0
+IR,مازندران,,True,0
+IR,مرکزی,,True,0
+IR,هرمزگان,,True,0
+IR,همدان,,True,0
+IR,یزد,,True,0
+IS,Höfuðborgarsvæðið,,True,0
+IS,Suðurnes,,True,0
+IS,Vesturland,,True,0
+IS,Vestfirðir,,True,0
+IS,Norðurland vestra,,True,0
+IS,Norðurland eystra,,True,0
+IS,Austurland,,True,0
+IS,Suðurland,,True,0
+IT,Agrigento,AG,TRUE,1
+IT,Alessandria,AL,TRUE,1
+IT,Ancona,AN,TRUE,1
+IT,Aosta,AO,TRUE,1
+IT,Arezzo,AR,TRUE,1
+IT,Ascoli Piceno,AP,TRUE,1
+IT,Asti,AT,TRUE,1
+IT,Avellino,AV,TRUE,1
+IT,Bari,BA,TRUE,1
+IT,Barletta-Andria-Trani,BT,TRUE,1
+IT,Belluno,BL,TRUE,1
+IT,Benevento,BN,TRUE,1
+IT,Bergamo,BG,TRUE,1
+IT,Biella,BI,TRUE,1
+IT,Bologna,BO,TRUE,1
+IT,Bolzano,BZ,TRUE,1
+IT,Brescia,BS,TRUE,1
+IT,Brindisi,BR,TRUE,1
+IT,Cagliari,CA,TRUE,1
+IT,Caltanissetta,CL,TRUE,1
+IT,Campobasso,CB,TRUE,1
+IT,Carbonia-Iglesias,CI,TRUE,1
+IT,Caserta,CE,TRUE,1
+IT,Catania,CT,TRUE,1
+IT,Catanzaro,CZ,TRUE,1
+IT,Chieti,CH,TRUE,1
+IT,Como,CO,TRUE,1
+IT,Cosenza,CS,TRUE,1
+IT,Cremona,CR,TRUE,1
+IT,Crotone,KR,TRUE,1
+IT,Cuneo,CN,TRUE,1
+IT,Enna,EN,TRUE,1
+IT,Fermo,FM,TRUE,1
+IT,Ferrara,FE,TRUE,1
+IT,Firenze,FI,TRUE,1
+IT,Foggia,FG,TRUE,1
+IT,Forlì-Cesena,FC,TRUE,1
+IT,Frosinone,FR,TRUE,1
+IT,Genova,GE,TRUE,1
+IT,Gorizia,GO,TRUE,1
+IT,Grosseto,GR,TRUE,1
+IT,Imperia,IM,TRUE,1
+IT,Isernia,IS,TRUE,1
+IT,La Spezia,SP,TRUE,1
+IT,L'Aquila,AQ,TRUE,1
+IT,Latina,LT,TRUE,1
+IT,Lecce,LE,TRUE,1
+IT,Lecco,LC,TRUE,1
+IT,Livorno,LI,TRUE,1
+IT,Lodi,LO,TRUE,1
+IT,Lucca,LU,TRUE,1
+IT,Macerata,MC,TRUE,1
+IT,Mantova,MN,TRUE,1
+IT,Massa-Carrara,MS,TRUE,1
+IT,Matera,MT,TRUE,1
+IT,Medio Campidano,VS,TRUE,1
+IT,Messina,ME,TRUE,1
+IT,Milano,MI,TRUE,1
+IT,Modena,MO,TRUE,1
+IT,Monza e della Brianza,MB,TRUE,1
+IT,Napoli,NA,TRUE,1
+IT,Novara,NO,TRUE,1
+IT,Nuoro,NU,TRUE,1
+IT,Ogliastra,OG,TRUE,1
+IT,Olbia-Tempio,OT,TRUE,1
+IT,Oristano,OR,TRUE,1
+IT,Padova,PD,TRUE,1
+IT,Palermo,PA,TRUE,1
+IT,Parma,PR,TRUE,1
+IT,Pavia,PV,TRUE,1
+IT,Perugia,PG,TRUE,1
+IT,Pesaro e Urbino,PU,TRUE,1
+IT,Pescara,PE,TRUE,1
+IT,Piacenza,PC,TRUE,1
+IT,Pisa,PI,TRUE,1
+IT,Pistoia,PT,TRUE,1
+IT,Pordenone,PN,TRUE,1
+IT,Potenza,PZ,TRUE,1
+IT,Prato,PO,TRUE,1
+IT,Ragusa,RG,TRUE,1
+IT,Ravenna,RA,TRUE,1
+IT,Reggio Calabria,RC,TRUE,1
+IT,Reggio Emilia,RE,TRUE,1
+IT,Rieti,RI,TRUE,1
+IT,Rimini,RN,TRUE,1
+IT,Roma,RM,TRUE,1
+IT,Rovigo,RO,TRUE,1
+IT,Salerno,SA,TRUE,1
+IT,Sassari,SS,TRUE,1
+IT,Savona,SV,TRUE,1
+IT,Siena,SI,TRUE,1
+IT,Siracusa,SR,TRUE,1
+IT,Sondrio,SO,TRUE,1
+IT,Taranto,TA,TRUE,1
+IT,Teramo,TE,TRUE,1
+IT,Terni,TR,TRUE,1
+IT,Torino,TO,TRUE,1
+IT,Trapani,TP,TRUE,1
+IT,Trento,TN,TRUE,1
+IT,Treviso,TV,TRUE,1
+IT,Trieste,TS,TRUE,1
+IT,Udine,UD,TRUE,1
+IT,Varese,VA,TRUE,1
+IT,Venezia,VE,TRUE,1
+IT,Verbano-Cusio-Ossola,VB,TRUE,1
+IT,Vercelli,VC,TRUE,1
+IT,Verona,VR,TRUE,1
+IT,Vibo Valentia,VV,TRUE,1
+IT,Vicenza,VI,TRUE,1
+IT,Viterbo,VT,TRUE,1
+KW,Al Asimah,,True,0
+KW,Hawalli,,True,0
+KW,Al Farwaniya,,True,0
+KW,Mubarak Al Kabeer,,True,0
+KW,Al Ahmadi,,True,0
+KW,Al Jahraa,,True,0
+LT,Alytaus apskritis,,True,0
+LT,Kauno apskritis,,True,0
+LT,Klaipėdos apskritis,,True,0
+LT,Marijampolės apskritis,,True,0
+LT,Panevėžio apskritis,,True,0
+LT,Šiaulių apskritis,,True,0
+LT,Tauragės apskritis,,True,0
+LT,Telšių apskritis,,True,0
+LT,Utenos apskritis,,True,0
+LT,Vilniaus apskritis,,True,0
+LU,Capellen,,True,0
+LU,Clerveaux,,True,0
+LU,Diekirch,,True,0
+LU,Echternach,,True,0
+LU,Esch-Sur-Azette,,True,0
+LU,Greven-Macher,,True,0
+LU,Luxembourg Campagne,,True,0
+LU,Mersch,,True,0
+LU,Redange,,True,0
+LU,Remich,,True,0
+LU,Vianden,,True,0
+LU,Wiltz,,True,0
+MA, Agadir,,True,0
+MA, Beni mellal,,True,0
+MA, Berkane,,True,0
+MA, Casablanca,,True,0
+MA, El jadida,,True,0
+MA, Fes,,True,0
+MA, Inezgane,,True,0
+MA, Kenitra,,True,0
+MA, Khemisset,,True,0
+MA, Khenifra,,True,0
+MA, Khouribga,,True,0
+MA, Laayoune,,True,0
+MA, Marrakech,,True,0
+MA, Meknes,,True,0
+MA, Mohammedia,,True,0
+MA, Nador,,True,0
+MA, Oujda,,True,0
+MA, Rabat,,True,0
+MA, Safi,,True,0
+MA, Sale,,True,0
+MA, Tanger,,True,0
+MA, Taza,,True,0
+MA, Temara,,True,0
+MA, Tetouan,,True,0
+MN,Улаанбаатар хот - Багануур дүүрэг,БН,True,1
+MN,Улаанбаатар хот - Багахангай дүүрэг,БХ,True,1
+MN,Улаанбаатар хот - Баянгол дүүрэг,БГ,True,1
+MN,Улаанбаатар хот - Баянзүрх дүүрэг,БЗ,True,1
+MN,Улаанбаатар хот - Налайх дүүрэг,НА,True,1
+MN,Улаанбаатар хот - Сонгино хайрхан дүүрэг,СХ,True,1
+MN,Улаанбаатар хот - Сүхбаатар дүүрэг,СБ,True,1
+MN,Улаанбаатар хот - Хан-Уул дүүрэг,ХУ,True,1
+MN,Улаанбаатар хот - Чингэлтэй дүүрэг,ЧИ,True,1
+MN,Архангай аймаг,АР,True,2
+MN,Баян-Өлгий аймаг,БӨ,True,2
+MN,Баянхонгор аймаг,БХ,True,2
+MN,Булган аймаг,БУ,True,2
+MN,Өвөрхангай аймаг,ӨВ,True,2
+MN,Говь-Алтай аймаг,ГА,True,2
+MN,Говьсүмбэр аймаг,ГС,True,2
+MN,Дархан-Уул аймаг,ДА,True,2
+MN,Дорноговь аймаг,ДГ,True,2
+MN,Дорнод аймаг,ДО,True,2
+MN,Дундговь аймаг,ДУ,True,2
+MN,Завхан аймаг,ЗА,True,2
+MN,Өмнөговь аймаг,ӨМ,True,2
+MN,Орхон аймаг,ОР,True,2
+MN,Сүхбаатар аймаг,СҮ,True,2
+MN,Сэлэнгэ аймаг,СЭ,True,2
+MN,Төв аймаг,ТӨ,True,2
+MN,Увс аймаг,УВ,True,2
+MN,Хөвсгөл аймаг,ХӨ,True,2
+MN,Ховд аймаг,ХО,True,2
+MN,Хэнтий аймаг,ХЭ,True,2
+MX, Aguascalientes,,True,0
+MX, Baja California,,True,0
+MX, Baja California Sur,,True,0
+MX, Campeche,,True,0
+MX, Chiapas,,True,0
+MX, Chihuahua,,True,0
+MX, Coahuila,,True,0
+MX, Colima,,True,0
+MX, Distrito Federal,,True,0
+MX, Durango,,True,0
+MX, Estado de México,,True,0
+MX, Guanajuato,,True,0
+MX, Guerrero,,True,0
+MX, Hidalgo,,True,0
+MX, Jalisco,,True,0
+MX, Michoacán,,True,0
+MX, Morelos,,True,0
+MX, Nayarit,,True,0
+MX, Nuevo León,,True,0
+MX, Oaxaca,,True,0
+MX, Puebla,,True,0
+MX, Querétaro,,True,0
+MX, Quintana Roo,,True,0
+MX, San Luis Potosí,,True,0
+MX, Sinaloa,,True,0
+MX, Sonora,,True,0
+MX, Tabasco,,True,0
+MX, Tamaulipas,,True,0
+MX, Tlaxcala,,True,0
+MX, Veracruz,,True,0
+MX, Yucatán,,True,0
+MX, Zacatecas,,True,0
+MY, Johor, JHR, True, 0
+MY, Kedah, KDH, True, 0
+MY, Kelantan, KTN, True, 0
+MY, Kuala Lumpur, KUL, True, 0
+MY, Labuan, LBN, True, 0
+MY, Melaka, MLK, True, 0
+MY, Negeri Sembilan, NSN, True, 0
+MY, Pahang, PHG, True, 0
+MY, Perak, PRK, True, 0
+MY, Perlis, PLS, True, 0
+MY, Pulau Pinang, PNG, True, 0
+MY, Putrajaya, PJY, True, 0
+MY, Sabah, SBH, True  , 0
+MY, Sarawak, SWK, True, 0
+MY, Selangor, SGR, True, 0
+MY, Terengganu, TRG, True, 0
+NG,Abia,,True,0
+NG,Adamawa,,True,0
+NG,Akwa Ibom,,True,0
+NG,Anambra,,True,0
+NG,Bauchi,,True,0
+NG,Bayelsa,,True,0
+NG,Benue,,True,0
+NG,Borno,,True,0
+NG,Cross River,,True,0
+NG,Delta,,True,0
+NG,Ebonyi,,True,0
+NG,Edo,,True,0
+NG,Enugu,,True,0
+NG,Ekiti,,True,0
+NG,FCT,,True,0
+NG,Gombe,,True,0
+NG,Imo,,True,0
+NG,Jigawa,,True,0
+NG,Kaduna,,True,0
+NG,Kano,,True,0
+NG,Katsina,,True,0
+NG,Kebbi,,True,0
+NG,Kogi,,True,0
+NG,Kwara,,True,0
+NG,Lagos,,True,0
+NG,Nasarawa,,True,0
+NG,Niger,,True,0
+NG,Ogun,,True,0
+NG,Ondo,,True,0
+NG,Osun,,True,0
+NG,Oyo,,True,0
+NG,Plateau,,True,0
+NG,Rivers,,True,0
+NG,Sokoto,,True,0
+NG,Taraba,,True,0
+NG,Yobe,,True,0
+NG,Zamafara,,True,0
+NL,Drenthe,DR,True,0
+NL,Flevoland,FL,True,0
+NL,Friesland,FR,True,0
+NL,Gelderland,GD,True,0
+NL,Groningen,GR,True,0
+NL,Limburg,LB,True,0
+NL,Noord-Brabant,NB,True,0
+NL,Noord-Holland,NH,True,0
+NL,Overijssel,OV,True,0
+NL,Utrecht,UT,True,0
+NL,Zeeland,ZL,True,0
+NL,Zuid-Holland,ZH,True,0
+NO,Østfold,01,True,1 
+NO,Akershus,02,True,2
+NO,Oslo,03,True,3
+NO,Hedmark,04,True,4
+NO,Oppland,05,True,5
+NO,Buskerud,06,True,6
+NO,Vestfold,07,True,7
+NO,Telemark,08,True,8
+NO,Aust-Agder,09,True,9
+NO,Vest-Agder,10,True,10
+NO,Rogaland,11,True,11
+NO,Hordaland,12,True,12
+NO,Sogn og Fjordane,14,True,14 
+NO,Møre og Romsdal,15,True,15
+NO,Sør-Trøndelag,16,True,16
+NO,Nord-Trøndelag,17,True,17
+NO,Nordland,18,True,18
+NO,Troms,19,True,19
+NO,Finnmark,20,True,20
+NO,Svalbard,21,True,21
+NO,Jan Mayen,22,True,22
+NP,Province No. 1,,TRUE,1
+NP,Province No. 2,,TRUE,2
+NP,Province No. 3,,TRUE,3
+NP,Gandaki Pradesh,,TRUE,4
+NP,Province No. 5,,TRUE,5
+NP,Karnali Pradesh,,TRUE,6
+NP,Sudurpashchim Pradesh,,TRUE,7
+NZ, Northland,,True,0
+NZ, Auckland,,True,0
+NZ, Waikato,,True,0
+NZ, Waitomo,,True,0
+NZ, Bay of Plenty,,True,0
+NZ, Taupo,,True,0
+NZ, King Country,,True,0 
+NZ, Taranaki,,True,0 
+NZ, Wanganui,,True,0 
+NZ, Manawatu,,True,0
+NZ, Horowhenua,,True,0 
+NZ, Kapiti,,True,0
+NZ, Gisborne,,True,0
+NZ, Hawkes Bay,,True,0   
+NZ, Wairarapa,,True,0
+NZ, Wellington,,True,0
+NZ, Nelson,,True,0  
+NZ, Marlborough,,True,0  
+NZ, Buller,,True,0  
+NZ, West Coast,,True,0 
+NZ, Canterbury,,True,0 
+NZ, Otago,,True,0 
+NZ, Southland,,True,0
+PH,Abra,,True,1
+PH,Agusan del Norte,,True,2
+PH,Agusan del Sur,,True,3
+PH,Aklan,,True,4
+PH,Albay,,True,5
+PH,Antique,,True,6
+PH,Apayao,,True,7
+PH,Aurora,,True,8
+PH,Basilan,,True,9
+PH,Bataan,,True,10
+PH,Batanes,,True,11
+PH,Batangas,,True,12
+PH,Benguet,,True,13
+PH,Biliran,,True,14
+PH,Bohol,,True,15
+PH,Bukidnon,,True,16
+PH,Bulacan,,True,17
+PH,Cagayan,,True,18
+PH,Camarines Norte,,True,19
+PH,Camarines Sur,,True,20
+PH,Camiguin,,True,21
+PH,Capiz,,True,22
+PH,Catanduanes,,True,23
+PH,Cavite,,True,24
+PH,Cebu,,True,25
+PH,Compostela Valley,,True,26
+PH,Cotabato,,True,27
+PH,Davao del Norte,,True,28
+PH,Davao del Sur,,True,29
+PH,Davao Occidental,,True,30
+PH,Davao Oriental,,True,31
+PH,Dinagat Islands,,True,32
+PH,Eastern Samar,,True,33
+PH,Guimaras,,True,34
+PH,Ifugao,,True,35
+PH,Ilocos Norte,,True,36
+PH,Ilocos Sur,,True,37
+PH,Iloilo,,True,38
+PH,Isabela,,True,39
+PH,Kalinga,,True,40
+PH,La Union,,True,41
+PH,Laguna,,True,42
+PH,Lanao del Norte,,True,43
+PH,Lanao del Sur,,True,44
+PH,Leyte,,True,45
+PH,Maguindanao,,True,46
+PH,Marinduque,,True,47
+PH,Masbate,,True,48
+PH,Misamis Occidental,,True,49
+PH,Misamis Oriental,,True,50
+PH,Mountain Province,,True,51
+PH,Negros Occidental,,True,52
+PH,Negros Oriental,,True,53
+PH,Northern Samar,,True,54
+PH,Nueva Ecija,,True,55
+PH,Nueva Vizcaya,,True,56
+PH,Occidental Mindoro,,True,57
+PH,Oriental Mindoro,,True,58
+PH,Palawan,,True,59
+PH,Pampanga,,True,60
+PH,Pangasinan,,True,61
+PH,Quezon,,True,62
+PH,Quirino,,True,63
+PH,Rizal,,True,64
+PH,Romblon,,True,65
+PH,Samar,,True,66
+PH,Sarangani,,True,67
+PH,Siquijor,,True,68
+PH,Sorsogon,,True,69
+PH,South Cotabato,,True,70
+PH,Southern Leyte,,True,71
+PH,Sultan Kudarat,,True,72
+PH,Sulu,,True,73
+PH,Surigao del Norte,,True,74
+PH,Surigao del Sur,,True,75
+PH,Tarlac,,True,76
+PH,Tawi-Tawi,,True,77
+PH,Zambales,,True,78
+PH,Zamboanga del Norte,,True,79
+PH,Zamboanga del Sur,,True,80
+PH,Zamboanga Sibugay,,True,81
+PH,Metro Manila,,True,82
+PK,Azad Kashmir,,True,0
+PK,Balochistan,,True,0
+PK,Capital Territory,,True,0
+PK,Gilgit–Baltistan,,True,0
+PK,Khyber Pakhtunkhwa,,True,0
+PK,Punjab,,True,0
+PK,Sindh,,True,0
+PK,Tribal Areas,,True,0
+PL,Dolnośląskie,,True,0
+PL,Kujawsko-pomorskie,,True,0
+PL,Lubelskie,,True,0
+PL,Lubuskie,,True,0
+PL,Łódzkie,,True,0
+PL,Małopolskie,,True,0
+PL,Mazowieckie,,True,0
+PL,Opolskie,,True,0
+PL,Podkarpackie,,True,0
+PL,Podlaskie,,True,0
+PL,Pomorskie,,True,0
+PL,Śląskie,,True,0
+PL,Świętokrzyskie,,True,0
+PL,Warmińsko-mazurskie,,True,0
+PL,Wielkopolskie,,True,0
+PL,Zachodniopomorskie,,True,0
+PT,Aveiro,01,TRUE,1
+PT,Beja,02,TRUE,2
+PT,Braga,03,TRUE,3
+PT,Bragança,04,TRUE,4
+PT,Castelo Branco,05,TRUE,5
+PT,Coimbra,06,TRUE,6
+PT,Évora,07,TRUE,7
+PT,Faro,08,TRUE,8
+PT,Guarda,09,TRUE,9
+PT,Leiria,10,TRUE,10
+PT,Lisboa,11,TRUE,11
+PT,Portalegre,12,TRUE,12
+PT,Porto,13,TRUE,13
+PT,Santarém,14,TRUE,14
+PT,Setúbal,15,TRUE,15
+PT,Viana do Castelo,16,TRUE,16
+PT,Vila Real,17,TRUE,17
+PT,Viseu,18,TRUE,18
+PT,Região Autónoma dos Açores,20,TRUE,19
+PT,Região Autónoma da Madeira,30,TRUE,20
+RO,Alba,AB,True,1
+RO,Arad,AR,True,2
+RO,Argeș,AG,True,3
+RO,Bacău,BC,True,4
+RO,Bihor,BH,True,5
+RO,Bistrița-Năsăud,BN,True,6
+RO,Botoșani,BT,True,7
+RO,Brașov,BV,True,8
+RO,Brăila,BR,True,9
+RO,București Sector 1,B,True,10
+RO,București Sector 2,B,True,11
+RO,București Sector 3,B,True,12
+RO,București Sector 4,B,True,13
+RO,București Sector 5,B,True,14
+RO,București Sector 6,B,True,15
+RO,Buzău,BZ,True,16
+RO,Caraș-Severin,CS,True,17
+RO,Călărași,CL,True,18
+RO,Cluj,CJ,True,19
+RO,Constanța,CT,True,20
+RO,Covasna,CV,True,21
+RO,Dâmbovița,DB,True,22
+RO,Dolj,DJ,True,23
+RO,Galați,GL,True,24
+RO,Giurgiu,GR,True,25
+RO,Gorj,GJ,True,26
+RO,Harghita,HR,True,27
+RO,Hunedoara,HD,True,28
+RO,Ialomița,IL,True,29
+RO,Iași,IS,True,30
+RO,Ilfov,IF,True,31
+RO,Maramureș,MM,True,32
+RO,Mehedinți,MH,True,33
+RO,Mureș,MS,True,34
+RO,Neamț,NT,True,35
+RO,Olt,OT,True,36
+RO,Prahova,PH,True,37
+RO,Satu Mare,SM,True,38
+RO,Sălaj,SJ,True,39
+RO,Sibiu,SB,True,40
+RO,Suceava,SV,True,41
+RO,Teleorman,TR,True,42
+RO,Timiș,TM,True,43
+RO,Tulcea,TL,True,44
+RO,Vaslui,VS,True,45
+RO,Vâlcea,VL,True,46
+RO,Vrancea,VN,True,47
+RS,Serbia,,True,0
+RS,Kosovo,,True,0
+RS,Vojvodina,,True,0
+RU,Адыгея,01,True,1  
+RU,Алтай,04,True,1  
+RU,Алтайский край,22,True,1  
+RU,Амурская область,28,True,1  
+RU,Архангельская область,29,True,1  
+RU,Астраханская область,30,True,1  
+RU,Башкортостан,02,True,1  
+RU,Белгородская область,31,True,1  
+RU,Брянская область,32,True,1  
+RU,Бурятия,03,True,1  
+RU,Владимирская область,33,True,1  
+RU,Волгоградская область,34,True,1  
+RU,Вологодская область,35,True,1  
+RU,Воронежская область,36,True,1  
+RU,Дагестан,05,True,1  
+RU,Еврейская автономная область,79,True,1  
+RU,Забайкальский край,75,True,1  
+RU,Ивановская область,37,True,1  
+RU,Ингушетия,06,True,1  
+RU,Иркутская область,38,True,1  
+RU,Кабардино-Балкарская Республика,7,True,1  
+RU,Калининградская область,39,True,1  
+RU,Калмыкия,08,True,1  
+RU,Калужская область,40,True,1  
+RU,Камчатский край,41,True,1  
+RU,Карачаево-Черкесская Республика,09,True,1  
+RU,Карелия,10,True,1  
+RU,Кемеровская область,42,True,1  
+RU,Кировская область,43,True,1  
+RU,Коми,11,True,1  
+RU,Костромская область,44,True,1  
+RU,Краснодарский край,23,True,1  
+RU,Красноярский край,24,True,1  
+RU,Крым,82,True,1  
+RU,Курганская область,45,True,1  
+RU,Курская область,46,True,1  
+RU,Ленинградская область,47,True,1  
+RU,Липецкая область,48,True,1  
+RU,Магаданская область,49,True,1  
+RU,Марий Эл,12,True,1  
+RU,Мордовия,13,True,1  
+RU,Москва,77,True,1  
+RU,Московская область,50,True,1  
+RU,Мурманская область,51,True,1  
+RU,Ненецкий автономный округ,83,True,1  
+RU,Нижегородская область,52,True,1  
+RU,Новгородская область,53,True,1  
+RU,Новосибирская область,54,True,1  
+RU,Омская область,55,True,1  
+RU,Оренбургская область,56,True,1  
+RU,Орловская область,57,True,1  
+RU,Пензенская область,58,True,1  
+RU,Пермский край,59,True,1  
+RU,Приморский край,25,True,1  
+RU,Псковская область,60,True,1  
+RU,Ростовская область,61,True,1  
+RU,Рязанская область,62,True,1  
+RU,Самарская область,63,True,1  
+RU,Санкт-Петербург,78,True,1  
+RU,Саратовская область,64,True,1  
+RU,Саха (Якутия),14,True,1  
+RU,Сахалинская область,65,True,1  
+RU,Свердловская область,66,True,1  
+RU,Севастополь,92,True,1  
+RU,Северная Осетия-Алания,15,True,1  
+RU,Смоленская область,67,True,1  
+RU,Ставропольский край,26,True,1  
+RU,Тамбовская область,68,True,1  
+RU,Татарстан,16,True,1  
+RU,Тверская область,69,True,1  
+RU,Томская область,70,True,1  
+RU,Тульская область,71,True,1  
+RU,Тыва,17,True,1  
+RU,Тюменская область,72,True,1  
+RU,Удмуртская Республика,18,True,1  
+RU,Ульяновская область,73,True,1  
+RU,Хабаровский край,27,True,1  
+RU,Хакасия,19,True,1  
+RU,Ханты-Мансийский автономный округ-Югра,86,True,1  
+RU,Челябинская область,74,True,1  
+RU,Чеченская Республика,95,True,1  
+RU,Чувашская Республика,21,True,1  
+RU,Чукотский автономный округ,87,True,1  
+RU,Ямало-Ненецкий автономный округ,89,True,1  
+RU,Ярославская область,76,True,1
+SA,Eastern Cape,,True,0
+SA,Al Bahah,, True,1
+SA,Al Jawf,, True,2
+SA,Al Madinah,, True,3
+SA,Al Qasim,, True,4
+SA,Al Riyadh,, True,5
+SA,Asir,, True,6
+SA,Eastern Province,, True,7
+SA,Ha'il,, True,8
+SA,Jizan,, True,9
+SA,Makkah,, True,10
+SA,Najran,, True,11
+SA,Northern Borders,, True,12
+SA,Tabuk,, True,13
+SE,Stockholms län,01,True, 1
+SE,Uppsala län,03,True,3
+SE,Södermanlands län,04,True,4
+SE,Östergötlands län,05,True,5
+SE,Jönköpings län,06,True,6
+SE,Kronobergs län,07,True,7
+SE,Kalmar län,08,True,8
+SE,Gotlands län,09,True,9
+SE,Blekinge län,11,True,11
+SE,Skåne län,12,True,12
+SE,Hallands län,14,True,14
+SE,Västra Götalands län,15,True, 15
+SE,Värmlands län,17,True,17
+SE,Örebro län,18,True,18
+SE,Västmanlands län,19,True,19
+SE,Dalarnas län,20,True,20
+SE,Gävleborgs län,21,True,21
+SE,Jämtlands län,22,True,22
+SE,Västernorrlands län,23,True,23
+SE,Västerbottens län,24,True,24
+SE,Norbottens län,25,True,25
+SI,Pomurska,,True,0
+SI,Podravska,,True,0
+SI,Koroška,,True,0
+SI,Savinjska,,True,0
+SI,Zasavska,,True,0
+SI,Posavska,,True,0
+SI,Jugovzhodna Slovenija,,True,0
+SI,Primorsko-notranjska,,True,0
+SI,Osrednjeslovenska,,True,0
+SI,Gorenjska,,True,0
+SI,Goriška,,True,0
+SI,Obalno-kraška,,True,0
+SK,Bratislavský kraj,,True,0
+SK,Trnavský kraj,,True,0
+SK,Nitrianský kraj,,True,0
+SK,Trenčianský kraj,,True,0
+SK,Žilinský kraj,,True,0
+SK,Banskobystrický kraj,,True,0
+SK,Košický kraj,,True,0
+SK,Prešovský kraj,,True,0
+TR,Adana,,True,0
+TR,Adıyaman,,True,0
+TR,Afyonkarahisar,,True,0
+TR,Ağrı,,True,0
+TR,Aksaray,,True,0
+TR,Amasya,,True,0
+TR,Ankara,,True,0
+TR,Antalya,,True,0
+TR,Ardahan,,True,0
+TR,Artvin,,True,0
+TR,Aydın,,True,0
+TR,Balıkesir,,True,0
+TR,Bartın,,True,0
+TR,Batman,,True,0
+TR,Bayburt,,True,0
+TR,Bilecik,,True,0
+TR,Bingöl,,True,0
+TR,Bitlis,,True,0
+TR,Bolu,,True,0
+TR,Burdur,,True,0
+TR,Bursa,,True,0
+TR,Çanakkale,,True,0
+TR,Çankırı,,True,0
+TR,Çorum,,True,0
+TR,Denizli,,True,0
+TR,Diyarbakır,,True,0
+TR,Düzce,,True,0
+TR,Edirne,,True,0
+TR,Elazığ,,True,0
+TR,Erzincan,,True,0
+TR,Erzurum,,True,0
+TR,Eskişehir,,True,0
+TR,Gaziantep,,True,0
+TR,Giresun,,True,0
+TR,Gümüşhane,,True,0
+TR,Hakkari,,True,0
+TR,Hatay,,True,0
+TR,Iğdır,,True,0
+TR,Isparta,,True,0
+TR,İstanbul,,True,0
+TR,İzmir,,True,0
+TR,Kahramanmaraş,,True,0
+TR,Karabük,,True,0
+TR,Karaman,,True,0
+TR,Kars,,True,0
+TR,Kastamonu,,True,0
+TR,Kayseri,,True,0
+TR,Kırıkkale,,True,0
+TR,Kırklareli,,True,0
+TR,Kırşehir,,True,0
+TR,Kilis,,True,0
+TR,Kocaeli,,True,0
+TR,Konya,,True,0
+TR,Kütahya,,True,0
+TR,Malatya,,True,0
+TR,Manisa,,True,0
+TR,Mardin,,True,0
+TR,Mersin,,True,0
+TR,Muğla,,True,0
+TR,Muş,,True,0
+TR,Nevşehir,,True,0
+TR,Niğde,,True,0
+TR,Ordu,,True,0
+TR,Osmaniye,,True,0
+TR,Rize,,True,0
+TR,Sakarya,,True,0
+TR,Samsun,,True,0
+TR,Siirt,,True,0
+TR,Sinop,,True,0
+TR,Sivas,,True,0
+TR,Şanlıurfa,,True,0
+TR,Şırnak,,True,0
+TR,Tekirdağ,,True,0
+TR,Tokat,,True,0
+TR,Trabzon,,True,0
+TR,Tunceli,,True,0
+TR,Uşak,,True,0
+TR,Van,,True,0
+TR,Yalova,,True,0
+TR,Yozgat,,True,0
+TR,Zonguldak,,True,0
+UA,Винницкая область,Вінн.обл,True,2
+UA,Волынская область,Волын. обл.,True,3
+UA,Днепропетровская область,Дніпроп. обл.,True,4
+UA,Донецька область,Дон. обл.,False,5
+UA,Житомерская область,Житом. обл.,True,6
+UA,Закарпатская область,Закарпю обл.,True,7
+UA,Запорізька область,Зап.а обл.,True,8
+UA,Ивано-Франковская область,Івано-Франк. обл.,True,9
+UA,Киевская область,Київська обл.,True,10
+UA,Кировоградская область,Кіровог. обл.,True,11
+UA,Луганская область,Луганська область,False,12
+UA,Львовская область,Львівська область,True,13
+UA,Николаевская область,Миколаївська обл.,True,14
+UA,Одесская область,Одеська обл.,True,15
+UA,Полтавская область,Полтавська обл.,True,16
+UA,Ровненская область,Рівненська обл.,True,17
+UA,Сумская область,Сумська область,True,18
+UA,Тернопільська область,Тернопільська область,True,19
+UA,Харковская область,Харківська обл.,True,20
+UA,Херсонская область,Херсонська область,True,20
+UA,Хмельницька область,Хмельницька область,True,21
+UA,Черкасская область,Черкаська область,True,22
+UA,Черниговская область,Чернігівська обл.,True,23
+UA,Черновицкая область,Чернівецька обл.,True,24
+US,AA (Armed Forces Americas),AA,True,1
+US,AE (Armed Forces Europe),AE,True,1
+US,Alabama,AL,True,1
+US,Alaska,AK,True,1
+US,American Samoa,AS,True,1
+US,AP (Armed Forces Pacific),AP,True,1
+US,Arizona,AZ,True,1
+US,Arkansas,AR,True,1
+US,California,CA,True,1
+US,Colorado,CO,True,1
+US,Connecticut,CT,True,1
+US,Delaware,DE,True,1
+US,District of Columbia,DC,True,1
+US,Federated States of Micronesia,FM,True,1
+US,Florida,FL,True,1
+US,Georgia,GA,True,1
+US,Guam,GU,True,1
+US,Hawaii,HI,True,1
+US,Idaho,ID,True,1
+US,Illinois,IL,True,1
+US,Indiana,IN,True,1
+US,Iowa,IA,True,1
+US,Kansas,KS,True,1
+US,Kentucky,KY,True,1
+US,Louisiana,LA,True,1
+US,Maine,ME,True,1
+US,Marshall Islands,MH,True,1
+US,Maryland,MD,True,1
+US,Massachusetts,MA,True,1
+US,Michigan,MI,True,1
+US,Minnesota,MN,True,1
+US,Mississippi,MS,True,1
+US,Missouri,MO,True,1
+US,Montana,MT,True,1
+US,Nebraska,NE,True,1
+US,Nevada,NV,True,1
+US,New Hampshire,NH,True,1
+US,New Jersey,NJ,True,1
+US,New Mexico,NM,True,1
+US,New York,NY,True,1
+US,North Carolina,NC,True,1
+US,North Dakota,ND,True,1
+US,Northern Mariana Islands,MP,True,1
+US,Ohio,OH,True,1
+US,Oklahoma,OK,True,1
+US,Oregon,OR,True,1
+US,Palau,PW,True,1
+US,Pennsylvania,PA,True,1
+US,Puerto Rico,PR,True,1
+US,Rhode Island,RI,True,1
+US,South Carolina,SC,True,1
+US,South Dakota,SD,True,1
+US,Tennessee,TN,True,1
+US,Texas,TX,True,1
+US,Utah,UT,True,1
+US,Vermont,VT,True,1
+US,Virgin Islands,VI,True,1
+US,Virginia,VA,True,1
+US,Washington,WA,True,1
+US,West Virginia,WV,True,1
+US,Wisconsin,WI,True,1
+US,Wyoming,WY,True,1
+VE,Amazonas,,True,1
+VE,Anzoategui,,True,2
+VE,Apure,,True,3
+VE,Aragua,,True,4
+VE,Barinas,,True,5
+VE,Bolívar,,True,6
+VE,Carabobo,,True,7
+VE,Cojedes,,True,8
+VE,Delta Amacuro,,True,9
+VE,Distrito Capital,,True,10
+VE,Falcón,,True,11
+VE,Guárico,,True,12
+VE,Lara,,True,13
+VE,Mérida,,True,14
+VE,Miranda,,True,15
+VE,Monagas,,True,16
+VE,Nueva Esparta,,True,17
+VE,Portuguesa,,True,18
+VE,Sucre,,True,19
+VE,Táchira,,True,20
+VE,Trujillo,,True,21
+VE,Vargas,,True,22
+VE,Yaracuy,,True,23
+VE,Zulia,,True,24
+VN, Hà Nội, HN, TRUE, 1
+VN, Hồ Chí Minh, HCM, TRUE, 2
+VN, Đà Nẵng, ĐN, TRUE, 3
+VN, Hải Phòng, HP, TRUE, 4
+VN, Cần Thơ, CT, TRUE, 5
+VN, Hà Giang, HG, TRUE, 6
+VN, Cao Bằng, CB, TRUE, 6
+VN, Bắc Kạn, BK, TRUE, 6
+VN, Tuyên Quang, TQ, TRUE, 6
+VN, Lào Cai, LC, TRUE, 6
+VN, Điện Biên, ĐB, TRUE, 6
+VN, Lai Châu, LC, TRUE, 6
+VN, Sơn La, SL, TRUE, 6
+VN, Yên Bái, YB, TRUE, 6
+VN, Hòa Bình, HB, TRUE, 6
+VN, Thái Nguyên, TN, TRUE, 6
+VN, Lạng Sơn, LS, TRUE, 6
+VN, Quảng Ninh, QN, TRUE, 6
+VN, Bắc Giang, BG, TRUE, 6
+VN, Phú Thọ, PT, TRUE, 6
+VN, Vĩnh Phúc, VP, TRUE, 6
+VN, Bắc Ninh, BN, TRUE, 6
+VN, Hải Dương, HD, TRUE, 6
+VN, Hưng Yên, HY, TRUE, 6
+VN, Thái Bình, TB, TRUE, 6
+VN, Hà Nam, HN, TRUE, 6
+VN, Nam Định, NĐ, TRUE, 6
+VN, Ninh Bình, NB, TRUE, 6
+VN, Thanh Hóa, TH, TRUE, 6
+VN, Nghệ An, NA, TRUE, 6
+VN, Hà Tĩnh, HT, TRUE, 6
+VN, Quảng Bình, QB, TRUE, 6
+VN, Quảng Trị, QT, TRUE, 6
+VN, Thừa Thiên Huế, TTH, TRUE, 6
+VN, Quảng Nam, QN, TRUE, 6
+VN, Quảng Ngãi, QN, TRUE, 6
+VN, Bình Định, BĐ, TRUE, 6
+VN, Phú Yên, PY, TRUE, 6
+VN, Khánh Hòa, KH, TRUE, 6
+VN, Ninh Thuận, NT, TRUE, 6
+VN, Bình Thuận, BT, TRUE, 6
+VN, Kon Tum, KT, TRUE, 6
+VN, Gia Lai, GL, TRUE, 6
+VN, Đắk Lắk, ĐL, TRUE, 6
+VN, Đắk Nông, ĐN, TRUE, 6
+VN, Lâm Đồng, LĐ, TRUE, 6
+VN, Bình Phước, BP, TRUE, 6
+VN, Tây Ninh, TN, TRUE, 6
+VN, Bình Dương, BD, TRUE, 6
+VN, Đồng Nai, ĐN, TRUE, 6
+VN, Bà Rịa - Vũng Tàu, BR, TRUE, 6
+VN, Long An, LA, TRUE, 6
+VN, Tiền Giang, TG, TRUE, 6
+VN, Bến Tre, BT, TRUE, 6
+VN, Trà Vinh, TV, TRUE, 6
+VN, Vĩnh Long, VL, TRUE, 6
+VN, Đồng Tháp, ĐT, TRUE, 6
+VN, An Giang, AG, TRUE, 6
+VN, Kiên Giang, KG, TRUE, 6
+VN, Hậu Giang, HG, TRUE, 6
+VN, Sóc Trăng, ST, TRUE, 6
+VN, Bạc Liêu, BL, TRUE, 6
+VN, Cà Mau, CM, TRUE, 6
+ZA,Free State,FS,True,0
+ZA,Gauteng,GP,True,0
+ZA,KwaZulu-Natal,KZN,True,0
+ZA,Limpopo,LP,True,0
+ZA,Mpumalanga,MP,True,0
+ZA,Northern Cape,NC,True,0
+ZA,North West,NW,True,0
+ZA,Western Cape,WC,True,0
+ZW,Bulawayo,BU,True,0
+ZW,Harare,HA,True,0
+ZW,Manicaland,MA,True,0
+ZW,Mashonaland Central,MC,True,0
+ZW,Mashonaland East,ME,True,0
+ZW,Mashonaland West,MW,True,0
+ZW,Masvingo,MV,True,0
+ZW,Matabeleland North,MN,True,0
+ZW,Matabeleland South,MS,True,0
+ZW,Midlands,MI,True,0

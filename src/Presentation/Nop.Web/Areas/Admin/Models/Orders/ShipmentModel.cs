@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a shipment model
     /// </summary>
-    public partial class ShipmentModel : BaseNopEntityModel
+    public partial record ShipmentModel : BaseNopEntityModel
     {
         #region Ctor
 

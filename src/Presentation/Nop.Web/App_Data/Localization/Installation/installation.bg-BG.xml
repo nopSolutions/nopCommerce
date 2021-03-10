@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Български" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email на администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Въведете Email на администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Парола на администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Въведете паролата на администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Потребител '{0}' няма права за запис в папка '{1}'. Моля, настройте дадените права.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Потребител '{0}' няма права за запис на файл '{1}'. Моля, настройте дадените права.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Потвърдете паролата</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Потвърдете паролата</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Низ за връзка</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Въведете низа за връзка с базата данни</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Грешен формат на низа за връзка с базата данни</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Държава</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Избери своята държава...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Създай база данни, ако тя не съществува</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Създай тестови данни (продукти, категории и т.н.)</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Посочете персонализирано съпоставяне (collation)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>База данни</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Грешка при създаването на база данни: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Информация за базата данни</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Име на базата данни</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Указаната база данни не съществува или вие нямате права за връзка с нея</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Изберете провайдер на данните</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Ако ви е нужна информация за това, как да използвате и настроите nopCommerce, моля, посетете</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>раздел "Документация" на сайта nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Пример</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Инсталирай</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Инсталиране на nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Вход с Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Паролите не съвпадат</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Низ за връзка с базата (raw)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Рестартирай процеса на инсталиране</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Натиснете, за да започне отново процеса на инсталация (ще изчисти всички кеширани стойности)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Рестартиране...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Име на сървъра</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Името на сървъра е задължително</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Грешка при инсталиране: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>Парола за вход в SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>Въведете паролата за вход в SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL сървър</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>Потребителско име за вход в SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>Въведете потребителското името за вход в SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Информация за магазина</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Инсталиране на nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>За да инсталирате успешно nopCommerce, е нужно да знаете низа за връзка с базата данни. Ако нямате тази информация, може да я узнаете от вашия хостинг провайдер. Ако искате да инсталирате nopCommerce на локалния ви компютър, то вие можете да я узнаете от вашия системен администратор.</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,93 @@
+﻿@model MultiFactorAuthenticationMethodSearchModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Authentication.MultiFactorMethods").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Multi-factor authentication methods");
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Admin.Configuration.Authentication.MultiFactorMethods")
+    </h1>
+    <div class="float-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MultiFactorAuthenticationListButtons })
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "multifactormethods-grid",
+                            UrlRead = new DataUrl("MultiFactorMethods", "Authentication", null),
+                            UrlUpdate = new DataUrl("MultiFactorMethodUpdate", "Authentication", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.FriendlyName))
+                                    {
+                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.FriendlyName").Text,
+                                        Width = "250"
+                                    },
+                                    new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.SystemName))
+                                    {
+                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.SystemName").Text,
+                                        Width = "250"
+                                    },
+                                    new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.DisplayOrder))
+                                    {
+                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.DisplayOrder").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Editable = true,
+                                        EditType = EditType.Number
+                                    },
+                                    new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.IsActive))
+                                    {
+                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Fields.IsActive").Text,
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.CenterAll,
+                                        Render = new RenderBoolean(),
+                                        Editable = true,
+                                        EditType = EditType.Checkbox
+                                    },
+                                    new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.SystemName))
+                                    {
+                                        Title = T("Admin.Configuration.Authentication.MultiFactorMethods.Configure").Text,
+                                        Width = "150",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderCustom("renderColumnConfigure")
+                                    },
+                                    new ColumnProperty(nameof(MultiFactorAuthenticationMethodModel.SystemName))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "200",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonsInlineEdit()
+                                    }
+                                }
+                        })
+
+                        <script>
+                            function renderColumnConfigure(data, type, row, meta) {
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.Configuration.Authentication.MultiFactorMethods.Configure").Text</a>';
+                                } else {
+                                    return '';
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>

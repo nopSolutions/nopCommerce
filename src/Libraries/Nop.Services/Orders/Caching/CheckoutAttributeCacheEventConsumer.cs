@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Orders.Caching
 {
@@ -12,11 +13,10 @@ namespace Nop.Services.Orders.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(CheckoutAttribute entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(CheckoutAttribute entity)
         {
-            RemoveByPrefix(NopOrderDefaults.CheckoutAttributesAllPrefixCacheKey);
-            var cacheKey = _cacheKeyService.PrepareKey(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, entity);
-            Remove(cacheKey);
+            await RemoveAsync(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, entity);
         }
     }
 }

@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Tax
@@ -12,31 +13,40 @@ namespace Nop.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        void DeleteTaxCategory(TaxCategory taxCategory);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteTaxCategoryAsync(TaxCategory taxCategory);
 
         /// <summary>
         /// Gets all tax categories
         /// </summary>
-        /// <returns>Tax categories</returns>
-        IList<TaxCategory> GetAllTaxCategories();
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax categories
+        /// </returns>
+        Task<IList<TaxCategory>> GetAllTaxCategoriesAsync();
 
         /// <summary>
         /// Gets a tax category
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <returns>Tax category</returns>
-        TaxCategory GetTaxCategoryById(int taxCategoryId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax category
+        /// </returns>
+        Task<TaxCategory> GetTaxCategoryByIdAsync(int taxCategoryId);
 
         /// <summary>
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        void InsertTaxCategory(TaxCategory taxCategory);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertTaxCategoryAsync(TaxCategory taxCategory);
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        void UpdateTaxCategory(TaxCategory taxCategory);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateTaxCategoryAsync(TaxCategory taxCategory);
     }
 }

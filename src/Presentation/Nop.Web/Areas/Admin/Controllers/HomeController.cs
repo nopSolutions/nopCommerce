@@ -1,6 +1,10 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -22,6 +26,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -33,7 +39,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
-            ISettingService settingService)
+            ISettingService settingService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext)
         {
             _adminAreaSettings = adminAreaSettings;
             _commonModelFactory = commonModelFactory;
@@ -42,39 +50,56 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService = notificationService;
             _permissionService = permissionService;
             _settingService = settingService;
+            _workContext = workContext;
+            _genericAttributeService = genericAttributeService;
         }
 
         #endregion
 
         #region Methods
 
-        public virtual IActionResult Index()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Index()
         {
             //display a warning to a store owner if there are some error
-            if (_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+            var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+            if ((hideCard || closeCard) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
             {
-                var warnings = _commonModelFactory.PrepareSystemWarningModels();
+                var warnings = await _commonModelFactory.PrepareSystemWarningModelsAsync();
                 if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
                                             warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
                                             warning.Level == SystemWarningLevel.Warning))
                     _notificationService.WarningNotification(
-                        string.Format(_localizationService.GetResource("Admin.System.Warnings.Errors"),
+                        string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.Errors"),
                         Url.Action("Warnings", "Common")),
                         //do not encode URLs
                         false);
             }
 
+            //progress of localozation 
+            var progress = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute);
+            if (!string.IsNullOrEmpty(progress))
+            {
+                var locale = await _localizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage");
+                _notificationService.SuccessNotification(string.Format(locale, progress, NopLinksDefaults.OfficialSite.Translations), false);
+                await _genericAttributeService.SaveAttributeAsync(await _workContext.GetWorkingLanguageAsync(), NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
+            }
+
             //prepare model
-            var model = _homeModelFactory.PrepareDashboardModel(new DashboardModel());
+            var model = await _homeModelFactory.PrepareDashboardModelAsync(new DashboardModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult NopCommerceNewsHideAdv()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> NopCommerceNewsHideAdv()
         {
             _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
-            _settingService.SaveSetting(_adminAreaSettings);
+            await _settingService.SaveSettingAsync(_adminAreaSettings);
 
             return Content("Setting changed");
         }

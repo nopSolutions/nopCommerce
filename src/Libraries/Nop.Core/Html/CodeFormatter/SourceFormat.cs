@@ -203,7 +203,7 @@ namespace Nop.Core.Html.CodeFormatter
                     {
                         var order = (int)Math.Log10(i);
                         sb.Append("<span class=\"lnum\">" 
-                            + spaces.Substring(0, 3 - order) + i 
+                            + spaces[0..(3 - order)] + i 
                             + ":  </span>");
                     }
 

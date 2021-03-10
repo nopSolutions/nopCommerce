@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public partial class FaviconAndAppIconsModel : BaseNopModel
+    public partial record FaviconAndAppIconsModel : BaseNopModel
     {
         public string HeadCode { get; set; }
     }

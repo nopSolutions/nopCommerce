@@ -4,7 +4,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CustomerAddressListModel : BaseNopModel
+    public partial record CustomerAddressListModel : BaseNopModel
     {
         public CustomerAddressListModel()
         {

@@ -32,13 +32,13 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Executes a task
         /// </summary>
-        public void Execute()
+        public async System.Threading.Tasks.Task ExecuteAsync()
         {
             var olderThanMinutes = _customerSettings.DeleteGuestTaskOlderThanMinutes;
             // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.
             olderThanMinutes = olderThanMinutes == 0 ? 1440 : olderThanMinutes;
 
-            _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
+            await _customerService.DeleteGuestCustomersAsync(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
         }
 
         #endregion

@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
     /// <summary>
     /// Represents an affiliate model
     /// </summary>
-    public partial class AffiliateModel : BaseNopEntityModel
+    public partial record AffiliateModel : BaseNopEntityModel
     {
         #region Ctor
 

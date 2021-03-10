@@ -9,61 +9,65 @@
 
 @{
     const string hideSearchBlockAttributeName = "CampaignPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
+
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Promotions.Campaigns")
     </h1>
-    <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn bg-blue">
-            <i class="fa fa-plus-square"></i>
+    <div class="float-right">
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CampaignListButtons })
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
+        <div class="cards-group">
             @*hide the entire search block if no elements are displayed*@
-            <div class="panel panel-default panel-search" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
-                <div class="panel-body">
+            <div class="card card-default card-search" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="StoreId" />
                                     </div>
                                     <div class="col-md-8">
                                         <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-campaigns" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
-                                    </div>
-                                </div>
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="button" id="search-campaigns" class="btn btn-primary btn-search">
+                                    <i class="fas fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.EmailCampaigns", Docs.EmailCampaigns + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "campaigns-grid",
@@ -107,3 +111,4 @@
         </div>
     </div>
 </div>
+</section>

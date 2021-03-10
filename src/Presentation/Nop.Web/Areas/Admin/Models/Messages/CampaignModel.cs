@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a campaign model
     /// </summary>
-    public partial class CampaignModel : BaseNopEntityModel
+    public partial record CampaignModel : BaseNopEntityModel
     {
         #region Ctor
 

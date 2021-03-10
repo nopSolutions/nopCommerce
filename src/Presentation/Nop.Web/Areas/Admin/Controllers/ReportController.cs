@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Reports;
@@ -28,27 +29,59 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        #region Low stock
+        #region Sales summary
 
-        public virtual IActionResult LowStock()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> SalesSummary()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _reportModelFactory.PrepareLowStockProductSearchModel(new LowStockProductSearchModel());
+            var model = await _reportModelFactory.PrepareSalesSummarySearchModelAsync(new SalesSummarySearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult LowStockList(LowStockProductSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> SalesSummaryList(SalesSummarySearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reportModelFactory.PrepareLowStockProductListModel(searchModel);
+            var model = await _reportModelFactory.PrepareSalesSummaryListModelAsync(searchModel);
+
+            return Json(model);
+        }
+
+
+        #endregion
+
+        #region Low stock
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> LowStock()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = await _reportModelFactory.PrepareLowStockProductSearchModelAsync(new LowStockProductSearchModel());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> LowStockList(LowStockProductSearchModel searchModel)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
+                return await AccessDeniedDataTablesJson();
+
+            //prepare model
+            var model = await _reportModelFactory.PrepareLowStockProductListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -57,37 +90,40 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Bestsellers
 
-        public virtual IActionResult Bestsellers()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Bestsellers()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _reportModelFactory.PrepareBestsellerSearchModel(new BestsellerSearchModel());
+            var model = await _reportModelFactory.PrepareBestsellerSearchModelAsync(new BestsellerSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult BestsellersList(BestsellerSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> BestsellersList(BestsellerSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reportModelFactory.PrepareBestsellerListModel(searchModel);
+            var model = await _reportModelFactory.PrepareBestsellerListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult BestsellersReportAggregates(BestsellerSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> BestsellersReportAggregates(BestsellerSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var totalAmount = _reportModelFactory.GetBestsellerTotalAmount(searchModel);
+            var totalAmount = await _reportModelFactory.GetBestsellerTotalAmountAsync(searchModel);
 
             return Json(new { aggregatortotal = totalAmount });
         }
@@ -96,25 +132,27 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Never Sold
 
-        public virtual IActionResult NeverSold()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> NeverSold()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _reportModelFactory.PrepareNeverSoldSearchModel(new NeverSoldReportSearchModel());
+            var model = await _reportModelFactory.PrepareNeverSoldSearchModelAsync(new NeverSoldReportSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult NeverSoldList(NeverSoldReportSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> NeverSoldList(NeverSoldReportSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reportModelFactory.PrepareNeverSoldListModel(searchModel);
+            var model = await _reportModelFactory.PrepareNeverSoldListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -123,25 +161,27 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Country sales
 
-        public virtual IActionResult CountrySales()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CountrySales()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.OrderCountryReport))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _reportModelFactory.PrepareCountrySalesSearchModel(new CountryReportSearchModel());
+            var model = await _reportModelFactory.PrepareCountrySalesSearchModelAsync(new CountryReportSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult CountrySalesList(CountryReportSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CountrySalesList(CountryReportSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.OrderCountryReport))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reportModelFactory.PrepareCountrySalesListModel(searchModel);
+            var model = await _reportModelFactory.PrepareCountrySalesListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -150,71 +190,77 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Customer reports
 
-        public virtual IActionResult RegisteredCustomers()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> RegisteredCustomers()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _reportModelFactory.PrepareCustomerReportsSearchModel(new CustomerReportsSearchModel());
+            var model = await _reportModelFactory.PrepareCustomerReportsSearchModelAsync(new CustomerReportsSearchModel());
 
             return View(model);
         }
 
-        public virtual IActionResult BestCustomersByOrderTotal()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> BestCustomersByOrderTotal()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _reportModelFactory.PrepareCustomerReportsSearchModel(new CustomerReportsSearchModel());
+            var model = await _reportModelFactory.PrepareCustomerReportsSearchModelAsync(new CustomerReportsSearchModel());
 
             return View(model);
         }
 
-        public virtual IActionResult BestCustomersByNumberOfOrders()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> BestCustomersByNumberOfOrders()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _reportModelFactory.PrepareCustomerReportsSearchModel(new CustomerReportsSearchModel());
+            var model = await _reportModelFactory.PrepareCustomerReportsSearchModelAsync(new CustomerReportsSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ReportBestCustomersByOrderTotalList(BestCustomersReportSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReportBestCustomersByOrderTotalList(BestCustomersReportSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reportModelFactory.PrepareBestCustomersReportListModel(searchModel);
+            var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ReportBestCustomersByNumberOfOrdersList(BestCustomersReportSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReportBestCustomersByNumberOfOrdersList(BestCustomersReportSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reportModelFactory.PrepareBestCustomersReportListModel(searchModel);
+            var model = await _reportModelFactory.PrepareBestCustomersReportListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ReportRegisteredCustomersList(RegisteredCustomersReportSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReportRegisteredCustomersList(RegisteredCustomersReportSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reportModelFactory.PrepareRegisteredCustomersReportListModel(searchModel);
+            var model = await _reportModelFactory.PrepareRegisteredCustomersReportListModelAsync(searchModel);
 
             return Json(model);
         }        

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Polls;
@@ -46,40 +47,41 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult Vote(int pollAnswerId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Vote(int pollAnswerId)
         {
-            var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
+            var pollAnswer = await _pollService.GetPollAnswerByIdAsync(pollAnswerId);
             if (pollAnswer == null)
                 return Json(new { error = "No poll answer found with the specified id" });
 
-            var poll = _pollService.GetPollById(pollAnswer.PollId);
+            var poll = await _pollService.GetPollByIdAsync(pollAnswer.PollId);
 
-            if (!poll.Published || !_storeMappingService.Authorize(poll))
+            if (!poll.Published || !await _storeMappingService.AuthorizeAsync(poll))
                 return Json(new { error = "Poll is not available" });
 
-            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !poll.AllowGuestsToVote)
-                return Json(new { error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote") });
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !poll.AllowGuestsToVote)
+                return Json(new { error = await _localizationService.GetResourceAsync("Polls.OnlyRegisteredUsersVote") });
 
-            var alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
+            var alreadyVoted = await _pollService.AlreadyVotedAsync(poll.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
             if (!alreadyVoted)
             {
                 //vote
-                _pollService.InsertPollVotingRecord(new PollVotingRecord
+                await _pollService.InsertPollVotingRecordAsync(new PollVotingRecord
                 {
                     PollAnswerId = pollAnswer.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
                 //update totals
-                pollAnswer.NumberOfVotes = _pollService.GetPollVotingRecordsByPollAnswer(pollAnswer.Id).Count;
-                _pollService.UpdatePollAnswer(pollAnswer);
-                _pollService.UpdatePoll(poll);
+                pollAnswer.NumberOfVotes = (await _pollService.GetPollVotingRecordsByPollAnswerAsync(pollAnswer.Id)).Count;
+                await _pollService.UpdatePollAnswerAsync(pollAnswer);
+                await _pollService.UpdatePollAsync(poll);
             }
 
             return Json(new
             {
-                html = RenderPartialViewToString("_Poll", _pollModelFactory.PreparePollModel(poll, true)),
+                html = await RenderPartialViewToStringAsync("_Poll", await _pollModelFactory.PreparePollModelAsync(poll, true)),
             });
         }
 

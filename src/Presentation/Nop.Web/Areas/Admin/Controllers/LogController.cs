@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -50,94 +51,100 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _logModelFactory.PrepareLogSearchModel(new LogSearchModel());
+            var model = await _logModelFactory.PrepareLogSearchModelAsync(new LogSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult LogList(LogSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> LogList(LogSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _logModelFactory.PrepareLogListModel(searchModel);
+            var model = await _logModelFactory.PrepareLogListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("clearall")]
-        public virtual IActionResult ClearAll()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ClearAll()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
-            _logger.ClearLog();
+            await _logger.ClearLogAsync();
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteSystemLog", _localizationService.GetResource("ActivityLog.DeleteSystemLog"));
+            await _customerActivityService.InsertActivityAsync("DeleteSystemLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"));
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Log.Cleared"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Log.Cleared"));
 
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult View(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> View(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             //try to get a log with the specified id
-            var log = _logger.GetLogById(id);
+            var log = await _logger.GetLogByIdAsync(id);
             if (log == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _logModelFactory.PrepareLogModel(null, log);
+            var model = await _logModelFactory.PrepareLogModelAsync(null, log);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             //try to get a log with the specified id
-            var log = _logger.GetLogById(id);
+            var log = await _logger.GetLogByIdAsync(id);
             if (log == null)
                 return RedirectToAction("List");
 
-            _logger.DeleteLog(log);
+            await _logger.DeleteLogAsync(log);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteSystemLog", _localizationService.GetResource("ActivityLog.DeleteSystemLog"), log);
+            await _customerActivityService.InsertActivityAsync("DeleteSystemLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"), log);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Log.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.Log.Deleted"));
 
             return RedirectToAction("List");
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
             if (selectedIds != null)
-                _logger.DeleteLogs(_logger.GetLogByIds(selectedIds.ToArray()).ToList());
+                await _logger.DeleteLogsAsync((await _logger.GetLogByIdsAsync(selectedIds.ToArray())).ToList());
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteSystemLog", _localizationService.GetResource("ActivityLog.DeleteSystemLog"));
+            await _customerActivityService.InsertActivityAsync("DeleteSystemLog", await _localizationService.GetResourceAsync("ActivityLog.DeleteSystemLog"));
 
             return Json(new { Result = true });
         }

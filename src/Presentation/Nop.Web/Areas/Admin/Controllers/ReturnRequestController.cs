@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Localization;
@@ -58,22 +59,24 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void UpdateLocales(ReturnRequestReason rrr, ReturnRequestReasonModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task UpdateLocalesAsync(ReturnRequestReason rrr, ReturnRequestReasonModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(rrr,
+                await _localizedEntityService.SaveLocalizedValueAsync(rrr,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
             }
         }
 
-        protected virtual void UpdateLocales(ReturnRequestAction rra, ReturnRequestActionModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task UpdateLocalesAsync(ReturnRequestAction rra, ReturnRequestActionModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(rra,
+                await _localizedEntityService.SaveLocalizedValueAsync(rra,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -89,54 +92,58 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestSearchModel(new ReturnRequestSearchModel());
+            var model = await _returnRequestModelFactory.PrepareReturnRequestSearchModelAsync(new ReturnRequestSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(ReturnRequestSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List(ReturnRequestSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestListModel(searchModel);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
             //try to get a return request with the specified id
-            var returnRequest = _returnRequestService.GetReturnRequestById(id);
+            var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(id);
             if (returnRequest == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestModel(null, returnRequest);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestModelAsync(null, returnRequest);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Edit(ReturnRequestModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(ReturnRequestModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
             //try to get a return request with the specified id
-            var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
+            var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(model.Id);
             if (returnRequest == null)
                 return RedirectToAction("List");
 
@@ -145,19 +152,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
                 
-                _returnRequestService.UpdateReturnRequest(returnRequest);
+                await _returnRequestService.UpdateReturnRequestAsync(returnRequest);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditReturnRequest",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id), returnRequest);
+                await _customerActivityService.InsertActivityAsync("EditReturnRequest",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditReturnRequest"), returnRequest.Id), returnRequest);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ReturnRequests.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _returnRequestModelFactory.PrepareReturnRequestModel(model, returnRequest, true);
+            model = await _returnRequestModelFactory.PrepareReturnRequestModelAsync(model, returnRequest, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -165,106 +172,112 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("notify-customer")]
-        public virtual IActionResult NotifyCustomer(ReturnRequestModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> NotifyCustomer(ReturnRequestModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
             //try to get a return request with the specified id
-            var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
+            var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(model.Id);
             if (returnRequest == null)
                 return RedirectToAction("List");
 
-            var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
+            var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
             if (orderItem is null)
             {
-                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.ReturnRequests.OrderItemDeleted"));
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
 
-            var order = _orderService.GetOrderById(orderItem.OrderId);
+            var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
 
-            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, order);
+            var queuedEmailIds = await _workflowMessageService.SendReturnRequestStatusChangedCustomerNotificationAsync(returnRequest, orderItem, order);
             if (queuedEmailIds.Any())
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ReturnRequests.Notified"));
 
             return RedirectToAction("Edit", new { id = returnRequest.Id });
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
             //try to get a return request with the specified id
-            var returnRequest = _returnRequestService.GetReturnRequestById(id);
+            var returnRequest = await _returnRequestService.GetReturnRequestByIdAsync(id);
             if (returnRequest == null)
                 return RedirectToAction("List");
 
-            _returnRequestService.DeleteReturnRequest(returnRequest);
+            await _returnRequestService.DeleteReturnRequestAsync(returnRequest);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteReturnRequest",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id), returnRequest);
+            await _customerActivityService.InsertActivityAsync("DeleteReturnRequest",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteReturnRequest"), returnRequest.Id), returnRequest);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ReturnRequests.Deleted"));
 
             return RedirectToAction("List");
         }
 
         #region Return request reasons
 
-        public virtual IActionResult ReturnRequestReasonList()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestReasonList()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select an appropriate panel
-            SaveSelectedPanelName("ordersettings-return-request");
+            //select an appropriate card
+            SaveSelectedCardName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");
         }
 
         [HttpPost]
-        public virtual IActionResult ReturnRequestReasonList(ReturnRequestReasonSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestReasonList(ReturnRequestReasonSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestReasonListModel(searchModel);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestReasonListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult ReturnRequestReasonCreate()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestReasonCreate()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(new ReturnRequestReasonModel(), null);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestReasonModelAsync(new ReturnRequestReasonModel(), null);
             
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var returnRequestReason = model.ToEntity<ReturnRequestReason>();
-                _returnRequestService.InsertReturnRequestReason(returnRequestReason);
+                await _returnRequestService.InsertReturnRequestReasonAsync(returnRequestReason);
 
                 //locales
-                UpdateLocales(returnRequestReason, model);
+                await UpdateLocalesAsync(returnRequestReason, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
 
                 return continueEditing 
                     ? RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id })
@@ -272,48 +285,50 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(model, null, true);
+            model = await _returnRequestModelFactory.PrepareReturnRequestReasonModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult ReturnRequestReasonEdit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestReasonEdit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a return request reason with the specified id
-            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(id);
+            var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(id);
             if (returnRequestReason == null)
                 return RedirectToAction("ReturnRequestReasonList");
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(null, returnRequestReason);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestReasonModelAsync(null, returnRequestReason);
             
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a return request reason with the specified id
-            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(model.Id);
+            var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.Id);
             if (returnRequestReason == null)
                 return RedirectToAction("ReturnRequestReasonList");
 
             if (ModelState.IsValid)
             {
                 returnRequestReason = model.ToEntity(returnRequestReason);
-                _returnRequestService.UpdateReturnRequestReason(returnRequestReason);
+                await _returnRequestService.UpdateReturnRequestReasonAsync(returnRequestReason);
 
                 //locales
-                UpdateLocales(returnRequestReason, model);
+                await UpdateLocalesAsync(returnRequestReason, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestReasonList");
@@ -322,25 +337,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(model, returnRequestReason, true);
+            model = await _returnRequestModelFactory.PrepareReturnRequestReasonModelAsync(model, returnRequestReason, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ReturnRequestReasonDelete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestReasonDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a return request reason with the specified id
-            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(id) 
+            var returnRequestReason = await _returnRequestService.GetReturnRequestReasonByIdAsync(id) 
                 ?? throw new ArgumentException("No return request reason found with the specified id", nameof(id));
 
-            _returnRequestService.DeleteReturnRequestReason(returnRequestReason);
+            await _returnRequestService.DeleteReturnRequestReasonAsync(returnRequestReason);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestReasons.Deleted"));
 
             return RedirectToAction("ReturnRequestReasonList");
         }
@@ -349,56 +365,60 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Return request actions
 
-        public virtual IActionResult ReturnRequestActionList()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestActionList()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select an appropriate panel
-            SaveSelectedPanelName("ordersettings-return-request");
+            //select an appropriate card
+            SaveSelectedCardName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");
         }
 
         [HttpPost]
-        public virtual IActionResult ReturnRequestActionList(ReturnRequestActionSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestActionList(ReturnRequestActionSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestActionListModel(searchModel);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestActionListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult ReturnRequestActionCreate()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestActionCreate()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestActionModel(new ReturnRequestActionModel(), null);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestActionModelAsync(new ReturnRequestActionModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var returnRequestAction = model.ToEntity<ReturnRequestAction>();
-                _returnRequestService.InsertReturnRequestAction(returnRequestAction);
+                await _returnRequestService.InsertReturnRequestActionAsync(returnRequestAction);
 
                 //locales
-                UpdateLocales(returnRequestAction, model);
+                await UpdateLocalesAsync(returnRequestAction, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
 
                 return continueEditing 
                     ? RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id }) 
@@ -406,48 +426,50 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _returnRequestModelFactory.PrepareReturnRequestActionModel(model, null, true);
+            model = await _returnRequestModelFactory.PrepareReturnRequestActionModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult ReturnRequestActionEdit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestActionEdit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a return request action with the specified id
-            var returnRequestAction = _returnRequestService.GetReturnRequestActionById(id);
+            var returnRequestAction = await _returnRequestService.GetReturnRequestActionByIdAsync(id);
             if (returnRequestAction == null)
                 return RedirectToAction("ReturnRequestActionList");
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestActionModel(null, returnRequestAction);
+            var model = await _returnRequestModelFactory.PrepareReturnRequestActionModelAsync(null, returnRequestAction);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a return request action with the specified id
-            var returnRequestAction = _returnRequestService.GetReturnRequestActionById(model.Id);
+            var returnRequestAction = await _returnRequestService.GetReturnRequestActionByIdAsync(model.Id);
             if (returnRequestAction == null)
                 return RedirectToAction("ReturnRequestActionList");
 
             if (ModelState.IsValid)
             {
                 returnRequestAction = model.ToEntity(returnRequestAction);
-                _returnRequestService.UpdateReturnRequestAction(returnRequestAction);
+                await _returnRequestService.UpdateReturnRequestActionAsync(returnRequestAction);
 
                 //locales
-                UpdateLocales(returnRequestAction, model);
+                await UpdateLocalesAsync(returnRequestAction, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestActionList");
@@ -456,25 +478,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _returnRequestModelFactory.PrepareReturnRequestActionModel(model, returnRequestAction, true);
+            model = await _returnRequestModelFactory.PrepareReturnRequestActionModelAsync(model, returnRequestAction, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ReturnRequestActionDelete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ReturnRequestActionDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a return request action with the specified id
-            var returnRequestAction = _returnRequestService.GetReturnRequestActionById(id)
+            var returnRequestAction = await _returnRequestService.GetReturnRequestActionByIdAsync(id)
                 ?? throw new ArgumentException("No return request action found with the specified id", nameof(id));
 
-            _returnRequestService.DeleteReturnRequestAction(returnRequestAction);
+            await _returnRequestService.DeleteReturnRequestActionAsync(returnRequestAction);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted"));
 
             return RedirectToAction("ReturnRequestActionList");
         }

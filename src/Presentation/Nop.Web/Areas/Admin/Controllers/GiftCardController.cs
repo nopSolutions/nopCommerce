@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -84,115 +85,121 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _giftCardModelFactory.PrepareGiftCardSearchModel(new GiftCardSearchModel());
+            var model = await _giftCardModelFactory.PrepareGiftCardSearchModelAsync(new GiftCardSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult GiftCardList(GiftCardSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GiftCardList(GiftCardSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _giftCardModelFactory.PrepareGiftCardListModel(searchModel);
+            var model = await _giftCardModelFactory.PrepareGiftCardListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _giftCardModelFactory.PrepareGiftCardModel(new GiftCardModel(), null);
+            var model = await _giftCardModelFactory.PrepareGiftCardModelAsync(new GiftCardModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(GiftCardModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create(GiftCardModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var giftCard = model.ToEntity<GiftCard>();
                 giftCard.CreatedOnUtc = DateTime.UtcNow;
-                _giftCardService.InsertGiftCard(giftCard);
+                await _giftCardService.InsertGiftCardAsync(giftCard);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewGiftCard",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode), giftCard);
+                await _customerActivityService.InsertActivityAsync("AddNewGiftCard",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.GiftCards.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _giftCardModelFactory.PrepareGiftCardModel(model, null, true);
+            model = await _giftCardModelFactory.PrepareGiftCardModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             //try to get a gift card with the specified id
-            var giftCard = _giftCardService.GetGiftCardById(id);
+            var giftCard = await _giftCardService.GetGiftCardByIdAsync(id);
             if (giftCard == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _giftCardModelFactory.PrepareGiftCardModel(null, giftCard);
+            var model = await _giftCardModelFactory.PrepareGiftCardModelAsync(null, giftCard);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Edit(GiftCardModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(GiftCardModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             //try to get a gift card with the specified id
-            var giftCard = _giftCardService.GetGiftCardById(model.Id);
+            var giftCard = await _giftCardService.GetGiftCardByIdAsync(model.Id);
             if (giftCard == null)
                 return RedirectToAction("List");
 
-            var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+            var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
 
             model.PurchasedWithOrderId = order?.Id;
-            model.RemainingAmountStr = _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
-            model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.RemainingAmountStr = await _priceFormatter.FormatPriceAsync(await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard), true, false);
+            model.AmountStr = await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
+            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 
             if (ModelState.IsValid)
             {
                 giftCard = model.ToEntity(giftCard);
-                _giftCardService.UpdateGiftCard(giftCard);
+                await _giftCardService.UpdateGiftCardAsync(giftCard);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditGiftCard",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode), giftCard);
+                await _customerActivityService.InsertActivityAsync("EditGiftCard",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.GiftCards.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -201,7 +208,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _giftCardModelFactory.PrepareGiftCardModel(model, giftCard, true);
+            model = await _giftCardModelFactory.PrepareGiftCardModelAsync(model, giftCard, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -215,13 +222,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("notifyRecipient")]
-        public virtual IActionResult NotifyRecipient(GiftCardModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> NotifyRecipient(GiftCardModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             //try to get a gift card with the specified id
-            var giftCard = _giftCardService.GetGiftCardById(model.Id);
+            var giftCard = await _giftCardService.GetGiftCardByIdAsync(model.Id);
             if (giftCard == null)
                 return RedirectToAction("List");
 
@@ -234,13 +242,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     throw new NopException("Sender email is not valid");
 
                 var languageId = 0;
-                var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+                var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
                 
                 if (order != null)
                 {
-                    var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
+                    var customerLang = await _languageService.GetLanguageByIdAsync(order.CustomerLanguageId);
                     if (customerLang == null)
-                        customerLang = _languageService.GetAllLanguages().FirstOrDefault();
+                        customerLang = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
                     if (customerLang != null)
                         languageId = customerLang.Id;
                 }
@@ -249,59 +257,63 @@ namespace Nop.Web.Areas.Admin.Controllers
                     languageId = _localizationSettings.DefaultAdminLanguageId;
                 }
 
-                var queuedEmailIds = _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
+                var queuedEmailIds = await _workflowMessageService.SendGiftCardNotificationAsync(giftCard, languageId);
                 if (queuedEmailIds.Any())
                 {
                     giftCard.IsRecipientNotified = true;
-                    _giftCardService.UpdateGiftCard(giftCard);
+                    await _giftCardService.UpdateGiftCardAsync(giftCard);
                     model.IsRecipientNotified = true;
                 }
+
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.GiftCards.RecipientNotified"));
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             //prepare model
-            model = _giftCardModelFactory.PrepareGiftCardModel(model, giftCard);
+            model = await _giftCardModelFactory.PrepareGiftCardModelAsync(model, giftCard);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
 
             //try to get a gift card with the specified id
-            var giftCard = _giftCardService.GetGiftCardById(id);
+            var giftCard = await _giftCardService.GetGiftCardByIdAsync(id);
             if (giftCard == null)
                 return RedirectToAction("List");
 
-            _giftCardService.DeleteGiftCard(giftCard);
+            await _giftCardService.DeleteGiftCardAsync(giftCard);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteGiftCard",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode), giftCard);
+            await _customerActivityService.InsertActivityAsync("DeleteGiftCard",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode), giftCard);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.GiftCards.Deleted"));
 
             return RedirectToAction("List");
         }
 
         [HttpPost]
-        public virtual IActionResult UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a gift card with the specified id
-            var giftCard = _giftCardService.GetGiftCardById(searchModel.GiftCardId)
+            var giftCard = await _giftCardService.GetGiftCardByIdAsync(searchModel.GiftCardId)
                 ?? throw new ArgumentException("No gift card found with the specified id");
 
             //prepare model
-            var model = _giftCardModelFactory.PrepareGiftCardUsageHistoryListModel(searchModel, giftCard);
+            var model = await _giftCardModelFactory.PrepareGiftCardUsageHistoryListModelAsync(searchModel, giftCard);
 
             return Json(model);
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Security;
@@ -25,7 +26,8 @@ namespace Nop.Web.Controllers
             _profileModelFactory = profileModelFactory;
         }
 
-        public virtual IActionResult Index(int? id, int? pageNumber)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Index(int? id, int? pageNumber)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
@@ -38,17 +40,17 @@ namespace Nop.Web.Controllers
                 customerId = id.Value;
             }
 
-            var customer = _customerService.GetCustomerById(customerId);
-            if (customer == null || _customerService.IsGuest(customer))
+            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            if (customer == null || await _customerService.IsGuestAsync(customer))
             {
                 return RedirectToRoute("Homepage");
             }
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin }));
 
-            var model = _profileModelFactory.PrepareProfileIndexModel(customer, pageNumber);
+            var model = await _profileModelFactory.PrepareProfileIndexModelAsync(customer, pageNumber);
             return View(model);
         }
     }

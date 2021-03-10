@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -13,9 +14,10 @@ namespace Nop.Web.Components
             _catalogModelFactory = catalogModelFactory;
         }
 
-        public IViewComponentResult Invoke()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _catalogModelFactory.PrepareSearchBoxModel();
+            var model = await _catalogModelFactory.PrepareSearchBoxModelAsync();
             return View(model);
         }
     }

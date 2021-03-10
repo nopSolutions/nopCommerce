@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product review search model
     /// </summary>
-    public partial class ProductReviewSearchModel : BaseSearchModel
+    public partial record ProductReviewSearchModel : BaseSearchModel
     {
         #region Ctor
 

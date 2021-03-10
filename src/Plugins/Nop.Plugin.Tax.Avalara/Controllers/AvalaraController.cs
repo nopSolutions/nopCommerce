@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -74,9 +75,10 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         #region Methods
 
-        public IActionResult Configure(string testTaxResult = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> Configure(string testTaxResult = null)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //prepare common properties
@@ -90,23 +92,24 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 ValidateAddress = _avalaraTaxSettings.ValidateAddress,
                 TaxOriginAddressTypeId = (int)_avalaraTaxSettings.TaxOriginAddressType,
                 EnableLogging = _avalaraTaxSettings.EnableLogging,
+                GetTaxRateByAddressOnly = _avalaraTaxSettings.GetTaxRateByAddressOnly,
                 TestTaxResult = testTaxResult
             };
             model.IsConfigured = !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId) && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
-            model.TaxOriginAddressTypes = TaxOriginAddressType.DefaultTaxAddress.ToSelectList(false)
+            model.TaxOriginAddressTypes = (await TaxOriginAddressType.DefaultTaxAddress.ToSelectListAsync(false))
                 .Select(type => new SelectListItem(type.Text, type.Value)).ToList();
-            model.HideGeneralBlock = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, AvalaraTaxDefaults.HideGeneralBlock);
-            model.HideLogBlock = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, AvalaraTaxDefaults.HideLogBlock);
+            model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), AvalaraTaxDefaults.HideGeneralBlock);
+            model.HideLogBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), AvalaraTaxDefaults.HideLogBlock);
 
             //prepare address model
-            _baseAdminModelFactory.PrepareCountries(model.TestAddress.AvailableCountries);
-            _baseAdminModelFactory.PrepareStatesAndProvinces(model.TestAddress.AvailableStates, model.TestAddress.CountryId);
+            await _baseAdminModelFactory.PrepareCountriesAsync(model.TestAddress.AvailableCountries);
+            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.TestAddress.AvailableStates, model.TestAddress.CountryId);
 
             //prepare tax transaction log model
             model.TaxTransactionLogSearchModel.SetGridPageSize();
 
             //get active account companies
-            var activeCompanies = model.IsConfigured ? _avalaraTaxManager.GetAccountCompanies() : null;
+            var activeCompanies = model.IsConfigured ? await _avalaraTaxManager.GetAccountCompaniesAsync() : null;
             if (activeCompanies?.Any() ?? false)
             {
                 model.Companies = activeCompanies.OrderBy(company => company.isDefault ?? false ? 0 : 1).Select(company => new SelectListItem
@@ -120,7 +123,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!model.Companies.Any())
             {
                 //add the special item for 'there are no companies' with empty guid value
-                var noCompaniesText = _localizationService.GetResource("Plugins.Tax.Avalara.Fields.Company.NotExist");
+                var noCompaniesText = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.Company.NotExist");
                 model.Companies.Add(new SelectListItem { Text = noCompaniesText, Value = Guid.Empty.ToString() });
                 defaultCompanyCode = Guid.Empty.ToString();
             }
@@ -130,14 +133,14 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             //set the default company
             model.CompanyCode = defaultCompanyCode;
             _avalaraTaxSettings.CompanyCode = defaultCompanyCode;
-            _settingService.SaveSetting(_avalaraTaxSettings);
+            await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 
             //display warning in case of company currency differ from the primary store currency
-            var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             var selectedCompany = activeCompanies?.FirstOrDefault(company => company.companyCode.Equals(defaultCompanyCode));
             if (!selectedCompany?.baseCurrencyCode?.Equals(primaryCurrency?.CurrencyCode, StringComparison.InvariantCultureIgnoreCase) ?? false)
             {
-                var warning = string.Format(_localizationService.GetResource("Plugins.Tax.Avalara.Fields.Company.Currency.Warning"),
+                var warning = string.Format(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.Company.Currency.Warning"),
                     selectedCompany.name, selectedCompany.baseCurrencyCode, primaryCurrency?.CurrencyCode);
                 _notificationService.WarningNotification(warning);
             }
@@ -147,13 +150,14 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("save")]
-        public IActionResult Configure(ConfigurationModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //save settings
             _avalaraTaxSettings.AccountId = model.AccountId;
@@ -164,42 +168,45 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _avalaraTaxSettings.ValidateAddress = model.ValidateAddress;
             _avalaraTaxSettings.TaxOriginAddressType = (TaxOriginAddressType)model.TaxOriginAddressTypeId;
             _avalaraTaxSettings.EnableLogging = model.EnableLogging;
-            _settingService.SaveSetting(_avalaraTaxSettings);
+            _avalaraTaxSettings.GetTaxRateByAddressOnly = model.GetTaxRateByAddressOnly;
+            await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("verifyCredentials")]
-        public IActionResult VerifyCredentials()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> VerifyCredentials()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //verify credentials 
-            var result = _avalaraTaxManager.Ping();
+            var result = await _avalaraTaxManager.PingAsync();
             if (result?.authenticated ?? false)
-                _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.VerifyCredentials.Verified"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.VerifyCredentials.Verified"));
             else
-                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.VerifyCredentials.Declined"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.VerifyCredentials.Declined"));
 
-            return Configure();
+            return await Configure();
         }
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("testTax")]
-        public IActionResult TestTaxRequest(ConfigurationModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> TestTaxRequest(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //get result
-            var transaction = _avalaraTaxManager.CreateTestTaxTransaction(new Address
+            var transaction = await _avalaraTaxManager.CreateTestTaxTransactionAsync(new Address
             {
                 City = model.TestAddress?.City,
                 CountryId = model.TestAddress?.CountryId,
@@ -218,22 +225,23 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                     testTaxResult = transaction.summary.Aggregate(testTaxResult, (resultString, rate) =>
                         $"{resultString}Jurisdiction: {rate?.jurisName}, Tax rate: {(rate?.rate ?? 0) * 100:0.00}% {Environment.NewLine}");
                 }
-                _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TestTax.Success"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TestTax.Success"));
             }
             else
-                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TestTax.Error"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TestTax.Error"));
 
-            return Configure(testTaxResult);
+            return await Configure(testTaxResult);
         }
 
-        public IActionResult ChangeOriginAddressType(int typeId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> ChangeOriginAddressType(int typeId)
         {
             var message = (TaxOriginAddressType)typeId switch
             {
-                TaxOriginAddressType.ShippingOrigin => string.Format(_localizationService
-                    .GetResource("Plugins.Tax.Avalara.Fields.TaxOriginAddressType.ShippingOrigin.Warning"), Url.Action("Shipping", "Setting")),
-                TaxOriginAddressType.DefaultTaxAddress => string.Format(_localizationService
-                    .GetResource("Plugins.Tax.Avalara.Fields.TaxOriginAddressType.DefaultTaxAddress.Warning"), Url.Action("Tax", "Setting")),
+                TaxOriginAddressType.ShippingOrigin => string.Format(await _localizationService
+                    .GetResourceAsync("Plugins.Tax.Avalara.Fields.TaxOriginAddressType.ShippingOrigin.Warning"), Url.Action("Shipping", "Setting")),
+                TaxOriginAddressType.DefaultTaxAddress => string.Format(await _localizationService
+                    .GetResourceAsync("Plugins.Tax.Avalara.Fields.TaxOriginAddressType.DefaultTaxAddress.Warning"), Url.Action("Tax", "Setting")),
                 _ => null
             };
 

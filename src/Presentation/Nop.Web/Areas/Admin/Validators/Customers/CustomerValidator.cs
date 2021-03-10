@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
@@ -24,27 +25,27 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 .NotEmpty()
                 .EmailAddress()
                 //.WithMessage("Valid Email is required for customer to be in 'Registered' role")
-                .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"))
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"))
                 //only for registered users
-                .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
 
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
             {
                 RuleFor(x => x.CountryId)
                     .NotEqual(0)
-                    .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Country.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.CountryEnabled &&
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {
-                RuleFor(x => x.StateProvinceId).Must((x, context) =>
+                RuleFor(x => x.StateProvinceId).MustAwait(async (x, context) =>
                 {
                     //does selected country have states?
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
+                    var hasStates = (await stateProvinceService.GetStateProvincesByCountryIdAsync(x.CountryId)).Any();
                     if (hasStates)
                     {
                         //if yes, then ensure that a state is selected
@@ -53,79 +54,80 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     }
 
                     return true;
-                }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
+                }).WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.StateProvince.Required"));
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {
                 RuleFor(x => x.Company)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Company.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Company.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled)
             {
                 RuleFor(x => x.StreetAddress)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.StreetAddress.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.StreetAddress2Required && customerSettings.StreetAddress2Enabled)
             {
                 RuleFor(x => x.StreetAddress2)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress2.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.StreetAddress2.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled)
             {
                 RuleFor(x => x.ZipPostalCode)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.ZipPostalCode.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.ZipPostalCode.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.CityRequired && customerSettings.CityEnabled)
             {
                 RuleFor(x => x.City)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.City.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.City.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.CountyRequired && customerSettings.CountyEnabled)
             {
                 RuleFor(x => x.County)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.County.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.County.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.PhoneRequired && customerSettings.PhoneEnabled)
             {
                 RuleFor(x => x.Phone)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Phone.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Phone.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.FaxRequired && customerSettings.FaxEnabled)
             {
                 RuleFor(x => x.Fax)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Fax.Required"))
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Fax.Required"))
                     //only for registered users
-                    .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
 
             SetDatabaseValidationRules<Customer>(dataProvider);
         }
 
-        private bool IsRegisteredCustomerRoleChecked(CustomerModel model, ICustomerService customerService)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task<bool> IsRegisteredCustomerRoleCheckedAsync(CustomerModel model, ICustomerService customerService)
         {
-            var allCustomerRoles = customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = await customerService.GetAllCustomerRolesAsync(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))

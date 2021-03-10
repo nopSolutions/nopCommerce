@@ -24,9 +24,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add options feature
             services.AddOptions();
-            
-            //add distributed memory cache
-            services.AddDistributedMemoryCache();
+
+            //add distributed cache
+            services.AddDistributedCache();
 
             //add HTTP sesion state feature
             services.AddHttpSession();
@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddRouting(options =>
             {
                 //add constraint key for language
-                options.ConstraintMap["lang"] = typeof(LanguageParameterTransformer);
+                options.ConstraintMap[NopPathRouteDefaults.LanguageParameterTransformer] = typeof(LanguageParameterTransformer);
             });
         }
 
@@ -74,9 +74,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use request localization
             application.UseNopRequestLocalization();
-
-            //set request culture
-            application.UseCulture();
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Topics
     /// <summary>
     /// Represents a topic search model
     /// </summary>
-    public partial class TopicSearchModel : BaseSearchModel
+    public partial record TopicSearchModel : BaseSearchModel
     {
         #region Ctor
 

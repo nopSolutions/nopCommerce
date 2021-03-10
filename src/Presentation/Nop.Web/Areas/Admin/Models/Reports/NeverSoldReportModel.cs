@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a never sold products report model
     /// </summary>
-    public partial class NeverSoldReportModel : BaseNopModel
+    public partial record NeverSoldReportModel : BaseNopModel
     {
         #region Properties
 

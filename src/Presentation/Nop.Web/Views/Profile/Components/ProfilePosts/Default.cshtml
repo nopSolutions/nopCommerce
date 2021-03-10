@@ -28,9 +28,9 @@ else
     </div>
 }
 @{
-    var pager = Html.Pager(Model.PagerModel);
+    var pager = await Html.PagerAsync(Model.PagerModel);
 }
-@if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+@if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
 {
     <div class="pager">
         @pager

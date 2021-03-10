@@ -7,7 +7,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
 {
-    public partial class ShoppingCartModel : BaseNopModel
+    public partial record ShoppingCartModel : BaseNopModel
     {
         public ShoppingCartModel()
         {
@@ -47,7 +47,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         #region Nested Classes
 
-        public partial class ShoppingCartItemModel : BaseNopEntityModel
+        public partial record ShoppingCartItemModel : BaseNopEntityModel
         {
             public ShoppingCartItemModel()
             {
@@ -91,7 +91,7 @@ namespace Nop.Web.Models.ShoppingCart
             public IList<string> Warnings { get; set; }
         }
 
-        public partial class CheckoutAttributeModel : BaseNopEntityModel
+        public partial record CheckoutAttributeModel : BaseNopEntityModel
         {
             public CheckoutAttributeModel()
             {
@@ -130,7 +130,7 @@ namespace Nop.Web.Models.ShoppingCart
             public IList<CheckoutAttributeValueModel> Values { get; set; }
         }
 
-        public partial class CheckoutAttributeValueModel : BaseNopEntityModel
+        public partial record CheckoutAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 
@@ -141,7 +141,7 @@ namespace Nop.Web.Models.ShoppingCart
             public bool IsPreSelected { get; set; }
         }
 
-        public partial class DiscountBoxModel: BaseNopModel
+        public partial record DiscountBoxModel: BaseNopModel
         {
             public DiscountBoxModel()
             {
@@ -154,20 +154,20 @@ namespace Nop.Web.Models.ShoppingCart
             public List<string> Messages { get; set; }
             public bool IsApplied { get; set; }
 
-            public class DiscountInfoModel : BaseNopEntityModel
+            public record DiscountInfoModel : BaseNopEntityModel
             {
                 public string CouponCode { get; set; }
             }
         }
 
-        public partial class GiftCardBoxModel : BaseNopModel
+        public partial record GiftCardBoxModel : BaseNopModel
         {
             public bool Display { get; set; }
             public string Message { get; set; }
             public bool IsApplied { get; set; }
         }
 
-        public partial class OrderReviewDataModel : BaseNopModel
+        public partial record OrderReviewDataModel : BaseNopModel
         {
             public OrderReviewDataModel()
             {

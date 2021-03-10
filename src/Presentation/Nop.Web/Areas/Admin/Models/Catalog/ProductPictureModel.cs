@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product picture model
     /// </summary>
-    public partial class ProductPictureModel : BaseNopEntityModel
+    public partial record ProductPictureModel : BaseNopEntityModel
     {
         #region Properties
 

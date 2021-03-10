@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CustomerAvatarModel : BaseNopModel
+    public partial record CustomerAvatarModel : BaseNopModel
     {
         public string AvatarUrl { get; set; }
     }

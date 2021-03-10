@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a registered customers report model
     /// </summary>
-    public partial class RegisteredCustomersReportModel : BaseNopModel
+    public partial record RegisteredCustomersReportModel : BaseNopModel
     {
         #region Properties
 

@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a cross-sell product model
     /// </summary>
-    public partial class CrossSellProductModel : BaseNopEntityModel
+    public partial record CrossSellProductModel : BaseNopEntityModel
     {
         #region Properties
 

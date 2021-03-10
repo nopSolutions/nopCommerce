@@ -20,7 +20,6 @@ namespace Nop.Data.Mapping.Builders.Catalog
                 .WithColumn(nameof(Manufacturer.Name)).AsString(400).NotNullable()
                 .WithColumn(nameof(Manufacturer.MetaKeywords)).AsString(400).Nullable()
                 .WithColumn(nameof(Manufacturer.MetaTitle)).AsString(400).Nullable()
-                .WithColumn(nameof(Manufacturer.PriceRanges)).AsString(400).Nullable()
                 .WithColumn(nameof(Manufacturer.PageSizeOptions)).AsString(200).Nullable();
         }
 

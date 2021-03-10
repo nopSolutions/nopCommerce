@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -82,55 +83,58 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void UpdatePictureSeoNames(Vendor vendor)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task UpdatePictureSeoNamesAsync(Vendor vendor)
         {
-            var picture = _pictureService.GetPictureById(vendor.PictureId);
+            var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
             if (picture != null)
-                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
+                await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(vendor.Name));
         }
 
-        protected virtual void UpdateLocales(Vendor vendor, VendorModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task UpdateLocalesAsync(Vendor vendor, VendorModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(vendor,
+                await _localizedEntityService.SaveLocalizedValueAsync(vendor,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(vendor,
+                await _localizedEntityService.SaveLocalizedValueAsync(vendor,
                     x => x.Description,
                     localized.Description,
                     localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(vendor,
+                await _localizedEntityService.SaveLocalizedValueAsync(vendor,
                     x => x.MetaKeywords,
                     localized.MetaKeywords,
                     localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(vendor,
+                await _localizedEntityService.SaveLocalizedValueAsync(vendor,
                     x => x.MetaDescription,
                     localized.MetaDescription,
                     localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(vendor,
+                await _localizedEntityService.SaveLocalizedValueAsync(vendor,
                     x => x.MetaTitle,
                     localized.MetaTitle,
                     localized.LanguageId);
 
                 //search engine name
-                var seName = _urlRecordService.ValidateSeName(vendor, localized.SeName, localized.Name, false);
-                _urlRecordService.SaveSlug(vendor, seName, localized.LanguageId);
+                var seName = await _urlRecordService.ValidateSeNameAsync(vendor, localized.SeName, localized.Name, false);
+                await _urlRecordService.SaveSlugAsync(vendor, seName, localized.LanguageId);
             }
         }
 
-        protected virtual string ParseVendorAttributes(IFormCollection form)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task<string> ParseVendorAttributesAsync(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
             var attributesXml = string.Empty;
-            var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
+            var vendorAttributes = await _vendorAttributeService.GetAllVendorAttributesAsync();
             foreach (var attribute in vendorAttributes)
             {
                 var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
@@ -165,7 +169,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
                         //load read-only (already server-side selected) values
-                        var attributeValues = _vendorAttributeService.GetVendorAttributeValues(attribute.Id);
+                        var attributeValues = await _vendorAttributeService.GetVendorAttributeValuesAsync(attribute.Id);
                         foreach (var selectedAttributeId in attributeValues
                             .Where(v => v.IsPreSelected)
                             .Select(v => v.Id)
@@ -209,64 +213,68 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _vendorModelFactory.PrepareVendorSearchModel(new VendorSearchModel());
+            var model = await _vendorModelFactory.PrepareVendorSearchModelAsync(new VendorSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(VendorSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List(VendorSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _vendorModelFactory.PrepareVendorListModel(searchModel);
+            var model = await _vendorModelFactory.PrepareVendorListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _vendorModelFactory.PrepareVendorModel(new VendorModel(), null);
+            var model = await _vendorModelFactory.PrepareVendorModelAsync(new VendorModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Create(VendorModel model, bool continueEditing, IFormCollection form)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create(VendorModel model, bool continueEditing, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //parse vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(form);
-            _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
+            var vendorAttributesXml = await ParseVendorAttributesAsync(form);
+            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
             if (ModelState.IsValid)
             {
                 var vendor = model.ToEntity<Vendor>();
-                _vendorService.InsertVendor(vendor);
+                await _vendorService.InsertVendorAsync(vendor);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewVendor",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewVendor"), vendor.Id), vendor);
+                await _customerActivityService.InsertActivityAsync("AddNewVendor",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewVendor"), vendor.Id), vendor);
 
                 //search engine name
-                model.SeName = _urlRecordService.ValidateSeName(vendor, model.SeName, vendor.Name, true);
-                _urlRecordService.SaveSlug(vendor, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(vendor, model.SeName, vendor.Name, true);
+                await _urlRecordService.SaveSlugAsync(vendor, model.SeName, 0);
 
                 //address
                 var address = model.Address.ToEntity<Address>();
@@ -277,20 +285,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                _addressService.InsertAddress(address);
+                await _addressService.InsertAddressAsync(address);
                 vendor.AddressId = address.Id;
-                _vendorService.UpdateVendor(vendor);
+                await _vendorService.UpdateVendorAsync(vendor);
 
                 //vendor attributes
-                _genericAttributeService.SaveAttribute(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
+                await _genericAttributeService.SaveAttributeAsync(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //locales
-                UpdateLocales(vendor, model);
+                await UpdateLocalesAsync(vendor, model);
 
                 //update picture seo file name
-                UpdatePictureSeoNames(vendor);
+                await UpdatePictureSeoNamesAsync(vendor);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Vendors.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -299,63 +307,65 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _vendorModelFactory.PrepareVendorModel(model, null, true);
+            model = await _vendorModelFactory.PrepareVendorModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(id);
+            var vendor = await _vendorService.GetVendorByIdAsync(id);
             if (vendor == null || vendor.Deleted)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _vendorModelFactory.PrepareVendorModel(null, vendor);
+            var model = await _vendorModelFactory.PrepareVendorModelAsync(null, vendor);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(VendorModel model, bool continueEditing, IFormCollection form)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(VendorModel model, bool continueEditing, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(model.Id);
+            var vendor = await _vendorService.GetVendorByIdAsync(model.Id);
             if (vendor == null || vendor.Deleted)
                 return RedirectToAction("List");
 
             //parse vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(form);
-            _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
+            var vendorAttributesXml = await ParseVendorAttributesAsync(form);
+            (await _vendorAttributeParser.GetAttributeWarningsAsync(vendorAttributesXml)).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
             if (ModelState.IsValid)
             {
                 var prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
-                _vendorService.UpdateVendor(vendor);
+                await _vendorService.UpdateVendorAsync(vendor);
 
                 //vendor attributes
-                _genericAttributeService.SaveAttribute(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
+                await _genericAttributeService.SaveAttributeAsync(vendor, NopVendorDefaults.VendorAttributes, vendorAttributesXml);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditVendor",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditVendor"), vendor.Id), vendor);
+                await _customerActivityService.InsertActivityAsync("EditVendor",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditVendor"), vendor.Id), vendor);
 
                 //search engine name
-                model.SeName = _urlRecordService.ValidateSeName(vendor, model.SeName, vendor.Name, true);
-                _urlRecordService.SaveSlug(vendor, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(vendor, model.SeName, vendor.Name, true);
+                await _urlRecordService.SaveSlugAsync(vendor, model.SeName, 0);
 
                 //address
-                var address = _addressService.GetAddressById(vendor.AddressId);
+                var address = await _addressService.GetAddressByIdAsync(vendor.AddressId);
                 if (address == null)
                 {
                     address = model.Address.ToEntity<Address>();
@@ -367,9 +377,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (address.StateProvinceId == 0)
                         address.StateProvinceId = null;
 
-                    _addressService.InsertAddress(address);
+                    await _addressService.InsertAddressAsync(address);
                     vendor.AddressId = address.Id;
-                    _vendorService.UpdateVendor(vendor);
+                    await _vendorService.UpdateVendorAsync(vendor);
                 }
                 else
                 {
@@ -381,23 +391,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (address.StateProvinceId == 0)
                         address.StateProvinceId = null;
 
-                    _addressService.UpdateAddress(address);
+                    await _addressService.UpdateAddressAsync(address);
                 }
 
                 //locales
-                UpdateLocales(vendor, model);
+                await UpdateLocalesAsync(vendor, model);
 
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != vendor.PictureId)
                 {
-                    var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                    var prevPicture = await _pictureService.GetPictureByIdAsync(prevPictureId);
                     if (prevPicture != null)
-                        _pictureService.DeletePicture(prevPicture);
+                        await _pictureService.DeletePictureAsync(prevPicture);
                 }
                 //update picture seo file name
-                UpdatePictureSeoNames(vendor);
+                await UpdatePictureSeoNamesAsync(vendor);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Vendors.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -406,39 +416,40 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _vendorModelFactory.PrepareVendorModel(model, vendor, true);
+            model = await _vendorModelFactory.PrepareVendorModelAsync(model, vendor, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(id);
+            var vendor = await _vendorService.GetVendorByIdAsync(id);
             if (vendor == null)
                 return RedirectToAction("List");
 
             //clear associated customer references
-            var associatedCustomers = _customerService.GetAllCustomers(vendorId: vendor.Id);
+            var associatedCustomers = await _customerService.GetAllCustomersAsync(vendorId: vendor.Id);
             foreach (var customer in associatedCustomers)
             {
                 customer.VendorId = 0;
-                _customerService.UpdateCustomer(customer);
+                await _customerService.UpdateCustomerAsync(customer);
             }
 
             //delete a vendor
-            _vendorService.DeleteVendor(vendor);
+            await _vendorService.DeleteVendorAsync(vendor);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteVendor",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteVendor"), vendor.Id), vendor);
+            await _customerActivityService.InsertActivityAsync("DeleteVendor",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteVendor"), vendor.Id), vendor);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Vendors.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -448,35 +459,37 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Vendor notes
 
         [HttpPost]
-        public virtual IActionResult VendorNotesSelect(VendorNoteSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> VendorNotesSelect(VendorNoteSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(searchModel.VendorId)
+            var vendor = await _vendorService.GetVendorByIdAsync(searchModel.VendorId)
                 ?? throw new ArgumentException("No vendor found with the specified id");
 
             //prepare model
-            var model = _vendorModelFactory.PrepareVendorNoteListModel(searchModel, vendor);
+            var model = await _vendorModelFactory.PrepareVendorNoteListModelAsync(searchModel, vendor);
 
             return Json(model);
         }
 
-        public virtual IActionResult VendorNoteAdd(int vendorId, string message)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> VendorNoteAdd(int vendorId, string message)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(message))
-                return ErrorJson(_localizationService.GetResource("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
+                return ErrorJson(await _localizationService.GetResourceAsync("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
 
             //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(vendorId);
+            var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
             if (vendor == null)
                 return ErrorJson("Vendor cannot be loaded");
 
-            _vendorService.InsertVendorNote(new VendorNote
+            await _vendorService.InsertVendorNoteAsync(new VendorNote
             {
                 Note = message,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -487,16 +500,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult VendorNoteDelete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> VendorNoteDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //try to get a vendor note with the specified id
-            var vendorNote = _vendorService.GetVendorNoteById(id)
+            var vendorNote = await _vendorService.GetVendorNoteByIdAsync(id)
                 ?? throw new ArgumentException("No vendor note found with the specified id", nameof(id));
 
-            _vendorService.DeleteVendorNote(vendorNote);
+            await _vendorService.DeleteVendorNoteAsync(vendorNote);
 
             return new NullJsonResult();
         }

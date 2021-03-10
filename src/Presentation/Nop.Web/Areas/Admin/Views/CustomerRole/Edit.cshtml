@@ -9,24 +9,24 @@
 
 <form asp-controller="CustomerRole" asp-action="Edit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Customers.CustomerRoles.EditCustomerRoleDetails") - @Model.Name
             <small>
-                <i class="fa fa-arrow-circle-left"></i>
+                <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Customers.CustomerRoles.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            <button type="submit" name="save-continue" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <span id="customerrole-delete" class="btn bg-red">
-                <i class="fa fa-trash-o"></i>
+            <span id="customerrole-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerRoleDetailsButtons, additionalData = Model })

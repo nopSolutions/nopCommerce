@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
@@ -52,10 +53,8 @@ namespace Nop.Services.Orders
                         continue;
 
                     var str1 = node.Attributes["ID"].InnerText.Trim();
-                    if (int.TryParse(str1, out var id))
-                    {
+                    if (int.TryParse(str1, out var id)) 
                         ids.Add(id);
-                    }
                 }
             }
             catch (Exception exc)
@@ -74,8 +73,11 @@ namespace Nop.Services.Orders
         /// Gets selected checkout attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected checkout attributes</returns>
-        public virtual IList<CheckoutAttribute> ParseCheckoutAttributes(string attributesXml)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected checkout attributes
+        /// </returns>
+        public virtual async Task<IList<CheckoutAttribute>> ParseCheckoutAttributesAsync(string attributesXml)
         {
             var result = new List<CheckoutAttribute>();
             if (string.IsNullOrEmpty(attributesXml))
@@ -84,11 +86,9 @@ namespace Nop.Services.Orders
             var ids = ParseCheckoutAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
-                if (attribute != null)
-                {
+                var attribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(id);
+                if (attribute != null) 
                     result.Add(attribute);
-                }
             }
 
             return result;
@@ -99,12 +99,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Checkout attribute values</returns>
-        public virtual IEnumerable<(CheckoutAttribute attribute, IEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml)
+        public virtual async IAsyncEnumerable<(CheckoutAttribute attribute, IAsyncEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml)
         {
             if (string.IsNullOrEmpty(attributesXml))
                 yield break;
 
-            var attributes = ParseCheckoutAttributes(attributesXml);
+            var attributes = await ParseCheckoutAttributesAsync(attributesXml);
 
             foreach (var attribute in attributes)
             {
@@ -116,7 +116,7 @@ namespace Nop.Services.Orders
                 yield return (attribute, getValues(valuesStr));
             }
 
-            IEnumerable<CheckoutAttributeValue> getValues(IList<string> valuesStr)
+            async IAsyncEnumerable<CheckoutAttributeValue> getValues(IList<string> valuesStr)
             {
                 foreach (var valueStr in valuesStr)
                 {
@@ -126,7 +126,7 @@ namespace Nop.Services.Orders
                     if (!int.TryParse(valueStr, out var id))
                         continue;
 
-                    var value = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
+                    var value = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(id);
                     if (value != null)
                         yield return value;
                 }
@@ -198,9 +198,7 @@ namespace Nop.Services.Orders
                     xmlDoc.AppendChild(element1);
                 }
                 else
-                {
                     xmlDoc.LoadXml(attributesXml);
-                }
 
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
@@ -254,8 +252,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="cart">Shopping cart items</param>
-        /// <returns>Updated attributes in XML format</returns>
-        public virtual string EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the updated attributes in XML format
+        /// </returns>
+        public virtual async Task<string> EnsureOnlyActiveAttributesAsync(string attributesXml, IList<ShoppingCartItem> cart)
         {
             if (string.IsNullOrEmpty(attributesXml))
                 return attributesXml;
@@ -264,12 +265,12 @@ namespace Nop.Services.Orders
 
             //removing "shippable" checkout attributes if there's no any shippable products in the cart
             var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
-            if (shoppingCartService.ShoppingCartRequiresShipping(cart))
+            if (await shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 return result;
 
             //find attribute IDs to remove
             var checkoutAttributeIdsToRemove = new List<int>();
-            var attributes = ParseCheckoutAttributes(attributesXml);
+            var attributes = await ParseCheckoutAttributesAsync(attributesXml);
 
             foreach (var ca in attributes)
                 if (ca.ShippableProductRequired)
@@ -291,16 +292,12 @@ namespace Nop.Services.Orders
                     if (!int.TryParse(str1, out var id)) 
                         continue;
 
-                    if (checkoutAttributeIdsToRemove.Contains(id))
-                    {
+                    if (checkoutAttributeIdsToRemove.Contains(id)) 
                         nodesToRemove.Add(node);
-                    }
                 }
 
-                foreach (var node in nodesToRemove)
-                {
+                foreach (var node in nodesToRemove) 
                     node.ParentNode.RemoveChild(node);
-                }
 
                 result = xmlDoc.OuterXml;
             }
@@ -317,8 +314,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attribute">Checkout attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
-        /// <returns>Result</returns>
-        public virtual bool? IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool?> IsConditionMetAsync(CheckoutAttribute attribute, string selectedAttributesXml)
         {
             if (attribute == null)
                 throw new ArgumentNullException(nameof(attribute));
@@ -329,7 +329,7 @@ namespace Nop.Services.Orders
                 return null;
 
             //load an attribute this one depends on
-            var dependOnAttribute = ParseCheckoutAttributes(conditionAttributeXml).FirstOrDefault();
+            var dependOnAttribute = (await ParseCheckoutAttributesAsync(conditionAttributeXml)).FirstOrDefault();
             if (dependOnAttribute == null)
                 return true;
 
@@ -377,9 +377,7 @@ namespace Nop.Services.Orders
                     xmlDoc.AppendChild(element1);
                 }
                 else
-                {
                     xmlDoc.LoadXml(attributesXml);
-                }
 
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
@@ -404,10 +402,8 @@ namespace Nop.Services.Orders
                 }
 
                 //found
-                if (attributeElement != null)
-                {
+                if (attributeElement != null) 
                     rootElement.RemoveChild(attributeElement);
-                }
 
                 result = xmlDoc.OuterXml;
             }

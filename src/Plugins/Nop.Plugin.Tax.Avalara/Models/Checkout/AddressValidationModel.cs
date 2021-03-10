@@ -5,7 +5,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.Checkout
     /// <summary>
     /// Represents an address validation model
     /// </summary>
-    public class AddressValidationModel : BaseNopModel
+    public record AddressValidationModel : BaseNopModel
     {
         #region Properties
 

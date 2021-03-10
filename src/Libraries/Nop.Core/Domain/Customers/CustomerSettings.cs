@@ -235,7 +235,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
         /// </summary>
-        public int DeleteGuestTaskOlderThanMinutes { get; set; }
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }        
 
         #region Form fields
 

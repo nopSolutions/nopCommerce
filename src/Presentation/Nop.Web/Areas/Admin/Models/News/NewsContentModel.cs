@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.News
     /// <summary>
     /// Represents a news content model
     /// </summary>
-    public partial class NewsContentModel : BaseNopModel
+    public partial record NewsContentModel : BaseNopModel
     {
         #region Ctor
 

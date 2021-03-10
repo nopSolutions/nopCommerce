@@ -47,13 +47,13 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
 
-            if (_physicalFileProvider.GetFileInfo(subpath).Exists || !pictureService.StoreInDb)
+            if (_physicalFileProvider.GetFileInfo(subpath).Exists || !pictureService.IsStoreInDbAsync().Result)
                 return _physicalFileProvider.GetFileInfo(subpath);
 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>() as NopFileProvider;
             var roxyFilemanService = EngineContext.Current.Resolve<IRoxyFilemanService>();
             var virtualPath = fileProvider?.GetVirtualPath(fileProvider.GetDirectoryName(_physicalFileProvider.GetFileInfo(subpath).PhysicalPath));
-            roxyFilemanService.FlushImagesOnDisk(virtualPath);
+            roxyFilemanService.FlushImagesOnDiskAsync(virtualPath).Wait();
 
             return _physicalFileProvider.GetFileInfo(subpath);
         }

@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Common;
 
 namespace Nop.Web.Infrastructure.Installation
 {
@@ -64,6 +65,16 @@ namespace Nop.Web.Infrastructure.Installation
         }
 
         /// <summary>
+        /// Get current browser culture
+        /// </summary>
+        /// <returns>Current culture</returns>
+        public string GetBrowserCulture()
+        {
+            _httpContextAccessor.HttpContext.Request.Headers.TryGetValue(HeaderNames.AcceptLanguage, out var userLanguages);
+            return userLanguages.FirstOrDefault()?.Split(',').FirstOrDefault() ?? NopCommonDefaults.DefaultLanguageCulture;
+        }
+
+        /// <summary>
         /// Get current language for the installation page
         /// </summary>
         /// <returns>Current language</returns>
@@ -73,7 +84,7 @@ namespace Nop.Web.Infrastructure.Installation
 
             //try to get cookie
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
-            httpContext.Request.Cookies.TryGetValue(cookieName, out string cookieLanguageCode);
+            httpContext.Request.Cookies.TryGetValue(cookieName, out var cookieLanguageCode);
 
             //ensure it's available (it could be delete since the previous installation)
             var availableLanguages = GetAvailableLanguages();
@@ -86,7 +97,7 @@ namespace Nop.Web.Infrastructure.Installation
             //let's find by current browser culture
             if (httpContext.Request.Headers.TryGetValue(HeaderNames.AcceptLanguage, out var userLanguages))
             {
-                var userLanguage = userLanguages.FirstOrDefault()?.Split(',')[0] ?? string.Empty;
+                var userLanguage = userLanguages.FirstOrDefault()?.Split(',').FirstOrDefault() ?? string.Empty;
                 if (!string.IsNullOrEmpty(userLanguage))
                 {
                     //right. we do "StartsWith" (not "Equals") because we have shorten codes (not full culture names)
@@ -148,6 +159,9 @@ namespace Nop.Web.Infrastructure.Installation
                 var matches = r.Matches(_fileProvider.GetFileName(filePath));
                 foreach (Match match in matches)
                     languageCode = match.Groups[1].Value;
+
+                //at now we use language codes only (not full culture names)
+                languageCode = languageCode[..2];
 
                 var languageNode = xmlDocument.SelectSingleNode(@"//Language");
 

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Engelsk" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Admin e-post</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Skriv inn admin e-postadresse</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Admin passord</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Skriv inn admin passord</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{0}' kontoen har ikke endringstillatelse i mappe '{1}'. Konfigurer disse tillatelsene.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{0}' kontoen har ikke endringstillatelse til filen '{1}'. Konfigurer disse tillatelsene.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Bekreft passordet</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Passord må bekreftes</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Database tilkoblingsstreng</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>En SQL-tilkoblingsstreng er påkrevd</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Feil format for SQL-tilkoblingsstreng</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Land</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Velg ditt land</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Opprett database hvis den ikke eksisterer</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Opprett eksempeldata</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Angi custom collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Det oppstod en feil under oppretting av databasen: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Databaseinformasjon</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Databasenavn</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Database eksisterer ikke, eller du har ikke tillatelser til å koble til</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Velg database leverandør</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Hvis du trenger informasjon om hvordan du bruker nopCommerce, kan du gå til</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentasjonsdelen på nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Eksempel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Installer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Installerer nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Bruk integrert Windows-godkjenning</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Passordene samsvarer ikke</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Angi tilkoblingsstreng (avansert)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Start installasjonen på nytt</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klikk for å starte installasjonsprosessen på nytt (tøm alle bufrede verdier)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Starter på nytt..</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Servernavn</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Servernavn er påkrevd</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Oppsett mislyktes: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL-passord</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL-passord er påkrevd</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL-brukernavn</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL-brukernavn er påkrevd</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Butikkinformasjon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce installasjon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>For å fullføre denne veiviseren, må du kjenne til litt informasjon angående databaseserveren ("tilkoblingsstreng"). Ta kontakt med Internett-leverandøren din om nødvendig. Hvis du installerer på en lokal maskin eller server, kan det hende du trenger informasjon fra systemadministratoren.</Value>
+  </LocaleResource>
+</Language>

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -30,12 +30,11 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that validates customer password expiration
         /// </summary>
-        private class ValidatePasswordFilter : IActionFilter
+        private class ValidatePasswordFilter : IAsyncActionFilter
         {
             #region Fields
 
             private readonly ICustomerService _customerService;
-            private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly IWorkContext _workContext;
 
             #endregion
@@ -43,23 +42,22 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Ctor
 
             public ValidatePasswordFilter(ICustomerService customerService,
-                IUrlHelperFactory urlHelperFactory,
                 IWorkContext workContext)
             {
                 _customerService = customerService;
-                _urlHelperFactory = urlHelperFactory;
                 _workContext = workContext;
             }
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task ValidatePasswordAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -67,7 +65,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //get action and controller names
@@ -78,27 +76,35 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
 
-                //don't validate on ChangePassword page
-                if (!(controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
-                    actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    //check password expiration
-                    if (_customerService.PasswordIsExpired(_workContext.CurrentCustomer))
-                    {
-                        //redirect to ChangePassword page if expires
-                        var changePasswordUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("CustomerChangePassword");
-                        context.Result = new RedirectResult(changePasswordUrl);
-                    }
-                }
+                //don't validate on the 'Change Password' page
+                if (controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                //check password expiration
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (!await _customerService.PasswordIsExpiredAsync(customer))
+                    return;
+
+                //redirect to ChangePassword page if expires
+                context.Result = new RedirectToRouteResult("CustomerChangePassword", null);
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await ValidatePasswordAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

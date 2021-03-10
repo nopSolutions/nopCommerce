@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer attribute value search model
     /// </summary>
-    public partial class CustomerAttributeValueSearchModel : BaseSearchModel
+    public partial record CustomerAttributeValueSearchModel : BaseSearchModel
     {
         #region Properties
 

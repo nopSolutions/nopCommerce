@@ -6,7 +6,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class CustomerRewardPointsModel : BaseNopModel
+    public partial record CustomerRewardPointsModel : BaseNopModel
     {
         public CustomerRewardPointsModel()
         {
@@ -22,7 +22,7 @@ namespace Nop.Web.Models.Order
 
         #region Nested classes
 
-        public partial class RewardPointsHistoryModel : BaseNopEntityModel
+        public partial record RewardPointsHistoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("RewardPoints.Fields.Points")]
             public int Points { get; set; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services;
 
 namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
@@ -26,9 +27,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
         #region Methods
 
         [HttpPost]
-        public IActionResult WebhookHandler()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> WebhookHandler()
         {
-            _serviceManager.HandleWebhook(_settings, Request);
+            await _serviceManager.HandleWebhookAsync(_settings, Request);
             return Ok();
         }
 

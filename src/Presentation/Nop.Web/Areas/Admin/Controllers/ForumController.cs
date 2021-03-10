@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Forums;
@@ -50,41 +51,44 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _forumModelFactory.PrepareForumGroupSearchModel(new ForumGroupSearchModel());
+            var model = await _forumModelFactory.PrepareForumGroupSearchModelAsync(new ForumGroupSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ForumGroupList(ForumGroupSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ForumGroupList(ForumGroupSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _forumModelFactory.PrepareForumGroupListModel(searchModel);
+            var model = await _forumModelFactory.PrepareForumGroupListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ForumList(ForumSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ForumList(ForumSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a forum group with the specified id
-            var forumGroup = _forumService.GetForumGroupById(searchModel.ForumGroupId)
+            var forumGroup = await _forumService.GetForumGroupByIdAsync(searchModel.ForumGroupId)
                 ?? throw new ArgumentException("No forum group found with the specified id");
 
             //prepare model
-            var model = _forumModelFactory.PrepareForumListModel(searchModel, forumGroup);
+            var model = await _forumModelFactory.PrepareForumListModelAsync(searchModel, forumGroup);
 
             return Json(model);
         }
@@ -93,21 +97,23 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Create
 
-        public virtual IActionResult CreateForumGroup()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CreateForumGroup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _forumModelFactory.PrepareForumGroupModel(new ForumGroupModel(), null);
+            var model = await _forumModelFactory.PrepareForumGroupModelAsync(new ForumGroupModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult CreateForumGroup(ForumGroupModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -115,35 +121,37 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var forumGroup = model.ToEntity<ForumGroup>();
                 forumGroup.CreatedOnUtc = DateTime.UtcNow;
                 forumGroup.UpdatedOnUtc = DateTime.UtcNow;
-                _forumService.InsertForumGroup(forumGroup);
+                await _forumService.InsertForumGroupAsync(forumGroup);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Forums.ForumGroup.Added"));
 
                 return continueEditing ? RedirectToAction("EditForumGroup", new { forumGroup.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _forumModelFactory.PrepareForumGroupModel(model, null, true);
+            model = await _forumModelFactory.PrepareForumGroupModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult CreateForum()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CreateForum()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _forumModelFactory.PrepareForumModel(new ForumModel(), null);
+            var model = await _forumModelFactory.PrepareForumModelAsync(new ForumModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult CreateForum(ForumModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CreateForum(ForumModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -151,15 +159,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var forum = model.ToEntity<Forum>();
                 forum.CreatedOnUtc = DateTime.UtcNow;
                 forum.UpdatedOnUtc = DateTime.UtcNow;
-                _forumService.InsertForum(forum);
+                await _forumService.InsertForumAsync(forum);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Forums.Forum.Added"));
 
                 return continueEditing ? RedirectToAction("EditForum", new { forum.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _forumModelFactory.PrepareForumModel(model, null, true);
+            model = await _forumModelFactory.PrepareForumModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -169,30 +177,32 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Edit
 
-        public virtual IActionResult EditForumGroup(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> EditForumGroup(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //try to get a forum group with the specified id
-            var forumGroup = _forumService.GetForumGroupById(id);
+            var forumGroup = await _forumService.GetForumGroupByIdAsync(id);
             if (forumGroup == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _forumModelFactory.PrepareForumGroupModel(null, forumGroup);
+            var model = await _forumModelFactory.PrepareForumGroupModelAsync(null, forumGroup);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult EditForumGroup(ForumGroupModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //try to get a forum group with the specified id
-            var forumGroup = _forumService.GetForumGroupById(model.Id);
+            var forumGroup = await _forumService.GetForumGroupByIdAsync(model.Id);
             if (forumGroup == null)
                 return RedirectToAction("List");
 
@@ -200,44 +210,46 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 forumGroup = model.ToEntity(forumGroup);
                 forumGroup.UpdatedOnUtc = DateTime.UtcNow;
-                _forumService.UpdateForumGroup(forumGroup);
+                await _forumService.UpdateForumGroupAsync(forumGroup);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Forums.ForumGroup.Updated"));
 
                 return continueEditing ? RedirectToAction("EditForumGroup", forumGroup.Id) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _forumModelFactory.PrepareForumGroupModel(model, forumGroup, true);
+            model = await _forumModelFactory.PrepareForumGroupModelAsync(model, forumGroup, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult EditForum(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> EditForum(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //try to get a forum with the specified id
-            var forum = _forumService.GetForumById(id);
+            var forum = await _forumService.GetForumByIdAsync(id);
             if (forum == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _forumModelFactory.PrepareForumModel(null, forum);
+            var model = await _forumModelFactory.PrepareForumModelAsync(null, forum);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult EditForum(ForumModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> EditForum(ForumModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //try to get a forum with the specified id
-            var forum = _forumService.GetForumById(model.Id);
+            var forum = await _forumService.GetForumByIdAsync(model.Id);
             if (forum == null)
                 return RedirectToAction("List");
 
@@ -245,15 +257,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 forum = model.ToEntity(forum);
                 forum.UpdatedOnUtc = DateTime.UtcNow;
-                _forumService.UpdateForum(forum);
+                await _forumService.UpdateForumAsync(forum);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Forums.Forum.Updated"));
 
                 return continueEditing ? RedirectToAction("EditForum", forum.Id) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _forumModelFactory.PrepareForumModel(model, forum, true);
+            model = await _forumModelFactory.PrepareForumModelAsync(model, forum, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -264,37 +276,39 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Delete
 
         [HttpPost]
-        public virtual IActionResult DeleteForumGroup(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> DeleteForumGroup(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //try to get a forum group with the specified id
-            var forumGroup = _forumService.GetForumGroupById(id);
+            var forumGroup = await _forumService.GetForumGroupByIdAsync(id);
             if (forumGroup == null)
                 return RedirectToAction("List");
 
-            _forumService.DeleteForumGroup(forumGroup);
+            await _forumService.DeleteForumGroupAsync(forumGroup);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Forums.ForumGroup.Deleted"));
 
             return RedirectToAction("List");
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteForum(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> DeleteForum(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
             //try to get a forum with the specified id
-            var forum = _forumService.GetForumById(id);
+            var forum = await _forumService.GetForumByIdAsync(id);
             if (forum == null)
                 return RedirectToAction("List");
 
-            _forumService.DeleteForum(forum);
+            await _forumService.DeleteForumAsync(forum);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Forums.Forum.Deleted"));
 
             return RedirectToAction("List");
         }

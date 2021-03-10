@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
@@ -37,22 +38,22 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public IActionResult UseValidatedAddress(int addressId, bool isNewAddress)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> UseValidatedAddress(int addressId, bool isNewAddress)
         {
             //try to get an address by the passed identifier
-            var address = _addressService.GetAddressById(addressId);
+            var address = await _addressService.GetAddressByIdAsync(addressId);
             if (address != null)
             {
                 //add address to customer collection if it's a new
-                if (isNewAddress)
-                    _customerService.InsertCustomerAddress(_workContext.CurrentCustomer, address);
+                if (isNewAddress) await _customerService.InsertCustomerAddressAsync(await _workContext.GetCurrentCustomerAsync(), address);
 
                 //and update appropriate customer address
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress)
-                    _workContext.CurrentCustomer.BillingAddressId = address.Id;
+                    (await _workContext.GetCurrentCustomerAsync()).BillingAddressId = address.Id;
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress)
-                    _workContext.CurrentCustomer.ShippingAddressId = address.Id;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    (await _workContext.GetCurrentCustomerAsync()).ShippingAddressId = address.Id;
+                await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
             }
 
             //nothing to return

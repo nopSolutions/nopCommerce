@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 
@@ -16,17 +17,24 @@ namespace Nop.Services.Catalog
         /// Gets selected product attribute mappings
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product attribute mappings</returns>
-        IList<ProductAttributeMapping> ParseProductAttributeMappings(string attributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected product attribute mappings
+        /// </returns>
+        Task<IList<ProductAttributeMapping>> ParseProductAttributeMappingsAsync(string attributesXml);
 
         /// <summary>
         /// Get product attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier; pass 0 to load all values</param>
-        /// <returns>Product attribute values</returns>
-        IList<ProductAttributeValue> ParseProductAttributeValues(string attributesXml, int productAttributeMappingId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute values
+        /// </returns>
+        Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(string attributesXml, int productAttributeMappingId = 0);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Gets selected product attribute values
         /// </summary>
@@ -35,6 +43,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute values</returns>
         IList<string> ParseValues(string attributesXml, int productAttributeMappingId);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Adds an attribute
         /// </summary>
@@ -45,6 +54,7 @@ namespace Nop.Services.Catalog
         /// <returns>Updated result (XML format)</returns>
         string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value, int? quantity = null);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Remove an attribute
         /// </summary>
@@ -60,16 +70,22 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml2">The attributes of the second product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreQuantity">A value indicating whether we should ignore the quantity of attribute value entered by the customer</param>
-        /// <returns>Result</returns>
-        bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<bool> AreProductAttributesEqualAsync(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true);
 
         /// <summary>
         /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
         /// </summary>
         /// <param name="pam">Product attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
-        /// <returns>Result</returns>
-        bool? IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<bool?> IsConditionMetAsync(ProductAttributeMapping pam, string selectedAttributesXml);
 
         /// <summary>
         /// Finds a product attribute combination by attributes stored in XML 
@@ -77,8 +93,11 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
-        /// <returns>Found product attribute combination</returns>
-        ProductAttributeCombination FindProductAttributeCombination(Product product,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found product attribute combination
+        /// </returns>
+        Task<ProductAttributeCombination> FindProductAttributeCombinationAsync(Product product,
             string attributesXml, bool ignoreNonCombinableAttributes = true);
 
         /// <summary>
@@ -87,17 +106,24 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
-        /// <returns>Attribute combinations in XML format</returns>
-        IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attribute combinations in XML format
+        /// </returns>
+        Task<IList<string>> GenerateAllCombinationsAsync(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
 
         /// <summary>
         /// Parse a customer entered price of the product
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
-        /// <returns>Customer entered price of the product</returns>
-        decimal ParseCustomerEnteredPrice(Product product, IFormCollection form);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer entered price of the product
+        /// </returns>
+        Task<decimal> ParseCustomerEnteredPriceAsync(Product product, IFormCollection form);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Parse a entered quantity of the product
         /// </summary>
@@ -106,6 +132,7 @@ namespace Nop.Services.Catalog
         /// <returns>Customer entered price of the product</returns>
         int ParseEnteredQuantity(Product product, IFormCollection form);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Parse product rental dates on the product details page
         /// </summary>
@@ -121,13 +148,17 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="form">Form values</param>
         /// <param name="errors">Errors</param>
-        /// <returns>Attributes in XML format</returns>
-        string ParseProductAttributes(Product product, IFormCollection form, List<string> errors);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attributes in XML format
+        /// </returns>
+        Task<string> ParseProductAttributesAsync(Product product, IFormCollection form, List<string> errors);
 
         #endregion
 
         #region Gift card attributes
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Add gift card attributes
         /// </summary>
@@ -141,6 +172,7 @@ namespace Nop.Services.Catalog
         string AddGiftCardAttribute(string attributesXml, string recipientName,
             string recipientEmail, string senderName, string senderEmail, string giftCardMessage);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get gift card attributes
         /// </summary>

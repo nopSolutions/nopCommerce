@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
@@ -26,24 +27,25 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
         {
             //load and cache report
-            var productIds = _productService.GetRelatedProductsByProductId1(productId).Select(x => x.ProductId2).ToArray();
+            var productIds = (await _productService.GetRelatedProductsByProductId1Async(productId)).Select(x => x.ProductId2).ToArray();
 
             //load products
-            var products = _productService.GetProductsByIds(productIds);
+            var products = await (await _productService.GetProductsByIdsAsync(productIds))
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+            .Where(p => _productService.ProductIsAvailable(p))
             //visible individually
-            products = products.Where(p => p.VisibleIndividually).ToList();
+            .Where(p => p.VisibleIndividually).ToListAsync();
 
             if (!products.Any())
                 return Content(string.Empty);
 
-            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
             return View(model);
         }
     }

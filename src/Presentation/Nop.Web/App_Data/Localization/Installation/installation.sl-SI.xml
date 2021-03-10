@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Slovenščina" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email administratorja</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Vnesite email administratorja</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Geslo administratorja</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Vnesite geslo administratorja</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{0}' račun nima dovolilnic za Urejanje dovoljenj v mapi '{1}'. Ustrezno nastavite dovolilnice.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{0}' račun nima dovolilnic za Urejanje dovoljenj za datoteko '{1}'. Ustrezno nastavite dovolilnice.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Potrdite geslo</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Vnesite geslo za potrditev</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Povezovalni niz</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Zahtevan je niz SQL povezave</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Napačen format niza SQL povezave</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Država</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Izberite državo ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Ustvari bazo podatkov, če ne obstaja</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Ustvari vzorčne podatke</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Določi custom collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Baza podatkov</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Prišlo je do napake pri ustvarjanju baze podatkov: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Podatki o bazi podatkov</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Naziv baze podatkov</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Baza podatkov ne obstaja ali pa nimate dovoljenja za povezovanje z njo</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Izberite ponudnika</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Če potrebujete informacije o uporabi nopCommerce, obiščite</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>stran z dokumentacijo na nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Primer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Namesti</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Nameščam nopCommerce ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Uporabi vgrajeno Windows preverjanje</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Gesli se ne ujemata.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Vnesi raw connection niz (napredno)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Ponovno zaženi namestitev</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Kliknite za ponoven zagon namestitve (izbris vseh vrednosti predpomnilnika)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Ponovno zaganjanje ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Ime strežnika</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Ime strežnika je obvezen podatek</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Namestitev ni uspela: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL geslo</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL geslo je zahtevan podatek</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL uporabniško ime</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL uporabniško ime je zahtevan podatek</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Podatki o trgovini</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce namestitev</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Za uporabo čarovnika morate poznati nekaj informacij glede strežnika baze podatkov ("povezovalni niz"). Če je potrebno, kontaktirajte ponudnika spletnih storitev. Če namestitev izvajate na lokalnem računalniku ali strežniku, boste morda potrebovali podatke od sistemskega skrbnika.</Value>
+  </LocaleResource>
+</Language>

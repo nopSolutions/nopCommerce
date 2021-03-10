@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Catalog.Caching
@@ -12,12 +13,19 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(SpecificationAttributeOption entity)
+        /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(SpecificationAttributeOption entity, EntityEventType entityEventType)
         {
-            Remove(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey);
-            Remove(_cacheKeyService.PrepareKey(NopCatalogDefaults.SpecAttributesOptionsCacheKey, entity.SpecificationAttributeId));
+            await RemoveAsync(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
+            await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsCacheKey, entity.SpecificationAttributeId);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.FilterableSpecificationAttributeOptionsPrefix);
 
-            RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdsPrefixCacheKey);
+            if (entityEventType == EntityEventType.Delete)
+                await RemoveByPrefixAsync(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

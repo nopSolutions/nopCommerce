@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Shipping.ShipStation.Models
 {
-    public class ShipStationModel : BaseNopModel
+    public record ShipStationModel : BaseNopModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -76,60 +77,64 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //whether discounts are ignored
             if (_catalogSettings.IgnoreDiscounts)
-                _notificationService.WarningNotification(_localizationService.GetResource("Admin.Promotions.Discounts.IgnoreDiscounts.Warning"));
+                _notificationService.WarningNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.IgnoreDiscounts.Warning"));
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountSearchModel(new DiscountSearchModel());
+            var model = await _discountModelFactory.PrepareDiscountSearchModelAsync(new DiscountSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DiscountSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List(DiscountSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountListModel(searchModel);
+            var model = await _discountModelFactory.PrepareDiscountListModelAsync(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountModel(new DiscountModel(), null);
+            var model = await _discountModelFactory.PrepareDiscountModelAsync(new DiscountModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(DiscountModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Create(DiscountModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var discount = model.ToEntity<Discount>();
-                _discountService.InsertDiscount(discount);
+                await _discountService.InsertDiscountAsync(discount);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewDiscount",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name), discount);
+                await _customerActivityService.InsertActivityAsync("AddNewDiscount",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewDiscount"), discount.Name), discount);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -138,36 +143,38 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _discountModelFactory.PrepareDiscountModel(model, null, true);
+            model = await _discountModelFactory.PrepareDiscountModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(id);
+            var discount = await _discountService.GetDiscountByIdAsync(id);
             if (discount == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountModel(null, discount);
+            var model = await _discountModelFactory.PrepareDiscountModelAsync(null, discount);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(DiscountModel model, bool continueEditing)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(DiscountModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(model.Id);
+            var discount = await _discountService.GetDiscountByIdAsync(model.Id);
             if (discount == null)
                 return RedirectToAction("List");
 
@@ -175,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var prevDiscountType = discount.DiscountType;
                 discount = model.ToEntity(discount);
-                _discountService.UpdateDiscount(discount);
+                await _discountService.UpdateDiscountAsync(discount);
 
                 //clean up old references (if changed) 
                 if (prevDiscountType != discount.DiscountType)
@@ -183,13 +190,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     switch (prevDiscountType)
                     {
                         case DiscountType.AssignedToSkus:
-                            _productService.ClearDiscountProductMapping(discount);
+                            await _productService.ClearDiscountProductMappingAsync(discount);
                             break;
                         case DiscountType.AssignedToCategories:
-                            _categoryService.ClearDiscountCategoryMapping(discount);
+                            await _categoryService.ClearDiscountCategoryMappingAsync(discount);
                             break;
                         case DiscountType.AssignedToManufacturers:
-                            _manufacturerService.ClearDiscountManufacturerMapping(discount);
+                            await _manufacturerService.ClearDiscountManufacturerMappingAsync(discount);
                             break;
                         default:
                             break;
@@ -197,10 +204,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("EditDiscount",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name), discount);
+                await _customerActivityService.InsertActivityAsync("EditDiscount",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditDiscount"), discount.Name), discount);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -209,37 +216,38 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _discountModelFactory.PrepareDiscountModel(model, discount, true);
+            model = await _discountModelFactory.PrepareDiscountModelAsync(model, discount, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(id);
+            var discount = await _discountService.GetDiscountByIdAsync(id);
             if (discount == null)
                 return RedirectToAction("List");
 
             //applied to products
-            var products = _productService.GetProductsWithAppliedDiscount(discount.Id, true);
+            var products = await _productService.GetProductsWithAppliedDiscountAsync(discount.Id, true);
 
-            _discountService.DeleteDiscount(discount);
+            await _discountService.DeleteDiscountAsync(discount);
 
             //update "HasDiscountsApplied" properties
             foreach (var p in products)
-                _productService.UpdateHasDiscountsApplied(p);
+                await _productService.UpdateHasDiscountsAppliedAsync(p);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteDiscount",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name), discount);
+            await _customerActivityService.InsertActivityAsync("DeleteDiscount",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteDiscount"), discount.Name), discount);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Promotions.Discounts.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -248,18 +256,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Discount requirements
 
-        public virtual IActionResult GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
-            var discountRequirementRule = _discountPluginManager.LoadPluginBySystemName(systemName)
+            var discountRequirementRule = await _discountPluginManager.LoadPluginBySystemNameAsync(systemName)
                 ?? throw new ArgumentException("Discount requirement rule could not be loaded");
 
-            var discount = _discountService.GetDiscountById(discountId)
+            var discount = await _discountService.GetDiscountByIdAsync(discountId)
                 ?? throw new ArgumentException("Discount could not be loaded");
 
             var url = discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId);
@@ -267,39 +276,40 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { url });
         }
 
-        public virtual IActionResult GetDiscountRequirements(int discountId, int discountRequirementId,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetDiscountRequirements(int discountId, int discountRequirementId,
             int? parentId, int? interactionTypeId, bool deleteRequirement)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             var requirements = new List<DiscountRequirementRuleModel>();
 
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountByIdAsync(discountId);
             if (discount == null)
                 return Json(requirements);
 
-            var discountRequirement = _discountService.GetDiscountRequirementById(discountRequirementId);
+            var discountRequirement = await _discountService.GetDiscountRequirementByIdAsync(discountRequirementId);
             if (discountRequirement != null)
             {
                 //delete
                 if (deleteRequirement)
                 {
-                    _discountService.DeleteDiscountRequirement(discountRequirement, true);
+                    await _discountService.DeleteDiscountRequirementAsync(discountRequirement, true);
 
-                    var discountRequirements = _discountService.GetAllDiscountRequirements(discount.Id);
+                    var discountRequirements = await _discountService.GetAllDiscountRequirementsAsync(discount.Id);
 
                     //delete default group if there are no any requirements
                     if (!discountRequirements.Any(requirement => requirement.ParentId.HasValue))
                     {
                         foreach (var dr in discountRequirements)
-                            _discountService.DeleteDiscountRequirement(dr, true);
+                            await _discountService.DeleteDiscountRequirementAsync(dr, true);
                     }
                 }
                 //or update the requirement
                 else
                 {
-                    var defaultGroupId = _discountService.GetAllDiscountRequirements(discount.Id, true).FirstOrDefault(requirement => requirement.IsGroup)?.Id ?? 0;
+                    var defaultGroupId = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id, true)).FirstOrDefault(requirement => requirement.IsGroup)?.Id ?? 0;
                     if (defaultGroupId == 0)
                     {
                         //add default requirement group
@@ -308,11 +318,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                             IsGroup = true,
                             DiscountId = discount.Id,
                             InteractionType = RequirementGroupInteractionType.And,
-                            DiscountRequirementRuleSystemName = _localizationService
-                                .GetResource("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
+                            DiscountRequirementRuleSystemName = await _localizationService
+                                .GetResourceAsync("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
                         };
 
-                        _discountService.InsertDiscountRequirement(defaultGroup);
+                        await _discountService.InsertDiscountRequirementAsync(defaultGroup);
 
                         defaultGroupId = defaultGroup.Id;
                     }
@@ -331,24 +341,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (interactionTypeId.HasValue)
                         discountRequirement.InteractionTypeId = interactionTypeId;
 
-                    _discountService.UpdateDiscountRequirement(discountRequirement);
+                    await _discountService.UpdateDiscountRequirementAsync(discountRequirement);
                 }
             }
 
             //get current requirements
-            var topLevelRequirements = _discountService.GetAllDiscountRequirements(discount.Id, true).Where(requirement => requirement.IsGroup).ToList();
+            var topLevelRequirements = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id, true)).Where(requirement => requirement.IsGroup).ToList();
 
             //get interaction type of top-level group
             var interactionType = topLevelRequirements.FirstOrDefault()?.InteractionType;
 
             if (interactionType.HasValue)
             {
-                requirements = _discountModelFactory
-                    .PrepareDiscountRequirementRuleModels(topLevelRequirements, discount, interactionType.Value).ToList();
+                requirements = (await _discountModelFactory
+                    .PrepareDiscountRequirementRuleModelsAsync(topLevelRequirements, discount, interactionType.Value)).ToList();
             }
 
             //get available groups
-            var requirementGroups = _discountService.GetAllDiscountRequirements(discount.Id).Where(requirement => requirement.IsGroup);
+            var requirementGroups = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id)).Where(requirement => requirement.IsGroup);
 
             var availableRequirementGroups = requirementGroups.Select(requirement =>
                 new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
@@ -356,26 +366,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Requirements = requirements, AvailableGroups = availableRequirementGroups });
         }
 
-        public virtual IActionResult AddNewGroup(int discountId, string name)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> AddNewGroup(int discountId, string name)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountByIdAsync(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
-            var defaultGroup = _discountService.GetAllDiscountRequirements(discount.Id, true).FirstOrDefault(requirement => requirement.IsGroup);
+            var defaultGroup = (await _discountService.GetAllDiscountRequirementsAsync(discount.Id, true)).FirstOrDefault(requirement => requirement.IsGroup);
             if (defaultGroup == null)
             {
                 //add default requirement group
-                _discountService.InsertDiscountRequirement(new DiscountRequirement
+                await _discountService.InsertDiscountRequirementAsync(new DiscountRequirement
                 {
                     DiscountId = discount.Id,
                     IsGroup = true,
                     InteractionType = RequirementGroupInteractionType.And,
-                    DiscountRequirementRuleSystemName = _localizationService
-                        .GetResource("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
+                    DiscountRequirementRuleSystemName = await _localizationService
+                        .GetResourceAsync("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
                 });
             }
 
@@ -388,16 +399,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 InteractionType = RequirementGroupInteractionType.And
             };
 
-            _discountService.InsertDiscountRequirement(discountRequirementGroup);
+            await _discountService.InsertDiscountRequirementAsync(discountRequirementGroup);
 
             if (!string.IsNullOrEmpty(name))
                 return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
 
             //set identifier as group name (if not specified)
             discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
-            _discountService.UpdateDiscountRequirement(discountRequirementGroup);
-            
-            _discountService.UpdateDiscount(discount);
+            await _discountService.UpdateDiscountRequirementAsync(discountRequirementGroup);
+
+            await _discountService.UpdateDiscountAsync(discount);
 
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
         }
@@ -407,88 +418,93 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Applied to products
 
         [HttpPost]
-        public virtual IActionResult ProductList(DiscountProductSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ProductList(DiscountProductSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+            var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountProductListModel(searchModel, discount);
+            var model = await _discountModelFactory.PrepareDiscountProductListModelAsync(searchModel, discount);
 
             return Json(model);
         }
 
-        public virtual IActionResult ProductDelete(int discountId, int productId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ProductDelete(int discountId, int productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
+            var discount = await _discountService.GetDiscountByIdAsync(discountId)
                 ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
 
             //try to get a product with the specified id
-            var product = _productService.GetProductById(productId)
+            var product = await _productService.GetProductByIdAsync(productId)
                 ?? throw new ArgumentException("No product found with the specified id", nameof(productId));
 
             //remove discount
-            if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is DiscountProductMapping discountProductMapping)
-                _productService.DeleteDiscountProductMapping(discountProductMapping);
+            if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is DiscountProductMapping discountProductMapping)
+                await _productService.DeleteDiscountProductMappingAsync(discountProductMapping);
 
-            _productService.UpdateProduct(product);
-            _productService.UpdateHasDiscountsApplied(product);
+            await _productService.UpdateProductAsync(product);
+            await _productService.UpdateHasDiscountsAppliedAsync(product);
 
             return new NullJsonResult();
         }
 
-        public virtual IActionResult ProductAddPopup(int discountId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ProductAddPopup(int discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _discountModelFactory.PrepareAddProductToDiscountSearchModel(new AddProductToDiscountSearchModel());
+            var model = await _discountModelFactory.PrepareAddProductToDiscountSearchModelAsync(new AddProductToDiscountSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAddPopupList(AddProductToDiscountSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ProductAddPopupList(AddProductToDiscountSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _discountModelFactory.PrepareAddProductToDiscountListModel(searchModel);
+            var model = await _discountModelFactory.PrepareAddProductToDiscountListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult ProductAddPopup(AddProductToDiscountModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ProductAddPopup(AddProductToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(model.DiscountId)
+            var discount = await _discountService.GetDiscountByIdAsync(model.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
-            var selectedProducts = _productService.GetProductsByIds(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
                 foreach (var product in selectedProducts)
                 {
-                    if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is null)
-                        _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
+                    if (await _productService.GetDiscountAppliedToProductAsync(product.Id, discount.Id) is null)
+                        await _productService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
 
-                    _productService.UpdateProduct(product);
-                    _productService.UpdateHasDiscountsApplied(product);
+                    await _productService.UpdateProductAsync(product);
+                    await _productService.UpdateHasDiscountsAppliedAsync(product);
                 }
             }
 
@@ -502,87 +518,92 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Applied to categories
 
         [HttpPost]
-        public virtual IActionResult CategoryList(DiscountCategorySearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CategoryList(DiscountCategorySearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+            var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountCategoryListModel(searchModel, discount);
+            var model = await _discountModelFactory.PrepareDiscountCategoryListModelAsync(searchModel, discount);
 
             return Json(model);
         }
 
-        public virtual IActionResult CategoryDelete(int discountId, int categoryId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CategoryDelete(int discountId, int categoryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
+            var discount = await _discountService.GetDiscountByIdAsync(discountId)
                 ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
 
             //try to get a category with the specified id
-            var category = _categoryService.GetCategoryById(categoryId)
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId)
                 ?? throw new ArgumentException("No category found with the specified id", nameof(categoryId));
 
             //remove discount
-            if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is DiscountCategoryMapping mapping)
-                _categoryService.DeleteDiscountCategoryMapping(mapping);
+            if (await _categoryService.GetDiscountAppliedToCategoryAsync(category.Id, discount.Id) is DiscountCategoryMapping mapping)
+                await _categoryService.DeleteDiscountCategoryMappingAsync(mapping);
 
-            _categoryService.UpdateCategory(category);
+            await _categoryService.UpdateCategoryAsync(category);
 
             return new NullJsonResult();
         }
 
-        public virtual IActionResult CategoryAddPopup(int discountId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CategoryAddPopup(int discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _discountModelFactory.PrepareAddCategoryToDiscountSearchModel(new AddCategoryToDiscountSearchModel());
+            var model = await _discountModelFactory.PrepareAddCategoryToDiscountSearchModelAsync(new AddCategoryToDiscountSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult CategoryAddPopupList(AddCategoryToDiscountSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CategoryAddPopupList(AddCategoryToDiscountSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _discountModelFactory.PrepareAddCategoryToDiscountListModel(searchModel);
+            var model = await _discountModelFactory.PrepareAddCategoryToDiscountListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult CategoryAddPopup(AddCategoryToDiscountModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> CategoryAddPopup(AddCategoryToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(model.DiscountId)
+            var discount = await _discountService.GetDiscountByIdAsync(model.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
             foreach (var id in model.SelectedCategoryIds)
             {
-                var category = _categoryService.GetCategoryById(id);
+                var category = await _categoryService.GetCategoryByIdAsync(id);
                 if (category == null)
                     continue;
 
-                if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
-                    _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
+                if (await _categoryService.GetDiscountAppliedToCategoryAsync(category.Id, discount.Id) is null)
+                    await _categoryService.InsertDiscountCategoryMappingAsync(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
 
-                _categoryService.UpdateCategory(category);
+                await _categoryService.UpdateCategoryAsync(category);
             }
 
             ViewBag.RefreshPage = true;
@@ -595,87 +616,92 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Applied to manufacturers
 
         [HttpPost]
-        public virtual IActionResult ManufacturerList(DiscountManufacturerSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ManufacturerList(DiscountManufacturerSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+            var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountManufacturerListModel(searchModel, discount);
+            var model = await _discountModelFactory.PrepareDiscountManufacturerListModelAsync(searchModel, discount);
 
             return Json(model);
         }
 
-        public virtual IActionResult ManufacturerDelete(int discountId, int manufacturerId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ManufacturerDelete(int discountId, int manufacturerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(discountId)
+            var discount = await _discountService.GetDiscountByIdAsync(discountId)
                 ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
 
             //try to get a manufacturer with the specified id
-            var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId)
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId)
                 ?? throw new ArgumentException("No manufacturer found with the specified id", nameof(manufacturerId));
 
             //remove discount
-            if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
-                _manufacturerService.DeleteDiscountManufacturerMapping(discountManufacturerMapping);
+            if (await _manufacturerService.GetDiscountAppliedToManufacturerAsync(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
+                await _manufacturerService.DeleteDiscountManufacturerMappingAsync(discountManufacturerMapping);
 
-            _manufacturerService.UpdateManufacturer(manufacturer);
+            await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
             return new NullJsonResult();
         }
 
-        public virtual IActionResult ManufacturerAddPopup(int discountId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ManufacturerAddPopup(int discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _discountModelFactory.PrepareAddManufacturerToDiscountSearchModel(new AddManufacturerToDiscountSearchModel());
+            var model = await _discountModelFactory.PrepareAddManufacturerToDiscountSearchModelAsync(new AddManufacturerToDiscountSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ManufacturerAddPopupList(AddManufacturerToDiscountSearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ManufacturerAddPopupList(AddManufacturerToDiscountSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _discountModelFactory.PrepareAddManufacturerToDiscountListModel(searchModel);
+            var model = await _discountModelFactory.PrepareAddManufacturerToDiscountListModelAsync(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult ManufacturerAddPopup(AddManufacturerToDiscountModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ManufacturerAddPopup(AddManufacturerToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(model.DiscountId)
+            var discount = await _discountService.GetDiscountByIdAsync(model.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
             foreach (var id in model.SelectedManufacturerIds)
             {
-                var manufacturer = _manufacturerService.GetManufacturerById(id);
+                var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(id);
                 if (manufacturer == null)
                     continue;
 
-                if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
-                    _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
+                if (await _manufacturerService.GetDiscountAppliedToManufacturerAsync(manufacturer.Id, discount.Id) is null)
+                    await _manufacturerService.InsertDiscountManufacturerMappingAsync(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
 
-                _manufacturerService.UpdateManufacturer(manufacturer);
+                await _manufacturerService.UpdateManufacturerAsync(manufacturer);
             }
 
             ViewBag.RefreshPage = true;
@@ -688,36 +714,38 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Discount usage history
 
         [HttpPost]
-        public virtual IActionResult UsageHistoryList(DiscountUsageHistorySearchModel searchModel)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> UsageHistoryList(DiscountUsageHistorySearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
-            var discount = _discountService.GetDiscountById(searchModel.DiscountId)
+            var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
                 ?? throw new ArgumentException("No discount found with the specified id");
 
             //prepare model
-            var model = _discountModelFactory.PrepareDiscountUsageHistoryListModel(searchModel, discount);
+            var model = await _discountModelFactory.PrepareDiscountUsageHistoryListModelAsync(searchModel, discount);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult UsageHistoryDelete(int discountId, int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> UsageHistoryDelete(int discountId, int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            _ = _discountService.GetDiscountById(discountId)
+            _ = await _discountService.GetDiscountByIdAsync(discountId)
                 ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
 
             //try to get a discount usage history entry with the specified id
-            var discountUsageHistoryEntry = _discountService.GetDiscountUsageHistoryById(id)
+            var discountUsageHistoryEntry = await _discountService.GetDiscountUsageHistoryByIdAsync(id)
                 ?? throw new ArgumentException("No discount usage history entry found with the specified id", nameof(id));
 
-            _discountService.DeleteDiscountUsageHistory(discountUsageHistoryEntry);
+            await _discountService.DeleteDiscountUsageHistoryAsync(discountUsageHistoryEntry);
 
             return new NullJsonResult();
         }

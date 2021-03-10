@@ -11,24 +11,24 @@
 
 @{
     const string hideSearchBlockAttributeName = "NewsCommentsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.ContentManagement.News.Comments")
     </h1>
-    <div class="pull-right">
-        <button type="button" id="approve-selected" class="btn bg-green">
-            <i class="fa fa-check-square-o"></i>
+    <div class="float-right">
+        <button type="button" id="approve-selected" class="btn btn-success">
+            <i class="fas fa-check-square"></i>
             @T("Admin.ContentManagement.News.Comments.ApproveSelected")
         </button>
-        <button type="button" id="disapprove-selected" class="btn bg-navy">
-            <i class="fa fa-minus-square-o"></i>
+        <button type="button" id="disapprove-selected" class="btn btn-secondary">
+            <i class="fas fa-minus-square"></i>
             @T("Admin.ContentManagement.News.Comments.DisapproveSelected")
         </button>
-        <button type="button" id="delete-selected" class="btn bg-red">
-            <i class="fa fa-trash-o"></i>
+        <button type="button" id="delete-selected" class="btn btn-danger">
+            <i class="far fa-trash-alt"></i>
             @T("Admin.ContentManagement.News.Comments.DeleteSelected")
         </button>
         <nop-action-confirmation asp-button-id="delete-selected" />
@@ -36,21 +36,22 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
                         <div class="row">
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnFrom" />
                                     </div>
@@ -58,7 +59,7 @@
                                         <nop-editor asp-for="CreatedOnFrom" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnTo" />
                                     </div>
@@ -68,7 +69,7 @@
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchApprovedId" />
                                     </div>
@@ -76,7 +77,7 @@
                                         <nop-select asp-for="SearchApprovedId" asp-items="Model.AvailableApprovedOptions" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchText" />
                                     </div>
@@ -87,9 +88,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-7 col-md-offset-5">
+                            <div class="text-center col-12">
                                 <button type="button" id="search-comments" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fas fa-search"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -98,8 +99,10 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.News", Docs.News + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "comments-grid",
@@ -135,7 +138,7 @@
                             {
                                 Title = T("Admin.ContentManagement.News.Comments.Fields.StoreName").Text,
                                 Width = "100",
-                                Visible = storeService.GetAllStores().Count > 1
+                                Visible = (await storeService.GetAllStoresAsync()).Count > 1
                             },
                             new ColumnProperty(nameof(NewsCommentModel.CustomerInfo))
                             {
@@ -271,6 +274,7 @@
         </div>
     </div>
 </div>
+</section>
 <nop-alert asp-alert-id="deleteSelectedCommentsFailed" />
 <nop-alert asp-alert-id="approveSelectedFailed" />
 <nop-alert asp-alert-id="disapproveSelectedFailed" />

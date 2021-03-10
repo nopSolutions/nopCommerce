@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Catalog;
@@ -32,9 +33,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult SearchAutoComplete(string term)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> SearchAutoComplete(string term)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))
                 return Content(string.Empty);
 
             const int searchTermMinimumLength = 3;
@@ -43,14 +45,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             var vendorId = 0;
-            if (_workContext.CurrentVendor != null)
+            if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                vendorId = _workContext.CurrentVendor.Id;
+                vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
             }
 
             //products
             const int productNumber = 15;
-            var products = _productService.SearchProducts(
+            var products = await _productService.SearchProductsAsync(0,
                 vendorId: vendorId,
                 keywords: term,
                 pageSize: productNumber,

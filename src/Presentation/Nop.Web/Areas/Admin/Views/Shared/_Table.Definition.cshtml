@@ -1,12 +1,30 @@
 ﻿@model DataTablesModel
+@using System.Globalization
 @using System.Net;
 
+@functions
+{
+    string GetUrl(DataUrl dataUrl)
+    {
+        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
+            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
+            : !string.IsNullOrEmpty(dataUrl.Url)
+            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
+            : string.Empty;
+    }
+
+    string ReplaceName(string str)
+    {
+        return str.Replace("-", "_");
+    }
+}
+
 @{
-    //the locale which MomentJS should use - the default is en (English).
-    var locale = "en";
+    //the locale which MomentJS should use
+    var locale = CultureInfo.CurrentCulture.Name;
 
     //Model name for js function names
-    var model_name = Model.Name.Replace("-", "_");
+    var model_name = ReplaceName(Model.Name);
 
     //dom
     var buttonsPanel = "";
@@ -30,18 +48,9 @@
     {
         dom = Model.Dom;
     }
-}
 
-@functions
-{
-    string GetUrl(DataUrl dataUrl)
-    {
-        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
-            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
-            : !string.IsNullOrEmpty(dataUrl.Url)
-            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
-            : string.Empty;
-    }
+    //check using MasterCheckBox
+    var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
 }
 
 @if (!string.IsNullOrEmpty(Model.HeaderCallback))
@@ -72,6 +81,22 @@
     serverSide: @Model.ServerSide.ToString().ToLower(),
     </text>
 }
+@if (!string.IsNullOrEmpty(Model.RowIdBasedOnField))
+{
+    <text>
+        rowId: function (item) {
+        var rowId = '';
+        if (item.hasOwnProperty('@(Model.RowIdBasedOnField)'))
+        {
+            if(item.@(Model.RowIdBasedOnField)){
+                var val = item.@(Model.RowIdBasedOnField).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+                rowId = 'row_' + val;
+            } else return;
+        }
+        return rowId;
+        },
+    </text>
+}
 @if (Model.Data != null)
 {
     <text>
@@ -80,8 +105,7 @@
 }
 else
 {
-    //check using MasterCheckBox
-    var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
+    
 
     <text>
     ajax:
@@ -94,7 +118,7 @@ else
         @if (isMasterCheckBoxUsed)
         {
             <text>
-            clearMasterCheckbox();
+            clearMasterCheckbox('#@Model.Name');
             </text>
         }
         },
@@ -183,18 +207,18 @@ ordering: @Model.Ordering.ToString().ToLower(),
     <text>
         buttons: [{
             name: 'refresh',
-            text: '<i class="fa fa-refresh" style="padding-left: 5px"></i>',
+            text: '<i class="fas fa-sync-alt" style="padding-left: 5px"></i>',
             action: function () {
                 @if (Model.ServerSide)
                 {
                     <text>
-                    updateTable('#@Model.Name');
+                    updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
                     </text>
                 }
                 else
                 {
                     <text>
-                    updateTableSrc('#@Model.Name');
+                    updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
                     </text>
                 }
             }
@@ -219,7 +243,7 @@ columns: [
                 if (!string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
                 {
                     <text>
-                    title: '<div class="checkbox"><label><input id="mastercheckbox" type="checkbox" />@JavaScriptEncoder.Default.Encode(column.Title)</label></div>',
+                    title: '<div class="checkbox"><label><input class="mastercheckbox" type="checkbox" />@JavaScriptEncoder.Default.Encode(column.Title)</label></div>',
                     </text>
                 }
                 else
@@ -227,7 +251,7 @@ columns: [
                     if (string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
                     {
                         <text>
-                        title: '<input id="mastercheckbox" type="checkbox"/>',
+                        title: '<input class="mastercheckbox" type="checkbox"/>',
                         </text>
                     }
                 }
@@ -294,7 +318,7 @@ columns: [
                 case RenderButtonRemove button:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a href="#" class="@button.ClassName" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="fa fa-remove"></i>@button.Title</a>';
+                        return '<a href="#" class="@button.ClassName" onclick="table_deletedata_@(model_name)(\'' + data + '\');return false;"><i class="far fa-trash-alt"></i>@button.Title</a>';
                     },
                     </text>
                     break;
@@ -306,23 +330,23 @@ columns: [
                             if (typeof data == 'string'){
                                 modData = data.replace(/[.*+?^${}()|[\]\\]/g, "_");
                             }
-                            return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
-                            '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
-                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                            return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit")</a>' +
+                            '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fas fa-check"></i>@T("Admin.Common.Update")</a>' +
+                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'' + '#@Model.Name' + '\');return false;"><i class="fas fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                         },                         
                     </text>
                     break;
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
                     },
                     </text>
                     break;
                 case RenderButtonView buttonView:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonView.ClassName" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>';
+                        return '<a class="@buttonView.ClassName" href="@GetUrl(buttonView.Url)' + data + '"><i class="far fa-eye"></i>@T("Admin.Common.View").Text</a>';
                     },
                     </text>
                     break;
@@ -345,18 +369,23 @@ columns: [
                     }
                     break;
                 case RenderPicture picture:
+                    var widthAttr = string.Empty;
                     <text>
                     render: function (data, type, row, meta) {
+                        @if (picture.Width > 0)
+                        {
+                            widthAttr = "width=" + picture.Width;
+                        }
                         @if (!string.IsNullOrEmpty(picture.Src))
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)@(picture.Src)"/>';
+                            return '<img src="@(picture.SrcPrefix)@(picture.Src)" @(widthAttr) />';
                             </text>
                         }
                         else
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)' + data + '"/>';
+                            return '<img src="@(picture.SrcPrefix)' + data + '" @(widthAttr) />';
                             </text>
                         }
                     },
@@ -375,8 +404,8 @@ columns: [
                     <text>
                     render: function (data, type, row) {
                         return data
-                            ? '<i class="fa fa-check true-icon" nop-value="true"></i>'
-                            : '<i class="fa fa-close false-icon" nop-value="false"></i>';
+                            ? '<i class="fas fa-check true-icon" nop-value="true"></i>'
+                            : '<i class="fas fa-times false-icon" nop-value="false"></i>';
                     },
                     </text>
                     break;
@@ -390,7 +419,7 @@ columns: [
                 case RenderChildCaret caret:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<i class="fa fa-caret-right" aria-hidden="true"></i>';
+                        return '<i class="fas fa-caret-right" aria-hidden="true"></i>';
                     },
                     </text>
                     break;
@@ -400,5 +429,4 @@ columns: [
         @if (i != Model.ColumnCollection.Count - 1) {<text>,</text>}
         </text>
     }
-]
-           
+]           

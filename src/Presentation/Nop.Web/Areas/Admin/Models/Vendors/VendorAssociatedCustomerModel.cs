@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
     /// <summary>
     /// Represents a vendor associated customer model
     /// </summary>
-    public partial class VendorAssociatedCustomerModel : BaseNopEntityModel
+    public partial record VendorAssociatedCustomerModel : BaseNopEntityModel
     {
         #region Properties
 

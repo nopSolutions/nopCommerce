@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -14,6 +15,7 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -49,20 +51,20 @@ namespace Nop.Web.Controllers
         public CatalogController(CatalogSettings catalogSettings,
             IAclService aclService,
             ICatalogModelFactory catalogModelFactory,
-            ICategoryService categoryService, 
+            ICategoryService categoryService,
             ICustomerActivityService customerActivityService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             IProductModelFactory productModelFactory,
-            IProductService productService, 
+            IProductService productService,
             IProductTagService productTagService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IVendorService vendorService,
             IWebHelper webHelper,
-            IWorkContext workContext, 
+            IWorkContext workContext,
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
@@ -88,64 +90,70 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
-        #region Categories
-        
-        public virtual IActionResult Category(int categoryId, CatalogPagingFilteringModel command)
-        {
-            var category = _categoryService.GetCategoryById(categoryId);
-            if (category == null || category.Deleted)
-                return InvokeHttp404();
 
-            var notAvailable =
-                //published?
-                !category.Published ||
-                //ACL (access control list) 
-                !_aclService.Authorize(category) ||
-                //Store mapping
-                !_storeMappingService.Authorize(category);
-            //Check whether the current user has a "Manage categories" permission (usually a store owner)
-            //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories);
-            if (notAvailable && !hasAdminAccess)
+        #region Categories
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Category(int categoryId, CatalogProductsCommand command)
+        {
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+
+            if (!await CheckCategoryAvailabilityAsync(category))
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                _storeContext.CurrentStore.Id);
+                (await _storeContext.GetCurrentStoreAsync()).Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.Admin }));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewCategory",
-                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
+            await _customerActivityService.InsertActivityAsync("PublicStore.ViewCategory",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
 
             //model
-            var model = _catalogModelFactory.PrepareCategoryModel(category, command);
+            var model = await _catalogModelFactory.PrepareCategoryModelAsync(category, command);
 
             //template
-            var templateViewPath = _catalogModelFactory.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);
+            var templateViewPath = await _catalogModelFactory.PrepareCategoryTemplateViewPathAsync(category.CategoryTemplateId);
             return View(templateViewPath, model);
+        }
+
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
+        {
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+
+            if (!await CheckCategoryAvailabilityAsync(category))
+                return NotFound();
+
+            var model = await _catalogModelFactory.PrepareCategoryProductsModelAsync(category, command);
+
+            return PartialView("_ProductsInGridOrLines", model);
         }
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult GetCatalogRoot()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetCatalogRoot()
         {
-            var model = _catalogModelFactory.PrepareRootCategories();
+            var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
 
             return Json(model);
         }
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult GetCatalogSubCategories(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
         {
-            var model = _catalogModelFactory.PrepareSubCategories(id);
+            var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);
 
             return Json(model);
         }
@@ -154,106 +162,149 @@ namespace Nop.Web.Controllers
 
         #region Manufacturers
 
-        public virtual IActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Manufacturer(int manufacturerId, CatalogProductsCommand command)
         {
-            var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
-            if (manufacturer == null || manufacturer.Deleted)
-                return InvokeHttp404();
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
 
-            var notAvailable =
-                //published?
-                !manufacturer.Published ||
-                //ACL (access control list) 
-                !_aclService.Authorize(manufacturer) ||
-                //Store mapping
-                !_storeMappingService.Authorize(manufacturer);
-            //Check whether the current user has a "Manage categories" permission (usually a store owner)
-            //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers);
-            if (notAvailable && !hasAdminAccess)
+            if (!await CheckManufacturerAvailabilityAsync(manufacturer))
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                _storeContext.CurrentStore.Id);
-            
+                (await _storeContext.GetCurrentStoreAsync()).Id);
+
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.Admin }));
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewManufacturer",
-                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name), manufacturer);
+            await _customerActivityService.InsertActivityAsync("PublicStore.ViewManufacturer",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name), manufacturer);
 
             //model
-            var model = _catalogModelFactory.PrepareManufacturerModel(manufacturer, command);
-            
+            var model = await _catalogModelFactory.PrepareManufacturerModelAsync(manufacturer, command);
+
             //template
-            var templateViewPath = _catalogModelFactory.PrepareManufacturerTemplateViewPath(manufacturer.ManufacturerTemplateId);
+            var templateViewPath = await _catalogModelFactory.PrepareManufacturerTemplateViewPathAsync(manufacturer.ManufacturerTemplateId);
+
             return View(templateViewPath, model);
         }
 
-        public virtual IActionResult ManufacturerAll()
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetManufacturerProducts(int manufacturerId, CatalogProductsCommand command)
         {
-            var model = _catalogModelFactory.PrepareManufacturerAllModels();
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
+
+            if (!await CheckManufacturerAvailabilityAsync(manufacturer))
+                return NotFound();
+
+            var model = await _catalogModelFactory.PrepareManufacturerProductsModelAsync(manufacturer, command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ManufacturerAll()
+        {
+            var model = await _catalogModelFactory.PrepareManufacturerAllModelsAsync();
+
             return View(model);
         }
-        
+
         #endregion
 
         #region Vendors
 
-        public virtual IActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Vendor(int vendorId, CatalogProductsCommand command)
         {
-            var vendor = _vendorService.GetVendorById(vendorId);
-            if (vendor == null || vendor.Deleted || !vendor.Active)
+            var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+
+            if (!await CheckVendorAvailabilityAsync(vendor))
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
-                _storeContext.CurrentStore.Id);
-            
+                (await _storeContext.GetCurrentStoreAsync()).Id);
+
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.Admin }));
 
             //model
-            var model = _catalogModelFactory.PrepareVendorModel(vendor, command);
+            var model = await _catalogModelFactory.PrepareVendorModelAsync(vendor, command);
 
             return View(model);
         }
 
-        public virtual IActionResult VendorAll()
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetVendorProducts(int vendorId, CatalogProductsCommand command)
+        {
+            var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+
+            if (!await CheckVendorAvailabilityAsync(vendor))
+                return NotFound();
+
+            var model = await _catalogModelFactory.PrepareVendorProductsModelAsync(vendor, command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return RedirectToRoute("Homepage");
 
-            var model = _catalogModelFactory.PrepareVendorAllModels();
+            var model = await _catalogModelFactory.PrepareVendorAllModelsAsync();
             return View(model);
         }
 
         #endregion
 
         #region Product tags
-        
-        public virtual IActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ProductsByTag(int productTagId, CatalogProductsCommand command)
         {
-            var productTag = _productTagService.GetProductTagById(productTagId);
+            var productTag = await _productTagService.GetProductTagByIdAsync(productTagId);
             if (productTag == null)
                 return InvokeHttp404();
 
-            var model = _catalogModelFactory.PrepareProductsByTagModel(productTag, command);
+            var model = await _catalogModelFactory.PrepareProductsByTagModelAsync(productTag, command);
+
             return View(model);
         }
 
-        public virtual IActionResult ProductTagsAll()
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> GetTagProducts(int tagId, CatalogProductsCommand command)
         {
-            var model = _catalogModelFactory.PrepareProductTagsAllModel();
+            var productTag = await _productTagService.GetProductTagByIdAsync(tagId);
+            if (productTag == null)
+                return NotFound();
+
+            var model = await _catalogModelFactory.PrepareTagProductsModelAsync(productTag, command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> ProductTagsAll()
+        {
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
+
             return View(model);
         }
 
@@ -261,52 +312,133 @@ namespace Nop.Web.Controllers
 
         #region Searching
 
-        public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Search(SearchModel model, CatalogProductsCommand command)
         {
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(true),
-                _storeContext.CurrentStore.Id);
+                (await _storeContext.GetCurrentStoreAsync()).Id);
 
             if (model == null)
                 model = new SearchModel();
 
-            model = _catalogModelFactory.PrepareSearchModel(model, command);
+            model = await _catalogModelFactory.PrepareSearchModelAsync(model, command);
+
             return View(model);
         }
 
-        public virtual IActionResult SearchTermAutoComplete(string term)
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
+            term = term.Trim();
             if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
-                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;            
+                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
 
-            var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
+            var products = await _productService.SearchProductsAsync(0,
+                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 keywords: term,
-                languageId: _workContext.WorkingLanguage.Id,
+                languageId: (await _workContext.GetWorkingLanguageAsync()).Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);
 
             var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
 
-            var models =  _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
+            var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
             var result = (from p in models
-                    select new
-                    {
-                        label = p.Name,
-                        producturl = Url.RouteUrl("Product", new {SeName = p.SeName}),
-                        productpictureurl = p.DefaultPictureModel.ImageUrl,
-                        showlinktoresultsearch = showLinkToResultSearch
-                    })
+                          select new
+                          {
+                              label = p.Name,
+                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
+                              productpictureurl = p.DefaultPictureModel.ImageUrl,
+                              showlinktoresultsearch = showLinkToResultSearch
+                          })
                 .ToList();
             return Json(result);
         }
-        
+
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> SearchProducts(SearchModel searchModel, CatalogProductsCommand command)
+        {
+            if (searchModel == null)
+                searchModel = new SearchModel();
+
+            var model = await _catalogModelFactory.PrepareSearchProductsModelAsync(searchModel, command);
+
+            return PartialView("_ProductsInGridOrLines", model);
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task<bool> CheckCategoryAvailabilityAsync(Category category)
+        {
+            var isAvailable = true;
+
+            if (category == null || category.Deleted)
+                isAvailable = false;
+
+            var notAvailable =
+                //published?
+                !category.Published ||
+                //ACL (access control list) 
+                !await _aclService.AuthorizeAsync(category) ||
+                //Store mapping
+                !await _storeMappingService.AuthorizeAsync(category);
+            //Check whether the current user has a "Manage categories" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories);
+            if (notAvailable && !hasAdminAccess)
+                isAvailable = false;
+
+            return isAvailable;
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task<bool> CheckManufacturerAvailabilityAsync(Manufacturer manufacturer)
+        {
+            var isAvailable = true;
+
+            if (manufacturer == null || manufacturer.Deleted)
+                isAvailable = false;
+
+            var notAvailable =
+                //published?
+                !manufacturer.Published ||
+                //ACL (access control list) 
+                !await _aclService.AuthorizeAsync(manufacturer) ||
+                //Store mapping
+                !await _storeMappingService.AuthorizeAsync(manufacturer);
+            //Check whether the current user has a "Manage categories" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers);
+            if (notAvailable && !hasAdminAccess)
+                isAvailable = false;
+
+            return isAvailable;
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private Task<bool> CheckVendorAvailabilityAsync(Vendor vendor)
+        {
+            var isAvailable = true;
+
+            if (vendor == null || vendor.Deleted || !vendor.Active)
+                isAvailable = false;
+
+            return Task.FromResult(isAvailable);
+        }
+
         #endregion
     }
 }

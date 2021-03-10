@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a bestseller search model
     /// </summary>
-    public partial class BestsellerSearchModel : BaseSearchModel
+    public partial record BestsellerSearchModel : BaseSearchModel
     {
         #region Ctor
 

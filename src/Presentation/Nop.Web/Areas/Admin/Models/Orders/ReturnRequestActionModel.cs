@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a return request action model
     /// </summary>
-    public partial class ReturnRequestActionModel : BaseNopEntityModel, ILocalizedModel<ReturnRequestActionLocalizedModel>
+    public partial record ReturnRequestActionModel : BaseNopEntityModel, ILocalizedModel<ReturnRequestActionLocalizedModel>
     {
         #region Ctor
 
@@ -31,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         #endregion
     }
 
-    public partial class ReturnRequestActionLocalizedModel : ILocalizedLocaleModel
+    public partial record ReturnRequestActionLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

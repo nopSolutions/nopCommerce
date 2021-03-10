@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
     /// <summary>
     /// Represents a payment method restriction model
     /// </summary>
-    public partial class PaymentMethodRestrictionModel : BaseNopModel
+    public partial record PaymentMethodRestrictionModel : BaseNopModel
     {
         #region Ctor
 

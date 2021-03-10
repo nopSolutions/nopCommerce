@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Common;
@@ -28,13 +29,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Methods
 
         [HttpPost]
-        public virtual IActionResult SavePreference(string name, bool value)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> SavePreference(string name, bool value)
         {
             //permission validation is not required here
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, name, value);
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), name, value);
 
             return Json(new
             {

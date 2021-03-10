@@ -5,32 +5,34 @@
 @{
 
 	const string hideInfoBlockAttributeName = "ProductAttributePage.HideInfoBlock";
-	var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+	var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
 
 	const string hideUsedByProductsBlockAttributeName = "ProductAttributePage.HideUsedByProductsBlock";
-	var hideUsedByProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsedByProductsBlockAttributeName, defaultValue: true);
+	var hideUsedByProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideUsedByProductsBlockAttributeName, defaultValue: true);
 
 	const string hidePredefinedValuesBlockAttributeName = "ProductAttributePage.HidePredefinedValuesBlock";
-	var hidePredefinedValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePredefinedValuesBlockAttributeName, defaultValue: true);
+	var hidePredefinedValuesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePredefinedValuesBlockAttributeName, defaultValue: true);
 
 }
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-<div class="content">
-	<div class="form-horizontal">
-        <div id="product-attribute-edit">
-            <nop-panels id="product-attribute-panels">
-                <nop-panel asp-name="product-attribute-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
-                <nop-panel asp-name="product-attribute-predefined-values" asp-icon="fa fa-check-square-o" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")" asp-hide-block-attribute-name="@hidePredefinedValuesBlockAttributeName" asp-hide="@hidePredefinedValuesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.PredefinedValues", Model)</nop-panel>
-                @if (Model.Id > 0)
-                {
-                    <nop-panel asp-name="product-attribute-used-by-products" asp-icon="fa fa-object-group" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.UsedByProducts", Model)</nop-panel>
-                }
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div id="product-attribute-edit">
+                <nop-cards id="product-attribute-cards">
+                    <nop-card asp-name="product-attribute-info" asp-icon="fas fa-info" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>                   
+                    <nop-card asp-name="product-attribute-predefined-values" asp-icon="fas fa-check-square" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")" asp-hide-block-attribute-name="@hidePredefinedValuesBlockAttributeName" asp-hide="@hidePredefinedValuesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.PredefinedValues", Model)</nop-card>
+                    @if (Model.Id > 0)
+                    {
+                        <nop-card asp-name="product-attribute-used-by-products" asp-icon="fas fa-object-group" asp-title="@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.UsedByProducts", Model)</nop-card>
+                    }
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsBlock, additionalData = Model })
-            </nop-panels>
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
         </div>
-	</div>
-</div>
+    </div>
+</section>

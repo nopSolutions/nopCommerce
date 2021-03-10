@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a product search model to add to the discount
     /// </summary>
-    public partial class AddProductToDiscountSearchModel : BaseSearchModel
+    public partial record AddProductToDiscountSearchModel : BaseSearchModel
     {
         #region Ctor
 

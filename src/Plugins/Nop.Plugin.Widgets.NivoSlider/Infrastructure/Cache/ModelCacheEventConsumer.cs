@@ -1,4 +1,5 @@
-﻿using Nop.Core.Caching;
+﻿using System.Threading.Tasks;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Events;
 using Nop.Services.Events;
@@ -30,17 +31,20 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
             _staticCacheManager = staticCacheManager;
         }
 
-        public void HandleEvent(EntityInsertedEvent<Setting> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Setting> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeletedEvent<Setting> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Setting> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
     }
 }

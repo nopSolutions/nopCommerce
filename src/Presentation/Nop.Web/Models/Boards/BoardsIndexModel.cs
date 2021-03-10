@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class BoardsIndexModel : BaseNopModel
+    public partial record BoardsIndexModel : BaseNopModel
     {
         public BoardsIndexModel()
         {
