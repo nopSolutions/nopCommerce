@@ -11,7 +11,7 @@ nopCommerce has been downloaded more than 3,000,000 times.
 
 The active developer community has more than 250,000 members.
 
-nopCommerce runs on .NET Core 3.1 with an MS SQL 2012 (or higher) backend database.
+nopCommerce runs on ASP.NET Core 5 with an MS SQL 2012 (or higher) backend database.
 
 nopCommerce is cross-platform, and you can run it on Windows, Linux, or Mac.
 
