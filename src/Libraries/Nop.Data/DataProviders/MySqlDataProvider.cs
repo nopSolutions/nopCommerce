@@ -324,7 +324,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider(ProviderName.MySql);
+        protected override IDataProvider LinqToDbDataProvider => MySqlTools.GetDataProvider(ProviderName.MySql);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

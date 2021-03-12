@@ -377,9 +377,9 @@ namespace Nop.Data.DataProviders
         {
             using var dataContext = await CreateDataConnectionAsync();
             var command = new CommandInfo(dataContext, procedureName, parameters);
-            var rez = await command.QueryProcAsync<T>();
+            var rez = command.QueryProc<T>().ToList();
             UpdateOutputParameters(dataContext, parameters);
-            return rez?.ToList() ?? new List<T>();
+            return rez;
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace Nop.Data.DataProviders
         public virtual async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using var dataContext = await CreateDataConnectionAsync();
-            return await dataContext.QueryToListAsync<T>(sql, parameters) ?? new List<T>();
+            return dataContext.Query<T>(sql, parameters).ToList();
         }
 
         #endregion
