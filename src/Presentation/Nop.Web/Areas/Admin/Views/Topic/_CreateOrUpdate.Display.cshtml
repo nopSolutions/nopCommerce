@@ -70,7 +70,7 @@
                 <nop-label asp-for="Password" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="Password" />
+                <nop-editor asp-for="Password" autocomplete="off"/>
                 <span asp-validation-for="Password"></span>
             </div>
         </div>
@@ -156,7 +156,7 @@
             <span asp-validation-for="AccessibleWhenStoreClosed"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting" @(Model.AvailableTopicTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+    <div class="form-group row advanced-setting" @(Model.AvailableTopicTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
         <div class="col-md-3">
             <nop-label asp-for="TopicTemplateId" />
         </div>
@@ -193,9 +193,9 @@
 
     function togglePassword() {
         if ($('#@Html.IdFor(model => model.IsPasswordProtected)').is(':checked')) {
-            $('#pnlPasswordEnabled').showField();
+            $('#pnlPasswordEnabled').showElement();
         } else {
-            $('#pnlPasswordEnabled').hide();
+            $('#pnlPasswordEnabled').hideElement();
         }
     }
 </script>

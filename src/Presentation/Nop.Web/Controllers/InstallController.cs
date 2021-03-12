@@ -105,6 +105,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Index()
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -130,6 +131,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Index(InstallModel model)
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -207,7 +209,8 @@ namespace Nop.Web.Controllers
 
                 var cultureInfo = new CultureInfo(NopCommonDefaults.DefaultLanguageCulture);
                 var regionInfo = new RegionInfo(NopCommonDefaults.DefaultLanguageCulture);
-                var downloadUrl = string.Empty;
+
+                var languagePackInfo = (DownloadUrl: string.Empty, Progress: 0);
                 if (model.InstallRegionalResources)
                 {
                     //try to get CultureInfo and RegionInfo
@@ -229,7 +232,11 @@ namespace Nop.Web.Controllers
                             var result = JsonConvert.DeserializeAnonymousType(resultString,
                                 new { Message = string.Empty, LanguagePack = new { Culture = string.Empty, Progress = 0, DownloadLink = string.Empty } });
                             if (result.LanguagePack.Progress > NopCommonDefaults.LanguagePackMinTranslationProgressToInstall)
-                                downloadUrl = result.LanguagePack.DownloadLink;
+                            {
+                                languagePackInfo.DownloadUrl = result.LanguagePack.DownloadLink;
+                                languagePackInfo.Progress = result.LanguagePack.Progress;
+                            }
+                                
                         }
                         catch { }
                     }
@@ -241,7 +248,7 @@ namespace Nop.Web.Controllers
 
                 //now resolve installation service
                 var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                await installationService.InstallRequiredDataAsync(model.AdminEmail, model.AdminPassword, downloadUrl, regionInfo, cultureInfo);
+                await installationService.InstallRequiredDataAsync(model.AdminEmail, model.AdminPassword, languagePackInfo, regionInfo, cultureInfo);
 
                 if (model.InstallSampleData)
                     await installationService.InstallSampleDataAsync(model.AdminEmail);
@@ -296,6 +303,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangeLanguage(string language)
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -309,6 +317,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RestartInstall()
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -317,6 +326,7 @@ namespace Nop.Web.Controllers
             return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RestartApplication()
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())

@@ -32,7 +32,6 @@ namespace Nop.Services.Catalog
         private readonly IProductService _productService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -48,8 +47,7 @@ namespace Nop.Services.Catalog
             IProductAttributeParser productAttributeParser,
             IProductService productService,
             IStaticCacheManager staticCacheManager,
-            IStoreContext storeContext,
-            IWorkContext workContext)
+            IStoreContext storeContext)
         {
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
@@ -62,7 +60,6 @@ namespace Nop.Services.Catalog
             _productService = productService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
-            _workContext = workContext;
         }
 
         #endregion
@@ -74,7 +71,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discounts
+        /// </returns>
         protected virtual async Task<IList<Discount>> GetAllowedDiscountsAppliedToProductAsync(Product product, Customer customer)
         {
             var allowedDiscounts = new List<Discount>();
@@ -98,7 +98,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discounts
+        /// </returns>
         protected virtual async Task<IList<Discount>> GetAllowedDiscountsAppliedToCategoriesAsync(Product product, Customer customer)
         {
             var allowedDiscounts = new List<Discount>();
@@ -140,7 +143,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discounts
+        /// </returns>
         protected virtual async Task<IList<Discount>> GetAllowedDiscountsAppliedToManufacturersAsync(Product product, Customer customer)
         {
             var allowedDiscounts = new List<Discount>();
@@ -182,7 +188,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discounts
+        /// </returns>
         protected virtual async Task<IList<Discount>> GetAllowedDiscountsAsync(Product product, Customer customer)
         {
             var allowedDiscounts = new List<Discount>();
@@ -213,7 +222,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
         /// <param name="productPriceWithoutDiscount">Already calculated product price without discount</param>
-        /// <returns>Discount amount, Applied discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount amount, Applied discounts
+        /// </returns>
         protected virtual async Task<(decimal, List<Discount>)> GetDiscountAmountAsync(Product product,
             Customer customer,
             decimal productPriceWithoutDiscount)
@@ -255,8 +267,11 @@ namespace Nop.Services.Catalog
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
-        /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        public virtual async Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the final price without discounts, Final price, Applied discount amount, Applied discounts
+        /// </returns>
+        public virtual async Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal additionalCharge = 0,
             bool includeDiscounts = true,
@@ -277,8 +292,11 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
-        /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        public virtual async Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the final price without discounts, Final price, Applied discount amount, Applied discounts
+        /// </returns>
+        public virtual async Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal additionalCharge,
             bool includeDiscounts,
@@ -301,8 +319,11 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
-        /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        public virtual async Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the final price without discounts, Final price, Applied discount amount, Applied discounts
+        /// </returns>
+        public virtual async Task<(decimal priceWithoutDiscounts, decimal finalPrice, decimal appliedDiscountAmount, List<Discount> appliedDiscounts)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal? overriddenProductPrice,
             decimal additionalCharge,
@@ -329,10 +350,11 @@ namespace Nop.Services.Catalog
                 cacheKey.CacheTime = 0;
 
             decimal rezPrice;
+            decimal rezPriceWithoutDiscount;
             decimal discountAmount;
             List<Discount> appliedDiscounts;
 
-            (rezPrice, discountAmount,  appliedDiscounts) = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            (rezPriceWithoutDiscount, rezPrice, discountAmount,  appliedDiscounts) = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var discounts = new List<Discount>();
                 var appliedDiscountAmount = decimal.Zero;
@@ -353,6 +375,8 @@ namespace Nop.Services.Catalog
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
                         price *= _productService.GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
 
+                var priceWithoutDiscount = price;
+
                 if (includeDiscounts)
                 {
                     //discount
@@ -369,10 +393,13 @@ namespace Nop.Services.Catalog
                 if (price < decimal.Zero)
                     price = decimal.Zero;
 
-                return (price, appliedDiscountAmount, discounts);
+                if (priceWithoutDiscount < decimal.Zero)
+                    priceWithoutDiscount = decimal.Zero;
+
+                return (priceWithoutDiscount, price, appliedDiscountAmount, discounts);
             });
 
-            return (rezPrice, discountAmount, appliedDiscounts);
+            return (rezPriceWithoutDiscount, rezPrice, discountAmount, appliedDiscounts);
         }
 
         /// <summary>
@@ -380,7 +407,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Shopping cart item attributes in XML</param>
-        /// <returns>Product cost (one item)</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product cost (one item)
+        /// </returns>
         public virtual async Task<decimal> GetProductCostAsync(Product product, string attributesXml)
         {
             if (product == null)
@@ -417,7 +447,10 @@ namespace Nop.Services.Catalog
         /// <param name="value">Product attribute value</param>
         /// <param name="customer">Customer</param>
         /// <param name="productPrice">Product price (null for using the base product price)</param>
-        /// <returns>Price adjustment</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the price adjustment
+        /// </returns>
         public virtual async Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product, ProductAttributeValue value, Customer customer, decimal? productPrice = null)
         {
             if (value == null)
@@ -460,7 +493,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="value">Value to round</param>
         /// <param name="currency">Currency; pass null to use the primary store currency</param>
-        /// <returns>Rounded value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rounded value
+        /// </returns>
         public virtual async Task<decimal> RoundPriceAsync(decimal value, Currency currency = null)
         {
             //we use this method because some currencies (e.g. Gungarian Forint or Swiss Franc) use non-standard rules for rounding

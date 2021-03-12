@@ -46,7 +46,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>View component result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             if (!await _paymentPluginManager.IsPluginActiveAsync(Defaults.SystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))

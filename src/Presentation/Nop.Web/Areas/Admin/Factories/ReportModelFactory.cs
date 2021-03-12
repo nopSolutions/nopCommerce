@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -70,6 +71,35 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task<IPagedList<SalesSummaryReportLine>> GetSalesSummaryReportAsync(SalesSummarySearchModel searchModel)
+        {
+            //get parameters to filter orders
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
+
+            //get sales summary
+            var salesSummary = await _orderReportService.SalesSummaryReportAsync(
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: searchModel.BillingCountryId,
+                groupBy: (GroupByOptions)searchModel.SearchGroupId,
+                categoryId: searchModel.CategoryId,
+                productId: searchModel.ProductId,
+                manufacturerId: searchModel.ManufacturerId,
+                storeId: searchModel.StoreId,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            return salesSummary;
+        }
+
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<IPagedList<BestsellersReportLine>> GetBestsellersReportAsync(BestsellerSearchModel searchModel)
         {
             //get parameters to filter bestsellers
@@ -97,11 +127,97 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             return bestsellers;
-        }
+        }        
 
         #endregion
 
         #region Methods
+
+        #region Sales summary
+
+        /// <summary>
+        /// Prepare sales summary search model
+        /// </summary>
+        /// <param name="searchModel">Sales summary search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sales summary search model
+        /// </returns>
+        public virtual async Task<SalesSummarySearchModel> PrepareSalesSummarySearchModelAsync(SalesSummarySearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+
+            //prepare available stores
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
+
+            //prepare available order statuses
+            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
+
+            //prepare available payment statuses
+            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
+
+            //prepare available categories
+            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
+
+            //prepare available manufacturers
+            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
+
+            //prepare available billing countries
+            searchModel.AvailableCountries = (await _countryService.GetAllCountriesForBillingAsync(showHidden: true))
+                .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
+
+            //prepare "group by" filter
+            searchModel.GroupByOptions = (await GroupByOptions.Day.ToSelectListAsync()).ToList();
+            
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        /// <summary>
+        /// Prepare sales summary list model
+        /// </summary>
+        /// <param name="searchModel">Sales summary search model</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sales summary list model
+        /// </returns>
+        public virtual async Task<SalesSummaryListModel> PrepareSalesSummaryListModelAsync(SalesSummarySearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            var salesSummary = await GetSalesSummaryReportAsync(searchModel);
+
+            //prepare list model
+            var model = new SalesSummaryListModel().PrepareToGrid(searchModel, salesSummary, () =>
+            {
+                return salesSummary.Select(sale =>
+                {
+                    //fill in model values from the entity
+                    var salesSummaryModel = new SalesSummaryModel
+                    {
+                        Summary = sale.Summary,
+                        NumberOfOrders = sale.NumberOfOrders,
+                        ProfitStr = sale.ProfitStr,
+                        Shipping = sale.Shipping,
+                        Tax = sale.Tax,
+                        OrderTotal = sale.OrderTotal
+                    };
+
+                    return salesSummaryModel;
+                });
+            });
+
+            return model;
+        }
+
+        #endregion
 
         #region LowStock
 
@@ -109,7 +225,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare low stock product search model
         /// </summary>
         /// <param name="searchModel">Low stock product search model</param>
-        /// <returns>Low stock product search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the low stock product search model
+        /// </returns>
         public virtual async Task<LowStockProductSearchModel> PrepareLowStockProductSearchModelAsync(LowStockProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -142,7 +261,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged low stock product list model
         /// </summary>
         /// <param name="searchModel">Low stock product search model</param>
-        /// <returns>Low stock product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the low stock product list model
+        /// </returns>
         public virtual async Task<LowStockProductListModel> PrepareLowStockProductListModelAsync(LowStockProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -201,7 +323,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare bestseller search model
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
-        /// <returns>Bestseller search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the bestseller search model
+        /// </returns>
         public virtual async Task<BestsellerSearchModel> PrepareBestsellerSearchModelAsync(BestsellerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -242,7 +367,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged bestseller list model
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
-        /// <returns>Bestseller list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the bestseller list model
+        /// </returns>
         public virtual async Task<BestsellerListModel> PrepareBestsellerListModelAsync(BestsellerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -277,7 +405,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Get a formatted bestsellers total amount
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
-        /// <returns>Bestseller total amount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the bestseller total amount
+        /// </returns>
         public virtual async Task<string> GetBestsellerTotalAmountAsync(BestsellerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -318,7 +449,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare never sold report search model
         /// </summary>
         /// <param name="searchModel">Never sold report search model</param>
-        /// <returns>Never sold report search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the never sold report search model
+        /// </returns>
         public virtual async Task<NeverSoldReportSearchModel> PrepareNeverSoldSearchModelAsync(NeverSoldReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -348,7 +482,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged never sold report list model
         /// </summary>
         /// <param name="searchModel">Never sold report search model</param>
-        /// <returns>Never sold report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the never sold report list model
+        /// </returns>
         public virtual async Task<NeverSoldReportListModel> PrepareNeverSoldListModelAsync(NeverSoldReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -394,7 +531,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare country report search model
         /// </summary>
         /// <param name="searchModel">Country report search model</param>
-        /// <returns>Country report search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country report search model
+        /// </returns>
         public virtual async Task<CountryReportSearchModel> PrepareCountrySalesSearchModelAsync(CountryReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -416,7 +556,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged country report list model
         /// </summary>
         /// <param name="searchModel">Country report search model</param>
-        /// <returns>Country report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the country report list model
+        /// </returns>
         public virtual async Task<CountryReportListModel> PrepareCountrySalesListModelAsync(CountryReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -466,7 +609,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare customer reports search model
         /// </summary>
         /// <param name="searchModel">Customer reports search model</param>
-        /// <returns>Customer reports search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer reports search model
+        /// </returns>
         public virtual async Task<CustomerReportsSearchModel> PrepareCustomerReportsSearchModelAsync(CustomerReportsSearchModel searchModel)
         {
             if (searchModel == null)
@@ -484,7 +630,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare best customers by number of orders report search model
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
-        /// <returns>Best customers report search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the best customers report search model
+        /// </returns>
         protected virtual async Task<BestCustomersReportSearchModel> PrepareBestCustomersReportSearchModelAsync(BestCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -505,7 +654,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare best customers by order total report search model
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
-        /// <returns>Best customers report search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the best customers report search model
+        /// </returns>
         protected virtual async Task<BestCustomersReportSearchModel> PrepareBestCustomersReportByOrderTotalSearchModelAsync(BestCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -527,7 +679,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare registered customers report search model
         /// </summary>
         /// <param name="searchModel">Registered customers report search model</param>
-        /// <returns>Registered customers report search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the registered customers report search model
+        /// </returns>
         protected virtual Task<RegisteredCustomersReportSearchModel> PrepareRegisteredCustomersReportSearchModelAsync(RegisteredCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -543,7 +698,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged best customers report list model
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
-        /// <returns>Best customers report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the best customers report list model
+        /// </returns>
         public virtual async Task<BestCustomersReportListModel> PrepareBestCustomersReportListModelAsync(BestCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
@@ -601,7 +759,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged registered customers report list model
         /// </summary>
         /// <param name="searchModel">Registered customers report search model</param>
-        /// <returns>Registered customers report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the registered customers report list model
+        /// </returns>
         public virtual async Task<RegisteredCustomersReportListModel> PrepareRegisteredCustomersReportListModelAsync(RegisteredCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)

@@ -94,6 +94,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         /// <param name="context">Contains information associated with the current HTML tag</param>
         /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -149,7 +150,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             collapseIcon.AddCssClass(context.AllAttributes[IS_HIDE_ATTRIBUTE_NAME].Value.Equals(true) ? "fa-plus" : "fa-minus");
 
             var cardToolContainer = new TagBuilder("div");
-            cardToolContainer.AddCssClass("card-tools pull-right");
+            cardToolContainer.AddCssClass("card-tools float-right");
             var cardbtnContainer = new TagBuilder("button");
 
             cardbtnContainer.AddCssClass("btn btn-tool");

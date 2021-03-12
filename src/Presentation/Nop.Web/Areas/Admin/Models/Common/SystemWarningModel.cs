@@ -10,13 +10,4 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         public bool DontEncode { get; set; }
     }
-
-    public enum SystemWarningLevel
-    {
-        Pass,
-        Recommendation,
-        CopyrightRemovalKey,
-        Warning,
-        Fail
-    }
 }

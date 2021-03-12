@@ -20,47 +20,47 @@
 
     function togglePreOrder() {
         if ($('#@Html.IdFor(model => model.AvailableForPreOrder)').is(':checked')) {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').showField();
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').showElement();
         } else {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').hideElement();
         }
     }
 
 
     function toggleCustomerEntersPrice() {
         if ($('#@Html.IdFor(model => model.CustomerEntersPrice)').is(':checked')) {
-            $('#pnlMinimumCustomerEnteredPrice').showField();
-            $('#pnlMaximumCustomerEnteredPrice').showField();
+            $('#pnlMinimumCustomerEnteredPrice').showElement();
+            $('#pnlMaximumCustomerEnteredPrice').showElement();
         } else {
-            $('#pnlMinimumCustomerEnteredPrice').hide();
-            $('#pnlMaximumCustomerEnteredPrice').hide();
+            $('#pnlMinimumCustomerEnteredPrice').hideElement();
+            $('#pnlMaximumCustomerEnteredPrice').hideElement();
         }
     }
 
     function toggleBasepriceEnabled() {
         if ($('#@Html.IdFor(model => model.BasepriceEnabled)').is(':checked')) {
-            $('#pnlBasepriceAmount').showField();
-            $('#pnlBasepriceUnit').showField();
-            $('#pnlBasepriceBaseAmount').showField();
-            $('#pnlBasepriceBaseUnit').showField();
+            $('#pnlBasepriceAmount').showElement();
+            $('#pnlBasepriceUnit').showElement();
+            $('#pnlBasepriceBaseAmount').showElement();
+            $('#pnlBasepriceBaseUnit').showElement();
         } else {
-            $('#pnlBasepriceAmount').hide();
-            $('#pnlBasepriceUnit').hide();
-            $('#pnlBasepriceBaseAmount').hide();
-            $('#pnlBasepriceBaseUnit').hide();
+            $('#pnlBasepriceAmount').hideElement();
+            $('#pnlBasepriceUnit').hideElement();
+            $('#pnlBasepriceBaseAmount').hideElement();
+            $('#pnlBasepriceBaseUnit').hideElement();
         }
     }
 
     function toggleTax() {
         if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
-            $('#pnlTaxCategory').hide();
+            $('#pnlTaxCategory').hideElement();
         } else {
-            $('#pnlTaxCategory').showField();
+            $('#pnlTaxCategory').showElement();
         }
     }
 </script>
 <div class="card-body">
-    <div class="form-group row">
+    <div class="form-group row" id="product-price-area">
         <div class="col-md-3">
             <nop-label asp-for="Price" />
         </div>
@@ -239,33 +239,35 @@
             </script>
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col-md-3">
-            <nop-label asp-for="IsTaxExempt" />
+    <div id="product-tax-area">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="IsTaxExempt" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IsTaxExempt" />
+                <span asp-validation-for="IsTaxExempt"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="IsTaxExempt" />
-            <span asp-validation-for="IsTaxExempt"></span>
-        </div>
-    </div>
-    <div class="form-group row" id="pnlTaxCategory">
-        <div class="col-md-3">
-            <nop-label asp-for="TaxCategoryId" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
-            <span asp-validation-for="TaxCategoryId"></span>
+        <div class="form-group row" id="pnlTaxCategory">
+            <div class="col-md-3">
+                <nop-label asp-for="TaxCategoryId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
+                <span asp-validation-for="TaxCategoryId"></span>
+            </div>
         </div>
     </div>
     <div class="form-group row @(Model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices ? null : "advanced-setting")" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
-                <div class="col-md-3">
-                    <nop-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-                    <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
-                </div>
-            </div>
+        <div class="col-md-3">
+            <nop-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
+            <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
+        </div>
+    </div>
     <div class="card card-default @(Model.ProductEditorSettingsModel.TierPrices ? null : "advanced-setting")">
         <div class="card-header">
             @T("Admin.Catalog.Products.TierPrices")
@@ -279,10 +281,10 @@
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
                     Name = "tierprices-grid",
-                    UrlRead = new DataUrl("TierPriceList", "Product", new RouteValueDictionary { [nameof(Model.ProductPictureSearchModel.ProductId)] = Model.ProductPictureSearchModel.ProductId }),
+                    UrlRead = new DataUrl("TierPriceList", "Product", new RouteValueDictionary { [nameof(Model.TierPriceSearchModel.ProductId)] = Model.TierPriceSearchModel.ProductId }),
                     UrlDelete = new DataUrl("TierPriceDelete", "Product", null),
-                    Length = Model.ProductPictureSearchModel.PageSize,
-                    LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+                    Length = Model.TierPriceSearchModel.PageSize,
+                    LengthMenu = Model.TierPriceSearchModel.AvailablePageSizes,
                     ColumnCollection = new List<ColumnProperty>
                     {
                         new ColumnProperty(nameof(TierPriceModel.Store))
@@ -331,7 +333,7 @@
 
                 <script>
                     function renderPriceColumnEdit(data, type, row, meta) {
-                        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/TierPriceEditPopup/")' + data + '?btnId=btnRefreshTierPrices&formId=product-form\', 800, 600, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+                        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/TierPriceEditPopup/")' + data + '?btnId=btnRefreshTierPrices&formId=product-form\', 800, 600, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
                     }
                 </script>
             </div>
@@ -339,7 +341,7 @@
                 <button type="submit" id="btnAddNewTierPrice" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="btn btn-primary">
                     @T("Admin.Catalog.Products.TierPrices.AddNew")
                 </button>
-                <input type="submit" id="btnRefreshTierPrices" style="display: none" />
+                <button type="submit" id="btnRefreshTierPrices" style="display: none"></button>
                 <script>
                     $(document).ready(function () {
                         $('#btnRefreshTierPrices').click(function () {

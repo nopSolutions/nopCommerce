@@ -11,15 +11,7 @@ using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Bmp;
-using SixLabors.ImageSharp.Formats.Gif;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using static SixLabors.ImageSharp.Configuration;
+using SkiaSharp;
 
 namespace Nop.Services.Media.RoxyFileman
 {
@@ -58,7 +50,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get directories in the passed parent directory
         /// </summary>
         /// <param name="parentDirectoryPath">Path to the parent directory</param>
-        /// <returns>Array of the paths to the directories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the array of the paths to the directories
+        /// </returns>
         protected override async Task<ArrayList> GetDirectoriesByParentDirectoryAsync(string parentDirectoryPath)
         {
             await CreateDirectoryAsync(parentDirectoryPath);
@@ -70,7 +65,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Gets picture from database by file
         /// </summary>
         /// <param name="filePath">File path</param>
-        /// <returns>Exist picture from database or null</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the exist picture from database or null
+        /// </returns>
         protected virtual async Task<Picture> GetPictureByFileAsync(string filePath)
         {
             var sourceVirtualPath = _fileProvider.GetVirtualPath(_fileProvider.GetDirectoryName(filePath));
@@ -86,6 +84,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Create the passed directory
         /// </summary>
         /// <param name="directoryPath">Path to the parent directory</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CreateDirectoryAsync(string directoryPath)
         {
             _fileProvider.CreateDirectory(directoryPath);
@@ -104,7 +103,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
-        /// <returns>List of paths to the files</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of paths to the files
+        /// </returns>
         protected override async Task<List<string>> GetFilesByDirectoryAsync(string directoryPath, string type)
         {
             //store files on disk if needed
@@ -118,6 +120,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task BaseCopyDirectoryAsync(string sourcePath, string destinationPath)
         {
             var pictures = await _pictureService.GetPicturesAsync($"{_fileProvider.GetVirtualPath(sourcePath).TrimEnd('/')}/");
@@ -137,107 +140,11 @@ namespace Nop.Services.Media.RoxyFileman
         }
 
         /// <summary>
-        /// Encode the image into a byte array in accordance with the specified image format
-        /// </summary>
-        /// <typeparam name="TPixel">Pixel data type</typeparam>
-        /// <param name="image">Image data</param>
-        /// <param name="imageFormat">Image format</param>
-        /// <param name="quality">Quality index that will be used to encode the image</param>
-        /// <returns>Image binary data</returns>
-        protected virtual async Task<byte[]> EncodeImageAsync<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            await using var stream = new MemoryStream();
-            var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
-            switch (imageEncoder)
-            {
-                case JpegEncoder jpegEncoder:
-                    jpegEncoder.Subsample = JpegSubsample.Ratio444;
-                    jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
-                    await jpegEncoder.EncodeAsync(image, stream, default);
-                    break;
-
-                case PngEncoder pngEncoder:
-                    pngEncoder.ColorType = PngColorType.RgbWithAlpha;
-                    await pngEncoder.EncodeAsync(image, stream, default);
-                    break;
-
-                case BmpEncoder bmpEncoder:
-                    bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
-                    await bmpEncoder.EncodeAsync(image, stream, default);
-                    break;
-
-                case GifEncoder gifEncoder:
-                    await gifEncoder.EncodeAsync(image, stream, default);
-                    break;
-
-                default:
-                    await imageEncoder.EncodeAsync(image, stream, default);
-                    break;
-            }
-
-            return stream.ToArray();
-        }
-
-        /// <summary>
-        /// Calculates picture dimensions whilst maintaining aspect
-        /// </summary>
-        /// <param name="originalSize">The original picture size</param>
-        /// <param name="targetSize">The target picture size (longest side)</param>
-        /// <param name="resizeType">Resize type</param>
-        /// <param name="ensureSizePositive">A value indicating whether we should ensure that size values are positive</param>
-        /// <returns></returns>
-        protected virtual Size CalculateDimensions(Size originalSize, int targetSize,
-            ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
-        {
-            float width, height;
-
-            switch (resizeType)
-            {
-                case ResizeType.LongestSide:
-                    if (originalSize.Height > originalSize.Width)
-                    {
-                        // portrait
-                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                        height = targetSize;
-                    }
-                    else
-                    {
-                        // landscape or square
-                        width = targetSize;
-                        height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    }
-
-                    break;
-                case ResizeType.Width:
-                    width = targetSize;
-                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
-                    break;
-                case ResizeType.Height:
-                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
-                    height = targetSize;
-                    break;
-                default:
-                    throw new Exception("Not supported ResizeType");
-            }
-
-            if (!ensureSizePositive)
-                return new Size((int)Math.Round(width), (int)Math.Round(height));
-
-            if (width < 1)
-                width = 1;
-            if (height < 1)
-                height = 1;
-
-            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/topic/40616/image-resizing-bug
-            return new Size((int)Math.Round(width), (int)Math.Round(height));
-        }
-
-        /// <summary>
         /// Save picture by picture virtual path
         /// </summary>
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SavePictureByVirtualPathAsync(Picture picture, int targetSize = 0)
         {
             if (string.IsNullOrEmpty(picture?.VirtualPath) || string.IsNullOrEmpty(picture.SeoFilename))
@@ -278,11 +185,13 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.FileExists(thumbFilePath))
                 return;
 
-            //the named semaphore helps to avoid creating the same files in different threads,
+            //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
-            using var semaphore = new Semaphore(1, 1, thumbFileName);
+            //you should be very careful, mutexes cannot be used in with the await operation
+            //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
+            using var mutex = new Mutex(false, thumbFileName);
 
-            semaphore.WaitOne();
+            mutex.WaitOne();
 
             try
             {
@@ -293,16 +202,9 @@ namespace Nop.Services.Media.RoxyFileman
                     if (targetSize != 0)
                     {
                         //resizing required
-                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
-                        var size = image.Size();
-
-                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
-                        {
-                            Mode = ResizeMode.Max,
-                            Size = CalculateDimensions(size, targetSize)
-                        }));
-
-                        pictureBinaryResized = await EncodeImageAsync(image, imageFormat);
+                        using var image = SKBitmap.Decode(pictureBinary);
+                        var imageFormat = GetImageFormatByMimeType(picture.MimeType);
+                        pictureBinaryResized = ImageResize(image, imageFormat, targetSize);
                     }
                     else
                     {
@@ -311,13 +213,89 @@ namespace Nop.Services.Media.RoxyFileman
                     }
 
                     //save
-                    await _fileProvider.WriteAllBytesAsync(thumbFilePath, pictureBinaryResized);
+                    _fileProvider.WriteAllBytesAsync(thumbFilePath, pictureBinaryResized).Wait();
                 }
             }
             finally
             {
-                semaphore.Release();
+                mutex.ReleaseMutex();
             }
+        }
+
+        /// <summary>
+        /// Resize image by targetSize
+        /// </summary>
+        /// <param name="image">Source image</param>
+        /// <param name="format">Destination format</param>
+        /// <param name="targetSize">Target size</param>
+        /// <returns>Image as array of byte[]</returns>
+        protected virtual byte[] ImageResize(SKBitmap image, SKEncodedImageFormat format, int targetSize)
+        {
+            if (image == null)
+                throw new ArgumentNullException("Image is null");
+
+            float width, height;
+            if (image.Height > image.Width)
+            {
+                // portrait
+                width = image.Width * (targetSize / (float)image.Height);
+                height = targetSize;
+            }
+            else
+            {
+                // landscape or square
+                width = targetSize;
+                height = image.Height * (targetSize / (float)image.Width);
+            }
+
+            if ((int)width == 0 || (int)height == 0)
+            {
+                width = image.Width;
+                height = image.Height;
+            }
+            try
+            {
+                using var resizedBitmap = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.Medium);
+                using var cropImage = SKImage.FromBitmap(resizedBitmap);
+
+                return cropImage.Encode(format, _mediaSettings.DefaultImageQuality).ToArray();
+            }
+            catch
+            {
+                return image.Bytes;
+            }
+        }
+
+        /// <summary>
+        /// Get image format by mime type
+        /// </summary>
+        /// <param name="mimeType">Mime type</param>
+        /// <returns>SKEncodedImageFormat</returns>
+        protected virtual SKEncodedImageFormat GetImageFormatByMimeType(string mimeType)
+        {
+            var format = SKEncodedImageFormat.Jpeg;
+            if (string.IsNullOrEmpty(mimeType))
+                return format;
+
+            var parts = mimeType.ToLower().Split('/');
+            var lastPart = parts[^1];
+
+            switch (lastPart)
+            {
+                case "webp":
+                    format = SKEncodedImageFormat.Webp;
+                    break;
+                case "png":
+                case "gif":
+                case "bmp":
+                case "x-icon":
+                    format = SKEncodedImageFormat.Png;
+                    break;
+                default:
+                    break;
+            }
+
+            return format;
         }
 
         /// <summary>
@@ -326,9 +304,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="picture">Image to store on disk</param>
         /// <param name="maxWidth">Max image width</param>
         /// <param name="maxHeight">Max image height</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task FlushImagesAsync(Picture picture, int maxWidth, int maxHeight)
         {
-            var image = Image.Load((await _pictureService.GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData);
+            using var image = SKBitmap.Decode((await _pictureService.GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData);
 
             maxWidth = image.Width > maxWidth ? maxWidth : 0;
             maxHeight = image.Height > maxHeight ? maxHeight : 0;
@@ -346,6 +325,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Initial service configuration
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ConfigureAsync()
         {
             await base.ConfigureAsync();
@@ -378,7 +358,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task MoveDirectoryAsync(string sourcePath, string destinationPath)
         {
             await base.MoveDirectoryAsync(sourcePath, destinationPath);
@@ -402,7 +382,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="newName">New name of the directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task RenameDirectoryAsync(string sourcePath, string newName)
         {
             var sourceVirtualPath = _fileProvider.GetVirtualPath(sourcePath).TrimEnd('/');
@@ -430,7 +410,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="destinationPath">Path to the destination file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
@@ -450,7 +430,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Delete the file
         /// </summary>
         /// <param name="sourcePath">Path to the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task DeleteFileAsync(string sourcePath)
         {
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
@@ -469,7 +449,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="destinationPath">Path to the destination file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task MoveFileAsync(string sourcePath, string destinationPath)
         {
             await base.MoveFileAsync(sourcePath, destinationPath);
@@ -489,7 +469,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="newName">New name of the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task RenameFileAsync(string sourcePath, string newName)
         {
             var filePath = _fileProvider.GetAbsolutePath(_fileProvider.GetVirtualPath(sourcePath));
@@ -510,7 +490,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Upload files to a directory on passed path
         /// </summary>
         /// <param name="directoryPath">Path to directory to upload files</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UploadFilesAsync(string directoryPath)
         {
             var result = GetSuccessResponse();
@@ -573,6 +553,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush all images on disk
         /// </summary>
         /// <param name="removeOriginal">Specifies whether to delete original images</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task FlushAllImagesOnDiskAsync(bool removeOriginal = true)
         {
             await base.FlushAllImagesOnDiskAsync(removeOriginal);
@@ -611,6 +592,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush images on disk
         /// </summary>
         /// <param name="directoryPath">Directory path to flush images</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task FlushImagesOnDiskAsync(string directoryPath)
         {
             await base.FlushImagesOnDiskAsync(directoryPath);

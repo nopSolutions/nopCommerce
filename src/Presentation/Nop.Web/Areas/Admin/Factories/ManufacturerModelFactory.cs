@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -25,6 +27,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IManufacturerService _manufacturerService;
@@ -41,6 +45,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public ManufacturerModelFactory(CatalogSettings catalogSettings,
+            CurrencySettings currencySettings,
+            ICurrencyService currencyService,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IBaseAdminModelFactory baseAdminModelFactory,
             IManufacturerService manufacturerService,
@@ -53,6 +59,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService)
         {
             _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _baseAdminModelFactory = baseAdminModelFactory;
             _manufacturerService = manufacturerService;
@@ -100,7 +108,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare manufacturer search model
         /// </summary>
         /// <param name="searchModel">Manufacturer search model</param>
-        /// <returns>Manufacturer search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer search model
+        /// </returns>
         public virtual async Task<ManufacturerSearchModel> PrepareManufacturerSearchModelAsync(ManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -138,7 +149,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged manufacturer list model
         /// </summary>
         /// <param name="searchModel">Manufacturer search model</param>
-        /// <returns>Manufacturer list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer list model
+        /// </returns>
         public virtual async Task<ManufacturerListModel> PrepareManufacturerListModelAsync(ManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -174,7 +188,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Manufacturer model</param>
         /// <param name="manufacturer">Manufacturer</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Manufacturer model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer model
+        /// </returns>
         public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(ManufacturerModel model,
             Manufacturer manufacturer, bool excludeProperties = false)
         {
@@ -211,7 +228,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
                 model.Published = true;
                 model.AllowCustomersToSelectPageSize = true;
+                model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
+                model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
+
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //prepare localized models
             if (!excludeProperties)
@@ -238,7 +261,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Manufacturer product search model</param>
         /// <param name="manufacturer">Manufacturer</param>
-        /// <returns>Manufacturer product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer product list model
+        /// </returns>
         public virtual async Task<ManufacturerProductListModel> PrepareManufacturerProductListModelAsync(ManufacturerProductSearchModel searchModel,
             Manufacturer manufacturer)
         {
@@ -275,7 +301,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product search model to add to the manufacturer
         /// </summary>
         /// <param name="searchModel">Product search model to add to the manufacturer</param>
-        /// <returns>Product search model to add to the manufacturer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the manufacturer
+        /// </returns>
         public virtual async Task<AddProductToManufacturerSearchModel> PrepareAddProductToManufacturerSearchModelAsync(AddProductToManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -306,16 +335,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product list model to add to the manufacturer
         /// </summary>
         /// <param name="searchModel">Product search model to add to the manufacturer</param>
-        /// <returns>Product list model to add to the manufacturer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product list model to add to the manufacturer
+        /// </returns>
         public virtual async Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModelAsync(AddProductToManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,

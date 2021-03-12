@@ -38,7 +38,10 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
             return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HomepageTop });
@@ -65,6 +68,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //pictures
@@ -108,6 +112,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings

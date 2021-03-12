@@ -66,11 +66,14 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task AuthorizeAdminAsync(AuthorizationFilterContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
+
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    return;
 
                 //check whether this filter has been overridden for the action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
@@ -81,9 +84,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //ignore filter (the action is available even if a customer hasn't access to the admin area)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //there is AdminAuthorizeFilter, so check access
@@ -103,7 +103,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="context">Authorization filter context</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
             {
                 await AuthorizeAdminAsync(context);

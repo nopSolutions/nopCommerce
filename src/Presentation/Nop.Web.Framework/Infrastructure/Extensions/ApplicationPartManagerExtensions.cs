@@ -5,13 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Core.Redis;
 using Nop.Data.Mapping;
 using Nop.Services.Plugins;
 
@@ -350,36 +348,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             return true;
         }
 
-        /// <summary>
-        /// Load plugins info (names of already installed, going to be installed, going to be uninstalled and going to be deleted plugins)
-        /// </summary>
-        /// <param name="appSettings">App settings</param>
-        private static void LoadPluginsInfo(AppSettings appSettings)
-        {
-            var useRedisToStorePluginsInfo = appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StorePluginsInfo;
-
-            //we use the main IRedisConnectionWrapper implementation since the DI isn't initialized yet
-            PluginsInfo = useRedisToStorePluginsInfo
-                ? new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings))
-                : new PluginsInfo(_fileProvider);
-
-            if (PluginsInfo.LoadPluginInfoAsync().Result || useRedisToStorePluginsInfo || !appSettings.RedisConfig.Enabled)
-                return;
-
-            var redisPluginsInfo = new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings));
-
-            if (!redisPluginsInfo.LoadPluginInfoAsync().Result)
-                return;
-
-            //copy plugins info data from redis 
-            PluginsInfo.CopyFrom(redisPluginsInfo);
-            PluginsInfo.Save();
-
-            //clear redis plugins info data
-            redisPluginsInfo = new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings));
-            redisPluginsInfo.Save();
-        }
-
         #endregion
 
         #region Methods
@@ -397,7 +365,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (appSettings == null)
                 throw new ArgumentNullException(nameof(appSettings));
 
-            LoadPluginsInfo(appSettings);
+            PluginsInfo = new PluginsInfo(_fileProvider);
+            PluginsInfo.LoadPluginInfoAsync().Wait();
 
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))

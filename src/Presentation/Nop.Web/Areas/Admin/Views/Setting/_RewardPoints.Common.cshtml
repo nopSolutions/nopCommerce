@@ -20,8 +20,8 @@
             <nop-label asp-for="ExchangeRate" />
         </div>
         <div class="col-md-9">
-            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")</div>
-            <div class="pull-left">
+            <div class="form-text-row float-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")</div>
+            <div class="float-left">
                 <nop-editor asp-for="ExchangeRate" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
                 <span asp-validation-for="ExchangeRate"></span>
             </div>

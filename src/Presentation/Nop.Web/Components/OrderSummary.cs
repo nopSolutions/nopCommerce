@@ -27,6 +27,7 @@ namespace Nop.Web.Components
             _workContext = workContext;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData, ShoppingCartModel overriddenModel)
         {
             //use already prepared (shared) model

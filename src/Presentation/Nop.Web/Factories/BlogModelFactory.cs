@@ -74,43 +74,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare blog comment model
-        /// </summary>
-        /// <param name="blogComment">Blog comment entity</param>
-        /// <returns>Blog comment model</returns>
-        protected virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
-        {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
-
-            var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
-
-            var model = new BlogCommentModel
-            {
-                Id = blogComment.Id,
-                CustomerId = blogComment.CustomerId,
-                CustomerName = await _customerService.FormatUsernameAsync(customer),
-                CommentText = blogComment.CommentText,
-                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer)
-            };
-
-            if (_customerSettings.AllowCustomersToUploadAvatars)
-            {
-                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
-                    await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-            }
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -119,6 +83,7 @@ namespace Nop.Web.Factories
         /// <param name="model">Blog post model</param>
         /// <param name="blogPost">Blog post entity</param>
         /// <param name="prepareComments">Whether to prepare blog comments</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (model == null)
@@ -164,7 +129,10 @@ namespace Nop.Web.Factories
         /// Prepare blog post list model
         /// </summary>
         /// <param name="command">Blog paging filtering model</param>
-        /// <returns>Blog post list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog post list model
+        /// </returns>
         public virtual async Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPagingFilteringModel command)
         {
             if (command == null)
@@ -203,7 +171,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare blog post tag list model
         /// </summary>
-        /// <returns>Blog post tag list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog post tag list model
+        /// </returns>
         public virtual async Task<BlogPostTagListModel> PrepareBlogPostTagListModelAsync()
         {
             var model = new BlogPostTagListModel();
@@ -227,7 +198,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare blog post year models
         /// </summary>
-        /// <returns>List of blog post year model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of blog post year model
+        /// </returns>
         public virtual async Task<List<BlogPostYearModel>> PrepareBlogPostYearModelAsync()
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
@@ -287,6 +261,41 @@ namespace Nop.Web.Factories
             });
 
             return cachedModel;
+        }
+        
+        /// <summary>
+        /// Prepare blog comment model
+        /// </summary>
+        /// <param name="blogComment">Blog comment entity</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog comment model
+        /// </returns>
+        public virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException(nameof(blogComment));
+
+            var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
+
+            var model = new BlogCommentModel
+            {
+                Id = blogComment.Id,
+                CustomerId = blogComment.CustomerId,
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CommentText = blogComment.CommentText,
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer)
+            };
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                    await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+            }
+
+            return model;
         }
 
         #endregion

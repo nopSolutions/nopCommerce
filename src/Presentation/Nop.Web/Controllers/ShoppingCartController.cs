@@ -78,6 +78,7 @@ namespace Nop.Web.Controllers
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly ShippingSettings _shippingSettings;
 
         #endregion
 
@@ -115,7 +116,8 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            ShippingSettings shippingSettings)
         {
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
@@ -150,12 +152,14 @@ namespace Nop.Web.Controllers
             _mediaSettings = mediaSettings;
             _orderSettings = orderSettings;
             _shoppingCartSettings = shoppingCartSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ParseAndSaveCheckoutAttributesAsync(IList<ShoppingCartItem> cart, IFormCollection form)
         {
             if (cart == null)
@@ -282,6 +286,7 @@ namespace Nop.Web.Controllers
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CheckoutAttributes, attributesXml, (await _storeContext.GetCurrentStoreAsync()).Id);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveItemAsync(ShoppingCartItem updatecartitem, List<string> addToCartWarnings, Product product,
            ShoppingCartType cartType, string attributes, decimal customerEnteredPriceConverted, DateTime? rentalStartDate,
            DateTime? rentalEndDate, int quantity)
@@ -319,6 +324,7 @@ namespace Nop.Web.Controllers
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<IActionResult> GetProductToCartDetailsAsync(List<string> addToCartWarnings, ShoppingCartType cartType,
             Product product)
         {
@@ -412,6 +418,7 @@ namespace Nop.Web.Controllers
         #region Shopping cart
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SelectShippingOption([FromQuery] string name, [FromQuery] EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
@@ -498,6 +505,7 @@ namespace Nop.Web.Controllers
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
@@ -697,6 +705,7 @@ namespace Nop.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -782,6 +791,7 @@ namespace Nop.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
             bool loadPicture, IFormCollection form)
         {
@@ -933,6 +943,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
@@ -974,6 +985,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UploadFileProductAttribute(int attributeId)
         {
             var attribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(attributeId);
@@ -1056,6 +1068,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UploadFileCheckoutAttribute(int attributeId)
         {
             var attribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(attributeId);
@@ -1136,6 +1149,7 @@ namespace Nop.Web.Controllers
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Cart()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
@@ -1149,6 +1163,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("updatecart")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UpdateCart(IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
@@ -1217,6 +1232,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("continueshopping")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ContinueShopping()
         {
             var returnUrl = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.LastContinueShoppingPageAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
@@ -1229,6 +1245,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("checkout")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> StartCheckout(IFormCollection form)
         {
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
@@ -1269,6 +1286,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applydiscountcouponcode")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ApplyDiscountCoupon(string discountcouponcode, IFormCollection form)
         {
             //trim
@@ -1331,6 +1349,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applygiftcardcouponcode")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ApplyGiftCard(string giftcardcouponcode, IFormCollection form)
         {
             //trim
@@ -1379,14 +1398,19 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetEstimateShipping(EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
                 model = new EstimateShippingModel();
 
             var errors = new List<string>();
-            if (string.IsNullOrEmpty(model.ZipPostalCode))
+
+            if (!_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.ZipPostalCode))
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.ZipPostalCode.Required"));
+
+            if (_shippingSettings.EstimateShippingCityNameEnabled && string.IsNullOrEmpty(model.City))
+                errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.City.Required"));
 
             if (model.CountryId == null || model.CountryId == 0)
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
@@ -1402,13 +1426,14 @@ namespace Nop.Web.Controllers
             //parse and save checkout attributes
             await ParseAndSaveCheckoutAttributesAsync(cart, form);
 
-            var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode, true);
+            var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(cart, model, true);
 
             return Json(result);
         }
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RemoveDiscountCoupon(IFormCollection form)
         {
             var model = new ShoppingCartModel();
@@ -1430,6 +1455,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RemoveGiftCardCode(IFormCollection form)
         {
             var model = new ShoppingCartModel();
@@ -1453,6 +1479,7 @@ namespace Nop.Web.Controllers
 
         #region Wishlist
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Wishlist(Guid? customerGuid)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist))
@@ -1473,6 +1500,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("updatecart")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UpdateWishlist(IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist))
@@ -1535,6 +1563,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("addtocartbutton")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
@@ -1610,6 +1639,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EmailWishlist()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
@@ -1628,6 +1658,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("EmailWishlist")]
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)

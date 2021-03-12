@@ -72,7 +72,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckDiscountCouponAsync(ActionExecutingContext context)
             {
                 if (context == null)
@@ -124,14 +124,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var locale = await _localizationService.GetResourceAsync("ShoppingCart.DiscountCouponCode.Activated");
                 foreach (var validCouponCode in validCouponCodes.Distinct())
                 {
-                    _notificationService.SuccessNotification(string.Format(locale, validCouponCode));
+                    _notificationService.SuccessNotification(string.Format(locale, WebUtility.HtmlEncode(validCouponCode)));
                 }
 
                 //show notifications for invalid coupon codes
                 var invalidLocale = await _localizationService.GetResourceAsync("ShoppingCart.DiscountCouponCode.Invalid");
                 foreach (var invalidCouponCode in couponCodes.Except(validCouponCodes.Distinct()))
                 {
-                    _notificationService.WarningNotification(string.Format(invalidLocale, invalidCouponCode));
+                    _notificationService.WarningNotification(string.Format(invalidLocale, WebUtility.HtmlEncode(invalidCouponCode)));
                 }
             }
 
@@ -144,7 +144,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 await CheckDiscountCouponAsync(context);

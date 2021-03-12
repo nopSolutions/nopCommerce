@@ -1,22 +1,29 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
 {
+    /// <summary>
+    /// Represents base provider
+    /// </summary>
     public class BaseRouteProvider
     {
-        protected string GetRouterPattern(IEndpointRouteBuilder endpointRouteBuilder, string seoCode = "")
+        /// <summary>
+        /// Get pattern used to detect routes with language code
+        /// </summary>
+        /// <returns></returns>
+        protected string GetLanguageRoutePattern()
         {
             if (DataSettingsManager.IsDatabaseInstalled())
             {
-                var localizationSettings = endpointRouteBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
+                var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                    return $"{{language:maxlength(2):lang=en}}/{seoCode}";
+                    return $"{{{NopPathRouteDefaults.LanguageRouteValue}:maxlength(2):{NopPathRouteDefaults.LanguageParameterTransformer}=en}}";
             }
 
-            return seoCode;
+            return string.Empty;
         }
     }
 }

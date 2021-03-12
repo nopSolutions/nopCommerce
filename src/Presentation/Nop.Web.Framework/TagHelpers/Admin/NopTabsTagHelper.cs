@@ -67,6 +67,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         /// <param name="context">Contains information associated with the current HTML tag</param>
         /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -233,6 +234,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         /// <param name="context">Contains information associated with the current HTML tag</param>
         /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -282,7 +284,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //merge classes
             if (context.AllAttributes.ContainsName("class"))
-                tabTitle.Attributes.Add("class", context.AllAttributes["class"].Value.ToString());
+                tabTitle.AddCssClass(context.AllAttributes["class"].Value.ToString());
+
             tabTitle.InnerHtml.AppendHtml(await linkTag.RenderHtmlContentAsync());
 
             //tab content

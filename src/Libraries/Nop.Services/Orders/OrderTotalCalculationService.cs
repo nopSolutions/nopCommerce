@@ -111,7 +111,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="orderSubTotal">Order subtotal</param>
-        /// <returns>Order discount, Applied discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order discount, Applied discounts
+        /// </returns>
         protected virtual async Task<(decimal orderDiscount, List<Discount> appliedDiscounts)> GetOrderSubtotalDiscountAsync(Customer customer,
             decimal orderSubTotal)
         {
@@ -145,7 +148,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shippingTotal">Shipping total</param>
-        /// <returns>Shipping discount. Applied discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping discount. Applied discounts
+        /// </returns>
         protected virtual async Task<(decimal shippingDiscount, List<Discount> appliedDiscounts)> GetShippingDiscountAsync(Customer customer, decimal shippingTotal)
         {
             var appliedDiscounts = new List<Discount>();
@@ -179,7 +185,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="orderTotal">Order total</param>
-        /// <returns>Order discount. Applied discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order discount. Applied discounts
+        /// </returns>
         protected virtual async Task<(decimal orderDiscount, List<Discount> appliedDiscounts)> GetOrderTotalDiscountAsync(Customer customer, decimal orderTotal)
         {
             var appliedDiscounts = new List<Discount>();
@@ -216,6 +225,7 @@ namespace Nop.Services.Orders
         /// <param name="discountAmountExclTax">Discount amount (excl tax)</param>
         /// <param name="shippingTotalExclTax">Shipping (excl tax)</param>
         /// <param name="taxTotal">Tax</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateTotalAsync(UpdateOrderParameters updateOrderParameters, decimal subTotalExclTax,
             decimal discountAmountExclTax, decimal shippingTotalExclTax, decimal taxTotal)
         {
@@ -291,7 +301,10 @@ namespace Nop.Services.Orders
         /// <param name="shippingTotalExclTax">Shipping (excl tax)</param>
         /// <param name="shippingTaxRate">Shipping tax rates</param>
         /// <param name="updatedOrder">Order</param>
-        /// <returns>Tax total</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax total
+        /// </returns>
         protected virtual async Task<decimal> UpdateTaxRatesAsync(SortedDictionary<decimal, decimal> subTotalTaxRates, decimal shippingTotalInclTax,
             decimal shippingTotalExclTax, decimal shippingTaxRate, Order updatedOrder)
         {
@@ -376,7 +389,10 @@ namespace Nop.Services.Orders
         /// <param name="restoredCart">Cart</param>
         /// <param name="subTotalInclTax">Subtotal (incl tax)</param>
         /// <param name="subTotalExclTax">Subtotal (excl tax)</param>
-        /// <returns>Shipping total. Shipping (incl tax). Shipping tax rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping total. Shipping (incl tax). Shipping tax rate
+        /// </returns>
         protected virtual async Task<(decimal shippingTotal, decimal shippingTotalInclTax, decimal shippingTaxRate)> UpdateShippingAsync(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart,
             decimal subTotalInclTax, decimal subTotalExclTax)
         {
@@ -533,7 +549,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="updateOrderParameters">UpdateOrderParameters</param>
         /// <param name="restoredCart">Cart</param>
-        /// <returns>Subtotal. Subtotal (incl tax). Subtotal tax rates. Discount amount (excl tax)</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the subtotal. Subtotal (incl tax). Subtotal tax rates. Discount amount (excl tax)
+        /// </returns>
         protected virtual async Task<(decimal subtotal, decimal subTotalInclTax, SortedDictionary<decimal, decimal> subTotalTaxRates, decimal discountAmountExclTax)> UpdateSubTotalAsync(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart)
         {
             var subTotalExclTax = decimal.Zero;
@@ -642,6 +661,7 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating whether to use reward points</param>
         /// <param name="customer">Customer</param>
         /// <param name="orderTotal">Order total</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<(int redeemedRewardPoints, decimal redeemedRewardPointsAmount)> SetRewardPointsAsync(int redeemedRewardPoints, decimal redeemedRewardPointsAmount,
             bool? useRewardPoints, Customer customer, decimal orderTotal)
         {
@@ -686,6 +706,7 @@ namespace Nop.Services.Orders
         /// <param name="appliedGiftCards">Applied gift cards</param>
         /// <param name="customer">Customer</param>
         /// <param name="resultTemp"></param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<decimal> AppliedGiftCardsAsync(IList<ShoppingCartItem> cart, List<AppliedGiftCard> appliedGiftCards,
             Customer customer, decimal resultTemp)
         {
@@ -723,7 +744,10 @@ namespace Nop.Services.Orders
         /// Gets shopping cart additional shipping charge
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>Additional shipping charge</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the additional shipping charge
+        /// </returns>
         protected virtual async Task<decimal> GetShoppingCartAdditionalShippingChargeAsync(IList<ShoppingCartItem> cart)
         {
             return await cart.SumAwaitAsync(async shoppingCartItem => await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem));
@@ -754,7 +778,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <returns>Applied discount amount. Applied discounts. Sub total (without discount). Sub total (with discount). Tax rates (of order sub total)</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the applied discount amount. Applied discounts. Sub total (without discount). Sub total (with discount). Tax rates (of order sub total)
+        /// </returns>
         public virtual async Task<(decimal discountAmount, List<Discount> appliedDiscounts, decimal subTotalWithoutDiscount, decimal subTotalWithDiscount, SortedDictionary<decimal, decimal> taxRates)> GetShoppingCartSubTotalAsync(IList<ShoppingCartItem> cart,
             bool includingTax)
         {
@@ -908,6 +935,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="updateOrderParameters">Parameters for the updating order</param>
         /// <param name="restoredCart">Shopping cart</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateOrderTotalsAsync(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart)
         {
             //sub total
@@ -928,7 +956,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="subTotal">Subtotal amount; pass null to calculate subtotal</param>
-        /// <returns>A value indicating whether shipping is free</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether shipping is free
+        /// </returns>
         public virtual async Task<bool> IsFreeShippingAsync(IList<ShoppingCartItem> cart, decimal? subTotal = null)
         {
             //check whether customer is in a customer role with free shipping applied
@@ -964,7 +995,10 @@ namespace Nop.Services.Orders
         /// <param name="shippingRate">Shipping rate to adjust</param>
         /// <param name="cart">Cart</param>
         /// <param name="applyToPickupInStore">Adjust shipping rate to pickup in store shipping option rate</param>
-        /// <returns>Adjusted shipping rate. Applied discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the adjusted shipping rate. Applied discounts
+        /// </returns>
         public virtual async Task<(decimal adjustedShippingRate, List<Discount> appliedDiscounts)> AdjustShippingRateAsync(decimal shippingRate, IList<ShoppingCartItem> cart, 
             bool applyToPickupInStore = false)
         {
@@ -1000,7 +1034,10 @@ namespace Nop.Services.Orders
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>Shipping total</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping total
+        /// </returns>
         public virtual async Task<decimal?> GetShoppingCartShippingTotalAsync(IList<ShoppingCartItem> cart)
         {
             var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
@@ -1013,7 +1050,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
-        /// <returns>Shipping total. Applied tax rate. Applied discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping total. Applied tax rate. Applied discounts
+        /// </returns>
         public virtual async Task<(decimal? shippingTotal, decimal taxRate, List<Discount> appliedDiscounts)> GetShoppingCartShippingTotalAsync(IList<ShoppingCartItem> cart, bool includingTax)
         {
             decimal? shippingTotal = null;
@@ -1104,7 +1144,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
-        /// <returns>Tax total, Tax rates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax total, Tax rates
+        /// </returns>
         public virtual async Task<(decimal taxTotal, SortedDictionary<decimal, decimal> taxRates)> GetTaxTotalAsync(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
         {
             if (cart == null)
@@ -1126,7 +1169,10 @@ namespace Nop.Services.Orders
         /// <param name="cart">Cart</param>
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
-        /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now. Applied gift cards. Applied discount amount. Applied discounts. Reward points to redeem. Reward points amount in primary store currency to redeem</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart total;Null if shopping cart total couldn't be calculated now. Applied gift cards. Applied discount amount. Applied discounts. Reward points to redeem. Reward points amount in primary store currency to redeem
+        /// </returns>
         public virtual async Task<(decimal? shoppingCartTotal, decimal discountAmount, List<Discount> appliedDiscounts, List<AppliedGiftCard> appliedGiftCards, int redeemedRewardPoints, decimal redeemedRewardPointsAmount)> GetShoppingCartTotalAsync(IList<ShoppingCartItem> cart,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
         {
@@ -1223,7 +1269,10 @@ namespace Nop.Services.Orders
         /// Converts existing reward points to amount
         /// </summary>
         /// <param name="rewardPoints">Reward points</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertRewardPointsToAmountAsync(int rewardPoints)
         {
             if (rewardPoints <= 0)
@@ -1273,7 +1322,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="amount">Amount (in primary store currency)</param>
-        /// <returns>Number of reward points</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of reward points
+        /// </returns>
         public virtual async Task<int> CalculateRewardPointsAsync(Customer customer, decimal amount)
         {
             if (!_rewardPointsSettings.Enabled)

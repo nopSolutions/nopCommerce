@@ -34,9 +34,9 @@
 
     function toggleEnableColorSquaresRgb() {
         if ($('#@Html.IdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
-            $('#pnlColorSquaresRgb').showField();
+            $('#pnlColorSquaresRgb').showElement();
         } else {
-            $('#pnlColorSquaresRgb').hide();
+            $('#pnlColorSquaresRgb').hideElement();
         }
     }
 </script>

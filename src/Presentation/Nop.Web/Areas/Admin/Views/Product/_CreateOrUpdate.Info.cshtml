@@ -36,9 +36,9 @@
 
     function toggleShowOnHomepage() {
         if ($('#@Html.IdFor(model => model.ShowOnHomepage)').is(':checked')) {
-            $('#pnlDisplayOrder').showField();
+            $('#pnlDisplayOrder').showElement();
         } else {
-            $('#pnlDisplayOrder').hide();
+            $('#pnlDisplayOrder').hideElement();
         }
     }
 
@@ -49,33 +49,33 @@
 
         var selectedProductTypeId = $("#@Html.IdFor(model => model.ProductTypeId)").val();
         if (!selectedProductTypeId || selectedProductTypeId == simpleProductId) {
-            $('#group-required-other-products').showField();
-            $('#group-visible-individually').showField();
-            $('#group-associated-products').hide();
+            $('#group-required-other-products').showElement();
+            $('#group-visible-individually').showElement();
+            $('#group-associated-products').hideElement();
 
-            $('[data-card-name=product-price]').showField();
-            $('[data-card-name=product-shipping]').showField();
-            $('[data-card-name=product-inventory]').showField();
-            $('[data-card-name=product-giftcard]').showField();
-            $('[data-card-name=product-downloadable]').showField();
-            $('[data-card-name=product-rental]').showField();
-            $('[data-card-name=product-recurring]').showField();
+            $('[data-card-name=product-price]').showElement();
+            $('[data-card-name=product-shipping]').showElement();
+            $('[data-card-name=product-inventory]').showElement();
+            $('[data-card-name=product-giftcard]').showElement();
+            $('[data-card-name=product-downloadable]').showElement();
+            $('[data-card-name=product-rental]').showElement();
+            $('[data-card-name=product-recurring]').showElement();
         } else if (selectedProductTypeId == groupedProductId) {
-            $('#group-required-other-products').hide();
-            $('#group-visible-individually').hide();
-            $('#group-associated-products').showField();
+            $('#group-required-other-products').hideElement();
+            $('#group-visible-individually').hideElement();
+            $('#group-associated-products').showElement();
             updateTableWidth('#associatedproducts-grid');
 
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
             
 
-            $('[data-card-name=product-price]').hide();
-            $('[data-card-name=product-shipping]').hide();
-            $('[data-card-name=product-inventory]').hide();
-            $('[data-card-name=product-giftcard]').hide();
-            $('[data-card-name=product-downloadable]').hide();
-            $('[data-card-name=product-rental]').hide();
-            $('[data-card-name=product-recurring]').hide();
+            $('[data-card-name=product-price]').hideElement();
+            $('[data-card-name=product-shipping]').hideElement();
+            $('[data-card-name=product-inventory]').hideElement();
+            $('[data-card-name=product-giftcard]').hideElement();
+            $('[data-card-name=product-downloadable]').hideElement();
+            $('[data-card-name=product-rental]').hideElement();
+            $('[data-card-name=product-recurring]').hideElement();
         }
 
         //templates
@@ -102,29 +102,29 @@
         });
 
         if ($('#@Html.IdFor(model => model.ProductTemplateId) option').length > 1) {
-            $('#pnlProductTemplateId').showField();
+            $('#pnlProductTemplateId').showElement();
         } else {
-            $('#pnlProductTemplateId').hide();
+            $('#pnlProductTemplateId').hideElement();
         }
     }
 
     function toggleRequireOtherProducts() {
         if ($('#@Html.IdFor(model => model.RequireOtherProducts)').is(':checked')) {
-            $('#pnlRequiredProductIds').showField();
-            $('#pnlAutomaticallyAddRequiredProducts').showField();
+            $('#pnlRequiredProductIds').showElement();
+            $('#pnlAutomaticallyAddRequiredProducts').showElement();
         } else {
-            $('#pnlRequiredProductIds').hide();
-            $('#pnlAutomaticallyAddRequiredProducts').hide();
+            $('#pnlRequiredProductIds').hideElement();
+            $('#pnlAutomaticallyAddRequiredProducts').hideElement();
         }
     }
 
     function toggleMarkAsNew() {
         if ($('#@Html.IdFor(model => model.MarkAsNew)').is(':checked')) {
-            $('#pnlMarkAsNewStartDateTimeUtc').showField();
-            $('#pnlMarkAsNewEndDateTimeUtc').showField();
+            $('#pnlMarkAsNewStartDateTimeUtc').showElement();
+            $('#pnlMarkAsNewEndDateTimeUtc').showElement();
         } else {
-            $('#pnlMarkAsNewStartDateTimeUtc').hide();
-            $('#pnlMarkAsNewEndDateTimeUtc').hide();
+            $('#pnlMarkAsNewStartDateTimeUtc').hideElement();
+            $('#pnlMarkAsNewEndDateTimeUtc').hideElement();
         }
     }
 
@@ -161,7 +161,7 @@
         var inputValue = $('#@Html.IdFor(model => model.RequiredProductIds)').val();
         if (inputValue) {
             //load friendly names
-            $('#required-products-check-progress').showField();
+            $('#required-products-check-progress').show();
 
             var postData = {
                 productIds: inputValue
@@ -201,7 +201,8 @@
 
 
 <div class="card-body">
-    @(await Html.LocalizedEditorAsync<ProductModel, ProductLocalizedModel>("product-info-localized",
+    <div id="product-details-area">
+        @(await Html.LocalizedEditorAsync<ProductModel, ProductLocalizedModel>("product-info-localized",
     @<div>
         <div class="form-group row">
             <div class="col-md-3">
@@ -262,14 +263,15 @@
             </div>
         </div>
         </div>))
-		 		 
-    <div class="form-group row">
-        <div class="col-md-3">
-            <nop-label asp-for="Sku" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="Sku" />
-            <span asp-validation-for="Sku"></span>
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Sku" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Sku" />
+                <span asp-validation-for="Sku"></span>
+            </div>
         </div>
     </div>
     <div class="form-group row">
@@ -473,7 +475,7 @@
                 <button type="submit" id="btnAddNewAssociatedProduct" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form"}))', 800, 800, true); return false;" class="btn btn-primary">
                     @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
                 </button>
-                <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
+                <button type="submit" id="btnRefreshAssociatedProducts" style="display: none"></button>
                 <script>
                     $(document).ready(function () {
                         $('#btnRefreshAssociatedProducts').click(function () {
@@ -604,18 +606,18 @@
         </div>
     </div>
     <nop-nested-setting asp-for="RequireOtherProducts">
-        <div class="form-group row" id="pnlRequiredProductIds">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")" id="pnlRequiredProductIds">
             <div class="col-md-3">
                 <nop-label asp-for="RequiredProductIds" />
                 <span id="required-products-check-progress" style="display: none; float: right; clear: both" class="please-wait">
-                    @T("Common.Wait...")
+                    @T("Common.Wait")
                 </span>
             </div>
             <div class="col-md-9">
                 <div class="input-group">
                     <nop-editor asp-for="RequiredProductIds" />
-                    <span class="input-group-btn">
-                        <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
+                    <div class="input-group-append">
+                        <button type="submit" id="btnRefreshRequiredProducts" style="display: none"></button>
                         <script>
                             $(document).ready(function () {
                                 $('#btnRefreshRequiredProducts').click(function () {
@@ -630,13 +632,13 @@
                         <button type="submit" id="btnAddNewRequiredProduct" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 850, true); return false;" class="btn btn-info">
                             @T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")
                         </button>
-                    </span>
+                    </div>
                 </div>
                 <span id="required-product-names"></span>
                 @Html.ValidationMessageFor(model => model.RequiredProductIds)
             </div>
         </div>
-        <div class="form-group row" id="pnlAutomaticallyAddRequiredProducts">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")" id="pnlAutomaticallyAddRequiredProducts">
             <div class="col-md-3">
                 <nop-label asp-for="AutomaticallyAddRequiredProducts" />
             </div>

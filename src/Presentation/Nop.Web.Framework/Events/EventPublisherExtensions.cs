@@ -15,6 +15,7 @@ namespace Nop.Web.Framework.Events
         /// <typeparam name="T">Type of the model</typeparam>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="model">Model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task ModelPreparedAsync<T>(this IEventPublisher eventPublisher, T model)
         {
             await eventPublisher.PublishAsync(new ModelPreparedEvent<T>(model));
@@ -27,6 +28,7 @@ namespace Nop.Web.Framework.Events
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="model">Model</param>
         /// <param name="modelState">Model state</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task ModelReceivedAsync<T>(this IEventPublisher eventPublisher, T model, ModelStateDictionary modelState)
         {
             await eventPublisher.PublishAsync(new ModelReceivedEvent<T>(model, modelState));

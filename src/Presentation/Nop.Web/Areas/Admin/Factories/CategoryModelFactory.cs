@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -25,6 +27,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICategoryService _categoryService;
@@ -41,6 +45,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CategoryModelFactory(CatalogSettings catalogSettings,
+            CurrencySettings currencySettings,
+            ICurrencyService currencyService,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICategoryService categoryService,
@@ -53,6 +59,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService)
         {
             _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _baseAdminModelFactory = baseAdminModelFactory;
             _categoryService = categoryService;
@@ -99,7 +107,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare category search model
         /// </summary>
         /// <param name="searchModel">Category search model</param>
-        /// <returns>Category search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category search model
+        /// </returns>
         public virtual async Task<CategorySearchModel> PrepareCategorySearchModelAsync(CategorySearchModel searchModel)
         {
             if (searchModel == null)
@@ -137,7 +148,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged category list model
         /// </summary>
         /// <param name="searchModel">Category search model</param>
-        /// <returns>Category list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category list model
+        /// </returns>
         public virtual async Task<CategoryListModel> PrepareCategoryListModelAsync(CategorySearchModel searchModel)
         {
             if (searchModel == null)
@@ -174,7 +188,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Category model</param>
         /// <param name="category">Category</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Category model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category model
+        /// </returns>
         public virtual async Task<CategoryModel> PrepareCategoryModelAsync(CategoryModel model, Category category, bool excludeProperties = false)
         {
             Action<CategoryLocalizedModel, int> localizedModelConfiguration = null;
@@ -211,7 +228,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Published = true;
                 model.IncludeInTopMenu = true;
                 model.AllowCustomersToSelectPageSize = true;
+                model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
+                model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
+
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //prepare localized models
             if (!excludeProperties)
@@ -242,7 +265,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Category product search model</param>
         /// <param name="category">Category</param>
-        /// <returns>Category product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category product list model
+        /// </returns>
         public virtual async Task<CategoryProductListModel> PrepareCategoryProductListModelAsync(CategoryProductSearchModel searchModel, Category category)
         {
             if (searchModel == null)
@@ -278,7 +304,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product search model to add to the category
         /// </summary>
         /// <param name="searchModel">Product search model to add to the category</param>
-        /// <returns>Product search model to add to the category</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the category
+        /// </returns>
         public virtual async Task<AddProductToCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToCategorySearchModel searchModel)
         {
             if (searchModel == null)
@@ -309,16 +338,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product list model to add to the category
         /// </summary>
         /// <param name="searchModel">Product search model to add to the category</param>
-        /// <returns>Product list model to add to the category</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product list model to add to the category
+        /// </returns>
         public virtual async Task<AddProductToCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToCategorySearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,

@@ -18,52 +18,52 @@
 
         function toggleShippedDate(editmode) {
             if (editmode) {
-                $('#lblShippedDate').hide();
-                $('#divShippedDate').showField();
-                $('#btnEditShippedDate').hide();
-                $('#btnSaveShippedDate').showField();
-                $('#btnCancelShippedDate').showField();
+                $('#lblShippedDate').hideElement();
+                $('#divShippedDate').showElement();
+                $('#btnEditShippedDate').hideElement();
+                $('#btnSaveShippedDate').showElement();
+                $('#btnCancelShippedDate').showElement();
             } else {
-                $('#lblShippedDate').showField();
-                $('#divShippedDate').hide();
-                $('#btnEditShippedDate').showField();
-                $('#btnSaveShippedDate').hide();
-                $('#btnCancelShippedDate').hide();
+                $('#lblShippedDate').showElement();
+                $('#divShippedDate').hideElement();
+                $('#btnEditShippedDate').showElement();
+                $('#btnSaveShippedDate').hideElement();
+                $('#btnCancelShippedDate').hideElement();
             }
         }
 
         function toggleDeliveryDate(editmode) {
             if (editmode) {
-                $('#lblDeliveryDate').hide();
-                $('#divDeliveryDate').showField();
-                $('#btnEditDeliveryDate').hide();
-                $('#btnSaveDeliveryDate').showField();
-                $('#btnCancelDeliveryDate').showField();
+                $('#lblDeliveryDate').hideElement();
+                $('#divDeliveryDate').showElement();
+                $('#btnEditDeliveryDate').hideElement();
+                $('#btnSaveDeliveryDate').showElement();
+                $('#btnCancelDeliveryDate').showElement();
             } else {
-                $('#lblDeliveryDate').showField();
-                $('#divDeliveryDate').hide();
-                $('#btnEditDeliveryDate').showField();
-                $('#btnSaveDeliveryDate').hide();
-                $('#btnCancelDeliveryDate').hide();
+                $('#lblDeliveryDate').showElement();
+                $('#divDeliveryDate').hideElement();
+                $('#btnEditDeliveryDate').showElement();
+                $('#btnSaveDeliveryDate').hideElement();
+                $('#btnCancelDeliveryDate').hideElement();
             }
         }
     </script>
 
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id
             <small>
-                <i class="fa fa-arrow-circle-left"></i>
+                <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Shipments.BackToOrder")</a>
             </small>
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <a asp-action="PdfPackagingSlip" asp-route-shipmentId="@Model.Id" class="btn btn-info">
-                <i class="fa fa-file-pdf-o"></i>
+                <i class="far fa-file-pdf"></i>
                 @T("Admin.Orders.Shipments.PrintPackagingSlip")
             </a>
             <span id="shipment-delete" class="btn btn-danger">
-                <i class="fa fa-trash-o"></i>
+                <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentDetailsButtons, additionalData = Model })
@@ -90,7 +90,7 @@
                                     <nop-label asp-for="TrackingNumber" />
                                 </div>
                                 <div class="col-md-9">
-                                    <div class="input-group input-group-short pull-left">
+                                    <div class="input-group input-group-short float-left">
                                         <nop-editor asp-for="TrackingNumber" />
                                         <span class="input-group-append">
                                             <button type="submit" name="settrackingnumber" class="btn btn-info">
@@ -134,16 +134,16 @@
                                 <div class="col-md-9">
                                     <div class="input-group input-group-short">
                                         <div id="lblShippedDate" class="input-group-text">
-                                            <div class="form-text-row">@Model.ShippedDate</div>
+                                            @Model.ShippedDate
                                         </div>
                                         @if (Model.ShippedDateUtc.HasValue)
                                         {
-                                        <div id="divShippedDate" style="display: inline-block;">
+                                        <div id="divShippedDate" style="display: inline-block;" class="col-md-9">
                                             <nop-editor asp-for="ShippedDateUtc" />
                                             @T("Admin.Orders.Shipments.ShippedDate.EnterUtc")&nbsp;&nbsp;
                                         </div>
                                         }
-                                    <div class="input-group-append">
+                                    <div class="input-group-append col-md-3">
                                         @if (Model.CanShip)
                                         {
                                             <button type="submit" name="setasshipped" id="setasshipped" class="btn btn-info btn-flat">
@@ -177,16 +177,16 @@
                                 <div class="col-md-9">
                                     <div class="input-group input-group-short">
                                         <div id="lblDeliveryDate" class="input-group-text">
-                                            <div class="form-text-row">@Model.DeliveryDate</div>
+                                            @Model.DeliveryDate
                                         </div>
                                         @if (Model.DeliveryDateUtc.HasValue)
                                         {
-                                        <div id="divDeliveryDate" style="display: inline-block;">
+                                        <div id="divDeliveryDate" style="display: inline-block;" class="col-md-9">
                                             <nop-editor asp-for="DeliveryDateUtc" />
                                             @T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")&nbsp;&nbsp;
                                         </div>
                                         }
-                                    <div class="input-group-append">
+                                    <div class="input-group-append col-md-3">
                                         @if (Model.CanDeliver)
                                         {
                                             <button type="submit" name="setasdelivered" id="setasdelivered" class="btn btn-info btn-flat">

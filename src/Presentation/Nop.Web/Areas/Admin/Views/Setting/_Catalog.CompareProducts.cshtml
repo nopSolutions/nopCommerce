@@ -41,11 +41,11 @@
 
         function toggleCompareProductsEnabled() {
             if ($('#@Html.IdFor(model => model.CompareProductsEnabled)').is(':checked')) {
-                $('#pnlIncludeShortDescriptionInCompareProducts').showField();
-                $('#IncludeFullDescriptionInCompareProducts').showField();
+                $('#pnlIncludeShortDescriptionInCompareProducts').showElement();
+                $('#IncludeFullDescriptionInCompareProducts').showElement();
             } else {
-                $('#pnlIncludeShortDescriptionInCompareProducts').hide();
-                $('#IncludeFullDescriptionInCompareProducts').hide();
+                $('#pnlIncludeShortDescriptionInCompareProducts').hideElement();
+                $('#IncludeFullDescriptionInCompareProducts').hideElement();
             }
         }
     </script>

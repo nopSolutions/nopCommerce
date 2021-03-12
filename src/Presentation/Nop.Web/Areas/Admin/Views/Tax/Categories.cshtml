@@ -8,7 +8,7 @@
 }
 
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Tax.Categories")
         </h1>
     </div>
@@ -20,6 +20,8 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons })
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TaxManagement", Docs.TaxManagement + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "tax-categories-grid",
@@ -110,10 +112,10 @@
                                             if (data.Result) {
                                                 //reload grid
                                                 updateTable('#tax-categories-grid');
-                            
+
                                                 //clear input value
                                                 $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
-                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").data("kendoNumericTextBox").value(0); 
+                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").data("kendoNumericTextBox").value(0);
                                             } else {
                                                 //display errors if returned
                                                 display_nop_error(data);

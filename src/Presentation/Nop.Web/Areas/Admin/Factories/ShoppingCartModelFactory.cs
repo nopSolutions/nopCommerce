@@ -99,7 +99,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shopping cart search model
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
-        /// <returns>Shopping cart search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart search model
+        /// </returns>
         public virtual async Task<ShoppingCartSearchModel> PrepareShoppingCartSearchModelAsync(ShoppingCartSearchModel searchModel)
         {
             if (searchModel == null)
@@ -134,7 +137,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged shopping cart list model
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
-        /// <returns>Shopping cart list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart list model
+        /// </returns>
         public virtual async Task<ShoppingCartListModel> PrepareShoppingCartListModelAsync(ShoppingCartSearchModel searchModel)
         {
             if (searchModel == null)
@@ -181,7 +187,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shopping cart item search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Shopping cart item list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart item list model
+        /// </returns>
         public virtual async Task<ShoppingCartItemListModel> PrepareShoppingCartItemListModelAsync(ShoppingCartItemSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -206,7 +215,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ShoppingCartItemListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.SelectAwait(async item =>
+                return items
+                .OrderByDescending(item => item.CreatedOnUtc)
+                .SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();

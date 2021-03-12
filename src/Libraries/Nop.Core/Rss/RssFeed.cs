@@ -84,7 +84,10 @@ namespace Nop.Core.Rss
         /// Load RSS feed from the passed stream
         /// </summary>
         /// <param name="stream">Stream</param>
-        /// <returns>The asynchronous task whose result contains the RSS feed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the RSS feed
+        /// </returns>
         public static async Task<RssFeed> LoadAsync(Stream stream)
         {
             try

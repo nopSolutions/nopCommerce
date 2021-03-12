@@ -44,41 +44,41 @@ $(document).ready(function () {
 
 function toggleAvatar() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
-        $('#pnlDefaultAvatarEnabled').showField();
+        $('#pnlDefaultAvatarEnabled').showElement();
     } else {
-        $('#pnlDefaultAvatarEnabled').hide();
+        $('#pnlDefaultAvatarEnabled').hideElement();
     }
 }
 
 function toggleUsername() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
-        $('#pnlAllowUsersToChangeUsernames').showField();
-        $('#pnlCheckUsernameAvailability').showField();
-        $('#pnlUsernameValidationEnabled').show();
+        $('#pnlAllowUsersToChangeUsernames').showElement();
+        $('#pnlCheckUsernameAvailability').showElement();
+        $('#pnlUsernameValidationEnabled').showElement();
     } else {
-        $('#pnlAllowUsersToChangeUsernames').hide();
-        $('#pnlCheckUsernameAvailability').hide();
-        $('#pnlUsernameValidationEnabled').hide();
+        $('#pnlAllowUsersToChangeUsernames').hideElement();
+        $('#pnlCheckUsernameAvailability').hideElement();
+        $('#pnlUsernameValidationEnabled').hideElement();
     }
 }
 
 function toggleUsernameValidation() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)').is(':checked')) {
-        $('#pnlUsernameValidationRule').showField();
-        $('#pnlUsernameValidationUseRegex').showField();
+        $('#pnlUsernameValidationRule').showElement();
+        $('#pnlUsernameValidationUseRegex').showElement();
     } else {
-        $('#pnlUsernameValidationRule').hide();
-        $('#pnlUsernameValidationUseRegex').hide();
+        $('#pnlUsernameValidationRule').hideElement();
+        $('#pnlUsernameValidationUseRegex').hideElement();
     }
 }
 	
 function togglePhoneNumberValidation() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.PhoneNumberValidationEnabled)').is(':checked')) {
-        $('#pnlPhoneNumberValidationRule').showField();
-        $('#pnlPhoneNumberValidationUseRegex').showField();
+        $('#pnlPhoneNumberValidationRule').showElement();
+        $('#pnlPhoneNumberValidationUseRegex').showElement();
     } else {
-        $('#pnlPhoneNumberValidationRule').hide();
-        $('#pnlPhoneNumberValidationUseRegex').hide();
+        $('#pnlPhoneNumberValidationRule').hideElement();
+        $('#pnlPhoneNumberValidationUseRegex').hideElement();
     }
 }
 </script>

@@ -89,6 +89,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
@@ -98,6 +99,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var feed = new RssFeed(
@@ -120,6 +123,7 @@ namespace Nop.Web.Controllers
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
@@ -156,6 +160,7 @@ namespace Nop.Web.Controllers
         [AutoValidateAntiforgeryToken]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)

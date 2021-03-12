@@ -76,11 +76,21 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             private async Task CheckLanguageSeoCodeAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
+                    return;
+
+                //only in GET requests
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    return;
 
                 //check whether this filter has been overridden for the Action
                 var actionFilter = context.ActionDescriptor.FilterDescriptors
@@ -91,16 +101,6 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //ignore filter (an action doesn't need to be checked)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
-                    return;
-
-                if (context.HttpContext.Request == null)
-                    return;
-
-                //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
-                    return;
-
-                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //whether SEO friendly URLs are enabled
@@ -129,7 +129,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
-            /// <returns>A task that on completion indicates the filter has executed</returns>
+            /// <returns>A task that represents the asynchronous operation</returns>
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 await CheckLanguageSeoCodeAsync(context);

@@ -337,21 +337,21 @@
             </div>
             <script>
                 $(document).ready(function() {
-                    var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                    customerRolesIdsInput.setOptions({
-                        customerRolesIdsInput: false,
+                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                    customerRoleIdsInput.setOptions({
+                        customerRoleIdsInput: false,
                         filter: "contains"
                     });
 
                     @if (Model.AvailableCustomerRoles.Count == 0)
                     {
                         <text>
-                            customerRolesIdsInput.setOptions({
+                            customerRoleIdsInput.setOptions({
                                 enable: false,
                                 placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
                             });
-                            customerRolesIdsInput._placeholder();
-                            customerRolesIdsInput._enable();
+                            customerRoleIdsInput._placeholder();
+                            customerRoleIdsInput._enable();
                         </text>
                     }
                 });
@@ -391,6 +391,28 @@
             <span asp-validation-for="Active"></span>
         </div>
     </div>
+    @if (!string.IsNullOrEmpty(Model.MultiFactorAuthenticationProvider))
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="MultiFactorAuthenticationProvider" />
+            </div>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <nop-editor asp-for="MultiFactorAuthenticationProvider" asp-disabled="true"/>
+                    <div class="input-group-append">
+                        @if (Model.Id > 0)
+                        {
+                            <a id="mfa-bind-delete" href="#" class="btn btn-danger">
+                                @T("Admin.Common.Delete")
+                            </a>
+                        }
+                    </div>
+                </div>
+                <span asp-validation-for="MultiFactorAuthenticationProvider"></span>
+            </div>
+        </div>
+    }
 
     @if (Model.Id > 0 && Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Count > 0)
     {

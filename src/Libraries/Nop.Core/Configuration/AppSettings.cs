@@ -22,9 +22,9 @@ namespace Nop.Core.Configuration
         public HostingConfig HostingConfig { get; set; } = new HostingConfig();
 
         /// <summary>
-        /// Gets or sets Redis configuration parameters
+        /// Gets or sets distributed cache configuration parameters
         /// </summary>
-        public RedisConfig RedisConfig { get; set; } = new RedisConfig();
+        public DistributedCacheConfig DistributedCacheConfig { get; set; } = new DistributedCacheConfig();
 
         /// <summary>
         /// Gets or sets Azure Blob storage configuration parameters

@@ -80,6 +80,7 @@ namespace Nop.Web.Controllers
         private readonly ILogger _logger;
         private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
@@ -128,6 +129,7 @@ namespace Nop.Web.Controllers
             ILogger logger,
             IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INotificationService notificationService,
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
@@ -172,6 +174,7 @@ namespace Nop.Web.Controllers
             _logger = logger;
             _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
@@ -205,6 +208,7 @@ namespace Nop.Web.Controllers
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> ParseSelectedProviderAsync(IFormCollection form)
         {
             if (form == null)
@@ -228,6 +232,7 @@ namespace Nop.Web.Controllers
             return string.Empty;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> ParseCustomCustomerAttributesAsync(IFormCollection form)
         {
             if (form == null)
@@ -307,6 +312,7 @@ namespace Nop.Web.Controllers
             return attributesXml;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task LogGdprAsync(Customer customer, CustomerInfoModel oldCustomerInfoModel,
             CustomerInfoModel newCustomerInfoModel, IFormCollection form)
         {
@@ -411,6 +417,7 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Login(bool? checkoutAsGuest)
         {
             var model = await _customerModelFactory.PrepareLoginModelAsync(checkoutAsGuest);
@@ -424,6 +431,7 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -434,27 +442,26 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_customerSettings.UsernamesEnabled && model.Username != null)
-                {
-                    model.Username = model.Username.Trim();
-                }
-                var loginResult = await _customerRegistrationService.ValidateCustomerAsync(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password);
+                var customerUserName = model.Username?.Trim();
+                var customerEmail = model.Email?.Trim();
+                var userNameOrEmail = _customerSettings.UsernamesEnabled ? customerUserName : customerEmail;
+
+                var loginResult = await _customerRegistrationService.ValidateCustomerAsync(userNameOrEmail, model.Password);
                 switch (loginResult)
                 {
                     case CustomerLoginResults.Successful:
                         {
                             var customer = _customerSettings.UsernamesEnabled
-                                ? await _customerService.GetCustomerByUsernameAsync(model.Username)
-                                : await _customerService.GetCustomerByEmailAsync(model.Email);
+                                ? await _customerService.GetCustomerByUsernameAsync(customerUserName)
+                                : await _customerService.GetCustomerByEmailAsync(customerEmail);
 
                             return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, model.RememberMe);
                         }
                     case CustomerLoginResults.MultiFactorAuthenticationRequired:
                         {
-                            var userName = _customerSettings.UsernamesEnabled ? model.Username : model.Email;
                             var customerMultiFactorAuthenticationInfo = new CustomerMultiFactorAuthenticationInfo
                             {
-                                UserName = userName,
+                                UserName = userNameOrEmail,
                                 RememberMe = model.RememberMe,
                                 ReturnUrl = returnUrl
                             };
@@ -491,7 +498,10 @@ namespace Nop.Web.Controllers
         /// <summary>
         /// The entry point for injecting a plugin component of type "MultiFactorAuth"
         /// </summary>
-        /// <returns>User verification page for Multi-factor authentication. Served by an authentication provider.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the user verification page for Multi-factor authentication. Served by an authentication provider.
+        /// </returns>
         public virtual async Task<IActionResult> MultiFactorVerification()
         {
             if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
@@ -520,6 +530,7 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Logout()
         {
             if (_workContext.OriginalCustomerIfImpersonated != null)
@@ -576,6 +587,7 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PasswordRecovery()
         {
             var model = new PasswordRecoveryModel();
@@ -591,6 +603,7 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PasswordRecoverySend(PasswordRecoveryModel model, bool captchaValid)
         {
             // validate CAPTCHA
@@ -601,7 +614,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
+                var customer = await _customerService.GetCustomerByEmailAsync(model.Email.Trim());
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
                     //save token and current date
@@ -633,6 +646,7 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PasswordRecoveryConfirm(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
@@ -675,6 +689,7 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PasswordRecoveryConfirmPOST(string token, string email, Guid guid, PasswordRecoveryConfirmModel model)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
@@ -729,6 +744,7 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Register(string returnUrl)
         {
             //check whether registration is allowed
@@ -746,6 +762,7 @@ namespace Nop.Web.Controllers
         [ValidateHoneypot]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
         {
             //check whether registration is allowed
@@ -791,15 +808,13 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_customerSettings.UsernamesEnabled && model.Username != null)
-                {
-                    model.Username = model.Username.Trim();
-                }
+                var customerUserName = model.Username?.Trim();
+                var customerEmail = model.Email?.Trim();
 
                 var isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer,
-                    model.Email,
-                    _customerSettings.UsernamesEnabled ? model.Username : model.Email,
+                    customerEmail,
+                    _customerSettings.UsernamesEnabled ? customerUserName : customerEmail,
                     model.Password,
                     _customerSettings.DefaultPasswordFormat,
                     (await _storeContext.GetCurrentStoreAsync()).Id,
@@ -861,13 +876,15 @@ namespace Nop.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
+
                         //save newsletter value
-                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(model.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, (await _storeContext.GetCurrentStoreAsync()).Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
                             {
-                                newsletter.Active = true;
+                                newsletter.Active = isNewsletterActive;
                                 await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
 
                                 //GDPR
@@ -889,8 +906,8 @@ namespace Nop.Web.Controllers
                                 await _newsLetterSubscriptionService.InsertNewsLetterSubscriptionAsync(new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = model.Email,
-                                    Active = true,
+                                    Email = customerEmail,
+                                    Active = isNewsletterActive,
                                     StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
@@ -1029,6 +1046,7 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RegisterResult(int resultId, string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
@@ -1041,6 +1059,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CheckUsernameAvailability(string username)
         {
             var usernameAvailable = false;
@@ -1074,6 +1093,7 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AccountActivation(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
@@ -1108,6 +1128,14 @@ namespace Nop.Web.Controllers
             //authenticate customer after activation
             await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
+            //activating newsletter if need
+            var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+            if (newsletter != null && !newsletter.Active)
+            {
+                newsletter.Active = true;
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(newsletter);
+            }
+
             model.Result = await _localizationService.GetResourceAsync("Account.AccountActivation.Activated");
             return View(model);
         }
@@ -1116,6 +1144,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Info
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Info()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1128,6 +1157,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Info(CustomerInfoModel model, IFormCollection form)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1165,10 +1195,11 @@ namespace Nop.Web.Controllers
                     //username 
                     if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
                     {
-                        if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        var userName = model.Username.Trim();
+                        if (!customer.Username.Equals(userName, StringComparison.InvariantCultureIgnoreCase))
                         {
                             //change username
-                            await _customerRegistrationService.SetUsernameAsync(customer, model.Username.Trim());
+                            await _customerRegistrationService.SetUsernameAsync(customer, userName);
 
                             //re-authenticate
                             //do not authenticate users in impersonation mode
@@ -1177,11 +1208,12 @@ namespace Nop.Web.Controllers
                         }
                     }
                     //email
-                    if (!customer.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                    var email = model.Email.Trim();
+                    if (!customer.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase))
                     {
                         //change email
                         var requireValidation = _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation;
-                        await _customerRegistrationService.SetEmailAsync(customer, model.Email.Trim(), requireValidation);
+                        await _customerRegistrationService.SetEmailAsync(customer, email, requireValidation);
 
                         //do not authenticate users in impersonation mode
                         if (_workContext.OriginalCustomerIfImpersonated == null)
@@ -1308,6 +1340,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RemoveExternalAssociation(int id)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1334,6 +1367,7 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EmailRevalidation(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
@@ -1386,6 +1420,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Addresses
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Addresses()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1397,6 +1432,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddressDelete(int addressId)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1421,6 +1457,7 @@ namespace Nop.Web.Controllers
             });
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddressAdd()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1437,6 +1474,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1480,6 +1518,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddressEdit(int addressId)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1503,6 +1542,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1547,6 +1587,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Downloadable products
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DownloadableProducts()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1560,6 +1601,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //ignore SEO friendly URLs checks
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UserAgreement(Guid orderItemId)
         {
             var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
@@ -1580,6 +1624,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Change password
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangePassword()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1595,6 +1640,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1609,7 +1655,7 @@ namespace Nop.Web.Controllers
                 var changePasswordResult = await _customerRegistrationService.ChangePasswordAsync(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
-                    model.Result = await _localizationService.GetResourceAsync("Account.ChangePassword.Success");
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
                     return View(model);
                 }
 
@@ -1626,6 +1672,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Avatar
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Avatar()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1642,6 +1689,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Avatar")]
         [FormValueRequired("upload-avatar")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1696,6 +1744,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Avatar")]
         [FormValueRequired("remove-avatar")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RemoveAvatar(CustomerAvatarModel model)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1718,6 +1767,7 @@ namespace Nop.Web.Controllers
 
         #region GDPR tools
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GdprTools()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1733,6 +1783,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("GdprTools")]
         [FormValueRequired("export-data")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GdprToolsExport()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1752,6 +1803,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("GdprTools")]
         [FormValueRequired("delete-account")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GdprToolsDelete()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1776,6 +1828,7 @@ namespace Nop.Web.Controllers
         //check gift card balance page
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CheckGiftCardBalance()
         {
             if (!(_captchaSettings.Enabled && _customerSettings.AllowCustomersToCheckGiftCardBalance))
@@ -1791,6 +1844,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("CheckGiftCardBalance")]
         [FormValueRequired("checkbalancegiftcard")]
         [ValidateCaptcha]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CheckBalance(CheckGiftCardBalanceModel model, bool captchaValid)
         {
             //validate CAPTCHA
@@ -1822,6 +1876,7 @@ namespace Nop.Web.Controllers
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MultiFactorAuthentication()
         {
             if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
@@ -1835,6 +1890,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MultiFactorAuthentication(MultiFactorAuthenticationModel model, IFormCollection form)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1896,6 +1952,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ConfigureMultiFactorAuthenticationProvider(string providerSysName)
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))

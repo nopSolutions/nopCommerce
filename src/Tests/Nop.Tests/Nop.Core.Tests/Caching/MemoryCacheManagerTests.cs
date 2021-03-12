@@ -31,10 +31,10 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
             await _staticCacheManager.SetAsync(new CacheKey("some_key_1"), 3);
             await _staticCacheManager.SetAsync(new CacheKey("some_key_2"), 4);
 
-            var isSet = await _staticCacheManager.IsSetAsync(new CacheKey("some_key_1"));
-            isSet.Should().BeTrue();
-            isSet = await _staticCacheManager.IsSetAsync(new CacheKey("some_key_3"));
-            isSet.Should().BeFalse();
+            var rez = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), () => 2);
+            rez.Should().Be(3);
+            rez = await _staticCacheManager.GetAsync(new CacheKey("some_key_2"), () => 2);
+            rez.Should().Be(4);
         }
 
         [Test]
@@ -44,8 +44,8 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
 
             await _staticCacheManager.ClearAsync();
 
-            var isSet = await _staticCacheManager.IsSetAsync(new CacheKey("some_key_1"));
-            isSet.Should().BeFalse();
+            var rez = await _staticCacheManager.GetAsync(new CacheKey("some_key_1"), () => Task.FromResult((object)null));
+            rez.Should().BeNull();
         }
 
         [Test]
@@ -57,8 +57,8 @@ namespace Nop.Tests.Nop.Core.Tests.Caching
             var actionCount = 0;
             var action = new Action(() =>
             {
-                var isSet = _staticCacheManager.IsSetAsync(key).Result;
-                isSet.Should().BeTrue();
+                var isSet = _staticCacheManager.GetAsync<object>(key, () => null);
+                isSet.Should().NotBeNull();
 
                 _staticCacheManager.PerformActionWithLock(key.Key, expiration,
                     () => Assert.Fail("Action in progress"))

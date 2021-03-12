@@ -73,6 +73,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle model received event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(ModelReceivedEvent<BaseNopModel> eventMessage)
         {
             //get entity by received model
@@ -108,6 +109,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle order placed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             if (eventMessage.Order == null)
@@ -126,6 +128,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle order refunded event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderRefundedEvent eventMessage)
         {
             if (eventMessage.Order == null)
@@ -143,6 +146,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle order async Tasked event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderVoidedEvent eventMessage)
         {
             if (eventMessage.Order == null)
@@ -160,6 +164,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle order cancelled event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
         {
             if (eventMessage.Order == null)
@@ -177,6 +182,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle order deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
         {
             if (eventMessage.Entity == null)

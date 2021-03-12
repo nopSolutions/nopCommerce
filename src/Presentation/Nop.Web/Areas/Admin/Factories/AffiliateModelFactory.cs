@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Affiliates;
-using Nop.Core.Domain.Common;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -26,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -41,7 +41,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public AffiliateModelFactory(IAddressService addressService,
+        public AffiliateModelFactory(IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
@@ -52,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IStateProvinceService stateProvinceService)
         {
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
             _affiliateService = affiliateService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -69,52 +71,14 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address = null)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set all address fields as enabled and required
-            model.FirstNameEnabled = true;
-            model.FirstNameRequired = true;
-            model.LastNameEnabled = true;
-            model.LastNameRequired = true;
-            model.EmailEnabled = true;
-            model.EmailRequired = true;
-            model.CompanyEnabled = true;
-            model.CountryEnabled = true;
-            model.CountryRequired = true;
-            model.StateProvinceEnabled = true;
-            model.CountyEnabled = true;
-            model.CountyRequired = true;
-            model.CityEnabled = true;
-            model.CityRequired = true;
-            model.StreetAddressEnabled = true;
-            model.StreetAddressRequired = true;
-            model.StreetAddress2Enabled = true;
-            model.ZipPostalCodeEnabled = true;
-            model.ZipPostalCodeRequired = true;
-            model.PhoneEnabled = true;
-            model.PhoneRequired = true;
-            model.FaxEnabled = true;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-        }
-
-        /// <summary>
         /// Prepare affiliated order search model
         /// </summary>
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliated order search model
+        /// </returns>
         protected virtual async Task<AffiliatedOrderSearchModel> PrepareAffiliatedOrderSearchModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
@@ -166,7 +130,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare affiliate search model
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
-        /// <returns>Affiliate search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliate search model
+        /// </returns>
         public virtual Task<AffiliateSearchModel> PrepareAffiliateSearchModelAsync(AffiliateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -182,7 +149,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged affiliate list model
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
-        /// <returns>Affiliate list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliate list model
+        /// </returns>
         public virtual async Task<AffiliateListModel> PrepareAffiliateListModelAsync(AffiliateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -223,7 +193,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Affiliate model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Affiliate model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliate model
+        /// </returns>
         public virtual async Task<AffiliateModel> PrepareAffiliateModelAsync(AffiliateModel model, Affiliate affiliate, bool excludeProperties = false)
         {
             //fill in model values from the entity
@@ -236,11 +209,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 await PrepareAffiliatedOrderSearchModelAsync(model.AffiliatedOrderSearchModel, affiliate);
                 PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
 
-                //prepare address model
-                var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
-                model.Address = address.ToModel(model.Address);
-                await PrepareAddressModelAsync(model.Address, address);
-
                 //whether to fill in some of properties
                 if (!excludeProperties)
                 {
@@ -249,10 +217,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Active = affiliate.Active;
                 }
             }
-            else
-            {
-                await PrepareAddressModelAsync(model.Address);
-            }
+
+            //prepare address model
+            var address = await _addressService.GetAddressByIdAsync(affiliate?.AddressId ?? 0);
+            if (!excludeProperties && address != null)
+                model.Address = address.ToModel(model.Address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailRequired = true;
+            model.Address.CountryRequired = true;
+            model.Address.CountyRequired = true;
+            model.Address.CityRequired = true;
+            model.Address.StreetAddressRequired = true;
+            model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneRequired = true;
 
             return model;
         }
@@ -262,7 +241,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliated order list model
+        /// </returns>
         public virtual async Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
@@ -317,7 +299,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
-        /// <returns>Affiliated customer list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the affiliated customer list model
+        /// </returns>
         public virtual async Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate)
         {

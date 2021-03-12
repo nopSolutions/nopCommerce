@@ -19,7 +19,10 @@ namespace Nop.Core
         /// XML Encode
         /// </summary>
         /// <param name="str">String</param>
-        /// <returns>Encoded string</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the encoded string
+        /// </returns>
         public static async Task<string> XmlEncodeAsync(string str)
         {
             if (str == null)
@@ -33,7 +36,10 @@ namespace Nop.Core
         /// XML Encode as is
         /// </summary>
         /// <param name="str">String</param>
-        /// <returns>Encoded string</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the encoded string
+        /// </returns>
         public static async Task<string> XmlEncodeAsIsAsync(string str)
         {
             if (str == null)
@@ -46,11 +52,9 @@ namespace Nop.Core
             };
 
             await using var sw = new StringWriter();
-            using (var xwr = XmlWriter.Create(sw, settings))
-            {
-                await xwr.WriteStringAsync(str);
-                await xwr.FlushAsync();
-            }
+            await using var xwr = XmlWriter.Create(sw, settings);
+            await xwr.WriteStringAsync(str);
+            await xwr.FlushAsync();
 
             return sw.ToString();
         }
@@ -73,7 +77,10 @@ namespace Nop.Core
         /// Serializes a datetime
         /// </summary>
         /// <param name="dateTime">Datetime</param>
-        /// <returns>Serialized datetime</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the serialized datetime
+        /// </returns>
         public static async Task<string> SerializeDateTimeAsync(DateTime dateTime)
         {
             var xmlS = new XmlSerializer(typeof(DateTime));

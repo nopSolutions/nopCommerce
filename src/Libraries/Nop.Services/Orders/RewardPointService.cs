@@ -47,7 +47,10 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; pass 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">Whether to load reward points that did not yet activated</param>
-        /// <returns>Query to load reward points history</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the query to load reward points history
+        /// </returns>
         protected virtual async Task<IQueryable<RewardPointsHistory>> GetRewardPointsQueryAsync(int customerId, int? storeId, bool showNotActivated = false)
         {
             var query = _rewardPointsHistoryRepository.Table;
@@ -74,6 +77,7 @@ namespace Nop.Services.Orders
         /// Update reward points balance if necessary
         /// </summary>
         /// <param name="query">Input query</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateRewardPointsBalanceAsync(IQueryable<RewardPointsHistory> query)
         {
             //get expired points
@@ -126,6 +130,7 @@ namespace Nop.Services.Orders
         /// Insert the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
             await _rewardPointsHistoryRepository.InsertAsync(rewardPointsHistory);
@@ -144,7 +149,10 @@ namespace Nop.Services.Orders
         /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Reward point history records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reward point history records
+        /// </returns>
         public virtual async Task<IPagedList<RewardPointsHistory>> GetRewardPointsHistoryAsync(int customerId = 0, int? storeId = null,
             bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -165,7 +173,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Balance</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the balance
+        /// </returns>
         public virtual async Task<int> GetRewardPointsBalanceAsync(int customerId, int storeId)
         {
             var query = (await GetRewardPointsQueryAsync(customerId, storeId))
@@ -200,7 +211,10 @@ namespace Nop.Services.Orders
         /// <param name="usedAmount">Used amount</param>
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
         /// <param name="endDate">Date and time when the reward points will no longer be valid; pass null to add date termless points</param>
-        /// <returns>Reward points history entry identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reward points history entry identifier
+        /// </returns>
         public virtual async Task<int> AddRewardPointsHistoryEntryAsync(Customer customer, int points, int storeId, string message = "",
             Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null)
         {
@@ -253,7 +267,10 @@ namespace Nop.Services.Orders
         /// Gets a reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistoryId">Reward point history entry identifier</param>
-        /// <returns>Reward point history entry</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reward point history entry
+        /// </returns>
         public virtual async Task<RewardPointsHistory> GetRewardPointsHistoryEntryByIdAsync(int rewardPointsHistoryId)
         {
             return await _rewardPointsHistoryRepository.GetByIdAsync(rewardPointsHistoryId);
@@ -263,6 +280,7 @@ namespace Nop.Services.Orders
         /// Update the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
             await _rewardPointsHistoryRepository.UpdateAsync(rewardPointsHistory);
@@ -272,6 +290,7 @@ namespace Nop.Services.Orders
         /// Delete the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteRewardPointsHistoryEntryAsync(RewardPointsHistory rewardPointsHistory)
         {
             await _rewardPointsHistoryRepository.DeleteAsync(rewardPointsHistory);

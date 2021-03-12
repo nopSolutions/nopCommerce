@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -20,6 +20,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication.External;
@@ -62,9 +63,9 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IComponentContext _componentContext;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
@@ -82,6 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
+        private readonly IServiceCollection _serviceCollection;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
@@ -107,9 +109,9 @@ namespace Nop.Web.Areas.Admin.Factories
             IActionContextAccessor actionContextAccessor,
             IAuthenticationPluginManager authenticationPluginManager,
             IBaseAdminModelFactory baseAdminModelFactory,
-            IComponentContext componentContext,
             ICurrencyService currencyService,
             ICustomerService customerService,
+            IEventPublisher eventPublisher,
             INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             INopFileProvider fileProvider,
@@ -127,6 +129,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductService productService,
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
+            IServiceCollection serviceCollection,
             IShippingPluginManager shippingPluginManager,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
@@ -148,9 +151,9 @@ namespace Nop.Web.Areas.Admin.Factories
             _actionContextAccessor = actionContextAccessor;
             _authenticationPluginManager = authenticationPluginManager;
             _baseAdminModelFactory = baseAdminModelFactory;
-            _componentContext = componentContext;
             _currencyService = currencyService;
             _customerService = customerService;
+            _eventPublisher = eventPublisher;
             _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _exchangeRatePluginManager = exchangeRatePluginManager;
@@ -168,6 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _productService = productService;
             _returnRequestService = returnRequestService;
             _searchTermService = searchTermService;
+            _serviceCollection = serviceCollection;
             _shippingPluginManager = shippingPluginManager;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -191,6 +195,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare store URL warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareStoreUrlWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -222,6 +227,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare copyright removal key warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareRemovalKeyWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -256,6 +262,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare primary exchange rate currency warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareExchangeRateCurrencyWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -294,6 +301,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare primary store currency warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePrimaryStoreCurrencyWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -322,6 +330,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare base weight warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareBaseWeightWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -360,6 +369,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare base dimension warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareBaseDimensionWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -398,6 +408,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare payment methods warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePaymentMethodsWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -425,6 +436,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare plugins warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePluginsWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -456,16 +468,18 @@ namespace Nop.Web.Areas.Admin.Factories
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
-
+            
             //check whether there are different plugins which try to override the same interface
             var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
-            var overridenServices = _componentContext.ComponentRegistry.Registrations.Where(p =>
-                    p.Services.Any(s =>
-                        s.Description.StartsWith("Nop.", StringComparison.InvariantCulture) &&
-                        !s.Description.StartsWith(typeof(IConsumer<>).FullName?.Replace("~1", string.Empty) ?? string.Empty,
-                            StringComparison.InvariantCulture))).SelectMany(p => p.Services.Select(x =>
-                    KeyValuePair.Create(x.Description, p.Target.Activator.LimitType.Assembly.GetName().Name)))
-                .Where(p => baseLibraries.All(library => !p.Value.StartsWith(library, StringComparison.InvariantCultureIgnoreCase)))
+            var overridenServices = _serviceCollection.Where(p =>
+                    p.ServiceType.FullName != null &&
+                    p.ServiceType.FullName.StartsWith("Nop.", StringComparison.InvariantCulture) &&
+                    !p.ServiceType.FullName.StartsWith(
+                        typeof(IConsumer<>).FullName?.Replace("~1", string.Empty) ?? string.Empty,
+                        StringComparison.InvariantCulture)).Select(p =>
+                    KeyValuePair.Create(p.ServiceType.FullName, p.ImplementationType?.Assembly.GetName().Name))
+                .Where(p => baseLibraries.All(library =>
+                    !p.Value?.StartsWith(library, StringComparison.InvariantCultureIgnoreCase) ?? false))
                 .GroupBy(p => p.Key, p => p.Value)
                 .Where(p => p.Count() > 1)
                 .ToDictionary(p => p.Key, p => p.ToList());
@@ -487,6 +501,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare performance settings warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePerformanceSettingsWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -517,6 +532,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare file permissions warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareFilePermissionsWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -593,6 +609,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare plugins enabled warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PreparePluginsEnabledWarningModelAsync(List<SystemWarningModel> models)
         {
             var plugins = await _pluginService.GetPluginsAsync<IPlugin>();
@@ -669,7 +686,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare system info model
         /// </summary>
         /// <param name="model">System info model</param>
-        /// <returns>System info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the system info model
+        /// </returns>
         public virtual async Task<SystemInfoModel> PrepareSystemInfoModelAsync(SystemInfoModel model)
         {
             if (model == null)
@@ -731,12 +751,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
 
-            model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
 
-            model.RedisEnabled = _appSettings.RedisConfig.Enabled;
-            model.UseRedisToStoreDataProtectionKeys = _appSettings.RedisConfig.StoreDataProtectionKeys;
-            model.UseRedisForCaching = _appSettings.RedisConfig.UseCaching;
-            model.UseRedisToStorePluginsInfo = _appSettings.RedisConfig.StorePluginsInfo;
+            var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
+
+            if (_appSettings.DistributedCacheConfig.Enabled)
+                currentStaticCacheManagerName +=
+                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.DistributedCacheConfig.DistributedCacheType)})";
+
+            model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 
             model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
 
@@ -747,6 +769,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare proxy connection warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProxyConnectionWarningModelAsync(IList<SystemWarningModel> models)
         {
             if (models == null)
@@ -781,7 +804,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare system warning models
         /// </summary>
-        /// <returns>List of system warning models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of system warning models
+        /// </returns>
         public virtual async Task<IList<SystemWarningModel>> PrepareSystemWarningModelsAsync()
         {
             var models = new List<SystemWarningModel>();
@@ -822,6 +848,12 @@ namespace Nop.Web.Areas.Admin.Factories
             //proxy connection
             await PrepareProxyConnectionWarningModelAsync(models);
 
+            //publish event
+            var warningEvent = new SystemWarningCreatedEvent();
+            await _eventPublisher.PublishAsync(warningEvent);
+            //add another warnings (for example from plugins) 
+            models.AddRange(warningEvent.SystemWarnings);
+
             return models;
         }
 
@@ -829,7 +861,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare maintenance model
         /// </summary>
         /// <param name="model">Maintenance model</param>
-        /// <returns>Maintenance model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the maintenance model
+        /// </returns>
         public virtual Task<MaintenanceModel> PrepareMaintenanceModelAsync(MaintenanceModel model)
         {
             if (model == null)
@@ -853,7 +888,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged backup file list model
         /// </summary>
         /// <param name="searchModel">Backup file search model</param>
-        /// <returns>Backup file list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the backup file list model
+        /// </returns>
         public virtual Task<BackupFileListModel> PrepareBackupFileListModelAsync(BackupFileSearchModel searchModel)
         {
             if (searchModel == null)
@@ -883,7 +921,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare URL record search model
         /// </summary>
         /// <param name="searchModel">URL record search model</param>
-        /// <returns>URL record search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the uRL record search model
+        /// </returns>
         public virtual async Task<UrlRecordSearchModel> PrepareUrlRecordSearchModelAsync(UrlRecordSearchModel searchModel)
         {
             if (searchModel == null)
@@ -925,7 +966,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged URL record list model
         /// </summary>
         /// <param name="searchModel">URL record search model</param>
-        /// <returns>URL record list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the uRL record list model
+        /// </returns>
         public virtual async Task<UrlRecordListModel> PrepareUrlRecordListModelAsync(UrlRecordSearchModel searchModel)
         {
             if (searchModel == null)
@@ -995,7 +1039,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare language selector model
         /// </summary>
-        /// <returns>Language selector model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language selector model
+        /// </returns>
         public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModelAsync()
         {
             var model = new LanguageSelectorModel
@@ -1013,7 +1060,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare popular search term search model
         /// </summary>
         /// <param name="searchModel">Popular search term search model</param>
-        /// <returns>Popular search term search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the popular search term search model
+        /// </returns>
         public virtual Task<PopularSearchTermSearchModel> PreparePopularSearchTermSearchModelAsync(PopularSearchTermSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1029,7 +1079,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged popular search term list model
         /// </summary>
         /// <param name="searchModel">Popular search term search model</param>
-        /// <returns>Popular search term list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the popular search term list model
+        /// </returns>
         public virtual async Task<PopularSearchTermListModel> PreparePopularSearchTermListModelAsync(PopularSearchTermSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1054,7 +1107,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare common statistics model
         /// </summary>
-        /// <returns>Common statistics model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the common statistics model
+        /// </returns>
         public virtual async Task<CommonStatisticsModel> PrepareCommonStatisticsModelAsync()
         {
             var model = new CommonStatisticsModel

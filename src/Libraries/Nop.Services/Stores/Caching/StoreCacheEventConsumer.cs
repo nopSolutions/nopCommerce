@@ -16,6 +16,7 @@ namespace Nop.Services.Stores.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(Store entity)
         {
             await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);

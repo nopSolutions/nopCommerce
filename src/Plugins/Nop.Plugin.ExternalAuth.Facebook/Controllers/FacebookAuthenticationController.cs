@@ -66,6 +66,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
@@ -84,6 +85,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [AutoValidateAntiforgeryToken]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
@@ -105,6 +107,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             return await Configure();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Login(string returnUrl)
         {
             var methodIsAvailable = await _authenticationPluginManager
@@ -128,6 +131,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> LoginCallback(string returnUrl)
         {
             //authenticate Facebook user

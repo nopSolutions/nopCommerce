@@ -44,7 +44,9 @@
                 <div asp-validation-summary="All" class="message-error"></div>
 
                 <p>@ILS.GetResource("Tooltip2")</p>
-                <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank" rel="noopener noreferrer">@ILS.GetResource("Documentation2")</a>.</p>
+                <p>@ILS.GetResource("Documentation1") 
+                    <a href="@(Docs.Main + Utm.OnInstall)" target="_blank" rel="noopener noreferrer">@ILS.GetResource("Documentation2")</a>.
+                </p>
 
                 <script>
                     function showThrobber(message) {
@@ -59,7 +61,7 @@
                             if ($('#installation-form').valid()) {
                                 $("html, body").animate({ scrollTop: 0 }, 400);
                                 showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
-                                $('input[type=submit]', this).attr('disabled', 'disabled');
+                                $('button[type=submit]', this).attr('disabled', 'disabled');
                             }
                         });
                     });
@@ -68,7 +70,7 @@
                         $('#restart-form').submit(function () {
                             $("html, body").animate({ scrollTop: 0 }, 400);
                             showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
-                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                            $('button[type=submit]', this).attr('disabled', 'disabled');
                         });
                     });
 

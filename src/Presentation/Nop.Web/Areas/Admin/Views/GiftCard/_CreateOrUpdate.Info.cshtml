@@ -143,7 +143,7 @@
             <div class="col-md-9">
                 <div class="input-group input-group-short">
                     <div class="input-group-text">
-                        <div class="form-text-row">@T(Model.IsRecipientNotified ? "Admin.Common.Yes" : "Admin.Common.No")</div>
+                        @T(Model.IsRecipientNotified ? "Admin.Common.Yes" : "Admin.Common.No")
                     </div>
                     <div class="input-group-append">
                         <button type="submit" name="notifyRecipient" class="btn btn-info">
@@ -178,13 +178,13 @@
     function toggleGiftCardType() {
         var selectedGiftCardTypeId = $("#@Html.IdFor(model => model.GiftCardTypeId)").val();
         if (selectedGiftCardTypeId == @(((int) GiftCardType.Virtual).ToString())) {
-            $('#pnlRecipientEmail').showField();
-            $('#pnlSenderEmail').showField();
-            $('#pnlNotifyRecipient').showField();
+            $('#pnlRecipientEmail').showElement();
+            $('#pnlSenderEmail').showElement();
+            $('#pnlNotifyRecipient').showElement();
         } else {
-            $('#pnlRecipientEmail').hide();
-            $('#pnlSenderEmail').hide();
-            $('#pnlNotifyRecipient').hide();
+            $('#pnlRecipientEmail').hideElement();
+            $('#pnlSenderEmail').hideElement();
+            $('#pnlNotifyRecipient').hideElement();
         }
     }
 </script>

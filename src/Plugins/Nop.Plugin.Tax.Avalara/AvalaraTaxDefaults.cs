@@ -48,15 +48,22 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         /// <remarks>
         /// {0} - Customer id
-        /// {1} - Tax category
-        /// {2} - Product SKU
-        /// {3} - Address
-        /// {4} - City
-        /// {5} - State or province identifier
-        /// {6} - Country identifier
-        /// {7} - Zip postal code
+        /// {1} - Tax category id
+        /// {2} - Address
+        /// {3} - City
+        /// {4} - State or province identifier
+        /// {5} - Country identifier
+        /// {6} - Zip postal code
         /// </remarks>
-        public static CacheKey TaxRateCacheKey => new CacheKey("Nop.avalara.taxrate-{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}");
+        public static CacheKey TaxRateCacheKey => new CacheKey("Nop.avalara.taxrate.{0}-{1}-{2}-{3}-{4}-{5}-{6}", TaxRateCacheKeyByCustomerPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {0} : Customer id
+        /// </remarks>
+        public static string TaxRateCacheKeyByCustomerPrefix => "Nop.avalara.taxrate.{0}-";
 
         /// <summary>
         /// Gets the key for caching Avalara tax code types

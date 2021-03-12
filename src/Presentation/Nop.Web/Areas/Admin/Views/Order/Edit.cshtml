@@ -23,26 +23,26 @@
 
     <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
         <div class="content-header clearfix">
-            <h1 class="pull-left">
+            <h1 class="float-left">
                 @T("Admin.Orders.EditOrderDetails") - @Model.CustomOrderNumber
                 <small>
-                    <i class="fa fa-arrow-circle-left"></i>
+                    <i class="fas fa-arrow-circle-left"></i>
                     <a asp-action="List">@T("Admin.Orders.BackToList")</a>
                 </small>
             </h1>
-            <div class="pull-right">
+            <div class="float-right">
                 <a asp-action="PdfInvoice" asp-route-orderId="@Model.Id" class="btn btn-info">
-                    <i class="fa fa-file-pdf-o"></i>
+                    <i class="far fa-file-pdf"></i>
                     @T("Admin.Orders.PdfInvoice")
                 </a>
                 @if (!Model.IsLoggedInAsVendor)
                 {
                     <span id="order-delete" class="btn btn-danger">
-                        <i class="fa fa-trash-o"></i>
+                        <i class="far fa-trash-alt"></i>
                         @T("Admin.Common.Delete")
                     </span>
                 }
-                <input type="submit" id="btnRefreshPage" style="display: none" />
+                <button type="submit" id="btnRefreshPage" style="display: none"></button>
                 <script>
                     $(document).ready(function () {
                         $('#btnRefreshPage').click(function () {
@@ -62,13 +62,13 @@
                 <div class="form-horizontal">
 
                     <nop-cards id="order-cards">
-                        <nop-card asp-name="order-info" asp-icon="fa fa-info" asp-title="@T("Admin.Orders.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-card>
-                        <nop-card asp-name="order-billing-shipping" asp-icon="fa fa-truck" asp-title="@T("Admin.Orders.BillingShippingInfo")" asp-hide-block-attribute-name="@hideBillingAndShippingBlockAttributeName" asp-hide="@hideBillingAndShippingBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-card>
-                        <nop-card asp-name="order-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-card>
+                        <nop-card asp-name="order-info" asp-icon="fas fa-info" asp-title="@T("Admin.Orders.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-card>
+                        <nop-card asp-name="order-billing-shipping" asp-icon="fas fa-truck" asp-title="@T("Admin.Orders.BillingShippingInfo")" asp-hide-block-attribute-name="@hideBillingAndShippingBlockAttributeName" asp-hide="@hideBillingAndShippingBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-card>
+                        <nop-card asp-name="order-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-card>
 
                         @if (!Model.IsLoggedInAsVendor)
                         {
-                            <nop-card asp-name="order-notes" asp-icon="fa fa-sticky-note-o" asp-title="@T("Admin.Orders.OrderNotes")" asp-hide-block-attribute-name="@hideNotesBlockAttributeName" asp-hide="@hideNotesBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-card>
+                            <nop-card asp-name="order-notes" asp-icon="far fa-sticky-note" asp-title="@T("Admin.Orders.OrderNotes")" asp-hide-block-attribute-name="@hideNotesBlockAttributeName" asp-hide="@hideNotesBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-card>
                         }
 
                         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBlock, additionalData = Model })

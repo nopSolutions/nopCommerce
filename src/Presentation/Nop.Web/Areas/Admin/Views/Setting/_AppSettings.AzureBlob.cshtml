@@ -75,11 +75,11 @@
 
     function toggleAzureDataProtection() {
         if ($('#@Html.IdFor(model => model.AzureBlobConfigModel.StoreDataProtectionKeys)').is(':checked')) {
-            $('#azure-data-protection-container').showField();
-            $('#azure-data-protection-vault').showField();
+            $('#azure-data-protection-container').showElement();
+            $('#azure-data-protection-vault').showElement();
         } else {
-            $('#azure-data-protection-container').hide();
-            $('#azure-data-protection-vault').hide();
+            $('#azure-data-protection-container').hideElement();
+            $('#azure-data-protection-vault').hideElement();
         }
     }
 </script>

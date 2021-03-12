@@ -140,6 +140,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.WishlistEnabled.Should().BeTrue();
             model.ShoppingCartEnabled.Should().BeTrue();
             model.SitemapEnabled.Should().BeTrue();
+            model.SearchEnabled.Should().BeTrue();
             model.WorkingLanguageId.Should().Be(1);
             model.BlogEnabled.Should().BeTrue();
             model.CompareProductsEnabled.Should().Be(_catalogSettings.CompareProductsEnabled);
@@ -271,7 +272,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.CurrentStoreTheme.Name.Should().Be("DefaultClean");
             model.CurrentStoreTheme.Title.Should().Be("Default clean");
             model.AvailableStoreThemes.Should().NotBeNull();
-            model.AvailableStoreThemes.Count.Should().Be(1);
+            model.AvailableStoreThemes.Count.Should().BeGreaterThan(0);
         }
 
         [Test]
@@ -286,7 +287,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         {
             var model = await _commonModelFactory.PrepareRobotsTextFileAsync();
             model.Should().NotBeNullOrEmpty();
-            model.Trim().Split("\r\n").Length.Should().Be(71);
+            model.Trim().Split("\r\n").Length.Should().Be(73);
         }
     }
 }

@@ -8,12 +8,12 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Stores")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreListButtons })
@@ -26,7 +26,9 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
-                    @await Html.PartialAsync("Table",new DataTablesModel
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.MultiStore", Docs.MultiStore + Utm.OnAdmin)" />
+
+                    @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "stores-grid",
                         UrlRead = new DataUrl("List", "Store", null),

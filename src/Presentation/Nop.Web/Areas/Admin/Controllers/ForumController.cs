@@ -51,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -63,6 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ForumGroupList(ForumGroupSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -75,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ForumList(ForumSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -94,6 +97,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Create
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CreateForumGroup()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -106,6 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -130,6 +135,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CreateForum()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -142,6 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CreateForum(ForumModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -170,6 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Edit
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EditForumGroup(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -187,6 +195,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -215,6 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EditForum(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -232,6 +242,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EditForum(ForumModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -265,6 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Delete
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteForumGroup(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
@@ -283,6 +295,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteForum(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))

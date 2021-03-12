@@ -101,7 +101,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Create common query parameters for the request
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Created query parameters</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the created query parameters
+        /// </returns>
         private async Task<IDictionary<string, string>> CreateQueryParametersAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //get store location
@@ -155,6 +158,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         /// <param name="parameters">Query parameters</param>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task AddItemsParametersAsync(IDictionary<string, string> parameters, PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //upload order items
@@ -264,6 +268,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         /// <param name="parameters">Query parameters</param>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task AddOrderTotalParametersAsync(IDictionary<string, string> parameters, PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //round order total
@@ -285,7 +290,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Verifies IPN
         /// </summary>
         /// <param name="formString">Form string</param>
-        /// <returns>Result, Values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result, Values
+        /// </returns>
         public async Task<(bool result, Dictionary<string, string> values)> VerifyIpnAsync(string formString)
         {
             var response = WebUtility.UrlDecode(await _payPalStandardHttpClient.VerifyIpnAsync(formString));
@@ -307,7 +315,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Gets PDT details
         /// </summary>
         /// <param name="tx">TX</param>
-        /// <returns>Result, Values, Response</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result, Values, Response
+        /// </returns>
         public async Task<(bool result, Dictionary<string, string> values, string response)> GetPdtDetailsAsync(string tx)
         {
             var response = WebUtility.UrlDecode(await _payPalStandardHttpClient.GetPdtDetailsAsync(tx));
@@ -338,7 +349,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Process a payment
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the process payment result
+        /// </returns>
         public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
             return Task.FromResult(new ProcessPaymentResult());
@@ -348,6 +362,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             var baseUrl = _payPalStandardPaymentSettings.UseSandbox ?
@@ -392,7 +407,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <returns>true - hide; false - display.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - hide; false - display.
+        /// </returns>
         public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
         {
             //you can put any logic here
@@ -405,7 +423,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Gets additional handling fee
         /// </summary>
         /// <param name="cart">Shopping cart</param>
-        /// <returns>Additional handling fee</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the additional handling fee
+        /// </returns>
         public async Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
         {
             return await _paymentService.CalculateAdditionalFeeAsync(cart,
@@ -416,7 +437,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Captures payment
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
-        /// <returns>Capture payment result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the capture payment result
+        /// </returns>
         public Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
         {
             return Task.FromResult(new CapturePaymentResult { Errors = new[] { "Capture method not supported" } });
@@ -426,7 +450,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Refunds a payment
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
         {
             return Task.FromResult(new RefundPaymentResult { Errors = new[] { "Refund method not supported" } });
@@ -436,7 +463,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Voids a payment
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
         {
             return Task.FromResult(new VoidPaymentResult { Errors = new[] { "Void method not supported" } });
@@ -446,7 +476,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Process recurring payment
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the process payment result
+        /// </returns>
         public Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
             return Task.FromResult(new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } });
@@ -456,7 +489,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             return Task.FromResult(new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } });
@@ -466,7 +502,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
             if (order == null)
@@ -484,7 +523,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Validate payment form
         /// </summary>
         /// <param name="form">The parsed form values</param>
-        /// <returns>List of validating errors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of validating errors
+        /// </returns>
         public Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
         {
             return Task.FromResult<IList<string>>(new List<string>());
@@ -494,7 +536,10 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Get payment information
         /// </summary>
         /// <param name="form">The parsed form values</param>
-        /// <returns>Payment info holder</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment info holder
+        /// </returns>
         public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
             return Task.FromResult(new ProcessPaymentRequest());
@@ -520,6 +565,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <summary>
         /// Install the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //settings
@@ -550,14 +596,15 @@ namespace Nop.Plugin.Payments.PayPalStandard
 	                    <br />
 	                    <br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br />
 	                    <br />1. Log in to your PayPal account (click <a href=""https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8"" target=""_blank"">here</a> to create your account).
-	                    <br />2. Click the Profile button.
-	                    <br />3. Click the Profile and Settings button.
-	                    <br />4. Select the My selling tools item on left panel.
-	                    <br />5. Click Website Preferences Update in the Selling online section.
-	                    <br />6. Under Auto Return for Website Payments, click the On radio button.
-	                    <br />7. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment ({0}).
-                        <br />8. Under Payment Data Transfer, click the On radio button and get your PDT identity token.
-	                    <br />9. Click Save.
+	                    <br />2. Click on the Profile button.
+	                    <br />3. Click on the <b>Account Settings</b> link.
+	                    <br />4. Select the <b>Website payments</b> item on left panel.
+	                    <br />5. Find <b>Website Preferences</b> and click on the <b>Update</b> link.
+	                    <br />6. Under <b>Auto Return</b> for <b>Website payments preferences</b>, select the <b>On</b> radio button.
+	                    <br />7. For the <b>Return URL</b>, enter and save the URL on your site that will receive the transaction ID posted by PayPal after a customer payment (<em>{0}</em>).
+                        <br />8. Under <b>Payment Data Transfer</b>, select the <b>On</b> radio button and get your <b>Identity token</b>.
+	                    <br />9. Enter <b>Identity token</b> in the field below on the plugin configuration page.
+                        <br />10. Click <b>Save</b> button on this page.
 	                    <br />
                     </p>",
                 ["Plugins.Payments.PayPalStandard.PaymentMethodDescription"] = "You will be redirected to PayPal site to complete the payment",
@@ -571,6 +618,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings
@@ -585,6 +633,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetPaymentMethodDescriptionAsync()
         {
             return await _localizationService.GetResourceAsync("Plugins.Payments.PayPalStandard.PaymentMethodDescription");

@@ -53,7 +53,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare customer role search model
         /// </summary>
         /// <param name="searchModel">Customer role search model</param>
-        /// <returns>Customer role search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role search model
+        /// </returns>
         public virtual Task<CustomerRoleSearchModel> PrepareCustomerRoleSearchModelAsync(CustomerRoleSearchModel searchModel)
         {
             if (searchModel == null)
@@ -69,7 +72,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged customer role list model
         /// </summary>
         /// <param name="searchModel">Customer role search model</param>
-        /// <returns>Customer role list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role list model
+        /// </returns>
         public virtual async Task<CustomerRoleListModel> PrepareCustomerRoleListModelAsync(CustomerRoleSearchModel searchModel)
         {
             if (searchModel == null)
@@ -102,7 +108,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Customer role model</param>
         /// <param name="customerRole">Customer role</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Customer role model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role model
+        /// </returns>
         public virtual async Task<CustomerRoleModel> PrepareCustomerRoleModelAsync(CustomerRoleModel model, CustomerRole customerRole, bool excludeProperties = false)
         {
             if (customerRole != null)
@@ -126,7 +135,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare customer role product search model
         /// </summary>
         /// <param name="searchModel">Customer role product search model</param>
-        /// <returns>Customer role product search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role product search model
+        /// </returns>
         public virtual async Task<CustomerRoleProductSearchModel> PrepareCustomerRoleProductSearchModelAsync(CustomerRoleProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -160,7 +172,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged customer role product list model
         /// </summary>
         /// <param name="searchModel">Customer role product search model</param>
-        /// <returns>Customer role product list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role product list model
+        /// </returns>
         public virtual async Task<CustomerRoleProductListModel> PrepareCustomerRoleProductListModelAsync(CustomerRoleProductSearchModel searchModel)
         {
             if (searchModel == null)
@@ -171,9 +186,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
+            var products = await _productService.SearchProductsAsync(showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
-                manufacturerId: searchModel.SearchManufacturerId,
+                manufacturerIds: new List<int> { searchModel.SearchManufacturerId },
                 storeId: searchModel.SearchStoreId,
                 vendorId: searchModel.SearchVendorId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,

@@ -9,17 +9,11 @@ namespace Nop.Web.Models.Catalog
     {
         public SearchModel()
         {
-            PagingFilteringContext = new CatalogPagingFilteringModel();
-            Products = new List<ProductOverviewModel>();
-
             AvailableCategories = new List<SelectListItem>();
             AvailableManufacturers = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
+            CatalogProductsModel = new CatalogProductsModel();
         }
-
-        public string Warning { get; set; }
-
-        public bool NoResults { get; set; }
 
         /// <summary>
         /// Query string
@@ -49,16 +43,6 @@ namespace Nop.Web.Models.Catalog
         public int vid { get; set; }
 
         /// <summary>
-        /// Price - From 
-        /// </summary>
-        public string pf { get; set; }
-
-        /// <summary>
-        /// Price - To
-        /// </summary>
-        public string pt { get; set; }
-
-        /// <summary>
         /// A value indicating whether to search in descriptions
         /// </summary>
         [NopResourceDisplayName("Search.SearchInDescriptions")]
@@ -68,20 +52,18 @@ namespace Nop.Web.Models.Catalog
         /// A value indicating whether "advanced search" is enabled
         /// </summary>
         [NopResourceDisplayName("Search.AdvancedSearch")]
-        public bool adv { get; set; }
+        public bool advs { get; set; }
 
         /// <summary>
         /// A value indicating whether "allow search by vendor" is enabled
         /// </summary>
         public bool asv { get; set; }
 
+        public CatalogProductsModel CatalogProductsModel { get; set; }
+
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
-
-
-        public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
-        public IList<ProductOverviewModel> Products { get; set; }
 
         #region Nested classes
 

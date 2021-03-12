@@ -54,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AccessDenied(string pageUrl)
         {
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
@@ -68,6 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Permissions()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))
@@ -80,6 +82,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Permissions")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PermissionsSave(PermissionMappingModel model, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAcl))

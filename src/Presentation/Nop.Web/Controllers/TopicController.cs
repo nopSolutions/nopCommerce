@@ -6,6 +6,7 @@ using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -43,6 +44,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicDetails(int topicId)
         {
             //allow administrators to preview any topic
@@ -61,6 +63,8 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
+        [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicDetailsPopup(string systemName)
         {
             var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
@@ -76,6 +80,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Authenticate(int id, string password)
         {
             var authResult = false;

@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Framework.Models.Extensions;
@@ -26,9 +27,10 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -44,9 +46,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public VendorModelFactory(IAddressAttributeModelFactory addressAttributeModelFactory,
+        public VendorModelFactory(CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            IAddressModelFactory addressModelFactory,
             IAddressService addressService,
-            IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
@@ -58,9 +61,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
-            _baseAdminModelFactory = baseAdminModelFactory;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
@@ -82,6 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor associated customer models</param>
         /// <param name="vendor">Vendor</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAssociatedCustomerModelsAsync(IList<VendorAssociatedCustomerModel> models, Vendor vendor)
         {
             if (models == null)
@@ -106,6 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor attribute models</param>
         /// <param name="vendor">Vendor</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareVendorAttributeModelsAsync(IList<VendorModel.VendorAttributeModel> models, Vendor vendor)
         {
             if (models == null)
@@ -196,37 +202,6 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set some of address fields as enabled and required
-            model.CountryEnabled = true;
-            model.StateProvinceEnabled = true;
-            model.CountyEnabled = true;
-            model.CityEnabled = true;
-            model.StreetAddressEnabled = true;
-            model.StreetAddress2Enabled = true;
-            model.ZipPostalCodeEnabled = true;
-            model.PhoneEnabled = true;
-            model.FaxEnabled = true;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-
-            //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
-        }
-
-        /// <summary>
         /// Prepare vendor note search model
         /// </summary>
         /// <param name="searchModel">Vendor note search model</param>
@@ -256,7 +231,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare vendor search model
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
-        /// <returns>Vendor search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor search model
+        /// </returns>
         public virtual Task<VendorSearchModel> PrepareVendorSearchModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
@@ -272,7 +250,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged vendor list model
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
-        /// <returns>Vendor list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor list model
+        /// </returns>
         public virtual async Task<VendorListModel> PrepareVendorListModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
@@ -307,7 +288,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Vendor model</param>
         /// <param name="vendor">Vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Vendor model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor model
+        /// </returns>
         public virtual async Task<VendorModel> PrepareVendorModelAsync(VendorModel model, Vendor vendor, bool excludeProperties = false)
         {
             Action<VendorLocalizedModel, int> localizedModelConfiguration = null;
@@ -346,7 +330,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Active = true;
                 model.AllowCustomersToSelectPageSize = true;
                 model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
+                model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
+                model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
+                model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
+
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 
             //prepare localized models
             if (!excludeProperties)
@@ -359,7 +349,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressByIdAsync(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await PrepareAddressModelAsync(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             return model;
         }
@@ -369,7 +359,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor note search model</param>
         /// <param name="vendor">Vendor</param>
-        /// <returns>Vendor note list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor note list model
+        /// </returns>
         public virtual async Task<VendorNoteListModel> PrepareVendorNoteListModelAsync(VendorNoteSearchModel searchModel, Vendor vendor)
         {
             if (searchModel == null)

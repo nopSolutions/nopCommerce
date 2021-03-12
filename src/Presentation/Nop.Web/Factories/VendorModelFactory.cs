@@ -69,7 +69,10 @@ namespace Nop.Web.Factories
         /// Prepare vendor attribute models
         /// </summary>
         /// <param name="vendorAttributesXml">Vendor attributes in XML format</param>
-        /// <returns>List of the vendor attribute model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the vendor attribute model
+        /// </returns>
         protected virtual async Task<IList<VendorAttributeModel>> PrepareVendorAttributesAsync(string vendorAttributesXml)
         {
             var result = new List<VendorAttributeModel>();
@@ -165,7 +168,10 @@ namespace Nop.Web.Factories
         /// <param name="validateVendor">Whether to validate that the customer is already a vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="vendorAttributesXml">Vendor attributes in XML format</param>
-        /// <returns>The apply vendor model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the apply vendor model
+        /// </returns>
         public virtual async Task<ApplyVendorModel> PrepareApplyVendorModelAsync(ApplyVendorModel model,
             bool validateVendor, bool excludeProperties, string vendorAttributesXml)
         {
@@ -200,7 +206,10 @@ namespace Nop.Web.Factories
         /// <param name="model">Vendor info model</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overriddenVendorAttributesXml">Overridden vendor attributes in XML format; pass null to use VendorAttributes of vendor</param>
-        /// <returns>Vendor info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor info model
+        /// </returns>
         public virtual async Task<VendorInfoModel> PrepareVendorInfoModelAsync(VendorInfoModel model,
             bool excludeProperties, string overriddenVendorAttributesXml = "")
         {

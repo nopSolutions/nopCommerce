@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
-using Nop.Core.Domain.Common;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
@@ -17,6 +17,7 @@ namespace Nop.Services.Tasks
     /// <summary>
     /// Represents task thread
     /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
     public partial class TaskThread : IDisposable
     {
         #region Fields
@@ -34,8 +35,8 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.Url}{NopTaskDefaults.ScheduleTaskPath}";
-            _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
+            _timeout = EngineContext.Current.Resolve<AppSettings>().CommonConfig.ScheduleTaskRunTimeout;
         }
 
         internal TaskThread()
@@ -76,9 +77,9 @@ namespace Nop.Services.Tasks
                     var serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
                     using var scope = serviceScopeFactory.CreateScope();
                     // Resolve
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
-                    var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-                    var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
+                    var logger = EngineContext.Current.Resolve<ILogger>(scope);
+                    var localizationService = EngineContext.Current.Resolve<ILocalizationService>(scope);
+                    var storeContext = EngineContext.Current.Resolve<IStoreContext>(scope);
 
                     var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResourceAsync("ScheduleTasks.TimeoutError") : ex.Message;
 

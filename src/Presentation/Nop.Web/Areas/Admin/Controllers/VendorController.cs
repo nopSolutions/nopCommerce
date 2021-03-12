@@ -83,6 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdatePictureSeoNamesAsync(Vendor vendor)
         {
             var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
@@ -90,6 +91,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(vendor.Name));
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(Vendor vendor, VendorModel model)
         {
             foreach (var localized in model.Locales)
@@ -125,6 +127,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> ParseVendorAttributesAsync(IFormCollection form)
         {
             if (form == null)
@@ -210,6 +213,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -222,6 +226,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List(VendorSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -233,6 +238,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Create()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -246,6 +252,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Create(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -306,6 +313,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Edit(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -323,6 +331,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Edit(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -414,6 +423,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -449,6 +459,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Vendor notes
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> VendorNotesSelect(VendorNoteSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -464,6 +475,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> VendorNoteAdd(int vendorId, string message)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
@@ -488,6 +500,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> VendorNoteDelete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))

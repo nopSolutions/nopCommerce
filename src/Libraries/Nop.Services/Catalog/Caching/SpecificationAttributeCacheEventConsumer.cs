@@ -14,6 +14,7 @@ namespace Nop.Services.Catalog.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(SpecificationAttribute entity, EntityEventType entityEventType)
         {
             await RemoveAsync(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
@@ -22,7 +23,10 @@ namespace Nop.Services.Catalog.Caching
             {
                 await RemoveByPrefixAsync(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
                 await RemoveByPrefixAsync(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
+                await RemoveByPrefixAsync(NopCatalogDefaults.FilterableSpecificationAttributeOptionsPrefix);
             }
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

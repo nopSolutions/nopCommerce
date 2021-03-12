@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -46,7 +45,7 @@ namespace Nop.Services.Authentication
         /// Invoke middleware actions
         /// </summary>
         /// <param name="context">HTTP context</param>
-        /// <returns>Task</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature
@@ -56,7 +55,7 @@ namespace Nop.Services.Authentication
             });
 
             // Give any IAuthenticationRequestHandler schemes a chance to handle the request
-            var handlers = context.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
+            var handlers = EngineContext.Current.Resolve<IAuthenticationHandlerProvider>();
             foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
             {
                 try

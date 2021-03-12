@@ -20,7 +20,6 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly IRepository<Product> _productRepository;
@@ -35,7 +34,7 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public ProductTagService(CatalogSettings catalogSettings,
+        public ProductTagService(
             IAclService aclService,
             ICustomerService customerService,
             IRepository<Product> productRepository,
@@ -46,7 +45,6 @@ namespace Nop.Services.Catalog
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _aclService = aclService;
             _customerService = customerService;
             _productRepository = productRepository;
@@ -67,6 +65,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="productTagId">Product tag identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task DeleteProductProductTagMappingAsync(int productId, int productTagId)
         {
             var mappingRecord = await _productProductTagMappingRepository.Table
@@ -79,73 +78,14 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Filter hidden entries according to constraints if any
-        /// </summary>
-        /// <param name="query">Query to filter</param>
-        /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
-        /// <returns>Filtered query</returns>
-        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
-            int storeId, int[] customerRolesIds)
-            where TEntity : Product
-        {
-            //filter unpublished entries
-            query = query.Where(entry => entry.Published);
-
-            //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
-                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
-
-            //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
-
-            return query;
-        }
-
-        /// <summary>
-        /// Get product count for each of existing product tag
-        /// </summary>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Dictionary of "product tag ID : product count"</returns>
-        protected virtual async Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden)
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRolesIds, showHidden);
-
-            return await _staticCacheManager.GetAsync(key, async () =>
-            {
-                var query = _productProductTagMappingRepository.Table;
-
-                if (!showHidden)
-                {
-                    var productsQuery = await FilterHiddenEntriesAsync(_productRepository.Table, storeId, customerRolesIds);
-                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
-                }
-
-                var pTagCount = from pt in _productTagRepository.Table
-                                join ptm in query on pt.Id equals ptm.ProductTagId into ptmDefaults
-                                from ptm in ptmDefaults.DefaultIfEmpty()
-                                group pt by pt.Id into ptGrouped
-                                select new
-                                {
-                                    ProductTagId = ptGrouped.Key,
-                                    ProductCount = ptGrouped.Count()
-                                };
-
-                return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
-            });
-        }
-
-        /// <summary>
         /// Indicates whether a product tag exists
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productTagId">Product tag identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         protected virtual async Task<bool> ProductTagExistsAsync(Product product, int productTagId)
         {
             if (product == null)
@@ -159,7 +99,10 @@ namespace Nop.Services.Catalog
         /// Gets product tag by name
         /// </summary>
         /// <param name="name">Product tag name</param>
-        /// <returns>Product tag</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tag
+        /// </returns>
         protected virtual async Task<ProductTag> GetProductTagByNameAsync(string name)
         {
             var query = from pt in _productTagRepository.Table
@@ -174,6 +117,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task InsertProductTagAsync(ProductTag productTag)
         {
             await _productTagRepository.InsertAsync(productTag);
@@ -187,6 +131,7 @@ namespace Nop.Services.Catalog
         /// Delete a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductTagAsync(ProductTag productTag)
         {
             await _productTagRepository.DeleteAsync(productTag);
@@ -196,6 +141,7 @@ namespace Nop.Services.Catalog
         /// Delete product tags
         /// </summary>
         /// <param name="productTags">Product tags</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductTagsAsync(IList<ProductTag> productTags)
         {
             if (productTags == null)
@@ -209,7 +155,10 @@ namespace Nop.Services.Catalog
         /// Gets all product tags
         /// </summary>
         /// <param name="tagName">Tag name</param>
-        /// <returns>Product tags</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tags
+        /// </returns>
         public virtual async Task<IList<ProductTag>> GetAllProductTagsAsync(string tagName = null)
         {
             var allProductTags = await _productTagRepository.GetAllAsync(query => query, getCacheKey: cache => default);
@@ -224,26 +173,34 @@ namespace Nop.Services.Catalog
         /// Gets all product tags by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <returns>Product tags</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tags
+        /// </returns>
         public virtual async Task<IList<ProductTag>> GetAllProductTagsByProductIdAsync(int productId)
         {
-            var productTags = await _productTagRepository.GetAllAsync(query =>
-            {
-                return from pt in query
-                       join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                       where ppt.ProductId == productId
-                       orderby pt.Id
-                       select pt;
-            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId));
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId);
 
-            return productTags;
+            return await _staticCacheManager.GetAsync(key, async () =>
+            {
+                var tagMapping = from ptm in _productProductTagMappingRepository.Table
+                                 join pt in _productTagRepository.Table on ptm.ProductTagId equals pt.Id
+                                 where ptm.ProductId == productId
+                                 orderby pt.Id
+                                 select pt;
+
+                return await tagMapping.ToListAsync();
+            });
         }
 
         /// <summary>
         /// Gets product tag
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
-        /// <returns>Product tag</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tag
+        /// </returns>
         public virtual async Task<ProductTag> GetProductTagByIdAsync(int productTagId)
         {
             return await _productTagRepository.GetByIdAsync(productTagId, cache => default);
@@ -253,7 +210,10 @@ namespace Nop.Services.Catalog
         /// Gets product tags
         /// </summary>
         /// <param name="productTagIds">Product tags identifiers</param>
-        /// <returns>Product tags</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product tags
+        /// </returns>
         public virtual async Task<IList<ProductTag>> GetProductTagsByIdsAsync(int[] productTagIds)
         {
             return await _productTagRepository.GetByIdsAsync(productTagIds);
@@ -263,6 +223,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product-product tag mapping
         /// </summary>
         /// <param name="tagMapping">Product-product tag mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductProductTagMappingAsync(ProductProductTagMapping tagMapping)
         {
             await _productProductTagMappingRepository.InsertAsync(tagMapping);
@@ -272,6 +233,7 @@ namespace Nop.Services.Catalog
         /// Updates the product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTagAsync(ProductTag productTag)
         {
             if (productTag == null)
@@ -284,13 +246,16 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get number of products
+        /// Get products quantity linked to a passed tag identifier
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Number of products</returns>
-        public virtual async Task<int> GetProductCountAsync(int productTagId, int storeId, bool showHidden = false)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of products
+        /// </returns>
+        public virtual async Task<int> GetProductCountByProductTagIdAsync(int productTagId, int storeId, bool showHidden = false)
         {
             var dictionary = await GetProductCountAsync(storeId, showHidden);
             if (dictionary.ContainsKey(productTagId))
@@ -300,10 +265,57 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Get product count for every linked tag
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dictionary of "product tag ID : product count"
+        /// </returns>
+        public virtual async Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden = false)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRoleIds, showHidden);
+
+            return await _staticCacheManager.GetAsync(key, async () =>
+            {
+                var query = _productProductTagMappingRepository.Table;
+
+                if (!showHidden)
+                {
+                    var productsQuery = _productRepository.Table.Where(p => p.Published);
+
+                    //apply store mapping constraints
+                    productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+                    //apply ACL constraints
+                    productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
+
+                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
+                }
+
+                var pTagCount = from pt in _productTagRepository.Table
+                                join ptm in query on pt.Id equals ptm.ProductTagId
+                                group ptm by ptm.ProductTagId into ptmGrouped
+                                select new
+                                {
+                                    ProductTagId = ptmGrouped.Key,
+                                    ProductCount = ptmGrouped.Count()
+                                };
+
+                return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+            });
+        }
+        
+        /// <summary>
         /// Update product tags
         /// </summary>
         /// <param name="product">Product for update</param>
         /// <param name="productTags">Product tags</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductTagsAsync(Product product, string[] productTags)
         {
             if (product == null)

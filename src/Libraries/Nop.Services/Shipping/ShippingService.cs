@@ -100,7 +100,10 @@ namespace Nop.Services.Shipping
         /// Check whether there are multiple package items in the cart for the delivery
         /// </summary>
         /// <param name="items">Package items</param>
-        /// <returns>True if there are multiple items; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if there are multiple items; otherwise false
+        /// </returns>
         protected async Task<bool> AreMultipleItemsAsync(IList<GetShippingOptionRequest.PackageItem> items)
         {
             //no items
@@ -136,7 +139,10 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
-        /// <returns>Width. Length. Height</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the width. Length. Height
+        /// </returns>
         protected virtual async Task<(decimal width, decimal length, decimal height)> GetAssociatedProductDimensionsAsync(ShoppingCartItem shoppingCartItem,
             bool ignoreFreeShippedItems = false)
         {
@@ -174,13 +180,231 @@ namespace Nop.Services.Shipping
             return (width, length, height);
         }
 
+        #endregion
+
+        #region Methods
+
+        #region Shipping methods
+
+        /// <summary>
+        /// Deletes a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">The shipping method</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteShippingMethodAsync(ShippingMethod shippingMethod)
+        {
+            await _shippingMethodRepository.DeleteAsync(shippingMethod);
+        }
+
+        /// <summary>
+        /// Gets a shipping method
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping method
+        /// </returns>
+        public virtual async Task<ShippingMethod> GetShippingMethodByIdAsync(int shippingMethodId)
+        {
+            return await _shippingMethodRepository.GetByIdAsync(shippingMethodId, cache => default);
+        }
+
+        /// <summary>
+        /// Gets all shipping methods
+        /// </summary>
+        /// <param name="filterByCountryId">The country identifier to filter by</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping methods
+        /// </returns>
+        public virtual async Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null)
+        {
+            if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
+            { 
+                return await _shippingMethodRepository.GetAllAsync(query =>
+                {
+                    var query1 = from sm in query
+                        join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
+                        where smcm.CountryId == filterByCountryId.Value
+                        select sm.Id;
+
+                    query1 = query1.Distinct();
+
+                    var query2 = from sm in query
+                        where !query1.Contains(sm.Id)
+                        orderby sm.DisplayOrder, sm.Id
+                        select sm;
+
+                    return query2;
+                }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
+            }
+
+            return await _shippingMethodRepository.GetAllAsync(query=>
+            {
+                return from sm in query
+                    orderby sm.DisplayOrder, sm.Id
+                    select sm;
+            }, cache => default);
+        }
+
+        /// <summary>
+        /// Inserts a shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertShippingMethodAsync(ShippingMethod shippingMethod)
+        {
+            await _shippingMethodRepository.InsertAsync(shippingMethod);
+        }
+
+        /// <summary>
+        /// Updates the shipping method
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateShippingMethodAsync(ShippingMethod shippingMethod)
+        {
+            await _shippingMethodRepository.UpdateAsync(shippingMethod);
+        }
+
+        /// <summary>
+        /// Does country restriction exist
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> CountryRestrictionExistsAsync(ShippingMethod shippingMethod, int countryId)
+        {
+            if (shippingMethod == null)
+                throw new ArgumentNullException(nameof(shippingMethod));
+
+            var result = await _shippingMethodCountryMappingRepository.Table
+                .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
+            
+            return result;
+        }
+
+        /// <summary>
+        /// Gets shipping country mappings
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping country mappings
+        /// </returns>
+        public virtual async Task<IList<ShippingMethodCountryMapping>> GetShippingMethodCountryMappingAsync(int shippingMethodId,
+            int countryId)
+        {
+            var query = _shippingMethodCountryMappingRepository.Table.Where(smcm =>
+                smcm.ShippingMethodId == shippingMethodId && smcm.CountryId == countryId);
+
+            return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// Inserts a shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertShippingMethodCountryMappingAsync(ShippingMethodCountryMapping shippingMethodCountryMapping)
+        {
+            await _shippingMethodCountryMappingRepository.InsertAsync(shippingMethodCountryMapping);
+        }
+
+        /// <summary>
+        /// Delete the shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteShippingMethodCountryMappingAsync(ShippingMethodCountryMapping shippingMethodCountryMapping)
+        {
+            await _shippingMethodCountryMappingRepository.DeleteAsync(shippingMethodCountryMapping);
+        }
+
+        #endregion
+
+        #region Warehouses
+
+        /// <summary>
+        /// Deletes a warehouse
+        /// </summary>
+        /// <param name="warehouse">The warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteWarehouseAsync(Warehouse warehouse)
+        {
+            await _warehouseRepository.DeleteAsync(warehouse);
+        }
+
+        /// <summary>
+        /// Gets a warehouse
+        /// </summary>
+        /// <param name="warehouseId">The warehouse identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warehouse
+        /// </returns>
+        public virtual async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
+        {
+            return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
+        }
+
+        /// <summary>
+        /// Gets all warehouses
+        /// </summary>
+        /// <param name="name">Warehouse name</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warehouses
+        /// </returns>
+        public virtual async Task<IList<Warehouse>> GetAllWarehousesAsync(string name = null)
+        {
+            var warehouses = await _warehouseRepository.GetAllAsync(query=>
+            {
+                return from wh in query
+                    orderby wh.Name
+                    select wh;
+            }, cache => default);
+
+            if (!string.IsNullOrEmpty(name)) 
+                warehouses = warehouses.Where(wh => wh.Name.Contains(name)).ToList();
+
+            return warehouses;
+        }
+
+        /// <summary>
+        /// Inserts a warehouse
+        /// </summary>
+        /// <param name="warehouse">Warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertWarehouseAsync(Warehouse warehouse)
+        {
+            await _warehouseRepository.InsertAsync(warehouse);
+        }
+
+        /// <summary>
+        /// Updates the warehouse
+        /// </summary>
+        /// <param name="warehouse">Warehouse</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateWarehouseAsync(Warehouse warehouse)
+        {
+            await _warehouseRepository.UpdateAsync(warehouse);
+        }
+
         /// <summary>
         /// Get the nearest warehouse for the specified address
         /// </summary>
         /// <param name="address">Address</param>
         /// <param name="warehouses">List of warehouses, if null all warehouses are used.</param>
-        /// <returns></returns>
-        protected virtual async Task<Warehouse> GetNearestWarehouseAsync(Address address, IList<Warehouse> warehouses = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
+        public virtual async Task<Warehouse> GetNearestWarehouseAsync(Address address, IList<Warehouse> warehouses = null)
         {
             warehouses ??= await GetAllWarehousesAsync();
 
@@ -228,195 +452,6 @@ namespace Nop.Services.Shipping
 
         #endregion
 
-        #region Methods
-
-        #region Shipping methods
-
-        /// <summary>
-        /// Deletes a shipping method
-        /// </summary>
-        /// <param name="shippingMethod">The shipping method</param>
-        public virtual async Task DeleteShippingMethodAsync(ShippingMethod shippingMethod)
-        {
-            await _shippingMethodRepository.DeleteAsync(shippingMethod);
-        }
-
-        /// <summary>
-        /// Gets a shipping method
-        /// </summary>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <returns>Shipping method</returns>
-        public virtual async Task<ShippingMethod> GetShippingMethodByIdAsync(int shippingMethodId)
-        {
-            return await _shippingMethodRepository.GetByIdAsync(shippingMethodId, cache => default);
-        }
-
-        /// <summary>
-        /// Gets all shipping methods
-        /// </summary>
-        /// <param name="filterByCountryId">The country identifier to filter by</param>
-        /// <returns>Shipping methods</returns>
-        public virtual async Task<IList<ShippingMethod>> GetAllShippingMethodsAsync(int? filterByCountryId = null)
-        {
-            if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
-            { 
-                return await _shippingMethodRepository.GetAllAsync(query =>
-                {
-                    var query1 = from sm in query
-                        join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
-                        where smcm.CountryId == filterByCountryId.Value
-                        select sm.Id;
-
-                    query1 = query1.Distinct();
-
-                    var query2 = from sm in query
-                        where !query1.Contains(sm.Id)
-                        orderby sm.DisplayOrder, sm.Id
-                        select sm;
-
-                    return query2;
-                }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
-            }
-
-            return await _shippingMethodRepository.GetAllAsync(query=>
-            {
-                return from sm in query
-                    orderby sm.DisplayOrder, sm.Id
-                    select sm;
-            }, cache => default);
-        }
-
-        /// <summary>
-        /// Inserts a shipping method
-        /// </summary>
-        /// <param name="shippingMethod">Shipping method</param>
-        public virtual async Task InsertShippingMethodAsync(ShippingMethod shippingMethod)
-        {
-            await _shippingMethodRepository.InsertAsync(shippingMethod);
-        }
-
-        /// <summary>
-        /// Updates the shipping method
-        /// </summary>
-        /// <param name="shippingMethod">Shipping method</param>
-        public virtual async Task UpdateShippingMethodAsync(ShippingMethod shippingMethod)
-        {
-            await _shippingMethodRepository.UpdateAsync(shippingMethod);
-        }
-
-        /// <summary>
-        /// Does country restriction exist
-        /// </summary>
-        /// <param name="shippingMethod">Shipping method</param>
-        /// <param name="countryId">Country identifier</param>
-        /// <returns>Result</returns>
-        public virtual async Task<bool> CountryRestrictionExistsAsync(ShippingMethod shippingMethod, int countryId)
-        {
-            if (shippingMethod == null)
-                throw new ArgumentNullException(nameof(shippingMethod));
-
-            var result = await _shippingMethodCountryMappingRepository.Table
-                .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
-            
-            return result;
-        }
-
-        /// <summary>
-        /// Gets shipping country mappings
-        /// </summary>
-        /// <param name="shippingMethodId">The shipping method identifier</param>
-        /// <param name="countryId">Country identifier</param>
-        /// <returns>Shipping country mappings</returns>
-        public virtual async Task<IList<ShippingMethodCountryMapping>> GetShippingMethodCountryMappingAsync(int shippingMethodId,
-            int countryId)
-        {
-            var query = _shippingMethodCountryMappingRepository.Table.Where(smcm =>
-                smcm.ShippingMethodId == shippingMethodId && smcm.CountryId == countryId);
-
-            return await query.ToListAsync();
-        }
-
-        /// <summary>
-        /// Inserts a shipping country mapping
-        /// </summary>
-        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
-        public virtual async Task InsertShippingMethodCountryMappingAsync(ShippingMethodCountryMapping shippingMethodCountryMapping)
-        {
-            await _shippingMethodCountryMappingRepository.InsertAsync(shippingMethodCountryMapping);
-        }
-
-        /// <summary>
-        /// Delete the shipping country mapping
-        /// </summary>
-        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
-        public virtual async Task DeleteShippingMethodCountryMappingAsync(ShippingMethodCountryMapping shippingMethodCountryMapping)
-        {
-            await _shippingMethodCountryMappingRepository.DeleteAsync(shippingMethodCountryMapping);
-        }
-
-        #endregion
-
-        #region Warehouses
-
-        /// <summary>
-        /// Deletes a warehouse
-        /// </summary>
-        /// <param name="warehouse">The warehouse</param>
-        public virtual async Task DeleteWarehouseAsync(Warehouse warehouse)
-        {
-            await _warehouseRepository.DeleteAsync(warehouse);
-        }
-
-        /// <summary>
-        /// Gets a warehouse
-        /// </summary>
-        /// <param name="warehouseId">The warehouse identifier</param>
-        /// <returns>Warehouse</returns>
-        public virtual async Task<Warehouse> GetWarehouseByIdAsync(int warehouseId)
-        {
-            return await _warehouseRepository.GetByIdAsync(warehouseId, cache => default);
-        }
-
-        /// <summary>
-        /// Gets all warehouses
-        /// </summary>
-        /// <param name="name">Warehouse name</param>
-        /// <returns>Warehouses</returns>
-        public virtual async Task<IList<Warehouse>> GetAllWarehousesAsync(string name = null)
-        {
-            var warehouses = await _warehouseRepository.GetAllAsync(query=>
-            {
-                return from wh in query
-                    orderby wh.Name
-                    select wh;
-            }, cache => default);
-
-            if (!string.IsNullOrEmpty(name)) 
-                warehouses = warehouses.Where(wh => wh.Name.Contains(name)).ToList();
-
-            return warehouses;
-        }
-
-        /// <summary>
-        /// Inserts a warehouse
-        /// </summary>
-        /// <param name="warehouse">Warehouse</param>
-        public virtual async Task InsertWarehouseAsync(Warehouse warehouse)
-        {
-            await _warehouseRepository.InsertAsync(warehouse);
-        }
-
-        /// <summary>
-        /// Updates the warehouse
-        /// </summary>
-        /// <param name="warehouse">Warehouse</param>
-        public virtual async Task UpdateWarehouseAsync(Warehouse warehouse)
-        {
-            await _warehouseRepository.UpdateAsync(warehouse);
-        }
-
-        #endregion
-
         #region Workflow
 
         /// <summary>
@@ -424,7 +459,10 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
-        /// <returns>Shopping cart item weight</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart item weight
+        /// </returns>
         public virtual async Task<decimal> GetShoppingCartItemWeightAsync(ShoppingCartItem shoppingCartItem, bool ignoreFreeShippedItems = false)
         {
             if (shoppingCartItem == null)
@@ -441,7 +479,10 @@ namespace Nop.Services.Shipping
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Selected product attributes in XML</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
-        /// <returns>Item weight</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the item weight
+        /// </returns>
         public virtual async Task<decimal> GetShoppingCartItemWeightAsync(Product product, string attributesXml, bool ignoreFreeShippedItems = false)
         {
             if (product == null)
@@ -483,7 +524,10 @@ namespace Nop.Services.Shipping
         /// <param name="request">Request</param>
         /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
-        /// <returns>Total weight</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the otal weight
+        /// </returns>
         public virtual async Task<decimal> GetTotalWeightAsync(GetShippingOptionRequest request,
             bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false)
         {
@@ -514,7 +558,10 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="packageItems">Package items</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
-        /// <returns>Width. Length. Height</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the width. Length. Height
+        /// </returns>
         public virtual async Task<(decimal width, decimal length, decimal height)> GetDimensionsAsync(IList<GetShippingOptionRequest.PackageItem> packageItems, bool ignoreFreeShippedItems = false)
         {
             if (packageItems == null)
@@ -610,7 +657,10 @@ namespace Nop.Services.Shipping
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipment packages (requests). Value indicating whether shipping is done from multiple locations (warehouses)</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment packages (requests). Value indicating whether shipping is done from multiple locations (warehouses)
+        /// </returns>
         public virtual async Task<(IList<GetShippingOptionRequest> shipmentPackages, bool shippingFromMultipleLocations)> CreateShippingOptionRequestsAsync(IList<ShoppingCartItem> cart,
             Address shippingAddress, int storeId)
         {
@@ -763,7 +813,10 @@ namespace Nop.Services.Shipping
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipping options</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping options
+        /// </returns>
         public virtual async Task<GetShippingOptionResponse> GetShippingOptionsAsync(IList<ShoppingCartItem> cart,
             Address shippingAddress, Customer customer = null, string allowedShippingRateComputationMethodSystemName = "",
             int storeId = 0)
@@ -866,7 +919,10 @@ namespace Nop.Services.Shipping
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Pickup points</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pickup points
+        /// </returns>
         public virtual async Task<GetPickupPointsResponse> GetPickupPointsAsync(int addressId, Customer customer = null,
             string providerSystemName = null, int storeId = 0)
         {
@@ -906,7 +962,10 @@ namespace Nop.Services.Shipping
         /// Whether the shopping cart item is ship enabled
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <returns>True if the shopping cart item requires shipping; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if the shopping cart item requires shipping; otherwise false
+        /// </returns>
         public virtual async Task<bool> IsShipEnabledAsync(ShoppingCartItem shoppingCartItem)
         {
             //whether the product requires shipping
@@ -926,7 +985,10 @@ namespace Nop.Services.Shipping
         /// Whether the shopping cart item is free shipping
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <returns>True if the shopping cart item is free shipping; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if the shopping cart item is free shipping; otherwise false
+        /// </returns>
         public virtual async Task<bool> IsFreeShippingAsync(ShoppingCartItem shoppingCartItem)
         {
             //first, check whether shipping is required
@@ -950,7 +1012,10 @@ namespace Nop.Services.Shipping
         /// Get the additional shipping charge
         /// </summary> 
         /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <returns>The additional shipping charge of the shopping cart item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the additional shipping charge of the shopping cart item
+        /// </returns>
         public virtual async Task<decimal> GetAdditionalShippingChargeAsync(ShoppingCartItem shoppingCartItem)
         {
             //first, check whether shipping is free

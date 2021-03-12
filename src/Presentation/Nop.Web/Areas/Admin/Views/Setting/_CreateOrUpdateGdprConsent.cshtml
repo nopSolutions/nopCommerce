@@ -101,9 +101,9 @@
 
                         function toggleIsRequired() {
                             if ($('#@Html.IdFor(model => model.IsRequired)').is(':checked')) {
-                                $('#pnlRequiredMessage').showField();
+                                $('#pnlRequiredMessage').showElement();
                             } else {
-                                $('#pnlRequiredMessage').hide();
+                                $('#pnlRequiredMessage').hideElement();
                             }
                         }
                         </script>

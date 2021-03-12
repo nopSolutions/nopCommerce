@@ -17,7 +17,5 @@ namespace Nop.Web.Models.Customer
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.ChangePassword.Fields.ConfirmNewPassword")]
         public string ConfirmNewPassword { get; set; }
-
-        public string Result { get; set; }
     }
 }

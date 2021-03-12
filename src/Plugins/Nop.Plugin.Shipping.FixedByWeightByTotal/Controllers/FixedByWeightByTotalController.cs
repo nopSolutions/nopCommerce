@@ -4,10 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Models;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -41,6 +44,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreService _storeService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
 
         #endregion
@@ -59,6 +64,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
             IStoreService storeService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext,
             MeasureSettings measureSettings)
         {
             _currencySettings = currencySettings;
@@ -73,6 +80,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             _stateProvinceService = stateProvinceService;
             _shippingService = shippingService;
             _storeService = storeService;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
             _measureSettings = measureSettings;
         }
 
@@ -80,7 +89,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
         #region Methods
 
-        public async Task<IActionResult> Configure()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IActionResult> Configure(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -112,10 +122,22 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
             model.SetGridPageSize();
 
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
+
             return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -130,6 +152,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> SaveMode(bool value)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -145,6 +168,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         #region Fixed rate
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> FixedShippingRateList(ConfigurationModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -170,6 +194,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> UpdateFixedShippingRate(FixedRateModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -188,6 +213,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         #region Rate by weight
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> RateByWeightByTotalList(ConfigurationModel searchModel, ConfigurationModel filter)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -278,6 +304,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             return Json(gridModel);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> AddRateByWeightByTotalPopup()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -318,6 +345,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> AddRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -347,6 +375,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/AddRateByWeightByTotalPopup.cshtml", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> EditRateByWeightByTotalPopup(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -414,6 +443,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> EditRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -448,6 +478,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> DeleteRateByWeightByTotal(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))

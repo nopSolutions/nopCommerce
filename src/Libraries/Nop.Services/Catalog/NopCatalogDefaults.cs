@@ -8,6 +8,20 @@ namespace Nop.Services.Catalog
     /// </summary>
     public static partial class NopCatalogDefaults
     {
+        #region Common
+
+        /// <summary>
+        /// Gets a default price range 'from'
+        /// </summary>
+        public static decimal DefaultPriceRangeFrom => 0;
+
+        /// <summary>
+        /// Gets a default price range 'to'
+        /// </summary>
+        public static decimal DefaultPriceRangeTo => 10000;
+
+        #endregion
+
         #region Products
 
         /// <summary>
@@ -165,6 +179,19 @@ namespace Nop.Services.Catalog
         /// {0} : product ID
         /// </remarks>
         public static string ProductManufacturersByProductPrefix => "Nop.productmanufacturer.byproduct.{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : category ID
+        /// </remarks>
+        public static CacheKey ManufacturersByCategoryCacheKey => new CacheKey("Nop.manufacturer.bycategory.{0}", ManufacturersByCategoryPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ManufacturersByCategoryPrefix => "Nop.manufacturer.bycategory.";
 
         #endregion
 
@@ -360,6 +387,27 @@ namespace Nop.Services.Catalog
         /// {0} : specification attribute ID
         /// </remarks>
         public static CacheKey SpecificationAttributeOptionsCacheKey => new CacheKey("Nop.specificationattributeoption.byattribute.{0}");
+
+        /// <summary>
+        /// Key for specification attribute options by category ID caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : category ID
+        /// </remarks>
+        public static CacheKey SpecificationAttributeOptionsByCategoryCacheKey => new CacheKey("Nop.specificationattributeoption.bycategory.{0}", FilterableSpecificationAttributeOptionsPrefix);
+
+        /// <summary>
+        /// Key for specification attribute options by manufacturer ID caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : manufacturer ID
+        /// </remarks>
+        public static CacheKey SpecificationAttributeOptionsByManufacturerCacheKey => new CacheKey("Nop.specificationattributeoption.bymanufacturer.{0}", FilterableSpecificationAttributeOptionsPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string FilterableSpecificationAttributeOptionsPrefix => "Nop.filterablespecificationattributeoptions";
 
         /// <summary>
         /// Gets a key for specification attribute groups caching by product id

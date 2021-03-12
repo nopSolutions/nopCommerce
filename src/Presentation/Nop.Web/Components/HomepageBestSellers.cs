@@ -44,6 +44,7 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)

@@ -8,10 +8,10 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Shipping.PickupPointProviders")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PickupPointProviderListButtons })
     </div>
@@ -23,6 +23,8 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PickupPoints", Docs.PickupPoints + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "pickup-point-providers-grid",
@@ -40,7 +42,7 @@
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName").Text,
                                     Width = "250"
-                                },                                
+                                },
                                 new ColumnProperty(nameof(PickupPointProviderModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder").Text,
@@ -78,7 +80,7 @@
                     <script>
                         function renderColumnConfigure(data, type, row, meta) {
                             if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text</a>';
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text</a>';
                             } else {
                                 return '';
                             }

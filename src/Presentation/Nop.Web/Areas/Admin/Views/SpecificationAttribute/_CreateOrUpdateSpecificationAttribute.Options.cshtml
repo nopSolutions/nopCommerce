@@ -47,7 +47,7 @@
     
         <script>
             function renderColumnEdit(data, type, row, meta) {
-                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")' + data + '?btnId=btnRefresh&formId=specificationattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")' + data + '?btnId=btnRefresh&formId=specificationattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
             }
         </script>
     </div>
@@ -56,7 +56,7 @@
         <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.AddNew")
         </button>
-        <input type="submit" id="btnRefresh" style="display: none" />
+        <button type="submit" id="btnRefresh" style="display: none"></button>
         <script>
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {

@@ -124,6 +124,20 @@ dotnet_naming_rule.private_field_with_.style                        = private_fi
 dotnet_naming_symbols.private_fields.applicable_accessibilities     = private,protected
 dotnet_naming_symbols.private_fields.applicable_kinds               = field
 
+# Async methods should have "Async" suffix
+dotnet_naming_rule.async_methods_end_in_async.severity              = suggestion
+dotnet_naming_rule.async_methods_end_in_async.symbols               = any_async_methods
+dotnet_naming_rule.async_methods_end_in_async.style                 = end_in_async
+
+dotnet_naming_symbols.any_async_methods.applicable_kinds            = method
+dotnet_naming_symbols.any_async_methods.applicable_accessibilities  = *
+dotnet_naming_symbols.any_async_methods.required_modifiers          = async
+
+dotnet_naming_style.end_in_async.required_prefix                    = 
+dotnet_naming_style.end_in_async.required_suffix                    = Async
+dotnet_naming_style.end_in_async.capitalization                     = pascal_case
+dotnet_naming_style.end_in_async.word_separator                     = 
+
 # Classes, structs, methods, enums, events, properties, namespaces, delegates must be PascalCase
 dotnet_naming_rule.general_naming.severity                         = warning
 dotnet_naming_rule.general_naming.symbols                          = general

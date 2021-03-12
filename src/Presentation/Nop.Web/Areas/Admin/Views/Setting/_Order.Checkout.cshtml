@@ -8,10 +8,10 @@
 
     function toggleOnePageCheckoutEnabled() {
         if ($('#@Html.IdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
-            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').showField();
+            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').showElement();
         }
         else {
-            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hide();
+            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hideElement();
         }
     }
 </script>

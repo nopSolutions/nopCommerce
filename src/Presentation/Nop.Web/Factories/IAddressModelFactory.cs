@@ -24,6 +24,7 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateWithCustomerFields">Whether to populate model properties with the customer fields (used with the customer entity)</param>
         /// <param name="customer">Customer entity; required if prePopulateWithCustomerFields is true</param>
         /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of the address entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task PrepareAddressModelAsync(AddressModel model,
             Address address, bool excludeProperties,
             AddressSettings addressSettings,

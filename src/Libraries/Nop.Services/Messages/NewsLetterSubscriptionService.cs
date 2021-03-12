@@ -50,6 +50,7 @@ namespace Nop.Services.Messages
         /// <param name="subscription">The newsletter subscription.</param>
         /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task PublishSubscriptionEventAsync(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
         {
             if (!publishSubscriptionEvents) 
@@ -74,6 +75,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
@@ -86,10 +88,7 @@ namespace Nop.Services.Messages
 
             //Persist
             await _subscriptionRepository.InsertAsync(newsLetterSubscription);
-
-            //Publish event
-            await _eventPublisher.EntityInsertedAsync(newsLetterSubscription);
-
+            
             //Publish the subscription event 
             if (newsLetterSubscription.Active) 
                 await PublishSubscriptionEventAsync(newsLetterSubscription, true, publishSubscriptionEvents);
@@ -100,6 +99,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
@@ -116,9 +116,6 @@ namespace Nop.Services.Messages
             //Persist
             await _subscriptionRepository.UpdateAsync(newsLetterSubscription);
             
-            //Publish event
-            await _eventPublisher.EntityUpdatedAsync(newsLetterSubscription);
-
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
                 (newsLetterSubscription.Active && originalSubscription.Email != newsLetterSubscription.Email))
@@ -144,6 +141,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteNewsLetterSubscriptionAsync(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null) 
@@ -151,9 +149,6 @@ namespace Nop.Services.Messages
 
             await _subscriptionRepository.DeleteAsync(newsLetterSubscription);
             
-            //event notification
-            await _eventPublisher.EntityDeletedAsync(newsLetterSubscription);
-
             //Publish the unsubscribe event 
             await PublishSubscriptionEventAsync(newsLetterSubscription, false, publishSubscriptionEvents);
         }
@@ -162,7 +157,10 @@ namespace Nop.Services.Messages
         /// Gets a newsletter subscription by newsletter subscription identifier
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
-        /// <returns>NewsLetter subscription</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetter subscription
+        /// </returns>
         public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByIdAsync(int newsLetterSubscriptionId)
         {
             return await _subscriptionRepository.GetByIdAsync(newsLetterSubscriptionId, cache => default);
@@ -172,7 +170,10 @@ namespace Nop.Services.Messages
         /// Gets a newsletter subscription by newsletter subscription GUID
         /// </summary>
         /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
-        /// <returns>NewsLetter subscription</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetter subscription
+        /// </returns>
         public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByGuidAsync(Guid newsLetterSubscriptionGuid)
         {
             if (newsLetterSubscriptionGuid == Guid.Empty) return null;
@@ -190,7 +191,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>NewsLetter subscription</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetter subscription
+        /// </returns>
         public virtual async Task<NewsLetterSubscription> GetNewsLetterSubscriptionByEmailAndStoreIdAsync(string email, int storeId)
         {
             if (!CommonHelper.IsValidEmail(email))
@@ -217,7 +221,10 @@ namespace Nop.Services.Messages
         /// <param name="isActive">Value indicating whether subscriber record should be active or not; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>NewsLetterSubscription entities</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsLetterSubscription entities
+        /// </returns>
         public virtual async Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptionsAsync(string email = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int storeId = 0, bool? isActive = null, int customerRoleId = 0,

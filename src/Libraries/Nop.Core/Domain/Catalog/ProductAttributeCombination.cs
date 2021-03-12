@@ -54,5 +54,10 @@
         /// Gets or sets the identifier of picture associated with this combination
         /// </summary>
         public int PictureId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum stock quantity
+        /// </summary>
+        public int MinStockQuantity { get; set; }
     }
 }

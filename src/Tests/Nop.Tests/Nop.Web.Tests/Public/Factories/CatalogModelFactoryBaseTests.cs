@@ -47,7 +47,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareSearchModel()
         {
-            var model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogPagingFilteringModel());
+            var model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogProductsCommand());
             model.AvailableCategories.Any().Should().BeTrue();
             model.AvailableCategories.Count.Should().Be(17);
 
@@ -59,23 +59,23 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             var queryString = _httpContextAccessor.HttpContext.Request.QueryString;
             _httpContextAccessor.HttpContext.Request.QueryString = new QueryString("?q=t");
 
-            model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogPagingFilteringModel());
+            model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogProductsCommand());
 
             _httpContextAccessor.HttpContext.Request.QueryString = queryString;
 
-            model.Warning.Should()
+            model.CatalogProductsModel.WarningMessage.Should()
                 .Be($"Search term minimum length is {_catalogSettings.ProductSearchTermMinimumLength} characters");
-            model.Products.Count.Should().Be(0);
+            model.CatalogProductsModel.Products.Count.Should().Be(0);
 
             _httpContextAccessor.HttpContext.Request.QueryString = new QueryString("?q=Lenovo");
 
             model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel
             {
                 q = "Lenovo"
-            }, new CatalogPagingFilteringModel());
+            }, new CatalogProductsCommand());
             _httpContextAccessor.HttpContext.Request.QueryString = queryString;
 
-            model.Products.Count.Should().Be(2);
+            model.CatalogProductsModel.Products.Count.Should().Be(2);
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareCategoryModel()
         {
-            var model = await _catalogModelFactory.PrepareCategoryModelAsync(_category, new CatalogPagingFilteringModel());
+            var model = await _catalogModelFactory.PrepareCategoryModelAsync(_category, new CatalogProductsCommand());
 
             model.Id.Should().Be(_category.Id);
             model.Name.Should().Be(_category.Name);
@@ -122,7 +122,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public void PrepareCategoryModelShouldRaiseExceptionIfCategoryOrCommandIsNull()
         {
             Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareCategoryModelAsync(null, new CatalogPagingFilteringModel()).Wait());
+                _catalogModelFactory.PrepareCategoryModelAsync(null, new CatalogProductsCommand()).Wait());
 
             Assert.Throws<AggregateException>(() =>
                 _catalogModelFactory.PrepareCategoryModelAsync(_category, null).Wait());
@@ -195,7 +195,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareManufacturerModel()
         {
-            var model = await _catalogModelFactory.PrepareManufacturerModelAsync(_manufacturer, new CatalogPagingFilteringModel());
+            var model = await _catalogModelFactory.PrepareManufacturerModelAsync(_manufacturer, new CatalogProductsCommand());
             model.Id.Should().Be(_manufacturer.Id);
             model.Name.Should().Be(_manufacturer.Name);
             model.Description.Should().Be(_manufacturer.Description);
@@ -208,7 +208,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public void PrepareManufacturerModelShouldRaiseExceptionIfManufacturerOrCommandIsNull()
         {
             Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareManufacturerModelAsync(null, new CatalogPagingFilteringModel()).Wait());
+                _catalogModelFactory.PrepareManufacturerModelAsync(null, new CatalogProductsCommand()).Wait());
 
             Assert.Throws<AggregateException>(() =>
                 _catalogModelFactory.PrepareManufacturerModelAsync(_manufacturer, null).Wait());
@@ -253,7 +253,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareVendorModel()
         {
-            var model = await _catalogModelFactory.PrepareVendorModelAsync(_vendor, new CatalogPagingFilteringModel());
+            var model = await _catalogModelFactory.PrepareVendorModelAsync(_vendor, new CatalogProductsCommand());
 
             model.Id.Should().Be(_vendor.Id);
             model.Name.Should().Be(_vendor.Name);
@@ -267,7 +267,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public void PrepareVendorModelShouldRaiseExceptionIfVendorOrCommandIsNull()
         {
             Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareVendorModelAsync(null, new CatalogPagingFilteringModel()).Wait());
+                _catalogModelFactory.PrepareVendorModelAsync(null, new CatalogProductsCommand()).Wait());
 
             Assert.Throws<AggregateException>(() =>
                 _catalogModelFactory.PrepareVendorModelAsync(_vendor, null).Wait());
@@ -289,11 +289,11 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareProductsByTagModel()
         {
-            var model = await _catalogModelFactory.PrepareProductsByTagModelAsync(_productTag, new CatalogPagingFilteringModel());
+            var model = await _catalogModelFactory.PrepareProductsByTagModelAsync(_productTag, new CatalogProductsCommand());
 
             model.Id.Should().Be(_productTag.Id);
             model.TagName.Should().Be(_productTag.Name);
-            model.Products.Count.Should().Be(6);
+            model.CatalogProductsModel.Products.Count.Should().Be(6);
         }
 
         [Test]
@@ -311,7 +311,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public void PrepareVendorModelShouldRaiseExceptionIfProductTagOrCommandIsNull()
         {
             Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareProductsByTagModelAsync(null, new CatalogPagingFilteringModel()).Wait());
+                _catalogModelFactory.PrepareProductsByTagModelAsync(null, new CatalogProductsCommand()).Wait());
 
             Assert.Throws<AggregateException>(() =>
                 _catalogModelFactory.PrepareProductsByTagModelAsync(_productTag, null).Wait());
@@ -320,7 +320,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareProductTagsAllModel()
         {
-            var model = await _catalogModelFactory.PrepareProductTagsAllModelAsync();
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
             model.Tags.Count.Should().Be(16);
         }
 
@@ -328,10 +328,117 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         public void PrepareSearchModelShouldRaiseExceptionIfSearchModelOrCommandIsNull()
         {
             Assert.Throws<AggregateException>(() =>
-                _catalogModelFactory.PrepareSearchModelAsync(null, new CatalogPagingFilteringModel()).Wait());
+                _catalogModelFactory.PrepareSearchModelAsync(null, new CatalogProductsCommand()).Wait());
 
             Assert.Throws<AggregateException>(() =>
                 _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), null).Wait());
+        }
+
+        [Test]
+        public async Task CanPrepareSortingOptions()
+        {
+            var model = new CatalogProductsModel();
+            var command = new CatalogProductsCommand();
+            await _catalogModelFactory.PrepareSortingOptionsAsync(model, command);
+
+            model.AllowProductSorting.Should().BeTrue();
+            model.AvailableSortOptions.Count.Should().Be(6);
+            command.OrderBy.Should().Be(0);
+        }
+
+        [Test]
+        public void PrepareSortingOptionsShouldRaiseExceptionIfPagingFilteringModelOrCommandIsNull()
+        {
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareSortingOptionsAsync(null, new CatalogProductsCommand()).Wait());
+
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareSortingOptionsAsync(new CatalogProductsModel(), null).Wait());
+        }
+
+        [Test]
+        public async Task CanPrepareViewModes()
+        {
+            var model = new CatalogProductsModel();
+            await _catalogModelFactory.PrepareViewModesAsync(model, new CatalogProductsCommand());
+
+            model.AllowProductViewModeChanging.Should().BeTrue();
+            model.AvailableViewModes.Count.Should().Be(2);
+            model.ViewMode.Should().Be("grid");
+        }
+
+        [Test]
+        public void PrepareViewModesShouldRaiseExceptionIfPagingFilteringModelOrCommandIsNull()
+        {
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareViewModesAsync(null, new CatalogProductsCommand()).Wait());
+
+            Assert.Throws<AggregateException>(() =>
+                _catalogModelFactory.PrepareViewModesAsync(new CatalogProductsModel(), null).Wait());
+        }
+
+        [Test]
+        public async Task CanPreparePageSizeOptions()
+        {
+            var pageSizes = "10, 20, 30";
+            var model = new CatalogProductsModel();
+            var command = new CatalogProductsCommand();
+            await _catalogModelFactory.PreparePageSizeOptionsAsync(model, command, true, pageSizes, 0);
+
+            model.AllowCustomersToSelectPageSize.Should().BeTrue();
+            model.PageSizeOptions.Count.Should().Be(3);
+
+            foreach (var modelPageSizeOption in model.PageSizeOptions)
+            {
+                int.TryParse(modelPageSizeOption.Text, out _).Should().BeTrue();
+                pageSizes.Contains(modelPageSizeOption.Text).Should().BeTrue();
+
+                modelPageSizeOption.Value.Should().Be(modelPageSizeOption.Text);
+            }
+
+            command.PageSize.Should().Be(10);
+
+            await _catalogModelFactory.PreparePageSizeOptionsAsync(model, command, false, "10, 20, 30", 15);
+
+            model.AllowCustomersToSelectPageSize.Should().BeFalse();
+            command.PageSize.Should().Be(15);
+            model.PageSizeOptions.Count.Should().Be(3);
+        }
+
+        [Test]
+        public void PreparePageSizeOptionsShouldRaiseExceptionIfPagingFilteringModelOrCommandIsNull()
+        {
+            Assert.Throws<NullReferenceException>(() =>
+                _catalogModelFactory.PreparePageSizeOptionsAsync(null, new CatalogProductsCommand(), true, string.Empty, 15).Wait());
+
+            Assert.Throws<NullReferenceException>(() =>
+                _catalogModelFactory.PreparePageSizeOptionsAsync(new CatalogProductsModel(), null, false, "10, 15, 20", 0).Wait());
+        }
+
+        [Test]
+        public async Task CanPrepareCategorySimpleModels()
+        {
+            var model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(7);
+
+            model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync(_category.Id);
+
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(3);
+
+            var categories = new[] { "Desktops", "Notebooks", "Software" };
+
+            foreach (var categoryModel in model)
+                categoryModel.Name.Should().BeOneOf(categories);
+
+            model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync(_category.Id, false);
+
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(3);
+
+            foreach (var categoryModel in model)
+                categoryModel.Name.Should().BeOneOf(categories);
         }
     }
 }

@@ -36,11 +36,13 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for caching of categories displayed on home page
         /// </summary>
         /// <remarks>
-        /// {0} : picture size
-        /// {1} : language ID
-        /// {2} : is connection SSL secured (included in a category picture URL)
+        /// {0} : current store ID
+        /// {1} : roles of the current user
+        /// {2} : picture size
+        /// {3} : language ID
+        /// {4} : is connection SSL secured (included in a category picture URL)
         /// </remarks>
-        public static CacheKey CategoryHomepageKey => new CacheKey("Nop.pres.category.homepage-{0}-{1}-{2}", CategoryHomepagePrefixCacheKey);
+        public static CacheKey CategoryHomepageKey => new CacheKey("Nop.pres.category.homepage-{0}-{1}-{2}-{3}-{4}", CategoryHomepagePrefixCacheKey);
         public static string CategoryHomepagePrefixCacheKey => "Nop.pres.category.homepage";
 
         /// <summary>
@@ -53,16 +55,6 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public static CacheKey CategoryXmlAllModelKey => new CacheKey("Nop.pres.categoryXml.all-{0}-{1}-{2}", CategoryXmlAllPrefixCacheKey);
         public static string CategoryXmlAllPrefixCacheKey => "Nop.pres.categoryXml.all";
-
-        /// <summary>
-        /// Key for SpecificationAttributeOptionFilter caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : list of specification attribute option IDs
-        /// {1} : language id
-        /// </remarks>
-        public static CacheKey SpecsFilterModelKey => new CacheKey("Nop.pres.filter.specs-{0}-{1}", SpecsFilterPrefixCacheKey);
-        public static string SpecsFilterPrefixCacheKey => "Nop.pres.filter.specs";
 
         /// <summary>
         /// Key for bestsellers identifiers displayed on the home page

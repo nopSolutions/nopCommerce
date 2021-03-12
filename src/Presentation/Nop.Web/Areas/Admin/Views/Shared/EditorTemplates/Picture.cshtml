@@ -29,12 +29,12 @@
     </div>
     <div class="upload-button-container">
         @*fine uploader container*@
-        <div id="@clientId" class="upload-image-button pull-left px-md-1">
+        <div id="@clientId" class="upload-image-button float-left px-md-1">
             <noscript>
                 <p>Please enable JavaScript to use file uploader.</p>
             </noscript>
         </div>
-        <div class="remove-image-button pull-left px-md-1">
+        <div class="remove-image-button float-left px-md-1">
             @if (picture != null)
             {
                 <span id="@(clientId + "remove")" class="btn btn-danger">@T("Admin.Picture.RemovePicture")</span>
@@ -87,7 +87,7 @@
             template: "@(clientId)-qq-template",
             multiple: false,
             validation: {
-                allowedExtensions: [ "bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif"]
+                allowedExtensions: [ "bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif", "webp"]
             }
         }).on("complete", function(event, id, name, responseJSON, xhr) {
             if (responseJSON.success) {

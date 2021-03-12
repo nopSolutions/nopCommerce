@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Mvc
         /// Execute result async
         /// </summary>
         /// <param name="context">ActionContext</param>
-        /// <returns>Task</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override Task ExecuteResultAsync(ActionContext context)
         {
             Content = Feed.GetContent();

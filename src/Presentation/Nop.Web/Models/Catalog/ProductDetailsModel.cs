@@ -44,6 +44,7 @@ namespace Nop.Web.Models.Catalog
         public string MetaDescription { get; set; }
         public string MetaTitle { get; set; }
         public string SeName { get; set; }
+        public bool VisibleIndividually { get; set; }
 
         public ProductType ProductType { get; set; }
 
@@ -113,6 +114,8 @@ namespace Nop.Web.Models.Catalog
         public string CurrentStoreName { get; set; }
 
         public bool InStock { get; set; }
+
+        public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
         #region Nested Classes
 

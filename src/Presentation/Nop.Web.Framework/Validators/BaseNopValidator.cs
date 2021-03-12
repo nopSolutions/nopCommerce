@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Validators
             foreach (var expression in maxValueExpressions)
             {
                 RuleFor(expression.Expression).IsDecimal(expression.MaxValue)
-                    .WithMessageAwait(localizationService.GetResourceAsync("Nop.Web.Framework.Validators.MaxDecimal"), expression.MaxValue - 1);
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.Validation.Decimal.Max"), expression.MaxValue - 1);
             }
         }
 

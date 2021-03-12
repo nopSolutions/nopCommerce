@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
@@ -11,10 +11,10 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="appSettings">App settings</param>
-        void Register(ContainerBuilder builder, ITypeFinder typeFinder, AppSettings appSettings);
+        void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings);
 
         /// <summary>
         /// Gets order of this dependency registrar implementation

@@ -9,28 +9,28 @@
 
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Countries")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         <button type="button" id="publish-selected" class="btn bg-teal">
-            <i class="fa fa-check-square-o"></i>
+            <i class="fas fa-check-square"></i>
             @T("Admin.Configuration.Countries.PublishSelected")
         </button>
         <button type="button" id="unpublish-selected" class="btn btn-secondary">
-            <i class="fa fa-minus-square-o"></i>
+            <i class="fas fa-minus-square"></i>
             @T("Admin.Configuration.Countries.UnpublishSelected")
         </button>
         <a asp-action="ExportCsv" class="btn btn-success">
-            <i class="fa fa-download"></i>
+            <i class="fas fa-download"></i>
             @T("Admin.Configuration.Countries.ExportToCsv")
         </a>
         <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
-            <i class="fa fa-upload"></i>
+            <i class="fas fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })
@@ -43,6 +43,8 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CountriesStates", Docs.CountriesStates + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "countries-grid",
@@ -61,7 +63,7 @@
                             },
                             new ColumnProperty(nameof(CountryModel.Name))
                             {
-                                Title = T("Admin.Configuration.Countries.Fields.Name").Text                                
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(CountryModel.AllowsBilling))
                             {
@@ -127,8 +129,8 @@
                             }
                         }
                     })
-                    
-                    
+
+
                     <script>
                         $(document).ready(function () {
                             //"publish selected" button
@@ -152,7 +154,7 @@
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#publishSelectedFailed-info').text(errorThrown);
                                         $("#publishSelectedFailed").click();
-                                    }                                    
+                                    }
                                 });
                                 return false;
                             });
@@ -209,7 +211,7 @@
                                 <em>@T("Admin.Configuration.Countries.ImportTip")</em>
                             </li>
                             <li>
-                                <em><a href="https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
+                                <em><a href="@(OfficialSite.StatesPackage + Utm.OnAdminCountries)" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
                             </li>
                         </ul>
                         <div class="form-group row">

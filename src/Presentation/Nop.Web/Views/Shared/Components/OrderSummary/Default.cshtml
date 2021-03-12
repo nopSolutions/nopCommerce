@@ -26,10 +26,6 @@
             <div class="table-wrapper">
                 <table class="cart">
                     <colgroup>
-                        @if (Model.IsEditable)
-                        {
-                            <col width="1" />
-                        }
                         @if (Model.ShowSku)
                         {
                             <col width="1" />
@@ -46,15 +42,13 @@
                         <col width="1" />
                         <col width="1" />
                         <col width="1" />
+                        @if (Model.IsEditable)
+                        {
+                            <col width="1" />
+                        }
                     </colgroup>
                     <thead>
                         <tr>
-                            @if (Model.IsEditable)
-                            {
-                                <th class="remove-from-cart">
-                                    @T("ShoppingCart.Remove")
-                                </th>
-                            }
                             @if (Model.ShowSku)
                             {
                                 <th class="sku">
@@ -85,26 +79,18 @@
                             <th class="subtotal">
                                 @T("ShoppingCart.ItemTotal")
                             </th>
+                            @if (Model.IsEditable)
+                            {
+                                <th class="remove-from-cart">
+                                    @T("ShoppingCart.Remove")
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Items)
                         {
                             <tr>
-                                @if (Model.IsEditable)
-                                {
-                                    <td class="remove-from-cart">
-                                        @if (item.DisableRemoval)
-                                        {
-                                            <text>&nbsp;</text>
-                                        }
-                                        else
-                                        {
-                                            <label class="td-title" for="removefromcart@(item.Id)">@T("ShoppingCart.Remove"):</label>
-                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                        }
-                                    </td>
-                                }
                                 @if (Model.ShowSku)
                                 {
                                     <td class="sku">
@@ -208,6 +194,20 @@
                                         }
                                     }
                                 </td>
+                                @if (Model.IsEditable)
+                                {
+                                    <td class="remove-from-cart">
+                                        @if (item.DisableRemoval)
+                                        {
+                                            <text>&nbsp;</text>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
+                                            <button name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true);"></button>
+                                        }
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -226,8 +226,9 @@
                 @if (Model.IsEditable)
                 {
                     <div class="common-buttons">
-                        <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" class="button-2 update-cart-button" />
-                        <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-2 continue-shopping-button" />
+                        <button type="submit" name="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
+
+                        <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
                         @await Component.InvokeAsync("ShoppingCartEstimateShipping")
                     </div>
                 }

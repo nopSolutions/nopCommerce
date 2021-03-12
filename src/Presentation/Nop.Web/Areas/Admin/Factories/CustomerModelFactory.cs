@@ -52,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ForumSettings _forumSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAffiliateService _affiliateService;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ForumSettings forumSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressModelFactory addressModelFactory,
             IAffiliateService affiliateService,
             IAuthenticationPluginManager authenticationPluginManager,
             IBackInStockSubscriptionService backInStockSubscriptionService,
@@ -134,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _forumSettings = forumSettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _addressAttributeFormatter = addressAttributeFormatter;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressModelFactory = addressModelFactory;
             _affiliateService = affiliateService;
             _authenticationPluginManager = authenticationPluginManager;
             _backInStockSubscriptionService = backInStockSubscriptionService;
@@ -175,6 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare the reward points model to add to the customer
         /// </summary>
         /// <param name="model">Reward points model to add to the customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAddRewardPointsToCustomerModelAsync(AddRewardPointsToCustomerModel model)
         {
             if (model == null)
@@ -193,6 +194,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of customer associated external authorization models</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAssociatedExternalAuthModelsAsync(IList<CustomerAssociatedExternalAuthModel> models, Customer customer)
         {
             if (models == null)
@@ -223,6 +225,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of customer attribute models</param>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareCustomerAttributeModelsAsync(IList<CustomerModel.CustomerAttributeModel> models, Customer customer)
         {
             if (models == null)
@@ -314,57 +317,11 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set some of address fields as enabled and required
-            model.FirstNameEnabled = true;
-            model.FirstNameRequired = true;
-            model.LastNameEnabled = true;
-            model.LastNameRequired = true;
-            model.EmailEnabled = true;
-            model.EmailRequired = true;
-            model.CompanyEnabled = _addressSettings.CompanyEnabled;
-            model.CompanyRequired = _addressSettings.CompanyRequired;
-            model.CountryEnabled = _addressSettings.CountryEnabled;
-            model.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
-            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-            model.CityEnabled = _addressSettings.CityEnabled;
-            model.CityRequired = _addressSettings.CityRequired;
-            model.CountyEnabled = _addressSettings.CountyEnabled;
-            model.CountyRequired = _addressSettings.CountyRequired;
-            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
-            model.PhoneEnabled = _addressSettings.PhoneEnabled;
-            model.PhoneRequired = _addressSettings.PhoneRequired;
-            model.FaxEnabled = _addressSettings.FaxEnabled;
-            model.FaxRequired = _addressSettings.FaxRequired;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-
-            //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
-        }
-
-        /// <summary>
         /// Prepare HTML string address
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareModelAddressHtmlAsync(AddressModel model, Address address)
         {
             if (model == null)
@@ -479,7 +436,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer shopping cart search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer shopping cart search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer shopping cart search model
+        /// </returns>
         protected virtual async Task<CustomerShoppingCartSearchModel> PrepareCustomerShoppingCartSearchModelAsync(CustomerShoppingCartSearchModel searchModel,
             Customer customer)
         {
@@ -551,7 +511,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer back in stock subscriptions search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer back in stock subscriptions search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer back in stock subscriptions search model
+        /// </returns>
         protected virtual async Task<CustomerAssociatedExternalAuthRecordsSearchModel> PrepareCustomerAssociatedExternalAuthRecordsSearchModelAsync(
             CustomerAssociatedExternalAuthRecordsSearchModel searchModel, Customer customer)
         {
@@ -579,7 +542,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare customer search model
         /// </summary>
         /// <param name="searchModel">Customer search model</param>
-        /// <returns>Customer search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer search model
+        /// </returns>
         public virtual async Task<CustomerSearchModel> PrepareCustomerSearchModelAsync(CustomerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -612,7 +578,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged customer list model
         /// </summary>
         /// <param name="searchModel">Customer search model</param>
-        /// <returns>Customer list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer list model
+        /// </returns>
         public virtual async Task<CustomerListModel> PrepareCustomerListModelAsync(CustomerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -680,7 +649,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Customer model</param>
         /// <param name="customer">Customer</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Customer model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer model
+        /// </returns>
         public virtual async Task<CustomerModel> PrepareCustomerModelAsync(CustomerModel model, Customer customer, bool excludeProperties = false)
         {
             if (customer != null)
@@ -697,6 +669,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AllowReSendingOfActivationMessage = await _customerService.IsRegisteredAsync(customer) && !customer.Active &&
                     _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation;
                 model.GdprEnabled = _gdprSettings.GdprEnabled;
+
+                model.MultiFactorAuthenticationProvider = await _genericAttributeService
+                    .GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
@@ -838,7 +813,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Reward points search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Reward points list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reward points list model
+        /// </returns>
         public virtual async Task<CustomerRewardPointsListModel> PrepareRewardPointsListModelAsync(CustomerRewardPointsSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -886,7 +864,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer address search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer address list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer address list model
+        /// </returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync(CustomerAddressSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -928,7 +909,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Customer address model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer address model
+        /// </returns>
         public virtual async Task<CustomerAddressModel> PrepareCustomerAddressModelAsync(CustomerAddressModel model,
             Customer customer, Address address, bool excludeProperties = false)
         {
@@ -948,7 +932,18 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CustomerId = customer.Id;
 
             //prepare address model
-            await PrepareAddressModelAsync(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailRequired = true;
+            model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.CityRequired = _addressSettings.CityRequired;
+            model.Address.CountyRequired = _addressSettings.CountyRequired;
+            model.Address.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.Address.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.Address.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.Address.PhoneRequired = _addressSettings.PhoneRequired;
+            model.Address.FaxRequired = _addressSettings.FaxRequired;
 
             return model;
         }
@@ -958,7 +953,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer order search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer order list model
+        /// </returns>
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync(CustomerOrderSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -1001,7 +999,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer shopping cart search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer shopping cart list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer shopping cart list model
+        /// </returns>
         public virtual async Task<CustomerShoppingCartListModel> PrepareCustomerShoppingCartListModelAsync(CustomerShoppingCartSearchModel searchModel,
             Customer customer)
         {
@@ -1049,7 +1050,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer activity log search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer activity log list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer activity log list model
+        /// </returns>
         public virtual async Task<CustomerActivityLogListModel> PrepareCustomerActivityLogListModelAsync(CustomerActivityLogSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -1088,7 +1092,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer back in stock subscriptions search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer back in stock subscriptions list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer back in stock subscriptions list model
+        /// </returns>
         public virtual async Task<CustomerBackInStockSubscriptionListModel> PrepareCustomerBackInStockSubscriptionListModelAsync(
             CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer)
         {
@@ -1129,7 +1136,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare online customer search model
         /// </summary>
         /// <param name="searchModel">Online customer search model</param>
-        /// <returns>Online customer search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the online customer search model
+        /// </returns>
         public virtual Task<OnlineCustomerSearchModel> PrepareOnlineCustomerSearchModelAsync(OnlineCustomerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1145,7 +1155,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged online customer list model
         /// </summary>
         /// <param name="searchModel">Online customer search model</param>
-        /// <returns>Online customer list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the online customer list model
+        /// </returns>
         public virtual async Task<OnlineCustomerListModel> PrepareOnlineCustomerListModelAsync(OnlineCustomerSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1193,7 +1206,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare GDPR request (log) search model
         /// </summary>
         /// <param name="searchModel">GDPR request search model</param>
-        /// <returns>GDPR request search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR request search model
+        /// </returns>
         public virtual async Task<GdprLogSearchModel> PrepareGdprLogSearchModelAsync(GdprLogSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1212,7 +1228,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged GDPR request list model
         /// </summary>
         /// <param name="searchModel">GDPR request search model</param>
-        /// <returns>GDPR request list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR request list model
+        /// </returns>
         public virtual async Task<GdprLogListModel> PrepareGdprLogListModelAsync(GdprLogSearchModel searchModel)
         {
             if (searchModel == null)

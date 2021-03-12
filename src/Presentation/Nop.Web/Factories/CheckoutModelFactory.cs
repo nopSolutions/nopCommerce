@@ -129,7 +129,10 @@ namespace Nop.Web.Factories
         /// Prepares the checkout pickup points model
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>The checkout pickup points model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout pickup points model
+        /// </returns>
         protected virtual async Task<CheckoutPickupPointsModel> PrepareCheckoutPickupPointsModelAsync(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutPickupPointsModel
@@ -222,7 +225,10 @@ namespace Nop.Web.Factories
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
-        /// <returns>Billing address model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the billing address model
+        /// </returns>
         public virtual async Task<CheckoutBillingAddressModel> PrepareBillingAddressModelAsync(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false,
@@ -283,7 +289,10 @@ namespace Nop.Web.Factories
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
-        /// <returns>Shipping address model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping address model
+        /// </returns>
         public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, 
             int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
@@ -342,7 +351,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="shippingAddress">Shipping address</param>
-        /// <returns>Shipping method model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping method model
+        /// </returns>
         public virtual async Task<CheckoutShippingMethodModel> PrepareShippingMethodModelAsync(IList<ShoppingCartItem> cart, Address shippingAddress)
         {
             var model = new CheckoutShippingMethodModel
@@ -429,7 +441,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="filterByCountryId">Filter by country identifier</param>
-        /// <returns>Payment method model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method model
+        /// </returns>
         public virtual async Task<CheckoutPaymentMethodModel> PreparePaymentMethodModelAsync(IList<ShoppingCartItem> cart, int filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
@@ -507,7 +522,10 @@ namespace Nop.Web.Factories
         /// Prepare payment info model
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
-        /// <returns>Payment info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment info model
+        /// </returns>
         public virtual Task<CheckoutPaymentInfoModel> PreparePaymentInfoModelAsync(IPaymentMethod paymentMethod)
         {
             return Task.FromResult(new CheckoutPaymentInfoModel
@@ -521,7 +539,10 @@ namespace Nop.Web.Factories
         /// Prepare confirm order model
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>Confirm order model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the confirm order model
+        /// </returns>
         public virtual async Task<CheckoutConfirmModel> PrepareConfirmOrderModelAsync(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutConfirmModel
@@ -544,7 +565,10 @@ namespace Nop.Web.Factories
         /// Prepare checkout completed model
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Checkout completed model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout completed model
+        /// </returns>
         public virtual Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
         {
             if (order == null)
@@ -564,7 +588,10 @@ namespace Nop.Web.Factories
         /// Prepare checkout progress model
         /// </summary>
         /// <param name="step">Step</param>
-        /// <returns>Checkout progress model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout progress model
+        /// </returns>
         public virtual Task<CheckoutProgressModel> PrepareCheckoutProgressModelAsync(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel { CheckoutProgressStep = step };
@@ -576,7 +603,10 @@ namespace Nop.Web.Factories
         /// Prepare one page checkout model
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>One page checkout model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the one page checkout model
+        /// </returns>
         public virtual async Task<OnePageCheckoutModel> PrepareOnePageCheckoutModelAsync(IList<ShoppingCartItem> cart)
         {
             if (cart == null)

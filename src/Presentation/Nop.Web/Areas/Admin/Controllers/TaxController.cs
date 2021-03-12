@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
@@ -20,6 +23,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly ITaxCategoryService _taxCategoryService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
         private readonly ITaxModelFactory _taxModelFactory;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly TaxSettings _taxSettings;
@@ -31,6 +36,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public TaxController(IPermissionService permissionService,
             ISettingService settingService,
             ITaxCategoryService taxCategoryService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext,
             ITaxModelFactory taxModelFactory,
             ITaxPluginManager taxPluginManager,
             TaxSettings taxSettings)
@@ -38,6 +45,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _permissionService = permissionService;
             _settingService = settingService;
             _taxCategoryService = taxCategoryService;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
             _taxModelFactory = taxModelFactory;
             _taxPluginManager = taxPluginManager;
             _taxSettings = taxSettings;
@@ -54,7 +63,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Providers");
         }
 
-        public virtual async Task<IActionResult> Providers()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Providers(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -62,10 +72,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _taxModelFactory.PrepareTaxProviderSearchModelAsync(new TaxProviderSearchModel());
 
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
+
             return View(model);
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Providers(TaxProviderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -77,6 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MarkAsPrimaryProvider(string systemName)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -99,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Tax Categories
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Categories()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -111,6 +135,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Categories(TaxCategorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -123,6 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CategoryUpdate(TaxCategoryModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -139,6 +165,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CategoryAdd(TaxCategoryModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -155,6 +182,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CategoryDelete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))

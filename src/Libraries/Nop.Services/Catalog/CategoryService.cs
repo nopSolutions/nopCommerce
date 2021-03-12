@@ -23,7 +23,6 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
@@ -40,7 +39,7 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public CategoryService(CatalogSettings catalogSettings,
+        public CategoryService(
             IAclService aclService,
             ICustomerService customerService,
             ILocalizationService localizationService,
@@ -53,7 +52,6 @@ namespace Nop.Services.Catalog
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
             _aclService = aclService;
             _customerService = customerService;
             _localizationService = localizationService;
@@ -72,37 +70,15 @@ namespace Nop.Services.Catalog
         #region Utilities
 
         /// <summary>
-        /// Filter hidden entries according to constraints if any
-        /// </summary>
-        /// <param name="query">Query to filter</param>
-        /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
-        /// <returns>Filtered query</returns>
-        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
-            int storeId, int[] customerRolesIds)
-            where TEntity : Category
-        {
-            //filter unpublished entries
-            query = query.Where(entry => entry.Published);
-
-            //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
-                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
-
-            //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
-
-            return query;
-        }
-        
-        /// <summary>
         /// Gets a product category mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
         /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns>Product category mapping collection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product category mapping collection
+        /// </returns>
         protected virtual async Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, int storeId,
             bool showHidden = false)
         {
@@ -110,13 +86,19 @@ namespace Nop.Services.Catalog
                 return new List<ProductCategory>();
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             return await _productCategoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                 {
-                    var categoriesQuery = await FilterHiddenEntriesAsync(_categoryRepository.Table, storeId, customerRolesIds);
+                    var categoriesQuery = _categoryRepository.Table.Where(c => c.Published);
+
+                    //apply store mapping constraints
+                    categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, storeId);
+
+                    //apply ACL constraints
+                    categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customer);
+
                     query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
                 }
 
@@ -135,7 +117,10 @@ namespace Nop.Services.Catalog
         /// <param name="source">Source</param>
         /// <param name="parentId">Parent category identifier</param>
         /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
-        /// <returns>Sorted categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sorted categories
+        /// </returns>
         protected virtual async Task<IList<Category>> SortCategoriesForTreeAsync(IList<Category> source, int parentId = 0,
             bool ignoreCategoriesWithoutExistingParent = false)
         {
@@ -169,6 +154,7 @@ namespace Nop.Services.Catalog
         /// Clean up category references for a  specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ClearDiscountCategoryMappingAsync(Discount discount)
         {
             if (discount is null)
@@ -183,6 +169,7 @@ namespace Nop.Services.Catalog
         /// Delete category
         /// </summary>
         /// <param name="category">Category</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCategoryAsync(Category category)
         {
             await _categoryRepository.DeleteAsync(category);
@@ -200,6 +187,7 @@ namespace Nop.Services.Catalog
         /// Delete Categories
         /// </summary>
         /// <param name="categories">Categories</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCategoriesAsync(IList<Category> categories)
         {
             if (categories == null)
@@ -214,7 +202,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
         public virtual async Task<IList<Category>> GetAllCategoriesAsync(int storeId = 0, bool showHidden = false)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllCacheKey,
@@ -241,20 +232,29 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
-        /// <returns>Categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
         public virtual async Task<IPagedList<Category>> GetAllCategoriesAsync(string categoryName, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, bool? overridePublished = null)
         {
             var unsortedCategories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                {
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
-                }
+                    query = query.Where(c => c.Published);
                 else if (overridePublished.HasValue)
                     query = query.Where(c => c.Published == overridePublished.Value);
+
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                if (!showHidden)
+                {
+                    var customer = await _workContext.GetCurrentCustomerAsync();
+                    query = await _aclService.ApplyAcl(query, customer);
+                }
 
                 if (!string.IsNullOrWhiteSpace(categoryName))
                     query = query.Where(c => c.Name.Contains(categoryName));
@@ -276,23 +276,33 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
         public virtual async Task<IList<Category>> GetAllCategoriesByParentCategoryIdAsync(int parentCategoryId,
             bool showHidden = false)
         {
-            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var categories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                {
+                    query = query.Where(c => c.Published);
+
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
+
+                    //apply ACL constraints
+                    query = await _aclService.ApplyAcl(query, customer);
+                }
 
                 query = query.Where(c => !c.Deleted && c.ParentCategoryId == parentCategoryId);
 
                 return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
-                parentCategoryId, showHidden, customer, storeId));
+                parentCategoryId, showHidden, customer, store));
 
             return categories;
         }
@@ -301,7 +311,10 @@ namespace Nop.Services.Catalog
         /// Gets all categories displayed on the home page
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
         public virtual async Task<IList<Category>> GetAllCategoriesDisplayedOnHomepageAsync(bool showHidden = false)
         {
             var categories = await _categoryRepository.GetAllAsync(query =>
@@ -335,7 +348,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Category identifiers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category identifiers
+        /// </returns>
         public virtual async Task<IList<int>> GetAppliedCategoryIdsAsync(Discount discount, Customer customer)
         {
             if (discount == null)
@@ -372,7 +388,10 @@ namespace Nop.Services.Catalog
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Category identifiers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category identifiers
+        /// </returns>
         public virtual async Task<IList<int>> GetChildCategoryIdsAsync(int parentCategoryId, int storeId = 0, bool showHidden = false)
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdsCacheKey,
@@ -402,7 +421,10 @@ namespace Nop.Services.Catalog
         /// Gets a category
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
-        /// <returns>Category</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category
+        /// </returns>
         public virtual async Task<Category> GetCategoryByIdAsync(int categoryId)
         {
             return await _categoryRepository.GetByIdAsync(categoryId, cache => default);
@@ -415,7 +437,10 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to load deleted categories</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of categories
+        /// </returns>
         public virtual async Task<IPagedList<Category>> GetCategoriesByAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -439,6 +464,7 @@ namespace Nop.Services.Catalog
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCategoryAsync(Category category)
         {
             await _categoryRepository.InsertAsync(category);
@@ -449,7 +475,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<DiscountCategoryMapping> GetDiscountAppliedToCategoryAsync(int categoryId, int discountId)
         {
             return await _discountCategoryMappingRepository.Table
@@ -460,6 +489,7 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-category mapping record
         /// </summary>
         /// <param name="discountCategoryMapping">Discount-category mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDiscountCategoryMappingAsync(DiscountCategoryMapping discountCategoryMapping)
         {
             await _discountCategoryMappingRepository.InsertAsync(discountCategoryMapping);
@@ -469,6 +499,7 @@ namespace Nop.Services.Catalog
         /// Deletes a discount-category mapping record
         /// </summary>
         /// <param name="discountCategoryMapping">Discount-category mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDiscountCategoryMappingAsync(DiscountCategoryMapping discountCategoryMapping)
         {
             await _discountCategoryMappingRepository.DeleteAsync(discountCategoryMapping);
@@ -478,6 +509,7 @@ namespace Nop.Services.Catalog
         /// Updates the category
         /// </summary>
         /// <param name="category">Category</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCategoryAsync(Category category)
         {
             if (category == null)
@@ -503,6 +535,7 @@ namespace Nop.Services.Catalog
         /// Deletes a product category mapping
         /// </summary>
         /// <param name="productCategory">Product category</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteProductCategoryAsync(ProductCategory productCategory)
         {
             await _productCategoryRepository.DeleteAsync(productCategory);
@@ -515,7 +548,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product a category mapping collection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product a category mapping collection
+        /// </returns>
         public virtual async Task<IPagedList<ProductCategory>> GetProductCategoriesByCategoryIdAsync(int categoryId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
@@ -530,10 +566,16 @@ namespace Nop.Services.Catalog
 
             if (!showHidden)
             {
-                var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                var categoriesQuery = _categoryRepository.Table.Where(c => c.Published);
+
+                //apply store mapping constraints
+                var store = await _storeContext.GetCurrentStoreAsync();
+                categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, store.Id);
+
+                //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                var categoriesQuery = await FilterHiddenEntriesAsync(_categoryRepository.Table, storeId, customerRolesIds);
+                categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customer);
+
                 query = query.Where(pc => categoriesQuery.Any(c => c.Id == pc.CategoryId));
             }
 
@@ -545,7 +587,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns> Product category mapping collection</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product category mapping collection
+        /// </returns>
         public virtual async Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, bool showHidden = false)
         {
             return await GetProductCategoriesByProductIdAsync(productId, (await _storeContext.GetCurrentStoreAsync()).Id, showHidden);
@@ -555,7 +600,10 @@ namespace Nop.Services.Catalog
         /// Gets a product category mapping 
         /// </summary>
         /// <param name="productCategoryId">Product category mapping identifier</param>
-        /// <returns>Product category mapping</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product category mapping
+        /// </returns>
         public virtual async Task<ProductCategory> GetProductCategoryByIdAsync(int productCategoryId)
         {
             return await _productCategoryRepository.GetByIdAsync(productCategoryId, cache => default);
@@ -565,6 +613,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product category mapping
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertProductCategoryAsync(ProductCategory productCategory)
         {
             await _productCategoryRepository.InsertAsync(productCategory);
@@ -574,6 +623,7 @@ namespace Nop.Services.Catalog
         /// Updates the product category mapping 
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateProductCategoryAsync(ProductCategory productCategory)
         {
             await _productCategoryRepository.UpdateAsync(productCategory);
@@ -583,7 +633,10 @@ namespace Nop.Services.Catalog
         /// Returns a list of names of not existing categories
         /// </summary>
         /// <param name="categoryIdsNames">The names and/or IDs of the categories to check</param>
-        /// <returns>List of names and/or IDs not existing categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of names and/or IDs not existing categories
+        /// </returns>
         public virtual async Task<string[]> GetNotExistingCategoriesAsync(string[] categoryIdsNames)
         {
             if (categoryIdsNames == null)
@@ -596,8 +649,10 @@ namespace Nop.Services.Catalog
                 .Where(c => queryFilter.Contains(c))
                 .ToListAsync();
 
+             queryFilter = queryFilter.Except(filter).ToArray();
+
             //if some names not found
-            if (!queryFilter.Except(filter).ToArray().Any())
+            if (!queryFilter.Any())
                 return queryFilter.ToArray();
 
             //filtering by IDs
@@ -612,7 +667,10 @@ namespace Nop.Services.Catalog
         /// Get category IDs for products
         /// </summary>
         /// <param name="productIds">Products IDs</param>
-        /// <returns>Category IDs for products</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category IDs for products
+        /// </returns>
         public virtual async Task<IDictionary<int, int[]>> GetProductCategoryIdsAsync(int[] productIds)
         {
             var query = _productCategoryRepository.Table;
@@ -628,12 +686,15 @@ namespace Nop.Services.Catalog
         /// Gets categories by identifier
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <returns>Categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
         public virtual async Task<IList<Category>> GetCategoriesByIdsAsync(int[] categoryIds)
         {
-            return await _categoryRepository.GetByIdsAsync(categoryIds);
+            return await _categoryRepository.GetByIdsAsync(categoryIds, includeDeleted: false);
         }
-        
+
         /// <summary>
         /// Returns a ProductCategory that has the specified values
         /// </summary>
@@ -658,7 +719,10 @@ namespace Nop.Services.Catalog
         /// <param name="allCategories">All categories</param>
         /// <param name="separator">Separator</param>
         /// <param name="languageId">Language identifier for localization</param>
-        /// <returns>Formatted breadcrumb</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the formatted breadcrumb
+        /// </returns>
         public virtual async Task<string> GetFormattedBreadCrumbAsync(Category category, IList<Category> allCategories = null,
             string separator = ">>", int languageId = 0)
         {
@@ -680,7 +744,10 @@ namespace Nop.Services.Catalog
         /// <param name="category">Category</param>
         /// <param name="allCategories">All categories</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
-        /// <returns>Category breadcrumb </returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category breadcrumb 
+        /// </returns>
         public virtual async Task<IList<Category>> GetCategoryBreadCrumbAsync(Category category, IList<Category> allCategories = null, bool showHidden = false)
         {
             if (category == null)

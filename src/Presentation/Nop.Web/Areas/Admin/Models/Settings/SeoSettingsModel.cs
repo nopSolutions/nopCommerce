@@ -22,6 +22,14 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool PageTitleSeoAdjustment_OverrideForStore { get; set; }
         public SelectList PageTitleSeoAdjustmentValues { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HomepageTitle")]
+        public string HomepageTitle { get; set; }
+        public bool HomepageTitle_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HomepageDescription")]
+        public string HomepageDescription { get; set; }
+        public bool HomepageDescription_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultTitle")]
         public string DefaultTitle { get; set; }
         public bool DefaultTitle_OverrideForStore { get; set; }

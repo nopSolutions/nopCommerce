@@ -1,5 +1,13 @@
-$.fn.showField = function () {
-  this.css('display', 'flex');
+//this method is used to show an element by removing the appropriate hiding class
+//we don't use the jquery show/hide methods since they don't work with "display: flex" properly
+$.fn.showElement = function () {
+  this.removeClass('d-none');
+}
+
+//this method is used to hide an element by adding the appropriate hiding class
+//we don't use the jquery show/hide methods since they don't work with "display: flex" properly
+$.fn.hideElement = function () {
+  this.addClass('d-none');
 }
 
 function setLocation(url) {
@@ -305,9 +313,9 @@ function reloadAllDataTables(itemCount) {
     timePause = itemCount * 100;
   }
   $('table[class^="table"]').each(function () {
-  setTimeout(function () {
-    ensureDataTablesRendered();
-  }, timePause);
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, timePause);
   });
 }
 
@@ -321,22 +329,22 @@ $(document).ready(function () {
       ensureDataTablesRendered();
     }, 1);
   });
+
+  // when tab item click
+  $('.nav-tabs .nav-item').on('click', function (e) {
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, 1);
+  });
+
   $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     ensureDataTablesRendered();
   });
+
   $('#advanced-settings-mode').on('click', function (e) {
     ensureDataTablesRendered();
   });
-});
 
-//Recalculate the column widths
-$(document).ready(function () {
-  // when menu item click
-  $('.nav-item').on('click', function (e) {
-    var itemCount = $(e.currentTarget).find('ul').children('li:not([nav-item])').length;
-       
-    reloadAllDataTables(itemCount);
-  });
   //when sidebar-toggle click
   $('#nopSideBarPusher').on('click', function (e) {
     reloadAllDataTables();

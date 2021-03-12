@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using SkiaSharp;
 
 namespace Nop.Services.Media.RoxyFileman
 {
@@ -49,6 +50,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task BaseCopyDirectoryAsync(string sourcePath, string destinationPath)
         {
             var existingFiles = _fileProvider.GetFiles(sourcePath);
@@ -76,7 +78,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
-        /// <returns>List of paths to the files</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of paths to the files
+        /// </returns>
         protected virtual async Task<List<string>> GetFilesByDirectoryAsync(string directoryPath, string type)
         {
             if (!await IsPathAllowedAsync(directoryPath))
@@ -164,7 +169,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// Checks if the path is allowed to work on
         /// </summary>
         /// <param name="path">Path to check</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         protected virtual async Task<bool> IsPathAllowedAsync(string path)
         {
             var absp = _fileProvider.GetAbsolutePath(path);
@@ -184,6 +192,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Initial service configuration
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ConfigureAsync()
         {
             await CreateConfigurationAsync();
@@ -202,7 +211,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CopyDirectoryAsync(string sourcePath, string destinationPath)
         {
             var directoryPath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -228,7 +237,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="parentDirectoryPath">Path to the parent directory</param>
         /// <param name="name">Name of the new directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CreateDirectoryAsync(string parentDirectoryPath, string name)
         {
             parentDirectoryPath = GetFullPath(await GetVirtualPathAsync(parentDirectoryPath));
@@ -255,7 +264,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Delete the directory
         /// </summary>
         /// <param name="path">Path to the directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDirectoryAsync(string path)
         {
             path = await GetVirtualPathAsync(path);
@@ -287,7 +296,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Download the directory from the server as a zip archive
         /// </summary>
         /// <param name="path">Path to the directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DownloadDirectoryAsync(string path)
         {
             path = (await GetVirtualPathAsync(path)).TrimEnd('/');
@@ -321,7 +330,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get all available directories as a directory tree
         /// </summary>
         /// <param name="type">Type of the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task GetDirectoriesAsync(string type)
         {
             var rootDirectoryPath = GetFullPath(await GetVirtualPathAsync(null));
@@ -350,7 +359,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MoveDirectoryAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -385,7 +394,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="newName">New name of the directory</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RenameDirectoryAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -427,7 +436,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="destinationPath">Path to the destination file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             var filePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -456,7 +465,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Delete the file
         /// </summary>
         /// <param name="path">Path to the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteFileAsync(string path)
         {
             path = GetFullPath(await GetVirtualPathAsync(path));
@@ -481,7 +490,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Download the file from the server
         /// </summary>
         /// <param name="path">Path to the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DownloadFileAsync(string path)
         {
             var filePath = GetFullPath(await GetVirtualPathAsync(path));
@@ -503,7 +512,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task GetFilesAsync(string directoryPath, string type)
         {
             directoryPath = await GetVirtualPathAsync(directoryPath);
@@ -519,7 +528,7 @@ namespace Nop.Services.Media.RoxyFileman
                 if (GetFileType(_fileProvider.GetFileExtension(files[i])) == "image")
                 {
                     await using var stream = new FileStream(physicalPath, FileMode.Open);
-                    using var image = Image.FromStream(stream);
+                    using var image = SKBitmap.Decode(stream);
                     width = image.Width;
                     height = image.Height;
                 }
@@ -538,7 +547,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="destinationPath">Path to the destination file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task MoveFileAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -573,7 +582,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source file</param>
         /// <param name="newName">New name of the file</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RenameFileAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
@@ -604,7 +613,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Upload files to a directory on passed path
         /// </summary>
         /// <param name="directoryPath">Path to directory to upload files</param>
-        /// <returns>A task that represents the completion of the operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UploadFilesAsync(string directoryPath)
         {
             var result = GetSuccessResponse();
@@ -627,10 +636,8 @@ namespace Nop.Services.Media.RoxyFileman
 
                         //A warning (SCS0018 - Path Traversal) from the "Security Code Scan" analyzer may appear at this point. 
                         //In this case, it is not relevant. The input is not supplied by user.
-                        using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
-                        {
+                        await using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate)) 
                             await formFile.CopyToAsync(stream);
-                        }
 
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
                             continue;
@@ -670,55 +677,39 @@ namespace Nop.Services.Media.RoxyFileman
         /// Create the thumbnail of the image and write it to the response
         /// </summary>
         /// <param name="path">Path to the image</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CreateImageThumbnailAsync(string path)
         {
             path = GetFullPath(await GetVirtualPathAsync(path));
-            int.TryParse(GetHttpContext().Request.Query["width"].ToString().Replace("px", string.Empty), out var width);
-            int.TryParse(GetHttpContext().Request.Query["height"].ToString().Replace("px", string.Empty), out var height);
 
-            await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            using var image = new Bitmap(Image.FromStream(stream));
-            var cropX = 0;
-            var cropY = 0;
+            var file = File.ReadAllBytes(path);
+            using var image = SKBitmap.Decode(file);
 
-            var imgRatio = image.Width / (double)image.Height;
 
-            if (height == 0)
-                height = Convert.ToInt32(Math.Floor(width / imgRatio));
-
-            if (width > image.Width)
-                width = image.Width;
-            if (height > image.Height)
-                height = image.Height;
-
-            var cropRatio = width / (double)height;
-            var cropWidth = Convert.ToInt32(Math.Floor(image.Height * cropRatio));
-            var cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
-
-            if (cropWidth > image.Width)
+            float width, height;
+            var targetSize = 120;
+            if (image.Height > image.Width)
             {
-                cropWidth = image.Width;
-                cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
+                // portrait
+                width = image.Width * (targetSize / (float)image.Height);
+                height = targetSize;
+            }
+            else
+            {
+                // landscape or square
+                width = targetSize;
+                height = image.Height * (targetSize / (float)image.Width);
             }
 
-            if (cropHeight > image.Height)
-            {
-                cropHeight = image.Height;
-                cropWidth = Convert.ToInt32(Math.Floor(cropHeight * cropRatio));
-            }
-
-            if (cropWidth < image.Width)
-                cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
-            if (cropHeight < image.Height)
-                cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
-
-            using var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare);
             GetHttpContext().Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
 
-            await using var thumbnailImageStream = new MemoryStream();
-            cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(thumbnailImageStream, ImageFormat.Png);
-            var thumbnailImageBinary = thumbnailImageStream.ToArray();
-            await GetHttpContext().Response.Body.WriteAsync(thumbnailImageBinary);
+            using (var bitmap = image.Resize(new SKImageInfo((int)width, (int)height), SKFilterQuality.None))
+            {
+                using var cropImg = SKImage.FromBitmap(bitmap);
+                file = cropImg.Encode().ToArray();
+            }
+
+            await GetHttpContext().Response.Body.WriteAsync(file, 0, file.Length);
             GetHttpContext().Response.Body.Close();
         }
 
@@ -726,6 +717,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush all images on disk
         /// </summary>
         /// <param name="removeOriginal">Specifies whether to delete original images</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task FlushAllImagesOnDiskAsync(bool removeOriginal = true)
         {
             //do nothing
@@ -736,6 +728,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush images on disk
         /// </summary>
         /// <param name="directoryPath">Directory path to flush images</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual Task FlushImagesOnDiskAsync(string directoryPath)
         {
             //do nothing

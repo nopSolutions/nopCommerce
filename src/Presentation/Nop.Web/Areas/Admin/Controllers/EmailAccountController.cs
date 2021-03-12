@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -29,6 +31,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
 
         #endregion
@@ -44,6 +48,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext,
             IStoreContext storeContext)
         {
             _emailAccountSettings = emailAccountSettings;
@@ -55,6 +61,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService = notificationService;
             _permissionService = permissionService;
             _settingService = settingService;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
             _storeContext = storeContext;
         }
 
@@ -62,7 +70,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual async Task<IActionResult> List()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> List(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -70,10 +79,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _emailAccountModelFactory.PrepareEmailAccountSearchModelAsync(new EmailAccountSearchModel());
 
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
+
             return View(model);
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List(EmailAccountSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
@@ -85,6 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MarkAsDefaultEmail(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
@@ -100,6 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Create()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
@@ -112,6 +135,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Create(EmailAccountModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
@@ -141,7 +165,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public virtual async Task<IActionResult> Edit(int id)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task<IActionResult> Edit(int id, bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -154,11 +179,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _emailAccountModelFactory.PrepareEmailAccountModelAsync(null, emailAccount);
 
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
+
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Edit(EmailAccountModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
@@ -192,6 +229,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangePassword(EmailAccountModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
@@ -213,6 +251,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("sendtestemail")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SendTestEmail(EmailAccountModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
@@ -253,6 +292,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))

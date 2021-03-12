@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 using Nop.Services.Customers;
@@ -23,11 +25,13 @@ namespace Nop.Services.Plugins
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMigrationManager _migrationManager;
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IPluginsInfo _pluginsInfo;
         private readonly IWebHelper _webHelper;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -35,18 +39,22 @@ namespace Nop.Services.Plugins
 
         public PluginService(CatalogSettings catalogSettings,
             ICustomerService customerService,
+            IHttpContextAccessor httpContextAccessor,
             IMigrationManager migrationManager,
             ILogger logger,
             INopFileProvider fileProvider,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            MediaSettings mediaSettings)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
+            _httpContextAccessor = httpContextAccessor;
             _migrationManager = migrationManager;
             _logger = logger;
             _fileProvider = fileProvider;
             _pluginsInfo = Singleton<IPluginsInfo>.Instance;
             _webHelper = webHelper;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -95,7 +103,10 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Result of check</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result of check
+        /// </returns>
         protected virtual async Task<bool> FilterByCustomerAsync(PluginDescriptor pluginDescriptor, Customer customer)
         {
             if (pluginDescriptor == null)
@@ -209,7 +220,10 @@ namespace Nop.Services.Plugins
         /// <param name="friendlyName">Filter by plugin friendly name; pass null to load all records</param>
         /// <param name="author">Filter by plugin author; pass null to load all records</param>
         /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
-        /// <returns>Plugin descriptors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin descriptors
+        /// </returns>
         public virtual async Task<IList<PluginDescriptor>> GetPluginDescriptorsAsync<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "", string friendlyName = null, string author = null) where TPlugin : class, IPlugin
         {
@@ -245,7 +259,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>>Plugin descriptor</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the >Plugin descriptor
+        /// </returns>
         public virtual async Task<PluginDescriptor> GetPluginDescriptorBySystemNameAsync<TPlugin>(string systemName,
             LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string @group = null) where TPlugin : class, IPlugin
@@ -262,7 +279,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
-        /// <returns>Plugins</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugins
+        /// </returns>
         public virtual async Task<IList<TPlugin>> GetPluginsAsync<TPlugin>(
             LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string @group = null) where TPlugin : class, IPlugin
@@ -292,7 +312,10 @@ namespace Nop.Services.Plugins
         /// Get plugin logo URL
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
-        /// <returns>Logo URL</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the logo URL
+        /// </returns>
         public virtual Task<string> GetPluginLogoUrlAsync(PluginDescriptor pluginDescriptor)
         {
             var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
@@ -305,8 +328,10 @@ namespace Nop.Services.Plugins
             if (string.IsNullOrWhiteSpace(logoExtension))
                 return Task.FromResult<string>(null);
 
-            var storeLocation = _webHelper.GetStoreLocation();
-            var logoUrl = $"{storeLocation}{NopPluginDefaults.PathName}/" +
+            var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty;
+            var logoPathUrl = _mediaSettings.UseAbsoluteImagePath ? _webHelper.GetStoreLocation() : $"{pathBase}/";
+
+            var logoUrl = $"{logoPathUrl}{NopPluginDefaults.PathName}/" +
                 $"{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
 
             return Task.FromResult(logoUrl);
@@ -318,6 +343,7 @@ namespace Nop.Services.Plugins
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
         /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PreparePluginToInstallAsync(string systemName, Customer customer = null, bool checkDependencies = true)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
@@ -358,6 +384,7 @@ namespace Nop.Services.Plugins
         /// Prepare plugin to the uninstallation
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PreparePluginToUninstallAsync(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
@@ -411,6 +438,7 @@ namespace Nop.Services.Plugins
         /// Prepare plugin to the removing
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PreparePluginToDeleteAsync(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
@@ -447,6 +475,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Install plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InstallPluginsAsync()
         {
             //get all uninstalled plugins
@@ -502,6 +531,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Uninstall plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UninstallPluginsAsync()
         {
             //get all installed plugins
@@ -556,6 +586,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Delete plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeletePluginsAsync()
         {
             //get all uninstalled plugins (delete plugin only previously uninstalled)
@@ -615,6 +646,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Update plugins
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdatePluginsAsync()
         {
             foreach (var installedPlugin in _pluginsInfo.InstalledPlugins)

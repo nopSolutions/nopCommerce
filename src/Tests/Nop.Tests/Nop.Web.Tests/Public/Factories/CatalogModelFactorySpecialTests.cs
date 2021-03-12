@@ -77,7 +77,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task PrepareSearchModelShouldDependOnSettings()
         {
-            var model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogPagingFilteringModel());
+            var model = await _catalogModelFactory.PrepareSearchModelAsync(new SearchModel(), new CatalogProductsCommand());
             
             model.AvailableVendors.Any().Should().BeTrue();
             model.AvailableVendors.Count.Should().Be(3);
@@ -86,20 +86,45 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task PrepareCategoryModelShouldDependOnSettings()
         {
-            var model = await _catalogModelFactory.PrepareCategoryModelAsync(_category, new CatalogPagingFilteringModel());
+            var model = await _catalogModelFactory.PrepareCategoryModelAsync(_category, new CatalogProductsCommand());
            
             model.CategoryBreadcrumb.Any().Should().BeFalse();
             model.SubCategories.Count.Should().Be(3);
-            model.Products.Count.Should().Be(6);
+            model.CatalogProductsModel.Products.Count.Should().Be(6);
         }
         
         [Test]
         public async Task CanPreparePopularProductTagsModel()
         {
-            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync(_catalogSettings.NumberOfProductTags);
 
             model.Tags.Count.Should().Be(16);
             model.TotalTags.Should().Be(16);
+        }
+
+        [Test]
+        public async Task PrepareViewModesShouldDependOnSettings()
+        {
+            var model = new CatalogProductsModel();
+            await _catalogModelFactory.PrepareViewModesAsync(model, new CatalogProductsCommand
+            {
+                ViewMode = "list"
+            });
+
+            model.AllowProductViewModeChanging.Should().BeFalse();
+            model.AvailableViewModes.Count.Should().Be(0);
+            model.ViewMode.Should().Be("list");
+        }
+
+        [Test]
+        public async Task PrepareCategorySimpleModelsShouldDependOnSettings()
+        {
+            var model = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
+
+            var numberOfProducts = model
+                .FirstOrDefault(p => p.Id == _category.Id)?.NumberOfProducts;
+
+            numberOfProducts.Should().Be(12);
         }
     }
 }

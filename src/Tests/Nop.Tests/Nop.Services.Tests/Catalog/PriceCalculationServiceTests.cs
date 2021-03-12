@@ -45,10 +45,13 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            var (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
             finalPrice.Should().Be(79.99M);
-            (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
+            finalPrice.Should().Be(finalPriceWithoutDiscounts);
+            
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
             finalPrice.Should().Be(19M);
+            finalPriceWithoutDiscounts.Should().Be(finalPriceWithoutDiscounts);
         }
 
         [Test]
@@ -59,16 +62,21 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            var (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
             finalPrice.Should().Be(79.99M);
-            (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
+            finalPrice.Should().Be(finalPriceWithoutDiscounts);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
             finalPrice.Should().Be(19);
-            (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 3);
+            finalPrice.Should().Be(finalPriceWithoutDiscounts);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 3);
             finalPrice.Should().Be(19);
-            (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 5);
+            finalPrice.Should().Be(finalPriceWithoutDiscounts);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 5);
             finalPrice.Should().Be(17);
-            (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 7);
+            finalPrice.Should().Be(finalPriceWithoutDiscounts);
+            (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 7);
             finalPrice.Should().Be(17);
+            finalPrice.Should().Be(finalPriceWithoutDiscounts);
         }
 
         [Test]
@@ -95,12 +103,12 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
 
             product.HasTierPrices = true;
 
-            var (rez1, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
-            var (rez2, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
-            var (rez3, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 3);
-            var (rez4, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 5);
-            var (rez5, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 10);
-            var (rez6, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 15);
+            var (rezWithoutDiscount1, rez1, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false);
+            var (rezWithoutDiscount2, rez2, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 2);
+            var (rezWithoutDiscount3, rez3, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 3);
+            var (rezWithoutDiscount4, rez4, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 5);
+            var (rezWithoutDiscount5, rez5, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 10);
+            var (rezWithoutDiscount6, rez6, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 0, false, 15);
 
             foreach (var tierPrice in tierPrices)
                 await _productService.DeleteTierPriceAsync(tierPrice);
@@ -111,6 +119,13 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             rez4.Should().Be(20);
             rez5.Should().Be(15);
             rez6.Should().Be(15);
+
+            rez1.Should().Be(rezWithoutDiscount1);
+            rez2.Should().Be(rezWithoutDiscount2);
+            rez3.Should().Be(rezWithoutDiscount3);
+            rez4.Should().Be(rezWithoutDiscount4);
+            rez5.Should().Be(rezWithoutDiscount5);
+            rez6.Should().Be(rezWithoutDiscount6);
         }
 
         [Test]
@@ -121,8 +136,9 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            var (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 5, false);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, 5, false);
             finalPrice.Should().Be(84.99M);
+            finalPrice.Should().Be(finalPriceWithoutDiscounts);
         }
 
         [Test]
@@ -143,12 +159,13 @@ namespace Nop.Tests.Nop.Services.Tests.Catalog
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
            
-            var (finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer);
 
             await _productService.DeleteDiscountProductMappingAsync(mapping);
             await _customerService.RemoveDiscountCouponCodeAsync(customer, "123");
 
             finalPrice.Should().Be(69.99M);
+            finalPriceWithoutDiscounts.Should().Be(79.99M);
         }
 
         [TestCase(12.366, 12.37, RoundingType.Rounding001)]

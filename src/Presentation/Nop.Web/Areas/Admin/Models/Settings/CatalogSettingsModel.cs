@@ -179,6 +179,22 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string SearchPagePageSizeOptions { get; set; }
         public bool SearchPagePageSizeOptions_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering")]
+        public bool SearchPagePriceRangeFiltering { get; set; }
+        public bool SearchPagePriceRangeFiltering_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPagePriceFrom")]
+        public decimal SearchPagePriceFrom { get; set; }
+        public bool SearchPagePriceFrom_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPagePriceTo")]
+        public decimal SearchPagePriceTo { get; set; }
+        public bool SearchPagePriceTo_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange")]
+        public bool SearchPageManuallyPriceRange { get; set; }
+        public bool SearchPageManuallyPriceRange_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled")]
         public bool ProductSearchAutoCompleteEnabled { get; set; }
         public bool ProductSearchAutoCompleteEnabled_OverrideForStore { get; set; }
@@ -226,6 +242,22 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions")]
         public string ProductsByTagPageSizeOptions { get; set; }
         public bool ProductsByTagPageSizeOptions_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering")]
+        public bool ProductsByTagPriceRangeFiltering { get; set; }
+        public bool ProductsByTagPriceRangeFiltering_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPriceFrom")]
+        public decimal ProductsByTagPriceFrom { get; set; }
+        public bool ProductsByTagPriceFrom_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPriceTo")]
+        public decimal ProductsByTagPriceTo { get; set; }
+        public bool ProductsByTagPriceTo_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange")]
+        public bool ProductsByTagManuallyPriceRange { get; set; }
+        public bool ProductsByTagManuallyPriceRange_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IncludeShortDescriptionInCompareProducts")]
         public bool IncludeShortDescriptionInCompareProducts { get; set; }
@@ -318,9 +350,28 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool DisplayDatePreOrderAvailability { get; set; }
         public bool DisplayDatePreOrderAvailability_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType")]
+        public int AttributeValueOutOfStockDisplayType { get; set; }
+        public bool AttributeValueOutOfStockDisplayType_OverrideForStore { get; set; }
+        public SelectList AttributeValueOutOfStockDisplayTypes { get; set; }
+
         public SortOptionSearchModel SortOptionSearchModel { get; set; }
 
         public ReviewTypeSearchModel ReviewTypeSearchModel { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.UseAjaxCatalogProductsLoading")]
+        public bool UseAjaxCatalogProductsLoading { get; set; }
+        public bool UseAjaxCatalogProductsLoading_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering")]
+        public bool EnableManufacturerFiltering { get; set; }
+        public bool EnableManufacturerFiltering_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering")]
+        public bool EnablePriceRangeFiltering { get; set; }
+        public bool EnablePriceRangeFiltering_OverrideForStore { get; set; }
+
+        public string PrimaryStoreCurrencyCode { get; set; }
 
         #endregion
     }

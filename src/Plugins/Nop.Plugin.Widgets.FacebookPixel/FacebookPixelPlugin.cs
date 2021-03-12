@@ -63,7 +63,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         public async Task<IList<string>> GetWidgetZonesAsync()
         {
             var widgetZones = new List<string> { PublicWidgetZones.HeadHtmlTag };
@@ -88,6 +91,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
@@ -95,6 +99,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
                 ["Plugins.Widgets.FacebookPixel.Configuration"] = "Configuration",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents"] = "Configure custom events",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.SaveBeforeEdit"] = "You need to save the configuration before edit custom events.",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName"] = "Event name",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName.Hint"] = "Enter a name of the custom event (e.g. BlogView).",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones"] = "Widget zones",
@@ -144,6 +149,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             _widgetSettings.ActiveWidgetSystemNames.Remove(FacebookPixelDefaults.SystemName);

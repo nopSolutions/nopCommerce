@@ -197,6 +197,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public string CustomerRoleNames { get; set; }
 
+        //binding with multi-factor authentication provider
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider")]
+        public string MultiFactorAuthenticationProvider { get; set; }
+
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
