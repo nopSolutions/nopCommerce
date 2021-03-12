@@ -146,6 +146,14 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         }
 
         [Test]
+        public async Task CanPrepareCustomCustomerAttributes()
+        {
+            var model = await _customerModelFactory.PrepareCustomCustomerAttributesAsync(_customer);
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(10);
+        }
+
+        [Test]
         [Ignore("not implemented yet")]
         public void CanPrepareCustomerNavigationModel()
         {

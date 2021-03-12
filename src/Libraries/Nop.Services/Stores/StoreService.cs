@@ -62,6 +62,7 @@ namespace Nop.Services.Stores
         /// Deletes a store
         /// </summary>
         /// <param name="store">Store</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteStoreAsync(Store store)
         {
             if (store == null)
@@ -77,7 +78,10 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Gets all stores
         /// </summary>
-        /// <returns>Stores</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the stores
+        /// </returns>
         public virtual async Task<IList<Store>> GetAllStoresAsync()
         {
             var result = await _storeRepository.GetAllAsync(query =>
@@ -92,7 +96,10 @@ namespace Nop.Services.Stores
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Store</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store
+        /// </returns>
         public virtual async Task<Store> GetStoreByIdAsync(int storeId)
         {
             return await _storeRepository.GetByIdAsync(storeId, cache => default);
@@ -102,6 +109,7 @@ namespace Nop.Services.Stores
         /// Inserts a store
         /// </summary>
         /// <param name="store">Store</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertStoreAsync(Store store)
         {
             await _storeRepository.InsertAsync(store);
@@ -111,6 +119,7 @@ namespace Nop.Services.Stores
         /// Updates the store
         /// </summary>
         /// <param name="store">Store</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateStoreAsync(Store store)
         {
             await _storeRepository.UpdateAsync(store);
@@ -139,7 +148,10 @@ namespace Nop.Services.Stores
         /// Returns a list of names of not existing stores
         /// </summary>
         /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
-        /// <returns>List of names and/or IDs not existing stores</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of names and/or IDs not existing stores
+        /// </returns>
         public async Task<string[]> GetNotExistingStoresAsync(string[] storeIdsNames)
         {
             if (storeIdsNames == null)

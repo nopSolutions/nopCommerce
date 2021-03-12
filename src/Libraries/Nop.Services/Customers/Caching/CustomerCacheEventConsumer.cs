@@ -17,6 +17,7 @@ namespace Nop.Services.Customers.Caching
         /// Handle password changed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(CustomerPasswordChangedEvent eventMessage)
         {
             await RemoveAsync(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId);
@@ -26,6 +27,7 @@ namespace Nop.Services.Customers.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(Customer entity)
         {
             await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesByCustomerPrefix, entity);

@@ -77,17 +77,17 @@
 
                         function toggleDisplayLogo() {
                             if ($('#@Html.IdFor(model => model.DisplayLogoInHeaderLinks)').is(':checked')) {
-                                $('#pnlLogoInHeaderLinks').showField();
+                                $('#pnlLogoInHeaderLinks').showElement();
                             }
                             else {
-                                $('#pnlLogoInHeaderLinks').hide();
+                                $('#pnlLogoInHeaderLinks').hideElement();
                             }
 
                             if ($('#@Html.IdFor(model => model.DisplayLogoInFooter)').is(':checked')) {
-                                $('#pnlLogoInFooter').showField();
+                                $('#pnlLogoInFooter').showElement();
                             }
                             else {
-                                $('#pnlLogoInFooter').hide();
+                                $('#pnlLogoInFooter').hideElement();
                             }
                         }
                     </script>

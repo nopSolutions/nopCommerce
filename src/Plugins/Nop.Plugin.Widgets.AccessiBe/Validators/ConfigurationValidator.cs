@@ -16,7 +16,8 @@ namespace Nop.Plugin.Widgets.AccessiBe.Validators
         {
             RuleFor(model => model.Script)
                 .NotEmpty()
-                .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Widgets.AccessiBe.Fields.Script.Required"));
+                .WithMessageAwait(localizationService.GetResourceAsync("Plugins.Widgets.AccessiBe.Fields.Script.Required"))
+                .When(model => model.Enabled);
         }
 
         #endregion

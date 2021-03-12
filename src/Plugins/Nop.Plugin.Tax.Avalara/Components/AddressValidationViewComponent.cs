@@ -78,7 +78,10 @@ namespace Nop.Plugin.Tax.Avalara.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone</param>
         /// <param name="additionalData">Additional parameters</param>
-        /// <returns>View component result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             //ensure that Avalara tax provider is active

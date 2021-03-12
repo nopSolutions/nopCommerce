@@ -73,44 +73,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Prepare the news comment model
-        /// </summary>
-        /// <param name="newsComment">News comment</param>
-        /// <returns>News comment model</returns>
-        protected virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
-        {
-            if (newsComment == null)
-                throw new ArgumentNullException(nameof(newsComment));
-
-            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
-
-            var model = new NewsCommentModel
-            {
-                Id = newsComment.Id,
-                CustomerId = newsComment.CustomerId,
-                CustomerName = await _customerService.FormatUsernameAsync(customer),
-                CommentTitle = newsComment.CommentTitle,
-                CommentText = newsComment.CommentText,
-                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuestAsync(customer),
-            };
-
-            if (_customerSettings.AllowCustomersToUploadAvatars)
-            {
-                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
-                    await _genericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-            }
-
-            return model;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -119,7 +82,10 @@ namespace Nop.Web.Factories
         /// <param name="model">News item model</param>
         /// <param name="newsItem">News item</param>
         /// <param name="prepareComments">Whether to prepare news comment models</param>
-        /// <returns>News item model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the news item model
+        /// </returns>
         public virtual async Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (model == null)
@@ -165,7 +131,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the home page news items model
         /// </summary>
-        /// <returns>Home page news items model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the home page news items model
+        /// </returns>
         public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync()
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
@@ -201,7 +170,10 @@ namespace Nop.Web.Factories
         /// Prepare the news item list model
         /// </summary>
         /// <param name="command">News paging filtering model</param>
-        /// <returns>News item list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the news item list model
+        /// </returns>
         public virtual async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command)
         {
             if (command.PageSize <= 0)
@@ -224,6 +196,42 @@ namespace Nop.Web.Factories
                 }).ToListAsync()
             };
             model.PagingFilteringContext.LoadPagedList(newsItems);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the news comment model
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the news comment model
+        /// </returns>
+        public virtual async Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment)
+        {
+            if (newsComment == null)
+                throw new ArgumentNullException(nameof(newsComment));
+
+            var customer = await _customerService.GetCustomerByIdAsync(newsComment.CustomerId);
+
+            var model = new NewsCommentModel
+            {
+                Id = newsComment.Id,
+                CustomerId = newsComment.CustomerId,
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CommentTitle = newsComment.CommentTitle,
+                CommentText = newsComment.CommentText,
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuestAsync(customer),
+            };
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                    await _genericAttributeService.GetAttributeAsync<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+            }
 
             return model;
         }

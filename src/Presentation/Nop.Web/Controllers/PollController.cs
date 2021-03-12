@@ -47,6 +47,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Vote(int pollAnswerId)
         {
             var pollAnswer = await _pollService.GetPollAnswerByIdAsync(pollAnswerId);

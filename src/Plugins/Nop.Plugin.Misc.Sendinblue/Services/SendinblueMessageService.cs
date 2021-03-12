@@ -91,6 +91,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
         /// <param name="tokens">Tokens</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task SendSmsNotificationAsync(MessageTemplate messageTemplate, IEnumerable<Token> tokens)
         {
             //get plugin settings
@@ -150,7 +151,10 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
-        /// <returns>Queued email identifier</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
         private async Task<int?> SendEmailNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, IEnumerable<Token> tokens,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
@@ -226,8 +230,11 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
         /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
-        /// <returns>Queued email identifier</returns>
-        protected override async Task<int> SendNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, int languageId, IList<Token> tokens,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public override async Task<int> SendNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, int languageId, IList<Token> tokens,
             string toEmailAddress, string toName, string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null, string fromEmail = null, string fromName = null,
             string subject = null)

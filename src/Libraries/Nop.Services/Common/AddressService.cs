@@ -50,6 +50,7 @@ namespace Nop.Services.Common
         /// Deletes an address
         /// </summary>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteAddressAsync(Address address)
         {
             await _addressRepository.DeleteAsync(address);
@@ -59,7 +60,10 @@ namespace Nop.Services.Common
         /// Gets total number of addresses by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
-        /// <returns>Number of addresses</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of addresses
+        /// </returns>
         public virtual async Task<int> GetAddressTotalByCountryIdAsync(int countryId)
         {
             if (countryId == 0)
@@ -76,7 +80,10 @@ namespace Nop.Services.Common
         /// Gets total number of addresses by state/province identifier
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
-        /// <returns>Number of addresses</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of addresses
+        /// </returns>
         public virtual async Task<int> GetAddressTotalByStateProvinceIdAsync(int stateProvinceId)
         {
             if (stateProvinceId == 0)
@@ -93,7 +100,10 @@ namespace Nop.Services.Common
         /// Gets an address by address identifier
         /// </summary>
         /// <param name="addressId">Address identifier</param>
-        /// <returns>Address</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address
+        /// </returns>
         public virtual async Task<Address> GetAddressByIdAsync(int addressId)
         {
             return await _addressRepository.GetByIdAsync(addressId,
@@ -104,6 +114,7 @@ namespace Nop.Services.Common
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertAddressAsync(Address address)
         {
             if (address == null)
@@ -124,6 +135,7 @@ namespace Nop.Services.Common
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateAddressAsync(Address address)
         {
             if (address == null)
@@ -142,7 +154,10 @@ namespace Nop.Services.Common
         /// Gets a value indicating whether address is valid (can be saved)
         /// </summary>
         /// <param name="address">Address to validate</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsAddressValidAsync(Address address)
         {
             if (address == null)

@@ -86,19 +86,19 @@
 
     function toggleMiniShoppingCartEnabled() {
         if ($('#@Html.IdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
-            $('#pnlMiniShoppingCartProductNumber').showField();
-            $('#pnlShowProductImagesInMiniShoppingCart').showField();
+            $('#pnlMiniShoppingCartProductNumber').showElement();
+            $('#pnlShowProductImagesInMiniShoppingCart').showElement();
         } else {
-            $('#pnlMiniShoppingCartProductNumber').hide();
-            $('#pnlShowProductImagesInMiniShoppingCart').hide();
+            $('#pnlMiniShoppingCartProductNumber').hideElement();
+            $('#pnlShowProductImagesInMiniShoppingCart').hideElement();
         }
     }
 
     function toggleEmailWishlistEnabled() {
         if ($('#@Html.IdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
-            $('#pnlAllowAnonymousUsersToEmailWishlist').showField();
+            $('#pnlAllowAnonymousUsersToEmailWishlist').showElement();
         } else {
-            $('#pnlAllowAnonymousUsersToEmailWishlist').hide();
+            $('#pnlAllowAnonymousUsersToEmailWishlist').hideElement();
         }
     }
 </script>

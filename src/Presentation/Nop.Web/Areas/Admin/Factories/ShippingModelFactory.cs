@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -11,7 +10,6 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Shipping.Pickup;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Framework.Factories;
@@ -26,8 +24,8 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICountryService _countryService;
         private readonly IDateRangeService _dateRangeService;
         private readonly ILocalizationService _localizationService;
@@ -41,8 +39,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ShippingModelFactory(IAddressService addressService,
-            IBaseAdminModelFactory baseAdminModelFactory,
+        public ShippingModelFactory(IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             ICountryService countryService,
             IDateRangeService dateRangeService,
             ILocalizationService localizationService,
@@ -52,8 +50,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IShippingService shippingService,
             IStateProvinceService stateProvinceService)
         {
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
-            _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
             _dateRangeService = dateRangeService;
             _localizationService = localizationService;
@@ -67,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare delivery date search model
         /// </summary>
@@ -108,7 +106,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shipping provider search model
         /// </summary>
         /// <param name="searchModel">Shipping provider search model</param>
-        /// <returns>Shipping provider search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping provider search model
+        /// </returns>
         public virtual Task<ShippingProviderSearchModel> PrepareShippingProviderSearchModelAsync(ShippingProviderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -124,7 +125,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged shipping provider list model
         /// </summary>
         /// <param name="searchModel">Shipping provider search model</param>
-        /// <returns>Shipping provider list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping provider list model
+        /// </returns>
         public virtual async Task<ShippingProviderListModel> PrepareShippingProviderListModelAsync(ShippingProviderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -158,7 +162,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare pickup point provider search model
         /// </summary>
         /// <param name="searchModel">Pickup point provider search model</param>
-        /// <returns>Pickup point provider search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pickup point provider search model
+        /// </returns>
         public virtual Task<PickupPointProviderSearchModel> PreparePickupPointProviderSearchModelAsync(PickupPointProviderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -174,7 +181,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged pickup point provider list model
         /// </summary>
         /// <param name="searchModel">Pickup point provider search model</param>
-        /// <returns>Pickup point provider list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pickup point provider list model
+        /// </returns>
         public virtual async Task<PickupPointProviderListModel> PreparePickupPointProviderListModelAsync(PickupPointProviderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -208,7 +218,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shipping method search model
         /// </summary>
         /// <param name="searchModel">Shipping method search model</param>
-        /// <returns>Shipping method search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping method search model
+        /// </returns>
         public virtual Task<ShippingMethodSearchModel> PrepareShippingMethodSearchModelAsync(ShippingMethodSearchModel searchModel)
         {
             if (searchModel == null)
@@ -224,7 +237,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged shipping method list model
         /// </summary>
         /// <param name="searchModel">Shipping method search model</param>
-        /// <returns>Shipping method list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping method list model
+        /// </returns>
         public virtual async Task<ShippingMethodListModel> PrepareShippingMethodListModelAsync(ShippingMethodSearchModel searchModel)
         {
             if (searchModel == null)
@@ -248,7 +264,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Shipping method model</param>
         /// <param name="shippingMethod">Shipping method</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Shipping method model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping method model
+        /// </returns>
         public virtual async Task<ShippingMethodModel> PrepareShippingMethodModelAsync(ShippingMethodModel model,
             ShippingMethod shippingMethod, bool excludeProperties = false)
         {
@@ -278,7 +297,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare dates and ranges search model
         /// </summary>
         /// <param name="searchModel">Dates and ranges search model</param>
-        /// <returns>Dates and ranges search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the dates and ranges search model
+        /// </returns>
         public virtual Task<DatesRangesSearchModel> PrepareDatesRangesSearchModelAsync(DatesRangesSearchModel searchModel)
         {
             if (searchModel == null)
@@ -295,7 +317,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged delivery date list model
         /// </summary>
         /// <param name="searchModel">Delivery date search model</param>
-        /// <returns>Delivery date list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the delivery date list model
+        /// </returns>
         public virtual async Task<DeliveryDateListModel> PrepareDeliveryDateListModelAsync(DeliveryDateSearchModel searchModel)
         {
             if (searchModel == null)
@@ -320,7 +345,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Delivery date model</param>
         /// <param name="deliveryDate">Delivery date</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Delivery date model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the delivery date model
+        /// </returns>
         public virtual async Task<DeliveryDateModel> PrepareDeliveryDateModelAsync(DeliveryDateModel model, DeliveryDate deliveryDate, bool excludeProperties = false)
         {
             Action<DeliveryDateLocalizedModel, int> localizedModelConfiguration = null;
@@ -348,7 +376,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged product availability range list model
         /// </summary>
         /// <param name="searchModel">Product availability range search model</param>
-        /// <returns>Product availability range list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product availability range list model
+        /// </returns>
         public virtual async Task<ProductAvailabilityRangeListModel> PrepareProductAvailabilityRangeListModelAsync(ProductAvailabilityRangeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -373,7 +404,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product availability range model</param>
         /// <param name="productAvailabilityRange">Product availability range</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product availability range model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product availability range model
+        /// </returns>
         public virtual async Task<ProductAvailabilityRangeModel> PrepareProductAvailabilityRangeModelAsync(ProductAvailabilityRangeModel model,
             ProductAvailabilityRange productAvailabilityRange, bool excludeProperties = false)
         {
@@ -402,7 +436,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare warehouse search model
         /// </summary>
         /// <param name="searchModel">Warehouse search model</param>
-        /// <returns>Warehouse search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warehouse search model
+        /// </returns>
         public virtual Task<WarehouseSearchModel> PrepareWarehouseSearchModelAsync(WarehouseSearchModel searchModel)
         {
             if (searchModel == null)
@@ -418,7 +455,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged warehouse list model
         /// </summary>
         /// <param name="searchModel">Warehouse search model</param>
-        /// <returns>Warehouse list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warehouse list model
+        /// </returns>
         public virtual async Task<WarehouseListModel> PrepareWarehouseListModelAsync(WarehouseSearchModel searchModel)
         {
             if (searchModel == null)
@@ -445,7 +485,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Warehouse model</param>
         /// <param name="warehouse">Warehouse</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Warehouse model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warehouse model
+        /// </returns>
         public virtual async Task<WarehouseModel> PrepareWarehouseModelAsync(WarehouseModel model, Warehouse warehouse, bool excludeProperties = false)
         {
             if (warehouse != null)
@@ -461,7 +504,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressByIdAsync(warehouse?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            model.Address.CountryRequired = true;
+            model.Address.ZipPostalCodeRequired = true;
 
             return model;
         }
@@ -470,7 +515,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shipping method restriction model
         /// </summary>
         /// <param name="model">Shipping method restriction model</param>
-        /// <returns>Shipping method restriction model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping method restriction model
+        /// </returns>
         public virtual async Task<ShippingMethodRestrictionModel> PrepareShippingMethodRestrictionModelAsync(ShippingMethodRestrictionModel model)
         {
             if (model == null)

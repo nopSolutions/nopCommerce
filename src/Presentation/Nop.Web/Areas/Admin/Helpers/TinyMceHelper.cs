@@ -13,7 +13,10 @@ namespace Nop.Web.Areas.Admin.Helpers
         /// <summary>
         /// Get tinyMCE language name for current language 
         /// </summary>
-        /// <returns>tinyMCE language name</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the inyMCE language name
+        /// </returns>
         public static async Task<string> GetTinyMceLanguageAsync()
         {
             //nopCommerce supports TinyMCE's localization for 10 languages:

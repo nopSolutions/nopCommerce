@@ -40,7 +40,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         /// Prepare store pickup point list model
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
-        /// <returns>Store pickup point list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store pickup point list model
+        /// </returns>
         public async Task<StorePickupPointListModel> PrepareStorePickupPointListModelAsync(StorePickupPointSearchModel searchModel)
         {
             var pickupPoints = await _storePickupPointService.GetAllStorePickupPointsAsync(pageIndex: searchModel.Page - 1,
@@ -72,7 +75,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         /// Prepare store pickup point search model
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
-        /// <returns>Store pickup point search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store pickup point search model
+        /// </returns>
         public Task<StorePickupPointSearchModel> PrepareStorePickupPointSearchModelAsync(StorePickupPointSearchModel searchModel)
         {
             if (searchModel == null)

@@ -90,6 +90,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
@@ -99,6 +100,7 @@ namespace Nop.Web.Controllers
             return View("List", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogByTag(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
@@ -108,6 +110,7 @@ namespace Nop.Web.Controllers
             return View("List", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogByMonth(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
@@ -118,6 +121,7 @@ namespace Nop.Web.Controllers
         }
 
         [CheckLanguageSeoCode(true)]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var feed = new RssFeed(
@@ -141,6 +145,7 @@ namespace Nop.Web.Controllers
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)
@@ -174,6 +179,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("BlogPost")]        
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)

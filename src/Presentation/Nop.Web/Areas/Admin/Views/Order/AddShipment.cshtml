@@ -110,11 +110,11 @@
                             function toggleDelivery() {
                                 if ($('#@Html.IdFor(model => model.CanShip)').is(':checked'))
                                 {
-                                    $('#pnlHasDelivery').showField();
+                                    $('#pnlHasDelivery').showElement();
                                 }
                                 else
                                 {
-                                    $('#pnlHasDelivery').hide();
+                                    $('#pnlHasDelivery').hideElement();
                                 }
                             }
 

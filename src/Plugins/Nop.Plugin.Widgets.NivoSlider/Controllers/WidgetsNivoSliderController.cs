@@ -10,9 +10,11 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 {
+    [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
     [AutoValidateAntiforgeryToken]
     public class WidgetsNivoSliderController : BasePluginController
@@ -39,6 +41,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             _storeContext = storeContext;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -100,6 +103,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))

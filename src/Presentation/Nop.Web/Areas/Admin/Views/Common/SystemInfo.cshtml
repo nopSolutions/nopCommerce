@@ -19,8 +19,8 @@
 
 <script>
     function toggleLoadedAssemblies() {
-        $('#pnlLoadedAssemblies').toggle();
-        if ($('#pnlLoadedAssemblies').css('display') == 'none') {
+        $('#pnlLoadedAssemblies').toggleClass('d-none');
+        if ($('#pnlLoadedAssemblies').hasClass('d-none')) {
             $('#loadedAssembliesShowHide').text('@T("Admin.Common.Show")');
         }
         else {
@@ -29,8 +29,8 @@
     }
 
     function toggleLoadedHeaders() {
-        $('#pnlHeaders').toggle();
-        if ($('#pnlHeaders').css('display') == 'none') {
+        $('#pnlHeaders').toggleClass('d-none');
+        if ($('#pnlHeaders').hasClass('d-none')) {
             $('#headersShowHide').text('@T("Admin.Common.Show")');
         }
         else {
@@ -124,7 +124,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a id="headersShowHide" href="javascript:toggleLoadedHeaders();">@T("Admin.Common.Show")</a>
-                                <div id="pnlHeaders" style="display: none; word-break: break-all">
+                                <div id="pnlHeaders" class="d-none" style="word-break: break-all">
                                     <ul>
                                         @foreach (var header in Model.Headers)
                                         {
@@ -142,7 +142,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
-                                <div id="pnlLoadedAssemblies" style="display: none">
+                                <div id="pnlLoadedAssemblies" class="d-none">
                                     <ul>
                                         @foreach (var assembly in Model.LoadedAssemblies)
                                         {

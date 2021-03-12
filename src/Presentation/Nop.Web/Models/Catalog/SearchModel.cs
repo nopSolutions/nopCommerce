@@ -52,7 +52,7 @@ namespace Nop.Web.Models.Catalog
         /// A value indicating whether "advanced search" is enabled
         /// </summary>
         [NopResourceDisplayName("Search.AdvancedSearch")]
-        public bool adv { get; set; }
+        public bool advs { get; set; }
 
         /// <summary>
         /// A value indicating whether "allow search by vendor" is enabled

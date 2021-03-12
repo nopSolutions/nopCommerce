@@ -102,10 +102,10 @@
 
         function toggleSitemapSettings() {
             if ($('#@Html.IdFor(model => model.SitemapSettings.SitemapEnabled)').is(':checked')) {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").showField();
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").showElement();
             }
             else {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").hide();
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").hideElement();
             }
         }
 

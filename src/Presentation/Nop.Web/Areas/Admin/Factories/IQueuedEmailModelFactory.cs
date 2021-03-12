@@ -13,14 +13,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare queued email search model
         /// </summary>
         /// <param name="searchModel">Queued email search model</param>
-        /// <returns>Queued email search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email search model
+        /// </returns>
         Task<QueuedEmailSearchModel> PrepareQueuedEmailSearchModelAsync(QueuedEmailSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged queued email list model
         /// </summary>
         /// <param name="searchModel">Queued email search model</param>
-        /// <returns>Queued email list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email list model
+        /// </returns>
         Task<QueuedEmailListModel> PrepareQueuedEmailListModelAsync(QueuedEmailSearchModel searchModel);
 
         /// <summary>
@@ -29,7 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Queued email model</param>
         /// <param name="queuedEmail">Queued email</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Queued email model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email model
+        /// </returns>
         Task<QueuedEmailModel> PrepareQueuedEmailModelAsync(QueuedEmailModel model, QueuedEmail queuedEmail, bool excludeProperties = false);
     }
 }

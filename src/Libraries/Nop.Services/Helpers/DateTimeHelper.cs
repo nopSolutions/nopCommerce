@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
-using Nop.Services.Configuration;
 
 namespace Nop.Services.Helpers
 {
@@ -18,7 +17,6 @@ namespace Nop.Services.Helpers
 
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ISettingService _settingService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -27,12 +25,10 @@ namespace Nop.Services.Helpers
 
         public DateTimeHelper(DateTimeSettings dateTimeSettings,
             IGenericAttributeService genericAttributeService,
-            ISettingService settingService,
             IWorkContext workContext)
         {
             _dateTimeSettings = dateTimeSettings;
             _genericAttributeService = genericAttributeService;
-            _settingService = settingService;
             _workContext = workContext;
         }
 
@@ -67,7 +63,10 @@ namespace Nop.Services.Helpers
         /// Converts the date and time to current user date and time
         /// </summary>
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
-        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.
+        /// </returns>
         public virtual async Task<DateTime> ConvertToUserTimeAsync(DateTime dt)
         {
             return await ConvertToUserTimeAsync(dt, dt.Kind);
@@ -78,7 +77,10 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
-        /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.
+        /// </returns>
         public virtual async Task<DateTime> ConvertToUserTimeAsync(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
@@ -150,7 +152,10 @@ namespace Nop.Services.Helpers
         /// Gets a customer time zone
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer time zone; if customer is null, then default store time zone
+        /// </returns>
         public virtual async Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer)
         {
             if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
@@ -178,7 +183,10 @@ namespace Nop.Services.Helpers
         /// <summary>
         /// Gets the current user time zone
         /// </summary>
-        /// <returns>Current user time zone</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the current user time zone
+        /// </returns>
         public virtual async Task<TimeZoneInfo> GetCurrentTimeZoneAsync()
         {
            return await GetCustomerTimeZoneAsync(await _workContext.GetCurrentCustomerAsync());

@@ -28,12 +28,12 @@
             /// <summary>
             /// Gets the copyright removal key page
             /// </summary>
-            public static string CopyrightRemovalKey => "https://www.nopcommerce.com/nopcommerce-copyright-removal-key/";
+            public static string CopyrightRemovalKey => "https://www.nopcommerce.com/nopcommerce-copyright-removal-key";
 
             /// <summary>
             /// Gets the premium support services page
             /// </summary>
-            public static string PremiumSupportServices => "https://www.nopcommerce.com/nopcommerce-premium-support-services/";
+            public static string PremiumSupportServices => "https://www.nopcommerce.com/nopcommerce-premium-support-services";
 
             /// <summary>
             /// Gets the marketplace page
@@ -446,6 +446,11 @@
             /// Gets parameters used on install
             /// </summary>
             public static string OnInstall => "?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page";
+
+            /// <summary>
+            /// Gets parameters used on admin area configuration steps block
+            /// </summary>
+            public static string OnAdminConfigurationSteps => "?utm_source=admin-panel&utm_medium=tour&utm_campaign=powered_by_nopcommerce&utm_content=dashboard";
         }
     }
 }

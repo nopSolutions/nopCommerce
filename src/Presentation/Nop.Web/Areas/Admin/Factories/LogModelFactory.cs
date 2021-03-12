@@ -51,7 +51,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare log search model
         /// </summary>
         /// <param name="searchModel">Log search model</param>
-        /// <returns>Log search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log search model
+        /// </returns>
         public virtual async Task<LogSearchModel> PrepareLogSearchModelAsync(LogSearchModel searchModel)
         {
             if (searchModel == null)
@@ -70,7 +73,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged log list model
         /// </summary>
         /// <param name="searchModel">Log search model</param>
-        /// <returns>Log list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log list model
+        /// </returns>
         public virtual async Task<LogListModel> PrepareLogListModelAsync(LogSearchModel searchModel)
         {
             if (searchModel == null)
@@ -121,7 +127,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Log model</param>
         /// <param name="log">Log</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Log model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log model
+        /// </returns>
         public virtual async Task<LogModel> PrepareLogModelAsync(LogModel model, Log log, bool excludeProperties = false)
         {
             if (log != null)

@@ -131,7 +131,10 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Customers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
         public virtual async Task<IPagedList<Customer>> GetAllCustomersAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
             string email = null, string username = null, string firstName = null, string lastName = null,
@@ -291,7 +294,10 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Customers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
         public virtual async Task<IPagedList<Customer>> GetOnlineCustomersAsync(DateTime lastActivityFromUtc,
             int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -319,7 +325,10 @@ namespace Nop.Services.Customers
         /// <param name="countryId">Billing country identifier; pass null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Customers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
         public virtual async Task<IPagedList<Customer>> GetCustomersWithShoppingCartsAsync(ShoppingCartType? shoppingCartType = null,
             int storeId = 0, int? productId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? countryId = null,
@@ -368,7 +377,10 @@ namespace Nop.Services.Customers
         /// Gets customer for shopping cart
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<Customer> GetShoppingCartCustomerAsync(IList<ShoppingCartItem> shoppingCart)
         {
             var customerId = shoppingCart.FirstOrDefault()?.CustomerId;
@@ -380,6 +392,7 @@ namespace Nop.Services.Customers
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCustomerAsync(Customer customer)
         {
             if (customer == null)
@@ -406,7 +419,10 @@ namespace Nop.Services.Customers
         /// Gets a customer
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
-        /// <returns>A customer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a customer
+        /// </returns>
         public virtual async Task<Customer> GetCustomerByIdAsync(int customerId)
         {
             return await _customerRepository.GetByIdAsync(customerId,
@@ -417,7 +433,10 @@ namespace Nop.Services.Customers
         /// Get customers by identifiers
         /// </summary>
         /// <param name="customerIds">Customer identifiers</param>
-        /// <returns>Customers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customers
+        /// </returns>
         public virtual async Task<IList<Customer>> GetCustomersByIdsAsync(int[] customerIds)
         {
             return await _customerRepository.GetByIdsAsync(customerIds, includeDeleted: false);
@@ -427,7 +446,10 @@ namespace Nop.Services.Customers
         /// Gets a customer by GUID
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>
-        /// <returns>A customer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a customer
+        /// </returns>
         public virtual async Task<Customer> GetCustomerByGuidAsync(Guid customerGuid)
         {
             if (customerGuid == Guid.Empty)
@@ -447,7 +469,10 @@ namespace Nop.Services.Customers
         /// Get customer by email
         /// </summary>
         /// <param name="email">Email</param>
-        /// <returns>Customer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer
+        /// </returns>
         public virtual async Task<Customer> GetCustomerByEmailAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -466,7 +491,10 @@ namespace Nop.Services.Customers
         /// Get customer by system name
         /// </summary>
         /// <param name="systemName">System name</param>
-        /// <returns>Customer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer
+        /// </returns>
         public virtual async Task<Customer> GetCustomerBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrWhiteSpace(systemName))
@@ -487,7 +515,10 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets built-in system record used for background tasks
         /// </summary>
-        /// <returns>A customer object</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a customer object
+        /// </returns>
         public virtual async Task<Customer> GetOrCreateBackgroundTaskUserAsync()
         {
             var backgroundTaskUser = await GetCustomerBySystemNameAsync(NopCustomerDefaults.BackgroundTaskCustomerName);
@@ -524,7 +555,10 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets built-in system guest record used for requests from search engines
         /// </summary>
-        /// <returns>A customer object</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a customer object
+        /// </returns>
         public virtual async Task<Customer> GetOrCreateSearchEngineUserAsync()
         {
             var searchEngineUser = await GetCustomerBySystemNameAsync(NopCustomerDefaults.SearchEngineCustomerName);
@@ -562,7 +596,10 @@ namespace Nop.Services.Customers
         /// Get customer by username
         /// </summary>
         /// <param name="username">Username</param>
-        /// <returns>Customer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer
+        /// </returns>
         public virtual async Task<Customer> GetCustomerByUsernameAsync(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
@@ -580,7 +617,10 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Insert a guest customer
         /// </summary>
-        /// <returns>Customer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer
+        /// </returns>
         public virtual async Task<Customer> InsertGuestCustomerAsync()
         {
             var customer = new Customer
@@ -607,6 +647,7 @@ namespace Nop.Services.Customers
         /// Insert a customer
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerAsync(Customer customer)
         {
             await _customerRepository.InsertAsync(customer);
@@ -616,6 +657,7 @@ namespace Nop.Services.Customers
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCustomerAsync(Customer customer)
         {
             await _customerRepository.UpdateAsync(customer);
@@ -631,6 +673,7 @@ namespace Nop.Services.Customers
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task ResetCheckoutDataAsync(Customer customer, int storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
@@ -675,7 +718,10 @@ namespace Nop.Services.Customers
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
-        /// <returns>Number of deleted customers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of deleted customers
+        /// </returns>
         public virtual async Task<int> DeleteGuestCustomersAsync(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
             var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
@@ -726,7 +772,10 @@ namespace Nop.Services.Customers
         /// Gets a default tax display type (if configured)
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<TaxDisplayType?> GetCustomerDefaultTaxDisplayTypeAsync(Customer customer)
         {
             if (customer == null)
@@ -743,7 +792,10 @@ namespace Nop.Services.Customers
         /// Get full name
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer full name</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer full name
+        /// </returns>
         public virtual async Task<string> GetCustomerFullNameAsync(Customer customer)
         {
             if (customer == null)
@@ -773,7 +825,10 @@ namespace Nop.Services.Customers
         /// <param name="customer">Source</param>
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
-        /// <returns>Formatted text</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the formatted text
+        /// </returns>
         public virtual async Task<string> FormatUsernameAsync(Customer customer, bool stripTooLong = false, int maxLength = 0)
         {
             if (customer == null)
@@ -812,7 +867,10 @@ namespace Nop.Services.Customers
         /// Gets coupon codes
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Coupon codes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the coupon codes
+        /// </returns>
         public virtual async Task<string[]> ParseAppliedDiscountCouponCodesAsync(Customer customer)
         {
             if (customer == null)
@@ -851,7 +909,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code</param>
-        /// <returns>New coupon codes document</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the new coupon codes document
+        /// </returns>
         public virtual async Task ApplyDiscountCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
@@ -916,7 +977,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code to remove</param>
-        /// <returns>New coupon codes document</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the new coupon codes document
+        /// </returns>
         public virtual async Task RemoveDiscountCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
@@ -938,7 +1002,10 @@ namespace Nop.Services.Customers
         /// Gets coupon codes
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Coupon codes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the coupon codes
+        /// </returns>
         public virtual async Task<string[]> ParseAppliedGiftCardCouponCodesAsync(Customer customer)
         {
             if (customer == null)
@@ -978,7 +1045,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code</param>
-        /// <returns>New coupon codes document</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the new coupon codes document
+        /// </returns>
         public virtual async Task ApplyGiftCardCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
@@ -1042,7 +1112,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="couponCode">Coupon code to remove</param>
-        /// <returns>New coupon codes document</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the new coupon codes document
+        /// </returns>
         public virtual async Task RemoveGiftCardCouponCodeAsync(Customer customer, string couponCode)
         {
             if (customer == null)
@@ -1068,6 +1141,7 @@ namespace Nop.Services.Customers
         /// Add a customer-customer role mapping
         /// </summary>
         /// <param name="roleMapping">Customer-customer role mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task AddCustomerRoleMappingAsync(CustomerCustomerRoleMapping roleMapping)
         {
             await _customerCustomerRoleMappingRepository.InsertAsync(roleMapping);
@@ -1078,6 +1152,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="role">Customer role</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task RemoveCustomerRoleMappingAsync(Customer customer, CustomerRole role)
         {
             if (customer is null)
@@ -1097,6 +1172,7 @@ namespace Nop.Services.Customers
         /// Delete a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteCustomerRoleAsync(CustomerRole customerRole)
         {
             if (customerRole == null)
@@ -1112,7 +1188,10 @@ namespace Nop.Services.Customers
         /// Gets a customer role
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
-        /// <returns>Customer role</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role
+        /// </returns>
         public virtual async Task<CustomerRole> GetCustomerRoleByIdAsync(int customerRoleId)
         {
             return await _customerRoleRepository.GetByIdAsync(customerRoleId, cache => default);
@@ -1122,7 +1201,10 @@ namespace Nop.Services.Customers
         /// Gets a customer role
         /// </summary>
         /// <param name="systemName">Customer role system name</param>
-        /// <returns>Customer role</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role
+        /// </returns>
         public virtual async Task<CustomerRole> GetCustomerRoleBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrWhiteSpace(systemName))
@@ -1145,7 +1227,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
-        /// <returns>Customer role identifiers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role identifiers
+        /// </returns>
         public virtual async Task<int[]> GetCustomerRoleIdsAsync(Customer customer, bool showHidden = false)
         {
             if (customer == null)
@@ -1167,7 +1252,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<CustomerRole>> GetCustomerRolesAsync(Customer customer, bool showHidden = false)
         {
             if (customer == null)
@@ -1188,7 +1276,10 @@ namespace Nop.Services.Customers
         /// Gets all customer roles
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Customer roles</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer roles
+        /// </returns>
         public virtual async Task<IList<CustomerRole>> GetAllCustomerRolesAsync(bool showHidden = false)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesAllCacheKey, showHidden);
@@ -1207,6 +1298,7 @@ namespace Nop.Services.Customers
         /// Inserts a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerRoleAsync(CustomerRole customerRole)
         {
             await _customerRoleRepository.InsertAsync(customerRole);
@@ -1218,7 +1310,10 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="customerRoleSystemName">Customer role system name</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsInCustomerRoleAsync(Customer customer,
             string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
         {
@@ -1238,7 +1333,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsAdminAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.AdministratorsRoleName, onlyActiveCustomerRoles);
@@ -1249,7 +1347,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsForumModeratorAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.ForumModeratorsRoleName, onlyActiveCustomerRoles);
@@ -1260,7 +1361,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsRegisteredAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.RegisteredRoleName, onlyActiveCustomerRoles);
@@ -1271,7 +1375,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsGuestAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.GuestsRoleName, onlyActiveCustomerRoles);
@@ -1282,7 +1389,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsVendorAsync(Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return await IsInCustomerRoleAsync(customer, NopCustomerDefaults.VendorsRoleName, onlyActiveCustomerRoles);
@@ -1292,6 +1402,7 @@ namespace Nop.Services.Customers
         /// Updates the customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCustomerRoleAsync(CustomerRole customerRole)
         {
             await _customerRoleRepository.UpdateAsync(customerRole);
@@ -1307,7 +1418,10 @@ namespace Nop.Services.Customers
         /// <param name="customerId">Customer identifier; pass null to load all records</param>
         /// <param name="passwordFormat">Password format; pass null to load all records</param>
         /// <param name="passwordsToReturn">Number of returning passwords; pass null to load all records</param>
-        /// <returns>List of customer passwords</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of customer passwords
+        /// </returns>
         public virtual async Task<IList<CustomerPassword>> GetCustomerPasswordsAsync(int? customerId = null,
             PasswordFormat? passwordFormat = null, int? passwordsToReturn = null)
         {
@@ -1332,7 +1446,10 @@ namespace Nop.Services.Customers
         /// Get current customer password
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
-        /// <returns>Customer password</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer password
+        /// </returns>
         public virtual async Task<CustomerPassword> GetCurrentPasswordAsync(int customerId)
         {
             if (customerId == 0)
@@ -1346,6 +1463,7 @@ namespace Nop.Services.Customers
         /// Insert a customer password
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerPasswordAsync(CustomerPassword customerPassword)
         {
             await _customerPasswordRepository.InsertAsync(customerPassword);
@@ -1355,6 +1473,7 @@ namespace Nop.Services.Customers
         /// Update a customer password
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateCustomerPasswordAsync(CustomerPassword customerPassword)
         {
             await _customerPasswordRepository.UpdateAsync(customerPassword);
@@ -1365,7 +1484,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="token">Token to validate</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsPasswordRecoveryTokenValidAsync(Customer customer, string token)
         {
             if (customer == null)
@@ -1385,7 +1507,10 @@ namespace Nop.Services.Customers
         /// Check whether password recovery link is expired
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsPasswordRecoveryLinkExpiredAsync(Customer customer)
         {
             if (customer == null)
@@ -1409,7 +1534,10 @@ namespace Nop.Services.Customers
         /// Check whether customer password is expired 
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>True if password is expired; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if password is expired; otherwise false
+        /// </returns>
         public virtual async Task<bool> PasswordIsExpiredAsync(Customer customer)
         {
             if (customer == null)
@@ -1452,6 +1580,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task RemoveCustomerAddressAsync(Customer customer, Address address)
         {
             if (customer == null)
@@ -1475,6 +1604,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertCustomerAddressAsync(Customer customer, Address address)
         {
             if (customer is null)
@@ -1501,7 +1631,10 @@ namespace Nop.Services.Customers
         /// Gets a list of addresses mapped to customer
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId)
         {
             var query = from address in _customerAddressRepository.Table
@@ -1519,7 +1652,10 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="addressId">Address identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<Address> GetCustomerAddressAsync(int customerId, int addressId)
         {
             if (customerId == 0 || addressId == 0)
@@ -1532,14 +1668,17 @@ namespace Nop.Services.Customers
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.SingleAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
         /// Gets a customer billing address
         /// </summary>
         /// <param name="customer">Customer identifier</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<Address> GetCustomerBillingAddressAsync(Customer customer)
         {
             if (customer is null)
@@ -1552,7 +1691,10 @@ namespace Nop.Services.Customers
         /// Gets a customer shipping address
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<Address> GetCustomerShippingAddressAsync(Customer customer)
         {
             if (customer is null)

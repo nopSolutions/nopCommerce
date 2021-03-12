@@ -54,8 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
@@ -103,8 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
-            IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressModelFactory addressModelFactory,
             IAddressService addressService,
             IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -148,8 +146,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
-            _addressAttributeFormatter = addressAttributeFormatter;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
             _affiliateService = affiliateService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -193,12 +190,32 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
+        /// <summary>
+        /// Set some address fields as required
+        /// </summary>
+        /// <param name="model">Address model</param>
+        protected virtual void SetAddressFieldsAsRequired(AddressModel model)
+        {
+            model.FirstNameRequired = true;
+            model.LastNameRequired = true;
+            model.EmailRequired = true;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.CountyRequired = _addressSettings.CountyRequired;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxRequired = _addressSettings.FaxRequired;
+        }
+
         /// <summary>
         /// Prepare order item models
         /// </summary>
         /// <param name="models">List of order item models</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderItemModelsAsync(IList<OrderItemModel> models, Order order)
         {
             if (models == null)
@@ -311,6 +328,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of return request brief models</param>
         /// <param name="orderItem">Order item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareReturnRequestBriefModelsAsync(IList<OrderItemModel.ReturnRequestBriefModel> models, OrderItem orderItem)
         {
             if (models == null)
@@ -335,6 +353,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelTotalsAsync(OrderModel model, Order order)
         {
             if (model == null)
@@ -486,6 +505,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelPaymentInfoAsync(OrderModel model, Order order)
         {
             if (model == null)
@@ -502,7 +522,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
             model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
 
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            SetAddressFieldsAsRequired(model.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -564,6 +585,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareOrderModelShippingInfoAsync(OrderModel model, Order order)
         {
             if (model == null)
@@ -588,7 +610,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ShippingAddress = shippingAddress.ToModel(model.ShippingAddress);
                 model.ShippingAddress.CountryName = shippingCountry?.Name;
                 model.ShippingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress))?.Name;
-                await _baseAdminModelFactory.PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
+                await _addressModelFactory.PrepareAddressModelAsync(model.ShippingAddress, shippingAddress);
+                SetAddressFieldsAsRequired(model.ShippingAddress);
                 model.ShippingAddressGoogleMapsUrl = "https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
                     $"{WebUtility.UrlEncode(shippingAddress.Address1 + " " + shippingAddress.ZipPostalCode + " " + shippingAddress.City + " " + (shippingCountry?.Name ?? string.Empty))}";
             }
@@ -613,6 +636,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="models">List of product attribute models</param>
         /// <param name="order">Order</param>
         /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareProductAttributeModelsAsync(IList<AddProductToOrderModel.ProductAttributeModel> models, Order order, Product product)
         {
             if (models == null)
@@ -693,6 +717,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Shipment item model</param>
         /// <param name="orderItem">Order item</param>
         /// <param name="product">Product item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareShipmentItemModelAsync(ShipmentItemModel model, OrderItem orderItem, Product product)
         {
             if (model == null)
@@ -740,6 +765,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of shipment status event models</param>
         /// <param name="shipment">Shipment</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareShipmentStatusEventModelsAsync(IList<ShipmentStatusEventModel> models, Shipment shipment)
         {
             if (models == null)
@@ -836,7 +862,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare order search model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
-        /// <returns>Order search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order search model
+        /// </returns>
         public virtual async Task<OrderSearchModel> PrepareOrderSearchModelAsync(OrderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -916,7 +945,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged order list model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
-        /// <returns>Order list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order list model
+        /// </returns>
         public virtual async Task<OrderListModel> PrepareOrderListModelAsync(OrderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -996,7 +1028,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare order aggregator model
         /// </summary>
         /// <param name="searchModel">Order search model</param>
-        /// <returns>Order aggregator model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order aggregator model
+        /// </returns>
         public virtual async Task<OrderAggreratorModel> PrepareOrderAggregatorModelAsync(OrderSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1073,7 +1108,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Order model</param>
         /// <param name="order">Order</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Order model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order model
+        /// </returns>
         public virtual async Task<OrderModel> PrepareOrderModelAsync(OrderModel model, Order order, bool excludeProperties = false)
         {
             if (order != null)
@@ -1137,7 +1175,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Upload license model</param>
         /// <param name="order">Order</param>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Upload license model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the upload license model
+        /// </returns>
         public virtual Task<UploadLicenseModel> PrepareUploadLicenseModelAsync(UploadLicenseModel model, Order order, OrderItem orderItem)
         {
             if (model == null)
@@ -1161,7 +1202,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the order</param>
         /// <param name="order">Order</param>
-        /// <returns>Product search model to add to the order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the order
+        /// </returns>
         public virtual async Task<AddProductToOrderSearchModel> PrepareAddProductToOrderSearchModelAsync(AddProductToOrderSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1192,7 +1236,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the order</param>
         /// <param name="order">Order</param>
-        /// <returns>Product search model to add to the order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the order
+        /// </returns>
         public virtual async Task<AddProductToOrderListModel> PrepareAddProductToOrderListModelAsync(AddProductToOrderSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1229,7 +1276,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product model to add to the order</param>
         /// <param name="order">Order</param>
         /// <param name="product">Product</param>
-        /// <returns>Product model to add to the order</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product model to add to the order
+        /// </returns>
         public virtual async Task<AddProductToOrderModel> PrepareAddProductToOrderModelAsync(AddProductToOrderModel model, Order order, Product product)
         {
             if (model == null)
@@ -1278,7 +1328,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Order address model</param>
         /// <param name="order">Order</param>
         /// <param name="address">Address</param>
-        /// <returns>Order address model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order address model
+        /// </returns>
         public virtual async Task<OrderAddressModel> PrepareOrderAddressModelAsync(OrderAddressModel model, Order order, Address address)
         {
             if (model == null)
@@ -1294,16 +1347,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare address model
             model.Address = address.ToModel(model.Address);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.Address.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.Address.AvailableStates, model.Address.CountryId);
-
-            //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.Address.CustomAddressAttributes, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            SetAddressFieldsAsRequired(model.Address);
 
             return model;
         }
@@ -1312,7 +1357,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shipment search model
         /// </summary>
         /// <param name="searchModel">Shipment search model</param>
-        /// <returns>Shipment search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment search model
+        /// </returns>
         public virtual async Task<ShipmentSearchModel> PrepareShipmentSearchModelAsync(ShipmentSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1340,7 +1388,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged shipment list model
         /// </summary>
         /// <param name="searchModel">Shipment search model</param>
-        /// <returns>Shipment list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment list model
+        /// </returns>
         public virtual async Task<ShipmentListModel> PrepareShipmentListModelAsync(ShipmentSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1411,7 +1462,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="shipment">Shipment</param>
         /// <param name="order">Order</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Shipment model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment model
+        /// </returns>
         public virtual async Task<ShipmentModel> PrepareShipmentModelAsync(ShipmentModel model, Shipment shipment, Order order,
             bool excludeProperties = false)
         {
@@ -1540,7 +1594,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Order shipment search model</param>
         /// <param name="order">Order</param>
-        /// <returns>Order shipment list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order shipment list model
+        /// </returns>
         public virtual async Task<OrderShipmentListModel> PrepareOrderShipmentListModelAsync(OrderShipmentSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1599,7 +1656,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shipment item search model</param>
         /// <param name="shipment">Shipment</param>
-        /// <returns>Shipment item list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment item list model
+        /// </returns>
         public virtual async Task<ShipmentItemListModel> PrepareShipmentItemListModelAsync(ShipmentItemSearchModel searchModel, Shipment shipment)
         {
             if (searchModel == null)
@@ -1658,7 +1718,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Order note search model</param>
         /// <param name="order">Order</param>
-        /// <returns>Order note list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order note list model
+        /// </returns>
         public virtual async Task<OrderNoteListModel> PrepareOrderNoteListModelAsync(OrderNoteSearchModel searchModel, Order order)
         {
             if (searchModel == null)
@@ -1698,7 +1761,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare bestseller brief search model
         /// </summary>
         /// <param name="searchModel">Bestseller brief search model</param>
-        /// <returns>Bestseller brief search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the bestseller brief search model
+        /// </returns>
         public virtual Task<BestsellerBriefSearchModel> PrepareBestsellerBriefSearchModelAsync(BestsellerBriefSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1714,7 +1780,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged bestseller brief list model
         /// </summary>
         /// <param name="searchModel">Bestseller brief search model</param>
-        /// <returns>Bestseller brief list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the bestseller brief list model
+        /// </returns>
         public virtual async Task<BestsellerBriefListModel> PrepareBestsellerBriefListModelAsync(BestsellerBriefSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1754,7 +1823,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare order average line summary report list model
         /// </summary>
         /// <param name="searchModel">Order average line summary report search model</param>
-        /// <returns>Order average line summary report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order average line summary report list model
+        /// </returns>
         public virtual async Task<OrderAverageReportListModel> PrepareOrderAverageReportListModelAsync(OrderAverageReportSearchModel searchModel)
         {
             //get report
@@ -1790,7 +1862,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare incomplete order report list model
         /// </summary>
         /// <param name="searchModel">Incomplete order report search model</param>
-        /// <returns>Incomplete order report list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the incomplete order report list model
+        /// </returns>
         public virtual async Task<OrderIncompleteReportListModel> PrepareOrderIncompleteReportListModelAsync(OrderIncompleteReportSearchModel searchModel)
         {
             var orderIncompleteReportModels = new List<OrderIncompleteReportModel>();

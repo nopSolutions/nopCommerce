@@ -39,7 +39,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare schedule task search model
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
-        /// <returns>Schedule task search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the schedule task search model
+        /// </returns>
         public virtual Task<ScheduleTaskSearchModel> PrepareScheduleTaskSearchModelAsync(ScheduleTaskSearchModel searchModel)
         {
             if (searchModel == null)
@@ -55,7 +58,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged schedule task list model
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
-        /// <returns>Schedule task list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the schedule task list model
+        /// </returns>
         public virtual async Task<ScheduleTaskListModel> PrepareScheduleTaskListModelAsync(ScheduleTaskSearchModel searchModel)
         {
             if (searchModel == null)

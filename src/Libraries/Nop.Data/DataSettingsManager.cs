@@ -71,7 +71,10 @@ namespace Nop.Data
         /// <param name="filePath">File path; pass null to use the default settings file</param>
         /// <param name="reloadSettings">Whether to reload data, if they already loaded</param>
         /// <param name="fileProvider">File provider</param>
-        /// <returns>Data settings</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the data settings
+        /// </returns>
         public static async Task<DataSettings> LoadSettingsAsync(string filePath = null, bool reloadSettings = false, INopFileProvider fileProvider = null)
         {
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
@@ -193,6 +196,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="settings">Data settings</param>
         /// <param name="fileProvider">File provider</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task SaveSettingsAsync(DataSettings settings, INopFileProvider fileProvider = null)
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -239,6 +243,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets a value indicating whether database is already installed
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task<bool> IsDatabaseInstalledAsync()
         {
             _databaseIsInstalled ??= !string.IsNullOrEmpty((await LoadSettingsAsync(reloadSettings: true))?.ConnectionString);
@@ -262,6 +267,7 @@ namespace Nop.Data
         /// <value>
         /// Number of seconds. Negative timeout value means that a default timeout will be used. 0 timeout value corresponds to infinite timeout.
         /// </value>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static async Task<int> GetSqlCommandTimeoutAsync()
         {
             return (await LoadSettingsAsync())?.SQLCommandTimeout ?? -1;

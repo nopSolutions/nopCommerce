@@ -23,14 +23,7 @@
                 url: "@(Url.Action("Configure", "DiscountRulesCustomerRoles"))",
                 data: postData,
                 success: function (data, textStatus, jqXHR) {
-                    $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
-                    //notify parent if it's a new requirement
-                    @if (Model.RequirementId == 0)
-                    {
-                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
+
                     var $alertInfoEl = $("#savecustomerrolesrequirementAlert-info");
                     let response = jqXHR.responseJSON;
                     if (response instanceof Object && response.hasOwnProperty('Errors')) {
@@ -41,10 +34,23 @@
                                 errorMessages += '</br>';
                         });
                         $alertInfoEl.html(errorMessages);
-                    } else {
-                        // display default error
-                        $alertInfoEl.html('@T("Admin.Promotions.Discounts.Requirements.FailedToSave")');
+                        $("#savecustomerrolesrequirementAlert").click();
+
+                        return;
+                    } 
+
+                    $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    //notify parent if it's a new requirement
+                    @if (Model.RequirementId == 0)
+                    {
+                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
                     }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    var $alertInfoEl = $("#savecustomerrolesrequirementAlert-info");
+
+                    // display default error
+                    $alertInfoEl.html('@T("Admin.Promotions.Discounts.Requirements.FailedToSave")');
 
                     $("#savecustomerrolesrequirementAlert").click();
                 }

@@ -10,6 +10,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -51,6 +52,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         private readonly ILogger _logger;
         private readonly IMeasureService _measureService;
         private readonly IOrderService _orderService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;        
@@ -69,6 +71,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             ILogger logger,
             IMeasureService measureService,
             IOrderService orderService,
+            IProductAttributeParser productAttributeParser,
             IProductService productService,
             IShipmentService shipmentService,
             IShippingService shippingService,
@@ -83,6 +86,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             _logger = logger;
             _measureService = measureService;
             _orderService = orderService;
+            _productAttributeParser = productAttributeParser;
             _productService = productService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
@@ -96,6 +100,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> SendGetRequestAsync(string apiUrl)
         {
             var request = WebRequest.Create(apiUrl);
@@ -110,11 +115,13 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return await sr.ReadToEndAsync();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<int> ConvertFromPrimaryMeasureDimensionAsync(decimal quantity, MeasureDimension usedMeasureDimension)
         {
             return Convert.ToInt32(Math.Ceiling(await _measureService.ConvertFromPrimaryMeasureDimensionAsync(quantity, usedMeasureDimension)));
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> TryGetError(string data)
         {
             var flag = false;
@@ -136,6 +143,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return flag;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<IList<ShipStationServiceRate>> GetRatesAsync(GetShippingOptionRequest getShippingOptionRequest, string carrierCode)
         {
             var usedWeight = await _measureService.GetMeasureWeightBySystemKeywordAsync(Weight.Units);
@@ -262,6 +270,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return (await TryGetError(data)) ? new List<ShipStationServiceRate>() : JsonConvert.DeserializeObject<List<ShipStationServiceRate>>(data);
         }
         
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<IList<Carrier>> GetCarriersAsync()
         {
             var rez = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForShortTermCache(_carriersCacheKey), async () =>
@@ -277,6 +286,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return rez;
         }
         
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<IList<Service>> GetServicesAsync()
         {
             var services = await (await GetCarriersAsync()).SelectManyAwait(async carrier =>
@@ -296,6 +306,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return services.ToList();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteAddressToXmlAsync(XmlWriter writer, bool isBillingAddress, Address address)
         {
             await writer.WriteElementStringAsync("Name", $"{address.FirstName} {address.LastName}");
@@ -314,6 +325,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteElementStringAsync("Country", (await _countryService.GetCountryByAddressAsync(address)).TwoLetterIsoCode);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteOrderItemsToXmlAsync(XmlWriter writer, ICollection<OrderItem> orderItems)
         {
             await writer.WriteStartElementAsync("Items");
@@ -331,6 +343,19 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
                 var sku = product.Sku;
 
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+                {
+                    var attributesXml = orderItem.AttributesXml;
+
+                    if (!string.IsNullOrEmpty(attributesXml) && product.ManageInventoryMethod ==
+                        ManageInventoryMethod.ManageStockByAttributes)
+                    {
+                        var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+                        if (combination != null && !string.IsNullOrEmpty(combination.Sku)) 
+                            sku = combination.Sku;
+                    }
+                }
+
                 await writer.WriteElementStringAsync("SKU", string.IsNullOrEmpty(sku) ? product.Id.ToString() : sku);
                 await writer.WriteElementStringAsync("Name", product.Name);
                 await writer.WriteElementStringAsync("Quantity", orderItem.Quantity.ToString());
@@ -344,6 +369,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.FlushAsync();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteCustomerToXmlAsync(XmlWriter writer, Order order, Core.Domain.Customers.Customer customer)
         {
             await writer.WriteStartElementAsync("Customer");
@@ -372,6 +398,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             };
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteOrderToXmlAsync(XmlWriter writer, Order order)
         {
             await writer.WriteStartElementAsync("Order");
@@ -398,7 +425,10 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// Gets all rates
         /// </summary>
         /// <param name="shippingOptionRequest"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         public virtual async Task<IList<ShipStationServiceRate>> GetAllRatesAsync(GetShippingOptionRequest shippingOptionRequest)
         {
             var services = await GetServicesAsync();
@@ -418,6 +448,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="carrier">Carrier</param>
         /// <param name="service">Service</param>
         /// <param name="trackingNumber">Tracking number</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task CreateOrUpdateShippingAsync(string orderNumber, string carrier, string service, string trackingNumber)
         {
             try
@@ -510,7 +541,10 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="endDate">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>XML view of orders</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the xML view of orders
+        /// </returns>
         public async Task<string> GetXmlOrdersAsync(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize)
         {
             string xml;

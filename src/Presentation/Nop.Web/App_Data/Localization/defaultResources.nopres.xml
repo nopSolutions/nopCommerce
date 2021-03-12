@@ -2082,12 +2082,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
     <Value>Category template</Value>
   </LocaleResource>
@@ -2129,6 +2123,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.LimitedToStores.Hint">
     <Value>Option to limit this category to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -2328,12 +2328,6 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Deleted">
     <Value>Deleted</Value>
   </LocaleResource>
@@ -2363,6 +2357,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.LimitedToStores.Hint">
     <Value>Option to limit this manufacturer to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate">
     <Value>Manufacturer template</Value>
@@ -3649,7 +3649,7 @@
     <Value>This attribute is already added to this product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination">
-    <Value>This attribute is already exists into combination: '{0}'.</Value>
+    <Value>This attribute already exists in combination: '{0}'.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct">
     <Value>back to product details</Value>
@@ -4420,7 +4420,7 @@
     <Value>Schedule task run timeout</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint">
-    <Value>The length of time, in milliseconds, before the running schedule task times out. Set null to use default value.</Value>
+    <Value>The length of time, in milliseconds, a running schedule task timeouts. Set null to use a default value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.StaticFilesCacheControl">
     <Value>Static files cache control</Value>
@@ -4432,7 +4432,7 @@
     <Value>Support previous nopCommerce versions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint">
-    <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).</Value>
+    <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance). In this case, old URLs (from previous nopCommerce versions) will redirect to new ones. Enable it only if you upgraded from one of the previous nopCommerce versions.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath">
     <Value>User agent strings path</Value>
@@ -5590,7 +5590,7 @@
     <Value>Display type for attribute value when out of stock</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint">
-    <Value>Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.</Value>
+    <Value>Select the display type for attribute value when an attribute combination is out of stock. Please note that the 'Allow only existing attribute combinations'option should be enabled for a product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
     <Value>Additional sections</Value>
@@ -5901,11 +5901,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the 'Products by tag' page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange">
-    <Value>'Products by tag' page. Calculate price range automatically</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange">
+    <Value>'Products by tag' page. Enter price range manually</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation on 'Products by tag' page.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize">
     <Value>'Products by tag' page. Products per page</Value>
@@ -5991,11 +5991,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize.Hint">
     <Value>Search page. Check to allow customers to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange">
-    <Value>Search page. Calculate price range automatically</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange">
+    <Value>Search page. Enter price range manually</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation on 'Search' page.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options</Value>
@@ -7357,16 +7357,16 @@
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription">
-    <Value>Home page description</Value>
+    <Value>Home page meta description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageDescription.Hint">
-    <Value>The description for home page in your store.</Value>
+    <Value>The description for the home page in your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageTitle">
     <Value>Home page title</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HomepageTitle.Hint">
-    <Value>The title for home page in your store.</Value>
+    <Value>The title for the home page in your store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
     <Value>Enable honeypot</Value>
@@ -8474,6 +8474,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled.Hint">
     <Value>Check to allow customers to estimate shipping on the shopping cart page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled">
+    <Value>Use a city name for estimate shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled.Hint">
+    <Value>Check to allow customers to enter a city name instead of zip postal code.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled">
     <Value>Estimate shipping enabled (product page)</Value>
@@ -9706,7 +9712,7 @@
     <Value>Your store name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Text">
-    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certification <a href="{0}" target="_blank">here</a>]]>.</Value>
+    <Value><![CDATA[If you already have an SSL certificate installed on the server, enable SSL to protect your customers’ data. <b>Do not enable it if you don’t have an SSL certificate installed yet!</b> SSL Certificates provide customer trust and improve site rankings. Note that some online payment methods require an SSL certificate installed for correct working. Read how to install and configure SSL certificates <a href="{0}" target="_blank">here</a>]]>.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Store.Ssl.Title">
     <Value>Enable SSL</Value>
@@ -10084,7 +10090,7 @@
     <Value>The name of this forum. This is the name that the customer will see.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Name.Required">
-    <Value>Forum group name is required.</Value>
+    <Value>Forum name is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Updated">
     <Value>The forum has been updated successfully.</Value>
@@ -12286,7 +12292,7 @@
     <Value>Search by recipient name. Leave empty to load all records.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.RecipientNotified">
-    <Value>The recipient has been notified successfully.</Value>
+    <Value>The recipient has been successfully notified.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Updated">
     <Value>The gift card has been updated successfully.</Value>
@@ -12724,7 +12730,7 @@
     <Value>Shipping method</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingMethod.Hint">
-    <Value>The customers chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping Methods.</Value>
+    <Value>A chosen shipping method for this order. You can manage shipping methods from Configuration &gt; Shipping &gt; Shipping providers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ShippingStatus">
     <Value>Shipping status</Value>
@@ -15525,12 +15531,6 @@
   <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails.None">
     <Value>No customer account associated to this vendor.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatically price range calculation.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Description">
     <Value>Description</Value>
   </LocaleResource>
@@ -15551,6 +15551,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Email.Required">
     <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -15870,6 +15876,9 @@
   <LocaleResource Name="Catalog.PageSize.PerPage">
     <Value>per page</Value>
   </LocaleResource>
+  <LocaleResource Name="Catalog.Products.NoResult">
+    <Value>No products were found that matched your criteria.</Value>
+  </LocaleResource>
   <LocaleResource Name="Catalog.ViewMode">
     <Value>View as</Value>
   </LocaleResource>
@@ -15983,6 +15992,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.NotAvailable">
     <Value>Pickup points could not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.NullName">
+    <Value>Pickup</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PickupPoints.SelectPickupPoint">
     <Value>Select pickup point</Value>
@@ -18774,9 +18786,6 @@
   <LocaleResource Name="Search.Manufacturer">
     <Value>Manufacturer</Value>
   </LocaleResource>
-  <LocaleResource Name="Search.NoResultsText">
-    <Value>No products were found that matched your criteria.</Value>
-  </LocaleResource>
   <LocaleResource Name="Search.SearchBox.SearchPageLink">
     <Value>View all results...</Value>
   </LocaleResource>
@@ -18798,6 +18807,9 @@
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShipping.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShipping.Country.Required">
     <Value>Country is required</Value>
   </LocaleResource>
@@ -18806,6 +18818,9 @@
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ChooseShippingTitle">
     <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.City">
+    <Value>City</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.Country">
     <Value>Country</Value>

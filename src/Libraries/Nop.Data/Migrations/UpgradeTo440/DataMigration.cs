@@ -212,24 +212,24 @@ namespace Nop.Data.Migrations.UpgradeTo440
             }
 
             //add column
-            var automaticallyCalculatePriceRangeColumnName = "AutomaticallyCalculatePriceRange";
+            var manuallyPriceRangeColumnName = "ManuallyPriceRange";
 
-            if (!Schema.Table(categoryTableName).Column(automaticallyCalculatePriceRangeColumnName).Exists())
+            if (!Schema.Table(categoryTableName).Column(manuallyPriceRangeColumnName).Exists())
             {
                 Alter.Table(categoryTableName)
-                    .AddColumn(automaticallyCalculatePriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
+                    .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
 
-            if (!Schema.Table(manufacturerTableName).Column(automaticallyCalculatePriceRangeColumnName).Exists())
+            if (!Schema.Table(manufacturerTableName).Column(manuallyPriceRangeColumnName).Exists())
             {
                 Alter.Table(manufacturerTableName)
-                    .AddColumn(automaticallyCalculatePriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
+                    .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
 
-            if (!Schema.Table(vendorTableName).Column(automaticallyCalculatePriceRangeColumnName).Exists())
+            if (!Schema.Table(vendorTableName).Column(manuallyPriceRangeColumnName).Exists())
             {
                 Alter.Table(vendorTableName)
-                    .AddColumn(automaticallyCalculatePriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
+                    .AddColumn(manuallyPriceRangeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
         }
 

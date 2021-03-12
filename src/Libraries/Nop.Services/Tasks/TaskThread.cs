@@ -17,6 +17,7 @@ namespace Nop.Services.Tasks
     /// <summary>
     /// Represents task thread
     /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
     public partial class TaskThread : IDisposable
     {
         #region Fields
@@ -34,7 +35,7 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
             _timeout = EngineContext.Current.Resolve<AppSettings>().CommonConfig.ScheduleTaskRunTimeout;
         }
 

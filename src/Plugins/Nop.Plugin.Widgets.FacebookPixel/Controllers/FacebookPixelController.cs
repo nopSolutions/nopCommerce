@@ -96,6 +96,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -114,6 +115,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List(FacebookPixelSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -137,6 +139,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             return Json(model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Create()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -160,6 +163,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Create(FacebookPixelModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -184,6 +188,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Create.cshtml", model);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Edit(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -208,6 +213,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Edit(FacebookPixelModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -243,6 +249,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -261,6 +268,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomEventList(CustomEventSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -286,6 +294,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
         //ValidateAttribute is used to force model validation
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomEventAdd(int configurationId, [Validate] CustomEventModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -301,6 +310,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         }
 
         [HttpPost]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomEventDelete(int configurationId, string id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
@@ -313,6 +323,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             return new NullJsonResult();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> CookieSettingsWarning(bool disableForUsersNotAcceptingCookieConsent)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))

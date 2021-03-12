@@ -29,9 +29,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAddressService _addressService;
-        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -49,9 +48,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public VendorModelFactory(CurrencySettings currencySettings,
             ICurrencyService currencyService,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressModelFactory addressModelFactory,
             IAddressService addressService,
-            IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
@@ -65,9 +63,8 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             _currencySettings = currencySettings;
             _currencyService = currencyService;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressModelFactory = addressModelFactory;
             _addressService = addressService;
-            _baseAdminModelFactory = baseAdminModelFactory;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
@@ -89,6 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor associated customer models</param>
         /// <param name="vendor">Vendor</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAssociatedCustomerModelsAsync(IList<VendorAssociatedCustomerModel> models, Vendor vendor)
         {
             if (models == null)
@@ -113,6 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor attribute models</param>
         /// <param name="vendor">Vendor</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareVendorAttributeModelsAsync(IList<VendorModel.VendorAttributeModel> models, Vendor vendor)
         {
             if (models == null)
@@ -232,7 +231,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare vendor search model
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
-        /// <returns>Vendor search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor search model
+        /// </returns>
         public virtual Task<VendorSearchModel> PrepareVendorSearchModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
@@ -248,7 +250,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged vendor list model
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
-        /// <returns>Vendor list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor list model
+        /// </returns>
         public virtual async Task<VendorListModel> PrepareVendorListModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
@@ -283,7 +288,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Vendor model</param>
         /// <param name="vendor">Vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Vendor model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor model
+        /// </returns>
         public virtual async Task<VendorModel> PrepareVendorModelAsync(VendorModel model, Vendor vendor, bool excludeProperties = false)
         {
             Action<VendorLocalizedModel, int> localizedModelConfiguration = null;
@@ -323,6 +331,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AllowCustomersToSelectPageSize = true;
                 model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
                 model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
                 model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
                 model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }
@@ -340,7 +349,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressByIdAsync(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await _baseAdminModelFactory.PrepareAddressModelAsync(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
 
             return model;
         }
@@ -350,7 +359,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor note search model</param>
         /// <param name="vendor">Vendor</param>
-        /// <returns>Vendor note list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor note list model
+        /// </returns>
         public virtual async Task<VendorNoteListModel> PrepareVendorNoteListModelAsync(VendorNoteSearchModel searchModel, Vendor vendor)
         {
             if (searchModel == null)

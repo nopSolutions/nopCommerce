@@ -48,6 +48,7 @@ namespace Nop.Services.Orders
         /// Deletes a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteGiftCardAsync(GiftCard giftCard)
         {
             await _giftCardRepository.DeleteAsync(giftCard);
@@ -57,7 +58,10 @@ namespace Nop.Services.Orders
         /// Gets a gift card
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
-        /// <returns>Gift card entry</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift card entry
+        /// </returns>
         public virtual async Task<GiftCard> GetGiftCardByIdAsync(int giftCardId)
         {
             return await _giftCardRepository.GetByIdAsync(giftCardId, cache => default);
@@ -75,7 +79,10 @@ namespace Nop.Services.Orders
         /// <param name="recipientName">Recipient name; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Gift cards</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift cards
+        /// </returns>
         public virtual async Task<IPagedList<GiftCard>> GetAllGiftCardsAsync(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
@@ -120,6 +127,7 @@ namespace Nop.Services.Orders
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertGiftCardAsync(GiftCard giftCard)
         {
             await _giftCardRepository.InsertAsync(giftCard);
@@ -129,6 +137,7 @@ namespace Nop.Services.Orders
         /// Updates the gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateGiftCardAsync(GiftCard giftCard)
         {
             await _giftCardRepository.UpdateAsync(giftCard);
@@ -138,7 +147,10 @@ namespace Nop.Services.Orders
         /// Gets gift cards by 'PurchasedWithOrderItemId'
         /// </summary>
         /// <param name="purchasedWithOrderItemId">Purchased with order item identifier</param>
-        /// <returns>Gift card entries</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift card entries
+        /// </returns>
         public virtual async Task<IList<GiftCard>> GetGiftCardsByPurchasedWithOrderItemIdAsync(int purchasedWithOrderItemId)
         {
             if (purchasedWithOrderItemId == 0)
@@ -157,7 +169,10 @@ namespace Nop.Services.Orders
         /// Get active gift cards that are applied by a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Active gift cards</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the active gift cards
+        /// </returns>
         public virtual async Task<IList<GiftCard>> GetActiveGiftCardsAppliedByCustomerAsync(Customer customer)
         {
             var result = new List<GiftCard>();
@@ -193,6 +208,7 @@ namespace Nop.Services.Orders
         /// Delete gift card usage history
         /// </summary>
         /// <param name="order">Order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteGiftCardUsageHistoryAsync(Order order)
         {
             var giftCardUsageHistory = await GetGiftCardUsageHistoryAsync(order);
@@ -212,7 +228,10 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a gift card remaining amount
         /// </summary>
-        /// <returns>Gift card remaining amount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift card remaining amount
+        /// </returns>
         public virtual async Task<decimal> GetGiftCardRemainingAmountAsync(GiftCard giftCard)
         {
             if (giftCard == null)
@@ -233,7 +252,10 @@ namespace Nop.Services.Orders
         /// Gets a gift card usage history entries
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(GiftCard giftCard)
         {
             if (giftCard is null)
@@ -248,7 +270,10 @@ namespace Nop.Services.Orders
         /// Gets a gift card usage history entries
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(Order order)
         {
             if (order is null)
@@ -263,6 +288,7 @@ namespace Nop.Services.Orders
         /// Inserts a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertGiftCardUsageHistoryAsync(GiftCardUsageHistory giftCardUsageHistory)
         {
             await _giftCardUsageHistoryRepository.InsertAsync(giftCardUsageHistory);
@@ -272,7 +298,10 @@ namespace Nop.Services.Orders
         /// Is gift card valid
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> IsGiftCardValidAsync(GiftCard giftCard)
         {
             if (giftCard == null)

@@ -12,6 +12,7 @@ namespace Nop.Services.Tasks
     /// <summary>
     /// Task
     /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
     public partial class Task
     {
         #region Fields
@@ -26,6 +27,7 @@ namespace Nop.Services.Tasks
         /// Ctor for Task
         /// </summary>
         /// <param name="task">Task </param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public Task(ScheduleTask task)
         {
             ScheduleTask = task;

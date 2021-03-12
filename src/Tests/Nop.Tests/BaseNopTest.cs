@@ -355,7 +355,7 @@ namespace Nop.Tests
             }, typeof(IConsumer<>)))
                 services.AddTransient(findInterface, consumer);
 
-            services.AddSingleton<IInstallationService, CodeFirstInstallationService>();
+            services.AddSingleton<IInstallationService, InstallationService>();
 
             services
                 // add common FluentMigrator services

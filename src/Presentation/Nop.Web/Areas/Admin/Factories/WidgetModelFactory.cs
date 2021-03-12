@@ -40,7 +40,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare widget search model
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
-        /// <returns>Widget search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget search model
+        /// </returns>
         public virtual Task<WidgetSearchModel> PrepareWidgetSearchModelAsync(WidgetSearchModel searchModel)
         {
             if (searchModel == null)
@@ -56,7 +59,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged widget list model
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
-        /// <returns>Widget list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget list model
+        /// </returns>
         public virtual async Task<WidgetListModel> PrepareWidgetListModelAsync(WidgetSearchModel searchModel)
         {
             if (searchModel == null)
@@ -91,7 +97,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>List of render widget models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of render widget models
+        /// </returns>
         public virtual async Task<IList<RenderWidgetModel>> PrepareRenderWidgetModelsAsync(string widgetZone, object additionalData = null)
         {
             //get active widgets by widget zone

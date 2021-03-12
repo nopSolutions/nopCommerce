@@ -15,6 +15,7 @@ namespace Nop.Services.Directory.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(StateProvince entity, EntityEventType entityEventType)
         {
             await RemoveByPrefixAsync(NopEntityCacheDefaults<StateProvince>.Prefix);

@@ -75,6 +75,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(string testTaxResult = null)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -91,6 +92,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 ValidateAddress = _avalaraTaxSettings.ValidateAddress,
                 TaxOriginAddressTypeId = (int)_avalaraTaxSettings.TaxOriginAddressType,
                 EnableLogging = _avalaraTaxSettings.EnableLogging,
+                GetTaxRateByAddressOnly = _avalaraTaxSettings.GetTaxRateByAddressOnly,
                 TestTaxResult = testTaxResult
             };
             model.IsConfigured = !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId) && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
@@ -148,6 +150,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("save")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -165,6 +168,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _avalaraTaxSettings.ValidateAddress = model.ValidateAddress;
             _avalaraTaxSettings.TaxOriginAddressType = (TaxOriginAddressType)model.TaxOriginAddressTypeId;
             _avalaraTaxSettings.EnableLogging = model.EnableLogging;
+            _avalaraTaxSettings.GetTaxRateByAddressOnly = model.GetTaxRateByAddressOnly;
             await _settingService.SaveSettingAsync(_avalaraTaxSettings);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
@@ -174,6 +178,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("verifyCredentials")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> VerifyCredentials()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -191,6 +196,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("testTax")]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> TestTaxRequest(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -227,6 +233,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             return await Configure(testTaxResult);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ChangeOriginAddressType(int typeId)
         {
             var message = (TaxOriginAddressType)typeId switch

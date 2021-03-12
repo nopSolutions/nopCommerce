@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Language Name="Česky" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>E-mail administrátora</Value>
+    <Value>Email administrátora</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
     <Value>Zadejte email administrátora</Value>
@@ -34,10 +34,10 @@
     <Value>Špatný formát připojovacího řetězce SQL.</Value>
   </LocaleResource>
   <LocaleResource Name="Country">
-    <Value>Country</Value>
+    <Value>Stát</Value>
   </LocaleResource>
   <LocaleResource Name="CountrySelect">
-    <Value>Select your country...</Value>
+    <Value>Vyberte svůj stát...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
     <Value>Vytvořit databázi, pokud neexistuje.</Value>
@@ -46,7 +46,7 @@
     <Value>Vytvořit vzorová data</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom collation</Value>
+    <Value>Zadejte vlastní řazení</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Databáze</Value>
@@ -103,13 +103,13 @@
     <Value>Klikněte pro obnovení - restart procesu instalace (včechny dočasné hodnoty budou smazány)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartProgress">
-    <Value>Restarting...</Value>
+    <Value>Restartuji...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Server name</Value>
+    <Value>Název serveru</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Server name is required</Value>
+    <Value>Název serveru je nutné zadat</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Nastavení se nezdařilo: {0}</Value>

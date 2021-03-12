@@ -84,7 +84,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Process a payment
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the process payment result
+        /// </returns>
         public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
             //try to get an order id from custom values
@@ -128,6 +131,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             return Task.CompletedTask;
@@ -137,7 +141,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Captures payment
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
-        /// <returns>Capture payment result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the capture payment result
+        /// </returns>
         public async Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
         {
             //capture previously authorized payment
@@ -160,7 +167,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Voids a payment
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public async Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
         {
             //void previously authorized payment
@@ -177,7 +187,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Refunds a payment
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public async Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
         {
             //refund previously captured payment
@@ -212,7 +225,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Process recurring payment
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the process payment result
+        /// </returns>
         public Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
             return Task.FromResult(new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } });
@@ -222,7 +238,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             return Task.FromResult(new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } });
@@ -232,7 +251,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
         /// <param name="cart">Shoping cart</param>
-        /// <returns>true - hide; false - display.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - hide; false - display.
+        /// </returns>
         public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
         {
             return Task.FromResult(false);
@@ -242,7 +264,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Gets additional handling fee
         /// </summary>
         /// <param name="cart">Shoping cart</param>
-        /// <returns>Additional handling fee</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the additional handling fee
+        /// </returns>
         public Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
         {
             return Task.FromResult(decimal.Zero);
@@ -252,7 +277,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
             return Task.FromResult(false);
@@ -262,7 +290,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Validate payment form
         /// </summary>
         /// <param name="form">The parsed form values</param>
-        /// <returns>List of validating errors</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of validating errors
+        /// </returns>
         public Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form)
         {
             if (form == null)
@@ -281,7 +312,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Get payment information
         /// </summary>
         /// <param name="form">The parsed form values</param>
-        /// <returns>Payment info holder</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment info holder
+        /// </returns>
         public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
             if (form == null)
@@ -310,7 +344,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
             return Task.FromResult<IList<string>>(new List<string>
@@ -356,6 +393,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// <summary>
         /// Install the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //settings
@@ -419,6 +457,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //webhooks
@@ -447,6 +486,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<string> GetPaymentMethodDescriptionAsync()
         {
             return await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription");

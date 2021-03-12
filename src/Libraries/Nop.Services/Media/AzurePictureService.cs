@@ -25,6 +25,8 @@ namespace Nop.Services.Media
     {
         #region Fields
 
+        private static BlobContainerClient _blobContainerClient;
+        private static BlobServiceClient _blobServiceClient;
         private static bool _azureBlobStorageAppendContainerName;
         private static bool _isInitialized;
         private static string _azureBlobStorageConnectionString;
@@ -34,10 +36,7 @@ namespace Nop.Services.Media
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly MediaSettings _mediaSettings;
 
-        private readonly object _locker = new object();
-
-        private BlobContainerClient _blobContainerClient;
-        private BlobServiceClient _blobServiceClient;
+        private readonly object _locker = new();
 
         #endregion
 
@@ -120,6 +119,7 @@ namespace Nop.Services.Media
         /// <summary>
         /// Create cloud Blob container
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task CreateCloudBlobContainer()
         {
             await _blobContainerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
@@ -129,7 +129,10 @@ namespace Nop.Services.Media
         /// Get picture (thumb) local path
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
-        /// <returns>Local picture thumb path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the local picture thumb path
+        /// </returns>
         protected override Task<string> GetThumbLocalPathAsync(string thumbFileName)
         {
             var path = _azureBlobStorageAppendContainerName ? $"{_azureBlobStorageContainerName}/" : string.Empty;
@@ -142,7 +145,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
-        /// <returns>Local picture thumb path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the local picture thumb path
+        /// </returns>
         protected override async Task<string> GetThumbUrlAsync(string thumbFileName, string storeLocation = null)
         {
             return await GetThumbLocalPathAsync(thumbFileName);
@@ -152,6 +158,7 @@ namespace Nop.Services.Media
         /// Initiates an asynchronous operation to delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task DeletePictureThumbsAsync(Picture picture)
         {
             //create a string containing the Blob name prefix
@@ -172,7 +179,10 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         protected override async Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
         {
             try
@@ -197,6 +207,7 @@ namespace Nop.Services.Media
         /// <param name="thumbFileName">Thumb file name</param>
         /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             var blobClient = _blobContainerClient.GetBlobClient(thumbFileName);

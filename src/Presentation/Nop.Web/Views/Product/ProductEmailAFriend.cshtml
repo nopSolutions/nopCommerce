@@ -43,7 +43,6 @@
                         <div class="inputs">
                             <label asp-for="PersonalMessage" asp-postfix=":"></label>
                             <textarea asp-for="PersonalMessage" class="your-email" placeholder="@T("Products.EmailAFriend.PersonalMessage.Hint")"></textarea>
-                            <nop-required />
                             <span asp-validation-for="PersonalMessage"></span>
                         </div>
                         @if (Model.DisplayCaptcha)

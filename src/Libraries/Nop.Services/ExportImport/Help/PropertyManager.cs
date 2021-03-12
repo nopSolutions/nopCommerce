@@ -50,7 +50,10 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         /// <typeparam name="T">Type of object</typeparam>
         /// <param name="itemsToExport">The objects to export</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
         public virtual async Task<byte[]> ExportToXlsxAsync(IEnumerable<T> itemsToExport)
         {
             await using var stream = new MemoryStream();
@@ -116,6 +119,7 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="row">Row index</param>
         /// <param name="cellOffset">Cell offset</param>
         /// <param name="fWorksheet">Filters worksheet</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task WriteToXlsxAsync(ExcelWorksheet worksheet, int row, int cellOffset = 0, ExcelWorksheet fWorksheet = null)
         {
             if (CurrentObject == null)

@@ -14,8 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="3.2.11" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.2.11" />
+    <PackageReference Include="FluentMigrator" Version="3.2.15" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.2.15" />
     <PackageReference Include="linq2db" Version="3.2.3" />
     <PackageReference Include="MySql.Data" Version="8.0.23" />
     <PackageReference Include="Npgsql" Version="5.0.3" />

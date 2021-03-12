@@ -65,39 +65,39 @@
 
                 function toggleAllowVoting() {
                     if ($('#@Html.IdFor(model => model.AllowPostVoting)').is(':checked')) {
-                        $('#pnlMaxVotes').showField();
+                        $('#pnlMaxVotes').showElement();
                     }
                     else {
-                        $('#pnlMaxVotes').hide();
+                        $('#pnlMaxVotes').hideElement();
                     }
                 }
 
                 function toggleAllowPrivateMessages() {
                     if ($('#@Html.IdFor(model => model.AllowPrivateMessages)').is(':checked')) {
-                        $('#pnlShowAlertForPM').showField();
-                        $('#pnlNotifyAboutPrivateMessages').showField();
+                        $('#pnlShowAlertForPM').showElement();
+                        $('#pnlNotifyAboutPrivateMessages').showElement();
                     }
                     else {
-                        $('#pnlShowAlertForPM').hide();
-                        $('#pnlNotifyAboutPrivateMessages').hide();
+                        $('#pnlShowAlertForPM').hideElement();
+                        $('#pnlNotifyAboutPrivateMessages').hideElement();
                     }
                 }
 
                 function toggleForumFeedsEnabled() {
                     if ($('#@Html.IdFor(model => model.ForumFeedsEnabled)').is(':checked')) {
-                        $('#pnlForumFeedCount').showField();
+                        $('#pnlForumFeedCount').showElement();
                     }
                     else {
-                        $('#pnlForumFeedCount').hide();
+                        $('#pnlForumFeedCount').hideElement();
                     }
                 }
 
                 function toggleActiveDiscussionsFeedEnabled() {
                     if ($('#@Html.IdFor(model => model.ActiveDiscussionsFeedEnabled)').is(':checked')) {
-                        $('#pnlActiveDiscussionsFeedCount').showField();
+                        $('#pnlActiveDiscussionsFeedCount').showElement();
                     }
                     else {
-                        $('#pnlActiveDiscussionsFeedCount').hide();
+                        $('#pnlActiveDiscussionsFeedCount').hideElement();
                     }
                 }
             </script>

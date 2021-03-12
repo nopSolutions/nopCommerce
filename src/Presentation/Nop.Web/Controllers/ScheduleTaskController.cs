@@ -18,6 +18,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RunTask(string taskType)
         {
             var scheduleTask = await _scheduleTaskService.GetTaskByTypeAsync(taskType);

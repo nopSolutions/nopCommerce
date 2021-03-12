@@ -80,7 +80,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Get the list of forum topic types
         /// </summary>
-        /// <returns>Collection of the select list item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of the select list item
+        /// </returns>
         protected virtual async Task<IEnumerable<SelectListItem>> ForumTopicTypesListAsync()
         {
             var list = new List<SelectListItem>
@@ -110,7 +113,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Get the list of forum groups
         /// </summary>
-        /// <returns>Collection of the select list item</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of the select list item
+        /// </returns>
         protected virtual async Task<IEnumerable<SelectListItem>> ForumGroupsForumsListAsync()
         {
             var forumsList = new List<SelectListItem>();
@@ -131,67 +137,7 @@ namespace Nop.Web.Factories
 
             return forumsList;
         }
-
-        /// <summary>
-        /// Prepare the forum topic row model
-        /// </summary>
-        /// <param name="topic">Forum topic</param>
-        /// <returns>Forum topic row model</returns>
-        protected virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
-        {
-            if (topic == null)
-                throw new ArgumentNullException(nameof(topic));
-
-            var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId);
-
-            var topicModel = new ForumTopicRowModel
-            {
-                Id = topic.Id,
-                Subject = topic.Subject,
-                SeName = await _forumService.GetTopicSeNameAsync(topic),
-                LastPostId = topic.LastPostId,
-                NumPosts = topic.NumPosts,
-                Views = topic.Views,
-                NumReplies = topic.NumPosts > 0 ? topic.NumPosts - 1 : 0,
-                ForumTopicType = topic.ForumTopicType,
-                CustomerId = topic.CustomerId,
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customer),
-                CustomerName = await _customerService.FormatUsernameAsync(customer)
-            };
-
-            var forumPosts = await _forumService.GetAllPostsAsync(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
-            topicModel.TotalPostPages = forumPosts.TotalPages;
-
-            var firstPost = await _forumService.GetFirstPostAsync(topic);
-            topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
-
-            return topicModel;
-        }
-
-        /// <summary>
-        /// Prepare the forum row model
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <returns>Forum row model</returns>
-        protected virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
-        {
-            if (forum == null)
-                throw new ArgumentNullException(nameof(forum));
-
-            var forumModel = new ForumRowModel
-            {
-                Id = forum.Id,
-                Name = forum.Name,
-                SeName = await _forumService.GetForumSeNameAsync(forum),
-                Description = forum.Description,
-                NumTopics = forum.NumTopics,
-                NumPosts = forum.NumPosts,
-                LastPostId = forum.LastPostId,
-            };
-
-            return forumModel;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -200,7 +146,10 @@ namespace Nop.Web.Factories
         /// Prepare the forum group model
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        /// <returns>Forum group model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum group model
+        /// </returns>
         public virtual async Task<ForumGroupModel> PrepareForumGroupModelAsync(ForumGroup forumGroup)
         {
             if (forumGroup == null)
@@ -225,7 +174,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the boards index model
         /// </summary>
-        /// <returns>Boards index model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the boards index model
+        /// </returns>
         public virtual async Task<BoardsIndexModel> PrepareBoardsIndexModelAsync()
         {
             var model = new BoardsIndexModel();
@@ -242,7 +194,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the active discussions model
         /// </summary>
-        /// <returns>Active discussions model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the active discussions model
+        /// </returns>
         public virtual async Task<ActiveDiscussionsModel> PrepareActiveDiscussionsModelAsync()
         {
             var model = new ActiveDiscussionsModel
@@ -268,7 +223,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="forumId">Forum identifier</param>
         /// <param name="page">Number of forum topics page</param>
-        /// <returns>Active discussions model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the active discussions model
+        /// </returns>
         public virtual async Task<ActiveDiscussionsModel> PrepareActiveDiscussionsModelAsync(int forumId, int page)
         {
             var model = new ActiveDiscussionsModel
@@ -299,7 +257,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="forum">Forum</param>
         /// <param name="page">Number of forum topics page</param>
-        /// <returns>Forum page model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum page model
+        /// </returns>
         public virtual async Task<ForumPageModel> PrepareForumPageModelAsync(Forum forum, int page)
         {
             if (forum == null)
@@ -349,7 +310,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="page">Number of forum posts page</param>
-        /// <returns>Forum topic page model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum topic page model
+        /// </returns>
         public virtual async Task<ForumTopicPageModel> PrepareForumTopicPageModelAsync(ForumTopic forumTopic, int page)
         {
             if (forumTopic == null)
@@ -462,7 +426,10 @@ namespace Nop.Web.Factories
         /// Prepare the topic move model
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        /// <returns>Topic move model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic move model
+        /// </returns>
         public virtual async Task<TopicMoveModel> PrepareTopicMoveAsync(ForumTopic forumTopic)
         {
             if (forumTopic == null)
@@ -484,6 +451,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="forum">Forum</param>
         /// <param name="model">Edit forum topic model</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTopicCreateModelAsync(Forum forum, EditForumTopicModel model)
         {
             if (forum == null)
@@ -509,6 +477,7 @@ namespace Nop.Web.Factories
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="model">Edit forum topic model</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareTopicEditModelAsync(ForumTopic forumTopic, EditForumTopicModel model, bool excludeProperties)
         {
             if (forumTopic == null)
@@ -553,7 +522,10 @@ namespace Nop.Web.Factories
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="quote">Identifier of the quoted post; pass null to load the empty text</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        /// <returns>Edit forum post model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the edit forum post model
+        /// </returns>
         public virtual async Task<EditForumPostModel> PreparePostCreateModelAsync(ForumTopic forumTopic, int? quote, bool excludeProperties)
         {
             if (forumTopic == null)
@@ -619,7 +591,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="forumPost">Forum post</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        /// <returns>Edit forum post model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the edit forum post model
+        /// </returns>
         public virtual async Task<EditForumPostModel> PreparePostEditModelAsync(ForumPost forumPost, bool excludeProperties)
         {
             if (forumPost == null)
@@ -664,13 +639,16 @@ namespace Nop.Web.Factories
         /// Prepare the search model
         /// </summary>
         /// <param name="searchterms">Search terms</param>
-        /// <param name="adv">Whether to use the advanced search</param>
+        /// <param name="advs">Whether to use the advanced search</param>
         /// <param name="forumId">Forum identifier</param>
         /// <param name="within">String representation of int value of ForumSearchType</param>
         /// <param name="limitDays">Limit by the last number days; 0 to load all topics</param>
         /// <param name="page">Number of items page</param>
-        /// <returns>Search model</returns>
-        public virtual async Task<SearchModel> PrepareSearchModelAsync(string searchterms, bool? adv, string forumId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search model
+        /// </returns>
+        public virtual async Task<SearchModel> PrepareSearchModelAsync(string searchterms, bool? advs, string forumId,
             string within, string limitDays, int page)
         {
             var model = new SearchModel();
@@ -786,7 +764,7 @@ namespace Nop.Web.Factories
 
             var searchTermMinimumLength = _forumSettings.ForumSearchTermMinimumLength;
 
-            model.ShowAdvancedSearch = adv.GetValueOrDefault();
+            model.ShowAdvancedSearch = advs.GetValueOrDefault();
             model.SearchResultsVisible = false;
             model.NoResultsVisisble = false;
             model.PostsPageSize = _forumSettings.PostsPageSize;
@@ -808,7 +786,7 @@ namespace Nop.Web.Factories
 
                     ForumSearchType searchWithin = 0;
                     var limitResultsToPrevious = 0;
-                    if (adv.GetValueOrDefault())
+                    if (advs.GetValueOrDefault())
                     {
                         searchWithin = (ForumSearchType)withinSelected;
                         limitResultsToPrevious = limitDaysSelected;
@@ -855,7 +833,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="forumPost">Forum post</param>
         /// <param name="showTopic">Whether to show topic</param>
-        /// <returns>Last post model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the last post model
+        /// </returns>
         public virtual async Task<LastPostModel> PrepareLastPostModelAsync(ForumPost forumPost, bool showTopic)
         {
             var model = new LastPostModel
@@ -900,7 +881,10 @@ namespace Nop.Web.Factories
         /// <param name="forumGroupId">Forum group identifier; pass null to load nothing</param>
         /// <param name="forumId">Forum identifier; pass null to load breadcrumbs up to forum group</param>
         /// <param name="forumTopicId">Forum topic identifier; pass null to load breadcrumbs up to forum</param>
-        /// <returns>Forum breadcrumb model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum breadcrumb model
+        /// </returns>
         public virtual async Task<ForumBreadcrumbModel> PrepareForumBreadcrumbModelAsync(int? forumGroupId, int? forumId, int? forumTopicId)
         {
             var model = new ForumBreadcrumbModel();
@@ -940,7 +924,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer forum subscriptions model
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
-        /// <returns>customer forum subscriptions model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer forum subscriptions model
+        /// </returns>
         public virtual async Task<CustomerForumSubscriptionsModel> PrepareCustomerForumSubscriptionsModelAsync(int? page)
         {
             var pageIndex = 0;
@@ -1008,6 +995,72 @@ namespace Nop.Web.Factories
             };
 
             return model;
+        }
+
+        /// <summary>
+        /// Prepare the forum topic row model
+        /// </summary>
+        /// <param name="topic">Forum topic</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum topic row model
+        /// </returns>
+        public virtual async Task<ForumTopicRowModel> PrepareForumTopicRowModelAsync(ForumTopic topic)
+        {
+            if (topic == null)
+                throw new ArgumentNullException(nameof(topic));
+
+            var customer = await _customerService.GetCustomerByIdAsync(topic.CustomerId);
+
+            var topicModel = new ForumTopicRowModel
+            {
+                Id = topic.Id,
+                Subject = topic.Subject,
+                SeName = await _forumService.GetTopicSeNameAsync(topic),
+                LastPostId = topic.LastPostId,
+                NumPosts = topic.NumPosts,
+                Views = topic.Views,
+                NumReplies = topic.NumPosts > 0 ? topic.NumPosts - 1 : 0,
+                ForumTopicType = topic.ForumTopicType,
+                CustomerId = topic.CustomerId,
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(customer),
+                CustomerName = await _customerService.FormatUsernameAsync(customer)
+            };
+
+            var forumPosts = await _forumService.GetAllPostsAsync(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
+            topicModel.TotalPostPages = forumPosts.TotalPages;
+
+            var firstPost = await _forumService.GetFirstPostAsync(topic);
+            topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
+
+            return topicModel;
+        }
+
+        /// <summary>
+        /// Prepare the forum row model
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum row model
+        /// </returns>
+        public virtual async Task<ForumRowModel> PrepareForumRowModelAsync(Forum forum)
+        {
+            if (forum == null)
+                throw new ArgumentNullException(nameof(forum));
+
+            var forumModel = new ForumRowModel
+            {
+                Id = forum.Id,
+                Name = forum.Name,
+                SeName = await _forumService.GetForumSeNameAsync(forum),
+                Description = forum.Description,
+                NumTopics = forum.NumTopics,
+                NumPosts = forum.NumPosts,
+                LastPostId = forum.LastPostId,
+            };
+
+            return forumModel;
         }
 
         #endregion

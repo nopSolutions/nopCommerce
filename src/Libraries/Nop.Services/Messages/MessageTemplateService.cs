@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Localization;
@@ -18,7 +17,6 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -30,7 +28,7 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public MessageTemplateService(CatalogSettings catalogSettings,
+        public MessageTemplateService(
             IStaticCacheManager staticCacheManager,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -38,7 +36,6 @@ namespace Nop.Services.Messages
             IRepository<MessageTemplate> messageTemplateRepository,
             IStoreMappingService storeMappingService)
         {
-            _catalogSettings = catalogSettings;
             _staticCacheManager = staticCacheManager;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -55,6 +52,7 @@ namespace Nop.Services.Messages
         /// Delete a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteMessageTemplateAsync(MessageTemplate messageTemplate)
         {
             await _messageTemplateRepository.DeleteAsync(messageTemplate);
@@ -64,6 +62,7 @@ namespace Nop.Services.Messages
         /// Inserts a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertMessageTemplateAsync(MessageTemplate messageTemplate)
         {
             await _messageTemplateRepository.InsertAsync(messageTemplate);
@@ -73,6 +72,7 @@ namespace Nop.Services.Messages
         /// Updates a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateMessageTemplateAsync(MessageTemplate messageTemplate)
         {
             await _messageTemplateRepository.UpdateAsync(messageTemplate);
@@ -82,7 +82,10 @@ namespace Nop.Services.Messages
         /// Gets a message template
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
-        /// <returns>Message template</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message template
+        /// </returns>
         public virtual async Task<MessageTemplate> GetMessageTemplateByIdAsync(int messageTemplateId)
         {
             return await _messageTemplateRepository.GetByIdAsync(messageTemplateId, cache => default);
@@ -93,7 +96,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
-        /// <returns>List of message templates</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of message templates
+        /// </returns>
         public virtual async Task<IList<MessageTemplate>> GetMessageTemplatesByNameAsync(string messageTemplateName, int? storeId = null)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
@@ -121,7 +127,10 @@ namespace Nop.Services.Messages
         /// Gets all message templates
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
-        /// <returns>Message template list</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message template list
+        /// </returns>
         public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId)
         {
             return await _messageTemplateRepository.GetAllAsync(async query =>
@@ -137,7 +146,10 @@ namespace Nop.Services.Messages
         /// Create a copy of message template with all depended data
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        /// <returns>Message template copy</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message template copy
+        /// </returns>
         public virtual async Task<MessageTemplate> CopyMessageTemplateAsync(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)

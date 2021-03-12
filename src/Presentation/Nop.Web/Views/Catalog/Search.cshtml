@@ -9,12 +9,12 @@
 }
 <script asp-location="Footer">
     $(document).ready(function () {
-        $("#@Html.IdFor(model => model.adv)").on('click', toggleAdvancedSearch);
+        $("#@Html.IdFor(model => model.advs)").on('click', toggleAdvancedSearch);
         toggleAdvancedSearch();
     });
 
     function toggleAdvancedSearch() {
-        if ($('#@Html.IdFor(model => model.adv)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.advs)').is(':checked')) {
             $('#advanced-search-block').show();
         }
         else {
@@ -43,8 +43,8 @@
                             </div>
                             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductSearchPageBasic })
                             <div class="inputs reversed">
-                                <input asp-for="adv" />
-                                <label asp-for="adv">@T("Search.AdvancedSearch")</label>
+                                <input asp-for="advs" />
+                                <label asp-for="advs">@T("Search.AdvancedSearch")</label>
                             </div>
                         </div>
                         <div class="advanced-search" id="advanced-search-block">
@@ -97,11 +97,11 @@
             <script asp-location="Footer">
                 $(document).ready(function () {
                     $(CatalogProducts).on('before', function (e) {
-                        var isAdvanced = $('#@Html.IdFor(model => model.adv)').is(':checked');
+                        var isAdvanced = $('#@Html.IdFor(model => model.advs)').is(':checked');
 
                         e.payload.urlBuilder
                             .addParameter('q', $('#@Html.IdFor(model => model.q)').val())
-                            .addParameter('adv', isAdvanced);
+                            .addParameter('advs', isAdvanced);
 
                         if (isAdvanced) {
                             e.payload.urlBuilder

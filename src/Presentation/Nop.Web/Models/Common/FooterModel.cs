@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Common
         public bool WishlistEnabled { get; set; }
         public bool ShoppingCartEnabled { get; set; }
         public bool SitemapEnabled { get; set; }
+        public bool SearchEnabled { get; set; }
         public bool NewsEnabled { get; set; }
         public bool BlogEnabled { get; set; }
         public bool CompareProductsEnabled { get; set; }

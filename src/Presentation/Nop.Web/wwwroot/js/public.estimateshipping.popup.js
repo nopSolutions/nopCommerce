@@ -10,7 +10,9 @@
     countryEl: false,
     stateProvinceEl: false,
     zipPostalCodeEl: false,
-    errorMessageBoxClass: 'message-failure'
+    useCity: false,
+    cityEl: false,
+    errorMessageBoxClass: 'message-failure',
   };
 
   return {
@@ -60,7 +62,12 @@
         addressChangedHandler();
       });
       $(this.settings.stateProvinceEl, $content).on('change', addressChangedHandler);
-      $(this.settings.zipPostalCodeEl, $content).on('input propertychange paste', addressChangedHandler);
+
+      if (this.settings.useCity) {
+        $(this.settings.cityEl, $content).on('input propertychange paste', addressChangedHandler);
+      } else {
+        $(this.settings.zipPostalCodeEl, $content).on('input propertychange paste', addressChangedHandler);
+      }
     },
 
     closePopup: function () {
@@ -255,6 +262,7 @@
       var selectedCountryId = $(this.settings.countryEl, $content).find(':selected');
       var selectedStateProvinceId = $(this.settings.stateProvinceEl, $content).find(':selected');
       var selectedZipPostalCode = $(this.settings.zipPostalCodeEl, $content);
+      var selectedCity = $(this.settings.cityEl, $content);
 
       if (selectedCountryId && selectedCountryId.val() > 0) {
         address.countryId = selectedCountryId.val();
@@ -270,32 +278,39 @@
         address.zipPostalCode = selectedZipPostalCode.val();
       }
 
+      if (selectedCity && selectedCity.val()) {
+        address.city = selectedCity.val();
+      }
+
       return address;
     },
 
     addressesAreEqual: function (address1, address2) {
       return address1.countryId === address2.countryId &&
         address1.stateProvinceId === address2.stateProvinceId &&
-        address1.zipPostalCode === address2.zipPostalCode;
+          (this.settings.useCity || address1.zipPostalCode === address2.zipPostalCode) &&
+            (!this.settings.useCity || address1.city === address2.city);
     },
 
     validateAddress: function (address) {
       this.clearErrorMessage();
 
+      var errors = [];
       var localizedData = this.settings.localizedData;
 
-      if (!(address.countryName && address.countryId > 0)) {
-        this.showErrorMessage([localizedData.countryErrorMessage]);
-      }
+      if (!(address.countryName && address.countryId > 0))
+        errors.push(localizedData.countryErrorMessage);
 
-      if (!address.zipPostalCode) {
-        this.showErrorMessage([localizedData.zipPostalCodeErrorMessage]);
-      }
+      if (this.settings.useCity && !address.city)
+        errors.push(localizedData.cityErrorMessage);
 
-      return address &&
-        address.countryName &&
-          address.countryId > 0 &&
-            address.zipPostalCode;
+      if (!this.settings.useCity && !address.zipPostalCode)
+        errors.push(localizedData.zipPostalCodeErrorMessage);
+
+      if (errors.length > 0)
+        this.showErrorMessage(errors);
+
+      return errors.length === 0;
     }
   }
 }

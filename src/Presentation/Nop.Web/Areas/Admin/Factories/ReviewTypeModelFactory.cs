@@ -43,7 +43,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare review type search model
         /// </summary>
         /// <param name="searchModel">Review type search model</param>
-        /// <returns>Review type search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review type search model
+        /// </returns>
         public virtual Task<ReviewTypeSearchModel> PrepareReviewTypeSearchModelAsync(ReviewTypeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -59,7 +62,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged review type list model
         /// </summary>
         /// <param name="searchModel">Review type search model</param>
-        /// <returns>Review type list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review type list model
+        /// </returns>
         public virtual async Task<ReviewTypeListModel> PrepareReviewTypeListModelAsync(ReviewTypeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -84,7 +90,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Review type model</param>
         /// <param name="reviewType">Review type</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Review type model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review type model
+        /// </returns>
         public virtual async Task<ReviewTypeModel> PrepareReviewTypeModelAsync(ReviewTypeModel model,
             ReviewType reviewType, bool excludeProperties = false)
         {

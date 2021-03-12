@@ -87,6 +87,11 @@ namespace Nop.Core.Domain.Shipping
         public bool EstimateShippingProductPageEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use city name on 'Estimate shipping' widget instead zip postal code
+        /// </summary>
+        public bool EstimateShippingCityNameEnabled { get; set; }
+
+        /// <summary>
         /// A value indicating whether customers should see shipment events on their order details pages
         /// </summary>
         public bool DisplayShipmentEventsToCustomers { get; set; }
