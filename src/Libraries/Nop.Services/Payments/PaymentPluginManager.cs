@@ -47,7 +47,7 @@ namespace Nop.Services.Payments
         /// A task that represents the asynchronous operation
         /// The task result contains the list of active payment methods
         /// </returns>
-        public virtual async Task<IList<IPaymentMethod>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0,
+        public virtual async Task<IList<IPaymentMethod>> LoadActivePluginsAsyncAsync(Customer customer = null, int storeId = 0,
             int countryId = 0)
         {
             var paymentMethods = await LoadActivePluginsAsync(_paymentSettings.ActivePaymentMethodSystemNames, customer, storeId);
