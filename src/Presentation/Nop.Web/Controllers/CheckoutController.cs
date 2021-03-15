@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
             //then we should allow standard checkout
             //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = await (await _paymentPluginManager
-                .LoadActivePluginsAsyncAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
                 .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart)).ToListAsync();
             //payment methods displayed during checkout (not with "Button" type)
             var nonButtonPaymentMethods = paymentMethods
