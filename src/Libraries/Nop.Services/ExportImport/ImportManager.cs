@@ -1677,7 +1677,7 @@ namespace Nop.Services.ExportImport
 
                     //delete product categories
                     var deletedProductCategories = await categories.Where(categoryId => !importedCategories.Contains(categoryId))
-                        .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).First(pc => pc.CategoryId == categoryId)).ToListAsync();
+                        .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true)).FirstOrDefault(pc => pc.CategoryId == categoryId)).Where(pc=>pc != null).ToListAsync();
 
                     foreach (var deletedProductCategory in deletedProductCategories) 
                         await _categoryService.DeleteProductCategoryAsync(deletedProductCategory);
