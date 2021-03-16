@@ -1,0 +1,50 @@
+name: nopCommerce CI/CD Pipeline
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  ci:
+    name: Continuous integration
+    runs-on: ubuntu-latest
+    env:
+      SOLUTION_PATH: src/nopCommerce.sln
+      TEST_PROJECT_PATH: src/Tests/Nop.Tests/Nop.Tests.csproj
+    steps:
+      - name: Checkout repository
+        id: checkout_repo
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      # GitHub automated tagging step
+
+      - name: Run .NET restore
+        id: dotnet_restore
+        shell: pwsh
+        run: |
+          dotnet restore $env:SOLUTION_PATH
+
+      - name: Build solution
+        id: build_solution
+        shell: pwsh
+        run: |
+          dotnet build $env:SOLUTION_PATH
+
+      - name: Run unit tests
+        id: run_unit_tests
+        shell: pwsh
+        run: |
+          dotnet test $env:TEST_PROJECT_PATH
+
+    # Continuous deployment job
+
+      # Slack notifications publish step
+
+      # NuGet package creation step
+
+      # NuGet package publish step
+
+      # GitHub release automation step
+
+# Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
