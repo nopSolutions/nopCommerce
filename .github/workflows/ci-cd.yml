@@ -19,12 +19,6 @@ jobs:
       
       # GitHub automated tagging step
 
-      - name: Run .NET restore
-        id: dotnet_restore
-        shell: pwsh
-        run: |
-          dotnet restore $env:SOLUTION_PATH
-
       - name: Build solution
         id: build_solution
         shell: pwsh
