@@ -3179,6 +3179,7 @@ namespace Nop.Services.Installation
                 MultipleThumbDirectories = false,
                 ImportProductImagesUsingHash = true,
                 AzureCacheControlHeader = string.Empty,
+                AzureBlobStorageOverwrite = false,
                 UseAbsoluteImagePath = true
             });
 
