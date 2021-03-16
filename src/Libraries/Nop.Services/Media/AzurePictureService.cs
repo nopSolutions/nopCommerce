@@ -231,7 +231,7 @@ namespace Nop.Services.Media
             }
 
             if (headers is null)
-                await blobClient.UploadAsync(ms);
+                await blobClient.UploadAsync(ms, overwrite: _mediaSettings.AzureBlobStorageOverwrite));
             else
                 await blobClient.UploadAsync(ms, new BlobUploadOptions { HttpHeaders = headers });
 
