@@ -7,7 +7,7 @@ jobs:
     name: Continuous integration
     runs-on: ubuntu-latest
     env:
-      SOLUTION_PATH: src/nopCommerce.sln
+      SOLUTION_PATH: src/NopCommerce.sln
       TEST_PROJECT_PATH: src/Tests/Nop.Tests/Nop.Tests.csproj
     steps:
       - name: Checkout repository
