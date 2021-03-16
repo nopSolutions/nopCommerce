@@ -21,13 +21,13 @@ jobs:
         id: dotnet_restore
         shell: pwsh
         run: |
-          dotnet restore $env:SOLUTION_NAME 
+          dotnet restore $env:SOLUTION_PATH 
 
       - name: Initialize CodeQL
         id: init_codeql
         uses: github/codeql-action/init@v1
-        with:
-          queries: security-and-quality
+        # with:
+        #   queries: security-and-quality
 
       - name: Build application
         id: build_app
