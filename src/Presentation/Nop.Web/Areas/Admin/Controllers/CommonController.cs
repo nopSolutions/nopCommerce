@@ -92,7 +92,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SystemInfo()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -104,7 +103,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Warnings()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -116,7 +114,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Maintenance()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -130,7 +127,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-guests")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MaintenanceDeleteGuests(MaintenanceModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -149,7 +145,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-abondoned-carts")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -163,7 +158,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-exported-files")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MaintenanceDeleteFiles(MaintenanceModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -204,7 +198,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BackupFiles(BackupFileSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -218,7 +211,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("backup-database")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BackupDatabase(MaintenanceModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -242,7 +234,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("re-index")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ReIndexTables(MaintenanceModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -263,7 +254,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("backupFileName", "action")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> BackupAction(MaintenanceModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -305,7 +295,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-already-sent-queued-emails")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MaintenanceDeleteAlreadySentQueuedEmails(MaintenanceModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -322,7 +311,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SetLanguage(int langid, string returnUrl = "")
         {
             var language = await _languageService.GetLanguageByIdAsync(langid);
@@ -341,7 +329,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ClearCache(string returnUrl = "")
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -361,7 +348,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RestartApplication(string returnUrl = "")
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -378,7 +364,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View("RestartApplication", returnUrl);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RestartApplication()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance) &&
@@ -394,7 +379,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new EmptyResult();
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SeNames()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -407,7 +391,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SeNames(UrlRecordSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -420,7 +403,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteSelectedSeNames(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
@@ -433,7 +415,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
@@ -446,7 +427,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         //action displaying notification (warning) to a store owner that entered SE URL already exists
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UrlReservedWarning(string entityId, string entityName, string seName)
         {
             if (string.IsNullOrEmpty(seName))

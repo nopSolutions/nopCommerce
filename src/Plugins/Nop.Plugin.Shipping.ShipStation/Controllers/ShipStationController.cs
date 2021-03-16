@@ -42,7 +42,6 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
         
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
@@ -80,7 +79,6 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ShipStationModel model)
         {
             if (!ModelState.IsValid)
@@ -118,7 +116,6 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             return await Configure();
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Webhook()
         {
             var userName = _webHelper.QueryString<string>("SS-UserName");

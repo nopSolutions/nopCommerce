@@ -29,7 +29,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Methods
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SavePreference(string name, bool value)
         {
             //permission validation is not required here

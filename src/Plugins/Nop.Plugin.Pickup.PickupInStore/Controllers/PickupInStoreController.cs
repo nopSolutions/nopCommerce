@@ -68,7 +68,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -81,7 +80,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> List(StorePickupPointSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -93,7 +91,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             return Json(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Create()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -127,7 +124,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Create(StorePickupPointModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -165,7 +161,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Edit(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -226,7 +221,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Edit(StorePickupPointModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -269,7 +263,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))

@@ -37,7 +37,6 @@ namespace Nop.Web.Controllers
         
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Sample(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -66,7 +65,6 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetDownload(Guid orderItemId, bool agree = false)
         {
             var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
@@ -128,7 +126,6 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetLicense(Guid orderItemId)
         {
             var orderItem = await _orderService.GetOrderItemByGuidAsync(orderItemId);
@@ -165,7 +162,6 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetFileUpload(Guid downloadId)
         {
             var download = await _downloadService.GetDownloadByGuidAsync(downloadId);
@@ -189,7 +185,6 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetOrderNoteFile(int orderNoteId)
         {
             var orderNote = await _orderService.GetOrderNoteByIdAsync(orderNoteId);

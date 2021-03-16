@@ -38,7 +38,6 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
@@ -103,7 +102,6 @@ namespace Nop.Web.Controllers
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SubscriptionActivation(Guid token, bool active)
         {
             var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuidAsync(token);
