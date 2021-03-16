@@ -1093,6 +1093,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<MediaSettingsModel, MediaSettings>()
                 .ForMember(settings => settings.AutoCompleteSearchThumbPictureSize, options => options.Ignore())
                 .ForMember(settings => settings.AzureCacheControlHeader, options => options.Ignore())
+                .ForMember(settings => settings.AzureBlobStorageOverwrite, options => options.Ignore())
                 .ForMember(settings => settings.UseAbsoluteImagePath, options => options.Ignore())
                 .ForMember(settings => settings.ImageSquarePictureSize, options => options.Ignore());
         }
