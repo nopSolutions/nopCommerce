@@ -106,6 +106,11 @@ namespace Nop.Core.Domain.Media
         /// proxy-revalidate      — similar to must-revalidate, except that it only applies to proxy caches.
         /// </remarks>
         public string AzureCacheControlHeader { get; set; }
+        
+        /// <summary>
+        /// Gets or sets Azure Blob Storage Overwrite (If set to true, allows Azure UploadAsync to overwrite a file)
+        /// </summary>
+        public bool AzureBlobStorageOverwrite { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether need to use absolute pictures path
