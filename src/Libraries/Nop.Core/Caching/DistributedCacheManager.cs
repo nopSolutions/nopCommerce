@@ -107,7 +107,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        public void Set(CacheKey key, object data)
+        private void Set(CacheKey key, object data)
         {
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return;
