@@ -89,7 +89,12 @@ namespace Nop.Web.Framework
             //try to determine the current store by HOST header
             string host = _httpContextAccessor.HttpContext?.Request.Headers[HeaderNames.Host];
 
-            var allStores = _storeRepository.Table.OrderBy(s => s.DisplayOrder).ThenBy(s => s.Id).ToList();
+            //we cannot call async methods here. otherwise, an application can hang. so it's a workaround to avoid that
+            var allStores = _storeRepository.GetAll(query =>
+            {
+                return from s in query orderby s.DisplayOrder, s.Id select s;
+            }, cache => default);
+            
             var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
 
             if (store == null)
