@@ -162,7 +162,7 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 return InvokeHttp404();
 
-            var notAvailable =
+            var notAvailable = 
                 //published?
                 (!product.Published && !_catalogSettings.AllowViewUnpublishedProductPage) ||
                 //ACL (access control list) 
@@ -228,6 +228,8 @@ namespace Nop.Web.Controllers
             var model = await _productModelFactory.PrepareProductDetailsModelAsync(product, updatecartitem, false);
             //template
             var productTemplateViewPath = await _productModelFactory.PrepareProductTemplateViewPathAsync(product);
+
+            model.AddToCart.DisableBuyButton = !await _productService.IsAnyProductCombinationAvailableAsync(product);
 
             return View(productTemplateViewPath, model);
         }
