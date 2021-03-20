@@ -162,7 +162,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangeStoreScopeConfiguration(int storeid, string returnUrl = "")
         {
             var store = await _storeService.GetStoreByIdAsync(storeid);
@@ -183,7 +182,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AppSettings()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -196,7 +194,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AppSettings(AppSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -232,7 +229,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Blog()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -245,7 +241,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Blog(BlogSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -288,7 +283,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Vendor()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -301,7 +295,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Vendor(VendorSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -347,7 +340,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Forum()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -360,7 +352,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Forum(ForumSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -418,7 +409,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> News()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -431,7 +421,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> News(NewsSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -475,7 +464,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Shipping()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -488,7 +476,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Shipping(ShippingSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -565,7 +552,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Tax()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -578,7 +564,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Tax(TaxSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -661,7 +646,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Catalog()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -674,7 +658,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Catalog(CatalogSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -798,7 +781,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SortOptionsList(SortOptionSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -811,7 +793,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SortOptionUpdate(SortOptionModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -835,7 +816,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RewardPoints()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -848,7 +828,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RewardPoints(RewardPointsSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -901,7 +880,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Order()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -914,7 +892,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Order(OrderSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -991,7 +968,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ShoppingCart()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1004,7 +980,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ShoppingCart(ShoppingCartSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1058,7 +1033,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Media()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1072,7 +1046,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Media(MediaSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1124,7 +1097,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangePictureStorage()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1151,7 +1123,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Media");
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerUser()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1164,7 +1135,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerUser(CustomerUserSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1259,7 +1229,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region GDPR
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Gdpr()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1272,7 +1241,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Gdpr(GdprSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1312,7 +1280,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GdprConsentList(GdprConsentSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1324,7 +1291,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CreateGdprConsent()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1337,7 +1303,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CreateGdprConsent(GdprConsentModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1363,7 +1328,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EditGdprConsent(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1381,7 +1345,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EditGdprConsent(GdprConsentModel model, bool continueEditing)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1413,7 +1376,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteGdprConsent(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1433,7 +1395,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GeneralCommon(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1462,7 +1423,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GeneralCommon(GeneralCommonSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1773,7 +1733,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("changeencryptionkey")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangeEncryptionKey(GeneralCommonSettingsModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1853,7 +1812,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UploadLocalePattern()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1873,7 +1831,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UploadIcons(IFormFile iconsFile)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1936,7 +1893,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("GeneralCommon");
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AllSettings(string settingName)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1949,7 +1905,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AllSettings(SettingSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1962,7 +1917,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SettingUpdate(SettingModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -1996,7 +1950,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SettingAdd(SettingModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -2023,7 +1976,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SettingDelete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
@@ -2044,7 +1996,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         //action displaying notification (warning) to a store owner about a lot of traffic 
         //between the distributed cache server and the application when LoadAllLocaleRecordsOnStartup setting is set
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
@@ -2061,7 +2012,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
         {
             //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning

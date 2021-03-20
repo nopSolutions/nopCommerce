@@ -37,7 +37,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         #region Methods
         
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CurrentCarts()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
@@ -50,7 +49,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CurrentCarts(ShoppingCartSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
@@ -63,7 +61,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetCartDetails(ShoppingCartItemSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))
@@ -80,7 +77,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
         
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteItem(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrentCarts))

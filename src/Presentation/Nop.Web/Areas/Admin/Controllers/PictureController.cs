@@ -27,7 +27,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AsyncUpload()
         {
             //if (!await _permissionService.Authorize(StandardPermissionProvider.UploadPictures))

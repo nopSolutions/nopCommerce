@@ -51,7 +51,7 @@ namespace Nop.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entries
         /// </returns>
-        protected virtual async Task<IList<TEntity>> GetEntities(Func<Task<IList<TEntity>>> getAllAsync, Func<IStaticCacheManager, CacheKey> getCacheKey)
+        protected virtual async Task<IList<TEntity>> GetEntitiesAsync(Func<Task<IList<TEntity>>> getAllAsync, Func<IStaticCacheManager, CacheKey> getCacheKey)
         {
             if (getCacheKey == null)
                 return await getAllAsync();
@@ -65,13 +65,31 @@ namespace Nop.Data
         /// <summary>
         /// Get all entity entries
         /// </summary>
+        /// <param name="getAll">Function to select entries</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <returns>Entity entries</returns>
+        protected virtual IList<TEntity> GetEntities(Func<IList<TEntity>> getAll, Func<IStaticCacheManager, CacheKey> getCacheKey)
+        {
+            if (getCacheKey == null)
+                return getAll();
+
+            //caching
+            var cacheKey = getCacheKey(_staticCacheManager)
+                           ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
+
+            return _staticCacheManager.Get(cacheKey, getAll);
+        }
+
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
         /// <param name="getAllAsync">Function to select entries</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entries
         /// </returns>
-        protected virtual async Task<IList<TEntity>> GetEntities(Func<Task<IList<TEntity>>> getAllAsync, Func<IStaticCacheManager, Task<CacheKey>> getCacheKey)
+        protected virtual async Task<IList<TEntity>> GetEntitiesAsync(Func<Task<IList<TEntity>>> getAllAsync, Func<IStaticCacheManager, Task<CacheKey>> getCacheKey)
         {
             if (getCacheKey == null)
                 return await getAllAsync();
@@ -197,7 +215,28 @@ namespace Nop.Data
                 return await query.ToListAsync();
             }
 
-            return await GetEntities(getAllAsync, getCacheKey);
+            return await GetEntitiesAsync(getAllAsync, getCacheKey);
+        }
+
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
+        /// <returns>Entity entries</returns>
+        public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
+            Func<IStaticCacheManager, CacheKey> getCacheKey = null, bool includeDeleted = true)
+        {
+            IList<TEntity> getAll()
+            {
+                var query = AddDeletedFilter(Table, includeDeleted);
+                query = func != null ? func(query) : query;
+
+                return query.ToList();
+            }
+
+            return GetEntities(getAll, getCacheKey);
         }
 
         /// <summary>
@@ -222,7 +261,7 @@ namespace Nop.Data
                 return await query.ToListAsync();
             }
 
-            return await GetEntities(getAllAsync, getCacheKey);
+            return await GetEntitiesAsync(getAllAsync, getCacheKey);
         }
 
         /// <summary>
@@ -247,7 +286,7 @@ namespace Nop.Data
                 return await query.ToListAsync();
             }
 
-            return await GetEntities(getAllAsync, getCacheKey);
+            return await GetEntitiesAsync(getAllAsync, getCacheKey);
         }
 
         /// <summary>

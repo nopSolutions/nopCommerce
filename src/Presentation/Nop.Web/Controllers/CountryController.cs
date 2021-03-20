@@ -28,7 +28,6 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             var model = await _countryModelFactory.GetStatesByCountryIdAsync(countryId, addSelectStateItem);
