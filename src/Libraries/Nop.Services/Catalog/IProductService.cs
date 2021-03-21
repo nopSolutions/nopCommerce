@@ -453,7 +453,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
         /// <param name="message">Message for the stock quantity history</param>
-        /// returns>A task that represents the asynchronous operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         Task BookReservedInventoryAsync(Product product, int warehouseId, int quantity, string message = "");
 
         /// <summary>
