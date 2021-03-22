@@ -1,4 +1,5 @@
 ﻿@model CheckoutBillingAddressModel
+
 <div class="checkout-data">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop })
     @if (Model.ShipToSameAddressAllowed)
@@ -22,7 +23,7 @@
                 }
             <div>
                 <select name="billing_address_id" id="billing-address-select" class="address-select"
-                        title="" onchange="Billing.newAddress(!this.value)">
+                        title="" onchange="Billing.resetBillingForm();Billing.newAddress(!this.value)">
                     @foreach (var address in Model.ExistingAddresses)
                     {
                         var addressLine = "";

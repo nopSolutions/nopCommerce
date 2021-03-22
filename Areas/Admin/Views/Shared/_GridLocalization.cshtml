@@ -23,7 +23,7 @@
         "previous":"&#8249;"
     },*@
     "paginate": {
-        @if (workContext.WorkingLanguage.Rtl)
+        @if ((await workContext.GetWorkingLanguageAsync()).Rtl)
         {
             <text>
                 "first":"<i class='k-icon k-i-seek-e'></i>",

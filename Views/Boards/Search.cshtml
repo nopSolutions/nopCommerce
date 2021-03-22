@@ -11,12 +11,12 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         toggleAdvancedSearch();
-        $('#adv').on('click', function () {
+        $('#advs').on('click', function () {
             toggleAdvancedSearch();
         });
     });
     function toggleAdvancedSearch() {
-        if ($('#adv').is(':checked')) {
+        if ($('#advs').is(':checked')) {
             $('#advanced-search').show();
         }
         else {
@@ -41,8 +41,8 @@
                                 <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms" />
                             </div>
                             <div class="inputs reversed">
-                                <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="adv" name="adv" type="checkbox" value="true">
-                                <label for="adv">@T("Forum.Search.AdvancedSearch")</label>
+                                <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="advs" name="advs" type="checkbox" value="true">
+                                <label for="advs">@T("Forum.Search.AdvancedSearch")</label>
                             </div>
                         </div>
                         <div class="advanced-search" id="advanced-search" style="display: none;">
@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <input type="submit" class="button-1 forum-search-button" value="@T("Forum.SearchButton")" />
+                    <button type="submit" class="button-1 forum-search-button">@T("Forum.SearchButton")</button>
                 </div>
             </form>
         </div>
@@ -73,31 +73,31 @@
         <div class="search-results">
             @{
                 var searchterms = Model.SearchTerms;
-                string adv = null;
+                string advs = null;
                 string within = null;
                 string limitDays = null;
                 string forumId = null;
 
                 if (Model.ShowAdvancedSearch)
                 {
-                    adv = "true";
+                    advs = "true";
                     within = Model.WithinSelected.ToString();
                     limitDays = Model.LimitDaysSelected.ToString();
                     forumId = Model.ForumIdSelected.ToString();
                 }
 
-                var pager = Html.Pager(new PagerModel
+                var pager = await Html.PagerAsync(new PagerModel
                 {
                     PageSize = Model.TopicPageSize,
                     TotalRecords = Model.TopicTotalRecords,
                     PageIndex = Model.TopicPageIndex,
                     ShowTotalSummary = false,
                     RouteActionName = "Search",
-                    RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
+                    RouteValues = new ForumSearchRouteValues { advs = advs, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
                 });
             }
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults })
-            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
             {
                 <div class="pager upper">
                     @pager
@@ -183,7 +183,7 @@
                                             @if (topic.NumPosts > Model.PostsPageSize)
                                             {
                                                 <div class="topic-pager">
-                                                    @Html.ForumTopicSmallPager(topic)
+                                                    @await Html.ForumTopicSmallPagerAsync(topic)
                                                 </div>
                                             }
                                             <div class="topic-starter">
@@ -223,7 +223,7 @@
                     </div>
                 }
             </div>
-            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
             {
                 <div class="pager lower">
                     @pager

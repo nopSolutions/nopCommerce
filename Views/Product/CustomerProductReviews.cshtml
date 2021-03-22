@@ -80,8 +80,8 @@
                     </div>
                 </div>
             }
-            var pager = Html.Pager(Model.PagerModel);
-            if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+            var pager = await Html.PagerAsync(Model.PagerModel);
+            if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
             {
                 <div class="pager">
                     @pager

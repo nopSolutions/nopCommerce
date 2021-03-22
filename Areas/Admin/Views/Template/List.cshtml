@@ -11,33 +11,39 @@
 
 @{
     const string hideCategoryBlockAttributeName = "Templates.HideCategoryBlock";
-    var hideCategoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCategoryBlockAttributeName);
+    var hideCategoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCategoryBlockAttributeName);
 
     const string hideManufacturerBlockAttributeName = "Templates.HideManufacturerBlock";
-    var hideManufacturerBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideManufacturerBlockAttributeName);
+    var hideManufacturerBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideManufacturerBlockAttributeName);
 
     const string hideProductBlockAttributeName = "Templates.HideProductBlock";
-    var hideProductBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductBlockAttributeName);
+    var hideProductBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductBlockAttributeName);
 
     const string hideTopicBlockAttributeName = "Templates.HideTopicBlock";
-    var hideTopicBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTopicBlockAttributeName);
+    var hideTopicBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTopicBlockAttributeName);
 }
 
-<div class="content">
-    <div class="form-horizontal">
-        <div class="content-header clearfix">
-            <h1 class="pull-left">
-                @T("Admin.System.Templates")
-            </h1>
-        </div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="content-header clearfix">
+                    <h3 class="float-left">
+                        @T("Admin.System.Templates")
+                    </h3>
+                </div>
+            </div>
 
-        <nop-panels id="templates-panels">
-            <nop-panel asp-name="templates-category" asp-icon="fa fa-sitemap" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">@await Html.PartialAsync("_List.Category", Model)</nop-panel>
-            <nop-panel asp-name="templates-manufacturer" asp-icon="fa fa-industry" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">@await Html.PartialAsync("_List.Manufacturer", Model)</nop-panel>
-            <nop-panel asp-name="templates-product" asp-icon="fa fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model)</nop-panel>
-            <nop-panel asp-name="templates-topic" asp-icon="fa fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model)</nop-panel>
-                
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
-        </nop-panels>
+            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Templates", Docs.Templates + Utm.OnAdmin)" />
+
+            <nop-cards id="templates-cards">
+                <nop-card asp-name="templates-category" asp-icon="fas fa-sitemap" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">@await Html.PartialAsync("_List.Category", Model)</nop-card>
+                <nop-card asp-name="templates-manufacturer" asp-icon="fas fa-industry" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">@await Html.PartialAsync("_List.Manufacturer", Model)</nop-card>
+                <nop-card asp-name="templates-product" asp-icon="fas fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model)</nop-card>
+                <nop-card asp-name="templates-topic" asp-icon="fas fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model)</nop-card>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
     </div>
-</div>
+</section>

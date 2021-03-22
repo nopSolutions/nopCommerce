@@ -10,38 +10,40 @@
 
 @{
     const string hideCommonBlockAttributeName = "NewsSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideCommentsBlockAttributeName = "NewsSettingsPage.HideCommentsBlock";
-    var hideCommentsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommentsBlockAttributeName);
+    var hideCommentsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommentsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="News" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Settings.News")
         </h1>
-        <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsSettingsButtons })
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Component.InvokeAsync("StoreScopeConfiguration")
-            @await Component.InvokeAsync("SettingMode")
-            <div asp-validation-summary="All"></div>
-            
-            <nop-panels id="newsettings-panels">
-                <nop-panel asp-name="newsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.News.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_News.Common", Model)</nop-panel>
-                <nop-panel asp-name="newsettings-comments" asp-icon="fa fa-comments-o" asp-title="@T("Admin.Configuration.Settings.News.BlockTitle.NewsComments")" asp-hide-block-attribute-name="@hideCommentsBlockAttributeName" asp-hide="@hideCommentsBlock" asp-advanced="false">@await Html.PartialAsync("_News.Comments", Model)</nop-panel>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync("StoreScopeConfiguration")
+                @await Component.InvokeAsync("SettingMode")
+                <div asp-validation-summary="All"></div>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsBlock, additionalData = Model })
-            </nop-panels>
+                <nop-cards id="newsettings-cards">
+                    <nop-card asp-name="newsettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.News.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_News.Common", Model)</nop-card>
+                    <nop-card asp-name="newsettings-comments" asp-icon="far fa-comments" asp-title="@T("Admin.Configuration.Settings.News.BlockTitle.NewsComments")" asp-hide-block-attribute-name="@hideCommentsBlockAttributeName" asp-hide="@hideCommentsBlock" asp-advanced="false">@await Html.PartialAsync("_News.Comments", Model)</nop-card>
+
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
         </div>
-    </div>
+    </section>
 </form>

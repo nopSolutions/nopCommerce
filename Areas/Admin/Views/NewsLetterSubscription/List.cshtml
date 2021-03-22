@@ -4,7 +4,7 @@
 @inject IStoreService storeService
 
 @{
-    var stores = storeService.GetAllStores();
+    var stores = await storeService.GetAllStoresAsync();
 
     //page title
     ViewBag.PageTitle = T("Admin.Promotions.newsLetterSubscriptions").Text;
@@ -14,42 +14,43 @@
 
 @{
     const string hideSearchBlockAttributeName = "NewsletterSubscriptionPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="NewsLetterSubscription" asp-action="List" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Promotions.NewsLetterSubscriptions")
         </h1>
-        <div class="pull-right">
-            <button  asp-action="ExportCSV" type="submit" name="exportcsv" class="btn bg-green">
-                <i class="fa fa-download"></i>
+        <div class="float-right">
+            <button asp-action="ExportCSV"type="submit" name="exportcsv" class="btn btn-success">
+                <i class="fas fa-download"></i>
                 @T("Admin.Common.ExportToCsv")
             </button>
             <button type="button" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
-                <i class="fa fa-upload"></i>
+                <i class="fas fa-upload"></i>
                 @T("Admin.Common.ImportFromCsv")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsLetterSubscriptionListButtons })
         </div>
     </div>
 
-    <div class="content">
+    <section class="content">
+    <div class="container-fluid">
         <div class="form-horizontal">
-            <div class="panel-group">
-                <div class="panel panel-default panel-search">
-                    <div class="panel-body">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
                                 <div class="col-md-5">
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchEmail" />
                                         </div>
@@ -57,7 +58,7 @@
                                             <nop-editor asp-for="SearchEmail" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="StartDate" />
                                         </div>
@@ -65,7 +66,7 @@
                                             <nop-editor asp-for="StartDate" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="EndDate" />
                                         </div>
@@ -75,7 +76,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-7">
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="ActiveId" />
                                         </div>
@@ -83,7 +84,7 @@
                                             <nop-select asp-for="ActiveId" asp-items="Model.ActiveList" />
                                         </div>
                                     </div>
-                                    <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="form-group row" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="StoreId" />
                                         </div>
@@ -91,7 +92,7 @@
                                             <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="CustomerRoleId" />
                                         </div>
@@ -102,9 +103,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-7 col-md-offset-5">
+                                <div class="text-center col-12">
                                     <button type="button" id="search-subscriptions" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
+                                        <i class="fas fa-search"></i>
                                         @T("Admin.Common.Search")
                                     </button>
                                 </div>
@@ -113,8 +114,10 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.EmailCampaigns", Docs.EmailCampaigns + Utm.OnAdmin)" />
+
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "newsletter-subscriptions-grid",
@@ -155,7 +158,7 @@
                                     {
                                         Title = T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store").Text,
                                         Width = "150",
-                                        Visible = storeService.GetAllStores().Count > 1
+                                        Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                     },
                                     new ColumnProperty(nameof(NewsletterSubscriptionModel.CreatedOn))
                                     {
@@ -183,6 +186,7 @@
             </div>
         </div>
     </div>
+    </section>
 </form>
 
 @*import emails form*@
@@ -190,16 +194,16 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
-                                    <label class="control-label">
+                                    <label class="col-form-label">
                                         @T("Admin.Common.CsvFile")
                                     </label>
                                 </div>

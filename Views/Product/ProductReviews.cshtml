@@ -23,6 +23,12 @@
                 @Model.AddProductReview.Result
             </div>
         }
+        else if (!Model.AddProductReview.CanAddNewReview)
+        {
+            <div class="result review-already-added">
+                @T("Reviews.AlreadyAddedProductReviews")
+            </div>
+        }
         else
         {
             <div class="write-review" id="review-form">
@@ -102,7 +108,7 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <input type="submit" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
+                        <button type="submit" name="add-review" class="button-1 write-product-review-button">@T("Reviews.SubmitButton")</button>
                     </div>
                 </form>
             </div>

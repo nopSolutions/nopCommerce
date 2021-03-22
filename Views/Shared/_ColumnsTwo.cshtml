@@ -28,22 +28,20 @@
         currentProductId = Convert.ToInt32(Url.ActionContext.RouteData.Values["productId"].ToString());
     }
 }
-@if (IsSectionDefined("Breadcrumb"))
-{
-    @section Breadcrumb {
-        @RenderSection("Breadcrumb")
-    } 
-}
+
+@await RenderSectionAsync("Breadcrumb", false)
+
 <div class="side-2">
     @if (IsSectionDefined("left"))
     {
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBefore })
-        @RenderSection("left")
+        @await RenderSectionAsync("left")
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })
     }
     else
     {
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBefore })
+        @await RenderSectionAsync("CatalogFilters", false);
         @await Component.InvokeAsync("CategoryNavigation", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfterCategoryNavigation })
         @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })

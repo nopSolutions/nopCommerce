@@ -1,10 +1,10 @@
 ﻿@model CustomerAttributeSearchModel
 
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card card-default">
+    <div class="card-header">
         @T("Admin.Customers.CustomerAttributes")
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <p>
             <em>@T("Admin.Customers.CustomerAttributes.Description")</em>
         </p>
@@ -49,9 +49,9 @@
             }
         })
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <a class="btn btn-primary" href="@Url.Action("Create", "CustomerAttribute")">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
     </div>

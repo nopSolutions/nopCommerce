@@ -14,38 +14,38 @@
         var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
         //validation
         if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').show();
-            $('#pnlDefaultValue').show();
+            $('#pnlValidationMinLength').showElement();
+            $('#pnlValidationMaxLength').showElement();
+            $('#pnlValidationFileMaximumSize').hideElement();
+            $('#pnlValidationFileAllowedExtensions').hideElement();
+            $('#pnlDefaultValueLocalized').showElement();
+            $('#pnlDefaultValue').showElement();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').show();
-            $('#pnlDefaultValue').show();
+            $('#pnlValidationMinLength').showElement();
+            $('#pnlValidationMaxLength').showElement();
+            $('#pnlValidationFileMaximumSize').hideElement();
+            $('#pnlValidationFileAllowedExtensions').hideElement();
+            $('#pnlDefaultValueLocalized').showElement();
+            $('#pnlDefaultValue').showElement();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
-            $('#pnlValidationMinLength').hide();
-            $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').show();
-            $('#pnlValidationFileAllowedExtensions').show();
-            $('#pnlDefaultValueLocalized').hide();
-            $('#pnlDefaultValue').hide();
+            $('#pnlValidationMinLength').hideElement();
+            $('#pnlValidationMaxLength').hideElement();
+            $('#pnlValidationFileMaximumSize').showElement();
+            $('#pnlValidationFileAllowedExtensions').showElement();
+            $('#pnlDefaultValueLocalized').hideElement();
+            $('#pnlDefaultValue').hideElement();
             $("#@Html.IdFor(model => model.DefaultValue)").val('');
             @for (var item = 0; item < Model.Locales.Count; item++)
             {
                 <text>$("#@Html.IdFor(model => model.Locales[item].DefaultValue)").val('');</text>
             }
         } else {
-            $('#pnlValidationMinLength').hide();
-            $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').hide();
-            $('#pnlDefaultValue').hide();
+            $('#pnlValidationMinLength').hideElement();
+            $('#pnlValidationMaxLength').hideElement();
+            $('#pnlValidationFileMaximumSize').hideElement();
+            $('#pnlValidationFileAllowedExtensions').hideElement();
+            $('#pnlDefaultValueLocalized').hideElement();
+            $('#pnlDefaultValue').hideElement();
             $("#@Html.IdFor(model => model.DefaultValue)").val('');
             @for (var item = 0; item < Model.Locales.Count; item++)
             {
@@ -60,16 +60,16 @@
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
-            $('[data-panel-name=product-attribute-mapping-values]').show();
+            $('[data-card-name=product-attribute-mapping-values]').showElement();
         } else {
-            $('[data-panel-name=product-attribute-mapping-values]').hide();
+            $('[data-card-name=product-attribute-mapping-values]').hideElement();
         }
     }
 </script>
 <input asp-for="ProductId" type="hidden" />
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="ProductAttributeId" />
         </div>
@@ -78,9 +78,9 @@
             <span asp-validation-for="ProductAttributeId"></span>
         </div>
     </div>
-    @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("productattribute-localized",
+    @(await Html.LocalizedEditorAsync<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("productattribute-localized",
     @<div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="@Model.Locales[item].TextPrompt" />
             </div>
@@ -93,7 +93,7 @@
     </div>
 ,
     @<div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="TextPrompt" />
             </div>
@@ -104,7 +104,7 @@
         </div>
     </div>
 ))
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="IsRequired" />
         </div>
@@ -113,18 +113,18 @@
             <span asp-validation-for="IsRequired"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AttributeControlTypeId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="AttributeControlTypeId" asp-items="@(((AttributeControlType)Model.AttributeControlTypeId).ToSelectList())" />
+            <nop-select asp-for="AttributeControlTypeId" asp-items="@await (((AttributeControlType)Model.AttributeControlTypeId).ToSelectListAsync())" />
             <span asp-validation-for="AttributeControlTypeId"></span>
         </div>
     </div>
-    @(Html.LocalizedEditor<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("pnlDefaultValueLocalized",
+    @(await Html.LocalizedEditorAsync<ProductAttributeMappingModel, ProductAttributeMappingLocalizedModel>("pnlDefaultValueLocalized",
     @<div>
-        <div class="form-group advanced-setting">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-label asp-for="@Model.Locales[item].DefaultValue"/>
             </div>
@@ -137,7 +137,7 @@
     </div>
 ,
     @<div>
-        <div class="form-group advanced-setting" id="pnlDefaultValue">
+        <div class="form-group row advanced-setting" id="pnlDefaultValue">
             <div class="col-md-3">
                 <nop-label asp-for="DefaultValue"/>
             </div>
@@ -148,7 +148,7 @@
         </div>
      </div>
 ))
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="DisplayOrder" />
         </div>
@@ -157,7 +157,7 @@
             <span asp-validation-for="DisplayOrder"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlValidationMinLength">
+    <div class="form-group row" id="pnlValidationMinLength">
         <div class="col-md-3">
             <nop-label asp-for="ValidationMinLength" />
         </div>
@@ -166,7 +166,7 @@
             <span asp-validation-for="ValidationMinLength"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlValidationMaxLength">
+    <div class="form-group row" id="pnlValidationMaxLength">
         <div class="col-md-3">
             <nop-label asp-for="ValidationMaxLength" />
         </div>
@@ -175,7 +175,7 @@
             <span asp-validation-for="ValidationMaxLength"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlValidationFileAllowedExtensions">
+    <div class="form-group row" id="pnlValidationFileAllowedExtensions">
         <div class="col-md-3">
             <nop-label asp-for="ValidationFileAllowedExtensions" />
         </div>
@@ -184,7 +184,7 @@
             <span asp-validation-for="ValidationFileAllowedExtensions"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlValidationFileMaximumSize">
+    <div class="form-group row" id="pnlValidationFileMaximumSize">
         <div class="col-md-3">
             <nop-label asp-for="ValidationFileMaximumSize" />
         </div>

@@ -1,11 +1,11 @@
 @model AffiliateModel
 
-<div class="panel-group">
-    <div class="sub-panel panel-search">
-        <div class="panel-body">
+<div class="card-body">
+    <div class="card card-search">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-7">
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-5">
                             <nop-label asp-for="AffiliatedOrderSearchModel.StartDate" />
                         </div>
@@ -13,7 +13,7 @@
                             <nop-editor asp-for="AffiliatedOrderSearchModel.StartDate" />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-5">
                             <nop-label asp-for="AffiliatedOrderSearchModel.EndDate" />
                         </div>
@@ -21,38 +21,36 @@
                             <nop-editor asp-for="AffiliatedOrderSearchModel.EndDate" />
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <div class="col-md-4">
+                    <div class="form-group row">
+                        <div class="col-md-5">
                             <nop-label asp-for="AffiliatedOrderSearchModel.OrderStatusId" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <nop-select asp-for="AffiliatedOrderSearchModel.OrderStatusId" asp-items="Model.AffiliatedOrderSearchModel.AvailableOrderStatuses" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-4">
+                    <div class="form-group row">
+                        <div class="col-md-5">
                             <nop-label asp-for="AffiliatedOrderSearchModel.PaymentStatusId" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <nop-select asp-for="AffiliatedOrderSearchModel.PaymentStatusId" asp-items="Model.AffiliatedOrderSearchModel.AvailablePaymentStatuses" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-4">
+                    <div class="form-group row">
+                        <div class="col-md-5">
                             <nop-label asp-for="AffiliatedOrderSearchModel.ShippingStatusId" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <nop-select asp-for="AffiliatedOrderSearchModel.ShippingStatusId" asp-items="Model.AffiliatedOrderSearchModel.AvailableShippingStatuses" />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8 col-md-offset-5">
+                <div class="col-md-8 offset-md-5">
                     <button type="button" id="search-orders" class="btn btn-primary btn-search">
-                        <i class="fa fa-search"></i>
+                        <i class="fas fa-search"></i>
                         @T("Admin.Common.Search")
                     </button>
                 </div>
@@ -60,8 +58,8 @@
         </div>
     </div>
 
-    <div class="sub-panel">
-        <div class="panel-body">
+    <div class="card">
+        <div class="card-body">
             @await Html.PartialAsync("Table", new DataTablesModel
             {
                 Name = "orders-grid",
@@ -115,7 +113,7 @@
                     }
                 }
             })
-
+ 
             <script>
                 var selectedIds = [];
                 var reportAggregates = "";

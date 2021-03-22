@@ -108,7 +108,7 @@
                         @if (Model.IsEditable)
                         {
                             //little hack here with empty "value" element
-                            <input type="submit" name="removegiftcard-@gc.Id" value=" " title="@T("Common.Remove")" class="remove-gift-card-button" />
+                            <button type="submit" name="removegiftcard-@gc.Id" class="remove-gift-card-button"></button>
                         }
                         <span class="giftcard-remaining">@string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)</span>
                     </td>

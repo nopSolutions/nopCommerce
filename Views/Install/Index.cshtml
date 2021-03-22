@@ -12,34 +12,30 @@
     <link rel="shortcut icon" href="/icons/icons_0/favicon.ico">
     @if (ILS.GetCurrentLanguage().IsRightToLeft)
     {
-        <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.rtl.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.rtl.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib_npm/@laylazi/bootstrap-rtl/css/bootstrap-rtl.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.rtl.css")" type="text/css" rel="stylesheet" />
     }
     else
     {
-        <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib_npm/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.css")" type="text/css" rel="stylesheet" />
     }
-    <script src="@Url.Content("~/lib/jquery/jquery-3.4.1.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery/jquery.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation/jquery.validate.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js")"></script>
     <script src="@Url.Content("~/js/public.common.js")"></script>
 </head>
-<body class="skin-blue">
+<body>
     <div class="wrapper">
-        <div class="content-header clearfix">
+        <div class="clearfix">
             <div class="row">
-                <div class="col-xs-offset-9 col-xs-3">
+                <div class="col-md-3 offset-md-9">
                     <select name="language" id="language" class="language-selector form-control" onchange="window.location.href=this.value;" asp-items="Model.AvailableLanguages"></select>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
-                    <div class="logo-wrapper">
-                        <div class="logo"></div>
-                    </div>
+                <div class="logo-wrapper col-md-12">
+                    <div class="logo"></div>
                 </div>
             </div>
         </div>
@@ -47,9 +43,10 @@
             <div class="content">
                 <div asp-validation-summary="All" class="message-error"></div>
 
-                @*<p>@ILS.GetResource("Tooltip1")</p>*@
                 <p>@ILS.GetResource("Tooltip2")</p>
-                <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank">@ILS.GetResource("Documentation2")</a>.</p>
+                <p>@ILS.GetResource("Documentation1") 
+                    <a href="@(Docs.Main + Utm.OnInstall)" target="_blank" rel="noopener noreferrer">@ILS.GetResource("Documentation2")</a>.
+                </p>
 
                 <script>
                     function showThrobber(message) {
@@ -64,7 +61,7 @@
                             if ($('#installation-form').valid()) {
                                 $("html, body").animate({ scrollTop: 0 }, 400);
                                 showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
-                                $('input[type=submit]', this).attr('disabled', 'disabled');
+                                $('button[type=submit]', this).attr('disabled', 'disabled');
                             }
                         });
                     });
@@ -73,7 +70,7 @@
                         $('#restart-form').submit(function () {
                             $("html, body").animate({ scrollTop: 0 }, 400);
                             showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
-                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                            $('button[type=submit]', this).attr('disabled', 'disabled');
                         });
                     });
 
@@ -142,52 +139,53 @@
                 </script>
 
                 <div class="form-horizontal">
-                    <div class="panel margin-t-30">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-4 text-right">
-                                    @ILS.GetResource("StoreInformation")
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <div class="col-xs-4">
-                                    <label class="control-label">
-                                        @ILS.GetResource("AdminEmail")
-                                    </label>
-                                </div>
-                                <div class="col-xs-7">
+                    <div class="card border-light margin-t-30">
+                        <h3 class="card-header">
+                            @ILS.GetResource("StoreInformation")
+                        </h3>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("AdminEmail")
+                                </label>
+                                <div class="col-sm-8">
                                     <input asp-for="AdminEmail" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-4">
-                                    <label class="control-label">
-                                        @ILS.GetResource("AdminPassword")
-                                    </label>
-                                </div>
-                                <div class="col-xs-7">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("AdminPassword")
+                                </label>
+                                <div class="col-sm-8">
                                     <input asp-for="AdminPassword" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-4">
-                                    <label class="control-label">
-                                        @ILS.GetResource("ConfirmPassword")
-                                    </label>
-                                </div>
-                                <div class="col-xs-7">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("ConfirmPassword")
+                                </label>
+                                <div class="col-sm-8">
                                     <input asp-for="ConfirmPassword" class="form-control" />
                                 </div>
                             </div>
+                            @if (Model.InstallRegionalResources)
+                            {
+                                <div class="form-group row" id="regionalResources">
+                                    <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                        @ILS.GetResource("Country")
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <nop-select asp-for="Country" asp-items="Model.AvailableCountries" />
+                                    </div>
+                                </div>
+                            }
                             @if (!Model.DisableSampleDataOption)
                             {
-                                <div class="form-group">
-                                    <div class="col-xs-7 col-xs-offset-4">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input asp-for="InstallSampleData" />
+                                <div class="form-group row">
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" asp-for="InstallSampleData" />
+                                            <label class="form-check-label" for="@Html.IdFor(m => m.InstallSampleData)">
                                                 @ILS.GetResource("CreateSampleData")
                                             </label>
                                         </div>
@@ -197,40 +195,34 @@
                         </div>
                     </div>
 
-                    <div class="panel margin-t-10">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-4 text-right">
-                                    @ILS.GetResource("DatabaseInformation")
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <div class="col-xs-4">
-                                    <label class="control-label">
-                                        @ILS.GetResource("Database")
-                                    </label>
-                                </div>
-                                <div class="col-xs-7">
+                    <div class="card border-light margin-t-10">
+                        <h3 class="card-header">
+                            @ILS.GetResource("DatabaseInformation")
+                        </h3>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                    @ILS.GetResource("Database")
+                                </label>
+                                <div class="col-sm-8">
                                     <nop-select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-7 col-xs-offset-4">
-                                    <div class="checkbox">
-                                        <label>
-                                            <nop-editor asp-for="CreateDatabaseIfNotExists" />
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" asp-for="CreateDatabaseIfNotExists" />
+                                        <label class="form-check-label" for="@Html.IdFor(m => m.CreateDatabaseIfNotExists)">
                                             @ILS.GetResource("CreateDatabaseIfDoesNotExist")
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-7 col-xs-offset-4">
-                                    <div class="checkbox">
-                                        <label>
-                                            <nop-editor asp-for="ConnectionStringRaw" />
+                            <div class="form-group row">
+                                <div class="col-md-6 offset-md-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" asp-for="ConnectionStringRaw" />
+                                        <label class="form-check-label" for="@Html.IdFor(m => m.ConnectionStringRaw)">
                                             @ILS.GetResource("RawConnectionString")
                                         </label>
                                     </div>
@@ -239,28 +231,26 @@
                             <div id="sqlConnectionInfo">
                                 <hr />
                                 @await Html.PartialAsync("_Install.ConnectionString", Model)
-                                <div class="form-group" id="sqlDatabaseConnectionString">
-                                    <div class="col-xs-4">
-                                        <label class="control-label">
-                                            @ILS.GetResource("ConnectionString")
-                                        </label>
-                                    </div>
-                                    <div class="col-xs-7">
+                                <div class="form-group row" id="sqlDatabaseConnectionString">
+                                    <label class="col-sm-3 col-form-label text-right font-weight-bold">
+                                        @ILS.GetResource("ConnectionString")
+                                    </label>
+                                    <div class="col-sm-8">
                                         <input asp-for="ConnectionString" class="form-control" />
                                         <span class="hint">
                                             @ILS.GetResource("Example"):<br />
                                             Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
                                             ID=userName;Password=password
                                             <br />
-                                            Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
+                                            Find more info <a href="http://www.connectionstrings.com/" target="_blank" rel="noopener noreferrer">here</a>
                                         </span>
                                     </div>
                                 </div>
-                                <div class="form-group" id="sqlConnectionInfo">
-                                    <div class="col-xs-7 col-xs-offset-4">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input asp-for="UseCustomCollation" />
+                                <div class="form-group row" id="sqlConnectionInfo">
+                                    <div class="col-sm-8 offset-sm-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" asp-for="UseCustomCollation" />
+                                            <label class="form-check-label" for="@Html.IdFor(m => m.UseCustomCollation)">
                                                 @ILS.GetResource("CustomCollation")
                                             </label>
                                             <input asp-for="Collation" class="form-control margin-t-10" />
@@ -268,9 +258,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group margin-t-30">
-                                <div class="col-xs-12 text-center">
-                                    <button type="submit" class="btn btn-md btn-install margin-l-5">@ILS.GetResource("Install")</button>
+                            <div class="form-group row margin-t-30">
+                                <div class="col-sm-12 text-center">
+                                    <button type="submit" class="btn btn-md btn-install">@ILS.GetResource("Install")</button>
                                 </div>
                             </div>
                         </div>
@@ -282,7 +272,7 @@
         <div class="content-footer">
             <form asp-action="RestartInstall" asp-controller="Install" id="restart-form" method="post">
                 <div class="row">
-                    <div class="col-xs-12 text-center">
+                    <div class="col-sm-12 text-center">
                         <button type="submit" class="btn btn-md btn-default" title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 @model GeneralCommonSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates_OverrideForStore" asp-input="AdminAreaSettings.UseRichEditorInMessageTemplates" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AdminAreaSettings.UseRichEditorInMessageTemplates" />

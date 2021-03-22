@@ -79,7 +79,7 @@
             }
         </div>
         @{
-            var pager = Html.Pager(new PagerModel
+            var pager = await Html.PagerAsync(new PagerModel
             {
                 PageSize = Model.PostsPageSize,
                 TotalRecords = Model.PostsTotalRecords,
@@ -91,7 +91,7 @@
             });
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
-        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+        @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
         {
             <div class="pager upper">
                 @pager
@@ -137,7 +137,7 @@
                 </script>
             }
         </div>
-        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+        @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
         {
             <div class="pager lower">
                 @pager

@@ -8,10 +8,10 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.System.ScheduleTasks")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ScheduleTaskListButtons })
     </div>
@@ -25,13 +25,15 @@
     });
 </script>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
                     <p>
                         @T("Admin.System.ScheduleTasks.24days")
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ScheduleTasks", Docs.ScheduleTasks + Utm.OnAdmin)" asp-add-wrapper="false"/>
                     </p>
                     <p>
                         <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
@@ -49,9 +51,7 @@
                                 new ColumnProperty(nameof(ScheduleTaskModel.Name))
                                 {
                                     Title = T("Admin.System.ScheduleTasks.Name").Text,
-                                    Width = "300",
-                                    Editable = true,
-                                    EditType = EditType.String
+                                    Width = "300"
                                 },
                                 new ColumnProperty(nameof(ScheduleTaskModel.Seconds))
                                 {
@@ -109,10 +109,10 @@
                                 }
                             }
                     })
-                    
+
                     <script>
                         function renderColumnRunNow(data, type, row, meta) {
-                            return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn bg-green">@T("Admin.System.ScheduleTasks.RunNow")</a>';
+                            return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn btn-success">@T("Admin.System.ScheduleTasks.RunNow")</a>';
                         }
                     </script>
                 </div>
@@ -120,3 +120,4 @@
         </div>
     </div>
 </div>
+</section>

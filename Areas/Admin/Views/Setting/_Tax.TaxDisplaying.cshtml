@@ -1,7 +1,7 @@
 @model TaxSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowCustomersToSelectTaxDisplayType_OverrideForStore" asp-input="AllowCustomersToSelectTaxDisplayType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowCustomersToSelectTaxDisplayType" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="AllowCustomersToSelectTaxDisplayType"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlTaxDisplayType">
+    <div class="form-group row" id="pnlTaxDisplayType">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="TaxDisplayType_OverrideForStore" asp-input="TaxDisplayType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="TaxDisplayType" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="TaxDisplayType"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="DisplayTaxSuffix_OverrideForStore" asp-input="DisplayTaxSuffix" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="DisplayTaxSuffix" />
@@ -31,7 +31,7 @@
             <span asp-validation-for="DisplayTaxSuffix"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="DisplayTaxRates_OverrideForStore" asp-input="DisplayTaxRates" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="DisplayTaxRates" />
@@ -41,7 +41,7 @@
             <span asp-validation-for="DisplayTaxRates"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="HideZeroTax_OverrideForStore" asp-input="HideZeroTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="HideZeroTax" />
@@ -51,7 +51,7 @@
             <span asp-validation-for="HideZeroTax"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="HideTaxInOrderSummary_OverrideForStore" asp-input="HideTaxInOrderSummary" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="HideTaxInOrderSummary" />
@@ -61,7 +61,7 @@
             <span asp-validation-for="HideTaxInOrderSummary"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ForceTaxExclusionFromOrderSubtotal_OverrideForStore" asp-input="ForceTaxExclusionFromOrderSubtotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ForceTaxExclusionFromOrderSubtotal" />
@@ -80,9 +80,9 @@
 
     function toggleTaxDisplayType() {
         if ($('#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
-            $('#pnlTaxDisplayType').hide();
+            $('#pnlTaxDisplayType').hideElement();
         } else {
-            $('#pnlTaxDisplayType').show();
+            $('#pnlTaxDisplayType').showElement();
         }
     }
 </script>

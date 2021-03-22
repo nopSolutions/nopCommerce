@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Controllers
 @using Nop.Core
 @using Nop.Services.Authentication.External
+@using Nop.Services.Authentication.MultiFactor
 @using Nop.Services.Cms
 @using Nop.Services.Common
 @using Nop.Services.Payments
@@ -62,10 +63,20 @@
     {
         //external auth method
         activeMenuSystemName = "External authentication methods";
-        configureLocale = "Admin.Configuration.ExternalAuthenticationMethods.Configure";
-        backToLocale = "Admin.Configuration.ExternalAuthenticationMethods.BackToList";
-        listActionMethodName = "Methods";
-        listControllerName = "ExternalAuthentication";
+        configureLocale = "Admin.Configuration.Authentication.ExternalMethods.Configure";
+        backToLocale = "Admin.Configuration.Authentication.ExternalMethods.BackToList";
+        listActionMethodName = "ExternalMethods";
+        listControllerName = "Authentication";
+    }
+    else if (plugin is IMultiFactorAuthenticationMethod)
+    {
+        //multi-factor authentication method
+        activeMenuSystemName = "Multi-factor authentication methods";
+        configureLocale = "Admin.Configuration.Authentication.MultiFactorMethods.Configure";
+        backToLocale = "Admin.Configuration.Authentication.MultiFactorMethods.BackToList";
+        listActionMethodName = "MultiFactorMethods";
+        listControllerName = "Authentication";
+
     }
     else if (plugin is IWidgetPlugin)
     {
@@ -84,7 +95,7 @@
         backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
         listActionMethodName = "List";
         listControllerName = "Plugin";
-    }
+    }    
 
     Layout = "_AdminLayout";
     //page title
@@ -94,32 +105,21 @@
 
 }
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T(configureLocale) - @friendlyName
         <small>
-            <i class="fa fa-arrow-circle-left"></i>
+            <i class="fas fa-arrow-circle-left"></i>
             <a asp-action="@listActionMethodName" asp-controller="@listControllerName">@T(backToLocale)</a>
         </small>
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
     </div>
 </div>
-<div class="content">
-    <div class="form-horizontal">
-        @*@if (plugin != null)
-        {*@
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
             @RenderBody()
-        @*}
-        else
-        {
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @T("Admin.Common.ConfigurationNotRequired")
-                    </div>
-                </div>
-            </div>
-        }*@
+        </div>
     </div>
-</div>
+</section>

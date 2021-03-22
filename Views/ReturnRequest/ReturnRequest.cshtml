@@ -106,8 +106,8 @@
                         @if (Model.AllowFiles)
                         {
                             //register CSS and JS
-                            Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
-                            Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
+                            Html.AddCssFileParts("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
+                            Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
                             var allowedFileExtensionsList = new List<string>();
                             //allowedFileExtensionsList.Add("jpg");
                             //allowedFileExtensionsList.Add("jpeg");
@@ -183,7 +183,7 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <input type="submit" name="submit-return-request" class="button-1 submit-return-request-button" value="@T("ReturnRequests.Submit")" />
+                    <button type="submit" name="submit-return-request" class="button-1 submit-return-request-button">@T("ReturnRequests.Submit")</button>
                 </div>
             </form>
         }

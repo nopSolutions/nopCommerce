@@ -44,8 +44,8 @@
                 </div>
             </div>
             <div class="buttons">
-                <input type="submit" class="button-1 send-pm-button" value="@T("PrivateMessages.Send.SendButton")"/>
-                <input type="button" class="button-2 cancel-pm-button" value="@T("PrivateMessages.Send.CancelButton")" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')"/>
+                <button type="submit" class="button-1 send-pm-button">@T("PrivateMessages.Send.SendButton")</button>
+                <button type="button" class="button-2 cancel-pm-button" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')">@T("PrivateMessages.Send.CancelButton")</button>
             </div>
         </div>
     </div>

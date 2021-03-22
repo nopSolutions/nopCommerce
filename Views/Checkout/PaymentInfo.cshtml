@@ -22,7 +22,7 @@
                     @await Component.InvokeAsync(Model.PaymentViewComponentName)
                 </div>
                 <div class="buttons">
-                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-info-next-step-button"/>
+                    <button type="submit" name="nextstep" class="button-1 payment-info-next-step-button">@T("Checkout.NextButton")</button>
                 </div>
             </form>
         </div>
