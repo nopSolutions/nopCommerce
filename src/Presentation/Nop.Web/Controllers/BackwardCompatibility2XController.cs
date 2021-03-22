@@ -55,7 +55,6 @@ namespace Nop.Web.Controllers
         #region Methods
 
         //in versions 2.00-2.65 we had ID in product URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectProductById(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -66,7 +65,6 @@ namespace Nop.Web.Controllers
         }
 
         //in versions 2.00-2.65 we had ID in category URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectCategoryById(int categoryId)
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -77,7 +75,6 @@ namespace Nop.Web.Controllers
         }
 
         //in versions 2.00-2.65 we had ID in manufacturer URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectManufacturerById(int manufacturerId)
         {
             var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
@@ -88,7 +85,6 @@ namespace Nop.Web.Controllers
         }
 
         //in versions 2.00-2.70 we had ID in news URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectNewsItemById(int newsItemId)
         {
             var newsItem = await _newsService.GetNewsByIdAsync(newsItemId);
@@ -99,7 +95,6 @@ namespace Nop.Web.Controllers
         }
 
         //in versions 2.00-2.70 we had ID in blog URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectBlogPostById(int blogPostId)
         {
             var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostId);
@@ -110,7 +105,6 @@ namespace Nop.Web.Controllers
         }
 
         //in versions 2.00-3.20 we had SystemName in topic URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectTopicBySystemName(string systemName)
         {
             var topic = await _topicService.GetTopicBySystemNameAsync(systemName);
@@ -121,7 +115,6 @@ namespace Nop.Web.Controllers
         }
 
         //in versions 3.00-3.20 we had ID in vendor URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectVendorById(int vendorId)
         {
             var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
@@ -132,7 +125,6 @@ namespace Nop.Web.Controllers
         }
 
         //in versions 3.00-4.00 we had ID in product tag URLs
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RedirectProductTagById(int productTagId)
         {
             var productTag = await _productTagService.GetProductTagByIdAsync(productTagId);

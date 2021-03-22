@@ -54,7 +54,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
@@ -67,7 +66,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List(ScheduleTaskSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
@@ -80,7 +78,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TaskUpdate(ScheduleTaskModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
@@ -112,7 +109,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RunNow(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))

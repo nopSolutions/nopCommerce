@@ -21,9 +21,6 @@ function jquery_DevTools(cb){
   gulp.src(nodeModules + "jquery-migrate/dist/jquery-migrate.js").pipe(gulp.dest(targetPath + "/jquery-migrate"));
   gulp.src(nodeModules + "jquery-migrate/dist/jquery-migrate.min.map").pipe(gulp.dest(targetPath + "/jquery-migrate"));
 
-  //jquery.validate.globalize
-  gulp.src(nodeModules + "jquery-validation-globalize/jquery.validate.globalize.min.js.map").pipe(gulp.dest(targetPath + "/jquery-validation-globalize"));
-
   //bootstrap
   gulp.src(nodeModules + "bootstrap/dist/css/bootstrap.min.css.map").pipe(gulp.dest(targetPath + "/bootstrap/css"));
 

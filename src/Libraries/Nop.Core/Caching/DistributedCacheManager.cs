@@ -70,7 +70,7 @@ namespace Nop.Core.Caching
         /// A task that represents the asynchronous operation
         /// The task result contains the flag which indicate is the key exists in the cache, cached item or default value
         /// </returns>
-        private async Task<(bool isSet, T item)> TryGetItem<T>(CacheKey key)
+        private async Task<(bool isSet, T item)> TryGetItemAsync<T>(CacheKey key)
         {
             var json = await _distributedCache.GetStringAsync(key.Key);
 
@@ -81,6 +81,42 @@ namespace Nop.Core.Caching
             _perRequestCache.Set(key.Key, item);
 
             return (true, item);
+        }
+
+        /// <summary>
+        /// Try to get the cached item
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <returns>Flag which indicate is the key exists in the cache, cached item or default value</returns>
+        private (bool isSet, T item) TryGetItem<T>(CacheKey key)
+        {
+            var json = _distributedCache.GetString(key.Key);
+
+            if (string.IsNullOrEmpty(json))
+                return (false, default);
+
+            var item = JsonConvert.DeserializeObject<T>(json);
+            _perRequestCache.Set(key.Key, item);
+
+            return (true, item);
+        }
+
+        /// <summary>
+        /// Add the specified key and object to the cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <param name="data">Value for caching</param>
+        private void Set(CacheKey key, object data)
+        {
+            if ((key?.CacheTime ?? 0) <= 0 || data == null)
+                return;
+
+            _distributedCache.SetString(key.Key, JsonConvert.SerializeObject(data), PrepareEntryOptions(key));
+            _perRequestCache.Set(key.Key, data);
+
+            using var _ = _locker.Lock();
+            _keys.Add(key.Key);
         }
 
         #endregion
@@ -116,7 +152,7 @@ namespace Nop.Core.Caching
             if (key.CacheTime <= 0)
                 return await acquire();
 
-            var (isSet, item) = await TryGetItem<T>(key);
+            var (isSet, item) = await TryGetItemAsync<T>(key);
 
             if (isSet)
                 return item;
@@ -150,7 +186,7 @@ namespace Nop.Core.Caching
             if (key.CacheTime <= 0)
                 return acquire();
 
-            var (isSet, item) = await TryGetItem<T>(key);
+            var (isSet, item) = await TryGetItemAsync<T>(key);
 
             if (isSet)
                 return item;
@@ -159,6 +195,37 @@ namespace Nop.Core.Caching
 
             if (result != null)
                 await SetAsync(key, result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public T Get<T>(CacheKey key, Func<T> acquire)
+        {
+            //little performance workaround here:
+            //we use "PerRequestCache" to cache a loaded object in memory for the current HTTP request.
+            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
+            if (_perRequestCache.IsSet(key.Key))
+                return _perRequestCache.Get(key.Key, () => default(T));
+
+            if (key.CacheTime <= 0)
+                return acquire();
+
+            var (isSet, item) = TryGetItem<T>(key);
+
+            if (isSet)
+                return item;
+
+            var result = acquire();
+
+            if (result != null)
+                Set(key, result);
 
             return result;
         }

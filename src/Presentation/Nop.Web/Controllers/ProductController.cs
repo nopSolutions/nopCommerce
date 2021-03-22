@@ -156,7 +156,6 @@ namespace Nop.Web.Controllers
 
         #region Product details page
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -234,7 +233,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
@@ -300,7 +298,6 @@ namespace Nop.Web.Controllers
 
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> GetProductCombinations(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -315,7 +312,6 @@ namespace Nop.Web.Controllers
 
         #region Recently viewed products
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
@@ -333,7 +329,6 @@ namespace Nop.Web.Controllers
 
         #region New (recently added) products page
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
@@ -347,7 +342,6 @@ namespace Nop.Web.Controllers
         }
 
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> NewProductsRss()
         {
             var feed = new RssFeed(
@@ -388,7 +382,6 @@ namespace Nop.Web.Controllers
 
         #region Product reviews
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductReviews(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -416,7 +409,6 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ProductReviews")]
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -505,7 +497,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = await _productService.GetProductReviewByIdAsync(productReviewId);
@@ -546,7 +537,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerProductReviews(int? pageNumber)
         {
             if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -566,7 +556,6 @@ namespace Nop.Web.Controllers
 
         #region Email a friend
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductEmailAFriend(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -581,7 +570,6 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ProductEmailAFriend")]
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
             var product = await _productService.GetProductByIdAsync(model.ProductId);
@@ -626,7 +614,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> AddProductToCompareList(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -659,7 +646,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RemoveProductFromCompareList(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -674,7 +660,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)

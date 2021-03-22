@@ -27,7 +27,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
         #region Methods
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> WebhookHandler()
         {
             await _serviceManager.HandleWebhookAsync(_settings, Request);
