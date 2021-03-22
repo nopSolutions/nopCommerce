@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="नेपाली" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>व्यवस्थापक प्रयोगकर्ता ईमेल</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>प्रशासक ईमेल उल्लेख गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>प्रशासक पासवर्ड</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>प्रशासक पासवर्ड उल्लेख गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{0}' खातालाई फोल्डर '{1}' परिमार्जन अनुमति प्रदान गरिएको छैन। कृपया यी अनुमतिहरू कन्फिगर गर्नुहोस्।</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{0}' खातालाई फाईल '{1}' परिमार्जन अनुमति साथ प्रदान गरिएको छैन। कृपया यी अनुमतिहरू कन्फिगर गर्नुहोस्।</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>पासवर्ड कन्फर्म गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>कन्फर्म पासवर्ड उल्लेख गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>कनेक्शन स्ट्रिंग</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL कनेक्शन स्ट्रिंग आवश्यक छ</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>कनेक्शन स्ट्रिंगको ढाँचा(फर्मेट) गलत छ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>डाटाबेस बनेको छैन भने सिर्जना गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>नमूना (सेम्पल) डेटा सिर्जना गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specify custom collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>डाटाबेस</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>डाटाबेस सिर्जना गर्दा एउटा त्रुटि देखापर्यो: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>डाटाबेस जानकारी</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>डाटाबेसको नाम</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>डाटाबेस अवस्थित छैन वा तपाईंसँग यससँग कनेक्ट गर्ने अनुमति छैन</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>डाटा प्रदायक(data provider) चयन गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>यदि तपाईंलाई nopCommerce कसरी प्रयोग गर्ने भन्ने बारे जानकारी चाहिएको छ भने, भ्रमण गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com मा डकुमेंटेसन सेक्सन</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>उदाहरण</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>स्थापना गर्नुहोस् (इन्स्टल)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>NopCommerce स्थापना(इन्स्टल) गर्दै...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>एकीकृत विन्डोज प्रमाणीकरण(integrated Windows authentication) प्रयोग गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>पासवर्डहरु मिलेन</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>र कनेक्शन स्ट्रिंग(raw connection string) उल्लेख गर्नुहोस् (एडभान्सड)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>इन्स्टलेसन पुनः सुरु गर्नुहोस्</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>इन्स्टलेसन प्रक्रिया पुन: सुरु गर्न क्लिक गर्नुहोस् (सबै क्यास(cache) रद्द गर्नुहोस्)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Restarting...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>सर्भरको नाम</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>सर्भरको नाम आवश्यक छ</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>सेटअप असफल भयो: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL पासवर्ड</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL पासवर्ड आवश्यक छ</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL प्रयोगकर्तानाम</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL प्रयोगकर्तानाम आवश्यक छ</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>स्टोरको जानकारी</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce इन्स्टलेसन</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>यो विजार्ड(wizard) पूर्ण गर्न तपाईलाई डेटाबेस सर्भर ("कनेक्शन स्ट्रिंग" ") को बारेमा केहि जानकारी थाहा हुनुपर्दछ। यदि आवश्यक भएमा तपाईंको ISP लाई सम्पर्क गर्नुहोस्। यदि तपाईं एक स्थानीय मेशिन वा सर्भरमा स्थापना गर्दै हुनुहुन्छ भने, तपाईंलाई तपाईंको प्रणाली प्रशासकबाट(system admin) इन्फर्मेशन आवश्यक पर्न सक्छ।</Value>
+  </LocaleResource>
+</Language>

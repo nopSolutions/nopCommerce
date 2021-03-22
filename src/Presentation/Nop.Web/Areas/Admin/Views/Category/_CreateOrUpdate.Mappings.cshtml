@@ -1,7 +1,7 @@
 ﻿@model CategoryModel
 
-<div class="panel-body">
-    <div class="form-group advanced-setting">
+<div class="card-body">
+    <div class="form-group advanced-setting row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedDiscountIds" />
         </div>
@@ -30,7 +30,7 @@
             </script>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group advanced-setting row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedCustomerRoleIds" />
         </div>
@@ -48,16 +48,16 @@
 							});
 
 							@if (Model.AvailableCustomerRoles.Count == 0)
-				{
-					<text>
-						rolesIdsInput.setOptions({
-							enable: false,
-							placeholder: 'No customer roles available'
-						});
-						rolesIdsInput._placeholder();
-						rolesIdsInput._enable();
-					</text>
-				}
+							{
+								<text>
+								rolesIdsInput.setOptions({
+									enable: false,
+									placeholder: 'No customer roles available'
+								});
+								rolesIdsInput._placeholder();
+								rolesIdsInput._enable();
+								</text>
+							}
 						});
                     </script>
                 </div>
@@ -67,7 +67,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group advanced-setting row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
         </div>
@@ -85,16 +85,16 @@
 							});
 
 							@if (Model.AvailableStores.Count == 0)
-						{
-							<text>
+							{
+								<text>
 								storesIdsInput.setOptions({
 									enable: false,
 									placeholder: 'No stores available'
 								});
 								storesIdsInput._placeholder();
 								storesIdsInput._enable();
-							</text>
-						}
+								</text>
+							}
 						});
                     </script>
                 </div>

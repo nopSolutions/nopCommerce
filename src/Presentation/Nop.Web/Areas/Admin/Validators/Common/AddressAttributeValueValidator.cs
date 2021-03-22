@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Common
     {
         public AddressAttributeValueValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Address.AddressAttributes.Values.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Address.AddressAttributes.Values.Fields.Name.Required"));
 
             SetDatabaseValidationRules<AddressAttributeValue>(dataProvider);
         }

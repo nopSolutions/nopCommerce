@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a never sold products report search model
     /// </summary>
-    public partial class NeverSoldReportSearchModel : BaseSearchModel
+    public partial record NeverSoldReportSearchModel : BaseSearchModel
     {
         #region Ctor
 

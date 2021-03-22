@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -17,42 +18,58 @@ namespace Nop.Services.Orders
         /// Gets an order
         /// </summary>
         /// <param name="orderId">The order identifier</param>
-        /// <returns>Order</returns>
-        Order GetOrderById(int orderId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
+        Task<Order> GetOrderByIdAsync(int orderId);
 
         /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="customOrderNumber">The custom order number</param>
-        /// <returns>Order</returns>
-        Order GetOrderByCustomOrderNumber(string customOrderNumber);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
+        Task<Order> GetOrderByCustomOrderNumberAsync(string customOrderNumber);
 
         /// <summary>
         /// Gets an order by order item identifier
         /// </summary>
         /// <param name="orderItemId">The order item identifier</param>
-        /// <returns>Order</returns>
-        Order GetOrderByOrderItem(int orderItemId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
+        Task<Order> GetOrderByOrderItemAsync(int orderItemId);
 
         /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
-        /// <returns>Order</returns>
-        IList<Order> GetOrdersByIds(int[] orderIds);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
+        Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds);
 
         /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
-        /// <returns>Order</returns>
-        Order GetOrderByGuid(Guid orderGuid);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order
+        /// </returns>
+        Task<Order> GetOrderByGuidAsync(Guid orderGuid);
 
         /// <summary>
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
-        void DeleteOrder(Order order);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteOrderAsync(Order order);
 
         /// <summary>
         /// Search orders
@@ -77,8 +94,11 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
-        /// <returns>Orders</returns>
-        IPagedList<Order> SearchOrders(int storeId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the orders
+        /// </returns>
+        Task<IPagedList<Order>> SearchOrdersAsync(int storeId = 0,
             int vendorId = 0, int customerId = 0,
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
             int billingCountryId = 0, string paymentMethodSystemName = null,
@@ -91,21 +111,15 @@ namespace Nop.Services.Orders
         /// Inserts an order
         /// </summary>
         /// <param name="order">Order</param>
-        void InsertOrder(Order order);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertOrderAsync(Order order);
 
         /// <summary>
         /// Updates the order
         /// </summary>
         /// <param name="order">The order</param>
-        void UpdateOrder(Order order);
-
-        /// <summary>
-        /// Get an order by authorization transaction ID and payment method system name
-        /// </summary>
-        /// <param name="authorizationTransactionId">Authorization transaction ID</param>
-        /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>Order</returns>
-        Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateOrderAsync(Order order);
 
         /// <summary>
         /// Parse tax rates
@@ -119,22 +133,31 @@ namespace Nop.Services.Orders
         /// Gets a value indicating whether an order has items to be added to a shipment
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to be added to a shipment</returns>
-        bool HasItemsToAddToShipment(Order order);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether an order has items to be added to a shipment
+        /// </returns>
+        Task<bool> HasItemsToAddToShipmentAsync(Order order);
 
         /// <summary>
         /// Gets a value indicating whether an order has items to ship
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to ship</returns>
-        bool HasItemsToShip(Order order);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether an order has items to ship
+        /// </returns>
+        Task<bool> HasItemsToShipAsync(Order order);
 
         /// <summary>
         /// Gets a value indicating whether an order has items to deliver
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to deliver</returns>
-        bool HasItemsToDeliver(Order order);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether an order has items to deliver
+        /// </returns>
+        Task<bool> HasItemsToDeliverAsync(Order order);
 
         #endregion
 
@@ -144,15 +167,21 @@ namespace Nop.Services.Orders
         /// Gets an order item
         /// </summary>
         /// <param name="orderItemId">Order item identifier</param>
-        /// <returns>Order item</returns>
-        OrderItem GetOrderItemById(int orderItemId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order item
+        /// </returns>
+        Task<OrderItem> GetOrderItemByIdAsync(int orderItemId);
 
         /// <summary>
         /// Gets a product of specify order item
         /// </summary>
         /// <param name="orderItemId">Order item identifier</param>
-        /// <returns>Product</returns>
-        Product GetProductByOrderItemId(int orderItemId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product
+        /// </returns>
+        Task<Product> GetProductByOrderItemIdAsync(int orderItemId);
 
         /// <summary>
         /// Gets a list items of order
@@ -161,89 +190,92 @@ namespace Nop.Services.Orders
         /// <param name="isNotReturnable">Value indicating whether this product is returnable; pass null to ignore</param>
         /// <param name="isShipEnabled">Value indicating whether the entity is ship enabled; pass null to ignore</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore</param>
-        /// <returns>Result</returns>
-        IList<OrderItem> GetOrderItems(int orderId, bool? isNotReturnable = null, bool? isShipEnabled = null, int vendorId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<IList<OrderItem>> GetOrderItemsAsync(int orderId, bool? isNotReturnable = null, bool? isShipEnabled = null, int vendorId = 0);
 
         /// <summary>
         /// Gets an order item
         /// </summary>
         /// <param name="orderItemGuid">Order item identifier</param>
-        /// <returns>Order item</returns>
-        OrderItem GetOrderItemByGuid(Guid orderItemGuid);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order item
+        /// </returns>
+        Task<OrderItem> GetOrderItemByGuidAsync(Guid orderItemGuid);
 
         /// <summary>
         /// Gets all downloadable order items
         /// </summary>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <returns>Order items</returns>
-        IList<OrderItem> GetDownloadableOrderItems(int customerId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order items
+        /// </returns>
+        Task<IList<OrderItem>> GetDownloadableOrderItemsAsync(int customerId);
 
         /// <summary>
         /// Delete an order item
         /// </summary>
         /// <param name="orderItem">The order item</param>
-        void DeleteOrderItem(OrderItem orderItem);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteOrderItemAsync(OrderItem orderItem);
 
         /// <summary>
         /// Gets a total number of items in all shipments
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of items in all shipments</returns>
-        int GetTotalNumberOfItemsInAllShipment(OrderItem orderItem);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the otal number of items in all shipments
+        /// </returns>
+        Task<int> GetTotalNumberOfItemsInAllShipmentAsync(OrderItem orderItem);
 
         /// <summary>
         /// Gets a total number of already items which can be added to new shipments
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already delivered items which can be added to new shipments</returns>
-        int GetTotalNumberOfItemsCanBeAddedToShipment(OrderItem orderItem);
-
-        /// <summary>
-        /// Gets a total number of not yet shipped items (but added to shipments)
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
-        int GetTotalNumberOfNotYetShippedItems(OrderItem orderItem);
-
-        /// <summary>
-        /// Gets a total number of already shipped items
-        /// </summary>
-        /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of already shipped items</returns>
-        int GetTotalNumberOfShippedItems(OrderItem orderItem);
-
-        /// <summary>
-        /// Gets a total number of already delivered items
-        /// </summary>
-        /// <param name="orderItem">Order  item</param>
-        /// <returns>Total number of already delivered items</returns>
-        int GetTotalNumberOfDeliveredItems(OrderItem orderItem);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the otal number of already delivered items which can be added to new shipments
+        /// </returns>
+        Task<int> GetTotalNumberOfItemsCanBeAddedToShipmentAsync(OrderItem orderItem);
 
         /// <summary>
         /// Gets a value indicating whether download is allowed
         /// </summary>
         /// <param name="orderItem">Order item to check</param>
-        /// <returns>True if download is allowed; otherwise, false.</returns>
-        bool IsDownloadAllowed(OrderItem orderItem);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if download is allowed; otherwise, false.
+        /// </returns>
+        Task<bool> IsDownloadAllowedAsync(OrderItem orderItem);
 
         /// <summary>
         /// Gets a value indicating whether license download is allowed
         /// </summary>
         /// <param name="orderItem">Order item to check</param>
-        /// <returns>True if license download is allowed; otherwise, false.</returns>
-        bool IsLicenseDownloadAllowed(OrderItem orderItem);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if license download is allowed; otherwise, false.
+        /// </returns>
+        Task<bool> IsLicenseDownloadAllowedAsync(OrderItem orderItem);
 
         /// <summary>
         /// Inserts a order item
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        void InsertOrderItem(OrderItem orderItem);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertOrderItemAsync(OrderItem orderItem);
 
         /// <summary>
         /// Updates a order item
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        void UpdateOrderItem(OrderItem orderItem);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateOrderItemAsync(OrderItem orderItem);
 
         #endregion
 
@@ -253,22 +285,29 @@ namespace Nop.Services.Orders
         /// Gets an order note
         /// </summary>
         /// <param name="orderNoteId">The order note identifier</param>
-        /// <returns>Order note</returns>
-        OrderNote GetOrderNoteById(int orderNoteId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order note
+        /// </returns>
+        Task<OrderNote> GetOrderNoteByIdAsync(int orderNoteId);
 
         /// <summary>
         /// Gets a list notes of order
         /// </summary>
         /// <param name="orderId">Order identifier</param>
         /// <param name="displayToCustomer">Value indicating whether a customer can see a note; pass null to ignore</param>
-        /// <returns>Result</returns>
-        IList<OrderNote> GetOrderNotesByOrderId(int orderId, bool? displayToCustomer = null);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<IList<OrderNote>> GetOrderNotesByOrderIdAsync(int orderId, bool? displayToCustomer = null);
 
         /// <summary>
         /// Deletes an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
-        void DeleteOrderNote(OrderNote orderNote);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteOrderNoteAsync(OrderNote orderNote);
 
         /// <summary>
         /// Formats the order note text
@@ -281,7 +320,8 @@ namespace Nop.Services.Orders
         /// Inserts an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
-        void InsertOrderNote(OrderNote orderNote);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertOrderNoteAsync(OrderNote orderNote);
 
         #endregion
 
@@ -291,26 +331,32 @@ namespace Nop.Services.Orders
         /// Deletes a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void DeleteRecurringPayment(RecurringPayment recurringPayment);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteRecurringPaymentAsync(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Gets a recurring payment
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
-        /// <returns>Recurring payment</returns>
-        RecurringPayment GetRecurringPaymentById(int recurringPaymentId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the recurring payment
+        /// </returns>
+        Task<RecurringPayment> GetRecurringPaymentByIdAsync(int recurringPaymentId);
 
         /// <summary>
         /// Inserts a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void InsertRecurringPayment(RecurringPayment recurringPayment);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertRecurringPaymentAsync(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Updates the recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void UpdateRecurringPayment(RecurringPayment recurringPayment);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateRecurringPaymentAsync(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Search recurring payments
@@ -322,8 +368,11 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Recurring payments</returns>
-        IPagedList<RecurringPayment> SearchRecurringPayments(int storeId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the recurring payments
+        /// </returns>
+        Task<IPagedList<RecurringPayment>> SearchRecurringPaymentsAsync(int storeId = 0,
             int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
@@ -335,14 +384,18 @@ namespace Nop.Services.Orders
         /// Inserts a recurring payment history entry
         /// </summary>
         /// <param name="recurringPaymentHistory">Recurring payment history entry</param>
-        void InsertRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertRecurringPaymentHistoryAsync(RecurringPaymentHistory recurringPaymentHistory);
 
         /// <summary>
         /// Gets a recurring payment history
         /// </summary>
         /// <param name="recurringPayment">The recurring payment</param>
-        /// <returns>Result</returns>
-        IList<RecurringPaymentHistory> GetRecurringPaymentHistory(RecurringPayment recurringPayment);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<IList<RecurringPaymentHistory>> GetRecurringPaymentHistoryAsync(RecurringPayment recurringPayment);
 
         #endregion
     }

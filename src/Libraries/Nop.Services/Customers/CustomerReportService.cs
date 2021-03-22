@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Helpers;
 using Nop.Services.Orders;
 
@@ -53,8 +55,11 @@ namespace Nop.Services.Customers
         /// <param name="orderBy">1 - order by order total, 2 - order by number of orders</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Report</returns>
-        public virtual IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the report
+        /// </returns>
+        public virtual async Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReportAsync(DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364)
         {
@@ -90,17 +95,17 @@ namespace Nop.Services.Customers
                          };
             query2 = orderBy switch
             {
-                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.OrderTotal),
-                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.OrderCount),
+                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.OrderCount),
+                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.OrderTotal),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
-            var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
+            var tmp = await query2.ToPagedListAsync(pageIndex, pageSize);
             return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
             {
                 CustomerId = x.CustomerId,
                 OrderTotal = x.OrderTotal,
                 OrderCount = x.OrderCount
-            }),
+            }).ToList(),
                 tmp.PageIndex, tmp.PageSize, tmp.TotalCount);
         }
 
@@ -108,18 +113,21 @@ namespace Nop.Services.Customers
         /// Gets a report of customers registered in the last days
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
-        /// <returns>Number of registered customers</returns>
-        public virtual int GetRegisteredCustomersReport(int days)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of registered customers
+        /// </returns>
+        public virtual async Task<int> GetRegisteredCustomersReportAsync(int days)
         {
-            var date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
+            var date = (await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).AddDays(-days);
 
-            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+            var registeredCustomerRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
             if (registeredCustomerRole == null)
                 return 0;
 
-            return _customerService.GetAllCustomers(
-                createdFromUtc: date,
-                customerRoleIds: new int[] { registeredCustomerRole.Id }).Count();
+            return (await _customerService.GetAllCustomersAsync(
+                date,
+                customerRoleIds: new[] { registeredCustomerRole.Id })).Count;
         }
 
         #endregion

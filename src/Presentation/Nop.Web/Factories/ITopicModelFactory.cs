@@ -1,4 +1,5 @@
-﻿using Nop.Web.Models.Topics;
+﻿using System.Threading.Tasks;
+using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Factories
 {
@@ -12,21 +13,30 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="topicId">Topic identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Topic model</returns>
-        TopicModel PrepareTopicModelById(int topicId, bool showHidden = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic model
+        /// </returns>
+        Task<TopicModel> PrepareTopicModelByIdAsync(int topicId, bool showHidden = false);
 
         /// <summary>
         /// Get the topic model by topic system name
         /// </summary>
         /// <param name="systemName">Topic system name</param>
-        /// <returns>Topic model</returns>
-        TopicModel PrepareTopicModelBySystemName(string systemName);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic model
+        /// </returns>
+        Task<TopicModel> PrepareTopicModelBySystemNameAsync(string systemName);
 
         /// <summary>
         /// Get the topic template view path
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
-        /// <returns>View path</returns>
-        string PrepareTemplateViewPath(int topicTemplateId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view path
+        /// </returns>
+        Task<string> PrepareTemplateViewPathAsync(int topicTemplateId);
     }
 }

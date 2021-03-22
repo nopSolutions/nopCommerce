@@ -84,7 +84,7 @@ namespace Nop.Core
         /// Restart application domain
         /// </summary>
         void RestartAppDomain();
-        
+
         /// <summary>
         /// Gets a value that indicates whether the client is being redirected to a new location
         /// </summary>
@@ -98,7 +98,7 @@ namespace Nop.Core
         /// <summary>
         /// Gets current HTTP request protocol
         /// </summary>
-        string CurrentRequestProtocol { get; }
+        string GetCurrentRequestProtocol();
 
         /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.

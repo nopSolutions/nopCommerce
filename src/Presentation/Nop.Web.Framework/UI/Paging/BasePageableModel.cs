@@ -1,4 +1,4 @@
-//Contributor : MVCContrib
+﻿//Contributor : MVCContrib
 
 using System;
 using Nop.Core;
@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.UI.Paging
     /// <summary>
     /// Base class for pageable models
     /// </summary>
-    public abstract class BasePageableModel : BaseNopModel, IPageableModel
+    public abstract record BasePageableModel : BaseNopModel, IPageableModel
     {
         #region Methods
 

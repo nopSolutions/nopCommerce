@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Events
+﻿using System.Threading.Tasks;
+
+namespace Nop.Services.Events
 {
     /// <summary>
     /// Consumer interface
@@ -10,6 +12,7 @@
         /// Handle event
         /// </summary>
         /// <param name="eventMessage">Event</param>
-        void HandleEvent(T eventMessage);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task HandleEventAsync(T eventMessage);
     }
 }

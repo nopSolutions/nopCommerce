@@ -1,7 +1,7 @@
 ﻿@model CategoryModel
 
-<div class="panel-body">
-    <div class="form-group advanced-setting">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Published" />
         </div>
@@ -10,7 +10,7 @@
             <span asp-validation-for="Published"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="ShowOnHomepage" />
         </div>
@@ -19,7 +19,7 @@
             <span asp-validation-for="ShowOnHomepage"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="IncludeInTopMenu" />
         </div>
@@ -28,7 +28,7 @@
             <span asp-validation-for="IncludeInTopMenu"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AllowCustomersToSelectPageSize" />
         </div>
@@ -38,7 +38,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
-        <div id="pnlPageSize" class="form-group advanced-setting">
+        <div id="pnlPageSize" class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="PageSize" />
             </div>
@@ -47,7 +47,7 @@
                 <span asp-validation-for="PageSize"></span>
             </div>
         </div>
-        <div id="pnlPageSizeOptions" class="form-group advanced-setting">
+        <div id="pnlPageSizeOptions" class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="PageSizeOptions" />
             </div>
@@ -57,16 +57,49 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
-            <nop-label asp-for="PriceRanges" />
+            <nop-label asp-for="PriceRangeFiltering" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="PriceRanges" />
-            <span asp-validation-for="PriceRanges"></span>
+            <nop-editor asp-for="PriceRangeFiltering" />
+            <span asp-validation-for="PriceRangeFiltering"></span>
         </div>
     </div>
-    <div class="form-group">
+    <nop-nested-setting asp-for="PriceRangeFiltering">
+        <div class="form-group row advanced-setting" id="pnlManuallyPriceRange">
+            <div class="col-md-3">
+                <nop-label asp-for="ManuallyPriceRange" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ManuallyPriceRange" />
+                <span asp-validation-for="ManuallyPriceRange"></span>
+            </div>
+        </div>
+        <div id="pnlPriceRange">
+            <nop-nested-setting asp-for="ManuallyPriceRange">
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PriceFrom" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PriceFrom" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                        <span asp-validation-for="PriceFrom"></span>
+                    </div>
+                </div>
+                <div class="form-group row advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PriceTo" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PriceTo" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                        <span asp-validation-for="PriceTo"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="DisplayOrder" />
         </div>
@@ -75,7 +108,7 @@
             <span asp-validation-for="DisplayOrder"></span>
         </div>
     </div>
-    <div class="form-group" @(Model.AvailableCategoryTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+    <div class="form-group row" @(Model.AvailableCategoryTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
         <div class="col-md-3">
             <nop-label asp-for="CategoryTemplateId" />
         </div>
@@ -85,3 +118,39 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        $("#@Html.IdFor(model => model.PriceRangeFiltering)").click(togglePriceRangeFiltering);
+        $("#@Html.IdFor(model => model.ManuallyPriceRange)").click(togglePriceRangeFiltering);
+
+        togglePageSize();
+        togglePriceRangeFiltering();
+    });
+
+    function togglePageSize() {
+        if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlPageSize').hideElement();
+            $('#pnlPageSizeOptions').showElement();
+        } else {
+            $('#pnlPageSize').showElement();
+            $('#pnlPageSizeOptions').hideElement();
+        }
+    }
+
+    function togglePriceRangeFiltering() {
+        if ($('#@Html.IdFor(model => model.PriceRangeFiltering)').is(':checked')) {
+            $('#pnlManuallyPriceRange').showElement();
+
+            if ($('#@Html.IdFor(model => model.ManuallyPriceRange)').is(':checked')) {
+                $('#pnlPriceRange').showElement();
+            } else {
+                $('#pnlPriceRange').hideElement();
+            }
+        } else {
+            $('#pnlPriceRange').hideElement();
+            $('#pnlManuallyPriceRange').hideElement();
+        }
+    }
+</script>

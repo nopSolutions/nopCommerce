@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="தமிழ்" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>நிர்வாக பயனர் மின்னஞ்சல்</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>நிர்வாக பயனர் மின்னஞ்சலை உள்ளிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>நிர்வாக பயனர் கடவுச்சொல்</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>நிர்வாக பயனர் கடவுச்சொல்லை உள்ளிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{1}' folder ஐ மாற்றியமைக்கும் அனுமதி '{0}' கணக்குக்கு வழங்கப்படவில்லை. இந்த அனுமதிகளை உள்ளமைக்கவும்.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{1}' file ஐ மாற்றியமைக்கும் அனுமதி '{0}' கணக்குக்கு வழங்கப்படவில்லை. இந்த அனுமதிகளை உள்ளமைக்கவும்.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>கடவுச்சொல்லை உறுதிப்படுத்தவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>உறுதிப்படுத்தும் கடவுச்சொல்லை உள்ளிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>தரவுத்தள இணைப்பு</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>ஒரு SQL தரவுத்தள இணைப்பு தேவை</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>தவறான SQL தரவுத்தள இணைப்பு வடிவம்</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>நாடு</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>உங்கள் நாட்டினைத் தேர்ந்தெடுங்கள்</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>தரவுத்தளம் இல்லாவிட்டால் அதை உருவாக்கவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>தரவு மாதிரியை உருவாக்கவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>தனிப்பயன் தொகுப்பைக் குறிப்பிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>தரவுத்தளம்</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>தரவுத்தளத்தை உருவாக்கும் போது பிழை ஏற்பட்டுள்ளது: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>தரவுத்தளத் தகவல்</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>தரவுத்தளத்தின் பெயர்</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>தரவுத்தளம் உருவாக்கப்படவில்லை அல்லது அதனுடன் இணைப்பை ஏற்படுத்த உங்களுக்கு அனுமதி இல்லை</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>தரவு வழங்குநரைத் தெரிவுசெய்க</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>NopCommerce ஐ எவ்வாறு பயன்படுத்துவது என்பது குறித்த தகவல்களை பின்வரும் தளத்தில் பார்வையிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com இன் ஆவணப்படுத்தல் பிரிவு</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>உதாரணம்</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>நிறுவு</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>NopCommerce ஐ நிறுவுகிறது...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>ஒருங்கிணைந்த விண்டோஸ் அங்கீகாரத்தைப் பயன்படுத்தவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>கடவுச்சொற்கள் பொருந்தவில்லை</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>மூல தரவுத்தள இணைப்பை உள்ளிடவும் (மேம்பட்டது)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>நிறுவலை மீள்தொடக்கம் செய்யுங்கள்</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>நிறுவல் செயல்முறையை மறுதொடக்கம் செய்ய கிளிக் செய்யவும் (தற்காலிக சேமிப்பு மதிப்புகள் அனைத்தையும் அழிப்பதற்காக)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>மீண்டும் தொடங்குகிறது…</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>சர்வர் பெயர்</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>சர்வர் பெயரை உள்ளிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>அமைப்பு தோல்வியடைந்துவிட்டது: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL கடவுச்சொல்</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL கடவுச்சொல்லை உள்ளிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>மைக்ரோசாஃப்ட் SQL சர்வர்</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL பயனர்பெயர்</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL பயனர்பெயரை உள்ளிடவும்</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>வியாபார நிலையத் தகவல்கள்</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce நிறுவல்</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>இந்த wizard ஐ பூரணப்படுத்த, உங்கள் தரவுத்தள சேவையகம் ("தரவுத்தள இணைப்பு") தொடர்பான சில தகவல்களை நீங்கள் அறிந்திருக்க வேண்டும். தேவைப்பட்டால் உங்கள் ISP ஐ தொடர்பு கொள்ளவும். நீங்கள் ஒரு பிரத்தியேக கணினி அல்லது சேவையகத்தில் நிறுவினால், உங்கள் System Admin னிடமிருந்து தகவல் தேவைப்படலாம்.</Value>
+  </LocaleResource>
+</Language>

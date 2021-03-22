@@ -11,45 +11,45 @@
 
 <form asp-controller="Customer" asp-action="Edit" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
             <small>
-                <i class="fa fa-arrow-circle-left"></i>
+                <i class="fas fa-arrow-circle-left"></i>
                 <a asp-action="List">@T("Admin.Customers.Customers.BackToList")</a>
             </small>
         </h1>
-        <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
-            <button type="submit" name="save-continue" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <button type="button" class="btn bg-green" data-toggle="modal" data-target="#sendemail-window">
-                <i class="fa fa-at"></i>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendemail-window">
+                <i class="far fa-envelope"></i>
                 @T("Admin.Customers.Customers.SendEmail")
             </button>
-            @if (Model.AllowSendingOfPrivateMessage)
-            {
-                <button type="button" class="btn bg-green" data-toggle="modal" data-target="#sendprivatemessage-window">
-                    <i class="fa fa-envelope-o"></i>
+             @if (Model.AllowSendingOfPrivateMessage)
+             {
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendprivatemessage-window">
+                    <i class="fas fa-at"></i>
                     @T("Admin.Customers.Customers.SendPM")
                 </button>
-            }
+             }
             @if (Model.AllowSendingOfWelcomeMessage)
             {
-                <button type="submit" id="send-welcome-message" name="send-welcome-message" class="btn bg-green">
-                    <i class="fa fa-smile-o"></i>
+                <button type="submit" id="send-welcome-message" name="send-welcome-message" class="btn btn-success">
+                    <i class="far fa-smile"></i>
                     @T("Admin.Customers.Customers.SendWelcomeMessage")
                 </button>
                 <nop-action-confirmation asp-button-id="send-welcome-message" />
             }
             @if (Model.AllowReSendingOfActivationMessage)
             {
-                <button type="submit" id="resend-activation-message" name="resend-activation-message" class="btn bg-green">
-                    <i class="fa fa-check-circle"></i>
+                <button type="submit" id="resend-activation-message" name="resend-activation-message" class="btn btn-success">
+                    <i class="fas fa-check-circle"></i>
                     @T("Admin.Customers.Customers.ReSendActivationMessage")
                 </button>
                 <nop-action-confirmation asp-button-id="resend-activation-message" />
@@ -59,7 +59,7 @@
                 
                 <div class="btn-group">
                     <button type="button" class="btn btn-success">
-                        <i class="fa fa-download"></i>
+                        <i class="fas fa-download"></i>
                         @T("Admin.Customers.Customers.Gdpr")
                     </button>
                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -67,23 +67,23 @@
                         <span class="sr-only">&nbsp;</span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a asp-action="GdprExport" asp-route-id="@Model.Id" >
-                                <i class="fa fa-file-code-o"></i>
+                        <li class="dropdown-item">
+                            <a asp-action="GdprExport" asp-route-id="@Model.Id">
+                                <i class="far fa-file-code"></i>
                                 @T("Admin.Customers.Customers.Gdpr.Export")
                             </a>
                         </li>
-                        <li>
+                        <li class="dropdown-item">
                             <a id="customer-gdpr-delete" href="#">
-                                <i class="fa fa-trash-o"></i>
+                                <i class="far fa-trash-alt"></i>
                                 @T("Admin.Customers.Customers.Gdpr.Delete")
                             </a>
                         </li>
                     </ul>
                 </div>
             }
-            <span id="customer-delete" class="btn bg-red">
-                <i class="fa fa-trash-o"></i>
+            <span id="customer-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete")
             </span>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsButtons, additionalData = Model })
@@ -96,20 +96,24 @@
 {
     <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="GdprDelete" asp-button-id="customer-gdpr-delete" />
 }
+@if (!string.IsNullOrEmpty(Model.MultiFactorAuthenticationProvider))
+{
+    <nop-delete-confirmation asp-model-id="@Model.Id" asp-action="RemoveBindMFA" asp-button-id="mfa-bind-delete" />
+}
 
 @*send email form*@
 <div id="sendemail-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendemail-window-title">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Customer" asp-action="SendEmail" method="post">
                 <input type="hidden" asp-for="Id" id="SendEmail_Id"/>
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendEmail.Subject" />
                             </div>
@@ -118,7 +122,7 @@
                                 <span asp-validation-for="SendEmail.Subject"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendEmail.Body" />
                             </div>
@@ -134,7 +138,7 @@
                                 <span asp-validation-for="SendEmail.Body"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendEmail.SendImmediately" />
                             </div>
@@ -143,7 +147,7 @@
                                 <span asp-validation-for="SendEmail.SendImmediately"></span>
                             </div>
                         </div>
-                        <div class="form-group" id="pnl-send-date">
+                        <div class="form-group row" id="pnl-send-date">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendEmail.DontSendBeforeDate" />
                             </div>
@@ -172,9 +176,9 @@
 
     function sendImmediately() {
         if ($('#@Html.IdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
-            $('#pnl-send-date').hide();
+            $('#pnl-send-date').hideElement();
         else
-            $('#pnl-send-date').show();
+            $('#pnl-send-date').showElement();
     }
 </script>
 
@@ -182,15 +186,15 @@
 <div id="sendprivatemessage-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendprivatemessage-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-header">                
                 <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Customer" asp-action="SendPm" method="post">
                 <input type="hidden" asp-for="Id" id="SendPm_Id"/>
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendPm.Subject" />
                             </div>
@@ -199,7 +203,7 @@
                                 <span asp-validation-for="SendPm.Subject"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendPm.Message" />
                             </div>

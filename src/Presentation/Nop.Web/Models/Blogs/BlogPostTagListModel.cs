@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Blogs
 {
-    public partial class BlogPostTagListModel : BaseNopModel
+    public partial record BlogPostTagListModel : BaseNopModel
     {
         public BlogPostTagListModel()
         {

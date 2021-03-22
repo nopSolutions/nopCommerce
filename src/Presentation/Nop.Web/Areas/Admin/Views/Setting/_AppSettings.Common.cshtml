@@ -1,0 +1,85 @@
+@model AppSettingsModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.DisplayFullErrorStack" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.DisplayFullErrorStack" />
+            <span asp-validation-for="CommonConfigModel.DisplayFullErrorStack"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UserAgentStringsPath" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UserAgentStringsPath" />
+            <span asp-validation-for="CommonConfigModel.UserAgentStringsPath"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath" />
+            <span asp-validation-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UseSessionStateTempDataProvider" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UseSessionStateTempDataProvider" />
+            <span asp-validation-for="CommonConfigModel.UseSessionStateTempDataProvider"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.MiniProfilerEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.MiniProfilerEnabled" />
+            <span asp-validation-for="CommonConfigModel.MiniProfilerEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.ScheduleTaskRunTimeout" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.ScheduleTaskRunTimeout" />
+            <span asp-validation-for="CommonConfigModel.ScheduleTaskRunTimeout"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.StaticFilesCacheControl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.StaticFilesCacheControl" />
+            <span asp-validation-for="CommonConfigModel.StaticFilesCacheControl"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.SupportPreviousNopcommerceVersions" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.SupportPreviousNopcommerceVersions" />
+            <span asp-validation-for="CommonConfigModel.SupportPreviousNopcommerceVersions"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.PluginStaticFileExtensionsBlacklist" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.PluginStaticFileExtensionsBlacklist" />
+            <span asp-validation-for="CommonConfigModel.PluginStaticFileExtensionsBlacklist"></span>
+        </div>
+    </div>
+</div>

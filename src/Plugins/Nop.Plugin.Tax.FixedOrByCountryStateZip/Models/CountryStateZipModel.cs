@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
 {
-    public class CountryStateZipModel : BaseNopEntityModel
+    public record CountryStateZipModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Plugins.Tax.FixedOrByCountryStateZip.Fields.Store")]
         public int StoreId { get; set; }

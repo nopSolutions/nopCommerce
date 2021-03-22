@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Logging;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Logging;
 using Nop.Web.Areas.Admin.Models.Logging;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -12,15 +13,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare log search model
         /// </summary>
         /// <param name="searchModel">Log search model</param>
-        /// <returns>Log search model</returns>
-        LogSearchModel PrepareLogSearchModel(LogSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log search model
+        /// </returns>
+        Task<LogSearchModel> PrepareLogSearchModelAsync(LogSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged log list model
         /// </summary>
         /// <param name="searchModel">Log search model</param>
-        /// <returns>Log list model</returns>
-        LogListModel PrepareLogListModel(LogSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log list model
+        /// </returns>
+        Task<LogListModel> PrepareLogListModelAsync(LogSearchModel searchModel);
 
         /// <summary>
         /// Prepare log model
@@ -28,7 +35,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Log model</param>
         /// <param name="log">Log</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Log model</returns>
-        LogModel PrepareLogModel(LogModel model, Log log, bool excludeProperties = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log model
+        /// </returns>
+        Task<LogModel> PrepareLogModelAsync(LogModel model, Log log, bool excludeProperties = false);
     }
 }

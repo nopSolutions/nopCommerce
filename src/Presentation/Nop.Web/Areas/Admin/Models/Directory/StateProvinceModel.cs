@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a state and province model
     /// </summary>
-    public partial class StateProvinceModel : BaseNopEntityModel, ILocalizedModel<StateProvinceLocalizedModel>
+    public partial record StateProvinceModel : BaseNopEntityModel, ILocalizedModel<StateProvinceLocalizedModel>
     {
         #region Ctor
 
@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         #endregion
     }
 
-    public partial class StateProvinceLocalizedModel : ILocalizedLocaleModel
+    public partial record StateProvinceLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
         

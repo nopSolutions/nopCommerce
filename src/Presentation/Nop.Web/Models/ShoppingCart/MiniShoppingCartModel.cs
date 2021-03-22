@@ -4,7 +4,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
 {
-    public partial class MiniShoppingCartModel : BaseNopModel
+    public partial record MiniShoppingCartModel : BaseNopModel
     {
         public MiniShoppingCartModel()
         {
@@ -22,7 +22,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         #region Nested Classes
 
-        public partial class ShoppingCartItemModel : BaseNopEntityModel
+        public partial record ShoppingCartItemModel : BaseNopEntityModel
         {
             public ShoppingCartItemModel()
             {

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Plugin.Tax.Avalara.Models.EntityUseCode;
 using Nop.Plugin.Tax.Avalara.Services;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -33,7 +33,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
         #region Fields
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -48,7 +47,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
         #region Ctor
 
         public EntityUseCodeViewComponent(AvalaraTaxManager avalaraTaxManager,
-            ICacheKeyService cacheKeyService,
             ICheckoutAttributeService checkoutAttributeService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -59,7 +57,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
             ITaxPluginManager taxPluginManager)
         {
             _avalaraTaxManager = avalaraTaxManager;
-            _cacheKeyService = cacheKeyService;
             _checkoutAttributeService = checkoutAttributeService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
@@ -79,18 +76,21 @@ namespace Nop.Plugin.Tax.Avalara.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone</param>
         /// <param name="additionalData">Additional parameters</param>
-        /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             //ensure that model is passed
-            if (!(additionalData is BaseNopEntityModel entityModel))
+            if (additionalData is not BaseNopEntityModel entityModel)
                 return Content(string.Empty);
 
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return Content(string.Empty);
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return Content(string.Empty);
 
             //ensure that it's a proper widget zone
@@ -103,8 +103,9 @@ namespace Nop.Plugin.Tax.Avalara.Components
             }
 
             //get Avalara pre-defined entity use codes
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.EntityUseCodesCacheKey);
-            var cachedEntityUseCodes = _staticCacheManager.Get(cacheKey, () => _avalaraTaxManager.GetEntityUseCodes());
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AvalaraTaxDefaults.EntityUseCodesCacheKey);
+            var cachedEntityUseCodes = await _staticCacheManager.GetAsync(cacheKey, async () => await _avalaraTaxManager.GetEntityUseCodesAsync());
+
             var entityUseCodes = cachedEntityUseCodes?.Select(useCode => new SelectListItem
             {
                 Value = useCode.code,
@@ -116,7 +117,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             entityUseCodes.Insert(0, new SelectListItem
             {
                 Value = defaultValue,
-                Text = _localizationService.GetResource("Plugins.Tax.Avalara.Fields.EntityUseCode.None")
+                Text = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Fields.EntityUseCode.None")
             });
 
             //prepare model
@@ -131,30 +132,30 @@ namespace Nop.Plugin.Tax.Avalara.Components
             if (widgetZone.Equals(AdminWidgetZones.CustomerDetailsBlock))
             {
                 model.PrecedingElementId = nameof(CustomerModel.IsTaxExempt);
-                entity = _customerService.GetCustomerById(entityModel.Id);
+                entity = await _customerService.GetCustomerByIdAsync(entityModel.Id);
             }
 
             if (widgetZone.Equals(AdminWidgetZones.CustomerRoleDetailsTop))
             {
                 model.PrecedingElementId = nameof(CustomerRoleModel.TaxExempt);
-                entity = _customerService.GetCustomerRoleById(entityModel.Id);
+                entity = await _customerService.GetCustomerRoleByIdAsync(entityModel.Id);
             }
 
             if (widgetZone.Equals(AdminWidgetZones.ProductDetailsBlock))
             {
                 model.PrecedingElementId = nameof(ProductModel.IsTaxExempt);
-                entity = _productService.GetProductById(entityModel.Id);
+                entity = await _productService.GetProductByIdAsync(entityModel.Id);
             }
 
             if (widgetZone.Equals(AdminWidgetZones.CheckoutAttributeDetailsBlock))
             {
                 model.PrecedingElementId = nameof(CheckoutAttributeModel.IsTaxExempt);
-                entity = _checkoutAttributeService.GetCheckoutAttributeById(entityModel.Id);
+                entity = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(entityModel.Id);
             }
 
             //try to get previously saved entity use code
             model.AvalaraEntityUseCode = entity == null ? defaultValue :
-                _genericAttributeService.GetAttribute<string>(entity, AvalaraTaxDefaults.EntityUseCodeAttribute);
+                await _genericAttributeService.GetAttributeAsync<string>(entity, AvalaraTaxDefaults.EntityUseCodeAttribute);
 
             return View("~/Plugins/Tax.Avalara/Views/EntityUseCode/EntityUseCode.cshtml", model);
         }

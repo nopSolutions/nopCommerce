@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a shipment search model
     /// </summary>
-    public partial class ShipmentSearchModel : BaseSearchModel
+    public partial record ShipmentSearchModel : BaseSearchModel
     {
         #region Ctor
 

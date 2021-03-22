@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Nop.Core.ComponentModel;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
@@ -14,7 +15,8 @@ namespace Nop.Core
         /// <summary>
         /// Executes a task
         /// </summary>
-        public void Execute()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public Task ExecuteAsync()
         {
             //lists
             TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
@@ -31,6 +33,8 @@ namespace Nop.Core
 
             //pickup point
             TypeDescriptor.AddAttributes(typeof(PickupPoint), new TypeConverterAttribute(typeof(PickupPointTypeConverter)));
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

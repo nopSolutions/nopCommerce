@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Tax
     /// <summary>
     /// Represents a tax provider search model
     /// </summary>
-    public partial class TaxProviderSearchModel : BaseSearchModel
+    public partial record TaxProviderSearchModel : BaseSearchModel
     {
     }
 }

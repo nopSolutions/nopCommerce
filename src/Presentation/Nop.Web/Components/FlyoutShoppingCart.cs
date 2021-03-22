@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Security;
 using Nop.Web.Factories;
@@ -21,15 +22,16 @@ namespace Nop.Web.Components
             _shoppingCartSettings = shoppingCartSettings;
         }
 
-        public IViewComponentResult Invoke()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = _shoppingCartModelFactory.PrepareMiniShoppingCartModel();
+            var model = await _shoppingCartModelFactory.PrepareMiniShoppingCartModelAsync();
             return View(model);
         }
     }

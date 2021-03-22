@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents an email account model
     /// </summary>
-    public partial class EmailAccountModel : BaseNopEntityModel
+    public partial record EmailAccountModel : BaseNopEntityModel
     {
         #region Properties
 
@@ -29,7 +29,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Password")]
         [DataType(DataType.Password)]
-        [NoTrim]
         public string Password { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.EnableSsl")]

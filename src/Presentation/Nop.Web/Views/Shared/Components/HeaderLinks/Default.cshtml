@@ -1,4 +1,5 @@
 ﻿@model HeaderLinksModel
+@using Nop.Core.Domain.Customers
 @inject Nop.Core.IWebHelper webHelper
 
 <div class="header-links">
@@ -11,7 +12,7 @@
         }
         else
         {
-            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url) 
+            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
                 ? url.ToString()
                 : webHelper.GetRawUrl(Context.Request);
 

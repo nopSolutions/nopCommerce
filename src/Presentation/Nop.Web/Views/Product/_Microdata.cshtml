@@ -1,10 +1,19 @@
 ﻿@model ProductDetailsModel
-@using System.Globalization
-@using Nop.Core.Domain.Catalog
+
 @inject Nop.Core.IWebHelper webHelper
 
+@{ 
+    var isAssociatedProduct = ViewData.ContainsKey("isAccessoryOrSparePartFor");
+    var productUrl = isAssociatedProduct && ViewData.ContainsKey("parentURL")
+        ? ViewData["parentURL"]
+        : Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
+    var productPrice = Model.AssociatedProducts.Any()
+        ? Model.AssociatedProducts.Min(associatedProduct => associatedProduct.ProductPrice.PriceValue)
+        : Model.ProductPrice.PriceValue;
+}
+
 <!--Microdata-->
-<div @if (ViewData.ContainsKey("isAccessoryOrSparePartFor")) { <text>itemprop="isAccessoryOrSparePartFor"</text> } itemscope itemtype="http://schema.org/Product">
+<div @if (isAssociatedProduct) { <text>itemprop="isAccessoryOrSparePartFor"</text> } itemscope itemtype="http://schema.org/Product">
     <meta itemprop="name" content="@Model.Name"/>
     <meta itemprop="sku" content="@Model.Sku"/>
     <meta itemprop="gtin" content="@Model.Gtin"/>
@@ -15,7 +24,7 @@
     {
         <meta itemprop="brand" content="@manufacturer.Name"/>
     }
-    @if (@Model.ProductReviewOverview.TotalReviews > 0)
+    @if (Model.ProductReviewOverview.TotalReviews > 0)
     {
         <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
             @{
@@ -26,27 +35,16 @@
                 }
                 var ratingValue = ratingPercent / (decimal)20;
             }
-            <meta itemprop="ratingValue" content="@ratingValue.ToString("0.0", new CultureInfo("en-US"))"/>
+            <meta itemprop="ratingValue" content="@ratingValue.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)"/>
             <meta itemprop="reviewCount" content="@Model.ProductReviewOverview.TotalReviews"/>
         </div>
     }    
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-        <meta itemprop="url" content="@Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant()"/>
-        <meta itemprop="price" content="@Model.ProductPrice.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/>
+        <meta itemprop="url" content="@productUrl"/>
+        <meta itemprop="price" content="@productPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/>
         <meta itemprop="priceCurrency" content="@Model.ProductPrice.CurrencyCode"/>
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
-        @if (Model.ManageInventoryMethod == ManageInventoryMethod.ManageStock || Model.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
-        {
-            @if (Model.StockAvailability.Contains(@T("Products.Availability.InStock").ToString(), StringComparison.InvariantCultureIgnoreCase) || 
-                Model.StockAvailability.Contains(@T("Products.Availability.InStockWithQuantity").ToString(), StringComparison.InvariantCultureIgnoreCase))
-            {
-                <meta itemprop="availability" content="http://schema.org/InStock"/>
-            }
-            else
-            {
-                <meta itemprop="availability" content="http://schema.org/OutOfStock"/>
-            }
-        }        
+        <meta itemprop="availability" content="http://schema.org/@(Model.InStock ? "InStock" : "OutOfStock")" />
     </div>
     <div itemprop="review" itemscope itemtype="http://schema.org/Review">
         <meta itemprop="author" content="ALL"/>
@@ -54,8 +52,13 @@
     </div>
     @foreach (var product in Model.AssociatedProducts)
     {
-        var dataAccociatedType = new ViewDataDictionary(ViewData);
-        dataAccociatedType.Add("isAccessoryOrSparePartFor", "true");
-        @await Html.PartialAsync("_Microdata", product, dataAccociatedType)        
+        var viewDataDictionary = new ViewDataDictionary(ViewData);
+        viewDataDictionary.Add("isAccessoryOrSparePartFor", "true");
+        if (!product.VisibleIndividually)
+        {
+            viewDataDictionary.Add("parentURL", productUrl);
+        }
+        
+        @await Html.PartialAsync("_Microdata", product, viewDataDictionary)        
     }
 </div>

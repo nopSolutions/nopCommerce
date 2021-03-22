@@ -87,6 +87,11 @@
         /// </summary>
         public const string ImageTiff = "image/tiff";
 
+        /// <summary>
+        /// Type
+        /// </summary>
+        public const string ImageWebp = "image/webp";
+
         #endregion
 
         #region text/*

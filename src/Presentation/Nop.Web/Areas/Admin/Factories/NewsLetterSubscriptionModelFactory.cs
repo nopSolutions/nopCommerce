@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Helpers;
@@ -54,33 +55,36 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare newsletter subscription search model
         /// </summary>
         /// <param name="searchModel">Newsletter subscription search model</param>
-        /// <returns>Newsletter subscription search model</returns>
-        public virtual NewsletterSubscriptionSearchModel PrepareNewsletterSubscriptionSearchModel(NewsletterSubscriptionSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsletter subscription search model
+        /// </returns>
+        public virtual async Task<NewsletterSubscriptionSearchModel> PrepareNewsletterSubscriptionSearchModelAsync(NewsletterSubscriptionSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available customer roles
-            _baseAdminModelFactory.PrepareCustomerRoles(searchModel.AvailableCustomerRoles);
+            await _baseAdminModelFactory.PrepareCustomerRolesAsync(searchModel.AvailableCustomerRoles);
 
             //prepare "activated" filter (0 - all; 1 - activated only; 2 - deactivated only)
             searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "0",
-                Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
             });
             searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "1",
-                Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly")
             });
             searchModel.ActiveList.Add(new SelectListItem
             {
                 Value = "2",
-                Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
@@ -95,8 +99,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged newsletter subscription list model
         /// </summary>
         /// <param name="searchModel">Newsletter subscription search model</param>
-        /// <returns>Newsletter subscription list model</returns>
-        public virtual NewsletterSubscriptionListModel PrepareNewsletterSubscriptionListModel(NewsletterSubscriptionSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsletter subscription list model
+        /// </returns>
+        public virtual async Task<NewsletterSubscriptionListModel> PrepareNewsletterSubscriptionListModelAsync(NewsletterSubscriptionSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -104,12 +111,12 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter newsletter subscriptions
             var isActivatedOnly = searchModel.ActiveId == 0 ? null : searchModel.ActiveId == 1 ? true : (bool?)false;
             var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
 
             //get newsletter subscriptions
-            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(email: searchModel.SearchEmail,
+            var newsletterSubscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(email: searchModel.SearchEmail,
                 customerRoleId: searchModel.CustomerRoleId,
                 storeId: searchModel.StoreId,
                 isActive: isActivatedOnly,
@@ -118,18 +125,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new NewsletterSubscriptionListModel().PrepareToGrid(searchModel, newsletterSubscriptions, () =>
+            var model = await new NewsletterSubscriptionListModel().PrepareToGridAsync(searchModel, newsletterSubscriptions, () =>
             {
-                return newsletterSubscriptions.Select(subscription =>
+                return newsletterSubscriptions.SelectAwait(async subscription =>
                 {
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
 
                     //convert dates to the user time
-                    subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc).ToString();
+                    subscriptionModel.CreatedOn = (await _dateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc)).ToString();
 
                     //fill in additional values (not existing in the entity)
-                    subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Deleted";
+                    subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Deleted";
 
                     return subscriptionModel;
                 });

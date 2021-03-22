@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class ForumBreadcrumbModel : BaseNopModel
+    public partial record ForumBreadcrumbModel : BaseNopModel
     {
         public int ForumGroupId { get; set; }
         public string ForumGroupName { get; set; }

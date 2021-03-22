@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +13,10 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
-using Nop.Services.Caching;
 using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
@@ -29,18 +30,17 @@ namespace Nop.Web.Framework.UI
 
         private static readonly object _lock = new object();
 
-        private readonly BundleFileProcessor _processor;
-        private readonly CachingSettings _cachingSettings;
+        private readonly AppSettings _appSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly INopFileProvider _fileProvider;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly SeoSettings _seoSettings;
 
+        private readonly BundleFileProcessor _processor;
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
@@ -56,31 +56,28 @@ namespace Nop.Web.Framework.UI
         #endregion
 
         #region Ctor
-        
-        public PageHeadBuilder(CachingSettings cachingSettings,
+
+        public PageHeadBuilder(AppSettings appSettings,
             CommonSettings commonSettings,
             IActionContextAccessor actionContextAccessor,
-            ICacheKeyService cacheKeyService,
-            IWebHostEnvironment webHostEnvironment,
             INopFileProvider fileProvider,
             IStaticCacheManager staticCacheManager,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
-            SeoSettings seoSettings         
-            )
+            IWebHostEnvironment webHostEnvironment,
+            SeoSettings seoSettings)
         {
-            _processor = new BundleFileProcessor();
-            _cachingSettings = cachingSettings;
+            _appSettings = appSettings;
             _commonSettings = commonSettings;
             _actionContextAccessor = actionContextAccessor;
-            _cacheKeyService = cacheKeyService;
-            _webHostEnvironment = webHostEnvironment;
             _fileProvider = fileProvider;
-            _staticCacheManager = staticCacheManager;            
+            _staticCacheManager = staticCacheManager;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
+            _webHostEnvironment = webHostEnvironment;
             _seoSettings = seoSettings;
 
+            _processor = new BundleFileProcessor();
             _titleParts = new List<string>();
             _metaDescriptionParts = new List<string>();
             _metaKeywordParts = new List<string>();
@@ -122,7 +119,7 @@ namespace Nop.Web.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = _urlRecordService.GetSeName(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            hash = _urlRecordService.GetSeNameAsync(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls).Result;
 
             return hash;
         }
@@ -364,7 +361,7 @@ namespace Nop.Web.Framework.UI
                     foreach (var item in partsToBundle)
                     {
                         new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out var path);
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory
@@ -388,9 +385,10 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.js-{outputFileName}")
                     {
-                        CacheTime = _cachingSettings.BundledFilesCacheTime
+                        CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => true);
+
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
 
                     if (shouldRebuild)
                     {
@@ -400,10 +398,10 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.Set(cacheKey, false);
+                        _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render
@@ -595,7 +593,7 @@ namespace Nop.Web.Framework.UI
                     foreach (var item in partsToBundle)
                     {
                         new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out var path);
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists 
@@ -617,9 +615,10 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.css-{outputFileName}")
                     {
-                        CacheTime = _cachingSettings.BundledFilesCacheTime
+                        CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => true);
+
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
 
                     if (shouldRebuild)
                     {
@@ -629,10 +628,10 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.Set(cacheKey, false);
+                        _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render

@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public partial class CurrencyModel : BaseNopEntityModel
+    public partial record CurrencyModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

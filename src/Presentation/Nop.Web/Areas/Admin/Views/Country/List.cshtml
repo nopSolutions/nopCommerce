@@ -7,40 +7,44 @@
     Html.SetActiveMenuItemSystemName("Countries");
 }
 
+
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Countries")
     </h1>
-    <div class="pull-right">
-        <a asp-action="Create" class="btn bg-blue">
-            <i class="fa fa-plus-square"></i>
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         <button type="button" id="publish-selected" class="btn bg-teal">
-            <i class="fa fa-check-square-o"></i>
+            <i class="fas fa-check-square"></i>
             @T("Admin.Configuration.Countries.PublishSelected")
         </button>
-        <button type="button" id="unpublish-selected" class="btn bg-navy">
-            <i class="fa fa-minus-square-o"></i>
+        <button type="button" id="unpublish-selected" class="btn btn-secondary">
+            <i class="fas fa-minus-square"></i>
             @T("Admin.Configuration.Countries.UnpublishSelected")
         </button>
-        <a asp-action="ExportCsv" class="btn bg-green">
-            <i class="fa fa-download"></i>
+        <a asp-action="ExportCsv" class="btn btn-success">
+            <i class="fas fa-download"></i>
             @T("Admin.Configuration.Countries.ExportToCsv")
         </a>
         <button type="submit" name="importcsv" class="btn bg-olive" data-toggle="modal" data-target="#importcsv-window">
-            <i class="fa fa-upload"></i>
+            <i class="fas fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CountriesStates", Docs.CountriesStates + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "countries-grid",
@@ -125,8 +129,8 @@
                             }
                         }
                     })
-                    
-                    
+
+
                     <script>
                         $(document).ready(function () {
                             //"publish selected" button
@@ -150,7 +154,7 @@
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         $('#publishSelectedFailed-info').text(errorThrown);
                                         $("#publishSelectedFailed").click();
-                                    }                                    
+                                    }
                                 });
                                 return false;
                             });
@@ -187,6 +191,7 @@
         </div>
     </div>
 </div>
+</section>
 <nop-alert asp-alert-id="publishSelectedFailed" />
 <nop-alert asp-alert-id="unpublishSelectedFailed" />
 
@@ -195,8 +200,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
@@ -206,13 +211,13 @@
                                 <em>@T("Admin.Configuration.Countries.ImportTip")</em>
                             </li>
                             <li>
-                                <em><a href="https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
+                                <em><a href="@(OfficialSite.StatesPackage + Utm.OnAdminCountries)" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
                             </li>
                         </ul>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
-                                    <label class="control-label">
+                                    <label class="col-form-label">
                                         @T("Admin.Common.CsvFile")
                                     </label>
                                 </div>

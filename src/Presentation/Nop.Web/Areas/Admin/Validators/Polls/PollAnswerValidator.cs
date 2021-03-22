@@ -13,11 +13,11 @@ namespace Nop.Web.Areas.Admin.Validators.Polls
         {
             //if validation without this set rule is applied, in this case nothing will be validated
             //it's used to prevent auto-validation of child models
-            RuleSet(NopValidatorDefaults.ValidationRuleSet, () =>
+            RuleSet(NopValidationDefaults.ValidationRuleSet, () =>
             {
                 RuleFor(model => model.Name)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.ContentManagement.Polls.Answers.Fields.Name.Required"));
+                    .WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Answers.Fields.Name.Required"));
 
                 SetDatabaseValidationRules<PollAnswer>(dataProvider);
             });

@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public record ConfigurationModel : BaseNopModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
         

@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
     /// <summary>
     /// Represents a blog comment model
     /// </summary>
-    public partial class BlogCommentModel : BaseNopEntityModel
+    public partial record BlogCommentModel : BaseNopEntityModel
     {
         #region Properties
 

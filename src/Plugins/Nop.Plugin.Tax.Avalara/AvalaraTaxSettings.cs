@@ -47,5 +47,15 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets or sets a value indicating whether to enable logging of all requests
         /// </summary>
         public bool EnableLogging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to get the tax rate by address only. 
+        /// </summary>
+        public bool GetTaxRateByAddressOnly { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tax rate (by address) cache time in minutes
+        /// </summary>
+        public int TaxRateByAddressCacheTime { get; set; }
     }
 }

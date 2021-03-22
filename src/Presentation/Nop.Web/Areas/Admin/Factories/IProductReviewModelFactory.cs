@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -14,15 +15,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare product review search model
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
-        /// <returns>Product review search model</returns>
-        ProductReviewSearchModel PrepareProductReviewSearchModel(ProductReviewSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review search model
+        /// </returns>
+        Task<ProductReviewSearchModel> PrepareProductReviewSearchModelAsync(ProductReviewSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product review list model
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
-        /// <returns>Product review list model</returns>
-        ProductReviewListModel PrepareProductReviewListModel(ProductReviewSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review list model
+        /// </returns>
+        Task<ProductReviewListModel> PrepareProductReviewListModelAsync(ProductReviewSearchModel searchModel);
 
         /// <summary>
         /// Prepare product review model
@@ -30,8 +37,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Product review model</param>
         /// <param name="productReview">Product review</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Product review model</returns>
-        ProductReviewModel PrepareProductReviewModel(ProductReviewModel model,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review model
+        /// </returns>
+        Task<ProductReviewModel> PrepareProductReviewModelAsync(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties = false);
 
         #endregion
@@ -43,8 +53,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product review and review type mapping search model</param>
         /// <param name="productReview">Product review</param>
-        /// <returns>Product review and review type mapping list model</returns>
-        ProductReviewReviewTypeMappingListModel PrepareProductReviewReviewTypeMappingListModel(ProductReviewReviewTypeMappingSearchModel searchModel,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review and review type mapping list model
+        /// </returns>
+        Task<ProductReviewReviewTypeMappingListModel> PrepareProductReviewReviewTypeMappingListModelAsync(ProductReviewReviewTypeMappingSearchModel searchModel,
             ProductReview productReview);
 
         #endregion

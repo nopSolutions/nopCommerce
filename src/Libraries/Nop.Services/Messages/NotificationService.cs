@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
@@ -69,12 +70,13 @@ namespace Nop.Services.Messages
         /// Log exception
         /// </summary>
         /// <param name="exception">Exception</param>
-        protected virtual void LogException(Exception exception)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task LogExceptionAsync(Exception exception)
         {
             if (exception == null)
                 return;
-            var customer = _workContext.CurrentCustomer;
-            _logger.Error(exception.Message, exception, customer);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            await _logger.ErrorAsync(exception.Message, exception, customer);
         }
 
         #endregion
@@ -127,13 +129,14 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="exception">Exception</param>
         /// <param name="logException">A value indicating whether exception should be logged</param>
-        public virtual void ErrorNotification(Exception exception, bool logException = true)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ErrorNotificationAsync(Exception exception, bool logException = true)
         {
             if (exception == null)
                 return;
 
             if (logException)
-                LogException(exception);
+                await LogExceptionAsync(exception);
 
             ErrorNotification(exception.Message);
         }

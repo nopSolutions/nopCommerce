@@ -1,7 +1,16 @@
-@model GeneralCommonSettingsModel
+﻿@model GeneralCommonSettingsModel
+@inject Nop.Services.Stores.IStoreService storeService
+@using Nop.Web.Framework.Models.AdminAreaTour
 
-<div class="panel-body">
-    <div class="form-group">
+@{
+    //tour step
+    ViewBag.TourStep = TourStep.GeneralSettings;
+}
+
+@await Html.PartialAsync("_AdminTour")
+
+<div class="card-body">
+    <div class="form-group row" id="theme-area">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.DefaultStoreTheme_OverrideForStore" asp-parent-container="theme-selection-block" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.DefaultStoreTheme" />
@@ -10,8 +19,17 @@
             <div id="theme-selection-block" class="theme-selection-block clearfix">
                 @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
                 {
-                    <div class="checkbox">
-                        <label>
+                    @*<div class="checkbox">
+                            <label>
+                                <span>
+                                    <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.SystemName" @if (theme.SystemName.Equals(Model.StoreInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)) { <text> checked="checked" </text> }>
+                                    @theme.FriendlyName
+                                </span>
+                                <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText">
+                            </label>
+                        </div>*@
+                    <div class="checkbox form-check">
+                        <label class="form-check-label">
                             <span>
                                 <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.SystemName" @if (theme.SystemName.Equals(Model.StoreInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)) { <text> checked="checked" </text> }>
                                 @theme.FriendlyName
@@ -22,10 +40,10 @@
                 }
             </div>
             <span asp-validation-for="StoreInformationSettings.DefaultStoreTheme"></span>
-            <p><em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore")</em></p>
+            <p><em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore", OfficialSite.Themes + Utm.OnAdminThemes)</em></p>
         </div>
     </div>
-    <div class="form-group" @(Model.StoreInformationSettings.AvailableStoreThemes.Count == 1 ? Html.Raw("style=\"display:none\"") : null)>
+    <div class="form-group row" @(Model.StoreInformationSettings.AvailableStoreThemes.Count == 1 ? Html.Raw("style=\"display:none\"") : null)>
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore" asp-input="StoreInformationSettings.AllowCustomerToSelectTheme" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" />
@@ -35,7 +53,7 @@
             <span asp-validation-for="StoreInformationSettings.AllowCustomerToSelectTheme"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row" id="logo-area">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.LogoPictureId_OverrideForStore" asp-parent-container="logo-block" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.LogoPictureId" />
@@ -45,7 +63,7 @@
             <span asp-validation-for="StoreInformationSettings.LogoPictureId"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore" asp-input="StoreInformationSettings.DisplayEuCookieLawWarning" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" />
@@ -55,7 +73,7 @@
             <span asp-validation-for="StoreInformationSettings.DisplayEuCookieLawWarning"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.StoreClosed_OverrideForStore" asp-input="StoreInformationSettings.StoreClosed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.StoreClosed" />
@@ -65,7 +83,7 @@
             <span asp-validation-for="StoreInformationSettings.StoreClosed"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore" asp-input="StoreInformationSettings.SubjectFieldOnContactUsForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" />
@@ -75,7 +93,7 @@
             <span asp-validation-for="StoreInformationSettings.SubjectFieldOnContactUsForm"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore" asp-input="StoreInformationSettings.UseSystemEmailForContactUsForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" />
@@ -85,7 +103,7 @@
             <span asp-validation-for="StoreInformationSettings.UseSystemEmailForContactUsForm"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore" asp-input="StoreInformationSettings.PopupForTermsOfServiceLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks" />

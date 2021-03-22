@@ -9,13 +9,13 @@
     taxTypes.Add(new SelectListItem
     {
         Text = T("Tax.Inclusive").Text,
-        Value = Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax), returnUrl }, webHelper.CurrentRequestProtocol),
+        Value = Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax), returnUrl }, webHelper.GetCurrentRequestProtocol()),
         Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
     });
     taxTypes.Add(new SelectListItem
     {
         Text = T("Tax.Exclusive").Text,
-        Value = Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax), returnUrl }, webHelper.CurrentRequestProtocol),
+        Value = Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax), returnUrl }, webHelper.GetCurrentRequestProtocol()),
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
 }

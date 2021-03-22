@@ -3,7 +3,7 @@
     /// <summary>
     /// Alert model
     /// </summary>
-    public class ActionAlertModel : BaseNopEntityModel
+    public record ActionAlertModel : BaseNopEntityModel
     {
         /// <summary>
         /// Window ID

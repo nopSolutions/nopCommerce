@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a GDPR log search model
     /// </summary>
-    public partial class GdprLogSearchModel : BaseSearchModel
+    public partial record GdprLogSearchModel : BaseSearchModel
     {
         #region Ctor
 

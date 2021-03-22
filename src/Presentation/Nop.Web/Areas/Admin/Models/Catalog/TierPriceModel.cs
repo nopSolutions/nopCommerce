@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a tier price model
     /// </summary>
-    public partial class TierPriceModel : BaseNopEntityModel
+    public partial record TierPriceModel : BaseNopEntityModel
     {
         #region Ctor
 

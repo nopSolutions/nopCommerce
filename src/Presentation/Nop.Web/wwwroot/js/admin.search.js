@@ -43,7 +43,10 @@ Admin.Search = (function () {
                 var rate = item.rate || 0;
                 var missKeyword = false;
 
-                if (substrRegex.test(item.title)) {
+                if (item.link == "#") {
+                  missKeyword = true;
+                }
+                else if (substrRegex.test(item.title)) {
                     rate += 10;
                 }
                 else if (item.node && substrRegex.test(item.node)) {

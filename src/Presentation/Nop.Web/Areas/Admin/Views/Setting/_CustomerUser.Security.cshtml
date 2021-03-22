@@ -2,8 +2,8 @@
 @using Nop.Services
 @model CustomerUserSettingsModel
 
-<div class="panel-body">
-        <div class="form-group">
+<div class="card-body">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PasswordMinLength" />
             </div>
@@ -12,7 +12,7 @@
                 <span asp-validation-for="CustomerSettings.PasswordMinLength"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PasswordRequireLowercase" />
             </div>
@@ -21,7 +21,7 @@
                 <span asp-validation-for="CustomerSettings.PasswordRequireLowercase"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PasswordRequireUppercase" />
             </div>
@@ -30,7 +30,7 @@
                 <span asp-validation-for="CustomerSettings.PasswordRequireUppercase"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PasswordRequireNonAlphanumeric" />
             </div>
@@ -39,7 +39,7 @@
                 <span asp-validation-for="CustomerSettings.PasswordRequireNonAlphanumeric"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PasswordRequireDigit" />
             </div>
@@ -48,7 +48,7 @@
                 <span asp-validation-for="CustomerSettings.PasswordRequireDigit"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.UnduplicatedPasswordsNumber" />
             </div>
@@ -57,16 +57,16 @@
                 <span asp-validation-for="CustomerSettings.UnduplicatedPasswordsNumber"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.DefaultPasswordFormat" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="@(((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())" />
+                <nop-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="@await (((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectListAsync())" />
                 <span asp-validation-for="CustomerSettings.DefaultPasswordFormat"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PasswordLifetime" />
             </div>
@@ -75,7 +75,7 @@
                 <span asp-validation-for="CustomerSettings.PasswordLifetime"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PasswordRecoveryLinkDaysValid" />
             </div>
@@ -84,7 +84,7 @@
                 <span asp-validation-for="CustomerSettings.PasswordRecoveryLinkDaysValid"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.FailedPasswordAllowedAttempts" />
             </div>
@@ -93,7 +93,7 @@
                 <span asp-validation-for="CustomerSettings.FailedPasswordAllowedAttempts"></span>
             </div>
         </div>
-        <div class="form-group" id="pnlFailedPasswordLockoutMinutes">
+        <div class="form-group row" id="pnlFailedPasswordLockoutMinutes">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.FailedPasswordLockoutMinutes" />
             </div>
@@ -102,13 +102,22 @@
                 <span asp-validation-for="CustomerSettings.FailedPasswordLockoutMinutes"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.EnteringEmailTwice" />
             </div>
             <div class="col-md-9">
                 <nop-editor asp-for="CustomerSettings.EnteringEmailTwice" />
                 <span asp-validation-for="CustomerSettings.EnteringEmailTwice"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="MultiFactorAuthenticationSettings.ForceMultifactorAuthentication" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MultiFactorAuthenticationSettings.ForceMultifactorAuthentication" />
+                <span asp-validation-for="MultiFactorAuthenticationSettings.ForceMultifactorAuthentication"></span>
             </div>
         </div>
     </div>

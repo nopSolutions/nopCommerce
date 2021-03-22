@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class LoginModel : BaseNopModel
+    public partial record LoginModel : BaseNopModel
     {
         public bool CheckoutAsGuest { get; set; }
 
@@ -21,7 +21,6 @@ namespace Nop.Web.Models.Customer
         public string Username { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [NopResourceDisplayName("Account.Login.Fields.Password")]
         public string Password { get; set; }
 

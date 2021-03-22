@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Models
     /// <summary>
     /// Represents base nopCommerce model
     /// </summary>
-    public partial class BaseNopModel
+    public partial record BaseNopModel
     {
         #region Ctor
 

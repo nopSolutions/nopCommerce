@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product model to associate to the product attribute value
     /// </summary>
-    public partial class AssociateProductToAttributeValueModel : BaseNopModel
+    public partial record AssociateProductToAttributeValueModel : BaseNopModel
     {
         #region Properties
         

@@ -13,59 +13,61 @@
     </script>
 }
 
-<div class="content">
-    <div class="form-horizontal">
-        <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeValueDetailsTop, additionalData = Model })
-            <div class="panel panel-default panel-popup">
-                <div class="panel-body">
-                    @(Html.LocalizedEditor<CustomerAttributeValueModel, CustomerAttributeValueLocalizedModel>("customerattributevalue-localized",
-                    @<div>
-                        <div class="form-group">
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeValueDetailsTop, additionalData = Model })
+                <div class="card card-default card-popup">
+                    <div class="card-body">
+                        @(await Html.LocalizedEditorAsync<CustomerAttributeValueModel, CustomerAttributeValueLocalizedModel>("customerattributevalue-localized",
+                                @<div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <nop-label asp-for="@Model.Locales[item].Name"/>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <nop-editor asp-for="@Model.Locales[item].Name"/>
+                                            <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId"/>
+                                </div>
+      ,
+                                                @<div>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-3">
+                                                            <nop-label asp-for="Name"/>
+                                                        </div>
+                                                        <div class="col-sm-9">
+                                                            <nop-editor asp-for="Name" asp-required="true"/>
+                                                            <span asp-validation-for="Name"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                      ))
+                        <div class="form-group row">
                             <div class="col-sm-3">
-                                <nop-label asp-for="@Model.Locales[item].Name"/>
+                                <nop-label asp-for="IsPreSelected"/>
                             </div>
                             <div class="col-sm-9">
-                                <nop-editor asp-for="@Model.Locales[item].Name"/>
-                                <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                <nop-editor asp-for="IsPreSelected"/>
+                                <span asp-validation-for="IsPreSelected"></span>
                             </div>
                         </div>
-                         <input type="hidden" asp-for="@Model.Locales[item].LanguageId"/>
-                    </div>
-    ,
-                    @<div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-sm-3">
-                                <nop-label asp-for="Name"/>
+                                <nop-label asp-for="DisplayOrder"/>
                             </div>
                             <div class="col-sm-9">
-                                <nop-editor asp-for="Name" asp-required="true"/>
-                                <span asp-validation-for="Name"></span>
+                                <nop-editor asp-for="DisplayOrder"/>
+                                <span asp-validation-for="DisplayOrder"></span>
                             </div>
-                        </div>
-                    </div>
-    ))
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            <nop-label asp-for="IsPreSelected"/>
-                        </div>
-                        <div class="col-sm-9">
-                            <nop-editor asp-for="IsPreSelected"/>
-                            <span asp-validation-for="IsPreSelected"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            <nop-label asp-for="DisplayOrder"/>
-                        </div>
-                        <div class="col-sm-9">
-                            <nop-editor asp-for="DisplayOrder"/>
-                            <span asp-validation-for="DisplayOrder"></span>
                         </div>
                     </div>
                 </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeValueDetailsBottom, additionalData = Model })
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeValueDetailsBottom, additionalData = Model })
         </div>
     </div>
-</div>
+</section>

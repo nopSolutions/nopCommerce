@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
 {
-    public class ConfigurationModel : BaseSearchModel
+    public record ConfigurationModel : BaseSearchModel
     {
         public ConfigurationModel()
         {
@@ -29,6 +29,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
         public decimal AddPercentage { get; set; }
 
         public bool CountryStateZipEnabled { get; set; }
+
+        public string TaxCategoriesCanNotLoadedError { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }

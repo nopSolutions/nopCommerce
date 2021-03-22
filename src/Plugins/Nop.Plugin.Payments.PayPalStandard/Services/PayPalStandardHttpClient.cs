@@ -26,7 +26,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Services
         {
             //configure client
             client.Timeout = TimeSpan.FromSeconds(20);
-            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
+            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
 
             _httpClient = client;
             _payPalStandardPaymentSettings = payPalStandardPaymentSettings;
@@ -40,7 +40,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Services
         /// Gets PDT details
         /// </summary>
         /// <param name="tx">TX</param>
-        /// <returns>The asynchronous task whose result contains the PDT details</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the PDT details
+        /// </returns>
         public async Task<string> GetPdtDetailsAsync(string tx)
         {
             //get response
@@ -58,7 +61,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Services
         /// Verifies IPN
         /// </summary>
         /// <param name="formString">Form string</param>
-        /// <returns>The asynchronous task whose result contains the IPN verification details</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the IPN verification details
+        /// </returns>
         public async Task<string> VerifyIpnAsync(string formString)
         {
             //get response

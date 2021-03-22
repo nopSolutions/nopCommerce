@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CheckGiftCardBalanceModel : BaseNopModel
+    public partial record CheckGiftCardBalanceModel : BaseNopModel
     {
         public string Result { get; set; }
 

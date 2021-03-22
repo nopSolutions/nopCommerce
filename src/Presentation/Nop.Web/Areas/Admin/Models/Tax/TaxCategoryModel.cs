@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Tax
     /// <summary>
     /// Represents a tax category model
     /// </summary>
-    public partial class TaxCategoryModel : BaseNopEntityModel
+    public partial record TaxCategoryModel : BaseNopEntityModel
     {
         #region Properties
 

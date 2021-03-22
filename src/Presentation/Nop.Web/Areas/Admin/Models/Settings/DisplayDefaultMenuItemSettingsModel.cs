@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a display default menu item settings model
     /// </summary>
-    public partial class DisplayDefaultMenuItemSettingsModel : BaseNopModel, ISettingsModel
+    public partial record DisplayDefaultMenuItemSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

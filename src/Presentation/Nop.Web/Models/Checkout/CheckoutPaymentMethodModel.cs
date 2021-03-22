@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Checkout
 {
-    public partial class CheckoutPaymentMethodModel : BaseNopModel
+    public partial record CheckoutPaymentMethodModel : BaseNopModel
     {
         public CheckoutPaymentMethodModel()
         {
@@ -20,7 +20,7 @@ namespace Nop.Web.Models.Checkout
 
         #region Nested classes
 
-        public partial class PaymentMethodModel : BaseNopModel
+        public partial record PaymentMethodModel : BaseNopModel
         {
             public string PaymentMethodSystemName { get; set; }
             public string Name { get; set; }

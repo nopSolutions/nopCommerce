@@ -7,12 +7,12 @@
     <div class="currency-selector">
         @{
             var returnUrl = webHelper.GetRawUrl(Context.Request);
-            var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem
+            var currencies = await Model.AvailableCurrencies.SelectAwait(async x => new SelectListItem
             {
                 Text = x.Name,
-                Value = Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id, returnUrl }, webHelper.CurrentRequestProtocol),
+                Value = Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id, returnUrl }, webHelper.GetCurrentRequestProtocol()),
                 Selected = x.Id.Equals(Model.CurrentCurrencyId)
-            });
+            }).ToListAsync();
             <select id="customerCurrency" name="customerCurrency" asp-items="@currencies" onchange="setLocation(this.value);" aria-label="@T("Currency.Selector.Label")"></select>
         }
     </div>

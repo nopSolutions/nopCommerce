@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -18,53 +19,46 @@ namespace Nop.Core
         /// XML Encode
         /// </summary>
         /// <param name="str">String</param>
-        /// <returns>Encoded string</returns>
-        public static string XmlEncode(string str)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the encoded string
+        /// </returns>
+        public static async Task<string> XmlEncodeAsync(string str)
         {
             if (str == null)
                 return null;
             str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
-            return XmlEncodeAsIs(str);
+            
+            return await XmlEncodeAsIsAsync(str);
         }
 
         /// <summary>
         /// XML Encode as is
         /// </summary>
         /// <param name="str">String</param>
-        /// <returns>Encoded string</returns>
-        public static string XmlEncodeAsIs(string str)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the encoded string
+        /// </returns>
+        public static async Task<string> XmlEncodeAsIsAsync(string str)
         {
             if (str == null)
                 return null;
-            using var sw = new StringWriter();
-            using var xwr = new XmlTextWriter(sw);
-            xwr.WriteString(str);
+
+            var settings = new XmlWriterSettings
+            {
+                Async = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
+
+            await using var sw = new StringWriter();
+            await using var xwr = XmlWriter.Create(sw, settings);
+            await xwr.WriteStringAsync(str);
+            await xwr.FlushAsync();
+
             return sw.ToString();
         }
-
-        /// <summary>
-        /// Encodes an attribute
-        /// </summary>
-        /// <param name="str">Attribute</param>
-        /// <returns>Encoded attribute</returns>
-        public static string XmlEncodeAttribute(string str)
-        {
-            if (str == null)
-                return null;
-            str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
-            return XmlEncodeAttributeAsIs(str);
-        }
-
-        /// <summary>
-        /// Encodes an attribute as is
-        /// </summary>
-        /// <param name="str">Attribute</param>
-        /// <returns>Encoded attribute</returns>
-        public static string XmlEncodeAttributeAsIs(string str)
-        {
-            return XmlEncodeAsIs(str).Replace("\"", "&quot;");
-        }
-
+        
         /// <summary>
         /// Decodes an attribute
         /// </summary>
@@ -73,34 +67,28 @@ namespace Nop.Core
         public static string XmlDecode(string str)
         {
             var sb = new StringBuilder(str);
-            return sb.Replace("&quot;", "\"").Replace("&apos;", "'").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&").ToString();
+            
+            var rez = sb.Replace("&quot;", "\"").Replace("&apos;", "'").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&").ToString();
+
+            return rez;
         }
 
         /// <summary>
         /// Serializes a datetime
         /// </summary>
         /// <param name="dateTime">Datetime</param>
-        /// <returns>Serialized datetime</returns>
-        public static string SerializeDateTime(DateTime dateTime)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the serialized datetime
+        /// </returns>
+        public static async Task<string> SerializeDateTimeAsync(DateTime dateTime)
         {
             var xmlS = new XmlSerializer(typeof(DateTime));
             var sb = new StringBuilder();
-            using var sw = new StringWriter(sb);
+            await using var sw = new StringWriter(sb);
             xmlS.Serialize(sw, dateTime);
-            return sb.ToString();
-        }
 
-        /// <summary>
-        /// Deserializes a datetime
-        /// </summary>
-        /// <param name="dateTime">Datetime</param>
-        /// <returns>Deserialized datetime</returns>
-        public static DateTime DeserializeDateTime(string dateTime)
-        {
-            var xmlS = new XmlSerializer(typeof(DateTime));
-            using var sr = new StringReader(dateTime);
-            var test = xmlS.Deserialize(sr);
-            return (DateTime)test;
+            return sb.ToString();
         }
 
         #endregion

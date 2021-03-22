@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a country model
     /// </summary>
-    public partial class CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>, IStoreMappingSupportedModel
+    public partial record CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -66,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         #endregion
     }
 
-    public partial class CountryLocalizedModel : ILocalizedLocaleModel
+    public partial record CountryLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

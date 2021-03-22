@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a setting search model
     /// </summary>
-    public partial class SettingSearchModel : BaseSearchModel
+    public partial record SettingSearchModel : BaseSearchModel
     {
         #region Ctor
 

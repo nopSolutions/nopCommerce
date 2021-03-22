@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a manufacturer model
     /// </summary>
-    public partial class ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
+    public partial record ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
         ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -75,8 +75,17 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PageSizeOptions")]
         public string PageSizeOptions { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceRanges")]
-        public string PriceRanges { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering")]
+        public bool PriceRangeFiltering { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceFrom")]
+        public decimal PriceFrom { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceTo")]
+        public decimal PriceTo { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange")]
+        public bool ManuallyPriceRange { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Published")]
         public bool Published { get; set; }
@@ -106,10 +115,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public ManufacturerProductSearchModel ManufacturerProductSearchModel { get; set; }
 
+        public string PrimaryStoreCurrencyCode { get; set; }
+
         #endregion
     }
 
-    public partial class ManufacturerLocalizedModel : ILocalizedLocaleModel
+    public partial record ManufacturerLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

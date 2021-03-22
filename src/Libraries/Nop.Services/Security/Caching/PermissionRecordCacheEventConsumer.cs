@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Security;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Security.Caching
 {
@@ -12,11 +13,10 @@ namespace Nop.Services.Security.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(PermissionRecord entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(PermissionRecord entity)
         {
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopSecurityDefaults.PermissionsAllowedPrefixCacheKey, entity.SystemName);
-            RemoveByPrefix(prefix);
-            RemoveByPrefix(NopSecurityDefaults.PermissionsAllByCustomerRoleIdPrefixCacheKey);
+            await RemoveByPrefixAsync(NopSecurityDefaults.PermissionAllowedPrefix, entity.SystemName);
         }
     }
 }

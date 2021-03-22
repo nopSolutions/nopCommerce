@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class SearchModel : BaseNopModel
+    public partial record SearchModel : BaseNopModel
     {
         public SearchModel()
         {

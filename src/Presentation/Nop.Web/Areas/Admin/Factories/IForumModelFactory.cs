@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Forums;
 using Nop.Web.Areas.Admin.Models.Forums;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -12,15 +13,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare forum group search model
         /// </summary>
         /// <param name="searchModel">Forum group search model</param>
-        /// <returns>Forum group search model</returns>
-        ForumGroupSearchModel PrepareForumGroupSearchModel(ForumGroupSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum group search model
+        /// </returns>
+        Task<ForumGroupSearchModel> PrepareForumGroupSearchModelAsync(ForumGroupSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged forum group list model
         /// </summary>
         /// <param name="searchModel">Forum group search model</param>
-        /// <returns>Forum group list model</returns>
-        ForumGroupListModel PrepareForumGroupListModel(ForumGroupSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum group list model
+        /// </returns>
+        Task<ForumGroupListModel> PrepareForumGroupListModelAsync(ForumGroupSearchModel searchModel);
 
         /// <summary>
         /// Prepare forum group model
@@ -28,16 +35,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Forum group model</param>
         /// <param name="forumGroup">Forum group</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Forum group model</returns>
-        ForumGroupModel PrepareForumGroupModel(ForumGroupModel model, ForumGroup forumGroup, bool excludeProperties = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum group model
+        /// </returns>
+        Task<ForumGroupModel> PrepareForumGroupModelAsync(ForumGroupModel model, ForumGroup forumGroup, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged forum list model
         /// </summary>
         /// <param name="searchModel">Forum search model</param>
         /// <param name="forumGroup">Forum group</param>
-        /// <returns>Forum list model</returns>
-        ForumListModel PrepareForumListModel(ForumSearchModel searchModel, ForumGroup forumGroup);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum list model
+        /// </returns>
+        Task<ForumListModel> PrepareForumListModelAsync(ForumSearchModel searchModel, ForumGroup forumGroup);
 
         /// <summary>
         /// Prepare forum model
@@ -45,7 +58,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Forum model</param>
         /// <param name="forum">Forum</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Forum model</returns>
-        ForumModel PrepareForumModel(ForumModel model, Forum forum, bool excludeProperties = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum model
+        /// </returns>
+        Task<ForumModel> PrepareForumModelAsync(ForumModel model, Forum forum, bool excludeProperties = false);
     }
 }

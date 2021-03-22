@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
@@ -43,71 +44,78 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle shopping cart item inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityInsertedEvent<ShoppingCartItem> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             if (eventMessage?.Entity != null)
-                _facebookPixelService.PrepareAddToCartScript(eventMessage.Entity);
+                await _facebookPixelService.PrepareAddToCartScriptAsync(eventMessage.Entity);
         }
 
         /// <summary>
         /// Handle order placed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(OrderPlacedEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             if (eventMessage?.Order != null)
-                _facebookPixelService.PreparePurchaseScript(eventMessage.Order);
+                await _facebookPixelService.PreparePurchaseScriptAsync(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle product details model prepared event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(ModelPreparedEvent<BaseNopModel> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
         {
             if (eventMessage?.Model is ProductDetailsModel productDetailsModel)
-                _facebookPixelService.PrepareViewContentScript(productDetailsModel);
+                await _facebookPixelService.PrepareViewContentScriptAsync(productDetailsModel);
         }
 
         /// <summary>
         /// Handle page rendering event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(PageRenderingEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(PageRenderingEvent eventMessage)
         {
             var routeName = eventMessage.GetRouteName() ?? string.Empty;
             if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
-                _facebookPixelService.PrepareInitiateCheckoutScript();
+                await _facebookPixelService.PrepareInitiateCheckoutScriptAsync();
         }
 
         /// <summary>
         /// Handle product search event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(ProductSearchEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(ProductSearchEvent eventMessage)
         {
             if (!string.IsNullOrEmpty(eventMessage?.SearchTerm))
-                _facebookPixelService.PrepareSearchScript(eventMessage.SearchTerm);
+                await _facebookPixelService.PrepareSearchScriptAsync(eventMessage.SearchTerm);
         }
 
         /// <summary>
         /// Handle message token added event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(MessageTokensAddedEvent<Token> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(MessageTokensAddedEvent<Token> eventMessage)
         {
             if (eventMessage?.Message?.Name == MessageTemplateSystemNames.ContactUsMessage)
-                _facebookPixelService.PrepareContactScript();
+                await _facebookPixelService.PrepareContactScriptAsync();
         }
 
         /// <summary>
         /// Handle customer registered event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(CustomerRegisteredEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
         {
             if (eventMessage?.Customer != null)
-                _facebookPixelService.PrepareCompleteRegistrationScript();
+                await _facebookPixelService.PrepareCompleteRegistrationScriptAsync();
         }
 
         #endregion

@@ -1,4 +1,5 @@
-using System.IO;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Seo
 {
@@ -12,15 +13,23 @@ namespace Nop.Services.Seo
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
-        /// <returns>Sitemap.xml as string</returns>
-        string Generate(int? id);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap.xml as string
+        /// </returns>
+        Task<string> GenerateAsync(int? id);
 
         /// <summary>
-        /// This will build an XML sitemap for better index with search engines.
-        /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
+        /// Return localized urls
         /// </summary>
-        /// <param name="id">Sitemap identifier</param>
-        /// <param name="stream">Stream of sitemap.</param>
-        void Generate(Stream stream, int? id);
+        /// <param name="routeName">Route name</param>
+        /// <param name="getRouteParamsAwait">Lambda for route params object</param>
+        /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
+        /// <param name="updateFreq">How often to update url</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
+            Func<int?, Task<object>> getRouteParamsAwait = null,
+            DateTime? dateTimeUpdatedOn = null,
+            UpdateFrequency updateFreq = UpdateFrequency.Weekly);
     }
 }

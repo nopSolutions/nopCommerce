@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Common;
@@ -30,12 +33,13 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that saves last visited page by customer
         /// </summary>
-        private class SaveLastVisitedPageFilter : IActionFilter
+        private class SaveLastVisitedPageFilter : IAsyncActionFilter
         {
             #region Fields
 
             private readonly CustomerSettings _customerSettings;
             private readonly IGenericAttributeService _genericAttributeService;
+            private readonly IRepository<GenericAttribute> _genericAttributeRepository;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
 
@@ -45,24 +49,27 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public SaveLastVisitedPageFilter(CustomerSettings customerSettings,
                 IGenericAttributeService genericAttributeService,
+                IRepository<GenericAttribute> genericAttributeRepository,
                 IWebHelper webHelper,
                 IWorkContext workContext)
             {
                 _customerSettings = customerSettings;
                 _genericAttributeService = genericAttributeService;
+                _genericAttributeRepository = genericAttributeRepository;
                 _webHelper = webHelper;
                 _workContext = workContext;
             }
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task SaveLastVisitedPageAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -74,7 +81,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //check whether we store last visited page URL
@@ -83,25 +90,55 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //get current page
                 var pageUrl = _webHelper.GetThisPageUrl(true);
+
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
 
                 //get previous last page
-                var previousPageUrl = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute);
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var previousPageAttribute = (await _genericAttributeService
+                    .GetAttributesForEntityAsync(customer.Id, nameof(Customer)))
+                    .FirstOrDefault(attribute => attribute.Key
+                        .Equals(NopCustomerDefaults.LastVisitedPageAttribute, StringComparison.InvariantCultureIgnoreCase));
 
                 //save new one if don't match
-                if (!pageUrl.Equals(previousPageUrl, StringComparison.InvariantCultureIgnoreCase))
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute, pageUrl);
+                if (previousPageAttribute == null)
+                {
+                    //insert without event notification
+                    await _genericAttributeRepository.InsertAsync(new GenericAttribute
+                    {
+                        EntityId = customer.Id,
+                        Key = NopCustomerDefaults.LastVisitedPageAttribute,
+                        KeyGroup = nameof(Customer),
+                        Value = pageUrl,
+                        CreatedOrUpdatedDateUTC = DateTime.UtcNow
+                    }, false);
+                }
+                else if (!pageUrl.Equals(previousPageAttribute.Value, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    //update without event notification
+                    previousPageAttribute.Value = pageUrl;
+                    previousPageAttribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
 
+                    await _genericAttributeRepository.UpdateAsync(previousPageAttribute, false);
+                }
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await SaveLastVisitedPageAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion
