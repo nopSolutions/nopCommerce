@@ -76,7 +76,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// </returns>
         public Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
-            return null;
+            return Task.FromResult<decimal?>(null);
         }
 
         /// <summary>
