@@ -13,6 +13,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure
     public class WeekdayProductRotation : IScheduleTask
     {
         public const string PRODUCT_ROTATION_TASK = "Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.WeekdayProductRotation";
+        public const string BUSINESS_DAY_SPEC_OPTION_NAME = "Business Day";
 
         private readonly ISpecificationAttributeService _specificationAttribute;
         private readonly IScheduleTaskService _scheduleTaskService;
@@ -33,11 +34,29 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure
             this._logger = logger;
         }
 
-        string GetNextWeekDay(DayOfWeek dayOfWeek)
+        DayOfWeek GetNextWeekDay(DayOfWeek dayOfWeek)
         {
             if (dayOfWeek == DayOfWeek.Sunday)
-                return DayOfWeek.Monday.ToString();
-            return (dayOfWeek + 1).ToString();
+                return DayOfWeek.Monday;
+            return dayOfWeek + 1;
+        }
+
+        IList<int> GetPublishableWeekdaySpecificationOptionIds(
+            IList<Core.Domain.Catalog.SpecificationAttributeOption> availableOnWeekdayOptions,
+            DayOfWeek targetWeekday)
+        {
+            var result = new List<int>();
+            var targetWeekdayString = targetWeekday.ToString();
+
+            result.Add(availableOnWeekdayOptions.First(x => x.Name.Equals(targetWeekdayString)).Id);
+
+            if(targetWeekday != DayOfWeek.Saturday &&
+                targetWeekday != DayOfWeek.Sunday)
+            {
+                result.Add(availableOnWeekdayOptions.First(x => x.Name.Equals(BUSINESS_DAY_SPEC_OPTION_NAME)).Id);
+            }
+
+            return result;
         }
 
         public void Execute()
@@ -77,19 +96,17 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure
             if(!currentTask.LastSuccessUtc.HasValue ||
                 currentTask.LastSuccessUtc.Value <= today3PMUtc)
             {
-                string targetWeekdayMenu;
+                DayOfWeek targetWeekdayMenu;
                 if (storeDateTime.Hour > 15)
                     targetWeekdayMenu = GetNextWeekDay(storeDateTime.DayOfWeek);
                 else
-                    targetWeekdayMenu = storeDateTime.DayOfWeek.ToString();
+                    targetWeekdayMenu = storeDateTime.DayOfWeek;
 
-                int nextWeekDaySpecificationAttributeOptionId =
-                    availableOnWeekdayOptions
-                        .First(x => x.Name.Equals(targetWeekdayMenu))
-                        .Id;
+                var publishableSpecificationOptionIds = 
+                    GetPublishableWeekdaySpecificationOptionIds(availableOnWeekdayOptions, targetWeekdayMenu);
 
                 _logger.Information(
-                    $"WeekdayProductRotation: Target weekday = {targetWeekdayMenu}, option id = {nextWeekDaySpecificationAttributeOptionId}");
+                    $"WeekdayProductRotation: Target weekday = {targetWeekdayMenu}, option ids = {string.Join(',', publishableSpecificationOptionIds)}");
 
                 var allProducts = _productService.SearchProducts(showHidden: true);
 
@@ -106,8 +123,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure
                     if (productSpecificationAttributes.Any(x => 
                         availableOnWeekdayOptions.Any(y => y.Id == x.SpecificationAttributeOptionId)))
                     {
-                        if (productSpecificationAttributes.Any(x => 
-                            x.SpecificationAttributeOptionId == nextWeekDaySpecificationAttributeOptionId))
+                        if (productSpecificationAttributes.Any(x =>
+                            publishableSpecificationOptionIds.Contains(x.SpecificationAttributeOptionId)))
                         {
                             _logger.Information(
                                 $"WeekdayProductRotation: Publishing product {product.Name}");

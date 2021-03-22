@@ -123,6 +123,7 @@
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.5" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.1.5" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="3.1.5" />
+	  <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
 	  <PackageReference Include="Telegram.Bot" Version="15.7.1" />
 	</ItemGroup>
 
