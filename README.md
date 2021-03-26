@@ -6,7 +6,7 @@
 ![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png#v1)
 
 The product is being developed and supported by the professional team since 2008.
-blah
+blah blah
 nopCommerce has been downloaded more than 3,000,000 times.
 
 The active developer community has more than 250,000 members.
