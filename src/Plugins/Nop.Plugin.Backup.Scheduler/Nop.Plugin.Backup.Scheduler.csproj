@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+  <TargetFramework>net5.0</TargetFramework>
+  <Copyright>Copyright by it-suite.ch</Copyright>
+  <Company>it-suite.ch</Company>
+  <Authors>Heaxyh</Authors>
+  <PackageLicenseUrl>http://it-suite.ch</PackageLicenseUrl>
+  <PackageProjectUrl>http://it-suite.ch</PackageProjectUrl>
+  <RepositoryUrl>http://github.com/haexyh/nopCommerce</RepositoryUrl>
+  <RepositoryType>Git</RepositoryType>
+  <OutputPath>..\..\Presentation\Nop.Web\Plugins\Nop-Plugin.Backup.Scheduler</OutputPath>
+  <OutDir>$(OutputPath)</OutDir>
+  <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your    project. You need to set this parameter to true if your plugin has a nuget package to ensure that   the dlls copied from the NuGet cache to the output of your project-->
+  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+</PropertyGroup>
+<ItemGroup>
+  <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+  <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+</ItemGroup>
+<!-- This target execute after "Build" target -->
+<Target Name="NopTarget" AfterTargets="Build">
+  <!-- Delete unnecessary libraries from plugins path -->
+  <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+</Target>
+</Project>
