@@ -197,3 +197,9 @@ src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/*
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/en/*
 !src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/main.zip
 src/packages/*
+/src/.idea/.idea.NopCommerce/.idea/.gitignore
+/src/.idea/.idea.NopCommerce/.idea/.name
+/src/.idea/.idea.NopCommerce/.idea/encodings.xml
+/src/.idea/.idea.NopCommerce/.idea/indexLayout.xml
+/src/.idea/.idea.NopCommerce/.idea/riderModule.iml
+/src/.idea/.idea.NopCommerce/.idea/vcs.xml
