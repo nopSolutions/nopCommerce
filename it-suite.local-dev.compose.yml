@@ -1,0 +1,23 @@
+version: "3.4"
+services:
+  nopcommerce_database:
+    image: "mysql:latest"
+    container_name: nop_mysql_server
+    #command: "--default-authentication-plugin=mysql_native_password"
+    restart: "always"
+    ports:
+    - 3306:3306
+    environment:
+      MYSQL_DATABASE: nop
+      MYSQL_ROOT_PASSWORD: "toor"
+      MYSQL_ROOT_HOST: '%'
+      
+  adminer:
+    depends_on:
+      - nopcommerce_database
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+volumes:
+  nopcommerce_data:            
