@@ -167,6 +167,12 @@ namespace Nop.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
+            
+            application.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });
+            
             ServiceProvider = application.ApplicationServices;
 
             //find startup configurations provided by other assemblies
