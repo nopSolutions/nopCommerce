@@ -333,7 +333,11 @@ namespace Nop.Web.Controllers
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
+            if (string.IsNullOrWhiteSpace(term))
+                return Content("");
+
             term = term.Trim();
+
             if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
