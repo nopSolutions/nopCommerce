@@ -338,8 +338,9 @@ namespace Nop.Services.Orders
                 query = from o in query
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
-                    where
+                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId into ps
+                    from pwi in ps.DefaultIfEmpty()
+                        where
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
                         (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
