@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Configuration;
-using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web
@@ -17,9 +15,6 @@ namespace Nop.Web
 
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        private AppSettings _appSettings;
-        private IEngine _engine;
 
         #endregion
 
@@ -39,16 +34,7 @@ namespace Nop.Web
         /// <param name="services">Collection of service descriptors</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            (_engine, _appSettings) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
-        }
-
-        /// <summary>
-        /// Configure the DI container 
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public void ConfigureContainer(IServiceCollection services)
-        {
-            _engine.RegisterDependencies(services, _appSettings);
+            services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
         }
 
         /// <summary>
