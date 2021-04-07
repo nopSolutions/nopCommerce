@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Mvc.Routing
@@ -16,22 +17,16 @@ namespace Nop.Web.Framework.Mvc.Routing
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public LanguageParameterTransformer(IHttpContextAccessor httpContextAccessor,
-            ILanguageService languageService,
-            IStoreContext storeContext,
-            IWorkContext workContext)
+            ILanguageService languageService)
         {
             _httpContextAccessor = httpContextAccessor;
             _languageService = languageService;
-            _storeContext = storeContext;
-            _workContext = workContext;
         }
 
         #endregion
@@ -45,19 +40,30 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <returns>The transformed value</returns>
         public string TransformOutbound(object value)
         {
-            //try to get a language code from the route values or use the passed one
-            _httpContextAccessor.HttpContext.Request.RouteValues.TryGetValue(NopPathRouteDefaults.LanguageRouteValue, out var routeValue);
-            var code = (routeValue ?? value)?.ToString();
-            if (string.IsNullOrEmpty(code))
+            //first try to get a language code from the route values
+            var routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
+            if (routeValues.TryGetValue(NopPathRouteDefaults.LanguageRouteValue, out var routeValue))
+            {
+                //ensure this language is available
+                var code = routeValue?.ToString();
+                var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                var store = storeContext.GetCurrentStoreAsync().Result;
+                var languages = _languageService.GetAllLanguagesAsync(storeId: store.Id).Result;
+                var language = languages
+                    .FirstOrDefault(lang => lang.Published && lang.UniqueSeoCode.Equals(code, StringComparison.InvariantCultureIgnoreCase));
+                if (language is not null)
+                    return language.UniqueSeoCode.ToLowerInvariant();
+            }
+
+            //if there is no code in the route values, check whether the value is passed
+            if (value is null)
                 return string.Empty;
 
-            //check whether the language is available
-            var store = _storeContext.GetCurrentStoreAsync().Result;
-            var languages = _languageService.GetAllLanguagesAsync(storeId: store.Id).Result.Where(lang => lang.Published).ToList();
-            var language = languages.FirstOrDefault(lang => lang.UniqueSeoCode.Equals(code, StringComparison.InvariantCultureIgnoreCase))
-                ?? _workContext.GetWorkingLanguageAsync().Result;
-
-            return language?.UniqueSeoCode.ToLowerInvariant();
+            //or use the current language code
+            //we don't use the passed value, since it's always either the same as the current one or it's the default value (en)
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var currentLanguage = workContext.GetWorkingLanguageAsync().Result;
+            return currentLanguage.UniqueSeoCode.ToLowerInvariant();
         }
 
         #endregion
