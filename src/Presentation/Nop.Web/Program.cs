@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,13 +14,7 @@ namespace Nop.Web
         {
             //initialize the host
             using var host = Host.CreateDefaultBuilder(args)
-                .UseDefaultServiceProvider(options =>
-                {
-                    //we don't validate the scopes, since at the app start and the initial configuration we need 
-                    //to resolve some services (registered as "scoped") through the root container
-                    options.ValidateScopes = false;
-                    options.ValidateOnBuild = true;
-                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
                     .ConfigureAppConfiguration(config =>
                     {
