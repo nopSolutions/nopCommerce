@@ -45,6 +45,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
 
         public bool IsDownload { get; set; }
 
+        public string Slug { get; set; }
+
         public int MinInventoryLevel { get; set; }
         public List<string> Errors { get; set; } = new List<string>();
         public List<PolyCommerceProductAttribute> ProductAttributes { get; set; } = new List<PolyCommerceProductAttribute>();

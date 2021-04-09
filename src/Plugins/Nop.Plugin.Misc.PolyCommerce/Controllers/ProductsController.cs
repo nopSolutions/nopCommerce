@@ -10,6 +10,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.PolyCommerce.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Media;
+using Nop.Services.Seo;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 {
@@ -20,13 +21,19 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
+        private readonly IUrlRecordService _urlRecordService;
 
-        public ProductsController(IRepository<Product> productRepository, IPictureService pictureService, IProductAttributeParser productAttributeParser, IProductService productService)
+        public ProductsController(IRepository<Product> productRepository, 
+            IPictureService pictureService, 
+            IProductAttributeParser productAttributeParser, 
+            IProductService productService, 
+            IUrlRecordService urlRecordService)
         {
             _productRepository = productRepository;
             _pictureService = pictureService;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
+            _urlRecordService = urlRecordService;
         }
 
         [Route("api/polycommerce/products")]
@@ -136,6 +143,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 Sku = product.Sku,
                 Depth = product.Length,
                 Width = product.Width,
+                Slug = _urlRecordService.GetSeName(product),
                 RetailPrice = product.OldPrice,
                 IsDownload = product.IsDownload,
                 MinInventoryLevel = product.MinStockQuantity,
