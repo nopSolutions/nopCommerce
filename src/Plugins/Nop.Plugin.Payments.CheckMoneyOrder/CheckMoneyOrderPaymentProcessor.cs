@@ -65,16 +65,16 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// A task that represents the asynchronous operation
         /// The task result contains the process payment result
         /// </returns>
-        public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+        public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
 
-            var storeDateTime = _dateTime.ConvertToUserTime(DateTime.Now);
+            var storeDateTime = await _dateTime.ConvertToUserTimeAsync(DateTime.Now);
             var todayStart = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 0, 0, 1);
             var todayEnd = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 23, 59, 59);
-
-            var customerTodayOrders = 
-                _orderService.SearchOrders(processPaymentRequest.StoreId, 
+            
+            var customerTodayOrders = await _orderService.SearchOrdersAsync(
+                processPaymentRequest.StoreId, 
                 customerId: processPaymentRequest.CustomerId,
                 createdFromUtc: _dateTime.ConvertToUtcTime(todayStart),
                 createdToUtc: _dateTime.ConvertToUtcTime(todayEnd));

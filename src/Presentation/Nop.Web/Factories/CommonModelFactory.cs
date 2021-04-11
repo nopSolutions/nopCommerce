@@ -373,7 +373,7 @@ namespace Nop.Web.Factories
                 UserRegistrationType.OnlyExternalAuthentication };
             var model = new HeaderLinksModel
             {
-                IsAuthenticated = _customerService.IsRegistered(customer),
+                IsAuthenticated = await _customerService.IsRegisteredAsync(customer),
                 IsRegistrationEnabled = !registrationDisabledCases.Contains(_customerSettings.UserRegistrationType),
                 CustomerName = await _customerService.IsRegisteredAsync(customer) ? await _customerService.FormatUsernameAsync(customer) : string.Empty,
                 ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart),

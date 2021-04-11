@@ -4,15 +4,15 @@
 @using Nop.Services.Stores
 
 @{
-    //page title
-    ViewBag.PageTitle = T("Admin.Orders").Text;
-    //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Orders");
+  //page title
+  ViewBag.PageTitle = T("Admin.Orders").Text;
+  //active menu item (system name)
+  Html.SetActiveMenuItemSystemName("Orders");
 }
 
 @{
-    const string hideSearchBlockAttributeName = "OrdersPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+  const string hideSearchBlockAttributeName = "OrdersPage.HideSearchBlock";
+  var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Order" asp-action="List" method="post">
@@ -282,16 +282,16 @@
                             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Orders", Docs.Orders + Utm.OnAdmin)" />
 
                             @{
-                                var gridModel = new DataTablesModel
-                                {
-                                    Name = "orders-grid",
-                                    UrlRead = new DataUrl("OrderList", "Order", null),
-                                    SearchButtonId = "search-orders",
-                                    Length = Model.PageSize,
-                                    LengthMenu = Model.AvailablePageSizes,
-                                    FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
-                                    FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
-                                    Filters = new List<FilterParameter>
+                              var gridModel = new DataTablesModel
+                              {
+                                Name = "orders-grid",
+                                UrlRead = new DataUrl("OrderList", "Order", null),
+                                SearchButtonId = "search-orders",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
+                                FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
+                                Filters = new List<FilterParameter>
                                                         {
                                         new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
                                         new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
@@ -309,8 +309,8 @@
                                         new FilterParameter(nameof(Model.ProductId)),
                                         new FilterParameter(nameof(Model.OrderNotes))
                                     }
-                                };
-                                gridModel.ColumnCollection = new List<ColumnProperty>
+                              };
+                              gridModel.ColumnCollection = new List<ColumnProperty>
                                                     {
                                     new ColumnProperty(nameof(OrderModel.Id))
                                     {
@@ -325,85 +325,85 @@
                                         Width = "80"
                                     }
                                 };
-                                //a vendor does not have access to this functionality
-                                if (!Model.IsLoggedInAsVendor)
+                              //a vendor does not have access to this functionality
+                              if (!Model.IsLoggedInAsVendor)
+                              {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
                                 {
-                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
-                                    {
-                                        Title = T("Admin.Orders.Fields.OrderStatus").Text,
-                                        Width = "100",
-                                        Render = new RenderCustom("renderColumnOrderStatus")
-                                    });
-                                }
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
-                                {
-                                    Title = T("Admin.Orders.Fields.PaymentStatus").Text,
-                                    Width = "150"
+                                  Title = T("Admin.Orders.Fields.OrderStatus").Text,
+                                  Width = "100",
+                                  Render = new RenderCustom("renderColumnOrderStatus")
                                 });
-                                //a vendor does not have access to this functionality
-                                if (!Model.IsLoggedInAsVendor)
+                              }
+                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
+                              {
+                                Title = T("Admin.Orders.Fields.PaymentStatus").Text,
+                                Width = "150"
+                              });
+                              //a vendor does not have access to this functionality
+                              if (!Model.IsLoggedInAsVendor)
+                              {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
                                 {
-                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
-                                    {
-                                        Title = T("Admin.Orders.Fields.ShippingStatus").Text,
-                                        Width = "150"
-                                    });
-                                }
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
-                                {
-                                    Title = T("Admin.Orders.Fields.Customer").Text,
-                                    Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                                  Title = T("Admin.Orders.Fields.ShippingStatus").Text,
+                                  Width = "150"
                                 });
-                            }
-                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
-                            {
+                              }
+                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
+                              {
                                 Title = T("Admin.Orders.Fields.Customer").Text,
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
-                            });
-                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
-                            {
+                              });
+
+                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
+                              {
+                                Title = T("Admin.Orders.Fields.Customer").Text,
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                              });
+                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
+                              {
                                 Title = T("Admin.Orders.Fields.Store").Text,
                                 Width = "100",
-                                Visible = storeService.GetAllStores().Count > 1
-                            });
-                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
-                            {
+                                Visible = storeService.GetAllStoresAsync().Result.Count > 1
+                              });
+                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                              {
                                 Title = T("Admin.Orders.Fields.CreatedOn").Text,
                                 Width = "120",
                                 Render = new RenderDate()
-                            });
-                            //a vendor does not have access to this functionality
-                            if (!Model.IsLoggedInAsVendor)
-                            {
+                              });
+                              //a vendor does not have access to this functionality
+                              if (!Model.IsLoggedInAsVendor)
+                              {
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
                                 {
-                                    Title = T("Admin.Orders.Fields.Store").Text,
-                                    Width = "100",
-                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                  Title = T("Admin.Orders.Fields.Store").Text,
+                                  Width = "100",
+                                  Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                 });
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
                                 {
-                                    Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                                    Width = "120",
-                                    Render = new RenderDate()
+                                  Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                                  Width = "120",
+                                  Render = new RenderDate()
                                 });
                                 //a vendor does not have access to this functionality
                                 if (!Model.IsLoggedInAsVendor)
                                 {
-                                    gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
-                                    {
-                                        Title = T("Admin.Orders.Fields.OrderTotal").Text,
-                                        Width = "100",
-                                    });
+                                  gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                                  {
+                                    Title = T("Admin.Orders.Fields.OrderTotal").Text,
+                                    Width = "100",
+                                  });
                                 }
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
                                 {
-                                    Title = T("Admin.Common.View").Text,
-                                    Width = "50",
-                                    ClassName = NopColumnClassDefaults.Button,
-                                    Render = new RenderButtonView(new DataUrl("Edit"))
+                                  Title = T("Admin.Common.View").Text,
+                                  Width = "50",
+                                  ClassName = NopColumnClassDefaults.Button,
+                                  Render = new RenderButtonView(new DataUrl("Edit"))
                                 });
-                                var orderSummaryColumnNumber = 8;
+                              }
                             }
 
                             @await Html.PartialAsync("Table", gridModel)
@@ -471,13 +471,14 @@
                                                     '<div>@T("Admin.Orders.Report.Shipping").Text <span>' + data['aggregatorshipping'] + '</span></div>' +
                                                     '<div>@T("Admin.Orders.Report.Tax").Text <span>' +  data['aggregatortax'] + '</span></div>' +
                                                     '<div>@T("Admin.Orders.Report.Total").Text <span>' + data['aggregatortotal'] + '</span></div>'
-                                                var orderTotalsColumn = $('#orders-grid').DataTable().column(@(orderSummaryColumnNumber));
+                                                var orderTotalsColumn = $('#orders-grid').DataTable().column(/*orderSummaryColumnNumber*/8);
                                                 $(orderTotalsColumn.footer()).html(reportSummary);
                                             }
                                         }
                                     }
                                 });
-                            }
+                              }
+
                             </script>
                         </div>
                     </div>

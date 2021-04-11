@@ -573,12 +573,12 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the checkout completed model
         /// </returns>
-        public virtual Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
+        public virtual async Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var now = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var now = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
             var untilLunchTimeDeliveryDeadline = new DateTime(now.Year, now.Month, now.Day, 11, 0, 0);
             var lunchTime = new DateTime(now.Year, now.Month, now.Day, 13, 0, 0);
 
@@ -603,7 +603,7 @@ namespace Nop.Web.Factories
                 DeliveryTimeWindowMessage = message
             };
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>

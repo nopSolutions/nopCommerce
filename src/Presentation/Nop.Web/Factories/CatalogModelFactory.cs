@@ -465,7 +465,10 @@ namespace Nop.Web.Factories
                     return subCatModel;
                 }).ToListAsync();
 
-            var displaySubcategoriesInCatalogPage = _settingService.GetSetting("catalogsettings.displaysubcategoriesincatalogpage", _storeContext.CurrentStore.Id, true);
+            var displaySubcategoriesInCatalogPage = await _settingService.GetSettingAsync(
+                "catalogsettings.displaysubcategoriesincatalogpage", 
+                (await _storeContext.GetCurrentStoreAsync()).Id,
+                true);
             model.DisplaySubcategoriesInCatalogPage = displaySubcategoriesInCatalogPage != null && 
                 displaySubcategoriesInCatalogPage.Value == "False" ? false : true;
 

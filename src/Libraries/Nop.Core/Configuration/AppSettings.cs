@@ -46,6 +46,8 @@ namespace Nop.Core.Configuration
         /// </summary>
         public CommonConfig CommonConfig { get; set; } = new CommonConfig();
 
+        public ExtendedAuthSettings ExtendedAuthSettings { get; set; } = new ExtendedAuthSettings();
+
         /// <summary>
         /// Gets or sets additional configuration parameters
         /// </summary>

@@ -993,8 +993,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 return orders.SelectAwait(async order =>
                 {
                     var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
-                    var customer = _customerService.GetCustomerById(order.CustomerId);
-                    var customerFullName = _customerService.GetCustomerFullName(customer);
+                    var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+                    var customerFullName = await _customerService.GetCustomerFullNameAsync(customer);
                     //fill in model values from the entity
                     var orderModel = new OrderModel
                     {

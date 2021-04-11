@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
@@ -32,7 +33,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
             return email.EndsWith("@servicetitan.com", StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public void HandleEvent(CustomerRegisteredEvent eventMessage)
+        public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
         {
             var customer = eventMessage.Customer;
             if(IsServiceTitanEmail(customer.Email))
@@ -42,8 +43,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
                     FirstName = "Melik Adamyan 2/2",
                     LastName = "2nd floor",
                     Email = customer.Email,
-                    Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
-                    CountryId = _countryService.GetCountryByTwoLetterIsoCode("AM").Id,
+                    Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute),
+                    CountryId = (await _countryService.GetCountryByTwoLetterIsoCodeAsync("AM")).Id,
                     StateProvinceId = null,
                     County = "",
                     City = "Yerevan",
@@ -55,16 +56,16 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
                     CreatedOnUtc = customer.CreatedOnUtc
                 };
 
-                if (_addressService.IsAddressValid(defaultAddress))
+                if (await _addressService.IsAddressValidAsync(defaultAddress))
                 {
-                    _addressService.InsertAddress(defaultAddress);
+                    await _addressService.InsertAddressAsync(defaultAddress);
 
-                    _customerService.InsertCustomerAddress(customer, defaultAddress);
+                    await _customerService.InsertCustomerAddressAsync(customer, defaultAddress);
 
                     customer.BillingAddressId = defaultAddress.Id;
                     customer.ShippingAddressId = defaultAddress.Id;
 
-                    _customerService.UpdateCustomer(customer);
+                    await _customerService.UpdateCustomerAsync(customer);
                 }
             }
         }

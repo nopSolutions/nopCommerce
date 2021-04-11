@@ -2,6 +2,8 @@
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
+using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -12,6 +14,7 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using System;
+using System.Threading.Tasks;
 
 namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
 {
@@ -47,35 +50,29 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="localizationSettings">Localization settings</param>
         public ExternalAuthenticationService_Override(
-          CustomerSettings customerSettings,
+            CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationPluginManager authenticationPluginManager,
-            IAuthenticationService authenticationService,
-            ICustomerActivityService customerActivityService,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            Data.IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
-            IShoppingCartService shoppingCartService,
+            IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
             IStoreContext storeContext,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings
             ) : base(
-                customerSettings,
+            customerSettings,
             externalAuthenticationSettings,
             authenticationPluginManager,
-            authenticationService,
-            customerActivityService,
             customerRegistrationService,
             customerService,
             eventPublisher,
             genericAttributeService,
             localizationService,
             externalAuthenticationRecordRepository,
-            shoppingCartService,
             storeContext,
             workContext,
             workflowMessageService,
@@ -96,33 +93,36 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
         /// <param name="parameters">External authentication parameters</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        public override IActionResult Authenticate(ExternalAuthenticationParameters parameters, string returnUrl = null)
+        public override async Task<IActionResult> AuthenticateAsync(ExternalAuthenticationParameters parameters, string returnUrl = null)
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            if (!_authenticationPluginManager.IsPluginActive(parameters.ProviderSystemName))
+            if (!await _authenticationPluginManager.IsPluginActiveAsync(parameters.ProviderSystemName))
                 return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user
-            var currentLoggedInUser = _customerService.IsRegistered(_workContext.CurrentCustomer) ? _workContext.CurrentCustomer : null;
+            var currentLoggedInUser = await _customerService.IsRegisteredAsync(
+                await _workContext.GetCurrentCustomerAsync()) ? 
+                    await _workContext.GetCurrentCustomerAsync() : 
+                    null;
 
             //authenticate associated user if already exists
-            var associatedUser = GetUserByExternalAuthenticationParameters(parameters);
+            var associatedUser = await GetUserByExternalAuthenticationParametersAsync(parameters);
             if (associatedUser != null)
-                return AuthenticateExistingUser(associatedUser, currentLoggedInUser, returnUrl);
+                return await AuthenticateExistingUserAsync(associatedUser, currentLoggedInUser, returnUrl);
 
             //user is already exists or not
-            var customer = _customerService.GetCustomerByEmail(parameters.Email);
+            var customer = await _customerService.GetCustomerByEmailAsync(parameters.Email);
             if (customer != null)
-                return AuthenticateExistingUser(customer, currentLoggedInUser, returnUrl);
+                return await AuthenticateExistingUserAsync(customer, currentLoggedInUser, returnUrl);
 
             //or associate and authenticate new user
             if (returnUrl == "/")
                 returnUrl += "customer/info";
             else if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = "/customer/info";            
-            return AuthenticateNewUser(currentLoggedInUser, parameters, returnUrl);
+            return await AuthenticateNewUserAsync(currentLoggedInUser, parameters, returnUrl);
         }
 
         #endregion
