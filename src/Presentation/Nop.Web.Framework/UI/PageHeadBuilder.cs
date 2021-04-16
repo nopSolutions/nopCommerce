@@ -403,9 +403,17 @@ namespace Nop.Web.Framework.UI
 
                         _staticCacheManager.SetAsync(cacheKey, false);
                     }
+                    
+                    var scriptPath = "~/bundles/" + outputFileName + ".min.js";
+                    if (!_fileProvider.FileExists(_fileProvider.Combine(_webHostEnvironment.WebRootPath, "bundles", outputFileName + ".min.js")))
+                    {
+                        if (!_fileProvider.FileExists(_fileProvider.Combine(_webHostEnvironment.WebRootPath, "bundles", outputFileName + ".js")))
+                            throw new Exception("bundels");
+                        scriptPath = "~/bundles/" + outputFileName + ".js";
+                    }
 
                     //render
-                    result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"));
+                    result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content(scriptPath));
                     result.Append(Environment.NewLine);
                 }
 
