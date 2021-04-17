@@ -190,6 +190,9 @@ namespace Nop.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow,
                 };
 
+                if (!_newsSettings.NewsCommentsMustBeApproved)
+                    comment.CommentText = "Automatically approved: " + comment.CommentText;
+
                 await _newsService.InsertNewsCommentAsync(comment);
 
                 //notify a store owner;

@@ -6669,7 +6669,7 @@ pre {
     z-index: 1;
     width: 90%;
     max-width: 600px;
-    margin: 0 auto 40px;
+    margin: 0 auto 40px;    
   }
 
   .menu-toggle {
@@ -6782,7 +6782,8 @@ pre {
 
   .master-wrapper-content,
   .header-menu {
-    width: 92.5%;
+    background-color: #adb8c0;
+    width: 100%;
   }
 
 
@@ -7966,6 +7967,7 @@ pre {
     border-bottom: 1px solid #ddd;
     padding: 25px 0;
     text-align: center;
+    background-color: #adb8c0;
   }
 
   .menu-toggle,
