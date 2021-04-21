@@ -318,7 +318,11 @@ namespace Nop.Web.Controllers
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
+            if (string.IsNullOrWhiteSpace(term))
+                return Content("");
+
             term = term.Trim();
+
             if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
