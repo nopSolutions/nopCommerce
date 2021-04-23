@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Media
 {
-    public partial class PictureModel : BaseNopModel
+    public partial record PictureModel : BaseNopModel
     {
         public string ImageUrl { get; set; }
 

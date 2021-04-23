@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
@@ -59,53 +60,57 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityInsertedEvent<TaxRate> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _staticCacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
         /// Handle tax rate updated event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityUpdatedEvent<TaxRate> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _staticCacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
         /// Handle tax rate deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityDeletedEvent<TaxRate> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            _staticCacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
         /// Handle tax category deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityDeletedEvent<TaxCategory> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<TaxCategory> eventMessage)
         {
             var taxCategory = eventMessage?.Entity;
             if (taxCategory == null)
                 return;
 
             //delete an appropriate record when tax category is deleted
-            var recordsToDelete = _taxRateService.GetAllTaxRates().Where(taxRate => taxRate.TaxCategoryId == taxCategory.Id).ToList();
+            var recordsToDelete = (await _taxRateService.GetAllTaxRatesAsync()).Where(taxRate => taxRate.TaxCategoryId == taxCategory.Id).ToList();
             foreach (var taxRate in recordsToDelete)
             {
-                _taxRateService.DeleteTaxRate(taxRate);
+                await _taxRateService.DeleteTaxRateAsync(taxRate);
             }
 
             //delete saved fixed rate if exists
-            var setting = _settingService.GetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id));
+            var setting = await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id));
             if (setting != null)
-                _settingService.DeleteSetting(setting);
+                await _settingService.DeleteSettingAsync(setting);
         }
 
         #endregion

@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents an associated product search model to add to the product
     /// </summary>
-    public partial class AddAssociatedProductSearchModel : BaseSearchModel
+    public partial record AddAssociatedProductSearchModel : BaseSearchModel
     {
         #region Ctor
 

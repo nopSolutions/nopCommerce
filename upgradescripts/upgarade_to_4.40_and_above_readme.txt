@@ -1,0 +1,11 @@
+﻿IMPORTANT. We don't use SQL upgrade scripts anymore. Upgrade is performed automatically with migrations (during the first application start).
+
+Steps:
+1. Make a backup of everything on your site, including the database. This is extremely important so that you can roll back to a running site no matter what happens during migration.
+2. Remove all files from the previous version except JSON files in the 'App_Data' directory (dataSettings.json, plugins.json, appsettings.json), move them to the safe place.
+3. Upload new site files
+4. Copy back JSON files in the 'App_Data' directory.
+5. Ensure that everything is OK
+
+Notes:
+1. If you stored your pictures on the file system, then also backup them (\wwwroot\images\) and copy back after upgrade

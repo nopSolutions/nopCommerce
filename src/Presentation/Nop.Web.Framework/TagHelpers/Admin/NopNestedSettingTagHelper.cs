@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -8,22 +9,25 @@ using Nop.Web.Framework.Extensions;
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// nop-nested-setting tag helper
+    /// "nop-nested-setting" tag helper
     /// </summary>
-    [HtmlTargetElement("nop-nested-setting", Attributes = ForAttributeName)]
+    [HtmlTargetElement("nop-nested-setting", Attributes = FOR_ATTRIBUTE_NAME)]
     public class NopNestedSettingTagHelper : TagHelper
     {
-        private const string ForAttributeName = "asp-for";
+        #region Constants
 
-        /// <summary>
-        /// HtmlGenerator
-        /// </summary>
+        private const string FOR_ATTRIBUTE_NAME = "asp-for";
+
+        #endregion
+
+        #region Properties
+
         protected IHtmlGenerator Generator { get; set; }
 
         /// <summary>
         /// An expression to be evaluated against the current model
         /// </summary>
-        [HtmlAttributeName(ForAttributeName)]
+        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
         public ModelExpression For { get; set; }
 
         /// <summary>
@@ -33,31 +37,32 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="generator">HTML generator</param>
+        #endregion
+
+        #region Ctor
+
         public NopNestedSettingTagHelper(IHtmlGenerator generator)
         {
             Generator = generator;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             if (output == null)
-            {
                 throw new ArgumentNullException(nameof(output));
-            }
 
             var parentSettingName = For.Name;
 
@@ -76,10 +81,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //use javascript
             var script = new TagBuilder("script");
-            script.InnerHtml.AppendHtml("$(document).ready(function () {" +
-                                            $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');" +
-                                        "});");
-            output.PreContent.SetHtmlContent(script.RenderHtmlContent());
+            script.InnerHtml.AppendHtml(
+                "$(document).ready(function () {" +
+                    $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');" +
+                "});");
+            var scriptTag = await script.RenderHtmlContentAsync();
+            output.PreContent.SetHtmlContent(scriptTag);
         }
+
+        #endregion
     }
 }

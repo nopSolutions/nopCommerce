@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a product model to add to the order
     /// </summary>
-    public partial class AddProductToOrderModel : BaseNopModel
+    public partial record AddProductToOrderModel : BaseNopModel
     {
         #region Ctor
 
@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Nested classes
         
-        public partial class ProductAttributeModel : BaseNopEntityModel
+        public partial record ProductAttributeModel : BaseNopEntityModel
         {
             public ProductAttributeModel()
             {
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             public IList<ProductAttributeValueModel> Values { get; set; }
         }
 
-        public partial class ProductAttributeValueModel : BaseNopEntityModel
+        public partial record ProductAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 
@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             public int Quantity { get; set; }
         }
 
-        public partial class GiftCardModel : BaseNopModel
+        public partial record GiftCardModel : BaseNopModel
         {
             public bool IsGiftCard { get; set; }
 

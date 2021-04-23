@@ -1,7 +1,7 @@
 @model BlogSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowNotRegisteredUsersToLeaveComments_OverrideForStore" asp-input="AllowNotRegisteredUsersToLeaveComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowNotRegisteredUsersToLeaveComments" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="AllowNotRegisteredUsersToLeaveComments"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="BlogCommentsMustBeApproved_OverrideForStore" asp-input="BlogCommentsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="BlogCommentsMustBeApproved" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="BlogCommentsMustBeApproved"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="NotifyAboutNewBlogComments_OverrideForStore" asp-input="NotifyAboutNewBlogComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="NotifyAboutNewBlogComments" />
@@ -31,7 +31,7 @@
             <span asp-validation-for="NotifyAboutNewBlogComments"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-label asp-for="ShowBlogCommentsPerStore" />
         </div>

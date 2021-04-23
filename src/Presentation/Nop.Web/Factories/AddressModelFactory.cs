@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -64,16 +65,17 @@ namespace Nop.Web.Factories
         /// <param name="model">Address model</param>
         /// <param name="address">Address entity</param>
         /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of address entity</param>
-        protected virtual void PrepareCustomAddressAttributes(AddressModel model,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareCustomAddressAttributesAsync(AddressModel model,
             Address address, string overrideAttributesXml = "")
         {
-            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            var attributes = await _addressAttributeService.GetAllAddressAttributesAsync();
             foreach (var attribute in attributes)
             {
                 var attributeModel = new AddressAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = _localizationService.GetLocalized(attribute, x => x.Name),
+                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -81,13 +83,13 @@ namespace Nop.Web.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = _addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                    var attributeValues = await _addressAttributeService.GetAddressAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new AddressAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = _localizationService.GetLocalized(attributeValue, x => x.Name),
+                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(attributeValueModel);
@@ -111,7 +113,7 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = _addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                var selectedValues = await _addressAttributeParser.ParseAddressAttributeValuesAsync(selectedAddressAttributes);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)
@@ -164,10 +166,11 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateWithCustomerFields">Whether to populate model properties with the customer fields (used with the customer entity)</param>
         /// <param name="customer">Customer entity; required if prePopulateWithCustomerFields is true</param>
         /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of the address entity</param>
-        public virtual void PrepareAddressModel(AddressModel model,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareAddressModelAsync(AddressModel model,
             Address address, bool excludeProperties,
             AddressSettings addressSettings,
-            Func<IList<Country>> loadCountries = null,
+            Func<Task<IList<Country>>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
             Customer customer = null,
             string overrideAttributesXml = "")
@@ -186,9 +189,9 @@ namespace Nop.Web.Factories
                 model.Email = address.Email;
                 model.Company = address.Company;
                 model.CountryId = address.CountryId;
-                model.CountryName = _countryService.GetCountryByAddress(address) is Country country ? _localizationService.GetLocalized(country, x => x.Name) : null;
+                model.CountryName = await _countryService.GetCountryByAddressAsync(address) is Country country ? await _localizationService.GetLocalizedAsync(country, x => x.Name) : null;
                 model.StateProvinceId = address.StateProvinceId;
-                model.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(address) is StateProvince stateProvince ? _localizationService.GetLocalized(stateProvince, x => x.Name) : null;
+                model.StateProvinceName = await _stateProvinceService.GetStateProvinceByAddressAsync(address) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name) : null;
                 model.County = address.County;
                 model.City = address.City;
                 model.Address1 = address.Address1;
@@ -203,22 +206,22 @@ namespace Nop.Web.Factories
                 if (customer == null)
                     throw new Exception("Customer cannot be null when prepopulating an address");
                 model.Email = customer.Email;
-                model.FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                model.LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                model.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                model.Address1 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                model.Address2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                model.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                model.City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
-                model.County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
-                model.PhoneNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                model.FaxNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
+                model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                model.Address1 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                model.Address2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
+                model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
+                model.PhoneNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                model.FaxNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
             }
 
             //countries and states
             if (addressSettings.CountryEnabled && loadCountries != null)
             {
-                var countries = loadCountries();
+                var countries = await loadCountries();
 
                 if (_addressSettings.PreselectCountryIfOnlyOne && countries.Count == 1)
                 {
@@ -226,14 +229,14 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                    model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
                 }
 
                 foreach (var c in countries)
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = _localizationService.GetLocalized(c, x => x.Name),
+                        Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -241,19 +244,19 @@ namespace Nop.Web.Factories
 
                 if (addressSettings.StateProvinceEnabled)
                 {
-                    var languageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    var states = _stateProvinceService
-                        .GetStateProvincesByCountryId(model.CountryId ?? 0, languageId)
+                    var languageId = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Id;
+                    var states = (await _stateProvinceService
+                        .GetStateProvincesByCountryIdAsync(model.CountryId ?? 0, languageId))
                         .ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
                             model.AvailableStates.Add(new SelectListItem
                             {
-                                Text = _localizationService.GetLocalized(s, x => x.Name),
+                                Text = await _localizationService.GetLocalizedAsync(s, x => x.Name),
                                 Value = s.Id.ToString(),
                                 Selected = (s.Id == model.StateProvinceId)
                             });
@@ -264,7 +267,7 @@ namespace Nop.Web.Factories
                         var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
+                            Text = await _localizationService.GetResourceAsync(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -294,11 +297,11 @@ namespace Nop.Web.Factories
             //customer attribute services
             if (_addressAttributeService != null && _addressAttributeParser != null)
             {
-                PrepareCustomAddressAttributes(model, address, overrideAttributesXml);
+                await PrepareCustomAddressAttributesAsync(model, address, overrideAttributesXml);
             }
             if (_addressAttributeFormatter != null && address != null)
             {
-                model.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
+                model.FormattedCustomAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(address.CustomAttributes);
             }
         }
 

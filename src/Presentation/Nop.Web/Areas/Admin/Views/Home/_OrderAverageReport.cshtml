@@ -1,39 +1,39 @@
 ﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
-    const string panelId = "order-average-report-box";
-    const string hidePanelAttributeName = "Reports.HideOrderAverageReportPanel";
-    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+    const string cardId = "order-average-report-card";
+    const string hideCardAttributeName = "Reports.HideOrderAverageReportCard";
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
 }
 
-<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
-    <div class="box-header with-border">
-        <h3 class="box-title">
-            <i class="fa fa-money"></i>
+<div class="card card-primary card-outline @if(hideCard){<text>collapsed-card</text>}" id="@cardId">
+    <div class="card-header with-border">
+        <h3 class="card-title">
+            <i class="far fa-money-bill-alt"></i>
             @T("Admin.SalesReport.Average")
         </h3>
-        <div class="box-tools pull-right">
-            <button class="btn btn-box-tool" data-widget="collapse">
-                @if (hidePanel)
+        <div class="card-tools float-right">
+            <button class="btn btn-tool" data-card-widget="collapse">
+                @if (hideCard)
                 {
-                    <text><i class="fa fa-plus"></i></text>
+                    <text><i class="fas fa-plus"></i></text>
                 }
                 else
                 {
-                    <text><i class="fa fa-minus"></i></text>
+                    <text><i class="fas fa-minus"></i></text>
                 }
             </button>
         </div>
     </div>
     <script>
         $(document).ready(function () {
-            $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
-                var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+            $('#@cardId').on('click', 'button[data-card-widget="collapse"]', function () {
+                var collapsed = !$('#@cardId').hasClass('collapsed-card');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
             });
         });
     </script>
-    <div class="box-body" style="padding-bottom: 22px;">
+    <div class="card-body" style="padding-bottom: 22px;">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "average-order-report-grid",

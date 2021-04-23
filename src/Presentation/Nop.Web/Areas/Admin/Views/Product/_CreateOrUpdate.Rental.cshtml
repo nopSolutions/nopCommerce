@@ -9,16 +9,16 @@
 
     function toggleRental() {
         if ($('#@Html.IdFor(model => model.IsRental)').is(':checked')) {
-            $('#pnlRentalPriceLength').show();
-            $('#pnlRentalPricePeriod').show();
+            $('#pnlRentalPriceLength').showElement();
+            $('#pnlRentalPricePeriod').showElement();
         } else {
-            $('#pnlRentalPriceLength').hide();
-            $('#pnlRentalPricePeriod').hide();
+            $('#pnlRentalPriceLength').hideElement();
+            $('#pnlRentalPricePeriod').hideElement();
         }
     }
 </script>
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="IsRental" />
         </div>
@@ -28,7 +28,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="IsRental">
-        <div class="form-group" id="pnlRentalPriceLength">
+        <div class="form-group row" id="pnlRentalPriceLength">
             <div class="col-md-3">
                 <nop-label asp-for="RentalPriceLength" />
             </div>
@@ -37,12 +37,12 @@
                 <span asp-validation-for="RentalPriceLength"></span>
             </div>
         </div>
-        <div class="form-group" id="pnlRentalPricePeriod">
+        <div class="form-group row" id="pnlRentalPricePeriod">
             <div class="col-md-3">
                 <nop-label asp-for="RentalPricePeriodId" />
             </div>
             <div class="col-md-9">
-                <nop-select asp-for="RentalPricePeriodId" asp-items="@(((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())" />
+                <nop-select asp-for="RentalPricePeriodId" asp-items="@await (((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectListAsync())" />
                 <span asp-validation-for="RentalPricePeriodId"></span>
             </div>
         </div>

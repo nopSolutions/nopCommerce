@@ -1,8 +1,8 @@
 ﻿@model EstimateShippingModel
 @{
     Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.estimateshipping.popup.js");
-    Html.AddScriptParts(ResourceLocation.Footer, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
-    Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/magnific-popup/jquery.magnific-popup.min.js");
+    Html.AddCssFileParts("~/lib_npm/magnific-popup/magnific-popup.css");
 }
 
 <div class="ship-to-title">
@@ -31,10 +31,20 @@
     </div>
     <div class="estimate-shipping-row-item address-item">
         <div class="estimate-shipping-row">
-            <input asp-for="ZipPostalCode"
-                   class="estimate-shipping-address-control"
-                   placeholder="@T("Shipping.EstimateShippingPopUp.ZipPostalCode")" />
-            <nop-required />
+            @if (Model.UseCity)
+            {
+                <input asp-for="City"
+                       class="estimate-shipping-address-control"
+                       placeholder="@T("Shipping.EstimateShippingPopUp.City")" />
+                <nop-required />
+            }
+            else
+            {
+                <input asp-for="ZipPostalCode"
+                       class="estimate-shipping-address-control"
+                       placeholder="@T("Shipping.EstimateShippingPopUp.ZipPostalCode")" />
+                <nop-required />
+            }
         </div>
     </div>
 </div>
@@ -65,6 +75,6 @@
 </div>
 
 <div class="apply-shipping-button-container">
-    <input type="button" value="@T("Shipping.EstimateShippingPopUp.SelectShippingOption.Button")" class="button-2 apply-shipping-button" />
+    <button type="button" class="button-2 apply-shipping-button">@T("Shipping.EstimateShippingPopUp.SelectShippingOption.Button")</button>
     <div class="message-failure"></div>
 </div>

@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Templates
     /// <summary>
     /// Represents a manufacturer template model
     /// </summary>
-    public partial class ManufacturerTemplateModel : BaseNopEntityModel
+    public partial record ManufacturerTemplateModel : BaseNopEntityModel
     {
         #region Properties
 

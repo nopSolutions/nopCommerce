@@ -1,36 +1,37 @@
 ﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
-    Html.AppendScriptParts("~/lib/chartjs/Chart.min.js");
+    Html.AppendScriptParts("~/lib_npm/chart.js/Chart.min.js");
 
     const string prefix = "order-statistics";
-    const string hidePanelAttributeName = "Reports.HideOrderStatisticsPanel";
-    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+    const string hideCardAttributeName = "Reports.HideOrderStatisticsCard";
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
+    
 }
 
-<div class="box box-info @if (hidePanel){<text>collapsed-box</text>}" id="@(prefix)-box">
-    <div class="box-header with-border">
-        <h3 class="box-title">
-            <i class="fa fa-shopping-cart"></i>
+<div class="card card-primary card-outline @if (hideCard){<text>collapsed-card</text>}" id="@(prefix)-card">
+    <div class="card-header with-border">
+        <h3 class="card-title">
+            <i class="fas fa-shopping-cart"></i>
             @T("Admin.SalesReport.OrderStatistics")
         </h3>
-        <div class="box-tools pull-right">
-            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text> } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.SalesReport.OrderStatistics.Year")</button>
-            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hidePanel) { <text> disabled="disabled" </text> } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.SalesReport.OrderStatistics.Month")</button>
-            <button class="btn btn-xs btn-info btn-flat" @if (hidePanel) { <text> disabled="disabled" </text> } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.SalesReport.OrderStatistics.Week")</button>
-            <button class="btn btn-box-tool margin-l-10" data-widget="collapse">
-                @if (hidePanel)
+        <div class="card-tools float-right">
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hideCard) { <text> disabled="disabled" </text> } data-chart-role="toggle-chart" data-chart-period="year">@T("Admin.SalesReport.OrderStatistics.Year")</button>
+            <button class="btn btn-xs btn-info btn-flat margin-r-5" @if (hideCard) { <text> disabled="disabled" </text> } data-chart-role="toggle-chart" data-chart-period="month">@T("Admin.SalesReport.OrderStatistics.Month")</button>
+            <button class="btn btn-xs btn-info btn-flat" @if (hideCard) { <text> disabled="disabled" </text> } data-chart-role="toggle-chart" data-chart-period="week">@T("Admin.SalesReport.OrderStatistics.Week")</button>
+            <button type="button" class="btn btn-tool margin-l-10" data-card-widget="collapse">
+                @if (hideCard)
                 {
-                    <text><i class="fa fa-plus"></i></text>
+                    <text><i class="fas fa-plus"></i></text>
                 }
                 else
                 {
-                    <text><i class="fa fa-minus"></i></text>
+                    <text><i class="fas fa-minus"></i></text>
                 }
             </button>
         </div>
     </div>
-    <div class="box-body">
+    <div class="card-body">
         <div class="chart" style="height: 300px;">
             <canvas id="@(prefix)-chart" height="300"></canvas>
         </div>
@@ -41,16 +42,17 @@
     $(document).ready(function () {
         var osCurrentPeriod;
 
-        $('#@(prefix)-box').on('click', 'button[data-widget="collapse"]', function () {
-            var collapsed = !$('#@(prefix)-box').hasClass('collapsed-box');
-            saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+        $('#@(prefix)-card').on('click', 'button[data-card-widget="collapse"]', function () {
+            var collapsed = !$('#@(prefix)-card').hasClass('collapsed-card');
+            saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
+            
             if (!collapsed) {
-                $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeAttr('disabled');
+                $('#@(prefix)-card button[data-chart-role="toggle-chart"]').removeAttr('disabled');
                 if (!osCurrentPeriod) {
-                    $('#@(prefix)-box button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
+                    $('#@(prefix)-card button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
                 }
             } else {
-                $('#@(prefix)-box button[data-chart-role="toggle-chart"]').attr('disabled', 'disabled');
+                $('#@(prefix)-card button[data-chart-role="toggle-chart"]').attr('disabled', 'disabled');
             }
         });
 
@@ -154,18 +156,19 @@
             });
         }
 
-        $('#@(prefix)-box button[data-chart-role="toggle-chart"]').on('click', function () {
+        $('#@(prefix)-card button[data-chart-role="toggle-chart"]').on('click', function () {
             var period = $(this).attr('data-chart-period');
             osCurrentPeriod = period;
             changeOsPeriod(period);
-            $('#@(prefix)-box button[data-chart-role="toggle-chart"]').removeClass('bg-light-blue');
+            $('#@(prefix)-card button[data-chart-role="toggle-chart"]').removeClass('bg-light-blue');
             $(this).addClass('bg-light-blue');
         });
 
-        @if (!hidePanel)
+        @if (!hideCard)
         {
+            
             <text>
-                $('#@(prefix)-box button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
+                $('#@(prefix)-card button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
             </text>
         }
     });

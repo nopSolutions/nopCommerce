@@ -1,4 +1,4 @@
-﻿@model IList<ProductDetailsModel.ProductAttributeModel>
+﻿@model ProductDetailsModel
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
 @using System.Text
@@ -6,11 +6,11 @@
 @using Nop.Services.Media
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
-@if (Model.Count > 0)
+@if (Model.ProductAttributes.Count > 0)
 {
     <div class="attributes">
         <dl>
-            @foreach (var attribute in Model)
+            @foreach (var attribute in Model.ProductAttributes)
             {
                 var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
@@ -34,18 +34,15 @@
                     {
                         case AttributeControlType.DropdownList:
                             {
-                                <select name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
-                                    @if (!attribute.IsRequired)
-                                    {
-                                        <option value="0">---</option>
-                                    }
+                                <select data-attr="@(attribute.Id)" name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
+                                    <option value="0">@T("Products.ProductAttributes.DropdownList.DefaultItem")</option>
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
-                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
+                                        <option data-attr-value="@attributeValue.Id" selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
                                     }
                                 </select>
                                 foreach (var attributeValue in attribute.Values.Where(value => value.CustomerEntersQty))
@@ -64,20 +61,20 @@
                             break;
                         case AttributeControlType.RadioList:
                             {
-                                <ul class="option-list">
+                                <ul data-attr="@(attribute.Id)" class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
-                                        <li>
+                                        <li data-attr-value="@attributeValue.Id">
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
+                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null) />
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
 
                                             @if (attributeValue.CustomerEntersQty)
-                                    {
+                                            {
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
@@ -96,20 +93,20 @@
                         case AttributeControlType.Checkboxes:
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
-                                <ul class="option-list">
+                                <ul @(attribute.AttributeControlType == AttributeControlType.Checkboxes ? Html.Raw("data-attr=" + attribute.Id) : null) class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
-                                        <li>
+                                        <li @(attribute.AttributeControlType == AttributeControlType.Checkboxes ? Html.Raw("data-attr-value=" + attributeValue.Id) : null)>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)
-                                                   @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null)/>
+                                                   @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null) />
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
 
                                             @if (attributeValue.CustomerEntersQty)
-                                    {
+                                            {
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
@@ -137,16 +134,14 @@
                             break;
                         case AttributeControlType.Datepicker:
                             {
-                                <nop-date-picker 
-                                    asp-day-name="@(controlId + "_day")" 
-                                    asp-month-name="@(controlId + "_month")" 
-                                    asp-year-name="@(controlId + "_year")"
-                                    asp-begin-year="@(DateTime.Now.Year)"
-                                    asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
-                                    asp-selected-day="@(attribute.SelectedDay)"
-                                    asp-selected-month="@(attribute.SelectedMonth)"
-                                    asp-selected-year="@(attribute.SelectedYear)"
-                                />
+                                <nop-date-picker asp-day-name="@(controlId + "_day")"
+                                                 asp-month-name="@(controlId + "_month")"
+                                                 asp-year-name="@(controlId + "_year")"
+                                                 asp-begin-year="@(DateTime.Now.Year)"
+                                                 asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
+                                                 asp-selected-day="@(attribute.SelectedDay)"
+                                                 asp-selected-month="@(attribute.SelectedMonth)"
+                                                 asp-selected-year="@(attribute.SelectedYear)" />
                             }
                             break;
                         case AttributeControlType.FileUpload:
@@ -154,12 +149,12 @@
                                 Download download = null;
                                 if (!string.IsNullOrEmpty(attribute.DefaultValue))
                                 {
-                                    download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
+                                    download = await downloadService.GetDownloadByGuidAsync(new Guid(attribute.DefaultValue));
                                 }
 
                                 //register CSS and JS
-                                Html.AddCssFileParts(ResourceLocation.Footer, "~/lib/fineuploader/fine-uploader.min.css");
-                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
+                                Html.AddCssFileParts(ResourceLocation.Footer, "~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
+                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -256,20 +251,23 @@
                             break;
                         case AttributeControlType.ColorSquares:
                             {
-                                <ul class="option-list attribute-squares color-squares" id="color-squares-@(attribute.Id)">
+                                <ul data-attr="@(attribute.Id)" class="option-list attribute-squares color-squares" id="color-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
-                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                        <li data-attr-value="@attributeValue.Id" @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
                                             <label for="@(controlId)_@(attributeValue.Id)">
                                                 <span class="attribute-square-container" title="@attributeName">
                                                     <span class="attribute-square" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                                 </span>
                                                 <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
+                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null) />
                                             </label>
+                                            <div class="tooltip-container">
+                                                <div class="not-available-text">@T("Products.ProductAttributes.NotAvailable")</div>
+                                            </div>
                                         </li>
                                     }
                                 </ul>
@@ -293,23 +291,24 @@
                             break;
                         case AttributeControlType.ImageSquares:
                             {
-                                <ul class="option-list attribute-squares image-squares" id="image-squares-@(attribute.Id)">
+                                <ul data-attr="@(attribute.Id)" class="option-list attribute-squares image-squares" id="image-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
-                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                        <li data-attr-value="@attributeValue.Id" @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
                                             <label for="@(controlId)_@(attributeValue.Id)">
                                                 <span class="attribute-square-container">
                                                     <span class="attribute-square" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
                                                 </span>
                                                 <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}', true)\"") : null)/>
+                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}', true)\"") : null) />
                                             </label>
                                             <div class="tooltip-container">
                                                 <div class="tooltip-header">@attributeName</div>
                                                 <div class="tooltip-body"><img src="@(attributeValue.ImageSquaresPictureModel.FullSizeImageUrl)" alt="@attributeName" /></div>
+                                                <div class="not-available-text">@T("Products.ProductAttributes.NotAvailable")</div>
                                             </div>
                                         </li>
                                     }
@@ -338,14 +337,14 @@
         </dl>
         <script asp-location="Footer">
             function showHideDropdownQuantity(id) {
-                $('select[name=' + id + '] > option').each(function() {
+                $('select[name=' + id + '] > option').each(function () {
                     $('#' + id + '_' + this.value + '_qty_box').hide();
                 });
                 $('#' + id + '_' + $('select[name=' + id + '] > option:selected').val() + '_qty_box').css('display', 'inline-block');
             };
 
             function showHideRadioQuantity(id) {
-                $('input[name=' + id + ']:radio').each(function() {
+                $('input[name=' + id + ']:radio').each(function () {
                     $('#' + $(this).attr('id') + '_qty_box').hide();
                 });
                 $('#' + id + '_' + $('input[name=' + id + ']:radio:checked').val() + '_qty_box').css('display', 'inline-block');
@@ -360,50 +359,82 @@
         </script>
     </div>
 
+    if (Model.AllowAddingOnlyExistingAttributeCombinations && catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.Disable)
+    {
+        Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.combinationsbehavior.js");
+
+        <script asp-location="Footer">
+            var combinationsBehavior_@(Model.Id);
+            $(document).ready(function () {
+                combinationsBehavior_@(Model.Id) = createCombinationsBehavior({
+                    contentEl: '[data-productid="@Model.Id"]',
+                    fetchUrl: '@Html.Raw(Url.RouteUrl("GetProductCombinations", new { productId = Model.Id }))'
+                });
+                combinationsBehavior_@(Model.Id).init();
+            });
+        </script>
+    }
+
     //dynamic update support
-    var attributesHaveConditions = Model.Any(x => x.HasCondition);
-    var attributesHaveAssociatedPictures = Model.Any(x => x.ProductId > 0);
+    var attributesHaveConditions = Model.ProductAttributes.Any(x => x.HasCondition);
+    var attributesHaveAssociatedPictures = Model.ProductAttributes.Any(x => x.ProductId > 0);
     var attributeChangeScriptsBuilder = new StringBuilder();
-    var productId = Model.First().ProductId;
-    var attributeChangeHandlerFuncName = $"attribute_change_handler_{productId}";
+    var attributeChangeHandlerFuncName = $"attribute_change_handler_{Model.Id}";
     if (catalogSettings.AjaxProcessAttributeChange)
     {
-        //generate change event script
-        foreach (var attribute in Model)
+        if (Model.AllowAddingOnlyExistingAttributeCombinations && catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.Disable)
         {
-            var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
-            switch (attribute.AttributeControlType)
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $(combinationsBehavior_@(Model.Id)).on('processed', function () {
+                        @(attributeChangeHandlerFuncName)();
+                    });
+                });
+            </script>
+        }
+        else
+        {
+            //generate change event script
+            foreach (var attribute in Model.ProductAttributes)
             {
-                case AttributeControlType.DropdownList:
-                    {
-                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').on('change', function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
-                    }
-                    break;
-                case AttributeControlType.RadioList:
-                case AttributeControlType.ColorSquares:
-                case AttributeControlType.ImageSquares:
-                    {
-                        foreach (var attributeValue in attribute.Values)
+                var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
                         {
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').on('change', function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
                         }
-                    }
-                    break;
-                case AttributeControlType.Checkboxes:
-                case AttributeControlType.ReadonlyCheckboxes:
-                    {
-                        foreach (var attributeValue in attribute.Values)
+                        break;
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
                         {
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            foreach (var attributeValue in attribute.Values)
+                            {
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            }
                         }
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    case AttributeControlType.Checkboxes:
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            foreach (var attributeValue in attribute.Values)
+                            {
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
+        }
 
+        foreach (var attribute in Model.ProductAttributes)
+        {
             foreach (var attributeValue in attribute.Values.Where(value => value.CustomerEntersQty))
             {
+                var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
                 attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}_qty').on('input propertychange paste', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
             }
         }
@@ -414,35 +445,35 @@
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
+                    url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new { productId = Model.Id, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
                     data: $('#product-details-form').serialize(),
                     type: "POST",
                     success: function (data, textStatus, jqXHR) {
                         if (data.price) {
-                            $('.price-value-@productId').text(data.price);
+                            $('.price-value-@Model.Id').text(data.price);
                         }
                         if (data.basepricepangv) {
-                            $('#base-price-pangv-@productId').text(data.basepricepangv);
+                            $('#base-price-pangv-@Model.Id').text(data.basepricepangv);
                         } else {
-                            $('#base-price-pangv-@productId').hide();
+                            $('#base-price-pangv-@Model.Id').hide();
                         }
                         if (data.sku) {
-                            $('#sku-@productId').text(data.sku).parent(".sku").show();
+                            $('#sku-@Model.Id').text(data.sku).parent(".sku").show();
                         } else {
-                            $('#sku-@productId').parent(".sku").hide();
+                            $('#sku-@Model.Id').parent(".sku").hide();
                         }
                         if (data.mpn) {
-                            $('#mpn-@productId').text(data.mpn).parent(".manufacturer-part-number").show();
+                            $('#mpn-@Model.Id').text(data.mpn).parent(".manufacturer-part-number").show();
                         } else {
-                            $('#mpn-@productId').parent(".manufacturer-part-number").hide();
+                            $('#mpn-@Model.Id').parent(".manufacturer-part-number").hide();
                         }
                         if (data.gtin) {
-                            $('#gtin-@productId').text(data.gtin).parent(".gtin").show();
+                            $('#gtin-@Model.Id').text(data.gtin).parent(".gtin").show();
                         } else {
-                            $('#gtin-@productId').parent(".gtin").hide();
+                            $('#gtin-@Model.Id').parent(".gtin").hide();
                         }
                         if (data.stockAvailability) {
-                            $('#stock-availability-value-@productId').text(data.stockAvailability);
+                            $('#stock-availability-value-@Model.Id').text(data.stockAvailability);
                         }
                         if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.enabledattributemappingids.length; i++) {
@@ -457,10 +488,10 @@
                             }
                         }
                         if (data.pictureDefaultSizeUrl) {
-                            $('#main-product-img-@productId').attr("src", data.pictureDefaultSizeUrl);
+                            $('#main-product-img-@Model.Id').attr("src", data.pictureDefaultSizeUrl);
                         }
                         if (data.pictureFullSizeUrl) {
-                            $('#main-product-img-lightbox-anchor-@productId').attr("href", data.pictureFullSizeUrl);
+                            $('#main-product-img-lightbox-anchor-@Model.Id').attr("href", data.pictureFullSizeUrl);
                         }
                         if (data.message) {
                             alert(data.message);

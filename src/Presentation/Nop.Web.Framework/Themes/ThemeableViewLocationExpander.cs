@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Themes
 {
@@ -23,8 +24,7 @@ namespace Nop.Web.Framework.Themes
             if (context.AreaName?.Equals(AreaNames.Admin) ?? false)
                 return;
 
-            var themeContext = (IThemeContext)context.ActionContext.HttpContext.RequestServices.GetService(typeof(IThemeContext));
-            context.Values[THEME_KEY] = themeContext.WorkingThemeName;
+            context.Values[THEME_KEY] = EngineContext.Current.Resolve<IThemeContext>().GetWorkingThemeNameAsync().Result;
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a display default footer item settings model
     /// </summary>
-    public partial class DisplayDefaultFooterItemSettingsModel : BaseNopModel, ISettingsModel
+    public partial record DisplayDefaultFooterItemSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

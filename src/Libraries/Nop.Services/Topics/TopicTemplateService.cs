@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Topics
 {
@@ -16,20 +13,14 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
 
         #endregion
 
         #region Ctor
 
-        public TopicTemplateService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<TopicTemplate> topicTemplateRepository)
+        public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _topicTemplateRepository = topicTemplateRepository;
         }
 
@@ -41,28 +32,27 @@ namespace Nop.Services.Topics
         /// Delete topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void DeleteTopicTemplate(TopicTemplate topicTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
-            _topicTemplateRepository.Delete(topicTemplate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(topicTemplate);
+            await _topicTemplateRepository.DeleteAsync(topicTemplate);
         }
 
         /// <summary>
         /// Gets all topic templates
         /// </summary>
-        /// <returns>Topic templates</returns>
-        public virtual IList<TopicTemplate> GetAllTopicTemplates()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic templates
+        /// </returns>
+        public virtual async Task<IList<TopicTemplate>> GetAllTopicTemplatesAsync()
         {
-            var query = from pt in _topicTemplateRepository.Table
-                        orderby pt.DisplayOrder, pt.Id
-                        select pt;
-
-            var templates = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopTopicDefaults.TopicTemplatesAllCacheKey));
+            var templates = await _topicTemplateRepository.GetAllAsync(query=>
+            {
+                return from pt in query
+                    orderby pt.DisplayOrder, pt.Id
+                    select pt;
+            }, cache => default);
 
             return templates;
         }
@@ -71,43 +61,33 @@ namespace Nop.Services.Topics
         /// Gets a topic template
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
-        /// <returns>Topic template</returns>
-        public virtual TopicTemplate GetTopicTemplateById(int topicTemplateId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the opic template
+        /// </returns>
+        public virtual async Task<TopicTemplate> GetTopicTemplateByIdAsync(int topicTemplateId)
         {
-            if (topicTemplateId == 0)
-                return null;
-
-            return _topicTemplateRepository.ToCachedGetById(topicTemplateId);
+            return await _topicTemplateRepository.GetByIdAsync(topicTemplateId, cache => default);
         }
 
         /// <summary>
         /// Inserts topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void InsertTopicTemplate(TopicTemplate topicTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
-            _topicTemplateRepository.Insert(topicTemplate);
-
-            //event notification
-            _eventPublisher.EntityInserted(topicTemplate);
+            await _topicTemplateRepository.InsertAsync(topicTemplate);
         }
 
         /// <summary>
         /// Updates the topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void UpdateTopicTemplate(TopicTemplate topicTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateTopicTemplateAsync(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
-            _topicTemplateRepository.Update(topicTemplate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(topicTemplate);
+            await _topicTemplateRepository.UpdateAsync(topicTemplate);
         }
 
         #endregion

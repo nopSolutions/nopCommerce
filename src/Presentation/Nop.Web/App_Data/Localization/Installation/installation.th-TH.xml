@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Thai" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>อีเมลผู้ดูแลระบบ</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>กรุณากรอกอีเมลผู้ดูแลระบบ</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>รหัสผ่านผู้ดูแลระบบ</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>กรุณากรอกรหัสผ่านผู้ดูแลระบบ</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>บัญชีชื่อ '{0}' ไม่ได้รับสิทธิในการแก้ไขภายใต้แฟ้มชื่อ '{1}' กรุณากำหนดสิทธิการแก้ไขเสียก่อน</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>บัญชีชื่อ '{0}' ไม่ได้รับสิทธิในการแก้ไขเอกสารชื่อ '{1}' กรุณากำหนดสิทธิการแก้ไขเสียก่อน</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>ยืนยันรหัสผ่าน</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>กรุณากรอกยืนยันรหัสผ่าน</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>กรุณากรอก SQL connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>รูปแบบค่า SQL connection string ไม่ถูกต้อง</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>ประเทศ *</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>เลือกประเทศของคุณ ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>หากยังไม่มีฐานข้อมูลเก่า ให้สร้างขึ้นด้วย</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>สร้างข้อมูลตัวอย่างด้วย</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>ระบุค่าเอง</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>ฐานข้อมูล</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>เกิดข้อผิดพลาด ขณะสร้างฐานข้อมูล เนื่องจาก: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>รายละเอียดฐานข้อมูล</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>ชื่อฐานข้อมูล</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>ชื่อฐานข้อมูลนี้ยังไม่ถูกสร้างขึ้น หรืออาจเป็นไปได้ว่าคุณไม่มีสิทธิในการเข้าถึงฐานข้อมูลนี้</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>กรุณาเลือก DataProvider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>ถ้าคุณต้องการข้อมูลการใช้งานผลิตภัณฑ์ nopCommerce ติดต่อได้ที่</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>ส่วนเอกสารประกอบบน nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>ตัวอย่าง</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>ติดตั้ง</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>กำลังดำเนินการติดตั้งผลิตภัณฑ์ nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>ใช้การยืนยันตัวตนของวินโดว์(Windows authentication)</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>รหัสผ่านไม่ตรงกัน</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>กรอกค่า connection string เอง (ระดับสูง)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>เริ่มทำการติดตั้งใหม่</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>คลิกเพื่อรีสตาร์ทกระบวนการติดตั้ง (ล้างค่าแคชทั้งหมด)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>กำลังเริ่มใหม่...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>ชื่อฐานข้อมูล</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>กรุณากรอกชื่อฐานข้อมูล</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>ดำเนินการติดตั้งล้มเหลว เนื่องจาก: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>รหัสผ่าน SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>กรุณากรอกรหัสผ่าน SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>ชื่อผู้ใช้ SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>กรุณากรอกชื่อผู้ใช้ SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>ข้อมูลร้านค้า</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>ติดตั้งผลิตภัณฑ์ nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>เพื่อให้การติดตั้งผลิตภัณฑ์นี้เสร็จสมบูรณ์ คุณจำเป็นจะต้องทราบรายละเอียดเกี่ยวกับฐานข้อมูลของคุณ เช่น connection string เป็นต้น กรุณาสอบถามผู้ให้บริการ หรือหากคุณใช้งานในเครื่องภายในให้สอบถามผู้ดูแลระบบของคุณเอง</Value>
+  </LocaleResource>
+</Language>

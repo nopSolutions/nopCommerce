@@ -1,4 +1,5 @@
 ﻿@model HeaderLinksModel
+@using Nop.Core.Domain.Customers
 @inject Nop.Core.IWebHelper webHelper
 
 <div class="header-links">
@@ -11,11 +12,14 @@
         }
         else
         {
-            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url) 
+            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
                 ? url.ToString()
                 : webHelper.GetRawUrl(Context.Request);
 
-            <li><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>
+            @if (Model.RegistrationType != UserRegistrationType.Disabled)
+            {
+                <li><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>
+            }
             <li><a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login">@T("Account.Login")</a></li>
         }
         @if (Model.AllowPrivateMessages)

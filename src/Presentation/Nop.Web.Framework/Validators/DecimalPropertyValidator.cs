@@ -14,11 +14,12 @@ namespace Nop.Web.Framework.Validators
         /// Ctor
         /// </summary>
         /// <param name="maxValue">Maximum value</param>
-        public DecimalPropertyValidator(decimal maxValue) :
-            base("Decimal value is out of range")
+        public DecimalPropertyValidator(decimal maxValue)
         {
             _maxValue = maxValue;
         }
+
+        protected override string GetDefaultMessageTemplate() => "Decimal value is out of range";
 
         /// <summary>
         /// Is valid?

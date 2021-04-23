@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
     /// <summary>
     /// Represents a payment methods model
     /// </summary>
-    public partial class PaymentMethodsModel : BaseNopModel
+    public partial record PaymentMethodsModel : BaseNopModel
     {
         #region Ctor
 

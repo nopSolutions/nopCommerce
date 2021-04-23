@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Shipping
     {
         public ProductAvailabilityRangeValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Shipping.ProductAvailabilityRanges.Fields.Name.Required"));
 
             SetDatabaseValidationRules<ProductAvailabilityRange>(dataProvider);
         }

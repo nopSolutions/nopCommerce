@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a stock quantity history model
     /// </summary>
-    public partial class StockQuantityHistoryModel : BaseNopEntityModel
+    public partial record StockQuantityHistoryModel : BaseNopEntityModel
     {
         #region Properties
 

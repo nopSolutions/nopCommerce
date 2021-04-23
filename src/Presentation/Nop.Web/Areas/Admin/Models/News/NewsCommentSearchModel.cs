@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.News
     /// <summary>
     /// Represents a news comment search model
     /// </summary>
-    public partial class NewsCommentSearchModel : BaseSearchModel
+    public partial record NewsCommentSearchModel : BaseSearchModel
     {
         #region Ctor
 

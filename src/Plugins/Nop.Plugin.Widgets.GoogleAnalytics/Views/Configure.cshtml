@@ -13,26 +13,26 @@
     
     function toggleEnableEcommerce() {
         if ($('#@Html.IdFor(model => model.EnableEcommerce)').is(':checked')) {
-            $('#pnlUseJsToSendEcommerceInfo').show();
-            $('#pnlIncludingTax').show();
+            $('#pnlUseJsToSendEcommerceInfo').showElement();
+            $('#pnlIncludingTax').showElement();
         }
         else {
-            $('#pnlUseJsToSendEcommerceInfo').hide();
-            $('#pnlIncludingTax').hide();
+            $('#pnlUseJsToSendEcommerceInfo').hideElement();
+            $('#pnlIncludingTax').hideElement();
         }
     }
 </script>
 
 <form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
                 @T("Plugins.Widgets.GoogleAnalytics.Instructions")              
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="GoogleId_OverrideForStore" asp-input="GoogleId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="GoogleId" />
@@ -42,7 +42,7 @@
                         <span asp-validation-for="GoogleId"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="TrackingScript_OverrideForStore" asp-input="TrackingScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="TrackingScript" />
@@ -52,7 +52,7 @@
                         <span asp-validation-for="TrackingScript"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="EnableEcommerce_OverrideForStore" asp-input="EnableEcommerce" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="EnableEcommerce" />
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <nop-nested-setting asp-for="EnableEcommerce">
-                    <div class="form-group" id="pnlUseJsToSendEcommerceInfo">
+                    <div class="form-group row" id="pnlUseJsToSendEcommerceInfo">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="UseJsToSendEcommerceInfo_OverrideForStore" asp-input="UseJsToSendEcommerceInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                             <nop-label asp-for="UseJsToSendEcommerceInfo" />
@@ -73,7 +73,7 @@
                             <span asp-validation-for="UseJsToSendEcommerceInfo"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlIncludingTax">
+                    <div class="form-group row" id="pnlIncludingTax">
                         <div class="col-md-3">
                             <nop-override-store-checkbox asp-for="IncludingTax_OverrideForStore" asp-input="IncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                             <nop-label asp-for="IncludingTax" />
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </nop-nested-setting>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="IncludeCustomerId_OverrideForStore" asp-input="IncludeCustomerId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="IncludeCustomerId" />
@@ -94,12 +94,12 @@
                         <span asp-validation-for="IncludeCustomerId"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         &nbsp;
                     </div>
                     <div class="col-md-9">
-                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                     </div>
                 </div>
             </div>

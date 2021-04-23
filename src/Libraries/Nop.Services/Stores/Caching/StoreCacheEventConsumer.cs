@@ -1,7 +1,9 @@
-﻿using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Caching;
 using Nop.Services.Localization;
-using Nop.Services.Orders;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Stores.Caching
 {
@@ -14,14 +16,11 @@ namespace Nop.Services.Stores.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Store entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(Store entity)
         {
-            Remove(NopStoreDefaults.StoresAllCacheKey);
-            RemoveByPrefix(NopOrderDefaults.ShoppingCartPrefixCacheKey);
-
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopLocalizationDefaults.LanguagesByStoreIdPrefixCacheKey, entity);
-
-            RemoveByPrefix(prefix);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopLocalizationDefaults.LanguagesByStorePrefix, entity);
         }
     }
 }

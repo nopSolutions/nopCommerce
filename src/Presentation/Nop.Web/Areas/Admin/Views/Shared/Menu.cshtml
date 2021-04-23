@@ -1,32 +1,33 @@
 ﻿@using Nop.Services.Plugins
 @using Nop.Services.Security
-@using Nop.Web.Framework.Menu
+
 @inject IPermissionService permissionService
 @inject IPluginManager<IAdminMenuPlugin> adminMenuPluginManager
-@inject IWorkContext workContext
 
-<ul class="sidebar-menu" data-widget="tree">
+<ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu">
     @{
+        var customer = await workContext.GetCurrentCustomerAsync();
+
         //load sitemap
         var siteMap = new XmlSiteMap();
-        siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
+        await siteMap.LoadFromAsync("~/Areas/Admin/sitemap.config");
 
         //standard (default) items
         var rootNode = siteMap.RootNode;
 
         //plugins
-        var adminMenuPlugins = adminMenuPluginManager.LoadAllPlugins(workContext.CurrentCustomer);
+        var adminMenuPlugins = await adminMenuPluginManager.LoadAllPluginsAsync(customer);
         foreach (var adminMenuPlugin in adminMenuPlugins)
         {
-            adminMenuPlugin.ManageSiteMap(rootNode);
+            await adminMenuPlugin.ManageSiteMapAsync(rootNode);
         }
 
         //"Plugins" menu item should be visible when it has some child nodes
         var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
-        if (pluginNode != null && pluginNode.Visible)
+        if (pluginNode?.Visible ?? false)
         {
-            var hasManagePluginsPermission = permissionService.Authorize(StandardPermissionProvider.ManagePlugins);
-            pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
+            pluginNode.Visible = pluginNode.ChildNodes.Any(x => x.Visible) 
+                &&  await permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins, customer);
         }
 
         //display menu items

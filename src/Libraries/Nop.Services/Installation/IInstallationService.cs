@@ -1,4 +1,7 @@
-﻿namespace Nop.Services.Installation
+﻿using System.Globalization;
+using System.Threading.Tasks;
+
+namespace Nop.Services.Installation
 {
     /// <summary>
     /// Installation service
@@ -10,12 +13,18 @@
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
         /// <param name="defaultUserPassword">Default user password</param>
-        void InstallRequiredData(string defaultUserEmail, string defaultUserPassword);
-        
+        /// <param name="languagePackInfo">Language pack info</param>
+        /// <param name="regionInfo">RegionInfo</param>
+        /// <param name="cultureInfo">CultureInfo</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InstallRequiredDataAsync(string defaultUserEmail, string defaultUserPassword,
+            (string languagePackDownloadLink, int languagePackProgress) languagePackInfo, RegionInfo regionInfo, CultureInfo cultureInfo);
+
         /// <summary>
         /// Install sample data
         /// </summary>
         /// <param name="defaultUserEmail">Default user email</param>
-        void InstallSampleData(string defaultUserEmail);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InstallSampleDataAsync(string defaultUserEmail);
     }
 }

@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Tax
     /// <summary>
     /// Represents a tax category search model
     /// </summary>
-    public partial class TaxCategorySearchModel : BaseSearchModel
+    public partial record TaxCategorySearchModel : BaseSearchModel
     {
         #region Ctor
 

@@ -8,7 +8,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.EntityUseCode
     /// <summary>
     /// Represents an entity use code model
     /// </summary>
-    public class EntityUseCodeModel : BaseNopEntityModel
+    public record EntityUseCodeModel : BaseNopEntityModel
     {
         #region Ctor
 

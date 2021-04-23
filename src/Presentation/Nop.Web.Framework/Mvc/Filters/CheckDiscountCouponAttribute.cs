@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
@@ -36,7 +37,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that checks and applied discount coupon code to customer
         /// </summary>
-        private class CheckDiscountCouponFilter : IActionFilter
+        private class CheckDiscountCouponFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -65,13 +66,14 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task CheckDiscountCouponAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -84,13 +86,13 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
-                var currentCustomer = _workContext.CurrentCustomer;
+                var customer = await _workContext.GetCurrentCustomerAsync();
 
                 //ignore search engines
-                if (currentCustomer.IsSearchEngineAccount())
+                if (customer.IsSearchEngineAccount())
                     return;
 
                 //try to get discount coupon code
@@ -99,49 +101,55 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get validated discounts with passed coupon codes
-                var discounts = couponCodes
-                    .SelectMany(couponCode => _discountService.GetAllDiscounts(couponCode: couponCode))
-                    .Distinct()
-                    .ToList();
 
                 var validCouponCodes = new List<string>();
+                var discounts = await couponCodes
+                    .SelectManyAwait(async couponCode => await _discountService.GetAllDiscountsAsync(couponCode: couponCode))
+                    .Distinct()
+                    .ToListAsync();
 
                 foreach (var discount in discounts)
                 {
-                    if (!_discountService.ValidateDiscount(discount, currentCustomer, couponCodes.ToArray()).IsValid)
+                    var result = await _discountService.ValidateDiscountAsync(discount, customer, couponCodes.ToArray());
+                    if (!result.IsValid)
                         continue;
-                    
+
                     //apply discount coupon codes to customer
-                    _customerService.ApplyDiscountCouponCode(currentCustomer, discount.CouponCode);
+                    await _customerService.ApplyDiscountCouponCodeAsync(customer, discount.CouponCode);
+
                     validCouponCodes.Add(discount.CouponCode);
                 }
 
                 //show notifications for activated coupon codes
+                var locale = await _localizationService.GetResourceAsync("ShoppingCart.DiscountCouponCode.Activated");
                 foreach (var validCouponCode in validCouponCodes.Distinct())
                 {
-                    _notificationService.SuccessNotification(
-                        string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Activated"),
-                            validCouponCode));
+                    _notificationService.SuccessNotification(string.Format(locale, WebUtility.HtmlEncode(validCouponCode)));
                 }
 
                 //show notifications for invalid coupon codes
-                foreach (var invalidCouponCode in couponCodes.Except(
-                    validCouponCodes.Distinct()))
+                var invalidLocale = await _localizationService.GetResourceAsync("ShoppingCart.DiscountCouponCode.Invalid");
+                foreach (var invalidCouponCode in couponCodes.Except(validCouponCodes.Distinct()))
                 {
-                    _notificationService.WarningNotification(
-                        string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Invalid"),
-                            invalidCouponCode));
+                    _notificationService.WarningNotification(string.Format(invalidLocale, WebUtility.HtmlEncode(invalidCouponCode)));
                 }
-
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await CheckDiscountCouponAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

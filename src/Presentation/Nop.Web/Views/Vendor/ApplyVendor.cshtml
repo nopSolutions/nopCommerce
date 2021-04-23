@@ -86,14 +86,14 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
                                 }
                             </div>
                         }
                     </div>
                 </div>
                 <div class="buttons">
-                    <input type="submit" id="apply-vendor" name="apply-vendor" class="button-1 apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
+                    <button type="submit" id="apply-vendor" name="apply-vendor" class="button-1 apply-vendor-button">@T("Vendors.ApplyAccount.Button")</button>
                 </div>
             </form>
         }

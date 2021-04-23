@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
@@ -26,7 +27,8 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachment)</param>
         /// <param name="headers">Headers</param>
-        void SendEmail(EmailAccount emailAccount, string subject, string body,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task SendEmailAsync(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyToAddress = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,

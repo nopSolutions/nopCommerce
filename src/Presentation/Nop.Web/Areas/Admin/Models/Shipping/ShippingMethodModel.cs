@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a shipping method model
     /// </summary>
-    public partial class ShippingMethodModel : BaseNopEntityModel, ILocalizedModel<ShippingMethodLocalizedModel>
+    public partial record ShippingMethodModel : BaseNopEntityModel, ILocalizedModel<ShippingMethodLocalizedModel>
     {
         #region Ctor
 
@@ -34,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
         #endregion
     }
 
-    public partial class ShippingMethodLocalizedModel : ILocalizedLocaleModel
+    public partial record ShippingMethodLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

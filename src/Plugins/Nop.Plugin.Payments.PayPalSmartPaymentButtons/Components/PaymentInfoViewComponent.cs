@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models;
@@ -53,8 +54,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var model = new PaymentInfoModel();
 
@@ -63,13 +67,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
             _paymentService.GenerateOrderGuid(paymentRequest);
 
             //try to create an order
-            var (order, errorMessage) = _serviceManager.CreateOrder(_settings, paymentRequest.OrderGuid);
+            var (order, errorMessage) = await _serviceManager.CreateOrderAsync(_settings, paymentRequest.OrderGuid);
             if (order != null)
             {
                 model.OrderId = order.Id;
 
                 //save order details for future using
-                paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.OrderId"), order.Id);
+                paymentRequest.CustomValues.Add(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.OrderId"), order.Id);
             }
             else if (!string.IsNullOrEmpty(errorMessage))
             {

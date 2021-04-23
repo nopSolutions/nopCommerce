@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    public partial class OrderAddressModel : BaseNopModel
+    public partial record OrderAddressModel : BaseNopModel
     {
         #region Ctor
 

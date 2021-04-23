@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 using Nop.Services.Discounts;
 
@@ -13,25 +14,25 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Category entity)
+        /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(Category entity, EntityEventType entityEventType)
         {
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
-            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, entity);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoriesHomepagePrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoryBreadcrumbPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.CategoryProductsNumberPrefix);
+            await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsPrefix);
 
-            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
-            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
-            
-            RemoveByPrefix(NopCatalogDefaults.CategoriesDisplayedOnHomepagePrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesAllPrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefixCacheKey);
-            
-            RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
+            if (entityEventType == EntityEventType.Delete)
+                await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByCategoryCacheKey, entity);
 
-            RemoveByPrefix(NopDiscountDefaults.DiscountCategoryIdsPrefixCacheKey);
+            await RemoveAsync(NopDiscountDefaults.AppliedDiscountsCacheKey, nameof(Category), entity);
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

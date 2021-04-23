@@ -4,24 +4,24 @@
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
-    var stores = Model.Stores.Select(store => new SelectListItem
+    var stores = await Model.Stores.SelectAwait(async store => new SelectListItem
     {
         Text = store.Name,
-        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id, returnUrl }, webHelper.CurrentRequestProtocol),
+        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id, returnUrl }, webHelper.GetCurrentRequestProtocol()),
         Selected = store.Id.Equals(Model.StoreId)
-    }).ToList();
+    }).ToListAsync();
     stores.Insert(0, new SelectListItem
     {
         Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
-        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = 0, returnUrl }, webHelper.CurrentRequestProtocol),
+        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = 0, returnUrl }, webHelper.GetCurrentRequestProtocol()),
         Selected = 0.Equals(Model.StoreId)
     });
 }
 
-<div class="form-group">
+<div class="form-group row">
     <div class="col-md-12 store-scope-configuration">
         <div class="label-wrapper">
-            <label class="control-label">
+            <label class="col-form-label">
                 @T("Admin.Configuration.Settings.StoreScope")
             </label>
         </div>

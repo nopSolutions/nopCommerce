@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Configuration;
@@ -42,14 +43,18 @@ namespace Nop.Services.Payments
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <param name="countryId">Filter by country; pass 0 to load all plugins</param>
-        /// <returns>List of active payment methods</returns>
-        public virtual IList<IPaymentMethod> LoadActivePlugins(Customer customer = null, int storeId = 0, int countryId = 0)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of active payment methods
+        /// </returns>
+        public virtual async Task<IList<IPaymentMethod>> LoadActivePluginsAsyncAsync(Customer customer = null, int storeId = 0,
+            int countryId = 0)
         {
-            var paymentMethods = LoadActivePlugins(_paymentSettings.ActivePaymentMethodSystemNames, customer, storeId);
+            var paymentMethods = await LoadActivePluginsAsync(_paymentSettings.ActivePaymentMethodSystemNames, customer, storeId);
 
             //filter by country
             if (countryId > 0)
-                paymentMethods = paymentMethods.Where(method => !GetRestrictedCountryIds(method).Contains(countryId)).ToList();
+                paymentMethods = await paymentMethods.WhereAwait(async method => !(await GetRestrictedCountryIdsAsync(method)).Contains(countryId)).ToListAsync();
 
             return paymentMethods;
         }
@@ -70,10 +75,13 @@ namespace Nop.Services.Payments
         /// <param name="systemName">System name of payment method to check</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Result</returns>
-        public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0)
         {
-            var paymentMethod = LoadPluginBySystemName(systemName, customer, storeId);
+            var paymentMethod = await LoadPluginBySystemNameAsync(systemName, customer, storeId);
             return IsPluginActive(paymentMethod);
         }
 
@@ -81,15 +89,18 @@ namespace Nop.Services.Payments
         /// Get countries in which the passed payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
-        /// <returns>List of country identifiers</returns>
-        public virtual IList<int> GetRestrictedCountryIds(IPaymentMethod paymentMethod)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of country identifiers
+        /// </returns>
+        public virtual async Task<IList<int>> GetRestrictedCountryIdsAsync(IPaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException(nameof(paymentMethod));
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            return _settingService.GetSettingByKey<List<int>>(settingKey) ?? new List<int>();
+            return await _settingService.GetSettingByKeyAsync<List<int>>(settingKey) ?? new List<int>();
         }
 
         /// <summary>
@@ -97,14 +108,15 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">List of country identifiers</param>
-        public virtual void SaveRestrictedCountries(IPaymentMethod paymentMethod, IList<int> countryIds)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task SaveRestrictedCountriesAsync(IPaymentMethod paymentMethod, IList<int> countryIds)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException(nameof(paymentMethod));
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            _settingService.SetSetting(settingKey, countryIds.ToList());
+            await _settingService.SetSettingAsync(settingKey, countryIds.ToList());
         }
 
         #endregion

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Shipping.UPS.Models
 {
-    public class UPSShippingModel : BaseNopModel
+    public record UPSShippingModel : BaseNopModel
     {
         #region Ctor
 

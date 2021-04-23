@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Plugins;
 
@@ -13,7 +14,10 @@ namespace Nop.Services.Directory
         /// Gets currency live rates
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
-        /// <returns>Exchange rates</returns>
-        IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the exchange rates
+        /// </returns>
+        Task<IList<ExchangeRate>> GetCurrencyLiveRatesAsync(string exchangeRateCurrencyCode);
     }
 }

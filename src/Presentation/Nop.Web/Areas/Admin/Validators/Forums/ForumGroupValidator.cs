@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Forums
     {
         public ForumGroupValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.ContentManagement.Forums.ForumGroup.Fields.Name.Required"));
 
             SetDatabaseValidationRules<ForumGroup>(dataProvider);
         }

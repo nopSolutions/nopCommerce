@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.ShipStation.Services
@@ -10,17 +11,21 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// Gets all rates
         /// </summary>
         /// <param name="shippingOptionRequest"></param>
-        /// <returns></returns>
-        IList<ShipStationServiceRate> GetAllRates(GetShippingOptionRequest shippingOptionRequest);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
+        Task<IList<ShipStationServiceRate>> GetAllRatesAsync(GetShippingOptionRequest shippingOptionRequest);
         
         /// <summary>
-        /// Create or upadete shipping
+        /// Create or update shipping
         /// </summary>
-        /// <param name="orderNumber"></param>
-        /// <param name="carrier"></param>
-        /// <param name="service"></param>
-        /// <param name="trackingNumber"></param>
-        void CreateOrUpadeteShipping(string orderNumber, string carrier, string service, string trackingNumber);
+        /// <param name="orderNumber">Order number</param>
+        /// <param name="carrier">Carrier</param>
+        /// <param name="service">Service</param>
+        /// <param name="trackingNumber">Tracking number</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task CreateOrUpdateShippingAsync(string orderNumber, string carrier, string service, string trackingNumber);
 
         /// <summary>
         /// Get XML view of orders to sending to the ShipStation service
@@ -29,8 +34,11 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="endDate">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>XML view of orders</returns>
-        string GetXmlOrders(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the xML view of orders
+        /// </returns>
+        Task<string> GetXmlOrdersAsync(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets a string that defines the required format of date time

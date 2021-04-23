@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.Vendors
@@ -6,7 +7,7 @@ namespace Nop.Core.Domain.Vendors
     /// <summary>
     /// Represents a vendor
     /// </summary>
-    public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported
+    public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the name
@@ -82,5 +83,25 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the available customer selectable page size options
         /// </summary>
         public string PageSizeOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range filtering is enabled
+        /// </summary>
+        public bool PriceRangeFiltering { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "from" price
+        /// </summary>
+        public decimal PriceFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "to" price
+        /// </summary>
+        public decimal PriceTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range should be entered manually
+        /// </summary>
+        public bool ManuallyPriceRange { get; set; }
     }
 }

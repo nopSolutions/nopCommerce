@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Catalog.Caching
@@ -8,13 +9,5 @@ namespace Nop.Services.Catalog.Caching
     /// </summary>
     public partial class CategoryTemplateCacheEventConsumer : CacheEventConsumer<CategoryTemplate>
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        protected override void ClearCache(CategoryTemplate entity)
-        {
-            Remove(NopCatalogDefaults.CategoryTemplatesAllCacheKey);
-        }
     }
 }

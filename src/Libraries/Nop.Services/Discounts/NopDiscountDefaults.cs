@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts
 {
@@ -20,7 +21,7 @@ namespace Nop.Services.Discounts
         /// <remarks>
         /// {0} : discount id
         /// </remarks>
-        public static CacheKey DiscountRequirementModelCacheKey => new CacheKey("Nop.discounts.requirements-{0}");
+        public static CacheKey DiscountRequirementsByDiscountCacheKey => new CacheKey("Nop.discountrequirement.bydiscount.{0}");
 
         /// <summary>
         /// Key for caching
@@ -30,12 +31,16 @@ namespace Nop.Services.Discounts
         /// {1} : coupon code
         /// {2} : discount name
         /// </remarks>
-        public static CacheKey DiscountAllCacheKey => new CacheKey("Nop.discounts.all-{0}-{1}-{2}", DiscountAllPrefixCacheKey);
+        public static CacheKey DiscountAllCacheKey => new CacheKey("Nop.discount.all.{0}-{1}-{2}", NopEntityCacheDefaults<Discount>.AllPrefix);
 
         /// <summary>
-        /// Gets a key pattern to clear cache
+        /// Key for caching
         /// </summary>
-        public static string DiscountAllPrefixCacheKey => "Nop.discounts.all";
+        /// <remarks>
+        /// {0} - entity type
+        /// {1} - entity id
+        /// </remarks>
+        public static CacheKey AppliedDiscountsCacheKey => new CacheKey("Nop.discount.applied.{0}-{1}");
 
         /// <summary>
         /// Key for category IDs of a discount
@@ -45,7 +50,7 @@ namespace Nop.Services.Discounts
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public static CacheKey DiscountCategoryIdsModelCacheKey => new CacheKey("Nop.discounts.categoryids-{0}-{1}-{2}", DiscountCategoryIdsByDiscountPrefixCacheKey, DiscountCategoryIdsPrefixCacheKey);
+        public static CacheKey CategoryIdsByDiscountCacheKey => new CacheKey("Nop.discount.categoryids.bydiscount.{0}-{1}-{2}", CategoryIdsByDiscountPrefix, CategoryIdsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -53,12 +58,12 @@ namespace Nop.Services.Discounts
         /// <remarks>
         /// {0} : discount id
         /// </remarks>
-        public static string DiscountCategoryIdsByDiscountPrefixCacheKey => "Nop.discounts.categoryids-{0}";
+        public static string CategoryIdsByDiscountPrefix => "Nop.discount.categoryids.bydiscount.{0}";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string DiscountCategoryIdsPrefixCacheKey => "Nop.discounts.categoryids";
+        public static string CategoryIdsPrefix => "Nop.discount.categoryids.bydiscount.";
 
         /// <summary>
         /// Key for manufacturer IDs of a discount
@@ -68,7 +73,7 @@ namespace Nop.Services.Discounts
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public static CacheKey DiscountManufacturerIdsModelCacheKey => new CacheKey("Nop.discounts.manufacturerids-{0}-{1}-{2}", DiscountManufacturerIdsByDiscountPrefixCacheKey, DiscountManufacturerIdsPrefixCacheKey);
+        public static CacheKey ManufacturerIdsByDiscountCacheKey => new CacheKey("Nop.discount.manufacturerids.bydiscount.{0}-{1}-{2}", ManufacturerIdsByDiscountPrefix, ManufacturerIdsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -76,12 +81,12 @@ namespace Nop.Services.Discounts
         /// <remarks>
         /// {0} : discount id
         /// </remarks>
-        public static string DiscountManufacturerIdsByDiscountPrefixCacheKey => "Nop.discounts.manufacturerids-{0}";
+        public static string ManufacturerIdsByDiscountPrefix => "Nop.discount.manufacturerids.bydiscount.{0}";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string DiscountManufacturerIdsPrefixCacheKey => "Nop.discounts.manufacturerids";
+        public static string ManufacturerIdsPrefix => "Nop.discount.manufacturerids.bydiscount.";
 
         #endregion
     }

@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a return request model
     /// </summary>
-    public partial class ReturnRequestModel : BaseNopEntityModel
+    public partial record ReturnRequestModel : BaseNopEntityModel
     {
         #region Properties
 

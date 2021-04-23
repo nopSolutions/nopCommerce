@@ -34,10 +34,11 @@
     </script>
 }
 
-<div class="panel-body">
+<div class="card-body">
+
     @if (Model.UsernamesEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="Username" />
             </div>
@@ -47,7 +48,7 @@
             </div>
         </div>
     }
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Email" />
         </div>
@@ -56,14 +57,14 @@
             <span asp-validation-for="Email"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Password" />
         </div>
         <div class="col-md-9">
             <div class="input-group">
-                <nop-editor asp-for="Password" />
-                <div class="input-group-btn">
+                <nop-editor asp-for="Password" autocomplete="new-password"/>
+                <div class="input-group-append">
                     @if (Model.Id > 0)
                     {
                         <button type="submit" name="changepassword" class="btn btn-info">
@@ -75,7 +76,7 @@
             <span asp-validation-for="Password"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="FirstName" />
         </div>
@@ -84,7 +85,7 @@
             <span asp-validation-for="FirstName"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="LastName" />
         </div>
@@ -95,27 +96,23 @@
     </div>
     @if (Model.GenderEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="Gender" />
             </div>
             <div class="col-md-9">
                 <div class="raw">
-                    <div class="col-md-1">
-                        <div class="radio">
-                            <label>
-                                @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
-                                @T("Admin.Customers.Customers.Fields.Gender.Male")
-                            </label>
-                        </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="Gender" id="Gender_Male" value="M" @(Model.Gender == "M" ? Html.Raw("checked") : null)>
+                        <label class="form-check-label" for="Gender_Male">
+                            @T("Admin.Customers.Customers.Fields.Gender.Male")
+                        </label>
                     </div>
-                    <div class="col-md-11">
-                        <div class="radio">
-                            <label>
-                                @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
-                                @T("Admin.Customers.Customers.Fields.Gender.Female")
-                            </label>
-                        </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="Gender" id="Gender_Female" value="F" @(Model.Gender == "F" ? Html.Raw("checked") : null)>
+                        <label class="form-check-label" for="Gender_Female">
+                            @T("Admin.Customers.Customers.Fields.Gender.Female")
+                        </label>
                     </div>
                 </div>
             </div>
@@ -123,7 +120,7 @@
     }
     @if (Model.DateOfBirthEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="DateOfBirth" />
             </div>
@@ -135,7 +132,7 @@
     }
     @if (Model.CompanyEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="Company" />
             </div>
@@ -147,7 +144,7 @@
     }
     @if (Model.StreetAddressEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="StreetAddress" />
             </div>
@@ -159,7 +156,7 @@
     }
     @if (Model.StreetAddress2Enabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="StreetAddress2" />
             </div>
@@ -171,7 +168,7 @@
     }
     @if (Model.ZipPostalCodeEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="ZipPostalCode" />
             </div>
@@ -183,7 +180,7 @@
     }
     @if (Model.CityEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="City" />
             </div>
@@ -195,7 +192,7 @@
     }
     @if (Model.CountyEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="County" />
             </div>
@@ -207,7 +204,7 @@
     }
     @if (Model.CountryEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CountryId" />
             </div>
@@ -219,7 +216,7 @@
     }
     @if (Model.CountryEnabled && Model.StateProvinceEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="StateProvinceId" />
             </div>
@@ -231,7 +228,7 @@
     }
     @if (Model.PhoneEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="Phone" />
             </div>
@@ -243,7 +240,7 @@
     }
     @if (Model.FaxEnabled)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="Fax" />
             </div>
@@ -257,7 +254,7 @@
     {
         @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
     }
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="IsTaxExempt" />
         </div>
@@ -268,7 +265,7 @@
     </div>
     @if (Model.DisplayVatNumber)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="VatNumber" />
             </div>
@@ -279,7 +276,7 @@
                     <button type="submit" name="markVatNumberAsValid" class="btn btn-primary">
                         @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")
                     </button>
-                    <button type="submit" name="markVatNumberAsInvalid" class="btn bg-red">
+                    <button type="submit" name="markVatNumberAsInvalid" class="btn btn-danger">
                         @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")
                     </button>
                 </div>
@@ -289,7 +286,7 @@
     }
     @if (Model.AllowCustomersToSetTimeZone)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="TimeZoneId" />
             </div>
@@ -301,13 +298,15 @@
     }
     @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
             </div>
             <div class="col-md-9">
-                <div class="input-group input-group-required">
-                    <nop-select asp-for="SelectedNewsletterSubscriptionStoreIds" asp-items="Model.AvailableNewsletterSubscriptionStores" asp-multiple="true" />
+                <div class="input-group-append">
+                    <div class="input-group">
+                        <nop-select asp-for="SelectedNewsletterSubscriptionStoreIds" asp-items="Model.AvailableNewsletterSubscriptionStores" asp-multiple="true" />
+                    </div>
                     <div class="input-group-btn"></div>
                 </div>
                 <script>
@@ -322,41 +321,44 @@
             </div>
         </div>
     }
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedCustomerRoleIds" />
         </div>
-        <div class="col-md-9">
-            <div class="input-group input-group-required">
-                <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+
+        <div class="col-md-9">            
+            <div class="input-group-append input-group-required">
+                <div class="input-group">
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                </div>
                 <div class="input-group-btn">
                     <nop-required />
                 </div>
             </div>
             <script>
                 $(document).ready(function() {
-                    var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                    customerRolesIdsInput.setOptions({
-                        customerRolesIdsInput: false,
+                    var customerRoleIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                    customerRoleIdsInput.setOptions({
+                        customerRoleIdsInput: false,
                         filter: "contains"
                     });
 
                     @if (Model.AvailableCustomerRoles.Count == 0)
                     {
                         <text>
-                            customerRolesIdsInput.setOptions({
+                            customerRoleIdsInput.setOptions({
                                 enable: false,
                                 placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
                             });
-                            customerRolesIdsInput._placeholder();
-                            customerRolesIdsInput._enable();
+                            customerRoleIdsInput._placeholder();
+                            customerRoleIdsInput._enable();
                         </text>
                     }
                 });
             </script>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="VendorId" />
         </div>
@@ -368,19 +370,19 @@
     </div>
     @if (Model.AffiliateId > 0)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="AffiliateId" />
             </div>
             <div class="col-md-9">
                 <a asp-controller="Affiliate" asp-action="Edit" asp-route-id="@Model.AffiliateId">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                <button type="submit" name="remove-affiliate" class="btn bg-red">
+                <button type="submit" name="remove-affiliate" class="btn btn-danger">
                     @T("Admin.Customers.Customers.Fields.Affiliate.Remove")
                 </button>
             </div>
         </div>
     }
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Active" />
         </div>
@@ -389,10 +391,32 @@
             <span asp-validation-for="Active"></span>
         </div>
     </div>
+    @if (!string.IsNullOrEmpty(Model.MultiFactorAuthenticationProvider))
+    {
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="MultiFactorAuthenticationProvider" />
+            </div>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <nop-editor asp-for="MultiFactorAuthenticationProvider" asp-disabled="true"/>
+                    <div class="input-group-append">
+                        @if (Model.Id > 0)
+                        {
+                            <a id="mfa-bind-delete" href="#" class="btn btn-danger">
+                                @T("Admin.Common.Delete")
+                            </a>
+                        }
+                    </div>
+                </div>
+                <span asp-validation-for="MultiFactorAuthenticationProvider"></span>
+            </div>
+        </div>
+    }
 
     @if (Model.Id > 0 && Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Count > 0)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords" />
             </div>
@@ -432,7 +456,7 @@
             </div>
         </div>
     }
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AdminComment" />
         </div>
@@ -443,7 +467,7 @@
     </div>
     @if (Model.DisplayRegisteredInStore)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RegisteredInStore" />
             </div>
@@ -454,7 +478,7 @@
     }
     @if (Model.Id > 0)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="LastIpAddress" />
             </div>
@@ -465,7 +489,7 @@
     }
     @if (Model.Id > 0)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CreatedOn" />
             </div>
@@ -476,7 +500,7 @@
     }
     @if (Model.Id > 0)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="LastActivityDate" />
             </div>
@@ -487,7 +511,7 @@
     }
     @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.LastVisitedPage))
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="LastVisitedPage" />
             </div>

@@ -49,7 +49,7 @@
         let selfTop = this;
 
         let catSel = 'li[' + this.topMenuLineAttr + ' = ' + id + ']';
-        if ($(catSel).hasClass("loaded")) { return; }
+        if ($(catSel).is(".loaded,.loading")) { return; }
 
         $.ajax({
             cache: false,
@@ -67,7 +67,13 @@
                 $(catSel).addClass("loaded");
                 $(catSel + ' > ul').append(listItems);
             },
-            error: this.ajaxFailure
+            error: this.ajaxFailure,
+            beforeSend: function() {
+                $(catSel).addClass("loading");
+            },
+            complete: function() {
+                $(catSel).removeClass("loading");
+            }
         });
     },
 

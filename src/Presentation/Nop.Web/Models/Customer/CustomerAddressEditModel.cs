@@ -3,7 +3,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CustomerAddressEditModel : BaseNopModel
+    public partial record CustomerAddressEditModel : BaseNopModel
     {
         public CustomerAddressEditModel()
         {

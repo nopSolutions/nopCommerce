@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Services.Authentication.External;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
@@ -50,15 +51,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged external authentication method list model
         /// </summary>
         /// <param name="searchModel">External authentication method search model</param>
-        /// <returns>External authentication method list model</returns>
-        public virtual ExternalAuthenticationMethodListModel PrepareExternalAuthenticationMethodListModel(
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the external authentication method list model
+        /// </returns>
+        public virtual async Task<ExternalAuthenticationMethodListModel> PrepareExternalAuthenticationMethodListModelAsync(
             ExternalAuthenticationMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get external authentication methods
-            var externalAuthenticationMethods = _authenticationPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var externalAuthenticationMethods = (await _authenticationPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ExternalAuthenticationMethodListModel().PrepareToGrid(searchModel, externalAuthenticationMethods, () =>

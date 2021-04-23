@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Blogs
 {
-    public partial class AddBlogCommentModel : BaseNopEntityModel
+    public partial record AddBlogCommentModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Blog.Comments.CommentText")]
         public string CommentText { get; set; }

@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents an order item model
     /// </summary>
-    public partial class OrderItemModel : BaseNopEntityModel
+    public partial record OrderItemModel : BaseNopEntityModel
     {
         #region Ctor
 
@@ -82,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Nested Classes
 
-        public partial class ReturnRequestBriefModel : BaseNopEntityModel
+        public partial record ReturnRequestBriefModel : BaseNopEntityModel
         {
             public string CustomNumber { get; set; }
         }

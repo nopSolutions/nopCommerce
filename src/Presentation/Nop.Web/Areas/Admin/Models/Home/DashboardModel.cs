@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Home
     /// <summary>
     /// Represents a dashboard model
     /// </summary>
-    public partial class DashboardModel : BaseNopModel
+    public partial record DashboardModel : BaseNopModel
     {
         #region Ctor
 

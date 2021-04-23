@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Seo;
 
@@ -10,49 +11,38 @@ namespace Nop.Services.Seo
     public partial interface IUrlRecordService
     {
         /// <summary>
-        /// Deletes an URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        void DeleteUrlRecord(UrlRecord urlRecord);
-
-        /// <summary>
         /// Deletes an URL records
         /// </summary>
         /// <param name="urlRecords">URL records</param>
-        void DeleteUrlRecords(IList<UrlRecord> urlRecords);
-
-        /// <summary>
-        /// Gets an URL record
-        /// </summary>
-        /// <param name="urlRecordId">URL record identifier</param>
-        /// <returns>URL record</returns>
-        UrlRecord GetUrlRecordById(int urlRecordId);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteUrlRecordsAsync(IList<UrlRecord> urlRecords);
 
         /// <summary>
         /// Gets an URL records
         /// </summary>
         /// <param name="urlRecordIds">URL record identifiers</param>
-        /// <returns>URL record</returns>
-        IList<UrlRecord> GetUrlRecordsByIds(int[] urlRecordIds);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the uRL record
+        /// </returns>
+        Task<IList<UrlRecord>> GetUrlRecordsByIdsAsync(int[] urlRecordIds);
 
         /// <summary>
         /// Inserts an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        void InsertUrlRecord(UrlRecord urlRecord);
-
-        /// <summary>
-        /// Updates the URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        void UpdateUrlRecord(UrlRecord urlRecord);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertUrlRecordAsync(UrlRecord urlRecord);
 
         /// <summary>
         /// Find URL record
         /// </summary>
         /// <param name="slug">Slug</param>
-        /// <returns>Found URL record</returns>
-        UrlRecord GetBySlug(string slug);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found URL record
+        /// </returns>
+        Task<UrlRecord> GetBySlugAsync(string slug);
 
         /// <summary>
         /// Gets all URL records
@@ -62,8 +52,11 @@ namespace Nop.Services.Seo
         /// <param name="isActive">A value indicating whether to get active records; "null" to load all records; "false" to load only inactive records; "true" to load only active records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>URL records</returns>
-        IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int? languageId = null, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the uRL records
+        /// </returns>
+        Task<IPagedList<UrlRecord>> GetAllUrlRecordsAsync(string slug = "", int? languageId = null, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Find slug
@@ -71,8 +64,11 @@ namespace Nop.Services.Seo
         /// <param name="entityId">Entity identifier</param>
         /// <param name="entityName">Entity name</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Found slug</returns>
-        string GetActiveSlug(int entityId, string entityName, int languageId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found slug
+        /// </returns>
+        Task<string> GetActiveSlugAsync(int entityId, string entityName, int languageId);
 
         /// <summary>
         /// Save slug
@@ -81,7 +77,8 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
-        void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported;
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task SaveSlugAsync<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported;
 
         /// <summary>
         ///  Get search engine friendly name (slug)
@@ -91,8 +88,11 @@ namespace Nop.Services.Seo
         /// <param name="languageId">Language identifier; pass null to use the current language</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
-        /// <returns>Search engine  name (slug)</returns>
-        string GetSeName<T>(T entity, int? languageId = null, bool returnDefaultValue = true,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search engine  name (slug)
+        /// </returns>
+        Task<string> GetSeNameAsync<T>(T entity, int? languageId = null, bool returnDefaultValue = true,
             bool ensureTwoPublishedLanguages = true) where T : BaseEntity, ISlugSupported;
 
         /// <summary>
@@ -103,8 +103,11 @@ namespace Nop.Services.Seo
         /// <param name="languageId">Language identifier; pass null to use the current language</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
-        /// <returns>Search engine  name (slug)</returns>
-        string GetSeName(int entityId, string entityName, int? languageId = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the search engine  name (slug)
+        /// </returns>
+        Task<string> GetSeNameAsync(int entityId, string entityName, int? languageId = null,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true);
 
         /// <summary>
@@ -113,8 +116,11 @@ namespace Nop.Services.Seo
         /// <param name="name">Name</param>
         /// <param name="convertNonWesternChars">A value indicating whether non western chars should be converted</param>
         /// <param name="allowUnicodeCharsInUrls">A value indicating whether Unicode chars are allowed</param>
-        /// <returns>Result</returns>
-        string GetSeName(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<string> GetSeNameAsync(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls);
 
         /// <summary>
         /// Validate search engine name
@@ -123,8 +129,11 @@ namespace Nop.Services.Seo
         /// <param name="seName">Search engine name to validate</param>
         /// <param name="name">User-friendly name used to generate sename</param>
         /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
-        /// <returns>Valid sename</returns>
-        string ValidateSeName<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported;
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the valid sename
+        /// </returns>
+        Task<string> ValidateSeNameAsync<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported;
 
         /// <summary>
         /// Validate search engine name
@@ -134,7 +143,10 @@ namespace Nop.Services.Seo
         /// <param name="seName">Search engine name to validate</param>
         /// <param name="name">User-friendly name used to generate sename</param>
         /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
-        /// <returns>Valid sename</returns>
-        string ValidateSeName(int entityId, string entityName, string seName, string name, bool ensureNotEmpty);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the valid sename
+        /// </returns>
+        Task<string> ValidateSeNameAsync(int entityId, string entityName, string seName, string name, bool ensureNotEmpty);
     }
 }

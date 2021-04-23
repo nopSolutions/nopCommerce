@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 using Nop.Services.Discounts;
 
@@ -13,9 +14,21 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Manufacturer entity)
+        /// <param name="entityEventType">Entity event type</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(Manufacturer entity, EntityEventType entityEventType)
         {
-            RemoveByPrefix(NopDiscountDefaults.DiscountManufacturerIdsPrefixCacheKey);
+            await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsPrefix);
+
+            if (entityEventType != EntityEventType.Insert)
+                await RemoveByPrefixAsync(NopCatalogDefaults.ManufacturersByCategoryPrefix);
+
+            if (entityEventType == EntityEventType.Delete)
+                await RemoveAsync(NopCatalogDefaults.SpecificationAttributeOptionsByManufacturerCacheKey, entity);
+
+            await RemoveAsync(NopDiscountDefaults.AppliedDiscountsCacheKey, nameof(Manufacturer), entity);
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

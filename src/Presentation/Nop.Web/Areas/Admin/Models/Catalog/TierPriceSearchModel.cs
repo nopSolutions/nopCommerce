@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a tier price search model
     /// </summary>
-    public partial class TierPriceSearchModel : BaseSearchModel
+    public partial record TierPriceSearchModel : BaseSearchModel
     {
         #region Properties
 

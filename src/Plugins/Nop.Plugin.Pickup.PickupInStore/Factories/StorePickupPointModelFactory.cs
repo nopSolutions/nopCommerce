@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Plugin.Pickup.PickupInStore.Models;
 using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Localization;
@@ -32,23 +33,27 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
         /// Prepare store pickup point list model
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
-        /// <returns>Store pickup point list model</returns>
-        public StorePickupPointListModel PrepareStorePickupPointListModel(StorePickupPointSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store pickup point list model
+        /// </returns>
+        public async Task<StorePickupPointListModel> PrepareStorePickupPointListModelAsync(StorePickupPointSearchModel searchModel)
         {
-            var pickupPoints = _storePickupPointService.GetAllStorePickupPoints(pageIndex: searchModel.Page - 1,
+            var pickupPoints = await _storePickupPointService.GetAllStorePickupPointsAsync(pageIndex: searchModel.Page - 1,
                 pageSize: searchModel.PageSize);
-            var model = new StorePickupPointListModel().PrepareToGrid(searchModel, pickupPoints, () =>
+            var model = await new StorePickupPointListModel().PrepareToGridAsync(searchModel, pickupPoints, () =>
             {
-                return pickupPoints.Select(point =>
+                return pickupPoints.SelectAwait(async point =>
                 {
-                    var store = _storeService.GetStoreById(point.StoreId);
+                    var store = await _storeService.GetStoreByIdAsync(point.StoreId);
+
                     return new StorePickupPointModel
                     {
                         Id = point.Id,
@@ -56,14 +61,13 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
                         OpeningHours = point.OpeningHours,
                         PickupFee = point.PickupFee,
                         DisplayOrder = point.DisplayOrder,
-                        StoreName = store?.Name ?? (point.StoreId == 0
-                                        ? _localizationService.GetResource(
-                                            "Admin.Configuration.Settings.StoreScope.AllStores")
-                                        : string.Empty)
+
+                        StoreName = store?.Name
+                            ?? (point.StoreId == 0 ? (await _localizationService.GetResourceAsync("Admin.Configuration.Settings.StoreScope.AllStores")) : string.Empty)
                     };
                 });
             });
-           
+
             return model;
         }
 
@@ -71,8 +75,11 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         /// Prepare store pickup point search model
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
-        /// <returns>Store pickup point search model</returns>
-        public StorePickupPointSearchModel PrepareStorePickupPointSearchModel(StorePickupPointSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store pickup point search model
+        /// </returns>
+        public Task<StorePickupPointSearchModel> PrepareStorePickupPointSearchModelAsync(StorePickupPointSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -80,7 +87,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         #endregion

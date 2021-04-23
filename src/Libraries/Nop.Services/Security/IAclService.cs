@@ -1,4 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
@@ -11,69 +13,88 @@ namespace Nop.Services.Security
     public partial interface IAclService
     {
         /// <summary>
+        /// Apply ACL to the passed query
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
+        /// <param name="query">Query to filter</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the filtered query
+        /// </returns>
+        Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, Customer customer) where TEntity : BaseEntity, IAclSupported;
+
+        /// <summary>
+        /// Apply ACL to the passed query
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
+        /// <param name="query">Query to filter</param>
+        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the filtered query
+        /// </returns>
+        Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported;
+
+        /// <summary>
         /// Deletes an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        void DeleteAclRecord(AclRecord aclRecord);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteAclRecordAsync(AclRecord aclRecord);
 
-        /// <summary>
-        /// Gets an ACL record
-        /// </summary>
-        /// <param name="aclRecordId">ACL record identifier</param>
-        /// <returns>ACL record</returns>
-        AclRecord GetAclRecordById(int aclRecordId);
-        
         /// <summary>
         /// Gets ACL records
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>ACL records</returns>
-        IList<AclRecord> GetAclRecords<T>(T entity) where T : BaseEntity, IAclSupported;
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the aCL records
+        /// </returns>
+        Task<IList<AclRecord>> GetAclRecordsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Inserts an ACL record
         /// </summary>
-        /// <param name="aclRecord">ACL record</param>
-        void InsertAclRecord(AclRecord aclRecord);
-        
-        /// <summary>
-        /// Inserts an ACL record
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
+        /// <param name="entity">Entity</param>
         /// <param name="customerRoleId">Customer role id</param>
-        /// <param name="entity">Entity</param>
-        void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
-
-        /// <summary>
-        /// Updates the ACL record
-        /// </summary>
-        /// <param name="aclRecord">ACL record</param>
-        void UpdateAclRecord(AclRecord aclRecord);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertAclRecordAsync<TEntity>(TEntity entity, int customerRoleId) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Find customer role identifiers with granted access
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>Customer role identifiers</returns>
-        int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported;
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer role identifiers
+        /// </returns>
+        Task<int[]> GetCustomerRoleIdsWithAccessAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Authorize ACL permission
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize<T>(T entity) where T : BaseEntity, IAclSupported;
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
+        Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Authorize ACL permission
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="entity">Entity</param>
         /// <param name="customer">Customer</param>
-        /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize<T>(T entity, Customer customer) where T : BaseEntity, IAclSupported;
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
+        Task<bool> AuthorizeAsync<TEntity>(TEntity entity, Customer customer) where TEntity : BaseEntity, IAclSupported;
     }
 }
