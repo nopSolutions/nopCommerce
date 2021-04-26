@@ -464,7 +464,7 @@ namespace Nop.Services.Catalog
                     if (value.PriceAdjustmentUsePercentage)
                     {
                         if (!productPrice.HasValue)
-                            productPrice = (await GetFinalPriceAsync(product, customer)).Item1;
+                            productPrice = (await GetFinalPriceAsync(product, customer)).priceWithoutDiscounts;
 
                         adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
                     }
@@ -478,7 +478,7 @@ namespace Nop.Services.Catalog
                     //bundled product
                     var associatedProduct = await _productService.GetProductByIdAsync(value.AssociatedProductId);
                     if (associatedProduct != null) 
-                        adjustment = (await GetFinalPriceAsync(associatedProduct, customer)).Item1 * value.Quantity;
+                        adjustment = (await GetFinalPriceAsync(associatedProduct, customer)).priceWithoutDiscounts * value.Quantity;
 
                     break;
                 default:

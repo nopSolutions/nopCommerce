@@ -331,6 +331,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AllowCustomersToSelectPageSize = true;
                 model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
                 model.PriceRangeFiltering = true;
+                model.ManuallyPriceRange = true;
                 model.PriceFrom = NopCatalogDefaults.DefaultPriceRangeFrom;
                 model.PriceTo = NopCatalogDefaults.DefaultPriceRangeTo;
             }

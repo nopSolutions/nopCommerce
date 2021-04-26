@@ -2082,12 +2082,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
     <Value>Category template</Value>
   </LocaleResource>
@@ -2129,6 +2123,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.LimitedToStores.Hint">
     <Value>Option to limit this category to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.MetaDescription">
     <Value>Meta description</Value>
@@ -2328,12 +2328,6 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Deleted">
     <Value>Deleted</Value>
   </LocaleResource>
@@ -2363,6 +2357,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.LimitedToStores.Hint">
     <Value>Option to limit this manufacturer to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate">
     <Value>Manufacturer template</Value>
@@ -5901,11 +5901,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAllowCustomersToSelectPageSize.Hint">
     <Value>Whether customers are allowed to select the 'Products by tag' page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange">
-    <Value>'Products by tag' page. Calculate price range automatically</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange">
+    <Value>'Products by tag' page. Enter price range manually</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint">
-    <Value>"Check to enable automatic calculation of price range on the 'Products by tag' page (based on prices of available products). Do not enable if you have complex discount rules.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize">
     <Value>'Products by tag' page. Products per page</Value>
@@ -5991,11 +5991,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize.Hint">
     <Value>Search page. Check to allow customers to select the page size from a predefined list of options.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange">
-    <Value>Search page. Calculate price range automatically</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange">
+    <Value>Search page. Enter price range manually</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatic calculation of price range  on the 'Search' page (based on prices of available products). Do not enable if you have complex discount rules.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options</Value>
@@ -15531,12 +15531,6 @@
   <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails.None">
     <Value>No customer account associated to this vendor.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange">
-    <Value>Calculate price range automatically</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint">
-    <Value>Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Description">
     <Value>Description</Value>
   </LocaleResource>
@@ -15557,6 +15551,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Email.Required">
     <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.ManuallyPriceRange">
+    <Value>Enter price range manually</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.ManuallyPriceRange.Hint">
+    <Value>Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.MetaDescription">
     <Value>Meta description</Value>

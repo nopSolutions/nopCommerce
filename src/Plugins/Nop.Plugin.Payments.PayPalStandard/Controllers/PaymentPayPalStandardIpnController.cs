@@ -209,7 +209,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> IPNHandler()
         {
             await using var stream = new MemoryStream();

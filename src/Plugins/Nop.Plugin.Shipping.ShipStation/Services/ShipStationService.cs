@@ -10,6 +10,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -51,6 +52,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         private readonly ILogger _logger;
         private readonly IMeasureService _measureService;
         private readonly IOrderService _orderService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;        
@@ -69,6 +71,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             ILogger logger,
             IMeasureService measureService,
             IOrderService orderService,
+            IProductAttributeParser productAttributeParser,
             IProductService productService,
             IShipmentService shipmentService,
             IShippingService shippingService,
@@ -83,6 +86,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             _logger = logger;
             _measureService = measureService;
             _orderService = orderService;
+            _productAttributeParser = productAttributeParser;
             _productService = productService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
@@ -338,6 +342,19 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 await writer.WriteStartElementAsync("Item");
 
                 var sku = product.Sku;
+
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+                {
+                    var attributesXml = orderItem.AttributesXml;
+
+                    if (!string.IsNullOrEmpty(attributesXml) && product.ManageInventoryMethod ==
+                        ManageInventoryMethod.ManageStockByAttributes)
+                    {
+                        var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
+                        if (combination != null && !string.IsNullOrEmpty(combination.Sku)) 
+                            sku = combination.Sku;
+                    }
+                }
 
                 await writer.WriteElementStringAsync("SKU", string.IsNullOrEmpty(sku) ? product.Id.ToString() : sku);
                 await writer.WriteElementStringAsync("Name", product.Name);

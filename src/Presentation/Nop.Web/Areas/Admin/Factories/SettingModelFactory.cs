@@ -1105,6 +1105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.AttributeValueOutOfStockDisplayTypes = await catalogSettings.AttributeValueOutOfStockDisplayType.ToSelectListAsync();
             model.AvailableViewModes.Add(new SelectListItem
             {
                 Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.Grid"),
@@ -1115,8 +1116,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.List"),
                 Value = "list"
             });
-
-            model.AttributeValueOutOfStockDisplayTypes = await catalogSettings.AttributeValueOutOfStockDisplayType.ToSelectListAsync();
 
             //fill in overridden values
             if (storeId > 0)
@@ -1157,7 +1156,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.SearchPagePriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceRangeFiltering, storeId);
                 model.SearchPagePriceFrom_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceFrom, storeId);
                 model.SearchPagePriceTo_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceTo, storeId);
-                model.SearchPageAutomaticallyCalculatePriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageAutomaticallyCalculatePriceRange, storeId);
+                model.SearchPageManuallyPriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageManuallyPriceRange, storeId);
                 model.SearchPagePageSizeOptions_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePageSizeOptions, storeId);
                 model.ProductSearchAutoCompleteEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, storeId);
                 model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, storeId);
@@ -1173,7 +1172,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductsByTagPriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceRangeFiltering, storeId);
                 model.ProductsByTagPriceFrom_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceFrom, storeId);
                 model.ProductsByTagPriceTo_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceTo, storeId);
-                model.ProductsByTagAutomaticallyCalculatePriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagAutomaticallyCalculatePriceRange, storeId);
+                model.ProductsByTagManuallyPriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagManuallyPriceRange, storeId);
                 model.IncludeShortDescriptionInCompareProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.IncludeShortDescriptionInCompareProducts, storeId);
                 model.IncludeFullDescriptionInCompareProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeId);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeId);

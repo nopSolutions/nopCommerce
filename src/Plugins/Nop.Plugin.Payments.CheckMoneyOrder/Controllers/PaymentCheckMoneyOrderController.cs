@@ -49,7 +49,6 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
@@ -87,7 +86,6 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))

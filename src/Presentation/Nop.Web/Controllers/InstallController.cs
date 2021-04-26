@@ -105,7 +105,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Index()
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -131,7 +130,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Index(InstallModel model)
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -303,7 +301,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ChangeLanguage(string language)
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -317,7 +314,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RestartInstall()
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
@@ -326,7 +322,6 @@ namespace Nop.Web.Controllers
             return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> RestartApplication()
         {
             if (await DataSettingsManager.IsDatabaseInstalledAsync())

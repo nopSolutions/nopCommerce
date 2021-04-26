@@ -66,16 +66,29 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        public void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
+        private void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
             _memoryCache.Remove(cacheKey.Key);
         }
 
+        /// <summary>
+        /// Add the specified key and object to the cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <param name="data">Value for caching</param>
+        private void Set(CacheKey key, object data)
+        {
+            if ((key?.CacheTime ?? 0) <= 0 || data == null)
+                return;
+
+            _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
+        }
+
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Remove the value with the specified key from the cache
         /// </summary>
@@ -145,6 +158,29 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public T Get<T>(CacheKey key, Func<T> acquire)
+        {
+            if ((key?.CacheTime ?? 0) <= 0)
+                return acquire();
+
+            if (_memoryCache.TryGetValue(key.Key, out T result))
+                return result;
+
+            result = acquire();
+
+            if (result != null)
+                Set(key, result);
+
+            return result;
+        }
+
+        /// <summary>
         /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
@@ -152,10 +188,7 @@ namespace Nop.Core.Caching
         /// <returns>A task that represents the asynchronous operation</returns>
         public Task SetAsync(CacheKey key, object data)
         {
-            if ((key?.CacheTime ?? 0) <= 0 || data == null)
-                return Task.CompletedTask;
-
-            _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
+            Set(key, data);
 
             return Task.CompletedTask;
         }

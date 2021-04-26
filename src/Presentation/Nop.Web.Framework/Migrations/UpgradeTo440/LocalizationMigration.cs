@@ -156,7 +156,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Filtering.PriceRangeFilter.Remove",
                 "Filtering.SpecificationFilter.CurrentlyFilteredBy",
                 "Filtering.SpecificationFilter.Remove",
-                "Filtering.SpecificationFilter.Separator"
+                "Filtering.SpecificationFilter.Separator",
             }).Wait();
 
             localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
@@ -618,20 +618,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Manufacturers.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
                 ["Admin.Vendors.Fields.PriceRangeFiltering"] = "Price range filtering",
                 ["Admin.Vendors.Fields.PriceRangeFiltering.Hint"] = "Check to enable the price range filtering.",
-                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Catalog.Categories.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.",
-                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Catalog.Manufacturers.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.",
-                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange"] = "Calculate price range automatically",
-                ["Admin.Vendors.Fields.AutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering"] = "Search page. Price range filtering",
                 ["Admin.Configuration.Settings.Catalog.SearchPagePriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Search' page.",
-                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange"] = "Search page. Calculate price range automatically",
-                ["Admin.Configuration.Settings.Catalog.SearchPageAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range on the 'Search' page (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering"] = "'Products by tag' page. Price range filtering",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagPriceRangeFiltering.Hint"] = "Check to enable the price range filtering on 'Products by tag' page.",
-                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange"] = "'Products by tag' page. Calculate price range automatically",
-                ["Admin.Configuration.Settings.Catalog.ProductsByTagAutomaticallyCalculatePriceRange.Hint"] = "Check to enable automatic calculation of price range on the 'Products by tag' page (based on prices of available products). Do not enable if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering"] = "Enable manufacturer filtering",
                 ["Admin.Configuration.Settings.Catalog.EnableManufacturerFiltering.Hint"] = "Check to enable the manufacturer filtering on catalog pages.",
                 ["Admin.Configuration.Settings.Catalog.EnablePriceRangeFiltering"] = "Enable price range filtering",
@@ -703,6 +693,18 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled.Hint"] = "Check to allow customers to enter a city name instead of zip postal code.",
                 ["Shipping.EstimateShippingPopUp.City"] = "City",
                 ["Shipping.EstimateShipping.City.Required"] = "City is required",
+
+                //#5496
+                ["Admin.Catalog.Categories.Fields.ManuallyPriceRange"] = "Enter price range manually",
+                ["Admin.Catalog.Categories.Fields.ManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange"] = "Enter price range manually",
+                ["Admin.Catalog.Manufacturers.Fields.ManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Vendors.Fields.ManuallyPriceRange"] = "Enter price range manually",
+                ["Admin.Vendors.Fields.ManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange"] = "Search page. Enter price range manually",
+                ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
+                ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
             }).Wait();
 
             // rename locales

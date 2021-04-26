@@ -52,7 +52,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> List()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -67,7 +66,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Weights
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Weights(MeasureWeightSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -80,7 +78,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> WeightUpdate(MeasureWeightModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -101,7 +98,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> WeightAdd(MeasureWeightModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -122,7 +118,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> WeightDelete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -147,7 +142,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MarkAsPrimaryWeight(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -168,7 +162,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Dimensions
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Dimensions(MeasureDimensionSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -181,7 +174,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DimensionUpdate(MeasureDimensionModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -202,7 +194,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DimensionAdd(MeasureDimensionModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -223,7 +214,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DimensionDelete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
@@ -248,7 +238,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MarkAsPrimaryDimension(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))

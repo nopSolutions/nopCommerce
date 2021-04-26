@@ -512,7 +512,7 @@ namespace Nop.Services.ExportImport
                         category.PriceTo = property.DecimalValue;
                         break;
                     case "AutomaticallyCalculatePriceRange":
-                        category.AutomaticallyCalculatePriceRange = property.BooleanValue;
+                        category.ManuallyPriceRange = property.BooleanValue;
                         break;
                     case "IncludeInTopMenu":
                         category.IncludeInTopMenu = property.BooleanValue;
@@ -1677,7 +1677,7 @@ namespace Nop.Services.ExportImport
 
                     //delete product categories
                     var deletedProductCategories = await categories.Where(categoryId => !importedCategories.Contains(categoryId))
-                        .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).First(pc => pc.CategoryId == categoryId)).ToListAsync();
+                        .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true)).FirstOrDefault(pc => pc.CategoryId == categoryId)).Where(pc=>pc != null).ToListAsync();
 
                     foreach (var deletedProductCategory in deletedProductCategories) 
                         await _categoryService.DeleteProductCategoryAsync(deletedProductCategory);
@@ -2028,7 +2028,7 @@ namespace Nop.Services.ExportImport
                             manufacturer.PriceTo = property.DecimalValue;
                             break;
                         case "AutomaticallyCalculatePriceRange":
-                            manufacturer.AutomaticallyCalculatePriceRange = property.BooleanValue;
+                            manufacturer.ManuallyPriceRange = property.BooleanValue;
                             break;
                         case "Published":
                             manufacturer.Published = property.BooleanValue;

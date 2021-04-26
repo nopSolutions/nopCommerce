@@ -20,7 +20,12 @@ namespace Nop.Web.Infrastructure
             {
                 var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                    return $"{{{NopPathRouteDefaults.LanguageRouteValue}:maxlength(2):{NopPathRouteDefaults.LanguageParameterTransformer}=en}}";
+                {
+                    //this pattern is set once at the application start, when we don't have the selected language yet
+                    //so we use 'en' by default for the language value, later it'll be replaced with the working language code
+                    var code = "en";
+                    return $"{{{NopPathRouteDefaults.LanguageRouteValue}:maxlength(2):{NopPathRouteDefaults.LanguageParameterTransformer}={code}}}";
+                }
             }
 
             return string.Empty;

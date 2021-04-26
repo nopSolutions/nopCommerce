@@ -76,6 +76,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var engine = EngineContext.Create();
 
             engine.ConfigureServices(services, configuration);
+            engine.RegisterDependencies(services, appSettings);
 
             return (engine, appSettings);
         }
@@ -246,7 +247,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 options.LoginPath = NopAuthenticationDefaults.LoginPath;
-                options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;                
+                options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
             });
 
             //add external authentication

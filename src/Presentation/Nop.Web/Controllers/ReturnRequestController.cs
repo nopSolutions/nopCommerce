@@ -77,7 +77,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerReturnRequests()
         {
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -87,7 +86,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ReturnRequest(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
@@ -103,7 +101,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ReturnRequest")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
@@ -183,7 +180,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> UploadFileReturnRequest()
         {
             if (!_orderSettings.ReturnRequestsEnabled || !_orderSettings.ReturnRequestsAllowFiles)
