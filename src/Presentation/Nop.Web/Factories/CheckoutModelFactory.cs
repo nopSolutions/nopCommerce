@@ -553,21 +553,24 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(order));
 
             var now = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            var untilLunchTimeDeliveryDeadline = new DateTime(now.Year, now.Month, now.Day, 11, 0, 0);
-            var lunchTime = new DateTime(now.Year, now.Month, now.Day, 13, 0, 0);
 
             string message;
-            if(now >= untilLunchTimeDeliveryDeadline)
+            if(now < new DateTime(now.Year, now.Month, now.Day, 12, 30, 0))
             {
-                if (now < lunchTime)
-                    message = "Lunches ordered after 11 AM will be delivered until 2 PM. Sorry for inconvenience, we'll get more flexible soon.";
-                else
-                    message = "Your lunch will be delivered TOMORROW at 1 PM.";
+                message = "Your lunch will be delivered at 1 PM.";
+            }
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 13, 30, 0))
+            {
+                message = "Your lunch will be delivered at 2 PM.";
+            }
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 30, 0))
+            {
+                message = "Your lunch will be delivered at 4 PM.";
             }
             else
             {
-                message = "Your lunch will be delivered at 1 PM.";
-            } 
+                message = "Your lunch will be delivered TOMORROW at 1 PM.";
+            }
 
             var model = new CheckoutCompletedModel
             {
