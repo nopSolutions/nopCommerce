@@ -19,6 +19,12 @@ namespace Nop.Data.DataProviders
 {
     public class PostgreSqlDataProvider : BaseDataProvider, INopDataProvider
     {
+        #region Fields
+
+        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new LinqToDBPostgreSQLDataProvider(), true);
+
+        #endregion
+
         #region Utils
 
         /// <summary>
@@ -365,7 +371,7 @@ namespace Nop.Data.DataProviders
 
         #region Properties
 
-        protected override IDataProvider LinqToDbDataProvider => new LinqToDBPostgreSQLDataProvider();
+        protected override IDataProvider LinqToDbDataProvider => _dataProvider.Value;
 
         public int SupportedLengthOfBinaryHash => 0;
 

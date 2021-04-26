@@ -52,7 +52,6 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(int discountId, int? discountRequirementId)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
@@ -97,7 +96,6 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
         }
 
         [HttpPost]        
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IActionResult> Configure(RequirementModel model)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))

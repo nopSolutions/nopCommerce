@@ -56,7 +56,6 @@ namespace Nop.Web.Controllers
         
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Index(int? pageNumber, string tab)
         {
             if (!_forumSettings.AllowPrivateMessages)
@@ -75,7 +74,6 @@ namespace Nop.Web.Controllers
         
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         [AutoValidateAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteInboxPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -104,7 +102,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
         [AutoValidateAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> MarkUnread(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -134,7 +131,6 @@ namespace Nop.Web.Controllers
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
         [AutoValidateAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeleteSentPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -161,7 +157,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("PrivateMessages", new {tab = "sent"});
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SendPM(int toCustomerId, int? replyToMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
@@ -187,7 +182,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)
@@ -277,7 +271,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ViewPM(int privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
@@ -313,7 +306,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> DeletePM(int privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)

@@ -23,7 +23,7 @@
     var pager = Html.Pager(Model)
         .QueryParam("pagenumber")
         // for search page
-        .BooleanParameterName("adv")
+        .BooleanParameterName("advs")
         .BooleanParameterName("isc")
         .BooleanParameterName("sid")
         .RenderEmptyParameters(true);

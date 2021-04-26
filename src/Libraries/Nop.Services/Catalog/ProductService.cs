@@ -215,7 +215,7 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get stock message
+        /// Get stock message for a product with attributes
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
@@ -223,12 +223,28 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the message
         /// </returns>
-        protected virtual async Task<string> GeStockMessageAsync(Product product, string attributesXml)
+        protected virtual async Task<string> GetStockMessageForAttributesAsync(Product product, string attributesXml)
         {
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
             string stockMessage;
+
+            /*TODO implement #5510
+            if (_catalogSettings.AttributeValueOutOfStockDisplayType == AttributeValueOutOfStockDisplayType.AlwaysDisplay)
+            {
+                //let's check whether all required attributes are already selected
+                //if some attribute is not selected, then return a "Products.Availability.SelectRequiredAttributes" locale 
+            }
+            else
+            {
+                //let's check whether all required attributes that could be selected are already selected
+
+                //note that it's possible that some required attribute is not selected yet, but its values are already disabled (not available)
+                //hence a customer cannot select it. in this case proceed to the logic below
+
+                //otherwise, return a "Products.Availability.SelectRequiredAttributes" locale
+            }*/
 
             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             if (combination != null)
@@ -273,8 +289,7 @@ namespace Nop.Services.Catalog
                 }
                 else
                 {
-                    stockMessage = !(await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
-                        .Any(pam => pam.IsRequired) ? await _localizationService.GetResourceAsync("Products.Availability.InStock") : await _localizationService.GetResourceAsync("Products.Availability.SelectRequiredAttributes");
+                    stockMessage = await _localizationService.GetResourceAsync("Products.Availability.InStock");
                 }
             }
 
@@ -285,16 +300,16 @@ namespace Nop.Services.Catalog
         /// Get stock message
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="stockMessage">Message</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the message
         /// </returns>
-        protected virtual async Task<string> GetStockMessageAsync(Product product, string stockMessage)
+        protected virtual async Task<string> GetStockMessageAsync(Product product)
         {
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
+            var stockMessage = string.Empty;
             var stockQuantity = await GetTotalStockQuantityAsync(product);
             if (stockQuantity > 0)
             {
@@ -1450,10 +1465,10 @@ namespace Nop.Services.Catalog
             switch (product.ManageInventoryMethod)
             {
                 case ManageInventoryMethod.ManageStock:
-                    stockMessage = await GetStockMessageAsync(product, stockMessage);
+                    stockMessage = await GetStockMessageAsync(product);
                     break;
                 case ManageInventoryMethod.ManageStockByAttributes:
-                    stockMessage = await GeStockMessageAsync(product, attributesXml);
+                    stockMessage = await GetStockMessageForAttributesAsync(product, attributesXml);
                     break;
             }
 

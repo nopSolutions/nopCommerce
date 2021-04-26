@@ -889,7 +889,12 @@ table .btn {
   border: none;
   height: 38px;
   padding-left: 23px;
+  padding-right: 0;
   background: #fff;
+}
+
+.k-numeric-wrap.k-state-default {
+  padding-right: 20px;
 }
 
 .k-picker-wrap.k-state-hover {
@@ -916,6 +921,9 @@ table .btn {
   height: 36px;
   width: 4.5em;
   padding-right: 1px;
+  left: 0;
+  right: unset;
+  box-sizing: content-box;
   -moz-box-sizing: content-box;
 }
 

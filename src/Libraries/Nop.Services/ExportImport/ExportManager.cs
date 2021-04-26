@@ -1173,7 +1173,7 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteEndElementAsync();
 
                 await xmlWriter.WriteStartElementAsync("ProductCategories");
-                var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
+                var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
                 if (productCategories != null)
                 {
                     foreach (var productCategory in productCategories)

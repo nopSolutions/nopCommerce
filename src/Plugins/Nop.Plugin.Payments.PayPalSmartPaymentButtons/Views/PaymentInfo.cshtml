@@ -24,13 +24,13 @@
                 },
 
                 onApprove: function(data, actions) {
-                    $('input.payment-info-next-step-button').trigger("click");
+                    $('button.payment-info-next-step-button').trigger("click");
                 },
 
                 onError: function (err) {
                     $('#@Html.IdFor(model => model.Errors)').val(err);
                     paymentForm = null;
-                    $('input.payment-info-next-step-button').trigger("click");
+                    $('button.payment-info-next-step-button').trigger("click");
                 }
             });
             if (paymentForm) {
