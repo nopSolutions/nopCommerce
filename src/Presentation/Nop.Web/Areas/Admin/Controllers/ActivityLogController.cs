@@ -44,7 +44,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ActivityTypes()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
@@ -57,7 +56,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("SaveTypes")]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SaveTypes(IFormCollection form)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
@@ -85,7 +83,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("ActivityTypes");
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ActivityLogs()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
@@ -98,7 +95,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ListLogs(ActivityLogSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
@@ -111,7 +107,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ActivityLogDelete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))
@@ -131,7 +126,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ClearAll()
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageActivityLog))

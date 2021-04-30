@@ -64,7 +64,6 @@ namespace Nop.Web.Controllers
 
         // Product details page > back in stock subscribe
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SubscribePopup(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -98,7 +97,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> SubscribePopupPOST(int productId)
         {
             var product = await _productService.GetProductByIdAsync(productId);
@@ -155,7 +153,6 @@ namespace Nop.Web.Controllers
         }
 
         // My account / Back in stock subscriptions
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerSubscriptions(int? pageNumber)
         {
             if (_customerSettings.HideBackInStockSubscriptionsTab)
@@ -209,7 +206,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("CustomerSubscriptions")]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerSubscriptionsPOST(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)

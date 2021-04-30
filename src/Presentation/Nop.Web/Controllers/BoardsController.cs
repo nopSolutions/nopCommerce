@@ -62,7 +62,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Index()
         {
             if (!_forumSettings.ForumsEnabled)
@@ -73,7 +72,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ActiveDiscussions(int forumId = 0, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -85,7 +83,6 @@ namespace Nop.Web.Controllers
         }
 
         [CheckLanguageSeoCode(true)]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ActiveDiscussionsRss(int forumId = 0)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -124,7 +121,6 @@ namespace Nop.Web.Controllers
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ForumGroup(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -139,7 +135,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Forum(int id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -154,7 +149,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ForumRss(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -206,7 +200,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> ForumWatch(int id)
         {
             var watchTopic = await _localizationService.GetResourceAsync("Forum.WatchForum");
@@ -246,7 +239,6 @@ namespace Nop.Web.Controllers
             return Json(new { Subscribed = subscribed, Text = returnText, Error = false });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Topic(int id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -270,7 +262,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicWatch(int id)
         {
             var watchTopic = await _localizationService.GetResourceAsync("Forum.WatchTopic");
@@ -310,7 +301,6 @@ namespace Nop.Web.Controllers
             return Json(new { Subscribed = subscribed, Text = returnText, Error = false });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicMove(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -326,7 +316,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]        
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicMove(TopicMoveModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -347,7 +336,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -379,7 +367,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicCreate(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -399,7 +386,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateCaptcha]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicCreate(EditForumTopicModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -506,7 +492,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicEdit(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -527,7 +512,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateCaptcha]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> TopicEdit(EditForumTopicModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -648,7 +632,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PostDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -687,7 +670,6 @@ namespace Nop.Web.Controllers
 
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PostCreate(int id, int? quote)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -707,7 +689,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateCaptcha]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PostCreate(EditForumPostModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -801,7 +782,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PostEdit(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -821,7 +801,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateCaptcha]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PostEdit(EditForumPostModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -918,7 +897,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> Search(string searchterms, bool? advs, string forumId,
             string within, string limitDays, int pageNumber = 1)
         {
@@ -930,7 +908,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerForumSubscriptions(int? pageNumber)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
@@ -943,7 +920,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("CustomerForumSubscriptions")]
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> CustomerForumSubscriptionsPOST(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -968,7 +944,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IActionResult> PostVote(int postId, bool isUp)
         {
             if (!_forumSettings.AllowPostVoting)
