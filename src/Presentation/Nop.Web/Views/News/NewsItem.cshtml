@@ -43,12 +43,12 @@
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="AddNewComment.CommentTitle" asp-postfix=":"></label>
-                            <input asp-for="AddNewComment.CommentTitle" class="enter-comment-title"/>
+                            <input asp-for="AddNewComment.CommentTitle" class="enter-comment-title" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments"/>
                             <span asp-validation-for="AddNewComment.CommentTitle"></span>
                         </div>
                         <div class="inputs">
                             <label asp-for="AddNewComment.CommentText" asp-postfix=":"></label>
-                            <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text"></textarea>
+                            <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments"></textarea>
                             <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
@@ -56,9 +56,16 @@
                             <nop-captcha />
                         }
                     </div>
-                    <div class="buttons">
-                        <button type="submit" name="add-comment" class="button-1 news-item-add-comment-button">@T("News.Comments.SubmitButton")</button>
-                    </div>
+                    @if (!Model.PreventNotRegisteredUsersToLeaveComments)
+                    {
+                        <div class="buttons">
+                            <button type="submit" name="add-comment" class="button-1 news-item-add-comment-button">@T("News.Comments.SubmitButton")</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="message-error">@T("News.Comments.OnlyRegisteredUsersLeaveComments")</div>
+                    }
                 </form>
             </div>
             if (Model.Comments.Count > 0)
