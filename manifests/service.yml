@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}
+spec:
+    type: LoadBalancer
+    ports:
+    - port: {{ servicePort }} 
+    selector:
+        app: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}
