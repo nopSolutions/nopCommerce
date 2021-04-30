@@ -359,6 +359,11 @@ namespace Nop.Services.Media
             return format;
         }
 
+        /// <summary>
+        /// Gets the MIME type from the file name
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         protected virtual string GetMimeTypeFromFileName(string fileName)
         {
             var provider = new FileExtensionContentTypeProvider();
