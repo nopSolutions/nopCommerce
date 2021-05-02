@@ -67,7 +67,47 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
 
         #region Properties
-        
+
+        //Custom Fields
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vegetarian")]
+        public bool Vegetarian { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vegan")]
+        public bool Vegan { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.GluttenFree")]
+        public bool GluttenFree { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Halal")]
+        public bool Halal { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllergyFriendly")]
+        public bool AllergyFriendly { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.WellPacked")]
+        public bool WellPacked { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SustainablePackaging")]
+        public bool SustainablePackaging { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.FastAndReliable")]
+        public bool FastAndReliable { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ExcellentValue")]
+        public bool ExcellentValue { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.FollowOrderNotes")]
+        public bool FollowOrderNotes { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Minimum")]
+        public bool Minimum { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Average")]
+        public bool Average { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Expensive")]
+        public bool Expensive { get; set; }
+
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }
@@ -108,6 +148,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomepage")]
         public bool ShowOnHomepage { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RibbonEnable")]
+        public bool RibbonEnable { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RibbonText")]
+        public bool RibbonText { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }

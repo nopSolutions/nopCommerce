@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
@@ -12,6 +13,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Security;
 
 namespace Nop.Web.Controllers.Api.Security
 {
@@ -33,6 +35,8 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IAuthenticationService _authenticationService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IConfiguration _config;
+        private readonly IAddressService _addressService;
+        private readonly IEncryptionService _encryptionService;
 
         #endregion
 
@@ -50,7 +54,9 @@ namespace Nop.Web.Controllers.Api.Security
             IWorkContext workContext,
             IAuthenticationService authenticationService,
             IShoppingCartService shoppingCartService,
-            IConfiguration config)
+            IConfiguration config,
+            IAddressService addressService,
+            IEncryptionService encryptionService)
         {
             _storeContext = storeContext;
             _customerRegistrationService = customerRegistrationService;
@@ -65,6 +71,8 @@ namespace Nop.Web.Controllers.Api.Security
             _authenticationService = authenticationService;
             _shoppingCartService = shoppingCartService;
             _config = config;
+            _addressService = addressService;
+            _encryptionService = encryptionService;
         }
 
         #endregion
@@ -76,6 +84,8 @@ namespace Nop.Web.Controllers.Api.Security
             public string Email { get; set; }
             public string Password { get; set; }
             public string PushToken { get; set; }
+            public Address ShippinAddress { get; set; }
+
         }
 
         [AllowAnonymous]
@@ -102,7 +112,12 @@ namespace Nop.Web.Controllers.Api.Security
                         var jwt = new JwtService(_config);
                         var token = jwt.GenerateSecurityToken(numberGenerate + "yo!Token");
 
-                        return Ok(new { success = true, message = "Login Successfully", token });
+                        var shippingAddress = customer.ShippingAddressId.HasValue ? _addressService.GetAddressById(customer.ShippingAddressId.Value) : null;
+
+                        var firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                        var lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+
+                        return Ok(new { success = true, message = "Login Successfully", token, shippingAddress, firstName, lastName });
                     }
                 case CustomerLoginResults.CustomerNotExist:
                     return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist") });
@@ -119,7 +134,13 @@ namespace Nop.Web.Controllers.Api.Security
                     return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials") });
             }
         }
-        
+
+        [HttpGet("check-customer-token")]
+        public IActionResult CheckCustomerToken(string token)
+        {
+            var decryptedToken = _encryptionService.DecryptText(token);
+            return Ok(new { success = true, message = "", decryptedToken });
+        }
         #endregion
     }
 }
