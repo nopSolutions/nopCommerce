@@ -149,7 +149,11 @@ namespace Nop.Web.Factories
             if (pickupPointProviders.Any())
             {
                 var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
-                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync((await _workContext.GetCurrentCustomerAsync()).BillingAddressId ?? 0,
+                var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+                var address = currentCustomer.BillingAddressId.HasValue
+                    ? await _addressService.GetAddressByIdAsync(currentCustomer.BillingAddressId.Value)
+                    : null;
+                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address,
                     await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (pickupPointsResponse.Success)
                     model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
