@@ -158,17 +158,22 @@ namespace Nop.Web.Controllers
         /// <summary>
         /// Parses the pickup option
         /// </summary>
+        /// <param name="cart">Shopping Cart</param>
         /// <param name="form">The form</param>
         /// <returns>
         /// The task result contains the pickup option
         /// </returns>
-        protected virtual async Task<PickupPoint> ParsePickupOptionAsync(IFormCollection form)
+        protected virtual async Task<PickupPoint> ParsePickupOptionAsync(IList<ShoppingCartItem> cart, IFormCollection form)
         {
             var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
-            var selectedPoint = (await _shippingService.GetPickupPointsAsync(customer.BillingAddressId ?? 0,
+            var address = customer.BillingAddressId.HasValue
+                ? await _addressService.GetAddressByIdAsync(customer.BillingAddressId.Value)
+                : null;
+
+            var selectedPoint = (await _shippingService.GetPickupPointsAsync(cart, address,
                 customer, pickupPoint[1], store.Id)).PickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
 
             if (selectedPoint == null)
@@ -693,7 +698,7 @@ namespace Nop.Web.Controllers
                 var pickupInStore = ParsePickupInStore(form);
                 if (pickupInStore)
                 {
-                    var pickupOption = await ParsePickupOptionAsync(form);
+                    var pickupOption = await ParsePickupOptionAsync(cart, form);
                     await SavePickupOptionAsync(pickupOption);
 
                     return RedirectToRoute("CheckoutPaymentMethod");
@@ -839,7 +844,7 @@ namespace Nop.Web.Controllers
                 var pickupInStore = ParsePickupInStore(form);
                 if (pickupInStore)
                 {
-                    var pickupOption = await ParsePickupOptionAsync(form);
+                    var pickupOption = await ParsePickupOptionAsync(cart, form);
                     await SavePickupOptionAsync(pickupOption);
 
                     return RedirectToRoute("CheckoutPaymentMethod");
@@ -1533,7 +1538,7 @@ namespace Nop.Web.Controllers
                     var pickupInStore = ParsePickupInStore(form);
                     if (pickupInStore)
                     {
-                        var pickupOption = await ParsePickupOptionAsync(form);
+                        var pickupOption = await ParsePickupOptionAsync(cart, form);
                         await SavePickupOptionAsync(pickupOption);
 
                         return await OpcLoadStepAfterShippingMethod(cart);
@@ -1649,7 +1654,7 @@ namespace Nop.Web.Controllers
                     var pickupInStore = ParsePickupInStore(form);
                     if (pickupInStore)
                     {
-                        var pickupOption = await ParsePickupOptionAsync(form);
+                        var pickupOption = await ParsePickupOptionAsync(cart, form);
                         await SavePickupOptionAsync(pickupOption);
 
                         return await OpcLoadStepAfterShippingMethod(cart);
