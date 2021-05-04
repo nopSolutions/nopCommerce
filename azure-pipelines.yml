@@ -1,0 +1,38 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- staging
+
+resources:
+- repo: self
+
+variables:
+  repository: nopcommerce
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'eisajanyan dockerhub'
+        repository: 'eisajanyan/nopcommerce'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(tag)
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'hetzner microk8s mysnacks namespace'
+        namespace: 'mysnacks'
+        manifests: 'manifests/service.yml|manifests/deployment.yml'
+        containers: 'eisajanyan/nopcommerce:$(tag)'
