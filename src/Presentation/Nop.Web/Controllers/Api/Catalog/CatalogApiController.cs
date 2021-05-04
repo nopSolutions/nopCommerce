@@ -1,0 +1,654 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Vendors;
+using Nop.Services.Catalog;
+using Nop.Services.Common;
+using Nop.Services.Customers;
+using Nop.Services.Directory;
+using Nop.Services.Events;
+using Nop.Services.Helpers;
+using Nop.Services.Localization;
+using Nop.Services.Logging;
+using Nop.Services.Media;
+using Nop.Services.Messages;
+using Nop.Services.Orders;
+using Nop.Services.Security;
+using Nop.Services.Seo;
+using Nop.Services.Stores;
+using Nop.Services.Vendors;
+using Nop.Web.Factories;
+using Nop.Web.Models.Catalog;
+using Nop.Web.Models.Common;
+
+namespace Nop.Web.Controllers.Api.Security
+{
+    [Produces("application/json")]
+    [Route("api/catalog")]
+    public class CatalogApiController : BaseApiController
+    {
+        #region Fields
+
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly LocalizationSettings _localizationSettings;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IOrderService _orderService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly MediaSettings _mediaSettings;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly ICurrencyService _currencyService;
+        private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductService _productService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IAclService _aclService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IPermissionService _permissionService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly ICategoryService _categoryService;
+        private readonly ICatalogModelFactory _catalogModelFactory;
+        private readonly ITopicModelFactory _topicModelFactory;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWebHelper _webHelper;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly ICountryService _countryService;
+        private readonly IPictureService _pictureService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly ISearchTermService _searchTermService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly VendorSettings _vendorSettings;
+        private readonly IVendorService _vendorService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+
+        #endregion
+
+        #region Ctor
+
+        public CatalogApiController(ICurrencyService currencyService,
+            ShoppingCartSettings shoppingCartSettings,
+        LocalizationSettings localizationSettings,
+            IWorkflowMessageService workflowMessageService,
+            IOrderService orderService,
+            IPriceFormatter priceFormatter,
+            MediaSettings mediaSettings,
+            ISpecificationAttributeService specificationAttributeService,
+            IStaticCacheManager cacheManager,
+            IManufacturerService manufacturerService,
+            IPictureService pictureService,
+            IUrlRecordService urlRecordService,
+            IStateProvinceService stateProvinceService,
+            ICountryService countryService,
+            IGenericAttributeService genericAttributeService,
+            IWebHelper webHelper,
+            ICatalogModelFactory catalogModelService,
+            IProductModelFactory productModelFactory,
+            ITopicModelFactory topicModelFactory,
+            ICategoryService categoryService,
+            IProductService productService,
+            ILocalizationService localizationService,
+            IRecentlyViewedProductsService recentlyViewedProductsService,
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService,
+            CatalogSettings catalogSettings,
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            IShoppingCartService shoppingCartService,
+            VendorSettings vendorSettings,
+            IHttpContextAccessor httpContextAccessor,
+            ISearchTermService searchTermService,
+            IEventPublisher eventPublisher,
+            IVendorService vendorService,
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper)
+        {
+            _shoppingCartSettings = shoppingCartSettings;
+            _localizationSettings = localizationSettings;
+            _workflowMessageService = workflowMessageService;
+            _orderService = orderService;
+            _priceFormatter = priceFormatter;
+            _mediaSettings = mediaSettings;
+            _specificationAttributeService = specificationAttributeService;
+            _cacheManager = cacheManager;
+            _currencyService = currencyService;
+            _manufacturerService = manufacturerService;
+            _pictureService = pictureService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _stateProvinceService = stateProvinceService;
+            _countryService = countryService;
+            _genericAttributeService = genericAttributeService;
+            _categoryService = categoryService;
+            _catalogModelFactory = catalogModelService;
+            _topicModelFactory = topicModelFactory;
+            _productService = productService;
+            _shoppingCartService = shoppingCartService;
+            _localizationService = localizationService;
+            _recentlyViewedProductsService = recentlyViewedProductsService;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _customerActivityService = customerActivityService;
+            _catalogSettings = catalogSettings;
+            _storeContext = storeContext;
+            _productModelFactory = productModelFactory;
+            _workContext = workContext;
+            _vendorSettings = vendorSettings;
+            _httpContextAccessor = httpContextAccessor;
+            _searchTermService = searchTermService;
+            _vendorService = vendorService;
+            _eventPublisher = eventPublisher;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+        }
+
+        #endregion
+
+        #region Utility
+
+        [NonAction]
+        protected virtual IEnumerable<ProductOverviewApiModel> PrepareApiProductOverviewModels(IEnumerable<Product> products)
+        {
+            if (products == null)
+                throw new ArgumentNullException(nameof(products));
+
+            var models = new List<ProductOverviewApiModel>();
+            foreach (var product in products)
+            {
+                var categoryName = "";
+                var categories = _categoryService.GetProductCategoriesByProductId(product.Id);
+                if (categories.Any())
+                {
+                    foreach (var category in categories)
+                    {
+                        categoryName += _categoryService.GetCategoryById(category.CategoryId).Name + ",";
+                    }
+                }
+                var productReviews = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id);
+                var model = new ProductOverviewApiModel
+                {
+                    Id = product.Id,
+                    Name = _localizationService.GetLocalized(product, x => x.Name),
+                    ShortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription),
+                    FullDescription = _localizationService.GetLocalized(product, x => x.FullDescription),
+                    SeName = _urlRecordService.GetSeName(product),
+                    CategoryName = categoryName.TrimEnd(','),
+                    Average = product.Average,
+                    Minimum = product.Minimum,
+                    Expensive = product.Expensive,
+                    Price = _priceFormatter.FormatPrice(product.Price),
+                    RatingSum = productReviews.Sum(pr => pr.Rating),
+                    TotalReviews = productReviews.Count,
+                    ImageUrl = _pictureService.GetPictureUrl(_pictureService.GetPicturesByProductId(product.Id).Any() ? _pictureService.GetPicturesByProductId(product.Id).FirstOrDefault().Id : 0, showDefaultPicture: true),
+                    RibbonEnable = product.RibbonEnable,
+                    RibbonText = product.RibbonText,
+                    Vegetarian = product.Vegetarian,
+                    Vegan = product.Vegan,
+                    GluttenFree = product.GluttenFree,
+                    Halal = product.Halal,
+                    AllergyFriendly = product.AllergyFriendly,
+                    WellPacked = product.WellPacked,
+                    SustainablePackaging = product.SustainablePackaging,
+                    FastAndReliable = product.FastAndReliable,
+                    ExcellentValue = product.ExcellentValue,
+                    FollowOrderNotes = product.FollowOrderNotes,
+                };
+                models.Add(model);
+            }
+
+            return models;
+        }
+        [NonAction]
+        public virtual void PreparePagination(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        {
+            var currentPageUrl = _webHelper.GetThisPageUrl(true);
+            var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagenumber={0}"/*, null*/);
+
+            for (int i = 1; i <= pagingFilteringModel.TotalPages; i++)
+            {
+                pagingFilteringModel.Pagination.Add(new SelectListItem
+                {
+                    Text = (i).ToString(),
+                    Value = i == 1 ? string.Format(_webHelper.RemoveQueryString(sortUrl, "pagenumber")) : string.Format(sortUrl, (i).ToString()),
+                    Selected = i.ToString() == pagingFilteringModel.PageNumber.ToString() ? true : false
+                });
+            }
+        }
+
+        [NonAction]
+        protected virtual CustomerProductReviewsModel PrepareCustomerProductReviewsModel(int? page, int customerId)
+        {
+            var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
+            var pageIndex = 0;
+
+            if (page > 0)
+            {
+                pageIndex = page.Value - 1;
+            }
+
+            var list = _productService.GetAllProductReviews(customerId: customerId,
+                approved: null,
+                pageIndex: pageIndex,
+                pageSize: pageSize);
+
+            var productReviews = new List<CustomerProductReviewModel>();
+
+            foreach (var review in list)
+            {
+                var product = _productService.GetProductById(review.ProductId);
+                var productReviewModel = new CustomerProductReviewModel
+                {
+                    Title = review.Title,
+                    ProductId = product.Id,
+                    ProductName = _localizationService.GetLocalized(product, p => p.Name),
+                    ProductSeName = _urlRecordService.GetSeName(product),
+                    Rating = review.Rating,
+                    ReviewText = review.ReviewText,
+                    ReplyText = review.ReplyText,
+                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
+                };
+
+                if (_catalogSettings.ProductReviewsMustBeApproved)
+                {
+                    productReviewModel.ApprovalStatus = review.IsApproved
+                        ? _localizationService.GetResource("Account.CustomerProductReviews.ApprovalStatus.Approved")
+                        : _localizationService.GetResource("Account.CustomerProductReviews.ApprovalStatus.Pending");
+                }
+                productReviews.Add(productReviewModel);
+            }
+
+            var pagerModel = new PagerModel
+            {
+                PageSize = list.PageSize,
+                TotalRecords = list.TotalCount,
+                PageIndex = list.PageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "CustomerProductReviewsPaged",
+                UseRouteLinks = true,
+                RouteValues = new CustomerProductReviewsModel.CustomerProductReviewsRouteValues { pageNumber = pageIndex }
+            };
+
+            var model = new CustomerProductReviewsModel
+            {
+                ProductReviews = productReviews,
+                PagerModel = pagerModel
+            };
+
+            return model;
+        }
+
+        #endregion
+
+        #region Category
+
+        [HttpGet("category-list")]
+        public IActionResult GetAllCategories()
+        {
+            var categories = _catalogModelFactory.PrepareCategorySimpleModels();
+            if (categories.Count > 0)
+            {
+                var result = from cat in categories
+                             select new
+                             {
+                                 id = cat.Id,
+                                 name = cat.Name,
+                                 numberOfProducts = cat.NumberOfProducts,
+                                 numberOfSubCategories = cat.SubCategories.Count,
+                                 seName = cat.SeName,
+                                 pictureUrl = cat.PictureUrl
+                             };
+                return Ok(result);
+            }
+            return Ok(new { message = "No Category Found" });
+        }
+
+        #endregion
+
+        #region Product
+
+        [HttpGet("product-search-term-autocomplete")]
+        public virtual IActionResult SearchTermAutoComplete(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
+                return Content("");
+
+            //products
+            var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
+                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
+
+            var products = _productService.SearchProducts(
+                storeId: _storeContext.CurrentStore.Id,
+                keywords: term,
+                languageId: _workContext.WorkingLanguage.Id,
+                visibleIndividuallyOnly: true,
+                pageSize: productNumber);
+
+            var result = (from p in products
+                          select new
+                          {
+                              label = p.Name,
+                          })
+                .ToList();
+            return Json(result);
+        }
+
+        [HttpGet("product-search")]
+        public IActionResult SearchProducts(SearchProductByFilters searchModel)
+        {
+            var products = _productService.SearchProducts(keywords: searchModel.Keyword,
+                vegetarian: searchModel.Vegetarian, vegan: searchModel.Vegan,
+                gluttenFree: searchModel.GluttenFree, halal: searchModel.Halal,
+                allergyFriendly: searchModel.AllergyFriendly, wellPacked: searchModel.WellPacked,
+                sustainablePackaging: searchModel.SustainablePackaging, fastAndReliable: searchModel.FastAndReliable,
+                excellentValue: searchModel.ExcellentValue, followOrderNotes: searchModel.FollowOrderNotes);
+            if (!products.Any())
+                return Ok(new { success = true, message = "No Product Found" });
+
+            //model
+            var model = PrepareApiProductOverviewModels(products);
+            return Ok(model);
+        }
+
+        [HttpGet("product/{id}")]
+        public IActionResult GetProductById(int id, int updatecartitemid = 0)
+        {
+            var product = _productService.GetProductById(id);
+            if (product == null || product.Deleted)
+                return NotFound();
+
+            var notAvailable =
+                //published?
+                (!product.Published && !_catalogSettings.AllowViewUnpublishedProductPage) ||
+                //ACL (access control list) 
+                !_aclService.Authorize(product) ||
+                //Store mapping
+                !_storeMappingService.Authorize(product) ||
+                //availability dates
+                !_productService.ProductIsAvailable(product);
+            //Check whether the current user has a "Manage products" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
+            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return NotFound();
+
+            //update existing shopping cart or wishlist  item?
+            ShoppingCartItem updatecartitem = null;
+            if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
+            {
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
+                updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
+            }
+
+            //save as recently viewed
+            _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewProduct",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name), product);
+
+            //model
+            var model = _productModelFactory.PrepareProductDetailsModel(product, updatecartitem, false);
+            return Ok(model);
+        }
+
+        [HttpGet("product-list/category/{categoryId}")]
+        public IActionResult GetProductList(int categoryId, CatalogPagingFilteringModel command, string brandFilter = "")
+        {
+            var category = _categoryService.GetCategoryById(categoryId);
+            if (category == null || category.Deleted)
+                return NotFound("No category found.");
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewCategory",
+                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
+
+            var model = _catalogModelFactory.PrepareCategoryModel(category, command);
+            PreparePagination(model.PagingFilteringContext, command);
+            return Ok(model);
+        }
+
+        [HttpGet("addtocart/productId/{productId}/quantity/{quantity}")]
+        public virtual IActionResult AddProductToCart(int productId = 0, int quantity = 0)
+        {
+            if (quantity <= 0)
+                return NotFound("Quantity should be > 0");
+
+            var customer = _workContext.CurrentCustomer;
+            if (customer == null)
+                return NotFound("invalid customer");
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return NotFound("No product found with the specified ID");
+
+            var cartType = (ShoppingCartType)1;
+            if (product.OrderMinimumQuantity > quantity)
+                return NotFound("Quantity should be > 0");
+
+            //get standard warnings without attribute validations
+            //first, try to find existing shopping cart item
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, cartType, _storeContext.CurrentStore.Id);
+            var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product);
+            //if we already have the same product in the cart, then use the total quantity to validate
+            var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
+            var addToCartWarnings = _shoppingCartService
+                .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
+                product, _storeContext.CurrentStore.Id, string.Empty,
+                decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
+            if (addToCartWarnings.Any())
+            {
+                if (addToCartWarnings.Contains("The maximum number of distinct products allowed in the cart is 10."))
+                    return Ok("The maximum number of distinct products allowed in the cart is 10.");
+
+                //cannot be added to the cart
+                //let's display standard warnings
+                return Ok(string.Join(" , ", addToCartWarnings.ToArray().ToString()));
+            }
+
+            //now let's try adding product to the cart (now including product attribute validation, etc)
+            addToCartWarnings = _shoppingCartService.AddToCart(customer: _workContext.CurrentCustomer,
+                product: product,
+                shoppingCartType: cartType,
+                storeId: _storeContext.CurrentStore.Id,
+                quantity: quantity);
+            if (addToCartWarnings.Any())
+            {
+                //cannot be added to the cart
+                //but we do not display attribute and gift card warnings here. let's do it on the product details page
+                return Ok(string.Join(" , ", addToCartWarnings.ToArray().ToString()));
+            }
+
+            return Ok(_localizationService.GetResource("Product.Added.Successfully.To.Cart"));
+        }
+
+        #endregion
+
+        #region Product Review
+
+        [HttpGet("get-product-reviews/product/{productId}")]
+        public virtual IActionResult ProductReviews(int productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
+                return Ok(new { success = false, message = "Product Not Found" });
+
+            var model = new ProductReviewsModel();
+            model = _productModelFactory.PrepareProductReviewsModel(model, product);
+            //only registered users can leave reviews
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                return Ok(new { success = false, message = _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews") });
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+            {
+                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                    productId: productId,
+                    osIds: new List<int> { (int)OrderStatus.Complete },
+                    pageSize: 1).Any();
+                if (!hasCompletedOrders)
+                    return Ok(new { success = false, message = _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing") });
+            }
+            //default value
+            model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
+            return Ok(new { success = true, data = model });
+        }
+
+        [HttpPost("add-product-reviews")]
+        public virtual IActionResult ProductReviewsAdd([FromBody] ProductReviewsApiModel model)
+        {
+            var product = _productService.GetProductById(model.ProductId);
+            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
+                return Ok(new { success = false, message = "Product Not Found" });
+
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                return Ok(new { success = false, message = _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews") });
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+            {
+                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                    productId: model.ProductId,
+                    osIds: new List<int> { (int)OrderStatus.Complete },
+                    pageSize: 1).Any();
+                if (!hasCompletedOrders)
+                    return Ok(new { success = false, message = _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing") });
+            }
+
+            if (ModelState.IsValid)
+            {
+                //save review
+                var rating = model.Rating;
+                if (rating < 1 || rating > 5)
+                    rating = _catalogSettings.DefaultProductRatingValue;
+                var isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+
+                var productReview = new ProductReview
+                {
+                    ProductId = product.Id,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    Title = model.Title,
+                    ReviewText = model.ReviewText,
+                    Rating = rating,
+                    HelpfulYesTotal = 0,
+                    HelpfulNoTotal = 0,
+                    IsApproved = isApproved,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    StoreId = _storeContext.CurrentStore.Id,
+                };
+
+                _productService.InsertProductReview(productReview);
+                _productService.UpdateProduct(product);
+
+                //update product totals
+                _productService.UpdateProductReviewTotals(product);
+
+                //notify store owner
+                if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
+                    _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
+
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.AddProductReview",
+                    string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
+
+                //raise event
+                if (productReview.IsApproved)
+                    _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+
+                if (!isApproved)
+                    return Ok(new { success = true, message = _localizationService.GetResource("Reviews.SeeAfterApproving") });
+                else
+                    return Ok(new { success = true, message = _localizationService.GetResource("Reviews.SuccessfullyAdded") });
+            }
+
+            return Ok(new { success = false });
+        }
+
+        [HttpGet("get-product-reviews")]
+        public virtual IActionResult CustomerProductReviews()
+        {
+            var customer = _workContext.CurrentCustomer;
+            if (_customerService.IsGuest(customer))
+                return Ok(new { success = false, message = "Customer Not Found" });
+
+            var model = PrepareCustomerProductReviewsModel(0, customer.Id);
+            return Ok(new { success = true, data = model });
+        }
+
+        #endregion
+
+        #region Topic
+
+        [HttpGet("get-topic/{systemName}")]
+        public virtual IActionResult GetTopicBySytemName(string systemName)
+        {
+            var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
+            return Ok(model);
+        }
+
+
+        #endregion
+
+        #region properties
+
+        public partial class SearchProductByFilters
+        {
+            //Custom Fields
+            public string Keyword { get; set; }
+            public bool Vegetarian { get; set; }
+            public bool Vegan { get; set; }
+            public bool GluttenFree { get; set; }
+            public bool Halal { get; set; }
+            public bool AllergyFriendly { get; set; }
+            public bool WellPacked { get; set; }
+            public bool SustainablePackaging { get; set; }
+            public bool FastAndReliable { get; set; }
+            public bool ExcellentValue { get; set; }
+            public bool FollowOrderNotes { get; set; }
+            public bool Minimum { get; set; }
+            public bool Average { get; set; }
+            public bool Expensive { get; set; }
+        }
+        public partial class ProductReviewsApiModel : BaseEntity
+        {
+            public ProductReviewsApiModel()
+            {
+                Items = new List<ProductReviewsApiModel>();
+            }
+            public int ProductId { get; set; }
+            public string ProductName { get; set; }
+            public string ProductSeName { get; set; }
+            public string Title { get; set; }
+            public string ReviewText { get; set; }
+            public int Rating { get; set; }
+            public IList<ProductReviewsApiModel> Items { get; set; }
+        }
+        public partial class AddProductReviewApiModel : BaseEntity
+        {
+            public string Title { get; set; }
+            public string ReviewText { get; set; }
+            public int Rating { get; set; }
+            public bool DisplayCaptcha { get; set; }
+            public bool CanCurrentCustomerLeaveReview { get; set; }
+            public bool SuccessfullyAdded { get; set; }
+            public string Result { get; set; }
+        }
+
+        #endregion
+    }
+}

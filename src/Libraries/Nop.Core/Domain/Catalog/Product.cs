@@ -530,6 +530,24 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool Deleted { get; set; }
 
+        //Custom Fields
+        public bool Vegetarian { get; set; }
+        public bool Vegan { get; set; }
+        public bool GluttenFree { get; set; }
+        public bool Halal { get; set; }
+        public bool AllergyFriendly { get; set; }
+        public bool WellPacked { get; set; }
+        public bool SustainablePackaging { get; set; }
+        public bool FastAndReliable { get; set; }
+        public bool ExcellentValue { get; set; }
+        public bool FollowOrderNotes { get; set; }
+        public bool Minimum { get; set; }
+        public bool Average { get; set; }
+        public bool Expensive { get; set; }
+
+        public bool RibbonEnable { get; set; }
+        public string RibbonText { get; set; }
+
         /// <summary>
         /// Gets or sets the date and time of product creation
         /// </summary>

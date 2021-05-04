@@ -130,7 +130,17 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null);
+            bool? overridePublished = null,
+            bool vegetarian = false,
+            bool vegan = false,
+            bool gluttenFree = false,
+            bool halal = false,
+            bool allergyFriendly = false,
+            bool wellPacked = false,
+            bool sustainablePackaging = false,
+            bool fastAndReliable = false,
+            bool excellentValue = false,
+            bool followOrderNotes = false);
 
         /// <summary>
         /// Search products
@@ -192,7 +202,17 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
-            bool? overridePublished = null);
+            bool? overridePublished = null,
+            bool vegetarian = false,
+            bool vegan = false,
+            bool gluttenFree = false,
+            bool halal = false,
+            bool allergyFriendly = false,
+            bool wellPacked = false,
+            bool sustainablePackaging = false,
+            bool fastAndReliable = false,
+            bool excellentValue = false,
+            bool followOrderNotes = false);
 
         /// <summary>
         /// Gets products by product attribute

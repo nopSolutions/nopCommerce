@@ -30,6 +30,7 @@ namespace Nop.Web.Models.Catalog
             AvailableSortOptions = new List<SelectListItem>();
             AvailableViewModes = new List<SelectListItem>();
             PageSizeOptions = new List<SelectListItem>();
+            Pagination = new List<SelectListItem>();
 
             PriceRangeFilter = new PriceRangeFilterModel();
             SpecificationFilter = new SpecificationFilterModel();
@@ -76,6 +77,7 @@ namespace Nop.Web.Models.Catalog
         /// Available page size options
         /// </summary>
         public IList<SelectListItem> PageSizeOptions { get; set; }
+        public IList<SelectListItem> Pagination { get; set; }
 
         /// <summary>
         /// Order by
