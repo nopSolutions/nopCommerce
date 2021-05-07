@@ -846,7 +846,7 @@ namespace Nop.Services.Catalog
                 var langs = await _languageService.GetAllLanguagesAsync(showHidden: true);
 
                 //Set a flag which will to points need to search in localized properties. If showHidden doesn't set to true should be at least two published languages.
-                var searchLocalizedValue = languageId > 0 && langs.Count() >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
+                var searchLocalizedValue = languageId > 0 && langs.Count >= 2 && (showHidden || langs.Count(l => l.Published) >= 2);
 
                 IQueryable<int> productsByKeywords;
 
@@ -903,7 +903,7 @@ namespace Nop.Services.Catalog
                                                 lp.LocaleKey == nameof(ProductTag.Name) &&
                                                 lp.LocaleValue.Contains(keywords)
                                 where
-                                    (lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId) && (checkName || checkShortDesc) ||
+                                    lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId && (checkName || checkShortDesc) ||
                                     checkProductTags
 
                                 select lp.EntityId);
@@ -926,11 +926,16 @@ namespace Nop.Services.Catalog
                         from pc in _productCategoryRepository.Table
                         where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                             categoryIds.Contains(pc.CategoryId)
-                        select pc;
+                        group pc by pc.ProductId into pc
+                        select new { 
+                            ProductId = pc.Key,
+                            DisplayOrder = pc.First().DisplayOrder
+                        };
 
                     productsQuery =
                         from p in productsQuery
-                        where productCategoryQuery.Any(pc => pc.ProductId == p.Id)
+                        join pc in productCategoryQuery on p.Id equals pc.ProductId
+                        orderby pc.DisplayOrder, p.Name
                         select p;
                 }
             }
@@ -946,11 +951,16 @@ namespace Nop.Services.Catalog
                         from pm in _productManufacturerRepository.Table
                         where (!excludeFeaturedProducts || !pm.IsFeaturedProduct) &&
                             manufacturerIds.Contains(pm.ManufacturerId)
-                        select pm;
+                        group pm by pm.ProductId into pm
+                        select new { 
+                            ProductId = pm.Key,
+                            DisplayOrder = pm.First().DisplayOrder
+                        };
 
                     productsQuery =
                         from p in productsQuery
-                        where productManufacturerQuery.Any(pm => pm.ProductId == p.Id)
+                        join pm in productManufacturerQuery on p.Id equals pm.ProductId
+                        orderby pm.DisplayOrder, p.Name
                         select p;
                 }
             }
