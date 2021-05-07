@@ -10,25 +10,25 @@ namespace Nop.Web.Middleware
     {
         public static IServiceCollection AddTokenAuthentication(this IServiceCollection services, IConfiguration config)
         {
-            var secret = config.GetSection("JwtConfig").GetSection("secret").Value;
+            var secret = config.GetSection("Jwt").GetSection("Key").Value;
             var key = Encoding.ASCII.GetBytes(secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidIssuer = "https://localhost:15536/",
-                    ValidAudience = "https://localhost:15536/",
-                    
-                };
             });
+            //.AddJwtBearer(x =>
+            //{
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        IssuerSigningKey = new SymmetricSecurityKey(key),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false,
+            //        ValidIssuer = "https://localhost:15536/",
+            //        ValidAudience = "https://localhost:15536/",
+                    
+            //    };
+            //});
 
             return services;
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
@@ -96,6 +96,7 @@ namespace Nop.Web.Models.Order
             public string RentalInfo { get; set; }
 
             public string VendorName { get; set; }
+            public string VendorLogoPictureUrl { get; set; }
 
             //downloadable product properties
             public int DownloadId { get; set; }

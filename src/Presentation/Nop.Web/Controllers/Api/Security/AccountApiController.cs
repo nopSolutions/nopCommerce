@@ -84,8 +84,12 @@ namespace Nop.Web.Controllers.Api.Security
             public string Email { get; set; }
             public string Password { get; set; }
             public string PushToken { get; set; }
-            public Address ShippinAddress { get; set; }
+        }
 
+        public class LogoutApiModel
+        {
+            public int CustomerId { get; set; }
+            public string PushToken { get; set; }
         }
 
         [AllowAnonymous]
@@ -108,9 +112,14 @@ namespace Nop.Web.Controllers.Api.Security
 
                         _workContext.CurrentCustomer.Id = customer.Id;
 
-                        var numberGenerate = CommonHelper.GenerateRandomDigitCode(24);
+                        //migrate shopping cart
+                        _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+
+                        //sign in new customer
+                        _authenticationService.SignIn(customer, false);
+
                         var jwt = new JwtService(_config);
-                        var token = jwt.GenerateSecurityToken(numberGenerate + "yo!Token");
+                        var token = jwt.GenerateSecurityToken(customer.Email);
 
                         var shippingAddress = customer.ShippingAddressId.HasValue ? _addressService.GetAddressById(customer.ShippingAddressId.Value) : null;
 
@@ -133,6 +142,19 @@ namespace Nop.Web.Controllers.Api.Security
                 default:
                     return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials") });
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("logout")]
+        public IActionResult Logout([FromBody] LogoutApiModel model)
+        {
+            var customer = _customerService.GetCustomerById(model.CustomerId);
+            if (customer == null)
+                return Ok(new { success = false, message = "'customer' could not be loaded" });
+
+            _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.PushToken, null, 1);
+
+            return Ok(new { success = true, message = "logout successfully" });
         }
 
         [HttpGet("check-customer-token")]

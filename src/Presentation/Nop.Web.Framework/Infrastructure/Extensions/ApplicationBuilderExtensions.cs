@@ -369,7 +369,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //Add the EndpointRoutingMiddleware
             application.UseRouting();
-
+            application.UseAuthorization();
             //Execute the endpoint selected by the routing middleware
             application.UseEndpoints(endpoints =>
             {

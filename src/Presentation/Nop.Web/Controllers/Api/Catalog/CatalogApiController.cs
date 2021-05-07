@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,6 +20,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -30,11 +28,16 @@ using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace Nop.Web.Controllers.Api.Security
 {
     [Produces("application/json")]
     [Route("api/catalog")]
+    [Authorize]
     public class CatalogApiController : BaseApiController
     {
         #region Fields
@@ -77,6 +80,8 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IEventPublisher _eventPublisher;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPaymentService _paymentService;
+        private readonly IOrderProcessingService _orderProcessingService;
 
         #endregion
 
@@ -119,7 +124,9 @@ namespace Nop.Web.Controllers.Api.Security
             IEventPublisher eventPublisher,
             IVendorService vendorService,
             ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            IPaymentService paymentService,
+            IOrderProcessingService orderProcessingService)
         {
             _shoppingCartSettings = shoppingCartSettings;
             _localizationSettings = localizationSettings;
@@ -159,6 +166,8 @@ namespace Nop.Web.Controllers.Api.Security
             _eventPublisher = eventPublisher;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
+            _paymentService = paymentService;
+            _orderProcessingService = orderProcessingService;
         }
 
         #endregion
@@ -174,6 +183,7 @@ namespace Nop.Web.Controllers.Api.Security
             var models = new List<ProductOverviewApiModel>();
             foreach (var product in products)
             {
+                var vendor = _vendorService.GetVendorByProductId(product.Id);
                 var categoryName = "";
                 var categories = _categoryService.GetProductCategoriesByProductId(product.Id);
                 if (categories.Any())
@@ -211,12 +221,14 @@ namespace Nop.Web.Controllers.Api.Security
                     FastAndReliable = product.FastAndReliable,
                     ExcellentValue = product.ExcellentValue,
                     FollowOrderNotes = product.FollowOrderNotes,
+                    VendorLogoPictureUrl = _pictureService.GetPictureUrl(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
                 };
                 models.Add(model);
             }
 
             return models;
         }
+
         [NonAction]
         public virtual void PreparePagination(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
@@ -373,7 +385,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var product = _productService.GetProductById(id);
             if (product == null || product.Deleted)
-                return NotFound();
+                return Ok(new { success = false, message = "No product found" });
 
             var notAvailable =
                 //published?
@@ -387,7 +399,7 @@ namespace Nop.Web.Controllers.Api.Security
             //Check whether the current user has a "Manage products" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
             if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return NotFound();
+                return Ok(new { success = false, message = "No product found" });
 
             //update existing shopping cart or wishlist  item?
             ShoppingCartItem updatecartitem = null;
@@ -414,7 +426,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null || category.Deleted)
-                return NotFound("No category found.");
+                return Ok(new { success = false, message = "No category found." });
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewCategory",
@@ -429,15 +441,15 @@ namespace Nop.Web.Controllers.Api.Security
         public virtual IActionResult AddProductToCart(int productId = 0, int quantity = 0)
         {
             if (quantity <= 0)
-                return NotFound("Quantity should be > 0");
+                return Ok(new { success = false, message = "Quantity should be > 0" });
 
             var customer = _workContext.CurrentCustomer;
             if (customer == null)
-                return NotFound("invalid customer");
+                return Ok(new { success = false, message = "invalid customer" });
 
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return NotFound("No product found with the specified ID");
+                return Ok(new { success = false, message = "No product found" });
 
             var cartType = (ShoppingCartType)1;
             if (product.OrderMinimumQuantity > quantity)
@@ -511,9 +523,9 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpPost("add-product-reviews")]
-        public virtual IActionResult ProductReviewsAdd([FromBody] ProductReviewsApiModel model)
+        public virtual IActionResult ProductReviewsAdd([FromBody] AddProductReviewApiModel model)
         {
-            var product = _productService.GetProductById(model.ProductId);
+            var product = _productService.GetProductById(model.Id);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
                 return Ok(new { success = false, message = "Product Not Found" });
 
@@ -523,7 +535,7 @@ namespace Nop.Web.Controllers.Api.Security
             if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
             {
                 var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
-                    productId: model.ProductId,
+                    productId: model.Id,
                     osIds: new List<int> { (int)OrderStatus.Complete },
                     pageSize: 1).Any();
                 if (!hasCompletedOrders)
@@ -594,13 +606,28 @@ namespace Nop.Web.Controllers.Api.Security
 
         #region Topic
 
-        [HttpGet("get-topic/{systemName}")]
+        [HttpGet("get-topic-by-systemname")]
         public virtual IActionResult GetTopicBySytemName(string systemName)
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             return Ok(model);
         }
 
+
+        #endregion
+
+        #region Setting
+
+        [HttpGet("get-schedule-dates")]
+        public IActionResult GetScheduleDates()
+        {
+            string[] dates = null;
+            var orderscheduleDate1 = _localizationService.GetLocaleStringResourceByName("orderschedule.Date ", 1, false);
+            if (orderscheduleDate1 != null)
+                dates = orderscheduleDate1.ResourceValue.Split(',');
+
+            return Ok(new { success = true, dates });
+        }
 
         #endregion
 

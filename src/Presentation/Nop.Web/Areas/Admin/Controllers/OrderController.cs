@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
@@ -152,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return hasVendorProducts;
         }
-        
+
         protected virtual bool HasAccessToProduct(OrderItem orderItem)
         {
             if (orderItem == null || orderItem.ProductId == 0)
@@ -166,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return _productService.GetProductById(orderItem.ProductId)?.VendorId == vendorId;
         }
-        
+
         protected virtual bool HasAccessToShipment(Shipment shipment)
         {
             if (shipment == null)
@@ -1768,7 +1769,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     RentalEndDateUtc = rentalEndDate
                 };
 
-                _orderService.InsertOrderItem(orderItem);                
+                _orderService.InsertOrderItem(orderItem);
 
                 //adjust inventory
                 _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml,
@@ -1834,6 +1835,71 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.Warnings.AddRange(warnings);
 
             return View(model);
+        }
+
+        #endregion
+
+        #region Schedule Date
+
+        public virtual IActionResult ScheduleDate()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var model = new OrderScheduleModel();
+
+            var orderscheduleDate1 = _localizationService.GetLocaleStringResourceByName("orderschedule.Date ", 1, false);
+            if (orderscheduleDate1 != null)
+            {
+                var value = orderscheduleDate1.ResourceValue.Split(',');
+                model.ScheduleDate1 = value[0];
+                model.ScheduleDate2 = value[1];
+                model.ScheduleDate3 = value[2];
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ScheduleDate(OrderScheduleModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            if (!String.IsNullOrWhiteSpace(model.ScheduleDate1))
+            {
+                model.ScheduleDate1 = model.ScheduleDate1.Trim();
+            }
+            if (!String.IsNullOrWhiteSpace(model.ScheduleDate2))
+            {
+                model.ScheduleDate2 = model.ScheduleDate2.Trim();
+            }
+            if (!String.IsNullOrWhiteSpace(model.ScheduleDate3))
+            {
+                model.ScheduleDate3 = model.ScheduleDate3.Trim();
+            }
+
+            var orderscheduleDate = _localizationService.GetLocaleStringResourceByName("orderschedule.Date", 1, false);
+            if (orderscheduleDate != null)
+            {
+                if (String.IsNullOrWhiteSpace(model.ScheduleDate1) && String.IsNullOrWhiteSpace(model.ScheduleDate2) && String.IsNullOrWhiteSpace(model.ScheduleDate3))
+                    orderscheduleDate.ResourceValue = "-";
+                else
+                    orderscheduleDate.ResourceValue = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
+
+                _localizationService.UpdateLocaleStringResource(orderscheduleDate);
+            }
+            else
+            {
+                var resource = new LocaleStringResource { LanguageId = 1 };
+                resource.ResourceName = "orderschedule.Date";
+                if (String.IsNullOrWhiteSpace(model.ScheduleDate1) && String.IsNullOrWhiteSpace(model.ScheduleDate2) && String.IsNullOrWhiteSpace(model.ScheduleDate3))
+                    resource.ResourceValue = "-";
+                else
+                    resource.ResourceValue = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
+                _localizationService.InsertLocaleStringResource(resource);
+            }
+
+            return RedirectToAction("ScheduleDate");
         }
 
         #endregion
@@ -2145,14 +2211,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-                if(model.CanShip)
+                if (model.CanShip)
                     _orderProcessingService.Ship(shipment, true);
 
-                if(model.CanShip && model.CanDeliver)
+                if (model.CanShip && model.CanDeliver)
                     _orderProcessingService.Deliver(shipment, true);
 
                 LogEditOrder(order.Id);
-                
+
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
                         ? RedirectToAction("ShipmentDetails", new { id = shipment.Id })
@@ -2198,7 +2264,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
-            
+
             foreach (var shipmentItem in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
             {
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);

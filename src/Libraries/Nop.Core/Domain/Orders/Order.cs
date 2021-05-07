@@ -282,6 +282,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
+        public DateTime ScheduleDate { get; set; }
+
         /// <summary>
         /// Gets or sets the custom order number without prefix
         /// </summary>

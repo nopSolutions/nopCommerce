@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
@@ -32,5 +32,6 @@ namespace Nop.Web.Models.Catalog
         public string Price { get; set; }
         public int RatingSum { get; set; }
         public int TotalReviews { get; set; }
+        public string VendorLogoPictureUrl { get; set; }
     }
 }
