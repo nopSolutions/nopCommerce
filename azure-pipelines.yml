@@ -57,6 +57,7 @@ stages:
             inputs:
               action: deploy
               namespace: mysnacks
+              kubernetesServiceConnection: 'mysnacks-mysnacks-1620423356138'
               manifests: |
                 $(System.ArtifactsDirectory)/manifests/deployment.yml
                 $(System.ArtifactsDirectory)/manifests/service.yml
