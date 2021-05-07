@@ -34,5 +34,7 @@ stages:
         action: 'deploy'
         kubernetesServiceConnection: 'hetzner microk8s mysnacks namespace'
         namespace: 'mysnacks'
-        manifests: 'manifests/service.yml|manifests/deployment.yml'
+        manifests: |
+          manifests/service.yml
+          manifests/deployment.yml
         containers: 'eisajanyan/nopcommerce:$(tag)'
