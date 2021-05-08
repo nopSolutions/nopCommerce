@@ -11,6 +11,8 @@ resources:
 variables:
   repository: nopcommerce
   tag: '$(Build.BuildId)'
+  servicePort: 5000
+  imageRepository: 'eisajanyan/nopcommerce'
 
 stages:
 - stage: Build
