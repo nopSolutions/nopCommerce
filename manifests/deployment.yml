@@ -16,4 +16,4 @@ spec:
         - name: "{{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}" 
           image: "{{ containerRegistryConnection.Authorization.Parameters.loginServer }}/{{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}"
           ports:
-          - containerPort: "{{ servicePort }}"
+          - containerPort: {{ servicePort }}

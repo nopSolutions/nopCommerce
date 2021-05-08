@@ -5,6 +5,6 @@ metadata:
 spec:
     type: LoadBalancer
     ports:
-    - port: "{{ servicePort }} "
+    - port: {{ servicePort }}
     selector:
         app: "{{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}"
