@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
@@ -43,6 +41,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPaymentService _paymentService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
 
         #endregion
 
@@ -61,7 +60,8 @@ namespace Nop.Web.Controllers.Api.Security
             IVendorService vendorService,
             IDateTimeHelper dateTimeHelper,
             IPaymentService paymentService,
-            IOrderProcessingService orderProcessingService)
+            IOrderProcessingService orderProcessingService,
+            IOrderTotalCalculationService orderTotalCalculationService)
         {
             _orderService = orderService;
             _priceFormatter = priceFormatter;
@@ -77,6 +77,7 @@ namespace Nop.Web.Controllers.Api.Security
             _dateTimeHelper = dateTimeHelper;
             _paymentService = paymentService;
             _orderProcessingService = orderProcessingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
         }
 
         #endregion
@@ -141,23 +142,27 @@ namespace Nop.Web.Controllers.Api.Security
         [HttpGet("check-products/{productids}")]
         public IActionResult CheckProducts(string productids)
         {
+            var errorList = new List<object>();
             int[] ids = null;
             if (!string.IsNullOrEmpty(productids))
-                ids = productids.Contains(",") ? Array.ConvertAll(productids.Split(","), s => int.Parse(s)) : new int[Convert.ToInt32(productids)];
+                ids = Array.ConvertAll(productids.Split(","), s => int.Parse(s));
 
             var products = _productService.GetProductsByIds(ids);
-            if (!products.Any())
-                return Ok(new { success = false, message = "No product found" });
-
             foreach (var product in products)
             {
                 if (!product.Published || product.Deleted)
-                    return Ok(new { success = false, message = product.Name + " is not published" });
+                    errorList.Add(new { Id = product, message = product.Name + " is not published" });
 
-                AddProductToCart(product.Id, 1);
+                if (!errorList.Any())
+                    AddProductToCart(product.Id, 1);
             }
 
-            return Ok(new { success = true, message = "All products are fine" });
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            var cartTotal = _orderTotalCalculationService.GetShoppingCartTotal(cart, false);
+            if (errorList.Any())
+                return Ok(new { success = false, errorList, cartTotal });
+
+            return Ok(new { success = true, message = "All products are fine", cartTotal });
         }
 
         [HttpPost("order-confirmation")]
@@ -178,6 +183,94 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(new { success = true, message = "Order Placed Successfully" });
             }
             return Ok(new { success = false, message = "Error while placing order" });
+        }
+
+        [HttpGet("get-todays-orders")]
+        public IActionResult GetTodaysOrders()
+        {
+            var perviousOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id).Where(x => x.CreatedOnUtc == DateTime.UtcNow);
+            if (perviousOrders.Any())
+            {
+                var languageId = _workContext.WorkingLanguage.Id;
+                var model = new CustomerOrderListModel();
+                foreach (var order in perviousOrders)
+                {
+                    var orderModel = new CustomerOrderListModel.OrderDetailsModel
+                    {
+                        Id = order.Id,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                        OrderStatusEnum = order.OrderStatus,
+                        OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus),
+                        PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus),
+                        ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus),
+                        IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order),
+                        CustomOrderNumber = order.CustomOrderNumber
+                    };
+                    var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
+                    orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage.Id);
+
+                    var orderItems = _orderService.GetOrderItems(order.Id);
+
+                    foreach (var orderItem in orderItems)
+                    {
+                        var product = _productService.GetProductById(orderItem.ProductId);
+                        var vendor = _vendorService.GetVendorByProductId(product.Id);
+                        var orderItemModel = new OrderDetailsModel.OrderItemModel
+                        {
+                            Id = orderItem.Id,
+                            OrderItemGuid = orderItem.OrderItemGuid,
+                            Sku = _productService.FormatSku(product, orderItem.AttributesXml),
+                            VendorName = _vendorService.GetVendorById(product.VendorId)?.Name ?? string.Empty,
+                            ProductId = product.Id,
+                            ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                            ProductSeName = _urlRecordService.GetSeName(product),
+                            Quantity = orderItem.Quantity,
+                            AttributeInfo = orderItem.AttributeDescription,
+                            VendorLogoPictureUrl = _pictureService.GetPictureUrl(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
+                        };
+                        //rental info
+                        if (product.IsRental)
+                        {
+                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
+                                ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : "";
+                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
+                                ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : "";
+                            orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                                rentalStartDate, rentalEndDate);
+                        }
+                        orderModel.Items.Add(orderItemModel);
+
+                        //unit price, subtotal
+                        if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                        {
+                            //including tax
+                            var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                            orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+
+                            var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
+                            orderItemModel.SubTotal = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
+                        }
+                        else
+                        {
+                            //excluding tax
+                            var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                            orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+
+                            var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
+                            orderItemModel.SubTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
+                        }
+
+                        //downloadable products
+                        if (_orderService.IsDownloadAllowed(orderItem))
+                            orderItemModel.DownloadId = product.DownloadId;
+                        if (_orderService.IsLicenseDownloadAllowed(orderItem))
+                            orderItemModel.LicenseId = orderItem.LicenseDownloadId ?? 0;
+                    }
+                    model.Orders.Add(orderModel);
+                }
+                return Ok(new { success = true, model });
+            }
+            return Ok(new { success = false, message = "No previous order found" });
         }
 
         [HttpGet("get-previous-orders")]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -146,13 +146,16 @@ namespace Nop.Web.Controllers.Api.Security
 
         [AllowAnonymous]
         [HttpPost("logout")]
-        public IActionResult Logout([FromBody] LogoutApiModel model)
+        public IActionResult Logout()
         {
-            var customer = _customerService.GetCustomerById(model.CustomerId);
+            var customer = _workContext.CurrentCustomer;
             if (customer == null)
                 return Ok(new { success = false, message = "'customer' could not be loaded" });
 
             _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.PushToken, null, 1);
+
+            //standard logout 
+            _authenticationService.SignOut();
 
             return Ok(new { success = true, message = "logout successfully" });
         }
