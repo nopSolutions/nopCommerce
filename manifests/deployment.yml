@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       labels:
-        app: ={{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}
+        app: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}
     spec:
       containers:
         - name: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}
