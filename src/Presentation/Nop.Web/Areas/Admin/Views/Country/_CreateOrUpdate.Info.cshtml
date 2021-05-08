@@ -1,9 +1,9 @@
 @model CountryModel
 
-<div class="panel-body">
-    @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
+<div class="card-body">
+    @(await Html.LocalizedEditorAsync<CountryModel, CountryLocalizedModel>("country-info-localized",
     @<div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="@Model.Locales[item].Name"/>
             </div>
@@ -18,7 +18,7 @@
     </div>
 ,
     @<div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="Name"/>
             </div>
@@ -29,7 +29,7 @@
         </div>
     </div>
 ))
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AllowsBilling"/>
         </div>
@@ -38,7 +38,7 @@
             <span asp-validation-for="AllowsBilling"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AllowsShipping"/>
         </div>
@@ -47,7 +47,7 @@
             <span asp-validation-for="AllowsShipping"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="TwoLetterIsoCode"/>
         </div>
@@ -56,7 +56,7 @@
             <span asp-validation-for="TwoLetterIsoCode"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="ThreeLetterIsoCode"/>
         </div>
@@ -65,7 +65,7 @@
             <span asp-validation-for="ThreeLetterIsoCode"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="NumericIsoCode"/>
         </div>
@@ -74,7 +74,7 @@
             <span asp-validation-for="NumericIsoCode"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SubjectToVat"/>
         </div>
@@ -83,7 +83,7 @@
             <span asp-validation-for="SubjectToVat"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds"/>
         </div>
@@ -120,7 +120,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Published"/>
         </div>
@@ -129,7 +129,7 @@
             <span asp-validation-for="Published"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="DisplayOrder"/>
         </div>

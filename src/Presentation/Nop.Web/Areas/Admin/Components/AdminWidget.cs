@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
@@ -32,11 +33,14 @@ namespace Nop.Web.Areas.Admin.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             //prepare model
-            var models = _widgetModelFactory.PrepareRenderWidgetModels(widgetZone, additionalData);
+            var models = await _widgetModelFactory.PrepareRenderWidgetModelsAsync(widgetZone, additionalData);
 
             //no data?
             if (!models.Any())

@@ -7,17 +7,19 @@
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Common.AddNew")
         </h1>
-        <div class="pull-right">
-            <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
-        </div>
-    </div>
+    <section class="content">
+		<div class="container-fluid">
+			<div class="form-horizontal">
+				@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
+			</div>
+		</div>
+    </section>
 </form>

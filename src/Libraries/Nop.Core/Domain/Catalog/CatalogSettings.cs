@@ -106,6 +106,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductReviewsMustBeApproved { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating that customer can add only one review per product
+        /// </summary>
+        public bool OneReviewPerProductFromCustomer { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating the default rating value of the product reviews
         /// </summary>
         public int DefaultProductRatingValue { get; set; }
@@ -246,6 +251,26 @@ namespace Nop.Core.Domain.Catalog
         public string SearchPagePageSizeOptions { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the price range filtering is enabled on search page
+        /// </summary>
+        public bool SearchPagePriceRangeFiltering { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "from" price on search page
+        /// </summary>
+        public decimal SearchPagePriceFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "to" price on search page
+        /// </summary>
+        public decimal SearchPagePriceTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range should be entered manually on search page
+        /// </summary>
+        public bool SearchPageManuallyPriceRange { get; set; }
+
+        /// <summary>
         /// Gets or sets "List of products purchased by other customers who purchased the above" option is enable
         /// </summary>
         public bool ProductsAlsoPurchasedEnabled { get; set; }
@@ -279,6 +304,26 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the available customer selectable page size options for 'products by tag'
         /// </summary>
         public string ProductsByTagPageSizeOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range filtering is enabled on 'products by tag' page
+        /// </summary>
+        public bool ProductsByTagPriceRangeFiltering { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "from" price on 'products by tag' page
+        /// </summary>
+        public decimal ProductsByTagPriceFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "to" price on 'products by tag' page
+        /// </summary>
+        public decimal ProductsByTagPriceTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range should be entered manually on 'products by tag' page
+        /// </summary>
+        public bool ProductsByTagManuallyPriceRange { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to include "Short description" in compare products
@@ -469,5 +514,25 @@ namespace Nop.Core.Domain.Catalog
         /// Get or set a value indicating whether use standart menu in public store or use Ajax to load menu
         /// </summary>
         public bool UseAjaxLoadMenu { get; set; }
+
+        /// <summary>
+        /// Get or set a value indicating whether use standart or AJAX products loading (applicable to 'paging', 'filtering', 'view modes') in catalog
+        /// </summary>
+        public bool UseAjaxCatalogProductsLoading { get; set; }
+
+        /// <summary>
+        /// Get or set a value indicating whether the manufacturer filtering is enabled on catalog pages
+        /// </summary>
+        public bool EnableManufacturerFiltering { get; set; }
+
+        /// <summary>
+        /// Get or set a value indicating whether the price range filtering is enabled on catalog pages
+        /// </summary>
+        public bool EnablePriceRangeFiltering { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attribute value display type when out of stock
+        /// </summary>
+        public AttributeValueOutOfStockDisplayType AttributeValueOutOfStockDisplayType { get; set; }
     }
 }

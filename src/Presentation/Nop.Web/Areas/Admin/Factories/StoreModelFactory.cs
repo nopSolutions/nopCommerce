@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -45,8 +46,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare store search model
         /// </summary>
         /// <param name="searchModel">Store search model</param>
-        /// <returns>Store search model</returns>
-        public virtual StoreSearchModel PrepareStoreSearchModel(StoreSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store search model
+        /// </returns>
+        public virtual Task<StoreSearchModel> PrepareStoreSearchModelAsync(StoreSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -54,21 +58,24 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
         /// Prepare paged store list model
         /// </summary>
         /// <param name="searchModel">Store search model</param>
-        /// <returns>Store list model</returns>
-        public virtual StoreListModel PrepareStoreListModel(StoreSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store list model
+        /// </returns>
+        public virtual async Task<StoreListModel> PrepareStoreListModelAsync(StoreSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get stores
-            var stores = _storeService.GetAllStores().ToPagedList(searchModel);
+            var stores = (await _storeService.GetAllStoresAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new StoreListModel().PrepareToGrid(searchModel, stores, () =>
@@ -86,8 +93,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Store model</param>
         /// <param name="store">Store</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Store model</returns>
-        public virtual StoreModel PrepareStoreModel(StoreModel model, Store store, bool excludeProperties = false)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store model
+        /// </returns>
+        public virtual async Task<StoreModel> PrepareStoreModelAsync(StoreModel model, Store store, bool excludeProperties = false)
         {
             Action<StoreLocalizedModel, int> localizedModelConfiguration = null;
 
@@ -97,19 +107,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= store.ToModel<StoreModel>();
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(store, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(store, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare available languages
-            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, 
-                defaultItemText: _localizationService.GetResource("Admin.Common.EmptyItemText"));
+            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, 
+                defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

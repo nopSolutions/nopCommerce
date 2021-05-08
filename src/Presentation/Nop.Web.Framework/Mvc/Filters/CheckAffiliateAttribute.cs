@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -32,7 +33,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that checks and updates affiliate of customer
         /// </summary>
-        private class CheckAffiliateFilter : IActionFilter
+        private class CheckAffiliateFilter : IAsyncActionFilter
         {
             #region Constants
 
@@ -51,7 +52,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public CheckAffiliateFilter(IAffiliateService affiliateService, 
+            public CheckAffiliateFilter(IAffiliateService affiliateService,
                 ICustomerService customerService,
                 IWorkContext workContext)
             {
@@ -68,32 +69,31 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Set the affiliate identifier of current customer
             /// </summary>
             /// <param name="affiliate">Affiliate</param>
-            protected void SetCustomerAffiliateId(Affiliate affiliate)
+            /// <param name="customer">Customer</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task SetCustomerAffiliateIdAsync(Affiliate affiliate, Customer customer)
             {
                 if (affiliate == null || affiliate.Deleted || !affiliate.Active)
                     return;
 
-                if (affiliate.Id == _workContext.CurrentCustomer.AffiliateId)
+                if (affiliate.Id == customer.AffiliateId)
                     return;
 
                 //ignore search engines
-                if (_workContext.CurrentCustomer.IsSearchEngineAccount())
+                if (customer.IsSearchEngineAccount())
                     return;
 
                 //update affiliate identifier
-                _workContext.CurrentCustomer.AffiliateId = affiliate.Id;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                customer.AffiliateId = affiliate.Id;
+                await _customerService.UpdateCustomerAsync(customer);
             }
 
-            #endregion
-
-            #region Methods
-
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task CheckAffiliateAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -103,35 +103,45 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (request?.Query == null || !request.Query.Any())
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //try to find by ID
+                var customer = await _workContext.GetCurrentCustomerAsync();
                 var affiliateIds = request.Query[AFFILIATE_ID_QUERY_PARAMETER_NAME];
-                if (affiliateIds.Any() && int.TryParse(affiliateIds.FirstOrDefault(), out int affiliateId)
-                    && affiliateId > 0 && affiliateId != _workContext.CurrentCustomer.AffiliateId)
+
+                if (int.TryParse(affiliateIds.FirstOrDefault(), out var affiliateId) && affiliateId > 0 && affiliateId != customer.AffiliateId)
                 {
-                    SetCustomerAffiliateId(_affiliateService.GetAffiliateById(affiliateId));
+                    var affiliate = await _affiliateService.GetAffiliateByIdAsync(affiliateId);
+                    await SetCustomerAffiliateIdAsync(affiliate, customer);
                     return;
                 }
 
                 //try to find by friendly name
                 var affiliateNames = request.Query[AFFILIATE_FRIENDLYURLNAME_QUERY_PARAMETER_NAME];
-                if (affiliateNames.Any())
+                var affiliateName = affiliateNames.FirstOrDefault();
+                if (!string.IsNullOrEmpty(affiliateName))
                 {
-                    var affiliateName = affiliateNames.FirstOrDefault();
-                    if (!string.IsNullOrEmpty(affiliateName))
-                        SetCustomerAffiliateId(_affiliateService.GetAffiliateByFriendlyUrlName(affiliateName));
+                    var affiliate = await _affiliateService.GetAffiliateByFriendlyUrlNameAsync(affiliateName);
+                    await SetCustomerAffiliateIdAsync(affiliate, customer);
                 }
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await CheckAffiliateAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

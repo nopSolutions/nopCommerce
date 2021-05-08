@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a category product model
     /// </summary>
-    public partial class CategoryProductModel : BaseNopEntityModel
+    public partial record CategoryProductModel : BaseNopEntityModel
     {
         #region Properties
 

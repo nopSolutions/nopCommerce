@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -42,20 +43,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare permission mapping model
         /// </summary>
         /// <param name="model">Permission mapping model</param>
-        /// <returns>Permission mapping model</returns>
-        public virtual PermissionMappingModel PreparePermissionMappingModel(PermissionMappingModel model)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the permission mapping model
+        /// </returns>
+        public virtual async Task<PermissionMappingModel> PreparePermissionMappingModelAsync(PermissionMappingModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
             model.AvailableCustomerRoles = customerRoles.Select(role => role.ToModel<CustomerRoleModel>()).ToList();
 
-            foreach (var permissionRecord in _permissionService.GetAllPermissionRecords())
+            foreach (var permissionRecord in await _permissionService.GetAllPermissionRecordsAsync())
             {
                 model.AvailablePermissions.Add(new PermissionRecordModel
                 {
-                    Name = _localizationService.GetLocalizedPermissionName(permissionRecord),
+                    Name = await _localizationService.GetLocalizedPermissionNameAsync(permissionRecord),
                     SystemName = permissionRecord.SystemName
                 });
 
@@ -64,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (!model.Allowed.ContainsKey(permissionRecord.SystemName))
                         model.Allowed[permissionRecord.SystemName] = new Dictionary<int, bool>();
                     model.Allowed[permissionRecord.SystemName][role.Id] = 
-                        _permissionService.GetMappingByPermissionRecordId(permissionRecord.Id).Any(mapping => mapping.CustomerRoleId == role.Id);
+                        (await _permissionService.GetMappingByPermissionRecordIdAsync(permissionRecord.Id)).Any(mapping => mapping.CustomerRoleId == role.Id);
                 }
             }
 

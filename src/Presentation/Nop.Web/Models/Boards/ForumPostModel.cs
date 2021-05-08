@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class ForumPostModel : BaseNopModel
+    public partial record ForumPostModel : BaseNopModel
     {
         public int Id { get; set; }
         public int ForumTopicId { get; set; }

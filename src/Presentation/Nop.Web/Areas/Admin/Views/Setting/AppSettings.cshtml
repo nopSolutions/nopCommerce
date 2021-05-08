@@ -1,0 +1,89 @@
+@model AppSettingsModel
+
+@{
+    ViewBag.PageTitle = T("Admin.Configuration.AppSettings").Text;
+    Html.SetActiveMenuItemSystemName("App settings");
+
+    const string hideCacheBlockAttributeName = "AppSettingsPage.HideCacheBlock";
+    var hideCacheBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCacheBlockAttributeName);
+    const string hideHostingBlockAttributeName = "AppSettingsPage.HideHostingBlock";
+    var hideHostingBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideHostingBlockAttributeName);
+    const string hideDistributedCacheBlockAttributeName = "AppSettingsPage.HideDistributedCacheBlock";
+    var hideDistributedCacheBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDistributedCacheBlockAttributeName);
+    const string hideAzureBlobBlockAttributeName = "AppSettingsPage.HideAzureBlobBlock";
+    var hideAzureBlobBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAzureBlobBlockAttributeName);
+    const string hideInstallationBlockAttributeName = "AppSettingsPage.HideInstallationBlock";
+    var hideInstallationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInstallationBlockAttributeName);
+    const string hidePluginBlockAttributeName = "AppSettingsPage.HidePluginBlock";
+    var hidePluginBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePluginBlockAttributeName);
+    const string hideCommonBlockAttributeName = "AppSettingsPage.HideCommonBlock";
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="AppSettings" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.AppSettings")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsButtons })
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+            <div class="container-fluid">
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                @T("Admin.Configuration.AppSettings.Description", Docs.AppSettings)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nop-cards id="app-settings-cards">
+                <nop-card asp-name="app-settings-cache" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Cache")" asp-hide-block-attribute-name="@hideCacheBlockAttributeName" asp-hide="@hideCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Cache", Model)</nop-card>
+                <nop-card asp-name="app-settings-distributed-cache" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.DistributedCache")" asp-hide-block-attribute-name="@hideDistributedCacheBlockAttributeName" asp-hide="@hideDistributedCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.DistributedCache", Model)</nop-card>
+                <nop-card asp-name="app-settings-hosting" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Hosting")" asp-hide-block-attribute-name="@hideHostingBlockAttributeName" asp-hide="@hideHostingBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Hosting", Model)</nop-card>
+                <nop-card asp-name="app-settings-azure-blob" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.AzureBlob")" asp-hide-block-attribute-name="@hideAzureBlobBlockAttributeName" asp-hide="@hideAzureBlobBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.AzureBlob", Model)</nop-card>
+                <nop-card asp-name="app-settings-installation" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Installation")" asp-hide-block-attribute-name="@hideInstallationBlockAttributeName" asp-hide="@hideInstallationBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Installation", Model)</nop-card>
+                <nop-card asp-name="app-settings-plugin" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Plugin")" asp-hide-block-attribute-name="@hidePluginBlockAttributeName" asp-hide="@hidePluginBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Plugin", Model)</nop-card>
+                <nop-card asp-name="app-settings-common" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Common", Model)</nop-card>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsBlock, additionalData = Model })
+            </nop-cards>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            checkEnvironmentVariables();
+        });
+
+        function checkEnvironmentVariables() {
+            var warningElem = "<span class='field-validation-custom warning'>@T("Admin.Configuration.AppSettings.EnvironmentVariablesWarning")</span>";
+            
+            @foreach (var controlId in Model.EnvironmentVariables)
+            {
+                <text>
+                var control = $("#@controlId");
+                var widget = kendo.widgetInstance(control);
+                if (widget)
+                {
+                    //because kendo fields have a original structure of elements, we are forced to add a warning for them in a special way
+                    control.parent().parent().after(warningElem);
+                }
+                else
+                {
+                    control.after(warningElem);
+                }
+                </text>
+            }
+        }
+    </script>
+</form>

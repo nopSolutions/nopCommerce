@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a vendor settings model
     /// </summary>
-    public partial class VendorSettingsModel : BaseNopModel, ISettingsModel
+    public partial record VendorSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

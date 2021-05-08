@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -14,13 +15,6 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public sealed class SaveSelectedTabAttribute : TypeFilterAttribute
     {
-        #region Fields
-
-        private readonly bool _ignoreFilter;
-        private readonly bool _persistForTheNextRequest;
-
-        #endregion
-
         #region Ctor
 
         /// <summary>
@@ -30,8 +24,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="persistForTheNextRequest">Whether a message should be persisted for the next request</param>
         public SaveSelectedTabAttribute(bool ignore = false, bool persistForTheNextRequest = true) : base(typeof(SaveSelectedTabFilter))
         {
-            _persistForTheNextRequest = persistForTheNextRequest;
-            _ignoreFilter = ignore;
+            PersistForTheNextRequest = persistForTheNextRequest;
+            IgnoreFilter = ignore;
             Arguments = new object[] { ignore, persistForTheNextRequest };
         }
 
@@ -42,12 +36,12 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Gets a value indicating whether to ignore the execution of filter actions
         /// </summary>
-        public bool IgnoreFilter => _ignoreFilter;
+        public bool IgnoreFilter { get; }
 
         /// <summary>
         /// Gets a value indicating whether a message should be persisted for the next request
         /// </summary>
-        public bool PersistForTheNextRequest => _persistForTheNextRequest;
+        public bool PersistForTheNextRequest { get; }
 
         #endregion
 
@@ -56,7 +50,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter confirming that checks whether current connection is secured and properly redirect if necessary
         /// </summary>
-        private class SaveSelectedTabFilter : IActionFilter
+        private class SaveSelectedTabFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -78,42 +72,38 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task SaveSelectedTabAsync(ActionExecutingContext context)
             {
-                //do nothing
-            }
-            /// <summary>
-            /// Called after the action executes, before the action result
-            /// </summary>
-            /// <param name="filterContext">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext filterContext)
-            {
-                if (filterContext == null)
-                    throw new ArgumentNullException(nameof(filterContext));
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
 
-                if (filterContext.HttpContext.Request == null)
+                if (context.HttpContext.Request == null)
                     return;
 
                 //only in POST requests
-                if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
-                    return;
-                //ignore AJAX requests
-                if (_webHelper.IsAjaxRequest(filterContext.HttpContext.Request))
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                //ignore AJAX requests
+                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
+                    return;
+
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //check whether this filter has been overridden for the Action
-                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
-                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<SaveSelectedTabAttribute>().FirstOrDefault();
+                    .Select(filterDescriptor => filterDescriptor.Filter)
+                    .OfType<SaveSelectedTabAttribute>()
+                    .FirstOrDefault();
 
                 //ignore filter
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
@@ -121,11 +111,26 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 var persistForTheNextRequest = actionFilter?.PersistForTheNextRequest ?? _persistForTheNextRequest;
 
-                var controller = filterContext.Controller as BaseController;
-                if (controller != null)
+                if (context.Controller is BaseController controller)
                     controller.SaveSelectedTabName(persistForTheNextRequest: persistForTheNextRequest);
             }
-            
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called asynchronously before the action, after model binding is complete.
+            /// </summary>
+            /// <param name="context">A context for action filters</param>
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+            {
+                await next();
+                await SaveSelectedTabAsync(context);
+            }
+
             #endregion
         }
 

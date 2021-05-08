@@ -8,9 +8,9 @@
 @await Component.InvokeAsync("SettingMode")
 
 <form asp-controller="PayPalSmartPaymentButtons" asp-action="Configure" method="post">
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
                 <p>
                     You must set up your development environment to get OAuth 2.0 client ID and secret credentials for the sandbox and live environments.<br />
                     Follow these steps to generate REST API credentials:<br />
@@ -22,7 +22,7 @@
                     6. Review your app details and save your app.<br />
                     <br />
                 </p>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="UseSandbox" />
@@ -32,7 +32,7 @@
                         <span asp-validation-for="UseSandbox"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="ClientId_OverrideForStore" asp-input="ClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="ClientId" />
@@ -42,7 +42,7 @@
                         <span asp-validation-for="ClientId"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="SecretKey_OverrideForStore" asp-input="SecretKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="SecretKey" />
@@ -52,7 +52,7 @@
                         <span asp-validation-for="SecretKey"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="PaymentTypeId_OverrideForStore" asp-input="PaymentTypeId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="PaymentTypeId" />
@@ -62,8 +62,8 @@
                         <span asp-validation-for="PaymentTypeId"></span>
                     </div>
                 </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
+                <div class="card card-default advanced-setting">
+                    <div class="card-header">
                         @T("Plugins.Payments.PayPalSmartPaymentButtons.Prominently")
                     </div>
 
@@ -77,29 +77,29 @@
 
                         function toggleDisplayLogo() {
                             if ($('#@Html.IdFor(model => model.DisplayLogoInHeaderLinks)').is(':checked')) {
-                                $('#pnlLogoInHeaderLinks').show();
+                                $('#pnlLogoInHeaderLinks').showElement();
                             }
                             else {
-                                $('#pnlLogoInHeaderLinks').hide();
+                                $('#pnlLogoInHeaderLinks').hideElement();
                             }
 
                             if ($('#@Html.IdFor(model => model.DisplayLogoInFooter)').is(':checked')) {
-                                $('#pnlLogoInFooter').show();
+                                $('#pnlLogoInFooter').showElement();
                             }
                             else {
-                                $('#pnlLogoInFooter').hide();
+                                $('#pnlLogoInFooter').hideElement();
                             }
                         }
                     </script>
 
-                    <div class="panel-body">
+                    <div class="card-body">
                         <p>
                             Build customer trust with PayPal branding on your website.<br />
                             Feature the PayPal button on all pages that initiate checkout. Including PayPal branding early in the checkout experience helps increase site conversion. You can also attract new customers to your site by announcing PayPal acceptance.<br />
                             <em>TIP: You can find more PayPal logos and banners on <a href="https://www.paypal.com/gd/webapps/mpp/logo-center" target="_blank">PayPal Logo Center</a></em>
                             <br />
                         </p>
-                        <div class="form-group advanced-setting">
+                        <div class="form-group row advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayButtonsOnShoppingCart_OverrideForStore" asp-input="DisplayButtonsOnShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="DisplayButtonsOnShoppingCart" />
@@ -109,7 +109,7 @@
                                 <span asp-validation-for="DisplayButtonsOnShoppingCart"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting">
+                        <div class="form-group row advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayButtonsOnProductDetails_OverrideForStore" asp-input="DisplayButtonsOnProductDetails" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="DisplayButtonsOnProductDetails" />
@@ -119,7 +119,7 @@
                                 <span asp-validation-for="DisplayButtonsOnProductDetails"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting">
+                        <div class="form-group row advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayLogoInHeaderLinks_OverrideForStore" asp-input="DisplayLogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="DisplayLogoInHeaderLinks" />
@@ -130,7 +130,7 @@
                             </div>
                         </div>
                         <nop-nested-setting asp-for="DisplayLogoInHeaderLinks">
-                            <div class="form-group advanced-setting" id="pnlLogoInHeaderLinks">
+                            <div class="form-group row advanced-setting" id="pnlLogoInHeaderLinks">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="LogoInHeaderLinks_OverrideForStore" asp-input="LogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                     <nop-label asp-for="LogoInHeaderLinks" />
@@ -141,7 +141,7 @@
                                 </div>
                             </div>
                         </nop-nested-setting>
-                        <div class="form-group advanced-setting">
+                        <div class="form-group row advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="DisplayLogoInFooter_OverrideForStore" asp-input="DisplayLogoInFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                 <nop-label asp-for="DisplayLogoInFooter" />
@@ -152,7 +152,7 @@
                             </div>
                         </div>
                         <nop-nested-setting asp-for="DisplayLogoInFooter">
-                            <div class="form-group advanced-setting" id="pnlLogoInFooter">
+                            <div class="form-group row advanced-setting" id="pnlLogoInFooter">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="LogoInFooter_OverrideForStore" asp-input="LogoInFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                     <nop-label asp-for="LogoInFooter" />
@@ -165,10 +165,10 @@
                         </nop-nested-setting>
                     </div>
                 </div>
-                <div class="form-group"></div>
-                <div class="form-group">
-                    <div class="col-md-9 col-md-offset-3">
-                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                <div class="form-group row"></div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
                     </div>
                 </div>
             </div>

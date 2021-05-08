@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
     /// <summary>
     /// Represents an admin language selector model
     /// </summary>
-    public partial class LanguageSelectorModel : BaseNopModel
+    public partial record LanguageSelectorModel : BaseNopModel
     {
         #region Ctor
 

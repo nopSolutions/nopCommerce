@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Orders
     {
         public CheckoutAttributeValueValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Required"));
 
             SetDatabaseValidationRules<CheckoutAttributeValue>(dataProvider);
         }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 {
-    public class FixedRateModel : BaseNopModel
+    public record FixedRateModel : BaseNopModel
     {
         public int ShippingMethodId { get; set; }
 

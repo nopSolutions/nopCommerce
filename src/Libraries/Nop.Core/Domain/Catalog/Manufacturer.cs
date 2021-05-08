@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -10,7 +11,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a manufacturer
     /// </summary>
-    public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountManufacturerMapping>
+    public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountManufacturerMapping>, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the name
@@ -63,11 +64,6 @@ namespace Nop.Core.Domain.Catalog
         public string PageSizeOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets the available price ranges
-        /// </summary>
-        public string PriceRanges { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
@@ -101,5 +97,25 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range filtering is enabled
+        /// </summary>
+        public bool PriceRangeFiltering { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "from" price
+        /// </summary>
+        public decimal PriceFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "to" price
+        /// </summary>
+        public decimal PriceTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range should be entered manually
+        /// </summary>
+        public bool ManuallyPriceRange { get; set; }
     }
 }

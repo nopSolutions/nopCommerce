@@ -8,7 +8,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Models
     /// <summary>
     /// Represents a Facebook Pixel search model
     /// </summary>
-    public class FacebookPixelSearchModel : BaseSearchModel
+    public record FacebookPixelSearchModel : BaseSearchModel
     {
         #region Ctor
 

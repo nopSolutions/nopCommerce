@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
     /// <summary>
     /// Represents an affiliated customer model
     /// </summary>
-    public partial class AffiliatedCustomerModel : BaseNopEntityModel
+    public partial record AffiliatedCustomerModel : BaseNopEntityModel
     {
         #region Properties
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
@@ -30,11 +31,14 @@ namespace Nop.Web.Areas.Admin.Components
         /// Invoke view component
         /// </summary>
         /// <param name="modeName">Setting mode name</param>
-        /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string modeName = "settings-advanced-mode")
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
+        public async Task<IViewComponentResult> InvokeAsync(string modeName = "settings-advanced-mode")
         {
             //prepare model
-            var model = _settingModelFactory.PrepareSettingModeModel(modeName);
+            var model = await _settingModelFactory.PrepareSettingModeModelAsync(modeName);
 
             return View(model);
         }

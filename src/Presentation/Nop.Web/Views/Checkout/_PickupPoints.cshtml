@@ -59,31 +59,36 @@
                     @foreach (var point in Model.PickupPoints)
                     {
                         var addressLine = new StringBuilder();
-                        addressLine.Append(point.Name);
+                        var parameters = new List<string>();
+                        if (!string.IsNullOrEmpty(point.Name))
+                        {
+                            parameters.Add(point.Name);
+                        }
                         if (!string.IsNullOrEmpty(point.Address))
                         {
-                            addressLine.AppendFormat(", {0}", point.Address);
+                            parameters.Add(point.Address);
                         }
                         if (!string.IsNullOrEmpty(point.City))
                         {
-                            addressLine.AppendFormat(", {0}", point.City);
+                            parameters.Add(point.City);
                         }
                         if (!string.IsNullOrEmpty(point.County))
                         {
-                            addressLine.AppendFormat(", {0}", point.County);
+                            parameters.Add(point.County);
                         }
                         if (!string.IsNullOrEmpty(point.StateName))
                         {
-                            addressLine.AppendFormat(", {0}", point.StateName);
+                            parameters.Add(point.StateName);
                         }
                         if (!string.IsNullOrEmpty(point.CountryName))
                         {
-                            addressLine.AppendFormat(", {0}", point.CountryName);
+                            parameters.Add(point.CountryName);
                         }
                         if (!string.IsNullOrEmpty(point.PickupFee))
                         {
-                            addressLine.AppendFormat(", {0}", point.PickupFee);
+                            parameters.Add(point.PickupFee);
                         }
+                        addressLine.AppendJoin(", ", parameters);
                         <option value="@($"{point.Id}___{point.ProviderSystemName}")">@(addressLine)</option>
                     }
                 </select>

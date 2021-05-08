@@ -33,7 +33,6 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
 
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.LicenseKey")]
         [DataType(DataType.Password)]
-        [NoTrim]
         public string LicenseKey { get; set; }
 
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.Company")]
@@ -55,6 +54,9 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
 
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.EnableLogging")]
         public bool EnableLogging { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.GetTaxRateByAddressOnly")]
+        public bool GetTaxRateByAddressOnly { get; set; }
 
         public AddressModel TestAddress { get; set; }
 

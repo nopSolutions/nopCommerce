@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Polls
     /// <summary>
     /// Represents a poll answer search model
     /// </summary>
-    public partial class PollAnswerSearchModel : BaseSearchModel
+    public partial record PollAnswerSearchModel : BaseSearchModel
     {
         #region Ctor
 

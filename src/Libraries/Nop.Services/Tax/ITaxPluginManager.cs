@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Tax
@@ -13,8 +14,11 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Tax provider</returns>
-        ITaxProvider LoadPrimaryPlugin(Customer customer = null, int storeId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax provider
+        /// </returns>
+        Task<ITaxProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Check whether the passed tax provider is active
@@ -29,7 +33,10 @@ namespace Nop.Services.Tax
         /// <param name="systemName">System name of tax provider to check</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Result</returns>
-        bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0);
     }
 }

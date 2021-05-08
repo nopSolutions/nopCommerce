@@ -6,7 +6,7 @@ namespace Nop.Web.Framework.Models
     /// <summary>
     /// Represents base search model
     /// </summary>
-    public abstract partial class BaseSearchModel : BaseNopModel, IPagingRequestModel
+    public abstract partial record BaseSearchModel : BaseNopModel, IPagingRequestModel
     {
         #region Ctor
 

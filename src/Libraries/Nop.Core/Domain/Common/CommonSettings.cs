@@ -29,16 +29,6 @@ namespace Nop.Core.Domain.Common
         public bool DisplayJavaScriptDisabledWarning { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether full-text search is supported
-        /// </summary>
-        public bool UseFullTextSearch { get; set; }
-
-        /// <summary>
-        /// Gets or sets a Full-Text search mode
-        /// </summary>
-        public FulltextSearchMode FullTextMode { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether 404 errors (page or file not found) should be logged
         /// </summary>
         public bool Log404Errors { get; set; }
@@ -69,20 +59,10 @@ namespace Nop.Core.Domain.Common
         public bool JqueryMigrateScriptLoggingActive { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance)
-        /// </summary>
-        public bool SupportPreviousNopcommerceVersions { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to compress response (gzip by default). 
         /// You may want to disable it, for example, If you have an active IIS Dynamic Compression Module configured at the server level
         /// </summary>
         public bool UseResponseCompression { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value of "Cache-Control" header value for static content (in seconds)
-        /// </summary>
-        public string StaticFilesCacheControl { get; set; }
 
         /// <summary>
         /// Gets or sets a value of favicon and app icons <head/> code
@@ -103,11 +83,6 @@ namespace Nop.Core.Domain.Common
         /// A value indicating whether CSS file bundling and minification is enabled
         /// </summary>
         public bool EnableCssBundling { get; set; }
-
-        /// <summary>
-        /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value
-        /// </summary>
-        public int? ScheduleTaskRunTimeout { get; set; }
 
         /// <summary>
         /// Gets or sets the timeout (in milliseconds) before restarting the application; set null to use default value

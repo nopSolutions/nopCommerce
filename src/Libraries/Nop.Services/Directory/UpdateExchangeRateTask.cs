@@ -32,21 +32,21 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Executes a task
         /// </summary>
-        public void Execute()
+        public async System.Threading.Tasks.Task ExecuteAsync()
         {
             if (!_currencySettings.AutoUpdateEnabled)
                 return;
 
-            var exchangeRates = _currencyService.GetCurrencyLiveRates();
-            foreach (var exchageRate in exchangeRates)
+            var exchangeRates = await _currencyService.GetCurrencyLiveRatesAsync();
+            foreach (var exchangeRate in exchangeRates)
             {
-                var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
+                var currency = await _currencyService.GetCurrencyByCodeAsync(exchangeRate.CurrencyCode);
                 if (currency == null)
                     continue;
 
-                currency.Rate = exchageRate.Rate;
+                currency.Rate = exchangeRate.Rate;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
-                _currencyService.UpdateCurrency(currency);
+                await _currencyService.UpdateCurrencyAsync(currency);
             }
         }
 

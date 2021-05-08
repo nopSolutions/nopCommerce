@@ -1,46 +1,65 @@
-﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// nop-textarea tag helper
+    /// "nop-textarea" tag helper
     /// </summary>
-    [HtmlTargetElement("nop-textarea", Attributes = ForAttributeName)]
+    [HtmlTargetElement("nop-textarea", Attributes = FOR_ATTRIBUTE_NAME)]
     public class NopTextAreaTagHelper : TextAreaTagHelper
     {
-        private const string ForAttributeName = "asp-for";
-        private const string RequiredAttributeName = "asp-required";
-        private const string DisabledAttributeName = "asp-disabled";
+        #region Constants
+
+        private const string FOR_ATTRIBUTE_NAME = "asp-for";
+        private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
+        private const string DISABLED_ATTRIBUTE_NAME = "asp-disabled";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Indicates whether the input is disabled
         /// </summary>
-        [HtmlAttributeName(DisabledAttributeName)]
+        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
         public string IsDisabled { set; get; }
 
         /// <summary>
         /// Indicates whether the field is required
         /// </summary>
-        [HtmlAttributeName(RequiredAttributeName)]
+        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
         public string IsRequired { set; get; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="generator">HTML generator</param>
+        #endregion
+
+        #region Ctor
+
         public NopTextAreaTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
             //tag details
             output.TagName = "textarea";
             output.TagMode = TagMode.StartTagAndEndTag;
@@ -52,12 +71,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.SetAttribute("class", classValue);
 
             //add disabled attribute
-            bool.TryParse(IsDisabled, out bool disabled);
-            if (disabled)
-            {
-                var d = new TagHelperAttribute("disabled", "disabled");
-                output.Attributes.Add(d);
-            }
+            if (bool.TryParse(IsDisabled, out var disabled) && disabled)
+                output.Attributes.Add(new TagHelperAttribute("disabled", "disabled"));
 
             //additional parameters
             var rowsNumber = output.Attributes.ContainsName("rows") ? output.Attributes["rows"].Value : 4;
@@ -66,14 +81,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.SetAttribute("cols", colsNumber);
 
             //required asterisk
-            bool.TryParse(IsRequired, out bool required);
-            if (required)
+            if (bool.TryParse(IsRequired, out var required) && required)
             {
                 output.PreElement.SetHtmlContent("<div class='input-group input-group-required'>");
                 output.PostElement.SetHtmlContent("<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>");
             }
 
-            base.Process(context, output);
+            await base.ProcessAsync(context, output);
         }
+
+        #endregion
     }
 }

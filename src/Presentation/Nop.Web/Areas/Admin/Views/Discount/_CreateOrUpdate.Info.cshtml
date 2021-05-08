@@ -18,29 +18,29 @@
     function toggleDiscountType() {
         var selectedDiscountTypeId = $("#@Html.IdFor(model => model.DiscountTypeId)").val();
         if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
-            $('#discount-applied-to-categories-panel').show();
-            $('#discount-applied-to-manufacturers-panel').hide();
-            $('#discount-applied-to-products-panel').hide();
-            $('#pnlMaximumDiscountedQuantity').show();
-            $('#pnlAppliedToSubCategories').show();
+            $('[data-card-name=discount-applied-to-categories]').showElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').showElement();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
-            $('#discount-applied-to-categories-panel').hide();
-            $('#discount-applied-to-manufacturers-panel').show();
-            $('#discount-applied-to-products-panel').hide();
-            $('#pnlMaximumDiscountedQuantity').show();
-            $('#pnlAppliedToSubCategories').hide();
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').showElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').hideElement();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
-            $('#discount-applied-to-categories-panel').hide();
-            $('#discount-applied-to-manufacturers-panel').hide();
-            $('#discount-applied-to-products-panel').show();
-            $('#pnlMaximumDiscountedQuantity').show();
-            $('#pnlAppliedToSubCategories').hide();
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').showElement();
+            $('#pnlMaximumDiscountedQuantity').showElement();
+            $('#pnlAppliedToSubCategories').hideElement();
     } else {
-            $('#discount-applied-to-categories-panel').hide();
-            $('#discount-applied-to-manufacturers-panel').hide();
-            $('#discount-applied-to-products-panel').hide();
-            $('#pnlMaximumDiscountedQuantity').hide();
-            $('#pnlAppliedToSubCategories').hide();
+            $('[data-card-name=discount-applied-to-categories]').hideElement();
+            $('[data-card-name=discount-applied-to-manufacturers]').hideElement();
+            $('[data-card-name=discount-applied-to-products]').hideElement();
+            $('#pnlMaximumDiscountedQuantity').hideElement();
+            $('#pnlAppliedToSubCategories').hideElement();
     }
     }
 
@@ -48,44 +48,44 @@
         var selectedDiscountLimitationId = $("#@Html.IdFor(model => model.DiscountLimitationId)").val();
         if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
             //'N Times Only' or 'N Times Per Customer'
-            $('#pnlLimitationTimes').show();
+            $('#pnlLimitationTimes').showElement();
     } else {
-            $('#pnlLimitationTimes').hide();
+            $('#pnlLimitationTimes').hideElement();
     }
     }
 
     function toggleUsePercentage() {
         if ($('#@Html.IdFor(model => model.UsePercentage)').is(':checked')) {
-            $('#pnlDiscountPercentage').show();
-            $('#pnlDiscountAmount').hide();
-            $('#pnlMaximumDiscountAmount').show();
+            $('#pnlDiscountPercentage').showElement();
+            $('#pnlDiscountAmount').hideElement();
+            $('#pnlMaximumDiscountAmount').showElement();
         } else {
-            $('#pnlDiscountPercentage').hide();
-            $('#pnlDiscountAmount').show();
-            $('#pnlMaximumDiscountAmount').hide();
+            $('#pnlDiscountPercentage').hideElement();
+            $('#pnlDiscountAmount').showElement();
+            $('#pnlMaximumDiscountAmount').hideElement();
         }
     }
 
     function toggleRequiresCouponCode() {
         if ($('#@Html.IdFor(model => model.RequiresCouponCode)').is(':checked')) {
-            $('#pnlCouponCode').show();
+            $('#pnlCouponCode').showElement();
             @if (!string.IsNullOrEmpty(Model.DiscountUrl))
             {
-                <text>$('#pnlDiscountUrl').show();</text>
+                <text>$('#pnlDiscountUrl').showElement();</text>
             }
             else
             {
-                <text>$('#pnlDiscountUrl').hide();</text>
+                <text>$('#pnlDiscountUrl').hideElement();</text>
             }
         } else {
-            $('#pnlCouponCode').hide();
-            $('#pnlDiscountUrl').hide();
+            $('#pnlCouponCode').hideElement();
+            $('#pnlDiscountUrl').hideElement();
         }
     }
 </script>
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Name" />
         </div>
@@ -94,16 +94,16 @@
             <span asp-validation-for="Name"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="DiscountTypeId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="DiscountTypeId" asp-items="@((DiscountType) Model.DiscountTypeId).ToSelectList()" />
+            <nop-select asp-for="DiscountTypeId" asp-items="@await ((DiscountType) Model.DiscountTypeId).ToSelectListAsync()" />
             <span asp-validation-for="DiscountTypeId"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlAppliedToSubCategories">
+    <div class="form-group row" id="pnlAppliedToSubCategories">
         <div class="col-md-3">
             <nop-label asp-for="AppliedToSubCategories" />
         </div>
@@ -112,7 +112,7 @@
             <span asp-validation-for="AppliedToSubCategories"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="UsePercentage" />
         </div>
@@ -122,7 +122,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="UsePercentage">
-        <div class="form-group" id="pnlDiscountPercentage">
+        <div class="form-group row" id="pnlDiscountPercentage">
             <div class="col-md-3">
                 <nop-label asp-for="DiscountPercentage" />
             </div>
@@ -131,7 +131,7 @@
                 <span asp-validation-for="DiscountPercentage"></span>
             </div>
         </div>
-        <div class="form-group" id="pnlMaximumDiscountAmount">
+        <div class="form-group row" id="pnlMaximumDiscountAmount">
             <div class="col-md-3">
                 <nop-label asp-for="MaximumDiscountAmount" />
             </div>
@@ -141,7 +141,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group" id="pnlDiscountAmount">
+    <div class="form-group row" id="pnlDiscountAmount">
         <div class="col-md-3">
             <nop-label asp-for="DiscountAmount" />
         </div>
@@ -150,7 +150,7 @@
             <span asp-validation-for="DiscountAmount"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="RequiresCouponCode" />
         </div>
@@ -160,7 +160,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="RequiresCouponCode">
-        <div class="form-group" id="pnlCouponCode">
+        <div class="form-group row" id="pnlCouponCode">
             <div class="col-md-3">
                 <nop-label asp-for="CouponCode" />
             </div>
@@ -171,7 +171,7 @@
         </div>
     </nop-nested-setting>
     <nop-nested-setting asp-for="RequiresCouponCode">
-        <div class="form-group" id="pnlDiscountUrl">
+        <div class="form-group row" id="pnlDiscountUrl">
             <div class="col-md-3">
                 <nop-label asp-for="DiscountUrl" />
             </div>
@@ -180,7 +180,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="StartDateUtc" />
         </div>
@@ -189,7 +189,7 @@
             <span asp-validation-for="StartDateUtc"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="EndDateUtc" />
         </div>
@@ -198,7 +198,7 @@
             <span asp-validation-for="EndDateUtc"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="IsCumulative" />
         </div>
@@ -207,16 +207,16 @@
             <span asp-validation-for="IsCumulative"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="DiscountLimitationId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="DiscountLimitationId" asp-items="@(((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())" />
+            <nop-select asp-for="DiscountLimitationId" asp-items="@await (((DiscountLimitationType)Model.DiscountLimitationId).ToSelectListAsync())" />
             <span asp-validation-for="DiscountLimitationId"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlLimitationTimes">
+    <div class="form-group row" id="pnlLimitationTimes">
         <div class="col-md-3">
             <nop-label asp-for="LimitationTimes" />
         </div>
@@ -225,7 +225,7 @@
             <span asp-validation-for="LimitationTimes"></span> @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
         </div>
     </div>
-    <div class="form-group" id="pnlMaximumDiscountedQuantity">
+    <div class="form-group row" id="pnlMaximumDiscountedQuantity">
         <div class="col-md-3">
             <nop-label asp-for="MaximumDiscountedQuantity" />
         </div>
@@ -234,7 +234,7 @@
             <span asp-validation-for="MaximumDiscountedQuantity"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AdminComment" />
         </div>

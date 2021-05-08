@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a reward points model to add to the customer
     /// </summary>
-    public partial class AddRewardPointsToCustomerModel : BaseNopModel
+    public partial record AddRewardPointsToCustomerModel : BaseNopModel
     {
         #region Ctor
 

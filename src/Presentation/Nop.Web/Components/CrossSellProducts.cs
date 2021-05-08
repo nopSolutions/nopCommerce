@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -41,17 +42,18 @@ namespace Nop.Web.Components
             _shoppingCartSettings = shoppingCartSettings;
         }
 
-        public IViewComponentResult Invoke(int? productThumbPictureSize)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
-            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
 
-            var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
+            var products = await (await _productService.GetCrosssellProductsByShoppingCartAsync(cart, _shoppingCartSettings.CrossSellsNumber))
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+            .Where(p => _productService.ProductIsAvailable(p))
             //visible individually
-            products = products.Where(p => p.VisibleIndividually).ToList();
+            .Where(p => p.VisibleIndividually).ToListAsync();
 
             if (!products.Any())
                 return Content("");
@@ -60,8 +62,8 @@ namespace Nop.Web.Components
             //We know that the entire shopping cart page is not refresh
             //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
             //That's why we force page refresh (redirect) in this case
-            var model = _productModelFactory.PrepareProductOverviewModels(products,
-                    productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products,
+                    productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true))
                 .ToList();
 
             return View(model);

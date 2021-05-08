@@ -34,7 +34,10 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         /// </summary>
         /// <param name="url">URL to request</param>
         /// <param name="httpClient">HTTP client</param>
-        /// <returns>The asynchronous task whose result determines that request is completed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result determines that request is completed
+        /// </returns>
         private async Task RequestAsync(string url, HttpClient httpClient)
         {
             //limit request number
@@ -86,7 +89,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                         a = 0;
                         for (h = HostName.Length - 1; h >= 0; h--)
                         {
-                            chrCharacter = char.Parse(HostName.Substring(h, 1));
+                            chrCharacter = char.Parse(HostName[h..(h + 1)]);
                             intCharacter = chrCharacter;
                             a = (a << 6 & 268435455) + intCharacter + (intCharacter << 14);
                             c = a & 266338304;
@@ -145,14 +148,15 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         /// </summary>
         /// <param name="transaction">A corresponding transaction</param>
         /// <param name="httpClient">HTTP client</param>
-        public void SendRequest(Transaction transaction, HttpClient httpClient)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task SendRequest(Transaction transaction, HttpClient httpClient)
         {
             var requestUrl = BASE_URL + CreateParameterString() + "&" + transaction.CreateParameterString();
-            RequestAsync(requestUrl, httpClient).Wait();
+            await RequestAsync(requestUrl, httpClient);
 
             foreach (var transItem in transaction.Items)
             {
-                RequestAsync(BASE_URL + CreateParameterString() + "&" + transItem.CreateParameterString(), httpClient).Wait();
+                await RequestAsync(BASE_URL + CreateParameterString() + "&" + transItem.CreateParameterString(), httpClient);
             }
         }
 

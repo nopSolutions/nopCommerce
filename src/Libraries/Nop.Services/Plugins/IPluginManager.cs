@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Plugins
@@ -14,8 +15,11 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>List of plugins</returns>
-        IList<TPlugin> LoadAllPlugins(Customer customer = null, int storeId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of plugins
+        /// </returns>
+        Task<IList<TPlugin>> LoadAllPluginsAsync(Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load plugin by system name
@@ -23,17 +27,11 @@ namespace Nop.Services.Plugins
         /// <param name="systemName">System name</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Plugin</returns>
-        TPlugin LoadPluginBySystemName(string systemName, Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load primary active plugin
-        /// </summary>
-        /// <param name="systemName">System name of primary active plugin</param>
-        /// <param name="customer">Filter by customer; pass null to load all plugins</param>
-        /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Plugin</returns>
-        TPlugin LoadPrimaryPlugin(string systemName, Customer customer = null, int storeId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the plugin
+        /// </returns>
+        Task<TPlugin> LoadPluginBySystemNameAsync(string systemName, Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load active plugins
@@ -41,8 +39,11 @@ namespace Nop.Services.Plugins
         /// <param name="systemNames">System names of active plugins</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>List of active plugins</returns>
-        IList<TPlugin> LoadActivePlugins(List<string> systemNames, Customer customer = null, int storeId = 0);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of active plugins
+        /// </returns>
+        Task<IList<TPlugin>> LoadActivePluginsAsync(List<string> systemNames, Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Check whether the passed plugin is active
@@ -56,7 +57,10 @@ namespace Nop.Services.Plugins
         /// Get plugin logo URL
         /// </summary>
         /// <param name="plugin">Plugin</param>
-        /// <returns>Logo URL</returns>
-        string GetPluginLogoUrl(TPlugin plugin);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the logo URL
+        /// </returns>
+        Task<string> GetPluginLogoUrlAsync(TPlugin plugin);
     }
 }

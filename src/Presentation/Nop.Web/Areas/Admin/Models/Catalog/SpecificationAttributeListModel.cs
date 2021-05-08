@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a specification attribute list model
     /// </summary>
-    public partial class SpecificationAttributeListModel : BasePagedListModel<SpecificationAttributeModel>
+    public partial record SpecificationAttributeListModel : BasePagedListModel<SpecificationAttributeModel>
     {
     }
 }

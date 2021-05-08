@@ -27,19 +27,24 @@
                 countryEl: '#@Html.IdFor(model => model.CountryId)',
                 stateProvinceEl: '#@Html.IdFor(model => model.StateProvinceId)',
                 zipPostalCodeEl: '#@Html.IdFor(model => model.ZipPostalCode)',
+                useCity: @Model.UseCity.ToString().ToLower(),
+                cityEl: '#@Html.IdFor(model => model.City)',
+                requestDelay: @Model.RequestDelay,
                 localizedData: {
                     noShippingOptionsMessage: '@T("Shipping.EstimateShippingPopUp.NoShippingOptions")',
                     countryErrorMessage: '@T("Shipping.EstimateShipping.Country.Required")',
                     zipPostalCodeErrorMessage: '@T("Shipping.EstimateShipping.ZipPostalCode.Required")',
+                    cityErrorMessage: '@T("Shipping.EstimateShipping.City.Required")',
                 },
                 urlFactory: function (address) {
                     var params = $.param({
                         CountryId: address.countryId,
                         StateProvinceId: address.stateProvinceId,
-                        ZipPostalCode: address.zipPostalCode
+                        ZipPostalCode: address.zipPostalCode,
+                        City: address.city
                     });
 
-                    return `@Html.Raw(Url.Action("estimateshipping", "product", new { ProductId = Model.ProductId }))&${params}`;
+                    return '@Html.Raw(Url.Action("estimateshipping", "product", new { ProductId = Model.ProductId }))&' + params;
                 },
                 handlers: {
                     openPopUp: function () {
@@ -84,11 +89,11 @@
 
                             var estimatedDelivery = $('<div/>').addClass('estimated-delivery')
                                 .append($('<div/>').addClass('shipping-address')
-                                    .append($('<span/>').text(`@T("Products.EstimateShipping.ToAddress") ${option.address.countryName}, ${(option.address.stateProvinceName ? option.address.stateProvinceName + ',' : '')} ${option.address.zipPostalCode} @T("Products.EstimateShipping.ViaProvider") ${option.provider}`))
+                                    .append($('<span/>').text('@T("Products.EstimateShipping.ToAddress") ' + option.address.countryName + ', ' + (option.address.stateProvinceName ? option.address.stateProvinceName + ', ' : '') + (popUp.settings.useCity ? option.address.city : option.address.zipPostalCode) + ' @T("Products.EstimateShipping.ViaProvider") ' + option.provider))
                                     .append($('<i/>').addClass('arrow-down')));
 
                             if (option.deliveryDate && option.deliveryDate !== '-')
-                                estimatedDelivery.append($('<div/>').addClass('shipping-date').text(`@T("Products.EstimateShipping.EstimatedDeliveryPrefix") ${option.deliveryDate}`));
+                                estimatedDelivery.append($('<div/>').addClass('shipping-date').text('@T("Products.EstimateShipping.EstimatedDeliveryPrefix") ' + option.deliveryDate));
 
                             shippingContent.append(estimatedDelivery);
                         } else {

@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
     {
         public StateProvinceValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Countries.States.Fields.Name.Required"));
 
             SetDatabaseValidationRules<StateProvince>(dataProvider);
         }

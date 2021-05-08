@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a associated external auth records search model
     /// </summary>
-    public class CustomerAssociatedExternalAuthRecordsSearchModel : BaseSearchModel
+    public record CustomerAssociatedExternalAuthRecordsSearchModel : BaseSearchModel
     {
         #region Properties
 

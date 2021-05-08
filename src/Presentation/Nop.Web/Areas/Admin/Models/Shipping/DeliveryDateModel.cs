@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a delivery date model
     /// </summary>
-    public partial class DeliveryDateModel : BaseNopEntityModel, ILocalizedModel<DeliveryDateLocalizedModel>
+    public partial record DeliveryDateModel : BaseNopEntityModel, ILocalizedModel<DeliveryDateLocalizedModel>
     {
         #region Ctor
 
@@ -31,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
         #endregion
     }
 
-    public partial class DeliveryDateLocalizedModel : ILocalizedLocaleModel
+    public partial record DeliveryDateLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

@@ -15,6 +15,8 @@
         public static string AllSettingListButtons => "admin_all_setting_list_buttons";
         public static string AllSettingsBottom => "admin_all_settings_bottom";
         public static string AllSettingsTop => "admin_all_settings_top";
+        public static string AppSettingsBlock => "admin_app_settings_block";
+        public static string AppSettingsButtons => "admin_app_settings_buttons";
         public static string BlogCommentListButtons => "admin_blog_comment_list_buttons";
         public static string BlogDetailsBlock => "admin_blog_details_block";
         public static string BlogDetailsButtons => "admin_blog_details_buttons";
@@ -27,7 +29,7 @@
         public static string CampaignListButtons => "admin_campaign_list_buttons";
         public static string CatalogSettingsDetailsBlock => "admin_catalog_settings_details_block";
         public static string CatalogSettingsButtons => "admin_catalog_settings_buttons";
-        public static string CategoryDetailsBlock => "admin_category_details_block"; 
+        public static string CategoryDetailsBlock => "admin_category_details_block";
         public static string CategoryDetailsButtons => "admin_category_details_buttons";
         public static string CategoryListButtons => "admin_category_list_buttons";
         public static string CategoryTemplateListButtons => "admin_category_template_list_buttons";
@@ -132,6 +134,7 @@
         public static string MessageTemplateDetailsTop => "admin_message_template_details_top";
         public static string MessageTemplateListButtons => "admin_message_template_list_buttons";
         public static string MessageTemplateTestButtons => "admin_message_template_test_buttons";
+        public static string MultiFactorAuthenticationListButtons => "admin_multifactor_authentication_list_buttons";
         public static string NewsCommentListButtons => "admin_news_comment_list_buttons";
         public static string NewsDetailsBlock => "admin_news_details_block";
         public static string NewsDetailsButtons => "admin_news_details_buttons";
@@ -252,6 +255,8 @@
         public static string SpecificationAttributeOptionDetailsBottom => "admin_specification_attribute_option_details_bottom";
         public static string SpecificationAttributeOptionDetailsButtons => "admin_specification_attribute_option_details_buttons";
         public static string SpecificationAttributeOptionDetailsTop => "admin_specification_attribute_option_details_top";
+        public static string SpecificationAttributeGroupDetailsButtons => "admin_specification_attribute_group_details_buttons";
+        public static string SpecificationAttributeGroupDetailsBlock => "admin_specification_attribute_group_details_block";
         public static string StoreDetailsBottom => "admin_store_details_bottom";
         public static string StoreDetailsButtons => "admin_store_details_buttons";
         public static string StoreDetailsTop => "admin_store_details_top";

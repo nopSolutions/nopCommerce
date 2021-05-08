@@ -87,6 +87,11 @@ namespace Nop.Core.Domain.Shipping
         public bool EstimateShippingProductPageEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use city name on 'Estimate shipping' widget instead zip postal code
+        /// </summary>
+        public bool EstimateShippingCityNameEnabled { get; set; }
+
+        /// <summary>
         /// A value indicating whether customers should see shipment events on their order details pages
         /// </summary>
         public bool DisplayShipmentEventsToCustomers { get; set; }
@@ -130,5 +135,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether to send all the items of a product marked as "Ship Separately" separately; if false, all the items of a such product will be shipped in a single box, but separately from the other order items
         /// </summary>
         public bool ShipSeparatelyOneItemEach { get; set; }
+
+        /// <summary>
+        /// Gets or sets the request delay in the shipping calculation popup (on product page/shopping cart page) when user enter the shipping address.
+        /// </summary>
+        public int RequestDelay { get; set; }
     }
 }

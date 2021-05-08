@@ -16,7 +16,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Components
 
         public IViewComponentResult Invoke()
         {
-            var _externalAuthSettings = _settingService.LoadSetting<ExternalAuthSettings>();
+            var _externalAuthSettings = _settingService.LoadSettingAsync<ExternalAuthSettings>().Result;
             return View("~/Plugins/ExternalAuth.ExtendedAuth/Views/PublicInfo.cshtml", _externalAuthSettings);
         }
     }

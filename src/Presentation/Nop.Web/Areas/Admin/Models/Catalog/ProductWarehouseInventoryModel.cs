@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product warehouse inventory model
     /// </summary>
-    public partial class ProductWarehouseInventoryModel : BaseNopModel
+    public partial record ProductWarehouseInventoryModel : BaseNopModel
     {
         #region Properties
 

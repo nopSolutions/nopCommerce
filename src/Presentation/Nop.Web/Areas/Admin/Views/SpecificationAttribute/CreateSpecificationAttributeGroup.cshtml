@@ -1,0 +1,32 @@
+@model SpecificationAttributeGroupModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Specification attributes");
+}
+
+<form asp-controller="SpecificationAttribute" asp-action="CreateSpecificationAttributeGroup" method="post" id="specificationattributegroup-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeGroupDetailsButtons })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateSpecificationAttributeGroup", Model)
+</form>

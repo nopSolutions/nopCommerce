@@ -1,4 +1,5 @@
-﻿using Nop.Core.Caching;
+﻿using System.Threading.Tasks;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
@@ -34,17 +35,12 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<Vendor>>,
         IConsumer<EntityUpdatedEvent<Vendor>>,
         IConsumer<EntityDeletedEvent<Vendor>>,
-        //product manufacturers
-        IConsumer<EntityInsertedEvent<ProductManufacturer>>,
-        IConsumer<EntityUpdatedEvent<ProductManufacturer>>,
-        IConsumer<EntityDeletedEvent<ProductManufacturer>>,
         //categories
         IConsumer<EntityInsertedEvent<Category>>,
         IConsumer<EntityUpdatedEvent<Category>>,
         IConsumer<EntityDeletedEvent<Category>>,
         //product categories
         IConsumer<EntityInsertedEvent<ProductCategory>>,
-        IConsumer<EntityUpdatedEvent<ProductCategory>>,
         IConsumer<EntityDeletedEvent<ProductCategory>>,
         //products
         IConsumer<EntityInsertedEvent<Product>>,
@@ -54,16 +50,6 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<ProductTag>>,
         IConsumer<EntityUpdatedEvent<ProductTag>>,
         IConsumer<EntityDeletedEvent<ProductTag>>,
-        //specification attributes
-        IConsumer<EntityUpdatedEvent<SpecificationAttribute>>,
-        IConsumer<EntityDeletedEvent<SpecificationAttribute>>,
-        //specification attribute options
-        IConsumer<EntityUpdatedEvent<SpecificationAttributeOption>>,
-        IConsumer<EntityDeletedEvent<SpecificationAttributeOption>>,
-        //Product specification attribute
-        IConsumer<EntityInsertedEvent<ProductSpecificationAttribute>>,
-        IConsumer<EntityUpdatedEvent<ProductSpecificationAttribute>>,
-        IConsumer<EntityDeletedEvent<ProductSpecificationAttribute>>,
         //Product attribute values
         IConsumer<EntityUpdatedEvent<ProductAttributeValue>>,
         //Topics
@@ -122,459 +108,426 @@ namespace Nop.Web.Infrastructure.Cache
 
         #region Languages
 
-        public void HandleEvent(EntityInsertedEvent<Language> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Language> eventMessage)
         {
             //clear all localizable models
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Language> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Language> eventMessage)
         {
             //clear all localizable models
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<Language> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Language> eventMessage)
         {
             //clear all localizable models
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
         }
 
         #endregion
-        
+
         #region Setting
 
-        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
         {
             //clear models which depend on settings
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey); //depends on CatalogSettings.ManufacturersBlockItemsToDisplay
-            _staticCacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey); //depends on VendorSettings.VendorBlockItemsToDisplay
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey); //depends on BlogSettings.NumberOfTags
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey); //depends on NewsSettings.MainPageNewsCount
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey); //depends on distinct sitemap settings
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.WidgetPrefixCacheKey); //depends on WidgetSettings and certain settings of widgets
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.StoreLogoPathPrefixCacheKey); //depends on StoreInformationSettings.LogoPictureId
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey); //depends on CatalogSettings.ManufacturersBlockItemsToDisplay
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey); //depends on VendorSettings.VendorBlockItemsToDisplay
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey); //depends on BlogSettings.NumberOfTags
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey); //depends on NewsSettings.MainPageNewsCount
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey); //depends on distinct sitemap settings
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.WidgetPrefixCacheKey); //depends on WidgetSettings and certain settings of widgets
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.StoreLogoPathPrefixCacheKey); //depends on StoreInformationSettings.LogoPictureId
         }
 
         #endregion
 
         #region Vendors
 
-        public void HandleEvent(EntityInsertedEvent<Vendor> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
         {
-            _staticCacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Vendor> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage)
         {
-            _staticCacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey);
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.VendorPicturePrefixCacheKeyById, eventMessage.Entity.Id));
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.VendorPicturePrefixCacheKeyById, eventMessage.Entity.Id));
         }
 
-        public void HandleEvent(EntityDeletedEvent<Vendor> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
         {
-            _staticCacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey);
+            await _staticCacheManager.RemoveAsync(NopModelCacheDefaults.VendorNavigationModelKey);
         }
 
         #endregion
 
         #region  Manufacturers
 
-        public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ManufacturerPicturePrefixCacheKeyById, eventMessage.Entity.Id));
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ManufacturerPicturePrefixCacheKeyById, eventMessage.Entity.Id));
         }
 
-        public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Manufacturer> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region  Product manufacturers
-
-        public void HandleEvent(EntityInsertedEvent<ProductManufacturer> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.ManufacturerId));
-        }
-
-        public void HandleEvent(EntityUpdatedEvent<ProductManufacturer> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.ManufacturerId));
-        }
-
-        public void HandleEvent(EntityDeletedEvent<ProductManufacturer> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.ManufacturerId));
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion
 
         #region Categories
 
-        public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.CategoryPicturePrefixCacheKeyById, eventMessage.Entity.Id));
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.CategoryPicturePrefixCacheKeyById, eventMessage.Entity.Id));
         }
 
-        public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion
 
         #region Product categories
 
-        public void HandleEvent(EntityInsertedEvent<ProductCategory> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<ProductCategory> eventMessage)
         {
             if (_catalogSettings.ShowCategoryProductNumber)
             {
                 //depends on CatalogSettings.ShowCategoryProductNumber (when enabled)
                 //so there's no need to clear this cache in other cases
-                _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-                _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+                await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+                await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             }
-
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.CategoryId));
         }
 
-        public void HandleEvent(EntityUpdatedEvent<ProductCategory> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.CategoryId));
-        }
-
-        public void HandleEvent(EntityDeletedEvent<ProductCategory> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<ProductCategory> eventMessage)
         {
             if (_catalogSettings.ShowCategoryProductNumber)
             {
                 //depends on CatalogSettings.ShowCategoryProductNumber (when enabled)
                 //so there's no need to clear this cache in other cases
-                _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
-                _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
+                await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
+                await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             }
-
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.CategoryId));
         }
 
         #endregion
 
         #region Products
 
-        public void HandleEvent(EntityInsertedEvent<Product> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Product> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.Id));
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.Id));
         }
 
-        public void HandleEvent(EntityDeletedEvent<Product> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Product> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion
 
         #region Product tags
 
-        public void HandleEvent(EntityInsertedEvent<ProductTag> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<ProductTag> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<ProductTag> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<ProductTag> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<ProductTag> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<ProductTag> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Specification attributes
-
-        public void HandleEvent(EntityUpdatedEvent<SpecificationAttribute> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityDeletedEvent<SpecificationAttribute> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Specification attribute options
-
-        public void HandleEvent(EntityUpdatedEvent<SpecificationAttributeOption> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityDeletedEvent<SpecificationAttributeOption> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        #endregion
-
-        #region Product specification attribute
-
-        public void HandleEvent(EntityInsertedEvent<ProductSpecificationAttribute> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityUpdatedEvent<ProductSpecificationAttribute> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
-        }
-
-        public void HandleEvent(EntityDeletedEvent<ProductSpecificationAttribute> eventMessage)
-        {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecsFilterPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion
 
         #region Product attributes
 
-        public void HandleEvent(EntityUpdatedEvent<ProductAttributeValue> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<ProductAttributeValue> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributeImageSquarePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributeImageSquarePicturePrefixCacheKey);
         }
 
         #endregion
 
         #region Topics
 
-        public void HandleEvent(EntityInsertedEvent<Topic> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Topic> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Topic> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Topic> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<Topic> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Topic> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion
 
         #region Orders
 
-        public void HandleEvent(EntityInsertedEvent<Order> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Order> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Order> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Order> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<Order> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductsAlsoPurchasedIdsPrefixCacheKey);
         }
 
         #endregion
 
         #region Pictures
 
-        public void HandleEvent(EntityInsertedEvent<Picture> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Picture> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Picture> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Picture> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorPicturePrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<Picture> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Picture> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerPicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturerPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorPicturePrefixCacheKey);
         }
 
         #endregion
 
         #region Product picture mappings
 
-        public void HandleEvent(EntityInsertedEvent<ProductPicture> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<ProductPicture> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKeyById, eventMessage.Entity.ProductId));
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKeyById, eventMessage.Entity.ProductId));
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<ProductPicture> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<ProductPicture> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKeyById, eventMessage.Entity.ProductId));
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKeyById, eventMessage.Entity.ProductId));
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<ProductPicture> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<ProductPicture> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKeyById, eventMessage.Entity.ProductId));
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDefaultPicturePrefixCacheKeyById, eventMessage.Entity.ProductId));
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductDetailsPicturesPrefixCacheKeyById, eventMessage.Entity.ProductId));
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ProductAttributePicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
         }
 
         #endregion
 
         #region Polls
 
-        public void HandleEvent(EntityInsertedEvent<Poll> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<Poll> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.PollsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Poll> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<Poll> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.PollsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<Poll> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Poll> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.PollsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.PollsPrefixCacheKey);
         }
 
         #endregion
 
         #region Blog posts
 
-        public void HandleEvent(EntityInsertedEvent<BlogPost> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<BlogPost> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<BlogPost> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<BlogPost> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<BlogPost> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<BlogPost> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.BlogPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion
 
         #region News items
 
-        public void HandleEvent(EntityInsertedEvent<NewsItem> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityInsertedEvent<NewsItem> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityUpdatedEvent<NewsItem> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<NewsItem> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        public void HandleEvent(EntityDeletedEvent<NewsItem> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<NewsItem> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.NewsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
         #endregion
-        
+
         #region Shopping cart items
 
-        public void HandleEvent(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CartPicturePrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CartPicturePrefixCacheKey);
         }
 
         #endregion
 
         #region Product reviews
 
-        public void HandleEvent(EntityDeletedEvent<ProductReview> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<ProductReview> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.ProductId));
+            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ProductReviewsPrefixCacheKeyById, eventMessage.Entity.ProductId));
         }
 
         #endregion
@@ -585,10 +538,11 @@ namespace Nop.Web.Infrastructure.Cache
         /// Handle plugin updated event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(PluginUpdatedEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(PluginUpdatedEvent eventMessage)
         {
             if (eventMessage?.Plugin?.Instance<IWidgetPlugin>() != null)
-                _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.WidgetPrefixCacheKey);
+                await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.WidgetPrefixCacheKey);
         }
 
         #endregion

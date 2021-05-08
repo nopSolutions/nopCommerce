@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents an associated product model to add to the product
     /// </summary>
-    public partial class AddAssociatedProductModel : BaseNopModel
+    public partial record AddAssociatedProductModel : BaseNopModel
     {
         #region Ctor
 

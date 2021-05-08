@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents an incomplete order report model
     /// </summary>
-    public partial class OrderIncompleteReportModel : BaseNopModel
+    public partial record OrderIncompleteReportModel : BaseNopModel
     {
         #region Properties
 

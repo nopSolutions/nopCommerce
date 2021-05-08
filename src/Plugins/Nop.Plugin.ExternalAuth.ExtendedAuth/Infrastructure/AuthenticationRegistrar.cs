@@ -29,10 +29,10 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure
             // facebook
             builder.AddFacebook(AuthenticationDefaults.FacebookAuthenticationScheme, options =>
             {
-                var currentstore = EngineContext.Current.Resolve<IStoreContext>().CurrentStore;
+                var currentstore = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore();
                 var storeScope = currentstore.Id;
                 var _settingService = EngineContext.Current.Resolve<ISettingService>();
-                var settings = _settingService.LoadSetting<ExternalAuthSettings>(storeScope);
+                var settings = _settingService.LoadSettingAsync<ExternalAuthSettings>(storeScope).Result;
                 options.ClientId = settings.FacebookClientId;
                 options.ClientSecret = settings.FacebookClientSecret;
                 options.SaveTokens = true;
@@ -42,10 +42,10 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure
             // Twitter
             builder.AddTwitter(TwitterDefaults.AuthenticationScheme, options =>
               {
-                  var currentstore = EngineContext.Current.Resolve<IStoreContext>().CurrentStore;
+                  var currentstore = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore();
                   var storeScope = currentstore.Id;
                   var _settingService = EngineContext.Current.Resolve<ISettingService>();
-                  var settings = _settingService.LoadSetting<ExternalAuthSettings>(storeScope);
+                  var settings = _settingService.LoadSettingAsync<ExternalAuthSettings>(storeScope).Result;
                   options.ConsumerKey = settings.TwitterClientId;
                   options.ConsumerSecret = settings.TwitterClientSecret;
                   options.SaveTokens = true;
@@ -54,9 +54,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure
             // Google
             builder.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
             {
-                var storeScope = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id;
+                var storeScope = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore();
                 var _settingService = EngineContext.Current.Resolve<ISettingService>();
-                var settings = _settingService.LoadSetting<ExternalAuthSettings>(storeScope);
+                var settings = _settingService.LoadSettingAsync<ExternalAuthSettings>(storeScope.Id).Result;
                 options.ClientId = settings.GoogleClientId;
                 options.ClientSecret = settings.GoogleClientSecret;
                 options.SaveTokens = true;
@@ -65,9 +65,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure
             // Microsoft
             builder.AddMicrosoftAccount(MicrosoftAccountDefaults.AuthenticationScheme, options =>
             {
-                var storeScope = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id;
+                var storeScope = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore().Id;
                 var _settingService = EngineContext.Current.Resolve<ISettingService>();
-                var settings = _settingService.LoadSetting<ExternalAuthSettings>(storeScope);
+                var settings = _settingService.LoadSettingAsync<ExternalAuthSettings>(storeScope).Result;
                 options.ClientId = settings.MicrosoftClientId;
                 options.ClientSecret = settings.MicrosoftClientSecret;
                 options.SaveTokens = true;
@@ -76,10 +76,10 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure
             // linked in             
             builder.AddOAuth(AuthenticationDefaults.LinkedInAuthenticationScheme, options =>
             {
-                var currentstore = EngineContext.Current.Resolve<IStoreContext>().CurrentStore;
+                var currentstore = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore();
                 var storeScope = currentstore.Id;
                 var _settingService = EngineContext.Current.Resolve<ISettingService>();
-                var settings = _settingService.LoadSetting<ExternalAuthSettings>(storeScope);
+                var settings = _settingService.LoadSettingAsync<ExternalAuthSettings>(storeScope).Result;
                 options.ClientId = settings.LinkedInClientId;
                 options.ClientSecret = settings.LinkedInClientSecret;
 

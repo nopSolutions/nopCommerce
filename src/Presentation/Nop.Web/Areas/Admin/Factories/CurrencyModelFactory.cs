@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
@@ -58,7 +59,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Currency exchange rate provider model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
-        protected virtual void PrepareExchangeRateProviderModel(CurrencyExchangeRateProviderModel model, bool prepareExchangeRates)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareExchangeRateProviderModelAsync(CurrencyExchangeRateProviderModel model, bool prepareExchangeRates)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -66,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
 
             //prepare available exchange rate providers
-            var availableExchangeRateProviders = _exchangeRatePluginManager.LoadAllPlugins();
+            var availableExchangeRateProviders = await _exchangeRatePluginManager.LoadAllPluginsAsync();
 
             model.ExchangeRateProviders = availableExchangeRateProviders.Select(provider => new SelectListItem
             {
@@ -77,23 +79,24 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare exchange rates
             if (prepareExchangeRates)
-                PrepareExchangeRateModels(model.ExchangeRates);
+                await PrepareExchangeRateModelsAsync(model.ExchangeRates);
         }
 
         /// <summary>
         /// Prepare exchange rate models
         /// </summary>
         /// <param name="models">List of currency exchange rate model</param>
-        protected virtual void PrepareExchangeRateModels(IList<CurrencyExchangeRateModel> models)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareExchangeRateModelsAsync(IList<CurrencyExchangeRateModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //get exchange rates
-            var exchangeRates = _currencyService.GetCurrencyLiveRates();
+            var exchangeRates = await _currencyService.GetCurrencyLiveRatesAsync();
 
             //filter by existing currencies
-            var currencies = _currencyService.GetAllCurrencies(true);
+            var currencies = await _currencyService.GetAllCurrenciesAsync(true);
             exchangeRates = exchangeRates
                 .Where(rate => currencies
                     .Any(currency => currency.CurrencyCode.Equals(rate.CurrencyCode, StringComparison.InvariantCultureIgnoreCase))).ToList();
@@ -114,14 +117,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Currency search model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
-        /// <returns>Currency search model</returns>
-        public virtual CurrencySearchModel PrepareCurrencySearchModel(CurrencySearchModel searchModel, bool prepareExchangeRates = false)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency search model
+        /// </returns>
+        public virtual async Task<CurrencySearchModel> PrepareCurrencySearchModelAsync(CurrencySearchModel searchModel, bool prepareExchangeRates = false)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare exchange rate provider model
-            PrepareExchangeRateProviderModel(searchModel.ExchangeRateProviderModel, prepareExchangeRates);
+            await PrepareExchangeRateProviderModelAsync(searchModel.ExchangeRateProviderModel, prepareExchangeRates);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -133,14 +139,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged currency list model
         /// </summary>
         /// <param name="searchModel">Currency search model</param>
-        /// <returns>Currency list model</returns>
-        public virtual CurrencyListModel PrepareCurrencyListModel(CurrencySearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency list model
+        /// </returns>
+        public virtual async Task<CurrencyListModel> PrepareCurrencyListModelAsync(CurrencySearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get currencies
-            var currencies = _currencyService.GetAllCurrencies(showHidden: true).ToPagedList(searchModel);
+            var currencies = (await _currencyService.GetAllCurrenciesAsync(showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CurrencyListModel().PrepareToGrid(searchModel, currencies, () =>
@@ -167,8 +176,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Currency model</param>
         /// <param name="currency">Currency</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Currency model</returns>
-        public virtual CurrencyModel PrepareCurrencyModel(CurrencyModel model, Currency currency, bool excludeProperties = false)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the currency model
+        /// </returns>
+        public virtual async Task<CurrencyModel> PrepareCurrencyModelAsync(CurrencyModel model, Currency currency, bool excludeProperties = false)
         {
             Action<CurrencyLocalizedModel, int> localizedModelConfiguration = null;
 
@@ -178,12 +190,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= currency.ToModel<CurrencyModel>();
 
                 //convert dates to the user time
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
+                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(currency.CreatedOnUtc, DateTimeKind.Utc);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(currency, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(currency, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -196,10 +208,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available stores
-            _storeMappingSupportedModelFactory.PrepareModelStores(model, currency, excludeProperties);
+            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, currency, excludeProperties);
 
             return model;
         }

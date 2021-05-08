@@ -12,36 +12,37 @@
 
 @{
     const string hideSearchBlockAttributeName = "AllSettingsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Settings.AllSettings")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingListButtons })
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+        <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
+        <div class="cards-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsTop })
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+            <div class="card card-default card-search">
+                <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
 
                         <div class="row">
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchSettingName" />
                                     </div>
@@ -51,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchSettingValue" />
                                     </div>
@@ -62,9 +63,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-7 col-md-offset-5">
+                            <div class="text-center col-12">
                                 <button type="button" id="search-settings" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fas fa-search"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -73,8 +74,8 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "settings-grid",
@@ -127,12 +128,12 @@
                         }
                     })
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card card-default">
+                    <div class="card-header">
                         @T("Admin.Common.AddNewRecord")
                     </div>
-                    <div class="panel-body">
-                        <div class="form-group">
+                    <div class="card-body">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="@Model.AddSetting.Name" />
                             </div>
@@ -141,7 +142,7 @@
                                 <span asp-validation-for="@Model.AddSetting.Name"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="@Model.AddSetting.Value" />
                             </div>
@@ -150,7 +151,7 @@
                                 <span asp-validation-for="@Model.AddSetting.Value"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="@Model.AddSetting.StoreId" />
                             </div>
@@ -159,8 +160,8 @@
                                 <span asp-validation-for="@Model.AddSetting.StoreId"></span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
                                 <button type="button" id="addSetting" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
                             </div>
                         </div>
@@ -208,3 +209,4 @@
         </div>
     </div>
 </div>
+</section>

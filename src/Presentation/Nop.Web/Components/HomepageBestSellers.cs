@@ -1,9 +1,9 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -18,7 +18,6 @@ namespace Nop.Web.Components
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IOrderReportService _orderReportService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
@@ -28,7 +27,6 @@ namespace Nop.Web.Components
 
         public HomepageBestSellersViewComponent(CatalogSettings catalogSettings,
             IAclService aclService,
-            ICacheKeyService cacheKeyService,
             IOrderReportService orderReportService,
             IProductModelFactory productModelFactory,
             IProductService productService,
@@ -38,7 +36,6 @@ namespace Nop.Web.Components
         {
             _catalogSettings = catalogSettings;
             _aclService = aclService;
-            _cacheKeyService = cacheKeyService;
             _orderReportService = orderReportService;
             _productModelFactory = productModelFactory;
             _productService = productService;
@@ -47,30 +44,31 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public IViewComponentResult Invoke(int? productThumbPictureSize)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
                 return Content("");
 
             //load and cache report
-            var report = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore),
-                () => _orderReportService.BestSellersReport(
-                        storeId: _storeContext.CurrentStore.Id,
-                        pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
-                    .ToList());
+            var report = (await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, await _storeContext.GetCurrentStoreAsync()),
+                async () => await _orderReportService.BestSellersReportAsync(
+                        storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                        pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)))
+                    .ToList();
 
             //load products
-            var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
+            var products = await (await _productService.GetProductsByIdsAsync(report.Select(x => x.ProductId).ToArray()))
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+            .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
             if (!products.Any())
                 return Content("");
 
             //prepare model
-            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
             return View(model);
         }
     }

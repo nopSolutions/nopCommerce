@@ -7,15 +7,15 @@
 @using Nop.Services.Stores
 
 @{
-    var stores = storeService.GetAllStores();
+    var stores = await storeService.GetAllStoresAsync();
 
     //resources for product tags input
-    Html.AppendCssFileParts("~/lib/tagEditor/jquery.tag-editor.css");
-    Html.AppendScriptParts("~/lib/tagEditor/jquery.tag-editor.min.js");
-    Html.AppendScriptParts("~/lib/tagEditor/jquery.caret.min.js");
+    Html.AppendCssFileParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.css");
+    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js");
+    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.caret.min.js");
 }
 
-<script>
+    <script>
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -38,9 +38,9 @@
 
     function toggleShowOnHomepage() {
         if ($('#@Html.IdFor(model => model.ShowOnHomepage)').is(':checked')) {
-            $('#pnlDisplayOrder').show();
+            $('#pnlDisplayOrder').showElement();
         } else {
-            $('#pnlDisplayOrder').hide();
+            $('#pnlDisplayOrder').hideElement();
         }
     }
 
@@ -59,33 +59,33 @@
 
         var selectedProductTypeId = $("#@Html.IdFor(model => model.ProductTypeId)").val();
         if (!selectedProductTypeId || selectedProductTypeId == simpleProductId) {
-            $('#group-required-other-products').show();
-            $('#group-visible-individually').show();
-            $('#group-associated-products').hide();
+            $('#group-required-other-products').showElement();
+            $('#group-visible-individually').showElement();
+            $('#group-associated-products').hideElement();
 
-            $('[data-panel-name=product-price]').show();
-            $('[data-panel-name=product-shipping]').show();
-            $('[data-panel-name=product-inventory]').show();
-            $('[data-panel-name=product-giftcard]').show();
-            $('[data-panel-name=product-downloadable]').show();
-            $('[data-panel-name=product-rental]').show();
-            $('[data-panel-name=product-recurring]').show();
+            $('[data-card-name=product-price]').showElement();
+            $('[data-card-name=product-shipping]').showElement();
+            $('[data-card-name=product-inventory]').showElement();
+            $('[data-card-name=product-giftcard]').showElement();
+            $('[data-card-name=product-downloadable]').showElement();
+            $('[data-card-name=product-rental]').showElement();
+            $('[data-card-name=product-recurring]').showElement();
         } else if (selectedProductTypeId == groupedProductId) {
-            $('#group-required-other-products').hide();
-            $('#group-visible-individually').hide();
-            $('#group-associated-products').show();
+            $('#group-required-other-products').hideElement();
+            $('#group-visible-individually').hideElement();
+            $('#group-associated-products').showElement();
             updateTableWidth('#associatedproducts-grid');
 
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
+            
 
-
-            $('[data-panel-name=product-price]').hide();
-            $('[data-panel-name=product-shipping]').hide();
-            $('[data-panel-name=product-inventory]').hide();
-            $('[data-panel-name=product-giftcard]').hide();
-            $('[data-panel-name=product-downloadable]').hide();
-            $('[data-panel-name=product-rental]').hide();
-            $('[data-panel-name=product-recurring]').hide();
+            $('[data-card-name=product-price]').hideElement();
+            $('[data-card-name=product-shipping]').hideElement();
+            $('[data-card-name=product-inventory]').hideElement();
+            $('[data-card-name=product-giftcard]').hideElement();
+            $('[data-card-name=product-downloadable]').hideElement();
+            $('[data-card-name=product-rental]').hideElement();
+            $('[data-card-name=product-recurring]').hideElement();
         }
 
         //templates
@@ -112,29 +112,29 @@
         });
 
         if ($('#@Html.IdFor(model => model.ProductTemplateId) option').length > 1) {
-            $('#pnlProductTemplateId').show();
+            $('#pnlProductTemplateId').showElement();
         } else {
-            $('#pnlProductTemplateId').hide();
+            $('#pnlProductTemplateId').hideElement();
         }
     }
 
     function toggleRequireOtherProducts() {
         if ($('#@Html.IdFor(model => model.RequireOtherProducts)').is(':checked')) {
-            $('#pnlRequiredProductIds').show();
-            $('#pnlAutomaticallyAddRequiredProducts').show();
+            $('#pnlRequiredProductIds').showElement();
+            $('#pnlAutomaticallyAddRequiredProducts').showElement();
         } else {
-            $('#pnlRequiredProductIds').hide();
-            $('#pnlAutomaticallyAddRequiredProducts').hide();
+            $('#pnlRequiredProductIds').hideElement();
+            $('#pnlAutomaticallyAddRequiredProducts').hideElement();
         }
     }
 
     function toggleMarkAsNew() {
         if ($('#@Html.IdFor(model => model.MarkAsNew)').is(':checked')) {
-            $('#pnlMarkAsNewStartDateTimeUtc').show();
-            $('#pnlMarkAsNewEndDateTimeUtc').show();
+            $('#pnlMarkAsNewStartDateTimeUtc').showElement();
+            $('#pnlMarkAsNewEndDateTimeUtc').showElement();
         } else {
-            $('#pnlMarkAsNewStartDateTimeUtc').hide();
-            $('#pnlMarkAsNewEndDateTimeUtc').hide();
+            $('#pnlMarkAsNewStartDateTimeUtc').hideElement();
+            $('#pnlMarkAsNewEndDateTimeUtc').hideElement();
         }
     }
 
@@ -207,81 +207,84 @@
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: $(this).val() });
         });
     });
-</script>
+    </script>
 
-<div class="panel-body">
-    @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
-        @<div>
-            <div class="form-group">
-               <div class="col-md-3">
-                   <nop-label asp-for="@Model.Locales[item].Name" />
-               </div>
-               <div class="col-md-9">
-                   <nop-editor asp-for="@Model.Locales[item].Name" />
-                   <span asp-validation-for="@Model.Locales[item].Name"></span>
-               </div>
-            </div>
-            <div class="form-group">
-               <div class="col-md-3">
-                   <nop-label asp-for="@Model.Locales[item].ShortDescription" />
-               </div>
-               <div class="col-md-9">
-                   <nop-textarea asp-for="@Model.Locales[item].ShortDescription" />
-                   <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
-               </div>
-            </div>
-            <div class="form-group">
-               <div class="col-md-3">
-                   <nop-label asp-for="@Model.Locales[item].FullDescription" />
-               </div>
-               <div class="col-md-9">
-                   <nop-editor asp-for="@Model.Locales[item].FullDescription" asp-template="RichEditor" />
-                   <span asp-validation-for="@Model.Locales[item].FullDescription"></span>
-               </div>
-            </div>
-            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
-        </div>
-        ,
-        @<div>
-            <div class="form-group">
-               <div class="col-md-3">
-                   <nop-label asp-for="Name" />
-               </div>
-               <div class="col-md-9">
-                   <nop-editor asp-for="Name" asp-required="true" />
-                   <span asp-validation-for="Name"></span>
-               </div>
-            </div>
-            <div class="form-group">
-               <div class="col-md-3">
-                   <nop-label asp-for="ShortDescription" />
-               </div>
-               <div class="col-md-9">
-                   <nop-textarea asp-for="ShortDescription" />
-                   <span asp-validation-for="ShortDescription"></span>
-               </div>
-            </div>
-            <div class="form-group">
-               <div class="col-md-3">
-                   <nop-label asp-for="FullDescription" />
-               </div>
-               <div class="col-md-9">
-                   <nop-editor asp-for="FullDescription" asp-template="RichEditor" />
-                   <span asp-validation-for="FullDescription"></span>
-               </div>
-            </div>
-         </div>))
 
-    <div class="form-group">
-        <div class="col-md-3">
-            <nop-label asp-for="Sku" />
+<div class="card-body">
+    <div id="product-details-area">
+        @(await Html.LocalizedEditorAsync<ProductModel, ProductLocalizedModel>("product-info-localized",
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="Sku" />
-            <span asp-validation-for="Sku"></span>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].ShortDescription" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="@Model.Locales[item].ShortDescription" />
+                <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].FullDescription" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].FullDescription" asp-template="RichEditor" />
+                <span asp-validation-for="@Model.Locales[item].FullDescription"></span>
+            </div>
+        </div>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+    </div>
+    ,
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" asp-required="true" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ShortDescription" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="ShortDescription" />
+                <span asp-validation-for="ShortDescription"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="FullDescription" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="FullDescription" asp-template="RichEditor" />
+                <span asp-validation-for="FullDescription"></span>
+            </div>
+        </div>
+        </div>))
+
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Sku" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Sku" />
+                <span asp-validation-for="Sku"></span>
+            </div>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedCategoryIds" />
         </div>
@@ -289,28 +292,28 @@
             <nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
             <script>
                 $(document).ready(function() {
-                    var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
-                    categoryIdsInput.setOptions({
-                        autoClose: false,
-                        filter: "contains"
+					var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
+					categoryIdsInput.setOptions({
+                    autoClose: false,
+                    filter: "contains"
                     });
 
-                    @if (Model.AvailableCategories.Count == 0)
-                    {
-                        <text>
-                            categoryIdsInput.setOptions({
-                                enable: false,
-                                placeholder: '@T("Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable")'
-                            });
-                            categoryIdsInput._placeholder();
-                            categoryIdsInput._enable();
-                        </text>
-                    }
-                });
+				@if (Model.AvailableCategories.Count == 0)
+                {
+                    <text>
+                        categoryIdsInput.setOptions({
+                            enable: false,
+                            placeholder: '@T("Admin.Catalog.Products.Fields.Categories.NoCategoriesAvailable")'
+                        });
+                        categoryIdsInput._placeholder();
+                        categoryIdsInput._enable();
+                    </text>
+                }
+            });
             </script>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="SelectedManufacturerIds" />
         </div>
@@ -318,28 +321,28 @@
             <nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
             <script>
                 $(document).ready(function() {
-                    var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
-                    manufacturersIdsInput.setOptions({
-                        autoClose: false,
-                        filter: "contains"
-                    });
-
-                    @if (Model.AvailableManufacturers.Count == 0)
-                    {
-                        <text>
-                            manufacturersIdsInput.setOptions({
-                                enable: false,
-                                placeholder: '@T("Admin.Catalog.Products.Fields.Manufacturers.NoManufacturersAvailable")'
-                            });
-                            manufacturersIdsInput._placeholder();
-                            manufacturersIdsInput._enable();
-                         </text>
-                    }
+                var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
+                manufacturersIdsInput.setOptions({
+                    autoClose: false,
+                    filter: "contains"
                 });
+
+				@if (Model.AvailableManufacturers.Count == 0)
+                {
+                    <text>
+                        manufacturersIdsInput.setOptions({
+                            enable: false,
+                            placeholder: '@T("Admin.Catalog.Products.Fields.Manufacturers.NoManufacturersAvailable")'
+                        });
+                        manufacturersIdsInput._placeholder();
+                        manufacturersIdsInput._enable();
+                        </text>
+                }
+            });
             </script>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Published ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.Published ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="Published" />
         </div>
@@ -501,7 +504,7 @@
             <span asp-validation-for="ProductTags"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.GTIN ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.GTIN ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="Gtin" />
         </div>
@@ -510,7 +513,7 @@
             <span asp-validation-for="Gtin"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ManufacturerPartNumber ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.ManufacturerPartNumber ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="ManufacturerPartNumber" />
         </div>
@@ -519,7 +522,7 @@
             <span asp-validation-for="ManufacturerPartNumber"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+    <div class="form-group row @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
         <div class="col-md-3">
             <nop-label asp-for="ShowOnHomepage" />
         </div>
@@ -529,7 +532,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowOnHomepage">
-        <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ShowOnHomepage  ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <div class="col-md-3">
                 <nop-label asp-for="DisplayOrder" />
             </div>
@@ -540,12 +543,12 @@
         </div>
     </nop-nested-setting>
 
-    <div class="form-group @(Model.ProductEditorSettingsModel.ProductType ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.ProductType ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="ProductTypeId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="ProductTypeId" asp-items="@(((ProductType)Model.ProductTypeId).ToSelectList())" />
+            <nop-select asp-for="ProductTypeId" asp-items="@await (((ProductType)Model.ProductTypeId).ToSelectListAsync())" />
             <span asp-validation-for="ProductTypeId"></span>
         </div>
     </div>
@@ -642,7 +645,7 @@
     @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
 </div>}
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ProductTemplate ? null : "advanced-setting")" @(Model.AvailableProductTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null) id="pnlProductTemplateId">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.ProductTemplate ? null : "advanced-setting")" @(Model.AvailableProductTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null) id="nnpnlProductTemplateId">
         <div class="col-md-3">
             <nop-label asp-for="ProductTemplateId" />
         </div>
@@ -651,7 +654,7 @@
             <span asp-validation-for="ProductTemplateId"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.VisibleIndividually ? null : "advanced-setting")" id="group-visible-individually">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.VisibleIndividually ? null : "advanced-setting")" id="group-visible-individually">
         <div class="col-md-3">
             <nop-label asp-for="VisibleIndividually" />
         </div>
@@ -660,7 +663,7 @@
             <span asp-validation-for="VisibleIndividually"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ACL ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.ACL ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="SelectedCustomerRoleIds" />
         </div>
@@ -669,26 +672,26 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
                     <script>
-                        $(document).ready(function() {
-                            var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
-                                .data("kendoMultiSelect");
-                            rolesIdsInput.setOptions({
-                                autoClose: false,
-                                filter: "contains"
-                            });
-
-                            @if (Model.AvailableCustomerRoles.Count == 0)
-                            {
-                                <text>
-                                    rolesIdsInput.setOptions({
-                                        enable: false,
-                                        placeholder: 'No customer roles available'
-                                    });
-                                    rolesIdsInput._placeholder();
-                                    rolesIdsInput._enable();
-                                </text>
-                            }
+                    $(document).ready(function() {
+                        var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
+                            .data("kendoMultiSelect");
+                        rolesIdsInput.setOptions({
+                            autoClose: false,
+                            filter: "contains"
                         });
+
+                        @if (Model.AvailableCustomerRoles.Count == 0)
+                        {
+                            <text>
+                                rolesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: 'No customer roles available'
+                                });
+                                rolesIdsInput._placeholder();
+                                rolesIdsInput._enable();
+                            </text>
+                        }
+                    });
                     </script>
                 </div>
                 <div class="col-md-8">
@@ -697,7 +700,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
         </div>
@@ -706,25 +709,25 @@
                 <div class="col-md-4">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
-                        $(document).ready(function() {
-                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                            storesIdsInput.setOptions({
-                                autoClose: false,
-                                filter: "contains"
-                            });
-
-                            @if (Model.AvailableStores.Count == 0)
-                            {
-                                <text>
-                                    storesIdsInput.setOptions({
-                                        enable: false,
-                                        placeholder: 'No stores available'
-                                    });
-                                    storesIdsInput._placeholder();
-                                    storesIdsInput._enable();
-                                </text>
-                            }
+                    $(document).ready(function() {
+                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                        storesIdsInput.setOptions({
+                            autoClose: false,
+                            filter: "contains"
                         });
+
+                        @if (Model.AvailableStores.Count == 0)
+                        {
+                            <text>
+                                storesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: 'No stores available'
+                                });
+                                storesIdsInput._placeholder();
+                                storesIdsInput._enable();
+                            </text>
+                        }
+                    });
                     </script>
                 </div>
                 <div class="col-md-8">
@@ -733,7 +736,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Vendor ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+    <div class="form-group row @(Model.ProductEditorSettingsModel.Vendor ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
         <div class="col-md-3">
             <nop-label asp-for="VendorId" />
         </div>
@@ -803,7 +806,7 @@
             <span asp-validation-for="AllowCustomerReviews"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AvailableStartDate ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.AvailableStartDate ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="AvailableStartDateTimeUtc" />
         </div>
@@ -812,7 +815,7 @@
             <span asp-validation-for="AvailableStartDateTimeUtc"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AvailableEndDate ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.AvailableEndDate ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="AvailableEndDateTimeUtc" />
         </div>
@@ -821,7 +824,7 @@
             <span asp-validation-for="AvailableEndDateTimeUtc"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="MarkAsNew" />
         </div>
@@ -831,7 +834,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="MarkAsNew">
-        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
             <div class="col-md-3">
                 <nop-label asp-for="MarkAsNewStartDateTimeUtc" />
             </div>
@@ -840,7 +843,7 @@
                 <span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
             </div>
         </div>
-        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
             <div class="col-md-3">
                 <nop-label asp-for="MarkAsNewEndDateTimeUtc" />
             </div>
@@ -850,7 +853,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AdminComment ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.AdminComment ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="AdminComment" />
         </div>
@@ -859,5 +862,4 @@
             <span asp-validation-for="AdminComment"></span>
         </div>
     </div>
-</div>         
-          
+</div>

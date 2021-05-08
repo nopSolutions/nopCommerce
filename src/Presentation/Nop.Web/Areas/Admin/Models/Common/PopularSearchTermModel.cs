@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
     /// <summary>
     /// Represents a popular search term model
     /// </summary>
-    public partial class PopularSearchTermModel : BaseNopModel
+    public partial record PopularSearchTermModel : BaseNopModel
     {
         #region Properties
 

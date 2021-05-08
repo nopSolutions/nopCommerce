@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="ქართული" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>ადმინის ელ-ფოსტა</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>შეიყვანეთ ადმინის ელ-ფოსტა</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>დმინის პაროლი</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>შეიყვანეთ ადმინის პაროლი</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{0}' მომხმარებელს არ აქვს ნებართვა შეცვალოს უფლებები '{1}' საქაღალდეზე. გთხოვთ დააკონფიგურიროთ მომხმარებლის უფლებები.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{0}' მომხმარებელს არ აქვს ნებართვა შეცვალოს უფლებები '{1}' ფაილზე. გთხოვთ დააკონფიგურიროთ მომხმარებლის უფლებები.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>დაადასტურეთ პაროლი</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>შეიყვანეთ პაროლი დასადასტურებლად</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>ბაზასთან კავშირი (Connection string)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>აუცილებელი ბაზასთან კავშირი</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>SQL კავშირის (connection string) არასწორი ფორმატი</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>შექმენი ბაზა მისი არარსებობის შემთხვევაში</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>შექმენი სამაგალითო მონაცემები</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specify custom collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Მონაცემთა ბაზა</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>მონაცემთა ბაზის შექმნისას მოხდა შეცდომა: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>ინფორმაცია მონაცემთა ბაზაზე</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>მონაცემთა ბაზის სახელი</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>მონაცემთა ბაზა არ არსებობს ან არ გაქვთ მასთან დაკავშირების უფლება</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>აირჩიეთ მონაცემთა პროვაიდერი</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>თუ გჭირდებათ ინფორმაცია, თუ როგორ გამოიყენოთ nopCommerce, ეწვიეთ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>დოკუმენტაციის სექცია nopCommerce.com– ზე</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>მაგალითი</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>დაინსტალირება</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce- ის ინსტალაცია ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>გამოიყენეთ ინტეგრირებული Windows ავტორიზაცია</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>პაროლები არ ემთხვევა</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>შეიყვანეთ დაუმუშავებელი კავშირის სტრიქონი (raw connection string)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>ინსტალაციის თავიდან დაწყება</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>დააჭირეთ ინსტალაციის პროცესის თავიდან დასაწყებად (ყველა შენახული მნიშვნელობის განულდება)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Restarting...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Server name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Server name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>დაყენება ვერ მოხერხდა: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL პაროლი</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>აუცილებელია SQL პაროლი</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL-ის მომხმარებლის სახელი</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>აუცილებელია SQL-ის მომხმარებლის სახელი</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>ინფორმაცია მაღაზიის შესახებ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce-ის ინსტალაცია</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>დასასრულებლად, თქვენ უნდა იცოდეთ ინფორმაცია თქვენს მონაცემთა ბაზასთან კავშირის შესახებ (connection string). საჭიროების შემთხვევაში გთხოვთ დაუკავშირდეთ თქვენს ინტერნეტ მომსახურეობის მომწოდებელს- ს. თუ ინსტალაცია მიმდინარეობს ლოკალურ მანქანაზე ან სერვერზე, შეიძლება დაგჭირდეთ ინფორმაცია თქვენი სისტემური ადმინისტრატორისგან.</Value>
+  </LocaleResource>
+</Language>

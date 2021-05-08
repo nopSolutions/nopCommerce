@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Plugins
 {
@@ -11,13 +12,22 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Save plugins info to the file
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task SaveAsync();
+
+        /// <summary>
+        /// Save plugins info to the file
+        /// </summary>
         void Save();
 
         /// <summary>
         /// Get plugins info
         /// </summary>
-        /// <returns>True if data are loaded, otherwise False</returns>
-        bool LoadPluginInfo();
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if data are loaded, otherwise False
+        /// </returns>
+        Task<bool> LoadPluginInfoAsync();
 
         /// <summary>
         /// Create copy from another instance of IPluginsInfo interface

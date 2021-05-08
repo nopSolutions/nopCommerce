@@ -85,15 +85,15 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope            
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var externalAuths = Enum.GetValues(typeof(ExternalAuthEnum)).Cast<ExternalAuthEnum>();
-            var _externalAuthSettings = _settingService.LoadSetting<ExternalAuthSettings>(storeScope);
+            var _externalAuthSettings = await _settingService.LoadSettingAsync<ExternalAuthSettings>(storeScope);
 
             ConfigurationModel model = new ConfigurationModel();
 
@@ -106,9 +106,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             model.FacebookBtnIsDisplay = _externalAuthSettings.FacebookEnable;
             if (storeScope > 0)
             {
-                model.FacebookBtnIsDisplay_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.FacebookEnable, storeScope);
-                model.FacebookClientId_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.FacebookClientId, storeScope);
-                model.FacebookClientSecret_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.FacebookClientSecret, storeScope);
+                model.FacebookBtnIsDisplay_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.FacebookEnable, storeScope);
+                model.FacebookClientId_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.FacebookClientId, storeScope);
+                model.FacebookClientSecret_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.FacebookClientSecret, storeScope);
             }
 
             // Twitter
@@ -117,9 +117,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             model.TwitterBtnIsDisplay = _externalAuthSettings.TwitterEnable;
             if (storeScope > 0)
             {
-                model.TwitterBtnIsDisplay_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.TwitterEnable, storeScope);
-                model.TwitterClientId_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.TwitterClientId, storeScope);
-                model.TwitterClientSecret_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.TwitterClientSecret, storeScope);
+                model.TwitterBtnIsDisplay_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.TwitterEnable, storeScope);
+                model.TwitterClientId_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.TwitterClientId, storeScope);
+                model.TwitterClientSecret_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.TwitterClientSecret, storeScope);
             }
 
             // Google
@@ -128,9 +128,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             model.GmailBtnIsDisplay = _externalAuthSettings.GoogleEnable;
             if (storeScope > 0)
             {
-                model.GmailBtnIsDisplay_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.GoogleEnable, storeScope);
-                model.GoogleClientId_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.GoogleClientId, storeScope);
-                model.GoogleClientSecret_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.GoogleClientSecret, storeScope);
+                model.GmailBtnIsDisplay_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.GoogleEnable, storeScope);
+                model.GoogleClientId_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.GoogleClientId, storeScope);
+                model.GoogleClientSecret_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.GoogleClientSecret, storeScope);
             }
 
             // Microsoft
@@ -139,9 +139,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             model.MicrosoftBtnIsDisplay = _externalAuthSettings.MicrosoftEnable;
             if (storeScope > 0)
             {
-                model.MicrosoftBtnIsDisplay_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.MicrosoftEnable, storeScope);
-                model.MicrosoftClientId_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.MicrosoftClientId, storeScope);
-                model.MicrosoftClientSecret_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.MicrosoftClientSecret, storeScope);
+                model.MicrosoftBtnIsDisplay_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.MicrosoftEnable, storeScope);
+                model.MicrosoftClientId_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.MicrosoftClientId, storeScope);
+                model.MicrosoftClientSecret_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.MicrosoftClientSecret, storeScope);
             }
 
             // LinkedIn
@@ -150,9 +150,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             model.LinkedInBtnIsDisplay = _externalAuthSettings.LinkedInEnable;
             if (storeScope > 0)
             {
-                model.LinkedInBtnIsDisplay_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.LinkedInEnable, storeScope);
-                model.LinkedInClientId_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.LinkedInClientId, storeScope);
-                model.LinkedInClientSecret_OverrideForStore = _settingService.SettingExists(_externalAuthSettings, x => x.LinkedInClientSecret, storeScope);
+                model.LinkedInBtnIsDisplay_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.LinkedInEnable, storeScope);
+                model.LinkedInClientId_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.LinkedInClientId, storeScope);
+                model.LinkedInClientSecret_OverrideForStore = await _settingService.SettingExistsAsync(_externalAuthSettings, x => x.LinkedInClientSecret, storeScope);
             }
 
             return View("~/Plugins/ExternalAuth.ExtendedAuth/Views/Configure.cshtml", model);
@@ -161,17 +161,17 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
         [HttpPost]        
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public IActionResult Configure(ConfigurationModel model)
+        public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var _externalAuthSettings = _settingService.LoadSetting<ExternalAuthSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var _externalAuthSettings = await _settingService.LoadSettingAsync<ExternalAuthSettings>(storeScope);
 
             #region Facebook
 
@@ -179,11 +179,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _externalAuthSettings.FacebookClientId = model.FacebookClientId;
             _externalAuthSettings.FacebookClientSecret = model.FacebookClientSecret;
             _externalAuthSettings.FacebookEnable = model.FacebookBtnIsDisplay;
-            _settingService.SaveSetting(_externalAuthSettings);
+            await _settingService.SaveSettingAsync(_externalAuthSettings);
 
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.FacebookEnable, model.FacebookBtnIsDisplay_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.FacebookClientSecret, model.FacebookClientSecret_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.FacebookClientId, model.FacebookClientId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.FacebookEnable, model.FacebookBtnIsDisplay_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.FacebookClientSecret, model.FacebookClientSecret_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.FacebookClientId, model.FacebookClientId_OverrideForStore, storeScope, false);
 
             #endregion Facebook
 
@@ -193,11 +193,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _externalAuthSettings.TwitterClientId = model.TwitterClientId;
             _externalAuthSettings.TwitterClientSecret = model.TwitterClientSecret;
             _externalAuthSettings.TwitterEnable = model.TwitterBtnIsDisplay;
-            _settingService.SaveSetting(_externalAuthSettings);
+            await _settingService.SaveSettingAsync(_externalAuthSettings);
 
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.TwitterEnable, model.TwitterBtnIsDisplay_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.TwitterClientId, model.TwitterClientId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.TwitterClientSecret, model.TwitterClientSecret_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.TwitterEnable, model.TwitterBtnIsDisplay_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.TwitterClientId, model.TwitterClientId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.TwitterClientSecret, model.TwitterClientSecret_OverrideForStore, storeScope, false);
 
             #endregion twitter  
 
@@ -207,11 +207,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _externalAuthSettings.GoogleClientId = model.GoogleClientId;
             _externalAuthSettings.GoogleClientSecret = model.GoogleClientSecret;
             _externalAuthSettings.GoogleEnable = model.GmailBtnIsDisplay;
-            _settingService.SaveSetting(_externalAuthSettings);
+            await _settingService.SaveSettingAsync(_externalAuthSettings);
 
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.GoogleEnable, model.GmailBtnIsDisplay_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.GoogleClientId, model.GoogleClientId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.GoogleClientSecret, model.GoogleClientSecret_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.GoogleEnable, model.GmailBtnIsDisplay_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.GoogleClientId, model.GoogleClientId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.GoogleClientSecret, model.GoogleClientSecret_OverrideForStore, storeScope, false);
 
             #endregion Google
 
@@ -221,11 +221,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _externalAuthSettings.MicrosoftClientId = model.MicrosoftClientId;
             _externalAuthSettings.MicrosoftClientSecret = model.MicrosoftClientSecret;
             _externalAuthSettings.MicrosoftEnable = model.MicrosoftBtnIsDisplay;
-            _settingService.SaveSetting(_externalAuthSettings);
+            await _settingService.SaveSettingAsync(_externalAuthSettings);
 
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.MicrosoftEnable, model.MicrosoftBtnIsDisplay_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.MicrosoftClientId, model.MicrosoftClientId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.MicrosoftClientSecret, model.MicrosoftClientSecret_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.MicrosoftEnable, model.MicrosoftBtnIsDisplay_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.MicrosoftClientId, model.MicrosoftClientId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.MicrosoftClientSecret, model.MicrosoftClientSecret_OverrideForStore, storeScope, false);
 
             #endregion Miscrosoft
 
@@ -235,15 +235,15 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _externalAuthSettings.LinkedInClientId = model.LinkedInClientId;
             _externalAuthSettings.LinkedInClientSecret = model.LinkedInClientSecret;
             _externalAuthSettings.LinkedInEnable = model.LinkedInBtnIsDisplay;
-            _settingService.SaveSetting(_externalAuthSettings);
+            await _settingService.SaveSettingAsync(_externalAuthSettings);
 
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.LinkedInEnable, model.LinkedInBtnIsDisplay_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.LinkedInClientId, model.LinkedInClientId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(_externalAuthSettings, x => x.LinkedInClientSecret, model.LinkedInClientSecret_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.LinkedInEnable, model.LinkedInBtnIsDisplay_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.LinkedInClientId, model.LinkedInClientId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(_externalAuthSettings, x => x.LinkedInClientSecret, model.LinkedInClientSecret_OverrideForStore, storeScope, false);
 
             #endregion LinkedIn
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
             //clear Facebook authentication options cache
             _optionsFacebookCache.TryRemove(FacebookDefaults.AuthenticationScheme);
@@ -251,12 +251,12 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _optionsMicrosoftCache.TryRemove(MicrosoftAccountDefaults.AuthenticationScheme);
             _optionsTwitterCache.TryRemove(TwitterDefaults.AuthenticationScheme);
 
-            return Configure();
+            return await Configure();
         }
 
-        public IActionResult Login(string returnUrl, string authentication)
+        public async Task<IActionResult> Login(string returnUrl, string authentication)
         {
-            if (!_authenticationPluginManager.IsPluginActive(AuthenticationDefaults.PluginSystemName))
+            if (!await _authenticationPluginManager.IsPluginActiveAsync(AuthenticationDefaults.PluginSystemName))
                 throw new NopException("Authentication module cannot be loaded");
 
             //configure login callback action
@@ -318,7 +318,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             };
 
             //authenticate Nop user
-            return _externalAuthenticationService.Authenticate(authenticationParameters, returnUrl);
+            return await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
         }
 
         #endregion

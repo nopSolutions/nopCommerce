@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a measure dimension model
     /// </summary>
-    public partial class MeasureDimensionModel : BaseNopEntityModel
+    public partial record MeasureDimensionModel : BaseNopEntityModel
     {
         #region Properties
 

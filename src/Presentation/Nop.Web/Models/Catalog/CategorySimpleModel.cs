@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class CategorySimpleModel : BaseNopEntityModel
+    public record CategorySimpleModel : BaseNopEntityModel
     {
         public CategorySimpleModel()
         {

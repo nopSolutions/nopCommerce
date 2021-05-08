@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -23,10 +24,11 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateWithCustomerFields">Whether to populate model properties with the customer fields (used with the customer entity)</param>
         /// <param name="customer">Customer entity; required if prePopulateWithCustomerFields is true</param>
         /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of the address entity</param>
-        void PrepareAddressModel(AddressModel model,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task PrepareAddressModelAsync(AddressModel model,
             Address address, bool excludeProperties,
             AddressSettings addressSettings,
-            Func<IList<Country>> loadCountries = null,
+            Func<Task<IList<Country>>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
             Customer customer = null,
             string overrideAttributesXml = "");

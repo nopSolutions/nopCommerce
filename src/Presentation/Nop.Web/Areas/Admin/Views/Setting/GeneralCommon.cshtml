@@ -8,90 +8,90 @@
 }
 
 @{
+    var showTour = ViewBag.ShowTour ?? false;
+
     const string hideCommonBlockAttributeName = "GeneralCommonSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = showTour ? false : await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideFaviconBlockAttributeName = "GeneralCommonSettingsPage.HideFaviconBlock";
-    var hideFaviconBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFaviconBlockAttributeName);
+    var hideFaviconBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFaviconBlockAttributeName);
 
     const string hideTopMenuItemsBlockAttributeName = "GeneralCommonSettingsPage.HideTopMenuItemsBlock";
-    var hideTopMenuItemsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTopMenuItemsBlockAttributeName);
+    var hideTopMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTopMenuItemsBlockAttributeName);
 
     const string hideFooterItemsBlockAttributeName = "GeneralCommonSettingsPage.HideFooterItemsBlock";
-    var hideFooterItemsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFooterItemsBlockAttributeName);
+    var hideFooterItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideFooterItemsBlockAttributeName);
 
     const string hideSocialMediaBlockAttributeName = "GeneralCommonSettingsPage.HideSocialMediaBlock";
-    var hideSocialMediaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSocialMediaBlockAttributeName);
+    var hideSocialMediaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSocialMediaBlockAttributeName);
 
     const string hideSitemapBlockAttributeName = "GeneralCommonSettingsPage.HideSitemapBlock";
-    var hideSitemapBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSitemapBlockAttributeName);
+    var hideSitemapBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSitemapBlockAttributeName);
 
     const string hideSEOBlockAttributeName = "GeneralCommonSettingsPage.HideSEOBlock";
-    var hideSEOBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSEOBlockAttributeName);
+    var hideSEOBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSEOBlockAttributeName);
 
     const string hideMinificationBlockAttributeName = "GeneralCommonSettingsPage.HideMinificationBlock";
-    var hideMinificationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMinificationBlockAttributeName);
+    var hideMinificationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideMinificationBlockAttributeName);
 
     const string hideSecurityBlockAttributeName = "GeneralCommonSettingsPage.HideSecurityBlock";
-    var hideSecurityBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSecurityBlockAttributeName);
+    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSecurityBlockAttributeName);
 
     const string hideCaptchaBlockAttributeName = "GeneralCommonSettingsPage.HideCaptchaBlock";
-    var hideCaptchaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCaptchaBlockAttributeName);
+    var hideCaptchaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCaptchaBlockAttributeName);
 
     const string hidePDFBlockAttributeName = "GeneralCommonSettingsPage.HidePDFBlock";
-    var hidePDFBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePDFBlockAttributeName);
+    var hidePDFBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePDFBlockAttributeName);
 
     const string hideLocalizationBlockAttributeName = "GeneralCommonSettingsPage.HideLocalizationBlock";
-    var hideLocalizationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideLocalizationBlockAttributeName);
-
-    const string hideFullTextBlockAttributeName = "GeneralCommonSettingsPage.HideFullTextBlock";
-    var hideFullTextBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFullTextBlockAttributeName);
+    var hideLocalizationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideLocalizationBlockAttributeName);
 
     const string hideAdminAreaBlockAttributeName = "GeneralCommonSettingsPage.HideAdminAreaBlock";
-    var hideAdminAreaBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAdminAreaBlockAttributeName);
+    var hideAdminAreaBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAdminAreaBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="GeneralCommon" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Settings.GeneralCommon")
         </h1>
-        <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
                 @T("Admin.Common.Save")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonSettingsButtons })
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Component.InvokeAsync("StoreScopeConfiguration")
-            @await Component.InvokeAsync("SettingMode")
-            <div asp-validation-summary="All"></div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync("StoreScopeConfiguration")
+                @await Component.InvokeAsync("SettingMode")
+                <div asp-validation-summary="All"></div>
 
-            <nop-panels id="generalcommon-panels">
-                <nop-panel asp-name="generalcommon-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Common", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-top-menu-items" asp-icon="fa fa-level-up" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems")" asp-hide-block-attribute-name="@hideTopMenuItemsBlockAttributeName" asp-hide="@hideTopMenuItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.TopMenuItems", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-footeritems" asp-icon="fa fa-level-down" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems")" asp-hide-block-attribute-name="@hideFooterItemsBlockAttributeName" asp-hide="@hideFooterItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.FooterItems", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-socialmedia" asp-icon="fa fa-share-square-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")" asp-hide-block-attribute-name="@hideSocialMediaBlockAttributeName" asp-hide="@hideSocialMediaBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SocialMedia", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-favicon" asp-icon="fa fa-picture-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons")" asp-hide-block-attribute-name="@hideFaviconBlockAttributeName" asp-hide="@hideFaviconBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Favicon", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-sitemap" asp-icon="fa fa-sitemap" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")" asp-hide-block-attribute-name="@hideSitemapBlockAttributeName" asp-hide="@hideSitemapBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Sitemap", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO")" asp-hide-block-attribute-name="@hideSEOBlockAttributeName" asp-hide="@hideSEOBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Seo", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-minification" asp-icon="fa fa-compress" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification")" asp-hide-block-attribute-name="@hideMinificationBlockAttributeName" asp-hide="@hideMinificationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Minification", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-security" asp-icon="fa fa-shield" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Security", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-captcha" asp-icon="fa fa-lock" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")" asp-hide-block-attribute-name="@hideCaptchaBlockAttributeName" asp-hide="@hideCaptchaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Captcha", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-pdf" asp-icon="fa fa-file-pdf-o" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")" asp-hide-block-attribute-name="@hidePDFBlockAttributeName" asp-hide="@hidePDFBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Pdf", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-localization" asp-icon="fa fa-globe" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")" asp-hide-block-attribute-name="@hideLocalizationBlockAttributeName" asp-hide="@hideLocalizationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Localization", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-fulltext" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText")" asp-hide-block-attribute-name="@hideFullTextBlockAttributeName" asp-hide="@hideFullTextBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.FullText", Model)</nop-panel>
-                <nop-panel asp-name="generalcommon-adminarea" asp-icon="fa fa-clipboard" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")" asp-hide-block-attribute-name="@hideAdminAreaBlockAttributeName" asp-hide="@hideAdminAreaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.AdminArea", Model)</nop-panel>
+                <nop-cards id="generalcommon-cards">
+                    <nop-card asp-name="generalcommon-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Common", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-top-menu-items" asp-icon="fas fa-level-up-alt" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.TopMenuItems")" asp-hide-block-attribute-name="@hideTopMenuItemsBlockAttributeName" asp-hide="@hideTopMenuItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.TopMenuItems", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-footeritems" asp-icon="fas fa-level-down-alt" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems")" asp-hide-block-attribute-name="@hideFooterItemsBlockAttributeName" asp-hide="@hideFooterItemsBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.FooterItems", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-socialmedia" asp-icon="fas fa-share-square" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SocialMedia")" asp-hide-block-attribute-name="@hideSocialMediaBlockAttributeName" asp-hide="@hideSocialMediaBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.SocialMedia", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-favicon" asp-icon="far fa-images" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.FaviconAndAppIcons")" asp-hide-block-attribute-name="@hideFaviconBlockAttributeName" asp-hide="@hideFaviconBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Favicon", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-sitemap" asp-icon="fas fa-sitemap" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Sitemap")" asp-hide-block-attribute-name="@hideSitemapBlockAttributeName" asp-hide="@hideSitemapBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Sitemap", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-seo" asp-icon="fas fa-search-plus" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.SEO")" asp-hide-block-attribute-name="@hideSEOBlockAttributeName" asp-hide="@hideSEOBlock" asp-advanced="false">@await Html.PartialAsync("_GeneralCommon.Seo", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-minification" asp-icon="fas fa-compress" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Minification")" asp-hide-block-attribute-name="@hideMinificationBlockAttributeName" asp-hide="@hideMinificationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Minification", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-security" asp-icon="fas fa-shield-alt" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Security")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Security", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-captcha" asp-icon="fas fa-lock" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Captcha")" asp-hide-block-attribute-name="@hideCaptchaBlockAttributeName" asp-hide="@hideCaptchaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Captcha", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-pdf" asp-icon="far fa-file-pdf" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Pdf")" asp-hide-block-attribute-name="@hidePDFBlockAttributeName" asp-hide="@hidePDFBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Pdf", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-localization" asp-icon="fas fa-globe" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization")" asp-hide-block-attribute-name="@hideLocalizationBlockAttributeName" asp-hide="@hideLocalizationBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.Localization", Model)</nop-card>
+                    <nop-card asp-name="generalcommon-adminarea" asp-icon="fas fa-clipboard" asp-title="@T("Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea")" asp-hide-block-attribute-name="@hideAdminAreaBlockAttributeName" asp-hide="@hideAdminAreaBlock" asp-advanced="true">@await Html.PartialAsync("_GeneralCommon.AdminArea", Model)</nop-card>
 
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonDetailsBlock, additionalData = Model })
-            </nop-panels>
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GeneralCommonDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
         </div>
-    </div>
-    
+    </section>
+
     <script>
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.SitemapSettings.SitemapEnabled)").click(toggleSitemapSettings);
@@ -102,15 +102,15 @@
 
         function toggleSitemapSettings() {
             if ($('#@Html.IdFor(model => model.SitemapSettings.SitemapEnabled)').is(':checked')) {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").show();
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").showElement();
             }
             else {
-                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").hide();
+                $("#pnlSitemapPageSize, #pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags, #pnlSitemapIncludeTopics, #pnlSitemapIncludeBlogPosts, #pnlSitemapIncludeNews").hideElement();
             }
         }
 
         function toggleLoadAllLocaleRecordsOnStartup() {
-            warningValidation('@Url.Action("RedisCacheHighTrafficWarning", "Setting")',
+            warningValidation('@Url.Action("DistributedCacheHighTrafficWarning", "Setting")',
                 '@Html.NameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
                 {
                     loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
@@ -120,12 +120,12 @@
 </form>
 
 @*upload favicon and app icons form*@
-<div id="uploadicons-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadicons-window-title">
+<div id="uploadicons-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadiconsarchive-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="uploadicons-window-title">@T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <form asp-controller="Setting" asp-action="UploadIcons" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
@@ -135,10 +135,10 @@
                                 @string.Format(T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.Hint").Text, Model.ActiveStoreScopeConfiguration)
                             </li>
                         </ul>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
-                                    <label class="control-label">
+                                    <label class="col-form-label">
                                         @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.FileExtensions")
                                     </label>
                                 </div>

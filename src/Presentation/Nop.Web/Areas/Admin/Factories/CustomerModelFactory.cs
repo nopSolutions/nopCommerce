@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -51,7 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ForumSettings _forumSettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-        private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressModelFactory _addressModelFactory;
         private readonly IAffiliateService _affiliateService;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
@@ -94,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ForumSettings forumSettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
             IAddressAttributeFormatter addressAttributeFormatter,
-            IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressModelFactory addressModelFactory,
             IAffiliateService affiliateService,
             IAuthenticationPluginManager authenticationPluginManager,
             IBackInStockSubscriptionService backInStockSubscriptionService,
@@ -133,7 +134,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _forumSettings = forumSettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _addressAttributeFormatter = addressAttributeFormatter;
-            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressModelFactory = addressModelFactory;
             _affiliateService = affiliateService;
             _authenticationPluginManager = authenticationPluginManager;
             _backInStockSubscriptionService = backInStockSubscriptionService;
@@ -174,17 +175,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare the reward points model to add to the customer
         /// </summary>
         /// <param name="model">Reward points model to add to the customer</param>
-        protected virtual void PrepareAddRewardPointsToCustomerModel(AddRewardPointsToCustomerModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareAddRewardPointsToCustomerModelAsync(AddRewardPointsToCustomerModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
             model.Message = string.Empty;
             model.ActivatePointsImmediately = true;
-            model.StoreId = _storeContext.CurrentStore.Id;
+            model.StoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
+            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores, false);
         }
 
         /// <summary>
@@ -192,7 +194,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of customer associated external authorization models</param>
         /// <param name="customer">Customer</param>
-        protected virtual void PrepareAssociatedExternalAuthModels(IList<CustomerAssociatedExternalAuthModel> models, Customer customer)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareAssociatedExternalAuthModelsAsync(IList<CustomerAssociatedExternalAuthModel> models, Customer customer)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -200,9 +203,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            foreach (var record in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
+            foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
-                var method = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
+                var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(record.ProviderSystemName);
                 if (method == null)
                     continue;
 
@@ -222,13 +225,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of customer attribute models</param>
         /// <param name="customer">Customer</param>
-        protected virtual void PrepareCustomerAttributeModels(IList<CustomerModel.CustomerAttributeModel> models, Customer customer)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareCustomerAttributeModelsAsync(IList<CustomerModel.CustomerAttributeModel> models, Customer customer)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //get available customer attributes
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
+            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
             foreach (var attribute in customerAttributes)
             {
                 var attributeModel = new CustomerModel.CustomerAttributeModel
@@ -242,7 +246,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
+                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new CustomerModel.CustomerAttributeValueModel
@@ -258,46 +262,46 @@ namespace Nop.Web.Areas.Admin.Factories
                 //set already selected attributes
                 if (customer != null)
                 {
-                    var selectedCustomerAttributes = _genericAttributeService
-                        .GetAttribute<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                    var selectedCustomerAttributes = await _genericAttributeService
+                        .GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
-                        {
-                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                //clear default selection
-                                foreach (var item in attributeModel.Values)
-                                    item.IsPreSelected = false;
-
-                                //select new values
-                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                foreach (var attributeValue in selectedValues)
+                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    //clear default selection
                                     foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedCustomerAttributes);
+                                    foreach (var attributeValue in selectedValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                }
                             }
-                        }
-                        break;
+                            break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
-                        break;
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
+                            break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                if (enteredText.Any())
-                                    attributeModel.DefaultValue = enteredText[0];
+                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                    if (enteredText.Any())
+                                        attributeModel.DefaultValue = enteredText[0];
+                                }
                             }
-                        }
-                        break;
+                            break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
@@ -313,58 +317,12 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual void PrepareAddressModel(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set some of address fields as enabled and required
-            model.FirstNameEnabled = true;
-            model.FirstNameRequired = true;
-            model.LastNameEnabled = true;
-            model.LastNameRequired = true;
-            model.EmailEnabled = true;
-            model.EmailRequired = true;
-            model.CompanyEnabled = _addressSettings.CompanyEnabled;
-            model.CompanyRequired = _addressSettings.CompanyRequired;
-            model.CountryEnabled = _addressSettings.CountryEnabled;
-            model.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
-            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-            model.CityEnabled = _addressSettings.CityEnabled;
-            model.CityRequired = _addressSettings.CityRequired;
-            model.CountyEnabled = _addressSettings.CountyEnabled;
-            model.CountyRequired = _addressSettings.CountyRequired;
-            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
-            model.PhoneEnabled = _addressSettings.PhoneEnabled;
-            model.PhoneRequired = _addressSettings.PhoneRequired;
-            model.FaxEnabled = _addressSettings.FaxEnabled;
-            model.FaxRequired = _addressSettings.FaxRequired;
-
-            //prepare available countries
-            _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
-
-            //prepare available states
-            _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
-
-            //prepare custom address attributes
-            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
-        }
-
-        /// <summary>
         /// Prepare HTML string address
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
-        protected virtual void PrepareModelAddressHtml(AddressModel model, Address address)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareModelAddressHtmlAsync(AddressModel model, Address address)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -395,7 +353,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (_addressSettings.CountryEnabled && !string.IsNullOrEmpty(model.CountryName))
                 addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
 
-            var customAttributesFormatted = _addressAttributeFormatter.FormatAttributes(address?.CustomAttributes);
+            var customAttributesFormatted = await _addressAttributeFormatter.FormatAttributesAsync(address?.CustomAttributes);
             if (!string.IsNullOrEmpty(customAttributesFormatted))
             {
                 //already encoded
@@ -478,8 +436,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer shopping cart search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer shopping cart search model</returns>
-        protected virtual CustomerShoppingCartSearchModel PrepareCustomerShoppingCartSearchModel(CustomerShoppingCartSearchModel searchModel,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer shopping cart search model
+        /// </returns>
+        protected virtual async Task<CustomerShoppingCartSearchModel> PrepareCustomerShoppingCartSearchModelAsync(CustomerShoppingCartSearchModel searchModel,
             Customer customer)
         {
             if (searchModel == null)
@@ -492,7 +453,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available shopping cart types (search shopping cart by default)
             searchModel.ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
-            _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
+            await _baseAdminModelFactory.PrepareShoppingCartTypesAsync(searchModel.AvailableShoppingCartTypes, false);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -550,8 +511,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer back in stock subscriptions search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer back in stock subscriptions search model</returns>
-        protected virtual CustomerAssociatedExternalAuthRecordsSearchModel PrepareCustomerAssociatedExternalAuthRecordsSearchModel(
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer back in stock subscriptions search model
+        /// </returns>
+        protected virtual async Task<CustomerAssociatedExternalAuthRecordsSearchModel> PrepareCustomerAssociatedExternalAuthRecordsSearchModelAsync(
             CustomerAssociatedExternalAuthRecordsSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -565,11 +529,11 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
             //prepare external authentication records
-            PrepareAssociatedExternalAuthModels(searchModel.AssociatedExternalAuthRecords, customer);
+            await PrepareAssociatedExternalAuthModelsAsync(searchModel.AssociatedExternalAuthRecords, customer);
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -578,8 +542,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare customer search model
         /// </summary>
         /// <param name="searchModel">Customer search model</param>
-        /// <returns>Customer search model</returns>
-        public virtual CustomerSearchModel PrepareCustomerSearchModel(CustomerSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer search model
+        /// </returns>
+        public virtual async Task<CustomerSearchModel> PrepareCustomerSearchModelAsync(CustomerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -594,12 +561,12 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
 
             //search registered customers by default
-            var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+            var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole != null)
                 searchModel.SelectedCustomerRoleIds.Add(registeredRole.Id);
 
             //prepare available customer roles
-            _aclSupportedModelFactory.PrepareModelCustomerRoles(searchModel);
+            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(searchModel);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -611,8 +578,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged customer list model
         /// </summary>
         /// <param name="searchModel">Customer search model</param>
-        /// <returns>Customer list model</returns>
-        public virtual CustomerListModel PrepareCustomerListModel(CustomerSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer list model
+        /// </returns>
+        public virtual async Task<CustomerListModel> PrepareCustomerListModelAsync(CustomerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -622,7 +592,7 @@ namespace Nop.Web.Areas.Admin.Factories
             int.TryParse(searchModel.SearchMonthOfBirth, out var monthOfBirth);
 
             //get customers
-            var customers = _customerService.GetAllCustomers(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
+            var customers = await _customerService.GetAllCustomersAsync(customerRoleIds: searchModel.SelectedCustomerRoleIds.ToArray(),
                 email: searchModel.SearchEmail,
                 username: searchModel.SearchUsername,
                 firstName: searchModel.SearchFirstName,
@@ -636,30 +606,34 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerListModel().PrepareToGrid(searchModel, customers, () =>
+            var model = await new CustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.Select(customer =>
+                return customers.SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var customerModel = customer.ToModel<CustomerModel>();
 
                     //convert dates to the user time
-                    customerModel.Email = _customerService.IsRegistered(customer) ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    customerModel.FullName = _customerService.GetCustomerFullName(customer);
-                    customerModel.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                    customerModel.Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                    customerModel.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                    customerModel.Email = (await _customerService.IsRegisteredAsync(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                    customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
+                    customerModel.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                    customerModel.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                    customerModel.ZipPostalCode = await _genericAttributeService
+                        .GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
 
-                    customerModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
-                    customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+                    customerModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
+                    customerModel.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    customerModel.CustomerRoleNames = string.Join(", ", _customerService.GetCustomerRoles(customer).Select(role => role.Name));
+                    customerModel.CustomerRoleNames = string.Join(", ",
+                        (await _customerService.GetCustomerRolesAsync(customer)).Select(role => role.Name));
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
-                        var avatarPictureId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute);
-                        customerModel.AvatarUrl = _pictureService.GetPictureUrl(avatarPictureId, _mediaSettings.AvatarPictureSize,
-                            _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                        var avatarPictureId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute);
+                        customerModel.AvatarUrl = await _pictureService
+                            .GetPictureUrlAsync(avatarPictureId, _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
                     }
 
                     return customerModel;
@@ -675,8 +649,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Customer model</param>
         /// <param name="customer">Customer</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Customer model</returns>
-        public virtual CustomerModel PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties = false)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer model
+        /// </returns>
+        public virtual async Task<CustomerModel> PrepareCustomerModelAsync(CustomerModel model, Customer customer, bool excludeProperties = false)
         {
             if (customer != null)
             {
@@ -685,13 +662,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.Id = customer.Id;
                 model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-                model.AllowSendingOfPrivateMessage = _customerService.IsRegistered(customer) &&
+                model.AllowSendingOfPrivateMessage = await _customerService.IsRegisteredAsync(customer) &&
                     _forumSettings.AllowPrivateMessages;
-                model.AllowSendingOfWelcomeMessage = _customerService.IsRegistered(customer) &&
+                model.AllowSendingOfWelcomeMessage = await _customerService.IsRegisteredAsync(customer) &&
                     _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval;
-                model.AllowReSendingOfActivationMessage = _customerService.IsRegistered(customer) && !customer.Active &&
+                model.AllowReSendingOfActivationMessage = await _customerService.IsRegisteredAsync(customer) && !customer.Active &&
                     _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation;
                 model.GdprEnabled = _gdprSettings.GdprEnabled;
+
+                model.MultiFactorAuthenticationProvider = await _genericAttributeService
+                    .GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
@@ -702,63 +682,63 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.Active = customer.Active;
-                    model.FirstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                    model.LastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                    model.Gender = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute);
-                    model.DateOfBirth = _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-                    model.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                    model.StreetAddress = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                    model.StreetAddress2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                    model.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                    model.City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
-                    model.County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
-                    model.CountryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                    model.StateProvinceId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
-                    model.Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                    model.Fax = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
-                    model.TimeZoneId = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
-                    model.VatNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute);
-                    model.VatNumberStatusNote = _localizationService.GetLocalizedEnum((VatNumberStatus)_genericAttributeService
-                        .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
-                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
-                    model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+                    model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                    model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                    model.Gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
+                    model.DateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                    model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                    model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                    model.StreetAddress2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                    model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                    model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
+                    model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
+                    model.CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                    model.StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+                    model.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                    model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
+                    model.TimeZoneId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+                    model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
+                    model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync((VatNumberStatus)await _genericAttributeService
+                        .GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
+                    model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc);
+                    model.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
-                    model.LastVisitedPage = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
-                    model.SelectedCustomerRoleIds = _customerService.GetCustomerRoleIds(customer).ToList();
-                    model.RegisteredInStore = _storeService.GetAllStores()
+                    model.LastVisitedPage = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
+                    model.SelectedCustomerRoleIds = (await _customerService.GetCustomerRoleIdsAsync(customer)).ToList();
+                    model.RegisteredInStore = (await _storeService.GetAllStoresAsync())
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
                     model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
-                        _storeService.GetAllStores().Select(x => x.Id).Count() > 1;
-                   
+                        (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
+
                     //prepare model affiliate
-                    var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
+                    var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);
                     if (affiliate != null)
                     {
                         model.AffiliateId = affiliate.Id;
-                        model.AffiliateName = _affiliateService.GetAffiliateFullName(affiliate);
+                        model.AffiliateName = await _affiliateService.GetAffiliateFullNameAsync(affiliate);
                     }
 
                     //prepare model newsletter subscriptions
                     if (!string.IsNullOrEmpty(customer.Email))
                     {
-                        model.SelectedNewsletterSubscriptionStoreIds = _storeService.GetAllStores()
-                            .Where(store => _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id) != null)
-                            .Select(store => store.Id).ToList();
+                        model.SelectedNewsletterSubscriptionStoreIds = await (await _storeService.GetAllStoresAsync())
+                            .WhereAwait(async store => await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id) != null)
+                            .Select(store => store.Id).ToListAsync();
                     }
                 }
                 //prepare reward points model
                 model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
                 if (model.DisplayRewardPointsHistory)
-                    PrepareAddRewardPointsToCustomerModel(model.AddRewardPoints);
+                    await PrepareAddRewardPointsToCustomerModelAsync(model.AddRewardPoints);
 
                 //prepare nested search models
                 PrepareRewardPointsSearchModel(model.CustomerRewardPointsSearchModel, customer);
                 PrepareCustomerAddressSearchModel(model.CustomerAddressSearchModel, customer);
                 PrepareCustomerOrderSearchModel(model.CustomerOrderSearchModel, customer);
-                PrepareCustomerShoppingCartSearchModel(model.CustomerShoppingCartSearchModel, customer);
+                await PrepareCustomerShoppingCartSearchModelAsync(model.CustomerShoppingCartSearchModel, customer);
                 PrepareCustomerActivityLogSearchModel(model.CustomerActivityLogSearchModel, customer);
                 PrepareCustomerBackInStockSubscriptionSearchModel(model.CustomerBackInStockSubscriptionSearchModel, customer);
-                PrepareCustomerAssociatedExternalAuthRecordsSearchModel(model.CustomerAssociatedExternalAuthRecordsSearchModel, customer);
+                await PrepareCustomerAssociatedExternalAuthRecordsSearchModelAsync(model.CustomerAssociatedExternalAuthRecordsSearchModel, customer);
             }
             else
             {
@@ -766,7 +746,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (!excludeProperties)
                 {
                     //precheck Registered Role as a default role while creating a new customer through admin
-                    var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+                    var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
                     if (registeredRole != null)
                         model.SelectedCustomerRoleIds.Add(registeredRole.Id);
                 }
@@ -797,14 +777,14 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available vendors
-            _baseAdminModelFactory.PrepareVendors(model.AvailableVendors,
-                defaultItemText: _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"));
+            await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors,
+                defaultItemText: await _localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Vendor.None"));
 
             //prepare model customer attributes
-            PrepareCustomerAttributeModels(model.CustomerAttributes, customer);
+            await PrepareCustomerAttributeModelsAsync(model.CustomerAttributes, customer);
 
             //prepare model stores for newsletter subscriptions
-            model.AvailableNewsletterSubscriptionStores = _storeService.GetAllStores().Select(store => new SelectListItem
+            model.AvailableNewsletterSubscriptionStores = (await _storeService.GetAllStoresAsync()).Select(store => new SelectListItem
             {
                 Value = store.Id.ToString(),
                 Text = store.Name,
@@ -812,17 +792,17 @@ namespace Nop.Web.Areas.Admin.Factories
             }).ToList();
 
             //prepare model customer roles
-            _aclSupportedModelFactory.PrepareModelCustomerRoles(model);
+            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model);
 
             //prepare available time zones
-            _baseAdminModelFactory.PrepareTimeZones(model.AvailableTimeZones, false);
+            await _baseAdminModelFactory.PrepareTimeZonesAsync(model.AvailableTimeZones, false);
 
             //prepare available countries and states
             if (_customerSettings.CountryEnabled)
             {
-                _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+                await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
                 if (_customerSettings.StateProvinceEnabled)
-                    _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId == 0 ? null : (int?)model.CountryId);
+                    await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId == 0 ? null : (int?)model.CountryId);
             }
 
             return model;
@@ -833,8 +813,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Reward points search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Reward points list model</returns>
-        public virtual CustomerRewardPointsListModel PrepareRewardPointsListModel(CustomerRewardPointsSearchModel searchModel, Customer customer)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reward points list model
+        /// </returns>
+        public virtual async Task<CustomerRewardPointsListModel> PrepareRewardPointsListModelAsync(CustomerRewardPointsSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -843,28 +826,31 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get reward points history
-            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id,
+            var rewardPoints = await _rewardPointService.GetRewardPointsHistoryAsync(customer.Id,
                 showNotActivated: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerRewardPointsListModel().PrepareToGrid(searchModel, rewardPoints, () =>
+            var model = await new CustomerRewardPointsListModel().PrepareToGridAsync(searchModel, rewardPoints, () =>
             {
-                return rewardPoints.Select(historyEntry =>
+                return rewardPoints.SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity        
                     var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();
 
                     //convert dates to the user time
-                    var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    var activatingDate = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
                     rewardPointsHistoryModel.CreatedOn = activatingDate;
-                    rewardPointsHistoryModel.PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString() :
-                        string.Format(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater"), activatingDate);
-                    rewardPointsHistoryModel.EndDate = !historyEntry.EndDateUtc.HasValue ? null :
-                        (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc);
+
+                    rewardPointsHistoryModel.PointsBalance = historyEntry.PointsBalance.HasValue
+                        ? historyEntry.PointsBalance.ToString()
+                        : string.Format((await _localizationService.GetResourceAsync("Admin.Customers.Customers.RewardPoints.ActivatedLater")), activatingDate);
+                    rewardPointsHistoryModel.EndDate = !historyEntry.EndDateUtc.HasValue
+                        ? null
+                        : (DateTime?)(await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.EndDateUtc.Value, DateTimeKind.Utc));
 
                     //fill in additional values (not existing in the entity)
-                    rewardPointsHistoryModel.StoreName = _storeService.GetStoreById(historyEntry.StoreId)?.Name ?? "Unknown";
+                    rewardPointsHistoryModel.StoreName = (await _storeService.GetStoreByIdAsync(historyEntry.StoreId))?.Name ?? "Unknown";
 
                     return rewardPointsHistoryModel;
                 });
@@ -878,8 +864,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer address search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer address list model</returns>
-        public virtual CustomerAddressListModel PrepareCustomerAddressListModel(CustomerAddressSearchModel searchModel, Customer customer)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer address list model
+        /// </returns>
+        public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync(CustomerAddressSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -888,22 +877,23 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer addresses
-            var addresses = _customerService.GetAddressesByCustomerId(customer.Id)
+            var addresses = (await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
                 .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList()
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAddressListModel().PrepareToGrid(searchModel, addresses, () =>
+            var model = await new CustomerAddressListModel().PrepareToGridAsync(searchModel, addresses, () =>
             {
-                return addresses.Select(address =>
+                return addresses.SelectAwait(async address =>
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
-                    addressModel.CountryName = _countryService.GetCountryByAddress(address)?.Name;
-                    addressModel.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(address)?.Name;
+
+                    addressModel.CountryName = (await _countryService.GetCountryByAddressAsync(address))?.Name;
+                    addressModel.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Name;
 
                     //fill in additional values (not existing in the entity)
-                    PrepareModelAddressHtml(addressModel, address);
+                    await PrepareModelAddressHtmlAsync(addressModel, address);
 
                     return addressModel;
                 });
@@ -919,8 +909,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Customer address model</returns>
-        public virtual CustomerAddressModel PrepareCustomerAddressModel(CustomerAddressModel model,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer address model
+        /// </returns>
+        public virtual async Task<CustomerAddressModel> PrepareCustomerAddressModelAsync(CustomerAddressModel model,
             Customer customer, Address address, bool excludeProperties = false)
         {
             if (customer == null)
@@ -939,7 +932,18 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CustomerId = customer.Id;
 
             //prepare address model
-            PrepareAddressModel(model.Address, address);
+            await _addressModelFactory.PrepareAddressModelAsync(model.Address, address);
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailRequired = true;
+            model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.CityRequired = _addressSettings.CityRequired;
+            model.Address.CountyRequired = _addressSettings.CountyRequired;
+            model.Address.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.Address.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.Address.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.Address.PhoneRequired = _addressSettings.PhoneRequired;
+            model.Address.FaxRequired = _addressSettings.FaxRequired;
 
             return model;
         }
@@ -949,8 +953,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer order search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer order list model</returns>
-        public virtual CustomerOrderListModel PrepareCustomerOrderListModel(CustomerOrderSearchModel searchModel, Customer customer)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer order list model
+        /// </returns>
+        public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync(CustomerOrderSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -959,26 +966,26 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer orders
-            var orders = _orderService.SearchOrders(customerId: customer.Id,
+            var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerOrderListModel().PrepareToGrid(searchModel, orders, () =>
+            var model = await new CustomerOrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
-                return orders.Select(order =>
+                return orders.SelectAwait(async order =>
                 {
                     //fill in model values from the entity
                     var orderModel = order.ToModel<CustomerOrderModel>();
 
                     //convert dates to the user time
-                    orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                    orderModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    orderModel.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Unknown";
-                    orderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
-                    orderModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
-                    orderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus);
-                    orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
+                    orderModel.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Unknown";
+                    orderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
+                    orderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
+                    orderModel.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
+                    orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
 
                     return orderModel;
                 });
@@ -992,8 +999,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer shopping cart search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer shopping cart list model</returns>
-        public virtual CustomerShoppingCartListModel PrepareCustomerShoppingCartListModel(CustomerShoppingCartSearchModel searchModel,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer shopping cart list model
+        /// </returns>
+        public virtual async Task<CustomerShoppingCartListModel> PrepareCustomerShoppingCartListModelAsync(CustomerShoppingCartSearchModel searchModel,
             Customer customer)
         {
             if (searchModel == null)
@@ -1003,35 +1013,34 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer shopping cart
-            var shoppingCart = _shoppingCartService.GetShoppingCart(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId)
+            var shoppingCart = (await _shoppingCartService.GetShoppingCartAsync(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId))
                 .ToPagedList(searchModel);
 
             //prepare list model
-
-            var pageList = shoppingCart.Select(item =>
+            var model = await new CustomerShoppingCartListModel().PrepareToGridAsync(searchModel, shoppingCart, () =>
             {
-                //fill in model values from the entity
-                var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
+                return shoppingCart.SelectAwait(async item =>
+                {
+                    //fill in model values from the entity
+                    var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
 
-                var product = _productService.GetProductById(item.ProductId);
+                    var product = await _productService.GetProductByIdAsync(item.ProductId);
 
-                //fill in additional values (not existing in the entity)
-                shoppingCartItemModel.ProductName = product.Name;
-                shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";
-                shoppingCartItemModel.AttributeInfo =
-                    _productAttributeFormatter.FormatAttributes(product, item.AttributesXml);
-                shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(product, _shoppingCartService.GetUnitPrice(item), out var _));
-                shoppingCartItemModel.Total = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(product, _shoppingCartService.GetSubTotal(item), out _));
-                //convert dates to the user time
-                shoppingCartItemModel.UpdatedOn =
-                    _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
+                    //fill in additional values (not existing in the entity)
+                    shoppingCartItemModel.ProductName = product.Name;
+                    shoppingCartItemModel.Store = (await _storeService.GetStoreByIdAsync(item.StoreId))?.Name ?? "Unknown";
+                    shoppingCartItemModel.AttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml);
+                    var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(item, true);
+                    shoppingCartItemModel.UnitPrice = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, unitPrice)).price);
+                    var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
+                    shoppingCartItemModel.Total = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, subTotal)).price);
 
-                return shoppingCartItemModel;
-            }).ToList().ToPagedList(searchModel);
+                    //convert dates to the user time
+                    shoppingCartItemModel.UpdatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc, DateTimeKind.Utc);
 
-            var model = new CustomerShoppingCartListModel().PrepareToGrid(searchModel, pageList, () => pageList);
+                    return shoppingCartItemModel;
+                });
+            });
 
             return model;
         }
@@ -1041,8 +1050,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer activity log search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer activity log list model</returns>
-        public virtual CustomerActivityLogListModel PrepareCustomerActivityLogListModel(CustomerActivityLogSearchModel searchModel, Customer customer)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer activity log list model
+        /// </returns>
+        public virtual async Task<CustomerActivityLogListModel> PrepareCustomerActivityLogListModelAsync(CustomerActivityLogSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -1051,27 +1063,27 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer activity log
-            var activityLog = _customerActivityService.GetAllActivities(customerId: customer.Id,
+            var activityLog = await _customerActivityService.GetAllActivitiesAsync(customerId: customer.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-            var pageList = activityLog.Select(logItem =>
-            {
-                //fill in model values from the entity
-                var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
-
-                //fill in additional values (not existing in the entity)
-                customerActivityLogModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId)?.Name;
-
-                //convert dates to the user time
-                customerActivityLogModel.CreatedOn =
-                    _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
-
-                return customerActivityLogModel;
-            }).ToList().ToPagedList(searchModel);
-
             //prepare list model
-            var model = new CustomerActivityLogListModel().PrepareToGrid(searchModel, pageList, () => pageList);
-            
+            var model = await new CustomerActivityLogListModel().PrepareToGridAsync(searchModel, activityLog, () =>
+            {
+                return activityLog.SelectAwait(async logItem =>
+                {
+                    //fill in model values from the entity
+                    var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    customerActivityLogModel.ActivityLogTypeName = (await _customerActivityService.GetActivityTypeByIdAsync(logItem.ActivityLogTypeId))?.Name;
+
+                    //convert dates to the user time
+                    customerActivityLogModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedOnUtc, DateTimeKind.Utc);
+
+                    return customerActivityLogModel;
+                });
+            });
+
             return model;
         }
 
@@ -1080,8 +1092,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer back in stock subscriptions search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Customer back in stock subscriptions list model</returns>
-        public virtual CustomerBackInStockSubscriptionListModel PrepareCustomerBackInStockSubscriptionListModel(
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer back in stock subscriptions list model
+        /// </returns>
+        public virtual async Task<CustomerBackInStockSubscriptionListModel> PrepareCustomerBackInStockSubscriptionListModelAsync(
             CustomerBackInStockSubscriptionSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -1091,27 +1106,28 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer back in stock subscriptions
-            var subscriptions = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
+            var subscriptions = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerIdAsync(customer.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var pageList = subscriptions.Select(subscription =>
+            var model = await new CustomerBackInStockSubscriptionListModel().PrepareToGridAsync(searchModel, subscriptions, () =>
             {
-                //fill in model values from the entity
-                var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
+                return subscriptions.SelectAwait(async subscription =>
+                {
+                    //fill in model values from the entity
+                    var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
 
-                //convert dates to the user time
-                subscriptionModel.CreatedOn =
-                    _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
+                    //convert dates to the user time
+                    subscriptionModel.CreatedOn =
+                        await _dateTimeHelper.ConvertToUserTimeAsync(subscription.CreatedOnUtc, DateTimeKind.Utc);
 
-                //fill in additional values (not existing in the entity)
-                subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Unknown";
-                subscriptionModel.ProductName = _productService.GetProductById(subscription.ProductId)?.Name ?? "Unknown";
+                    //fill in additional values (not existing in the entity)
+                    subscriptionModel.StoreName = (await _storeService.GetStoreByIdAsync(subscription.StoreId))?.Name ?? "Unknown";
+                    subscriptionModel.ProductName = (await _productService.GetProductByIdAsync(subscription.ProductId))?.Name ?? "Unknown";
 
-                return subscriptionModel;
-            }).ToList().ToPagedList(searchModel);
-
-            var model = new CustomerBackInStockSubscriptionListModel().PrepareToGrid(searchModel, pageList, () => pageList);
+                    return subscriptionModel;
+                });
+            });
 
             return model;
         }
@@ -1120,8 +1136,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare online customer search model
         /// </summary>
         /// <param name="searchModel">Online customer search model</param>
-        /// <returns>Online customer search model</returns>
-        public virtual OnlineCustomerSearchModel PrepareOnlineCustomerSearchModel(OnlineCustomerSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the online customer search model
+        /// </returns>
+        public virtual Task<OnlineCustomerSearchModel> PrepareOnlineCustomerSearchModelAsync(OnlineCustomerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -1129,15 +1148,18 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
         /// Prepare paged online customer list model
         /// </summary>
         /// <param name="searchModel">Online customer search model</param>
-        /// <returns>Online customer list model</returns>
-        public virtual OnlineCustomerListModel PrepareOnlineCustomerListModel(OnlineCustomerSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the online customer list model
+        /// </returns>
+        public virtual async Task<OnlineCustomerListModel> PrepareOnlineCustomerListModelAsync(OnlineCustomerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -1146,30 +1168,32 @@ namespace Nop.Web.Areas.Admin.Factories
             var lastActivityFrom = DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes);
 
             //get online customers
-            var customers = _customerService.GetOnlineCustomers(customerRoleIds: null,
+            var customers = await _customerService.GetOnlineCustomersAsync(customerRoleIds: null,
                  lastActivityFromUtc: lastActivityFrom,
                  pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new OnlineCustomerListModel().PrepareToGrid(searchModel, customers, () =>
+            var model = await new OnlineCustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.Select(customer =>
+                return customers.SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var customerModel = customer.ToModel<OnlineCustomerModel>();
 
                     //convert dates to the user time
-                    customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+                    customerModel.LastActivityDate = await _dateTimeHelper.ConvertToUserTimeAsync(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    customerModel.CustomerInfo = _customerService.IsRegistered(customer)
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    customerModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                     customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
-                        ? customer.LastIpAddress : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
+                        ? customer.LastIpAddress
+                        : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
                     customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
                     customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage
-                        ? _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute)
-                        : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
+                        ? await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute)
+                        : await _localizationService.GetResourceAsync("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
 
                     return customerModel;
                 });
@@ -1182,14 +1206,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare GDPR request (log) search model
         /// </summary>
         /// <param name="searchModel">GDPR request search model</param>
-        /// <returns>GDPR request search model</returns>
-        public virtual GdprLogSearchModel PrepareGdprLogSearchModel(GdprLogSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR request search model
+        /// </returns>
+        public virtual async Task<GdprLogSearchModel> PrepareGdprLogSearchModelAsync(GdprLogSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare request types
-            _baseAdminModelFactory.PrepareGdprRequestTypes(searchModel.AvailableRequestTypes);
+            await _baseAdminModelFactory.PrepareGdprRequestTypesAsync(searchModel.AvailableRequestTypes);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -1201,8 +1228,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged GDPR request list model
         /// </summary>
         /// <param name="searchModel">GDPR request search model</param>
-        /// <returns>GDPR request list model</returns>
-        public virtual GdprLogListModel PrepareGdprLogListModel(GdprLogSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR request list model
+        /// </returns>
+        public virtual async Task<GdprLogListModel> PrepareGdprLogListModelAsync(GdprLogSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -1211,7 +1241,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerInfo = "";
             if (!string.IsNullOrEmpty(searchModel.SearchEmail))
             {
-                var customer = _customerService.GetCustomerByEmail(searchModel.SearchEmail);
+                var customer = await _customerService.GetCustomerByEmailAsync(searchModel.SearchEmail);
                 if (customer != null)
                     customerId = customer.Id;
                 else
@@ -1220,7 +1250,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             }
             //get requests
-            var gdprLog = _gdprService.GetAllLog(
+            var gdprLog = await _gdprService.GetAllLogAsync(
                 customerId: customerId,
                 customerInfo: customerInfo,
                 requestType: searchModel.SearchRequestTypeId > 0 ? (GdprRequestType?)searchModel.SearchRequestTypeId : null,
@@ -1228,19 +1258,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new GdprLogListModel().PrepareToGrid(searchModel, gdprLog, () =>
+            var model = await new GdprLogListModel().PrepareToGridAsync(searchModel, gdprLog, () =>
             {
-                return gdprLog.Select(log =>
+                return gdprLog.SelectAwait(async log =>
                 {
                     //fill in model values from the entity
-                    var customer = _customerService.GetCustomerById(log.CustomerId);
+                    var customer = await _customerService.GetCustomerByIdAsync(log.CustomerId);
 
                     var requestModel = log.ToModel<GdprLogModel>();
 
                     //fill in additional values (not existing in the entity)
-                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !string.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
-                    requestModel.RequestType = _localizationService.GetLocalizedEnum(log.RequestType);
-                    requestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
+                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !string.IsNullOrEmpty(customer.Email)
+                        ? customer.Email
+                        : log.CustomerInfo;
+                    requestModel.RequestType = await _localizationService.GetLocalizedEnumAsync(log.RequestType);
+
+                    requestModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(log.CreatedOnUtc, DateTimeKind.Utc);
 
                     return requestModel;
                 });

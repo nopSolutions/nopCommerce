@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public record ConfigurationModel : BaseNopModel
     {
         [NopResourceDisplayName("Plugins.ExternalAuth.plugin.IsEnabled")]
         public bool IsActive { get; set; }

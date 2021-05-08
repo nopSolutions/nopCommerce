@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
     /// <summary>
     /// Represents an address attribute value model
     /// </summary>
-    public partial class AddressAttributeValueModel : BaseNopEntityModel, ILocalizedModel<AddressAttributeValueLocalizedModel>
+    public partial record AddressAttributeValueModel : BaseNopEntityModel, ILocalizedModel<AddressAttributeValueLocalizedModel>
     {
         #region Ctor
 
@@ -36,7 +36,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         #endregion
     }
 
-    public partial class AddressAttributeValueLocalizedModel : ILocalizedLocaleModel
+    public partial record AddressAttributeValueLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

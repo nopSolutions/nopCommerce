@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
 using Nop.Services.Vendors;
@@ -37,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
@@ -60,7 +61,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -69,8 +70,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare vendor attribute search model
         /// </summary>
         /// <param name="searchModel">Vendor attribute search model</param>
-        /// <returns>Vendor attribute search model</returns>
-        public virtual VendorAttributeSearchModel PrepareVendorAttributeSearchModel(VendorAttributeSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute search model
+        /// </returns>
+        public virtual Task<VendorAttributeSearchModel> PrepareVendorAttributeSearchModelAsync(VendorAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -78,32 +82,35 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
         /// Prepare paged vendor attribute list model
         /// </summary>
         /// <param name="searchModel">Vendor attribute search model</param>
-        /// <returns>Vendor attribute list model</returns>
-        public virtual VendorAttributeListModel PrepareVendorAttributeListModel(VendorAttributeSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute list model
+        /// </returns>
+        public virtual async Task<VendorAttributeListModel> PrepareVendorAttributeListModelAsync(VendorAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get vendor attributes
-            var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes().ToPagedList(searchModel);
+            var vendorAttributes = (await _vendorAttributeService.GetAllVendorAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorAttributeListModel().PrepareToGrid(searchModel, vendorAttributes, () =>
+            var model = await new VendorAttributeListModel().PrepareToGridAsync(searchModel, vendorAttributes, () =>
             {
-                return vendorAttributes.Select(attribute =>
+                return vendorAttributes.SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<VendorAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
+                    attributeModel.AttributeControlTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType);
 
                     return attributeModel;
                 });
@@ -118,8 +125,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Vendor attribute model</param>
         /// <param name="vendorAttribute">Vendor attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Vendor attribute model</returns>
-        public virtual VendorAttributeModel PrepareVendorAttributeModel(VendorAttributeModel model,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute model
+        /// </returns>
+        public virtual async Task<VendorAttributeModel> PrepareVendorAttributeModelAsync(VendorAttributeModel model,
             VendorAttribute vendorAttribute, bool excludeProperties = false)
         {
             Action<VendorAttributeLocalizedModel, int> localizedModelConfiguration = null;
@@ -133,15 +143,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareVendorAttributeValueSearchModel(model.VendorAttributeValueSearchModel, vendorAttribute);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(vendorAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(vendorAttribute, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -151,8 +161,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor attribute value search model</param>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        /// <returns>Vendor attribute value list model</returns>
-        public virtual VendorAttributeValueListModel PrepareVendorAttributeValueListModel(VendorAttributeValueSearchModel searchModel,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute value list model
+        /// </returns>
+        public virtual async Task<VendorAttributeValueListModel> PrepareVendorAttributeValueListModelAsync(VendorAttributeValueSearchModel searchModel,
             VendorAttribute vendorAttribute)
         {
             if (searchModel == null)
@@ -162,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
             //get vendor attribute values
-            var vendorAttributeValues = _vendorAttributeService.GetVendorAttributeValues(vendorAttribute.Id).ToPagedList(searchModel);
+            var vendorAttributeValues = (await _vendorAttributeService.GetVendorAttributeValuesAsync(vendorAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new VendorAttributeValueListModel().PrepareToGrid(searchModel, vendorAttributeValues, () =>
@@ -181,8 +194,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="vendorAttribute">Vendor attribute</param>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Vendor attribute value model</returns>
-        public virtual VendorAttributeValueModel PrepareVendorAttributeValueModel(VendorAttributeValueModel model,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute value model
+        /// </returns>
+        public virtual async Task<VendorAttributeValueModel> PrepareVendorAttributeValueModelAsync(VendorAttributeValueModel model,
             VendorAttribute vendorAttribute, VendorAttributeValue vendorAttributeValue, bool excludeProperties = false)
         {
             if (vendorAttribute == null)
@@ -196,9 +212,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= vendorAttributeValue.ToModel<VendorAttributeValueModel>();
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(vendorAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(vendorAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -206,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

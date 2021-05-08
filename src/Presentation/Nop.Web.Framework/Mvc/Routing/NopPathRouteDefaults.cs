@@ -66,5 +66,15 @@
         /// Gets default key for vendor id field
         /// </summary>
         public static string VendorIdFieldKey => "vendorid";
+
+        /// <summary>
+        /// Gets language route value
+        /// </summary>
+        public static string LanguageRouteValue => "language";
+
+        /// <summary>
+        /// Gets language parameter transformer
+        /// </summary>
+        public static string LanguageParameterTransformer => "lang";
     }
 }

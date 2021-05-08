@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -220,11 +221,14 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
         /// <param name="errors">Errors</param>
-        /// <returns>Attributes in XML format</returns>
-        protected virtual string GetProductAttributesXml(Product product, IFormCollection form, List<string> errors)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attributes in XML format
+        /// </returns>
+        protected virtual async Task<string> GetProductAttributesXmlAsync(Product product, IFormCollection form, List<string> errors)
         {
             var attributesXml = string.Empty;
-            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var productAttributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
             foreach (var attribute in productAttributes)
             {
                 var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
@@ -246,7 +250,7 @@ namespace Nop.Services.Catalog
                                     var quantityStr = form[$"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}_{selectedAttributeId}_qty"];
                                     if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                         (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                        errors.Add(_localizationService.GetResource("Products.QuantityShouldBePositive"));
+                                        errors.Add(await _localizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
 
                                     attributesXml = AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
@@ -270,7 +274,7 @@ namespace Nop.Services.Catalog
                                         var quantityStr = form[$"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}_{item}_qty"];
                                         if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                             (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                            errors.Add(_localizationService.GetResource("Products.QuantityShouldBePositive"));
+                                            errors.Add(await _localizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
 
                                         attributesXml = AddProductAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
@@ -282,7 +286,7 @@ namespace Nop.Services.Catalog
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                            var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
@@ -293,7 +297,7 @@ namespace Nop.Services.Catalog
                                 var quantityStr = form[$"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}_{selectedAttributeId}_qty"];
                                 if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                     (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                    errors.Add(_localizationService.GetResource("Products.QuantityShouldBePositive"));
+                                    errors.Add(await _localizationService.GetResourceAsync("Products.QuantityShouldBePositive"));
 
                                 attributesXml = AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
@@ -323,7 +327,9 @@ namespace Nop.Services.Catalog
                             }
                             catch
                             {
+                                // ignored
                             }
+
                             if (selectedDate.HasValue)
                                 attributesXml = AddProductAttribute(attributesXml, attribute, selectedDate.Value.ToString("D"));
                         }
@@ -331,12 +337,10 @@ namespace Nop.Services.Catalog
                     case AttributeControlType.FileUpload:
                         {
                             Guid.TryParse(form[controlId], out var downloadGuid);
-                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
-                            {
                                 attributesXml = AddProductAttribute(attributesXml,
                                     attribute, download.DownloadGuid.ToString());
-                            }
                         }
                         break;
                     default:
@@ -346,7 +350,7 @@ namespace Nop.Services.Catalog
             //validate conditional attributes (if specified)
             foreach (var attribute in productAttributes)
             {
-                var conditionMet = IsConditionMet(attribute, attributesXml);
+                var conditionMet = await IsConditionMetAsync(attribute, attributesXml);
                 if (conditionMet.HasValue && !conditionMet.Value)
                 {
                     attributesXml = RemoveProductAttribute(attributesXml, attribute);
@@ -363,8 +367,11 @@ namespace Nop.Services.Catalog
         /// Gets selected product attribute mappings
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product attribute mappings</returns>
-        public virtual IList<ProductAttributeMapping> ParseProductAttributeMappings(string attributesXml)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected product attribute mappings
+        /// </returns>
+        public virtual async Task<IList<ProductAttributeMapping>> ParseProductAttributeMappingsAsync(string attributesXml)
         {
             var result = new List<ProductAttributeMapping>();
             if (string.IsNullOrEmpty(attributesXml))
@@ -373,11 +380,9 @@ namespace Nop.Services.Catalog
             var ids = ParseProductAttributeMappingIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = _productAttributeService.GetProductAttributeMappingById(id);
-                if (attribute != null)
-                {
+                var attribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(id);
+                if (attribute != null) 
                     result.Add(attribute);
-                }
             }
 
             return result;
@@ -388,14 +393,17 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier; pass 0 to load all values</param>
-        /// <returns>Product attribute values</returns>
-        public virtual IList<ProductAttributeValue> ParseProductAttributeValues(string attributesXml, int productAttributeMappingId = 0)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute values
+        /// </returns>
+        public virtual async Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(string attributesXml, int productAttributeMappingId = 0)
         {
             var values = new List<ProductAttributeValue>();
             if (string.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = ParseProductAttributeMappings(attributesXml);
+            var attributes = await ParseProductAttributeMappingsAsync(attributesXml);
 
             //to load values only for the passed product attribute mapping
             if (productAttributeMappingId > 0)
@@ -411,7 +419,7 @@ namespace Nop.Services.Catalog
                     if (string.IsNullOrEmpty(attributeValue.Item1) || !int.TryParse(attributeValue.Item1, out var attributeValueId))
                         continue;
 
-                    var value = _productAttributeService.GetProductAttributeValueById(attributeValueId);
+                    var value = await _productAttributeService.GetProductAttributeValueByIdAsync(attributeValueId);
                     if (value == null)
                         continue;
 
@@ -419,7 +427,7 @@ namespace Nop.Services.Catalog
                     {
                         //if customer enters quantity, use new entity with new quantity
 
-                        var oldValue = _productAttributeValueRepository.LoadOriginalCopy(value);
+                        var oldValue = await _productAttributeValueRepository.LoadOriginalCopyAsync(value);
 
                         oldValue.ProductAttributeMappingId = attribute.Id;
                         oldValue.Quantity = quantity;
@@ -623,20 +631,19 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml2">The attributes of the second product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreQuantity">A value indicating whether we should ignore the quantity of attribute value entered by the customer</param>
-        /// <returns>Result</returns>
-        public virtual bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> AreProductAttributesEqualAsync(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true)
         {
-            var attributes1 = ParseProductAttributeMappings(attributesXml1);
-            if (ignoreNonCombinableAttributes)
-            {
+            var attributes1 = await ParseProductAttributeMappingsAsync(attributesXml1);
+            if (ignoreNonCombinableAttributes) 
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
-            }
 
-            var attributes2 = ParseProductAttributeMappings(attributesXml2);
-            if (ignoreNonCombinableAttributes)
-            {
+            var attributes2 = await ParseProductAttributeMappingsAsync(attributesXml2);
+            if (ignoreNonCombinableAttributes) 
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
-            }
 
             if (attributes1.Count != attributes2.Count)
                 return false;
@@ -698,8 +705,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="pam">Product attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
-        /// <returns>Result</returns>
-        public virtual bool? IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool?> IsConditionMetAsync(ProductAttributeMapping pam, string selectedAttributesXml)
         {
             if (pam == null)
                 throw new ArgumentNullException(nameof(pam));
@@ -710,7 +720,7 @@ namespace Nop.Services.Catalog
                 return null;
 
             //load an attribute this one depends on
-            var dependOnAttribute = ParseProductAttributeMappings(conditionAttributeXml).FirstOrDefault();
+            var dependOnAttribute = (await ParseProductAttributeMappingsAsync(conditionAttributeXml)).FirstOrDefault();
             if (dependOnAttribute == null)
                 return true;
 
@@ -746,8 +756,11 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
-        /// <returns>Found product attribute combination</returns>
-        public virtual ProductAttributeCombination FindProductAttributeCombination(Product product,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found product attribute combination
+        /// </returns>
+        public virtual async Task<ProductAttributeCombination> FindProductAttributeCombinationAsync(Product product,
             string attributesXml, bool ignoreNonCombinableAttributes = true)
         {
             if (product == null)
@@ -757,9 +770,9 @@ namespace Nop.Services.Catalog
             if (string.IsNullOrEmpty(attributesXml))
                 return null;
 
-            var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
-            return combinations.FirstOrDefault(x =>
-                AreProductAttributesEqual(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
+            var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
+            return await combinations.FirstOrDefaultAwaitAsync(async x =>
+                await AreProductAttributesEqualAsync(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
         }
 
         /// <summary>
@@ -768,20 +781,22 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
-        /// <returns>Attribute combinations in XML format</returns>
-        public virtual IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attribute combinations in XML format
+        /// </returns>
+        public virtual async Task<IList<string>> GenerateAllCombinationsAsync(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var allProductAttributMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-            if (ignoreNonCombinableAttributes)
-            {
-                allProductAttributMappings = allProductAttributMappings.Where(x => !x.IsNonCombinable()).ToList();
-            }
+            var allProductAttributeMappings = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
+            
+            if (ignoreNonCombinableAttributes) 
+                allProductAttributeMappings = allProductAttributeMappings.Where(x => !x.IsNonCombinable()).ToList();
 
             //get all possible attribute combinations
-            var allPossibleAttributeCombinations = CreateCombination(allProductAttributMappings);
+            var allPossibleAttributeCombinations = CreateCombination(allProductAttributeMappings);
 
             var allAttributesXml = new List<string>();
 
@@ -794,13 +809,11 @@ namespace Nop.Services.Catalog
                         continue;
 
                     //get product attribute values
-                    var attributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
+                    var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
 
                     //filter product attribute values
-                    if (allowedAttributeIds?.Any() ?? false)
-                    {
+                    if (allowedAttributeIds?.Any() ?? false) 
                         attributeValues = attributeValues.Where(attributeValue => allowedAttributeIds.Contains(attributeValue.Id)).ToList();
-                    }
 
                     if (!attributeValues.Any())
                         continue;
@@ -821,15 +834,11 @@ namespace Nop.Services.Catalog
                             foreach (var checkboxCombination in CreateCombination(attributeValues))
                             {
                                 var newXml = oldXml;
-                                foreach (var checkboxValue in checkboxCombination)
-                                {
+                                foreach (var checkboxValue in checkboxCombination) 
                                     newXml = AddProductAttribute(newXml, productAttributeMapping, checkboxValue.Id.ToString());
-                                }
 
-                                if (!string.IsNullOrEmpty(newXml))
-                                {
+                                if (!string.IsNullOrEmpty(newXml)) 
                                     currentAttributesXml.Add(newXml);
-                                }
                             }
                         }
                     }
@@ -858,13 +867,11 @@ namespace Nop.Services.Catalog
             for (var i = 0; i < allAttributesXml.Count; i++)
             {
                 var attributesXml = allAttributesXml[i];
-                foreach (var attribute in allProductAttributMappings)
+                foreach (var attribute in allProductAttributeMappings)
                 {
-                    var conditionMet = IsConditionMet(attribute, attributesXml);
-                    if (conditionMet.HasValue && !conditionMet.Value)
-                    {
+                    var conditionMet = await IsConditionMetAsync(attribute, attributesXml);
+                    if (conditionMet.HasValue && !conditionMet.Value) 
                         allAttributesXml[i] = RemoveProductAttribute(attributesXml, attribute);
-                    }
                 }
             }
 
@@ -876,8 +883,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
-        /// <returns>Customer entered price of the product</returns>
-        public virtual decimal ParseCustomerEnteredPrice(Product product, IFormCollection form)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer entered price of the product
+        /// </returns>
+        public virtual async Task<decimal> ParseCustomerEnteredPriceAsync(Product product, IFormCollection form)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -886,17 +896,15 @@ namespace Nop.Services.Catalog
 
             var customerEnteredPriceConverted = decimal.Zero;
             if (product.CustomerEntersPrice)
-            {
                 foreach (var formKey in form.Keys)
                 {
                     if (formKey.Equals($"addtocart_{product.Id}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
                     {
                         if (decimal.TryParse(form[formKey], out var customerEnteredPrice))
-                            customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
+                            customerEnteredPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(customerEnteredPrice, await _workContext.GetWorkingCurrencyAsync());
                         break;
                     }
                 }
-            }
 
             return customerEnteredPriceConverted;
         }
@@ -916,13 +924,11 @@ namespace Nop.Services.Catalog
 
             var quantity = 1;
             foreach (var formKey in form.Keys)
-            {
                 if (formKey.Equals($"addtocart_{product.Id}.EnteredQuantity", StringComparison.InvariantCultureIgnoreCase))
                 {
                     int.TryParse(form[formKey], out quantity);
                     break;
                 }
-            }
 
             return quantity;
         }
@@ -959,6 +965,7 @@ namespace Nop.Services.Catalog
                 }
                 catch
                 {
+                    // ignored
                 }
             }
         }
@@ -969,8 +976,11 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="form">Form values</param>
         /// <param name="errors">Errors</param>
-        /// <returns>Attributes in XML format</returns>
-        public virtual string ParseProductAttributes(Product product, IFormCollection form, List<string> errors)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attributes in XML format
+        /// </returns>
+        public virtual async Task<string> ParseProductAttributesAsync(Product product, IFormCollection form, List<string> errors)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -978,7 +988,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(form));
 
             //product attributes
-            var attributesXml = GetProductAttributesXml(product, form, errors);
+            var attributesXml = await GetProductAttributesXmlAsync(product, form, errors);
 
             //gift cards
             AddGiftCardsAttributesXml(product, form, ref attributesXml);
@@ -1018,9 +1028,7 @@ namespace Nop.Services.Catalog
                     xmlDoc.AppendChild(element1);
                 }
                 else
-                {
                     xmlDoc.LoadXml(attributesXml);
-                }
 
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 

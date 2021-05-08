@@ -15,6 +15,12 @@ namespace Nop.Web.Infrastructure.Installation
         string GetResource(string resourceName);
 
         /// <summary>
+        /// Get current browser culture
+        /// </summary>
+        /// <returns>Current culture</returns>
+        string GetBrowserCulture();
+
+        /// <summary>
         /// Get current language for the installation page
         /// </summary>
         /// <returns>Current language</returns>

@@ -70,17 +70,17 @@
                             }
                             else
                             {
-                                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+                                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
                             }
                         </div>
                     }
                     <div class="buttons">
-                        <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
+                        <button type="submit" name="nextstep" class="button-1 confirm-order-next-step-button">@T("Checkout.ConfirmButton")</button>
                     </div>
                     <script asp-location="Footer">
                         $('#confirm-order-form').on('submit',
                             function () {
-                                var button = $(this).find('input[type="submit"][name="nextstep"]');
+                                var button = $(this).find('button[type="submit"][name="nextstep"]');
                                 setTimeout(function () {
                                     button.prop('disabled', true);
                                 },

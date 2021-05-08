@@ -3,21 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Plugin.ExternalAuth.ExtendedAuth.Service;
 using Nop.Services.Authentication.External;
 using Telegram.Bot;
-using Telegram.Bot.Args;
-using Telegram.Bot.Requests.Abstractions;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.InlineQueryResults;
-using Telegram.Bot.Types.InputFiles;
-using Telegram.Bot.Types.Payments;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure
 {
@@ -40,16 +32,13 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
         {
-            builder.RegisterType<ExternalAuthenticationService_Override>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
-            builder.RegisterType<WeekdayProductRotation>().SingleInstance();
+            services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService_Override>();
+            services.AddSingleton<WeekdayProductRotation>();
 
-            builder
-                .Register(ctx => 
-                    new TelegramBotClient(config.TelegramBotSecret))
-                .As<ITelegramBotClient>()
-                .SingleInstance();
+            services.AddSingleton<ITelegramBotClient, TelegramBotClient>(ctx => 
+                new TelegramBotClient(appSettings.ExtendedAuthSettings.TelegramBotSecret));
         }
     }
 }

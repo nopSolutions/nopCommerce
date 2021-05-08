@@ -4,7 +4,7 @@ namespace Nop.Web.Framework.Models
     /// <summary>
     /// Represents base nopCommerce entity model
     /// </summary>
-    public partial class BaseNopEntityModel : BaseNopModel
+    public partial record BaseNopEntityModel : BaseNopModel
     {
         /// <summary>
         /// Gets or sets model identifier
