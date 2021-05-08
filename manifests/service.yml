@@ -3,7 +3,7 @@ kind: Service
 metadata:
     name: "mysnacks-nopcommerce"
 spec:
-    type: LoadBalancer
+    type: ClusterIP
     ports:
     - port: 5000
     selector:

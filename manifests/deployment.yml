@@ -17,3 +17,6 @@ spec:
           image: eisajanyan/nopcommerce:staging
           ports:
           - containerPort: 5000
+          env:
+          - name: ASPNETCORE_URLS
+            value: http://*:5000
