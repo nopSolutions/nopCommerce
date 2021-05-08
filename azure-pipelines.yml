@@ -51,8 +51,14 @@ stages:
             inputs:
               artifactName: 'manifests'
               downloadPath: '$(System.ArtifactsDirectory)/manifests'
-          
-          
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Write your commands here
+                echo "Echoing contents of file"
+                cat "$(System.ArtifactsDirectory)/manifests/deployment.yml"
+
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes cluster
             inputs:
