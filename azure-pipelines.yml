@@ -9,8 +9,9 @@ resources:
 - repo: self
 
 variables:
-  repository: nopcommerce
-  tag: '$(Build.BuildId)'
+  tag: 'staging'
+  servicePort: 5000
+  imageRepository: 'eisajanyan/nopcommerce'
 
 stages:
 - stage: Build
@@ -24,15 +25,49 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'eisajanyan dockerhub'
-        repository: 'eisajanyan/nopcommerce'
+        repository: '$(imageRepository)'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: |
           $(tag)
-    - task: KubernetesManifest@0
+    - task: PublishPipelineArtifact@1
       inputs:
-        action: 'deploy'
-        kubernetesServiceConnection: 'hetzner microk8s mysnacks namespace'
-        namespace: 'mysnacks'
-        manifests: 'manifests/service.yml|manifests/deployment.yml'
-        containers: 'eisajanyan/nopcommerce:$(tag)'
+        artifactName: 'manifests'
+        path: 'manifests'
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy job
+    pool:
+      vmImage: ubuntu-latest
+    environment: 'mysnacks'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: 'manifests'
+              downloadPath: '$(System.ArtifactsDirectory)/manifests'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Write your commands here
+                echo "Echoing contents of file"
+                cat "$(System.ArtifactsDirectory)/manifests/deployment.yml"
+
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              namespace: mysnacks
+              kubernetesServiceConnection: 'mysnacks-mysnacks-1620423356138'
+              manifests: |
+                $(System.ArtifactsDirectory)/manifests/deployment.yml
+                $(System.ArtifactsDirectory)/manifests/service.yml
+              containers: |
+                '$(imageRepository):$(tag)'

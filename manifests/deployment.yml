@@ -1,19 +1,22 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}} 
+  name: mysnacks-nopcommerce
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}
+      app: mysnacks-nopcommerce
   template:
     metadata:
       labels:
-        app: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}} 
+        app: mysnacks-nopcommerce
     spec:
       containers:
-        - name: {{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}} 
-          image: {{ containerRegistryConnection.Authorization.Parameters.loginServer }}/{{#toAlphaNumericString imageRepository 50}}{{/toAlphaNumericString}}
+        - name: nopcommerce
+          image: eisajanyan/nopcommerce:staging
           ports:
-          - containerPort: {{ servicePort }}
+          - containerPort: 5000
+          env:
+          - name: ASPNETCORE_URLS
+            value: http://*:5000
