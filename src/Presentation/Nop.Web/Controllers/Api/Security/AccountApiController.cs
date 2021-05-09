@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -94,68 +95,68 @@ namespace Nop.Web.Controllers.Api.Security
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginApiModel model)
+        public async Task<IActionResult> Login([FromBody] LoginApiModel model)
         {
             if (!ModelState.IsValid)
                 return Ok(new { success = false, message = GetModelErrors(ModelState) });
 
-            var loginResult = _customerRegistrationService.ValidateCustomer(model.Email, model.Password);
+            var loginResult = await _customerRegistrationService.ValidateCustomerAsync(model.Email, model.Password);
             switch (loginResult)
             {
                 case CustomerLoginResults.Successful:
                     {
-                        var customer = _customerService.GetCustomerByEmail(model.Email);
+                        var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
                         if (customer == null)
                             return Ok(new { success = false, message = "'User' could not be loaded" });
 
-                        _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.PushToken, model.PushToken, 1);
+                        await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.PushToken, model.PushToken, 1);
 
-                        _workContext.CurrentCustomer.Id = customer.Id;
+                        await _workContext.SetCurrentCustomerAsync(customer);
 
                         //migrate shopping cart
-                        _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+                        await _shoppingCartService.MigrateShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), customer, true);
 
                         //sign in new customer
-                        _authenticationService.SignIn(customer, false);
+                        await _authenticationService.SignInAsync(customer, false);
 
                         var jwt = new JwtService(_config);
                         var token = jwt.GenerateSecurityToken(customer.Email);
 
-                        var shippingAddress = customer.ShippingAddressId.HasValue ? _addressService.GetAddressById(customer.ShippingAddressId.Value) : null;
+                        var shippingAddress = customer.ShippingAddressId.HasValue ? await _addressService.GetAddressByIdAsync(customer.ShippingAddressId.Value) : null;
 
-                        var firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                        var lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                        var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                        var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
 
                         return Ok(new { success = true, message = "Login Successfully", token, shippingAddress, firstName, lastName });
                     }
                 case CustomerLoginResults.CustomerNotExist:
-                    return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist") });
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.CustomerNotExist") });
                 case CustomerLoginResults.Deleted:
-                    return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials.Deleted") });
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.Deleted") });
                 case CustomerLoginResults.NotActive:
-                    return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials.NotActive") });
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.NotActive") });
                 case CustomerLoginResults.NotRegistered:
-                    return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials.NotRegistered") });
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.NotRegistered") });
                 case CustomerLoginResults.LockedOut:
-                    return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials.LockedOut") });
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.LockedOut") });
                 case CustomerLoginResults.WrongPassword:
                 default:
-                    return Ok(new { success = false, message = _localizationService.GetResource("Account.Login.WrongCredentials") });
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials") });
             }
         }
 
         [AllowAnonymous]
         [HttpPost("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            var customer = _workContext.CurrentCustomer;
+            var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
                 return Ok(new { success = false, message = "'customer' could not be loaded" });
 
-            _genericAttributeService.SaveAttribute<string>(customer, NopCustomerDefaults.PushToken, null, 1);
+            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.PushToken, null, 1);
 
             //standard logout 
-            _authenticationService.SignOut();
+            await _authenticationService.SignOutAsync();
 
             return Ok(new { success = true, message = "logout successfully" });
         }

@@ -6,7 +6,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class ProductOverviewApiModel : BaseNopEntityModel
+    public partial class ProductOverviewApiModel
     {
         public bool Vegetarian { get; set; }
         public bool Vegan { get; set; }
@@ -24,6 +24,7 @@ namespace Nop.Web.Models.Catalog
         public bool RibbonEnable { get; set; }
         public string RibbonText { get; set; }
         public string CategoryName { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }

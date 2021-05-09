@@ -844,7 +844,7 @@ namespace Nop.Web.Factories
                     Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
                     SeName = await _urlRecordService.GetSeNameAsync(category),
                     IncludeInTopMenu = category.IncludeInTopMenu,
-                    PictureUrl = _pictureService.GetPictureUrl(category.PictureId, showDefaultPicture: true)
+                    PictureUrl = await _pictureService.GetPictureUrlAsync(category.PictureId, showDefaultPicture: true)
                 };
 
                 //number of products in each category

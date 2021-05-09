@@ -9,6 +9,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -32,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nop.Web.Controllers.Api.Security
 {
@@ -175,7 +177,7 @@ namespace Nop.Web.Controllers.Api.Security
         #region Utility
 
         [NonAction]
-        protected virtual IEnumerable<ProductOverviewApiModel> PrepareApiProductOverviewModels(IEnumerable<Product> products)
+        protected virtual async Task<IEnumerable<ProductOverviewApiModel>> PrepareApiProductOverviewModels(IEnumerable<Product> products)
         {
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
@@ -183,32 +185,34 @@ namespace Nop.Web.Controllers.Api.Security
             var models = new List<ProductOverviewApiModel>();
             foreach (var product in products)
             {
-                var vendor = _vendorService.GetVendorByProductId(product.Id);
+                var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                 var categoryName = "";
-                var categories = _categoryService.GetProductCategoriesByProductId(product.Id);
+                var categories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
                 if (categories.Any())
                 {
                     foreach (var category in categories)
                     {
-                        categoryName += _categoryService.GetCategoryById(category.CategoryId).Name + ",";
+                        var cat = await _categoryService.GetCategoryByIdAsync(category.CategoryId);
+                        categoryName += cat.Name + ",";
                     }
                 }
-                var productReviews = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id);
+                var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: _storeContext.GetCurrentStore().Id);
+                var picsById = await _pictureService.GetPicturesByProductIdAsync(product.Id);
                 var model = new ProductOverviewApiModel
                 {
                     Id = product.Id,
-                    Name = _localizationService.GetLocalized(product, x => x.Name),
-                    ShortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription),
-                    FullDescription = _localizationService.GetLocalized(product, x => x.FullDescription),
-                    SeName = _urlRecordService.GetSeName(product),
+                    Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                    ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
+                    FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
+                    SeName = await _urlRecordService.GetSeNameAsync(product),
                     CategoryName = categoryName.TrimEnd(','),
                     Average = product.Average,
                     Minimum = product.Minimum,
                     Expensive = product.Expensive,
-                    Price = _priceFormatter.FormatPrice(product.Price),
+                    Price = await _priceFormatter.FormatPriceAsync(product.Price),
                     RatingSum = productReviews.Sum(pr => pr.Rating),
                     TotalReviews = productReviews.Count,
-                    ImageUrl = _pictureService.GetPictureUrl(_pictureService.GetPicturesByProductId(product.Id).Any() ? _pictureService.GetPicturesByProductId(product.Id).FirstOrDefault().Id : 0, showDefaultPicture: true),
+                    ImageUrl = await _pictureService.GetPictureUrlAsync(picsById.Any() ? picsById.FirstOrDefault().Id : 0, showDefaultPicture: true),
                     RibbonEnable = product.RibbonEnable,
                     RibbonText = product.RibbonText,
                     Vegetarian = product.Vegetarian,
@@ -221,7 +225,7 @@ namespace Nop.Web.Controllers.Api.Security
                     FastAndReliable = product.FastAndReliable,
                     ExcellentValue = product.ExcellentValue,
                     FollowOrderNotes = product.FollowOrderNotes,
-                    VendorLogoPictureUrl = _pictureService.GetPictureUrl(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
+                    VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
                 };
                 models.Add(model);
             }
@@ -230,24 +234,7 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [NonAction]
-        public virtual void PreparePagination(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
-        {
-            var currentPageUrl = _webHelper.GetThisPageUrl(true);
-            var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagenumber={0}"/*, null*/);
-
-            for (int i = 1; i <= pagingFilteringModel.TotalPages; i++)
-            {
-                pagingFilteringModel.Pagination.Add(new SelectListItem
-                {
-                    Text = (i).ToString(),
-                    Value = i == 1 ? string.Format(_webHelper.RemoveQueryString(sortUrl, "pagenumber")) : string.Format(sortUrl, (i).ToString()),
-                    Selected = i.ToString() == pagingFilteringModel.PageNumber.ToString() ? true : false
-                });
-            }
-        }
-
-        [NonAction]
-        protected virtual CustomerProductReviewsModel PrepareCustomerProductReviewsModel(int? page, int customerId)
+        protected virtual async Task<CustomerProductReviewsModel> PrepareCustomerProductReviewsModel(int? page, int customerId)
         {
             var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
             var pageIndex = 0;
@@ -257,7 +244,7 @@ namespace Nop.Web.Controllers.Api.Security
                 pageIndex = page.Value - 1;
             }
 
-            var list = _productService.GetAllProductReviews(customerId: customerId,
+            var list = await _productService.GetAllProductReviewsAsync(customerId: customerId,
                 approved: null,
                 pageIndex: pageIndex,
                 pageSize: pageSize);
@@ -266,24 +253,25 @@ namespace Nop.Web.Controllers.Api.Security
 
             foreach (var review in list)
             {
-                var product = _productService.GetProductById(review.ProductId);
+                var product = await _productService.GetProductByIdAsync(review.ProductId);
+                var dateTime = await _dateTimeHelper.ConvertToUserTimeAsync(product.CreatedOnUtc, DateTimeKind.Utc);
                 var productReviewModel = new CustomerProductReviewModel
                 {
                     Title = review.Title,
                     ProductId = product.Id,
-                    ProductName = _localizationService.GetLocalized(product, p => p.Name),
-                    ProductSeName = _urlRecordService.GetSeName(product),
+                    ProductName = await _localizationService.GetLocalizedAsync(product, p => p.Name),
+                    ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                     Rating = review.Rating,
                     ReviewText = review.ReviewText,
                     ReplyText = review.ReplyText,
-                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
+                    WrittenOnStr = dateTime.ToString("g")
                 };
 
                 if (_catalogSettings.ProductReviewsMustBeApproved)
                 {
                     productReviewModel.ApprovalStatus = review.IsApproved
-                        ? _localizationService.GetResource("Account.CustomerProductReviews.ApprovalStatus.Approved")
-                        : _localizationService.GetResource("Account.CustomerProductReviews.ApprovalStatus.Pending");
+                        ? await _localizationService.GetResourceAsync("Account.CustomerProductReviews.ApprovalStatus.Approved")
+                        : await _localizationService.GetResourceAsync("Account.CustomerProductReviews.ApprovalStatus.Pending");
                 }
                 productReviews.Add(productReviewModel);
             }
@@ -313,9 +301,9 @@ namespace Nop.Web.Controllers.Api.Security
         #region Category
 
         [HttpGet("category-list")]
-        public IActionResult GetAllCategories()
+        public async Task<IActionResult> GetAllCategories()
         {
-            var categories = _catalogModelFactory.PrepareCategorySimpleModels();
+            var categories = await _catalogModelFactory.PrepareCategorySimpleModelsAsync();
             if (categories.Count > 0)
             {
                 var result = from cat in categories
@@ -338,7 +326,7 @@ namespace Nop.Web.Controllers.Api.Security
         #region Product
 
         [HttpGet("product-search-term-autocomplete")]
-        public virtual IActionResult SearchTermAutoComplete(string term)
+        public virtual async Task<IActionResult> SearchTermAutoComplete(string term)
         {
             if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
@@ -347,10 +335,10 @@ namespace Nop.Web.Controllers.Api.Security
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
 
-            var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
+            var products = await _productService.SearchProductsAsync(
+                storeId: _storeContext.GetCurrentStore().Id,
                 keywords: term,
-                languageId: _workContext.WorkingLanguage.Id,
+                languageId: _workContext.GetWorkingLanguageAsync().Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);
 
@@ -364,14 +352,9 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("product-search")]
-        public IActionResult SearchProducts(SearchProductByFilters searchModel)
+        public async Task<IActionResult> SearchProducts(SearchProductByFilters searchModel)
         {
-            var products = _productService.SearchProducts(keywords: searchModel.Keyword,
-                vegetarian: searchModel.Vegetarian, vegan: searchModel.Vegan,
-                gluttenFree: searchModel.GluttenFree, halal: searchModel.Halal,
-                allergyFriendly: searchModel.AllergyFriendly, wellPacked: searchModel.WellPacked,
-                sustainablePackaging: searchModel.SustainablePackaging, fastAndReliable: searchModel.FastAndReliable,
-                excellentValue: searchModel.ExcellentValue, followOrderNotes: searchModel.FollowOrderNotes);
+            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword);
             if (!products.Any())
                 return Ok(new { success = true, message = "No Product Found" });
 
@@ -381,9 +364,9 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpGet("product/{id}")]
-        public IActionResult GetProductById(int id, int updatecartitemid = 0)
+        public async Task<IActionResult> GetProductById(int id, int updatecartitemid = 0)
         {
-            var product = _productService.GetProductById(id);
+            var product = await _productService.GetProductByIdAsync(id);
             if (product == null || product.Deleted)
                 return Ok(new { success = false, message = "No product found" });
 
@@ -391,63 +374,62 @@ namespace Nop.Web.Controllers.Api.Security
                 //published?
                 (!product.Published && !_catalogSettings.AllowViewUnpublishedProductPage) ||
                 //ACL (access control list) 
-                !_aclService.Authorize(product) ||
+                !await _aclService.AuthorizeAsync(product) ||
                 //Store mapping
-                !_storeMappingService.Authorize(product) ||
+                !await _storeMappingService.AuthorizeAsync(product) ||
                 //availability dates
                 !_productService.ProductIsAvailable(product);
             //Check whether the current user has a "Manage products" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (notAvailable && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return Ok(new { success = false, message = "No product found" });
 
             //update existing shopping cart or wishlist  item?
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
-                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
+                var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), storeId: _storeContext.GetCurrentStore().Id);
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
             }
 
             //save as recently viewed
-            _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
+            await _recentlyViewedProductsService.AddProductToRecentlyViewedListAsync(product.Id);
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewProduct",
-                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name), product);
+            await _customerActivityService.InsertActivityAsync("PublicStore.ViewProduct",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewProduct"), product.Name), product);
 
             //model
-            var model = _productModelFactory.PrepareProductDetailsModel(product, updatecartitem, false);
+            var model = await _productModelFactory.PrepareProductDetailsModelAsync(product, updatecartitem, false);
             return Ok(model);
         }
 
         [HttpGet("product-list/category/{categoryId}")]
-        public IActionResult GetProductList(int categoryId, CatalogPagingFilteringModel command, string brandFilter = "")
+        public async Task<IActionResult> GetProductList(int categoryId, CatalogProductsCommand command, string brandFilter = "")
         {
-            var category = _categoryService.GetCategoryById(categoryId);
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
             if (category == null || category.Deleted)
                 return Ok(new { success = false, message = "No category found." });
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewCategory",
-                string.Format(_localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
+            await _customerActivityService.InsertActivityAsync("PublicStore.ViewCategory",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
 
-            var model = _catalogModelFactory.PrepareCategoryModel(category, command);
-            PreparePagination(model.PagingFilteringContext, command);
+            var model = await _catalogModelFactory.PrepareCategoryModelAsync(category, command);
             return Ok(model);
         }
 
         [HttpGet("addtocart/productId/{productId}/quantity/{quantity}")]
-        public virtual IActionResult AddProductToCart(int productId = 0, int quantity = 0)
+        public virtual async Task<IActionResult> AddProductToCart(int productId = 0, int quantity = 0)
         {
             if (quantity <= 0)
                 return Ok(new { success = false, message = "Quantity should be > 0" });
 
-            var customer = _workContext.CurrentCustomer;
+            var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
                 return Ok(new { success = false, message = "invalid customer" });
 
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
             if (product == null)
                 return Ok(new { success = false, message = "No product found" });
 
@@ -457,13 +439,13 @@ namespace Nop.Web.Controllers.Api.Security
 
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
-            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, cartType, _storeContext.CurrentStore.Id);
-            var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), cartType, _storeContext.GetCurrentStore().Id);
+            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(cart, cartType, product);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
-            var addToCartWarnings = _shoppingCartService
-                .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
-                product, _storeContext.CurrentStore.Id, string.Empty,
+            var addToCartWarnings = await _shoppingCartService
+                .GetShoppingCartItemWarningsAsync(await _workContext.GetCurrentCustomerAsync(), cartType,
+                product, _storeContext.GetCurrentStore().Id, string.Empty,
                 decimal.Zero, null, null, quantityToValidate, false, shoppingCartItem?.Id ?? 0, true, false, false, false);
             if (addToCartWarnings.Any())
             {
@@ -476,10 +458,10 @@ namespace Nop.Web.Controllers.Api.Security
             }
 
             //now let's try adding product to the cart (now including product attribute validation, etc)
-            addToCartWarnings = _shoppingCartService.AddToCart(customer: _workContext.CurrentCustomer,
+            addToCartWarnings = await _shoppingCartService.AddToCartAsync(customer: await _workContext.GetCurrentCustomerAsync(),
                 product: product,
                 shoppingCartType: cartType,
-                storeId: _storeContext.CurrentStore.Id,
+                storeId: _storeContext.GetCurrentStore().Id,
                 quantity: quantity);
             if (addToCartWarnings.Any())
             {
@@ -488,7 +470,7 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(string.Join(" , ", addToCartWarnings.ToArray().ToString()));
             }
 
-            return Ok(_localizationService.GetResource("Product.Added.Successfully.To.Cart"));
+            return Ok(await _localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart"));
         }
 
         #endregion
@@ -496,26 +478,27 @@ namespace Nop.Web.Controllers.Api.Security
         #region Product Review
 
         [HttpGet("get-product-reviews/product/{productId}")]
-        public virtual IActionResult ProductReviews(int productId)
+        public virtual async Task<IActionResult> ProductReviews(int productId)
         {
-            var product = _productService.GetProductById(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
+            var curCus = await _workContext.GetCurrentCustomerAsync();
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
                 return Ok(new { success = false, message = "Product Not Found" });
 
             var model = new ProductReviewsModel();
-            model = _productModelFactory.PrepareProductReviewsModel(model, product);
+            model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
             //only registered users can leave reviews
-            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-                return Ok(new { success = false, message = _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews") });
+            if (await _customerService.IsGuestAsync(curCus) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews") });
 
             if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
             {
-                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                var hasCompletedOrders = await _orderService.SearchOrdersAsync(customerId: curCus.Id,
                     productId: productId,
                     osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1).Any();
-                if (!hasCompletedOrders)
-                    return Ok(new { success = false, message = _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing") });
+                    pageSize: 1);
+                if (!hasCompletedOrders.Any())
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing") });
             }
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
@@ -523,23 +506,24 @@ namespace Nop.Web.Controllers.Api.Security
         }
 
         [HttpPost("add-product-reviews")]
-        public virtual IActionResult ProductReviewsAdd([FromBody] AddProductReviewApiModel model)
+        public virtual async Task<IActionResult> ProductReviewsAdd([FromBody] AddProductReviewApiModel model)
         {
-            var product = _productService.GetProductById(model.Id);
+            var product = await _productService.GetProductByIdAsync(model.Id);
+            var curCus = await _workContext.GetCurrentCustomerAsync();
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
                 return Ok(new { success = false, message = "Product Not Found" });
 
-            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-                return Ok(new { success = false, message = _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews") });
+            if (await _customerService.IsGuestAsync(curCus) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews") });
 
             if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
             {
-                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                var hasCompletedOrders = await _orderService.SearchOrdersAsync(customerId: curCus.Id,
                     productId: model.Id,
                     osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1).Any();
-                if (!hasCompletedOrders)
-                    return Ok(new { success = false, message = _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing") });
+                    pageSize: 1);
+                if (!hasCompletedOrders.Any())
+                    return Ok(new { success = false, message = _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing") });
             }
 
             if (ModelState.IsValid)
@@ -553,7 +537,7 @@ namespace Nop.Web.Controllers.Api.Security
                 var productReview = new ProductReview
                 {
                     ProductId = product.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
+                    CustomerId = curCus.Id,
                     Title = model.Title,
                     ReviewText = model.ReviewText,
                     Rating = rating,
@@ -561,41 +545,41 @@ namespace Nop.Web.Controllers.Api.Security
                     HelpfulNoTotal = 0,
                     IsApproved = isApproved,
                     CreatedOnUtc = DateTime.UtcNow,
-                    StoreId = _storeContext.CurrentStore.Id,
+                    StoreId = _storeContext.GetCurrentStore().Id,
                 };
 
-                _productService.InsertProductReview(productReview);
-                _productService.UpdateProduct(product);
+                await _productService.InsertProductReviewAsync(productReview);
+                await _productService.UpdateProductAsync(product);
 
                 //update product totals
-                _productService.UpdateProductReviewTotals(product);
+                await _productService.UpdateProductReviewTotalsAsync(product);
 
                 //notify store owner
                 if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                    _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendProductReviewNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddProductReview",
-                    string.Format(_localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
+               await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
+                    string.Format(await  _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
 
                 //raise event
                 if (productReview.IsApproved)
-                    _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+                    await _eventPublisher.PublishAsync(new ProductReviewApprovedEvent(productReview));
 
                 if (!isApproved)
-                    return Ok(new { success = true, message = _localizationService.GetResource("Reviews.SeeAfterApproving") });
+                    return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Reviews.SeeAfterApproving") });
                 else
-                    return Ok(new { success = true, message = _localizationService.GetResource("Reviews.SuccessfullyAdded") });
+                    return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Reviews.SuccessfullyAdded") });
             }
 
             return Ok(new { success = false });
         }
 
         [HttpGet("get-product-reviews")]
-        public virtual IActionResult CustomerProductReviews()
+        public virtual async Task<IActionResult> CustomerProductReviews()
         {
-            var customer = _workContext.CurrentCustomer;
-            if (_customerService.IsGuest(customer))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer))
                 return Ok(new { success = false, message = "Customer Not Found" });
 
             var model = PrepareCustomerProductReviewsModel(0, customer.Id);
@@ -607,9 +591,9 @@ namespace Nop.Web.Controllers.Api.Security
         #region Topic
 
         [HttpGet("get-topic-by-systemname")]
-        public virtual IActionResult GetTopicBySytemName(string systemName)
+        public virtual async Task<IActionResult> GetTopicBySytemName(string systemName)
         {
-            var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
+            var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);
             return Ok(model);
         }
 
@@ -619,10 +603,10 @@ namespace Nop.Web.Controllers.Api.Security
         #region Setting
 
         [HttpGet("get-schedule-dates")]
-        public IActionResult GetScheduleDates()
+        public async Task<IActionResult> GetScheduleDates()
         {
             string[] dates = null;
-            var orderscheduleDate1 = _localizationService.GetLocaleStringResourceByName("orderschedule.Date ", 1, false);
+            var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", 1, false);
             if (orderscheduleDate1 != null)
                 dates = orderscheduleDate1.ResourceValue.Split(',');
 

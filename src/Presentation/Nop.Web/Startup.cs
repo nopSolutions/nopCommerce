@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using Autofac;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -101,7 +99,7 @@ namespace Nop.Web
                 };
             });
             services.AddTokenAuthentication(_configuration);
-            (_engine, _nopConfig) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
+            (_engine, _appSettings) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
         }
 
         /// <summary>

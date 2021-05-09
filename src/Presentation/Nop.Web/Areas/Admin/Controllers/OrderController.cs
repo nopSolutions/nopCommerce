@@ -1794,14 +1794,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Schedule Date
 
-        public virtual IActionResult ScheduleDate()
+        public virtual async Task<IActionResult> ScheduleDate()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             var model = new OrderScheduleModel();
 
-            var orderscheduleDate1 = _localizationService.GetLocaleStringResourceByName("orderschedule.Date ", 1, false);
+            var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", 1, false);
             if (orderscheduleDate1 != null)
             {
                 var value = orderscheduleDate1.ResourceValue.Split(',');
@@ -1813,9 +1813,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ScheduleDate(OrderScheduleModel model)
+        public async Task<IActionResult> ScheduleDate(OrderScheduleModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             if (!String.IsNullOrWhiteSpace(model.ScheduleDate1))
@@ -1831,7 +1831,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.ScheduleDate3 = model.ScheduleDate3.Trim();
             }
 
-            var orderscheduleDate = _localizationService.GetLocaleStringResourceByName("orderschedule.Date", 1, false);
+            var orderscheduleDate = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", 1, false);
             if (orderscheduleDate != null)
             {
                 if (String.IsNullOrWhiteSpace(model.ScheduleDate1) && String.IsNullOrWhiteSpace(model.ScheduleDate2) && String.IsNullOrWhiteSpace(model.ScheduleDate3))
@@ -1839,7 +1839,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                     orderscheduleDate.ResourceValue = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
 
-                _localizationService.UpdateLocaleStringResource(orderscheduleDate);
+                await _localizationService.UpdateLocaleStringResourceAsync(orderscheduleDate);
             }
             else
             {
@@ -1849,7 +1849,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     resource.ResourceValue = "-";
                 else
                     resource.ResourceValue = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
-                _localizationService.InsertLocaleStringResource(resource);
+                await _localizationService.InsertLocaleStringResourceAsync(resource);
             }
 
             return RedirectToAction("ScheduleDate");

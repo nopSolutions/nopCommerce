@@ -77,7 +77,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
                 RouteValues = new RouteValueDictionary() { { "Area", "Admin" } }
             };
 
-            var SubMenuItem = new SiteMapNode()
+            var subMenuItem = new SiteMapNode()
             {
                 Title = "Configure",
                 Url = _webHelper.GetStoreLocation() + "Admin/Authentication/Configure",
@@ -85,7 +85,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
                 IconClass = "fa fa-genderless",
                 RouteValues = new RouteValueDictionary() { { "Area", "Admin" } },
             };
-            menuItemBuilder.ChildNodes.Add(SubMenuItem);
+            menuItemBuilder.ChildNodes.Add(subMenuItem);
             return menuItemBuilder;
         }
 
@@ -167,16 +167,16 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
                 });
             }
 
-            if (await _scheduleTaskService.GetTaskByTypeAsync(UnpublishAfterHour.UNPUBLISH_AFTER_HOUR_TASK) == null)
-            {
-                await _scheduleTaskService.InsertTaskAsync(new Core.Domain.Tasks.ScheduleTask
-                {
-                    Enabled = false,
-                    Name = "Unpublish After Hour task",
-                    Type = UnpublishAfterHour.UNPUBLISH_AFTER_HOUR_TASK,
-                    Seconds = 5 * 60
-                });
-            }
+            //if (await _scheduleTaskService.GetTaskByTypeAsync(UnpublishAfterHour.UNPUBLISH_AFTER_HOUR_TASK) == null)
+            //{
+            //    await _scheduleTaskService.InsertTaskAsync(new Core.Domain.Tasks.ScheduleTask
+            //    {
+            //        Enabled = false,
+            //        Name = "Unpublish After Hour task",
+            //        Type = UnpublishAfterHour.UNPUBLISH_AFTER_HOUR_TASK,
+            //        Seconds = 5 * 60
+            //    });
+            //}
 
             await base.InstallAsync();
         }

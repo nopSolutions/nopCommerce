@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    public partial class OrderScheduleModel : BaseNopEntityModel
+    public partial class OrderScheduleModel
     {
         [NopResourceDisplayName("Admin.Orders.Fields.ScheduleDate1")]
         public string ScheduleDate1 { get; set; }
