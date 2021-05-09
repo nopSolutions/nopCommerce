@@ -109,6 +109,7 @@ namespace Nop.Web.Controllers.Api.Security
                         if (customer == null)
                             return Ok(new { success = false, message = "'User' could not be loaded" });
 
+                        // FIXME: change storeid argument, get from Customer.RegisteredInStore?
                         await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.PushToken, model.PushToken, 1);
 
                         await _workContext.SetCurrentCustomerAsync(customer);
