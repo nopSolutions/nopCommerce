@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -27,6 +26,7 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using System;
@@ -39,7 +39,7 @@ namespace Nop.Web.Controllers.Api.Security
 {
     [Produces("application/json")]
     [Route("api/catalog")]
-    [Authorize]
+    [AuthorizeAttribute]
     public class CatalogApiController : BaseApiController
     {
         #region Fields
@@ -227,6 +227,7 @@ namespace Nop.Web.Controllers.Api.Security
                     FollowOrderNotes = product.FollowOrderNotes,
                     VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
                 };
+
                 models.Add(model);
             }
 
@@ -359,7 +360,7 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(new { success = true, message = "No Product Found" });
 
             //model
-            var model = PrepareApiProductOverviewModels(products);
+            var model = await PrepareApiProductOverviewModels(products);
             return Ok(model);
         }
 
@@ -621,19 +622,6 @@ namespace Nop.Web.Controllers.Api.Security
         {
             //Custom Fields
             public string Keyword { get; set; }
-            public bool Vegetarian { get; set; }
-            public bool Vegan { get; set; }
-            public bool GluttenFree { get; set; }
-            public bool Halal { get; set; }
-            public bool AllergyFriendly { get; set; }
-            public bool WellPacked { get; set; }
-            public bool SustainablePackaging { get; set; }
-            public bool FastAndReliable { get; set; }
-            public bool ExcellentValue { get; set; }
-            public bool FollowOrderNotes { get; set; }
-            public bool Minimum { get; set; }
-            public bool Average { get; set; }
-            public bool Expensive { get; set; }
         }
         public partial class ProductReviewsApiModel : BaseEntity
         {

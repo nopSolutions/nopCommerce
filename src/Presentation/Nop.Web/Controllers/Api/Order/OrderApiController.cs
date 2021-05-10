@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -17,13 +16,14 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers.Api.Security
 {
     [Produces("application/json")]
     [Route("api/order")]
-    [Authorize]
+    [AuthorizeAttribute]
     public class OrderApiController : BaseApiController
     {
         #region Fields
@@ -137,29 +137,41 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(string.Join(" , ", addToCartWarnings.ToArray().ToString()));
             }
 
-            return Ok(_localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart"));
+            return Ok(await _localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart"));
         }
 
-        [HttpGet("check-products/{productids}")]
-        public async Task<IActionResult> CheckProducts(string productids)
+        [HttpGet("check-products/{productids}/{quantities}")]
+        public async Task<IActionResult> CheckProducts(string productids, string quantities)
         {
-            var errorList = new List<object>();
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var carts = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, _storeContext.GetCurrentStore().Id);
+            foreach (var item in carts)
+                await _shoppingCartService.DeleteShoppingCartItemAsync(item.Id);
+
+            var errorList = new List<object>();
             int[] ids = null;
             if (!string.IsNullOrEmpty(productids))
                 ids = Array.ConvertAll(productids.Split(","), s => int.Parse(s));
 
-            var products = await  _productService.GetProductsByIdsAsync(ids);
+            int[] qtys = null;
+            if (!string.IsNullOrEmpty(quantities))
+                qtys = Array.ConvertAll(quantities.Split(","), s => int.Parse(s));
+
+            var counter = 0;
+            var products = await _productService.GetProductsByIdsAsync(ids);
             foreach (var product in products)
             {
                 if (!product.Published || product.Deleted)
                     errorList.Add(new { Id = product, message = product.Name + " is not published" });
 
                 if (!errorList.Any())
-                    await AddProductToCart(product.Id, 1);
+                    await AddProductToCart(product.Id, qtys[counter]);
+
+                counter++;
             }
 
             var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, _storeContext.GetCurrentStore().Id);
+
             var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false);
             if (errorList.Any())
                 return Ok(new { success = false, errorList, cartTotal });
@@ -264,7 +276,7 @@ namespace Nop.Web.Controllers.Api.Security
                             orderItemModel.SubTotal = await _priceFormatter.FormatPriceAsync(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
                         }
 
-                         //downloadable products
+                        //downloadable products
                         if (await _orderService.IsDownloadAllowedAsync(orderItem))
                             orderItemModel.DownloadId = product.DownloadId;
                         if (await _orderService.IsLicenseDownloadAllowedAsync(orderItem))
@@ -397,8 +409,8 @@ namespace Nop.Web.Controllers.Api.Security
 
                     foreach (var orderItem in orderItems)
                     {
-                        var product = await  _productService.GetProductByIdAsync(orderItem.ProductId);
-                        var vendor = await  _vendorService.GetVendorByProductIdAsync(product.Id);
+                        var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                        var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                         var orderItemModel = new OrderDetailsModel.OrderItemModel
                         {
                             Id = orderItem.Id,
