@@ -167,17 +167,6 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication
                 });
             }
 
-            //if (await _scheduleTaskService.GetTaskByTypeAsync(UnpublishAfterHour.UNPUBLISH_AFTER_HOUR_TASK) == null)
-            //{
-            //    await _scheduleTaskService.InsertTaskAsync(new Core.Domain.Tasks.ScheduleTask
-            //    {
-            //        Enabled = false,
-            //        Name = "Unpublish After Hour task",
-            //        Type = UnpublishAfterHour.UNPUBLISH_AFTER_HOUR_TASK,
-            //        Seconds = 5 * 60
-            //    });
-            //}
-
             await base.InstallAsync();
         }
 
