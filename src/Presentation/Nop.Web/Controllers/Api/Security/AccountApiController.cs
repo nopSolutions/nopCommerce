@@ -84,7 +84,6 @@ namespace Nop.Web.Controllers.Api.Security
         {
             public string Email { get; set; }
             public string Password { get; set; }
-            public string PushToken { get; set; }
         }
 
         public class LogoutApiModel
@@ -109,9 +108,6 @@ namespace Nop.Web.Controllers.Api.Security
                         if (customer == null)
                             return Ok(new { success = false, message = "'User' could not be loaded" });
 
-                        // FIXME: change storeid argument, get from Customer.RegisteredInStore?
-                        await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.PushToken, model.PushToken, 1);
-
                         await _workContext.SetCurrentCustomerAsync(customer);
 
                         //migrate shopping cart
@@ -121,7 +117,7 @@ namespace Nop.Web.Controllers.Api.Security
                         await _authenticationService.SignInAsync(customer, false);
 
                         var jwt = new JwtService(_config);
-                        var token = jwt.GenerateSecurityToken(customer.Email);
+                        var token = jwt.GenerateSecurityToken(customer.Email, customer.Id);
 
                         var shippingAddress = customer.ShippingAddressId.HasValue ? await _addressService.GetAddressByIdAsync(customer.ShippingAddressId.Value) : null;
 
@@ -153,8 +149,6 @@ namespace Nop.Web.Controllers.Api.Security
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
                 return Ok(new { success = false, message = "'customer' could not be loaded" });
-
-            await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.PushToken, null, 1);
 
             //standard logout 
             await _authenticationService.SignOutAsync();

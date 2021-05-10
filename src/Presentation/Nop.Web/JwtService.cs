@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Nop.Web
 {
@@ -20,34 +21,23 @@ namespace Nop.Web
             _expDate = config.GetSection("JwtConfig").GetSection("expirationInMinutes").Value;
         }
 
-        public string GenerateSecurityToken(string email)
+        public string GenerateSecurityToken(string email, int customerId)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var permClaims = new List<Claim>();
+            permClaims.Add(new Claim("Email", email));
+            permClaims.Add(new Claim("UserId", customerId.ToString()));
+
             var token = new JwtSecurityToken(_issuer,
               _issuer,
+              claims: permClaims,
               null,
               expires: DateTime.Now.AddMinutes(120),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-            //var tokenHandler = new JwtSecurityTokenHandler();
-            //var key = Encoding.ASCII.GetBytes(_secret);
-            //var tokenDescriptor = new SecurityTokenDescriptor
-            //{
-            //    Subject = new ClaimsIdentity(new[]
-            //    {
-            //        new Claim(ClaimTypes.Email, email)
-            //    }),
-            //    Expires = DateTime.UtcNow.AddMinutes(double.Parse(_expDate)),
-            //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-
-            //};
-
-            //var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            //return tokenHandler.WriteToken(token);
 
         }
     }

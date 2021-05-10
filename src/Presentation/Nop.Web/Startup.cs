@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Services.Customers;
 using Nop.Web.Framework.Infrastructure.Extensions;
 using Nop.Web.Middleware;
 
@@ -99,6 +100,13 @@ namespace Nop.Web
                 };
             });
             services.AddTokenAuthentication(_configuration);
+
+            
+            // configure strongly typed settings object
+            services.Configure<JwtSettings>(_configuration.GetSection("JwtSettings"));
+
+            // configure DI for application services
+            services.AddScoped<ICustomerService, CustomerService>();
             (_engine, _appSettings) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
         }
 
@@ -125,7 +133,14 @@ namespace Nop.Web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Snacks LLC API");
                 c.RoutePrefix = "swagger";
             });
+             // global cors policy
+            application.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
+            // custom jwt auth middleware
+            application.UseMiddleware<JwtMiddleware>();
             application.ConfigureRequestPipeline();
             application.StartEngine();
         }

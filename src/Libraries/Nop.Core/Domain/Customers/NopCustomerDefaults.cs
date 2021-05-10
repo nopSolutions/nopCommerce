@@ -290,8 +290,6 @@
         /// </summary>
         public static string CloseConfigurationStepsAttribute => "CloseConfigurationSteps";
 
-        public static string PushToken => "PushToken";
-
         #endregion
     }
 }
