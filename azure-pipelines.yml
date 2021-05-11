@@ -30,43 +30,8 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: |
           $(tag)
+          $(Build.BuildNumber)
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'manifests'
         path: 'manifests'
-
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-  jobs:
-  - deployment: Deploy
-    displayName: Deploy job
-    pool:
-      vmImage: ubuntu-latest
-    environment: 'mysnacks'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifactName: 'manifests'
-              downloadPath: '$(System.ArtifactsDirectory)/manifests'
-          - task: Bash@3
-            inputs:
-              targetType: 'inline'
-              script: |
-                # Write your commands here
-                echo "Echoing contents of file"
-                cat "$(System.ArtifactsDirectory)/manifests/deployment.yml"
-
-          - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
-            inputs:
-              action: deploy
-              kubernetesServiceConnection: 'mysnacks-mysnacks-1620423356138'
-              manifests: |
-                $(System.ArtifactsDirectory)/manifests/deployment.yml
-                $(System.ArtifactsDirectory)/manifests/service.yml
-              containers: |
-                '$(imageRepository):$(tag)'
