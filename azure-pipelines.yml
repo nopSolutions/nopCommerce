@@ -30,6 +30,16 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: $(tag)
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          $deployment = Get-Content -Path manifests/deployment.yml
+          Write-Host "Content before replace: $deployment"
+          $deployment = $deployment -replace 'image:\s*\S+', 'image: $(imageRepository):$(tag)'
+          Write-Host "Content after replace: $deployment"
+          Set-Content -Path manifests/deployment.yml -Value $deployment
+        pwsh: true
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'manifests'
