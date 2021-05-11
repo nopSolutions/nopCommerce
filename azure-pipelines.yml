@@ -9,7 +9,8 @@ resources:
 - repo: self
 
 variables:
-  tag: 'staging'
+  tag: |
+    '$(Build.BuildNumber)'
   servicePort: 5000
   imageRepository: 'eisajanyan/nopcommerce'
 
@@ -28,9 +29,7 @@ stages:
         repository: '$(imageRepository)'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
-        tags: |
-          $(tag)
-          $(Build.BuildNumber)
+        tags: $(tag)
     - task: PublishPipelineArtifact@1
       inputs:
         artifactName: 'manifests'
