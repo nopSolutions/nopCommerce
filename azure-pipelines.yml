@@ -9,8 +9,7 @@ resources:
 - repo: self
 
 variables:
-  tag: |
-    '$(Build.BuildNumber)'
+  tag: '$(Build.BuildNumber)'
   servicePort: 5000
   imageRepository: 'eisajanyan/nopcommerce'
 
