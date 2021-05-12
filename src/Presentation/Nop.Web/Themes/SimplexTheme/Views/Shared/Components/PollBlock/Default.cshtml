@@ -1,0 +1,9 @@
+﻿@model PollModel
+<div class="block block-poll well box-shadow-wrapper">
+    <div class="title main-title">
+        <strong>@T("Polls.Title")</strong>
+    </div>
+    <div class="listbox">
+        @await Html.PartialAsync("_Poll", Model)
+    </div>
+</div>

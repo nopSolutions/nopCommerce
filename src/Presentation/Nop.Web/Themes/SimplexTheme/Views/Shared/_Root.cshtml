@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "_Root.Head";
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
+@await Html.PartialAsync("_Notifications")
+<div class="master-wrapper-page">
+    @await Html.PartialAsync("_Header")
+    <script asp-location="Footer">
+        var localized_data = {
+            AjaxCartFailure: "@T("AjaxCart.Failure")"
+        };
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
+    </script>
+    <section class="page-home wapper">
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentAfter })
+    </section>
+    @await Component.InvokeAsync("Footer")
+    @* Use this content for back to top page scrolling *@
+    <div id="backTop"></div>
+</div>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyEndHtmlTagBefore })
+

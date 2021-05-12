@@ -1,0 +1,80 @@
+Release Date: March 30, 2021
+nopAccelerate Simplex Theme version: 2.5.0
+
+Added Feature
+
+Support for nopCommerce 4.40 added
+
+==========================================
+
+Release Date: August 27, 2020
+nopAccelerate Simplex Theme version: 2.4.0
+
+Added Feature
+
+Added support for RTL from nopCommerce 4.30
+
+==========================================
+
+Release Date: July 1, 2020
+nopAccelerate Simplex Theme version: 2.3.0
+
+Added Feature
+
+Support for nopCommerce 4.30 added
+
+==========================================
+
+Release Date: August 21, 2019
+nopAccelerate Simplex Theme version: 2.2.0
+
+Added Feature
+
+Support for nopCommerce 4.20 added
+
+==========================================
+
+Release Date: August 28, 2018
+nopAccelerate Simplex Theme version: 2.1.0
+
+Added Feature
+
+Support for nopCommerce 4.10 added
+
+==========================================
+
+Release Date: November 28, 2017
+nopAccelerate Simplex Theme version: 2.0.0
+
+Added Feature
+
+Support for nopCommerce 4.0 added
+
+==========================================
+
+Release Date: March 17, 2017
+nopAccelerate Simplex Theme version: 1.2.0
+
+Added Feature
+
+Support for nopCommerce 3.90 added
+
+==========================================
+
+Release Date: December 9, 2016
+nopAccelerate Simplex Theme version: 1.1.0
+
+Added Feature
+
+Support for nopCommerce 3.80 added
+Updated FontAwesome to version 4.7.0
+Updated Bootstrap to version 3.3.7
+
+==========================================
+
+Release Date: December 9, 2016
+nopAccelerate Simplex Theme version: 1.0.0
+
+Release nopAccelerate Simplex Theme Initial version 1.0.0.
+
+==========================================

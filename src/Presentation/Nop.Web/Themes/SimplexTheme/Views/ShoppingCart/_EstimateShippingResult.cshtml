@@ -1,0 +1,28 @@
+﻿@model EstimateShippingResultModel
+@if (Model.ShippingOptions.Count > 0)
+            {
+    <ul class="shipping-results">
+        @foreach (var shippingOption in Model.ShippingOptions)
+        {
+            <li class="shipping-option-item">
+                <strong class="option-name">
+                    @T("ShoppingCart.EstimateShipping.ShippingOptionWithRate", shippingOption.Name, shippingOption.Price)
+                </strong>
+                <span class="option-description">
+                    @Html.Raw(shippingOption.Description)
+                </span>
+            </li>
+        }
+    </ul>
+}
+else if (Model.Warnings.Count > 0)
+{
+    <div class="message-error">
+        <ul>
+            @foreach (var error in Model.Warnings)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}

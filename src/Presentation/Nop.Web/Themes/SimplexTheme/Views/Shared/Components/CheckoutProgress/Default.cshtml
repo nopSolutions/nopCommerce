@@ -1,0 +1,25 @@
+﻿@model CheckoutProgressModel
+<div class="order-progress">
+    <ul class="nav nav-pills">
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutProgressBefore })
+        <li class="active-step">
+            <a class="cart-progress-icon" @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("ShoppingCart")}\"") : null)><span class="progress-icon"><i class="fa fa-cart-plus"></i></span> <span class="progress-test">@T("Checkout.Progress.Cart")</span></a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Address || Model.CheckoutProgressStep == CheckoutProgressStep.Shipping || Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a class="address-progress-icon" @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutBillingAddress")}\"") : null)><span class="progress-icon"><i class="fa fa-map-marker"></i></span> <span class="progress-test">@T("Checkout.Progress.Address")</span></a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Shipping || Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a class="shipping-progress-icon" @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutShippingMethod")}\"") : null)><span class="progress-icon"><i class="fa fa-ship"></i></span> <span class="progress-test">@T("Checkout.Progress.Shipping")</span></a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a class="payment-progress-icon" @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutPaymentMethod")}\"") : null)><span class="progress-icon"><i class="fa fa-credit-card-alt"></i></span> <span class="progress-test">@T("Checkout.Progress.Payment")</span></a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a class="confirm-progress-icon" @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw($" href=\"{Url.RouteUrl("CheckoutConfirm")}\"") : null)><span class="progress-icon"><i class="fa fa-shopping-bag"></i></span> <span class="progress-test">@T("Checkout.Progress.Confirm")</span></a>
+        </li>
+        <li @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>
+            <a class="complete-progress-icon"><span class="progress-icon"><i class="fa fa-check-circle"></i></span> <span class="progress-test">@T("Checkout.Progress.Complete")</span></a>
+        </li>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutProgressAfter })
+    </ul>
+</div>
