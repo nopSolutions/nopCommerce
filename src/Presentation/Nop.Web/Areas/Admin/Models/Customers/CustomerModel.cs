@@ -44,6 +44,15 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         #region Properties
 
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Offers")]
+        public bool Offers { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Rewards")]
+        public bool Rewards { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.EatsPass")]
+        public bool EatsPass { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Other")]
+        public bool Other { get; set; }
+
         public bool UsernamesEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Username")]

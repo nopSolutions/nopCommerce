@@ -84,11 +84,6 @@ namespace Nop.Web.Controllers.Api.Security
         {
             public string Email { get; set; }
             public string Password { get; set; }
-        }
-
-        public class LogoutApiModel
-        {
-            public int CustomerId { get; set; }
             public string PushToken { get; set; }
         }
 
@@ -107,6 +102,9 @@ namespace Nop.Web.Controllers.Api.Security
                         var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
                         if (customer == null)
                             return Ok(new { success = false, message = "'User' could not be loaded" });
+
+                        customer.PushToken = "ExponentPushToken[" + model.PushToken + "]";
+                        await _customerService.UpdateCustomerAsync(customer);
 
                         await _workContext.SetCurrentCustomerAsync(customer);
 
@@ -149,6 +147,9 @@ namespace Nop.Web.Controllers.Api.Security
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
                 return Ok(new { success = false, message = "'customer' could not be loaded" });
+
+            customer.PushToken = null;
+            await _customerService.UpdateCustomerAsync(customer);
 
             //standard logout 
             await _authenticationService.SignOutAsync();
