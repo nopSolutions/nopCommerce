@@ -134,10 +134,10 @@ namespace Nop.Core.Domain.Customers
         public int? ShippingAddressId { get; set; }
 
         //custom fields
-        public string PushToken { get; set; }
-        public bool Offers { get; set; }
-        public bool Rewards { get; set; }
-        public bool EatsPass { get; set; }
-        public bool Other { get; set; }
+        //public string PushToken { get; set; }
+        //public bool Offers { get; set; }
+        //public bool Rewards { get; set; }
+        //public bool EatsPass { get; set; }
+        //public bool Other { get; set; }
     }
 }
