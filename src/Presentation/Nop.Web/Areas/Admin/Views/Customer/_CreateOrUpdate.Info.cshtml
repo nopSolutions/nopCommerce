@@ -63,7 +63,7 @@
         </div>
         <div class="col-md-9">
             <div class="input-group">
-                <nop-editor asp-for="Password" autocomplete="new-password"/>
+                <nop-editor asp-for="Password" autocomplete="new-password" />
                 <div class="input-group-append">
                     @if (Model.Id > 0)
                     {
@@ -326,7 +326,7 @@
             <nop-label asp-for="SelectedCustomerRoleIds" />
         </div>
 
-        <div class="col-md-9">            
+        <div class="col-md-9">
             <div class="input-group-append input-group-required">
                 <div class="input-group">
                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
@@ -391,6 +391,42 @@
             <span asp-validation-for="Active"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Offers" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Offers" />
+            <span asp-validation-for="Offers"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Rewards" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Rewards" />
+            <span asp-validation-for="Rewards"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="EatsPass" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EatsPass" />
+            <span asp-validation-for="EatsPass"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Other" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Other" />
+            <span asp-validation-for="Other"></span>
+        </div>
+    </div>s
     @if (!string.IsNullOrEmpty(Model.MultiFactorAuthenticationProvider))
     {
         <div class="form-group row">
@@ -399,7 +435,7 @@
             </div>
             <div class="col-md-9">
                 <div class="input-group">
-                    <nop-editor asp-for="MultiFactorAuthenticationProvider" asp-disabled="true"/>
+                    <nop-editor asp-for="MultiFactorAuthenticationProvider" asp-disabled="true" />
                     <div class="input-group-append">
                         @if (Model.Id > 0)
                         {

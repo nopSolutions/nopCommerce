@@ -132,5 +132,12 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the shipping address identifier
         /// </summary>
         public int? ShippingAddressId { get; set; }
+
+        //custom fields
+        public string PushToken { get; set; }
+        public bool Offers { get; set; }
+        public bool Rewards { get; set; }
+        public bool EatsPass { get; set; }
+        public bool Other { get; set; }
     }
 }
