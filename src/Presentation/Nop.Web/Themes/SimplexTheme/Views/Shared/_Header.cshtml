@@ -374,7 +374,7 @@
                     </div>
                 </div>
                 <div class="col-xs-2 end-xs col-md-6 menu-wrapper">
-                    <a href="https://www.luxstay.com/vi/#" class="menu-mobile--open"><img src="https://www.luxstay.com/icons/menu.svg" width="24" height="24"></a>
+                    <a href="#" class="menu-mobile--open"><img src="https://www.luxstay.com/icons/menu.svg" width="24" height="24"></a>
                     <ul class="menu is-flex end-xs middle-xs">
                         <li class="menu__item is-logo">
                             <!---->
@@ -402,3 +402,16 @@
     </div>
     <div class="header-after"></div>
 </div>
+
+<script>
+    $(function () {
+        /* Menu Mobile */
+        $(".menu-mobile--open").click(function () {
+            $("ul.menu").toggleClass("menu--opened");
+        });
+
+        $(".menu-mobile--close").click(function () {
+            $("ul.menu").removeClass("menu--opened");
+        });
+    });
+</script>
