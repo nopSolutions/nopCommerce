@@ -184,7 +184,7 @@ namespace Nop.Web.Controllers.Api.Security
             return Ok(new { success = true, message = "All products are fine", cartTotal = cartTotal.shoppingCartTotal });
         }
 
-        [HttpPost("order-confirmation")]
+        [HttpPost("order-confirmation/{scheduleDate}")]
         public async Task<IActionResult> OrderConfirmation(string scheduleDate)
         {
             var processPaymentRequest = new ProcessPaymentRequest();
@@ -192,7 +192,7 @@ namespace Nop.Web.Controllers.Api.Security
             _paymentService.GenerateOrderGuid(processPaymentRequest);
             processPaymentRequest.StoreId = _storeContext.GetCurrentStore().Id;
             processPaymentRequest.CustomerId = customer.Id;
-            processPaymentRequest.PaymentMethodSystemName = "Payments.CheckMoneyOrder";
+            processPaymentRequest.PaymentMethodSystemName = "Payments.PurchaseOrder";
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
             if (placeOrderResult.Success)
             {
@@ -201,7 +201,7 @@ namespace Nop.Web.Controllers.Api.Security
 
                 return Ok(new { success = true, message = "Order Placed Successfully" });
             }
-            return Ok(new { success = false, message = "Error while placing order" });
+            return Ok(new { success = false, message = string.Join(", ", placeOrderResult.Errors).ToString() });
         }
 
         [HttpGet("get-todays-orders")]
@@ -209,7 +209,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
-            var perviousOrders = orders.Where(x => x.CreatedOnUtc.Date == DateTime.UtcNow.Date).ToList();
+            var perviousOrders = orders.Where(x => x.ScheduleDate.Date == DateTime.UtcNow.Date).ToList();
             if (perviousOrders.Any())
             {
                 var languageId = _workContext.GetWorkingLanguageAsync().Id;
@@ -219,6 +219,7 @@ namespace Nop.Web.Controllers.Api.Security
                     var orderModel = new CustomerOrderListModel.OrderDetailsModel
                     {
                         Id = order.Id,
+                        ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc),
                         CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
                         OrderStatusEnum = order.OrderStatus,
                         OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
@@ -301,7 +302,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
-            var perviousOrders = orders.Where(x => x.CreatedOnUtc <= DateTime.UtcNow);
+            var perviousOrders = orders.Where(x => x.ScheduleDate.Date <= DateTime.UtcNow.Date);
             if (perviousOrders.Any())
             {
                 var languageId = _workContext.GetWorkingLanguageAsync().Id;
@@ -312,6 +313,7 @@ namespace Nop.Web.Controllers.Api.Security
                     {
                         Id = order.Id,
                         CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
+                        ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc),
                         OrderStatusEnum = order.OrderStatus,
                         OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
                         PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus),
@@ -393,7 +395,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
-            var perviousOrders = orders.Where(x => x.ScheduleDate >= DateTime.UtcNow);
+            var perviousOrders = orders.Where(x => x.ScheduleDate.Date > DateTime.UtcNow.Date);
             if (perviousOrders.Any())
             {
                 var languageId = _workContext.GetWorkingLanguageAsync().Id;
@@ -410,7 +412,7 @@ namespace Nop.Web.Controllers.Api.Security
                         ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus),
                         IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
                         CustomOrderNumber = order.CustomOrderNumber,
-                        ScheduleDate = order.ScheduleDate.ToString()
+                        ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc),
                     };
                     var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                     orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.GetWorkingLanguageAsync().Id);

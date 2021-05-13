@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Models;
@@ -28,7 +28,7 @@ namespace Nop.Web.Models.Order
                 Items = new List<OrderItemModel>();
             }
             public IList<OrderItemModel> Items { get; set; }
-            public string ScheduleDate { get; set; }
+            public DateTime ScheduleDate { get; set; }
             public string CustomOrderNumber { get; set; }
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }

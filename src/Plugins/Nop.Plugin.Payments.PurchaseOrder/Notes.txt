@@ -1,0 +1,32 @@
+﻿Important points when developing plugins
+
+
+- All views (cshtml files) and web.config file should have "Build action" set to "Content" and "Copy to output directory" set to "Copy if newer"
+
+- When you develop a new plugin from scratch, and when a new class library is added to the solution, open its .csproj file (a main project file) in any text editor and replace its content with the following one
+
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework> 
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\PLUGIN_OUTPUT_DIRECTORY</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+	<!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
+    You need to set this parameter to true if your plugin has a nuget package 
+    to ensure that the dlls copied from the NuGet cache to the output of your project-->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>    
+    <ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+  </ItemGroup>
+
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <!-- Delete unnecessary libraries from plugins path -->
+    <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+  </Target>
+</Project>
+
+Replace “PLUGIN_OUTPUT_DIRECTORY” in the code above with your real plugin output directory name. 
+
+It’s not required. But this way we can use a new ASP.NET approach to add third-party references. It was introduced in .NET Core. Furthermore, references from already referenced libraries will be loaded automatically. It’s very convenient.

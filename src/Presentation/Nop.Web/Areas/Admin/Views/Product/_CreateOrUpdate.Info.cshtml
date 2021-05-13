@@ -206,6 +206,10 @@
         $('#@Html.IdFor(model => model.Sku)').on('input change', function () {
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: $(this).val() });
         });
+        $('#Expensive, #Average, #Minimum').change(function () {
+            $('#Expensive, #Average, #Minimum').prop('checked', false);
+            $(this).prop('checked', true);
+        });
     });
     </script>
 
@@ -351,7 +355,7 @@
             <span asp-validation-for="Published"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Vegetarian" />
         </div>
@@ -360,7 +364,7 @@
             <span asp-validation-for="Vegetarian"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Vegan" />
         </div>
@@ -369,7 +373,7 @@
             <span asp-validation-for="Vegan"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="GluttenFree" />
         </div>
@@ -378,7 +382,7 @@
             <span asp-validation-for="GluttenFree"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Halal" />
         </div>
@@ -387,7 +391,7 @@
             <span asp-validation-for="Halal"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AllergyFriendly" />
         </div>
@@ -396,7 +400,7 @@
             <span asp-validation-for="AllergyFriendly"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="WellPacked" />
         </div>
@@ -405,7 +409,7 @@
             <span asp-validation-for="WellPacked"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SustainablePackaging" />
         </div>
@@ -414,7 +418,7 @@
             <span asp-validation-for="SustainablePackaging"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="FastAndReliable" />
         </div>
@@ -423,7 +427,7 @@
             <span asp-validation-for="FastAndReliable"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="ExcellentValue" />
         </div>
@@ -432,7 +436,7 @@
             <span asp-validation-for="ExcellentValue"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="FollowOrderNotes" />
         </div>
@@ -441,7 +445,7 @@
             <span asp-validation-for="FollowOrderNotes"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Minimum" />
         </div>
@@ -450,7 +454,7 @@
             <span asp-validation-for="Minimum"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Average" />
         </div>
@@ -459,7 +463,7 @@
             <span asp-validation-for="Average"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Expensive" />
         </div>
@@ -468,7 +472,7 @@
             <span asp-validation-for="Expensive"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="RibbonEnable" />
         </div>
@@ -477,7 +481,7 @@
             <span asp-validation-for="RibbonEnable"></span>
         </div>
     </div>
-    <div class="form-group" id="pnlRibbon">
+    <div class="form-group row" id="pnlRibbon">
         <div class="col-md-3">
             <nop-label asp-for="RibbonText" />
         </div>
@@ -486,7 +490,7 @@
             <span asp-validation-for="RibbonText"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ProductTags ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.ProductTags ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="ProductTags" />
         </div>

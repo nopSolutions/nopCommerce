@@ -153,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public bool RibbonEnable { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.RibbonText")]
-        public bool RibbonText { get; set; }
+        public string RibbonText { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
