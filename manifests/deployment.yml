@@ -20,3 +20,12 @@ spec:
           env:
           - name: ASPNETCORE_URLS
             value: http://*:5000
+          volumeMounts:
+            - mountPath: /app/App_Data/dataSettings.json
+              name: config
+              subPath: dataSettings.json
+
+      volumes:
+      - name: config
+        configMap:
+          name: mysnacks-datasettings-config
