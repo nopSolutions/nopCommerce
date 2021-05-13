@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
@@ -87,6 +87,7 @@ namespace Nop.Web.Models.Order
             public Guid OrderItemGuid { get; set; }
             public string Sku { get; set; }
             public int ProductId { get; set; }
+            public string ProductPictureUrl { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public string UnitPrice { get; set; }

@@ -85,24 +85,29 @@ namespace Nop.Web.Controllers.Api.Security
 
         #region Order
 
+        public class CartErrorModel
+        {
+            public bool Success { get; set; }
+            public int Id { get; set; }
+            public string Message { get; set; }
+        }
 
-        [HttpGet("addtocart/productId/{productId}/quantity/{quantity}")]
-        public virtual async Task<IActionResult> AddProductToCart(int productId = 0, int quantity = 0)
+        protected virtual async Task<CartErrorModel> AddProductToCart(int productId = 0, int quantity = 0)
         {
             if (quantity <= 0)
-                return Ok(new { success = false, message = "Quantity should be > 0" });
+                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "Quantity should be > 0" });
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
-                return Ok(new { success = false, message = "invalid customer" });
+                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "invalid customer" });
 
             var product = await _productService.GetProductByIdAsync(productId);
             if (product == null)
-                return Ok(new { success = false, message = "No product found" });
+                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "No product found" });
 
             var cartType = (ShoppingCartType)1;
             if (product.OrderMinimumQuantity > quantity)
-                return NotFound("Quantity should be > 0");
+                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "Quantity should be > 0" });
 
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
@@ -117,11 +122,10 @@ namespace Nop.Web.Controllers.Api.Security
             if (addToCartWarnings.Any())
             {
                 if (addToCartWarnings.Contains("The maximum number of distinct products allowed in the cart is 10."))
-                    return Ok("The maximum number of distinct products allowed in the cart is 10.");
-
+                    return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = "The maximum number of distinct products allowed in the cart is 10." });
                 //cannot be added to the cart
                 //let's display standard warnings
-                return Ok(string.Join(" , ", addToCartWarnings.ToArray().ToString()));
+                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = string.Join(" , ", addToCartWarnings).ToString() });
             }
 
             //now let's try adding product to the cart (now including product attribute validation, etc)
@@ -134,11 +138,12 @@ namespace Nop.Web.Controllers.Api.Security
             {
                 //cannot be added to the cart
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
-                return Ok(string.Join(" , ", addToCartWarnings.ToArray().ToString()));
+                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = string.Join(" , ",addToCartWarnings).ToString() });
             }
 
-            return Ok(await _localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart"));
+            return await Task.FromResult(new CartErrorModel { Success = true, Id = productId, Message = await _localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart") });
         }
+
 
         [HttpGet("check-products/{productids}/{quantities}")]
         public async Task<IActionResult> CheckProducts(string productids, string quantities)
@@ -148,7 +153,7 @@ namespace Nop.Web.Controllers.Api.Security
             foreach (var item in carts)
                 await _shoppingCartService.DeleteShoppingCartItemAsync(item.Id);
 
-            var errorList = new List<object>();
+            var errorList = new List<CartErrorModel>();
             int[] ids = null;
             if (!string.IsNullOrEmpty(productids))
                 ids = Array.ConvertAll(productids.Split(","), s => int.Parse(s));
@@ -162,21 +167,21 @@ namespace Nop.Web.Controllers.Api.Security
             foreach (var product in products)
             {
                 if (!product.Published || product.Deleted)
-                    errorList.Add(new { Id = product, message = product.Name + " is not published" });
+                    errorList.Add(new CartErrorModel { Success = false, Id = product.Id, Message = product.Name + " is not valid" });
 
-                if (!errorList.Any())
-                    await AddProductToCart(product.Id, qtys[counter]);
+                errorList.Add(await AddProductToCart(product.Id, qtys[counter]));
 
                 counter++;
             }
-
+            var sdad = errorList.Where(x => x.Success);
+            var ssss = errorList.Where(x => x.Success).Select(x => x.Message).FirstOrDefault();
             var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, _storeContext.GetCurrentStore().Id);
 
             var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false);
-            if (errorList.Any())
-                return Ok(new { success = false, errorList, cartTotal });
+            if (errorList.Any() && errorList.Where(x => !x.Success).Count() > 0)
+                return Ok(new { success = false, errorList = errorList.Where(x => !x.Success), cartTotal = cartTotal.shoppingCartTotal });
 
-            return Ok(new { success = true, message = "All products are fine", cartTotal });
+            return Ok(new { success = true, message = "All products are fine", cartTotal = cartTotal.shoppingCartTotal });
         }
 
         [HttpPost("order-confirmation")]
@@ -204,7 +209,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
-            var perviousOrders = orders.Where(x => x.CreatedOnUtc == DateTime.UtcNow);
+            var perviousOrders = orders.Where(x => x.CreatedOnUtc.Date == DateTime.UtcNow.Date).ToList();
             if (perviousOrders.Any())
             {
                 var languageId = _workContext.GetWorkingLanguageAsync().Id;
@@ -230,14 +235,16 @@ namespace Nop.Web.Controllers.Api.Security
                     foreach (var orderItem in orderItems)
                     {
                         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                        var productPicture = await _pictureService.GetPicturesByProductIdAsync(orderItem.ProductId);
                         var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                         var orderItemModel = new OrderDetailsModel.OrderItemModel
                         {
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
                             Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
-                            VendorName = vendor?.Name ?? string.Empty,
+                            VendorName = vendor != null ?vendor.Name : string.Empty,
                             ProductId = product.Id,
+                            ProductPictureUrl = productPicture.Any() ? await _pictureService.GetPictureUrlAsync(productPicture.FirstOrDefault().Id) : await _pictureService.GetDefaultPictureUrlAsync(),
                             ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                             ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                             Quantity = orderItem.Quantity,
@@ -320,16 +327,18 @@ namespace Nop.Web.Controllers.Api.Security
                     foreach (var orderItem in orderItems)
                     {
                         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                        var productPicture = await _pictureService.GetPicturesByProductIdAsync(orderItem.ProductId);
                         var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                         var orderItemModel = new OrderDetailsModel.OrderItemModel
                         {
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
                             Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
-                            VendorName = vendor.Name ?? string.Empty,
+                            VendorName = vendor != null ?vendor.Name : string.Empty,
                             ProductId = product.Id,
                             ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                             ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                            ProductPictureUrl = productPicture.Any() ? await _pictureService.GetPictureUrlAsync(productPicture.FirstOrDefault().Id) : await _pictureService.GetDefaultPictureUrlAsync(),
                             Quantity = orderItem.Quantity,
                             AttributeInfo = orderItem.AttributeDescription,
                             VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
@@ -410,15 +419,17 @@ namespace Nop.Web.Controllers.Api.Security
                     foreach (var orderItem in orderItems)
                     {
                         var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                        var productPicture = await _pictureService.GetPicturesByProductIdAsync(orderItem.ProductId);
                         var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                         var orderItemModel = new OrderDetailsModel.OrderItemModel
                         {
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
                             Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
-                            VendorName = vendor.Name ?? string.Empty,
+                            VendorName = vendor != null ?vendor.Name : string.Empty,
                             ProductId = product.Id,
                             ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                            ProductPictureUrl = productPicture.Any() ? await _pictureService.GetPictureUrlAsync(productPicture.FirstOrDefault().Id) : await _pictureService.GetDefaultPictureUrlAsync(),
                             ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                             Quantity = orderItem.Quantity,
                             AttributeInfo = orderItem.AttributeDescription,
