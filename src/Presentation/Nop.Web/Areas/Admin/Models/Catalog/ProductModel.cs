@@ -108,9 +108,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Expensive")]
         public bool Expensive { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.VendorPictureId")]
-        [UIHint("Picture")]
-        public int VendorPictureId { get; set; }
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }

@@ -548,7 +548,6 @@ namespace Nop.Core.Domain.Catalog
 
         public bool RibbonEnable { get; set; }
         public string RibbonText { get; set; }
-        public int VendorPictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of product creation
