@@ -1,0 +1,19 @@
+﻿@model TopMenuModel.CategoryLineModel
+@if (Model.Category.SubCategories.Count > 0)
+{
+    @await Html.PartialAsync("_SubCategoryLine.TopMenu", Model.Category)
+}
+else
+{
+    <li>
+        <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+            @Model.Category.Name
+                <span class="head-number op-number">
+                    @if (Model.Category.NumberOfProducts.HasValue)
+                    {
+                        <text> </text>@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)
+                    }
+                </span>
+            </a>
+    </li>
+}

@@ -1,0 +1,88 @@
+﻿@model IList<VendorAttributeModel>
+
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services.Vendors
+@foreach (var attribute in Model)
+{
+    var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
+    var textPrompt = attribute.Name;
+
+    <div class="form-group vendor-attributes">
+        <label class="control-label col-sm-2 col-md-2">@textPrompt:</label>
+
+        @switch (attribute.AttributeControlType)
+        {
+            case AttributeControlType.DropdownList:
+                {
+                    <div class="col-sm-5 col-md-5">
+                        <select class="form-control" name="@(controlId)" id="@(controlId)">
+                            @if (!attribute.IsRequired)
+                            {
+                                <option value="0">---</option>
+                            }
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                            }
+                        </select>
+                    </div>
+                }
+                break;
+            case AttributeControlType.RadioList:
+                {
+                    <ul class="option-list col-sm-5 col-md-5">
+                        @foreach (var attributeValue in attribute.Values)
+                        {
+                            <li>
+                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                            </li>
+                        }
+                    </ul>
+                }
+                break;
+            case AttributeControlType.Checkboxes:
+            case AttributeControlType.ReadonlyCheckboxes:
+                {
+                    <ul class="option-list col-sm-5 col-md-5">
+                        @foreach (var attributeValue in attribute.Values)
+                        {
+                            <li>
+                                <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                            </li>
+                        }
+                    </ul>
+                }
+                break;
+            case AttributeControlType.TextBox:
+                {
+                    <div class="col-sm-5 col-md-5">
+                        <input name="@(controlId)" type="text" class="textbox form-control" id="@(controlId)" value="@(attribute.DefaultValue)" />
+                    </div>
+                }
+                break;
+            case AttributeControlType.MultilineTextbox:
+                {
+                    <div class="col-sm-5 col-md-5">
+                        <textarea class="form-control" id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
+                    </div>
+                }
+                break;
+            case AttributeControlType.Datepicker:
+            case AttributeControlType.FileUpload:
+            case AttributeControlType.ColorSquares:
+            case AttributeControlType.ImageSquares:
+                {
+                    //not support attribute type
+                }
+                break;
+        }
+        @if (attribute.IsRequired)
+        {
+            <div class="col-sm-3 col-md-3">
+                <nop-required />
+            </div>
+        }
+    </div>
+}

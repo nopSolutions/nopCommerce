@@ -1,0 +1,99 @@
+﻿@model CustomerDownloadableProductsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-downloadable-products-page");
+}
+@section left
+    {
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
+}
+<div class="page account-page downloadable-products-page">
+    <div class="page-title panel-heading">
+        <h1>@T("Account.MyAccount") - @T("Account.DownloadableProducts")</h1>
+    </div>
+    <div class="page-body panel-body">
+        @if (Model.Items.Count > 0)
+        {
+            <div class="panel panel-default">
+                <table class="table table-bordered">
+                    <colgroup>
+                        <col width="1" />
+                        <col width="1" />
+                        <col />
+                        <col width="1" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="a-center order">
+                                @T("DownloadableProducts.Fields.Order")
+                            </th>
+                            <th class="a-center date">
+                                @T("DownloadableProducts.Fields.Date")
+                            </th>
+                            <th class="a-center product">
+                                @T("DownloadableProducts.Fields.Product")
+                            </th>
+                            <th class="a-center download">
+                                @T("DownloadableProducts.Fields.Download")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Items.Count; i++)
+                        {
+                            var item = Model.Items[i];
+                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                <td class="a-center order">
+                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.CustomOrderNumber</a>
+                                </td>
+                                <td class="a-center date">
+                                    @item.CreatedOn.ToString("d")
+                                </td>
+                                <td class="a-center product">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                    @if (!string.IsNullOrEmpty(item.ProductAttributes))
+                                    {
+                                        <div class="attributes">
+                                            @Html.Raw(item.ProductAttributes)
+                                        </div>
+                                    }
+                                </td>
+                                <td class="a-center download">
+                                    @if (item.DownloadId > 0)
+                                    {
+                                        <div>
+                                            <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            @T("DownloadableProducts.Fields.Download.NA")
+                                        </div>
+                                    }
+                                    @if (item.LicenseId > 0)
+                                    {
+                                        <div>
+                                            <a href="@Url.RouteUrl("GetLicense", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("DownloadableProducts.NoItems")
+            </div>
+        }
+    </div>
+</div>

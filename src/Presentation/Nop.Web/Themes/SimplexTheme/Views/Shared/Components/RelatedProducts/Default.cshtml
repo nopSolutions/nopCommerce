@@ -1,0 +1,33 @@
+﻿@model IList<ProductOverviewModel>
+@if (Model.Count > 0)
+{
+    <div class="related-products-grid col-xs-12 col-sm-12 col-md-12">
+        <div class="title sub-title">
+             <strong>@T("Products.RelatedProducts")</strong>
+        </div>
+        <div class="row">
+            @if (Model.Count <= 4)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="item-box product-grid col-xs-12 col-sm-4 col-md-3 product-align clearfix">
+                        <div class="thumbnail">
+                            @await Html.PartialAsync("_ProductBox", item)
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div id="related-products-slider" class="related-products-slider owl-carousel owl-theme">
+                    @foreach (var item in Model)
+                    {
+                        <div class="item-box product-grid col-xs-12 col-sm-12 col-md-12 product-align clearfix">
+                            <div class="thumbnail">@await Html.PartialAsync("_ProductBox", item)</div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div> 
+}

@@ -1,0 +1,30 @@
+﻿@model IList<BlogPostYearModel>
+@if (Model.Count > 0)
+{
+    <div class="block block-blog-archive well box-shadow-wrapper">
+        <div class="title main-title">
+            <strong>@T("Blog.Archive")</strong>
+        </div>
+        <div class="listbox">
+            <ul class="nav nav-list" id="blog-month-list">
+                @foreach (var yearItem in Model)
+                {
+                    <li class="year">
+                        <strong>@(yearItem.Year)</strong>
+                        <ul class="nav nav-list" id="blog-year-@(yearItem.Year)">
+                            @foreach (var monthItem in yearItem.Months)
+                            {
+                                <li class="month">
+                                    <a href="@Url.RouteUrl("BlogByMonth", new { month = yearItem.Year + "-" + monthItem.Month })">
+                                        @(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))
+                                    (@(monthItem.BlogPostCount))
+                                </a>
+                            </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

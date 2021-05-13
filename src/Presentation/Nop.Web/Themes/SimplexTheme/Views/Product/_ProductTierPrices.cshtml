@@ -1,0 +1,41 @@
+﻿@model IList<ProductDetailsModel.TierPriceModel>
+@{
+    //When there is just one tier (with  qty 1), there are no actual savings in the list.
+    var displayTierPrices = Model.Count > 0 && !(Model.Count == 1 && Model[0].Quantity <= 1);
+}
+@if (displayTierPrices)
+{
+    <div class="tier-prices">
+        <div class="prices-header">
+            <strong>@T("Products.TierPrices")</strong>
+        </div>
+        <div class="prices-list">
+            <div class="panel-default">
+                <table class="table table-bordered  table-striped">
+                    <tr>
+                        <td class="field-header span3">
+                            @T("Products.TierPrices.Quantity")
+                        </td>
+                        @foreach (var tierPrice in Model)
+                        {
+                            <td class="item-quantity span3">
+                                @(tierPrice.Quantity)+
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <td class="field-header span3">
+                            @T("Products.TierPrices.Price")
+                        </td>
+                        @foreach (var tierPrice in Model)
+                        {
+                            <td class="item-price span3 tier-price-value">
+                                @tierPrice.Price
+                            </td>
+                        }
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}

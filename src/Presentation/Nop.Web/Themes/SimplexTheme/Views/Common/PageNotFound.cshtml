@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.PageNotFound").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-not-found-page");
+}
+<div class="page not-found-page">
+    <div class="page-title panel-heading">
+        <h1>@T("PageTitle.PageNotFound")</h1>
+    </div>
+    <div class="page-body">
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "PageNotFound" })
+    </div>
+</div>

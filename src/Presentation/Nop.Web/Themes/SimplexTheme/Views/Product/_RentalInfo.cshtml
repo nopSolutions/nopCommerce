@@ -1,0 +1,88 @@
+﻿@model ProductDetailsModel
+@using System.Globalization
+@using Nop.Core.Domain.Catalog
+@using Nop.Services.Helpers
+@inject CatalogSettings catalogSettings
+@inject IUserAgentHelper userAgentHelper
+@if (Model.IsRental)
+{
+    <div class="attributes rental-attributes">
+        <dl>
+            @{
+                var startDateControlId = $"rental_start_date_{Model.Id}";
+                var endDateControlId = $"rental_end_date_{Model.Id}";
+                var dateControlChangeHandlerFuncName = $"on_rental_datepicker_select_{Model.Id}";
+                //currenly we support only this format
+                //java-script format
+                const string datePickerFormat = "mm/dd/yy";
+                //C# format for ToString method
+                const string datePickerFormat2 = "d";
+                var isMobileDevice = userAgentHelper.IsMobileDevice();
+                <dl class="row">
+                    <dt class="col-md-2">
+                        <label class="text-prompt">
+                            @T("Products.RentalStartDate"):
+                        </label>
+                        <span class="required">*</span>
+                    </dt>
+                    <dd class="col-md-4">
+                        <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker form-control" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>} />
+                        <script asp-location="Footer">
+                            $(document).ready(function () {
+                                $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
+                            });
+                        </script>
+                    </dd>
+                </dl>
+                <dl class="row">
+                    <dt class="col-md-2">
+                        <label class="text-prompt">
+                            @T("Products.RentalEndDate"):
+                        </label>
+                        <span class="required">*</span>
+                    </dt>
+                    <dd class="col-md-4">
+                        <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker form-control" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>} />
+                        <script asp-location="Footer">
+                            $(document).ready(function () {
+                                $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: @(dateControlChangeHandlerFuncName) });
+                            });
+                        </script>
+                    </dd>
+                </dl>
+            }
+        </dl>
+    <script asp-location="Footer">
+    function @(dateControlChangeHandlerFuncName)() {
+        @{
+            //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
+            var productId = Model.Id;
+            if (catalogSettings.AjaxProcessAttributeChange)
+            {
+                <text>
+                $.ajax({
+                    url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))",
+                    data: $('#product-details-form').serialize(),
+                    type: "POST",
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.sku) {
+                            $('#sku-@productId').text(data.sku);
+                        }
+                        if (data.mpn) {
+                            $('#mpn-@productId').text(data.mpn);
+                        }
+                        if (data.gtin) {
+                            $('#gtin-@productId').text(data.gtin);
+                        }
+                        if (data.price) {
+                            $('.price-value-@productId').text(data.price);
+                        }
+                    }
+                });
+                </text>
+            }
+        }
+    }
+    </script>
+</div>
+}
