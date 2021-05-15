@@ -1,0 +1,46 @@
+@model PushNotificationModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.PushNotifcation.PushNotifcations.SendNotification").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Push Notifcation");
+}
+
+<form asp-controller="PustNotification" asp-action="SendNotification" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="NotificationType" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="NotificationType" asp-items="Model.NotificationTypes" />
+                        <span asp-validation-for="NotificationType"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="MessageTitle" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MessageTitle" />
+                        <span asp-validation-for="MessageTitle"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="MessageBody" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MessageBody" />
+                        <span asp-validation-for="MessageBody"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

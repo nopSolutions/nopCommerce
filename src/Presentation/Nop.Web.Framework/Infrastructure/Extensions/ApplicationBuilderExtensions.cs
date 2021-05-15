@@ -18,6 +18,8 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Data.Migrations.CustomUpdateMigration;
+using Nop.Data.Migrations.UpgradeTo440;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Installation;
@@ -43,6 +45,26 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void ConfigureRequestPipeline(this IApplicationBuilder application)
         {
             EngineContext.Current.ConfigureRequestPipeline(application);
+        }
+
+        public static void StartCustomEngine(this IApplicationBuilder application)
+        {
+            var engine = EngineContext.Current;
+
+            //further actions are performed only when the database is installed
+            if (DataSettingsManager.IsDatabaseInstalled())
+            {
+
+                var dataProvider = engine.Resolve<INopDataProvider>();
+                var migrationManager = new CustomDataMigration(dataProvider);
+                migrationManager.Up();
+
+#if DEBUG
+                //prevent save the update migrations into the DB during the developing process  
+                var versions = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
+                versions.DeleteAsync(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
+#endif
+            }
         }
 
         public static void StartEngine(this IApplicationBuilder application)
@@ -78,6 +100,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 #endif
             }
         }
+
 
         /// <summary>
         /// Add exception handling

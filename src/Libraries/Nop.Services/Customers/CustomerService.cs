@@ -287,6 +287,30 @@ namespace Nop.Services.Customers
             return customers;
         }
 
+
+        public virtual async Task<IPagedList<Customer>> GetAllPushNotificationCustomersAsync(bool isOffers = false, bool isRewards = false,
+            bool isEatsPass = false, bool isOther = false,
+          int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var customers = await _customerRepository.GetAllPagedAsync(query =>
+            {
+                if (isOffers)
+                    query = query.Where(c => c.Offers == isOffers);
+                if (isRewards)
+                    query = query.Where(c => c.Rewards == isRewards);
+                if (isEatsPass)
+                    query = query.Where(c => c.EatsPass == isEatsPass);
+                if (isOther)
+                    query = query.Where(c => c.Other == isOther);
+                query = query.Where(c => !c.Deleted);
+
+                query = query.OrderByDescending(c => c.CreatedOnUtc);
+
+                return query;
+            }, pageIndex, pageSize);
+
+            return customers;
+        }
         /// <summary>
         /// Gets online customers
         /// </summary>

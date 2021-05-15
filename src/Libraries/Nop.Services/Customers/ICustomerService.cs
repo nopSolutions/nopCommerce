@@ -48,6 +48,9 @@ namespace Nop.Services.Customers
             string company = null, string phone = null, string zipPostalCode = null, string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
+        Task<IPagedList<Customer>> GetAllPushNotificationCustomersAsync(bool isOffers = false, bool isRewards = false,
+            bool isEatsPass = false, bool isOther = false,
+          int pageIndex = 0, int pageSize = int.MaxValue);
         /// <summary>
         /// Gets online customers
         /// </summary>

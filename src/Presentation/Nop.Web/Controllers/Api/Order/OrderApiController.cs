@@ -138,12 +138,27 @@ namespace Nop.Web.Controllers.Api.Security
             {
                 //cannot be added to the cart
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
-                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = string.Join(" , ",addToCartWarnings).ToString() });
+                return await Task.FromResult(new CartErrorModel { Success = false, Id = productId, Message = string.Join(" , ", addToCartWarnings).ToString() });
             }
 
             return await Task.FromResult(new CartErrorModel { Success = true, Id = productId, Message = await _localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart") });
         }
 
+        [HttpPost("delete-cart/{ids}")]
+        public async Task<IActionResult> DeleteCart(string ids)
+        {
+            int[] cartIds = null;
+            if (!string.IsNullOrEmpty(ids))
+                cartIds = Array.ConvertAll(ids.Split(","), s => int.Parse(s));
+
+            var carts = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+            foreach (var sci in carts)
+            {
+                if (cartIds.Contains(sci.Id))
+                    await _shoppingCartService.DeleteShoppingCartItemAsync(sci);
+            }
+            return Ok(new { success = false, message = "Cart deleted successfully" });
+        }
 
         [HttpGet("check-products/{productids}/{quantities}")]
         public async Task<IActionResult> CheckProducts(string productids, string quantities)
@@ -243,7 +258,7 @@ namespace Nop.Web.Controllers.Api.Security
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
                             Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
-                            VendorName = vendor != null ?vendor.Name : string.Empty,
+                            VendorName = vendor != null ? vendor.Name : string.Empty,
                             ProductId = product.Id,
                             ProductPictureUrl = productPicture.Any() ? await _pictureService.GetPictureUrlAsync(productPicture.FirstOrDefault().Id) : await _pictureService.GetDefaultPictureUrlAsync(),
                             ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
@@ -336,7 +351,7 @@ namespace Nop.Web.Controllers.Api.Security
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
                             Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
-                            VendorName = vendor != null ?vendor.Name : string.Empty,
+                            VendorName = vendor != null ? vendor.Name : string.Empty,
                             ProductId = product.Id,
                             ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                             ProductSeName = await _urlRecordService.GetSeNameAsync(product),
@@ -428,7 +443,7 @@ namespace Nop.Web.Controllers.Api.Security
                             Id = orderItem.Id,
                             OrderItemGuid = orderItem.OrderItemGuid,
                             Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
-                            VendorName = vendor != null ?vendor.Name : string.Empty,
+                            VendorName = vendor != null ? vendor.Name : string.Empty,
                             ProductId = product.Id,
                             ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                             ProductPictureUrl = productPicture.Any() ? await _pictureService.GetPictureUrlAsync(productPicture.FirstOrDefault().Id) : await _pictureService.GetDefaultPictureUrlAsync(),
