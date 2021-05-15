@@ -1801,7 +1801,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var model = new OrderScheduleModel();
 
-            var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", 1, false);
+            var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", 1, false);
             if (orderscheduleDate1 != null)
             {
                 var value = orderscheduleDate1.ResourceValue.Split(',');
