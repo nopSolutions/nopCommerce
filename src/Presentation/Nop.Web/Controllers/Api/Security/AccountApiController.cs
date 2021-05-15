@@ -103,7 +103,7 @@ namespace Nop.Web.Controllers.Api.Security
                         if (customer == null)
                             return Ok(new { success = false, message = "'User' could not be loaded" });
 
-                        customer.PushToken = "ExponentPushToken[" + model.PushToken + "]";
+                        customer.PushToken = model.PushToken;
                         await _customerService.UpdateCustomerAsync(customer);
 
                         await _workContext.SetCurrentCustomerAsync(customer);
