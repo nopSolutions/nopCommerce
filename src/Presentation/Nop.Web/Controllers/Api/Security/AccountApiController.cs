@@ -84,7 +84,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             public string Email { get; set; }
             public string Password { get; set; }
-            //public string PushToken { get; set; }
+            public string PushToken { get; set; }
         }
 
         [AllowAnonymous]
@@ -103,8 +103,8 @@ namespace Nop.Web.Controllers.Api.Security
                         if (customer == null)
                             return Ok(new { success = false, message = "'User' could not be loaded" });
 
-                        //customer.PushToken = "ExponentPushToken[" + model.PushToken + "]";
-                        //await _customerService.UpdateCustomerAsync(customer);
+                        customer.PushToken = "ExponentPushToken[" + model.PushToken + "]";
+                        await _customerService.UpdateCustomerAsync(customer);
 
                         await _workContext.SetCurrentCustomerAsync(customer);
 

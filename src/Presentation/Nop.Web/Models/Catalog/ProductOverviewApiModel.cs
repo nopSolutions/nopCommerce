@@ -8,6 +8,10 @@ namespace Nop.Web.Models.Catalog
 {
     public partial class ProductOverviewApiModel
     {
+        public ProductOverviewApiModel()
+        {
+            ProductSpecificationModel = new ProductSpecificationModel();
+        }
         public bool Vegetarian { get; set; }
         public bool Vegan { get; set; }
         public bool GluttenFree { get; set; }
@@ -34,5 +38,6 @@ namespace Nop.Web.Models.Catalog
         public int RatingSum { get; set; }
         public int TotalReviews { get; set; }
         public string VendorLogoPictureUrl { get; set; }
+        public ProductSpecificationModel ProductSpecificationModel { get; set; }
     }
 }

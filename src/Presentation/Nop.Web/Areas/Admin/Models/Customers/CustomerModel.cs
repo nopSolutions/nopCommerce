@@ -44,6 +44,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         #region Properties
 
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.PushToken")]
+        public string PushToken { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Offers")]
         public bool Offers { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Rewards")]

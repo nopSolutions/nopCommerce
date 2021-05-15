@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Nop.Web.Controllers.Api.Security
@@ -177,6 +178,82 @@ namespace Nop.Web.Controllers.Api.Security
         #region Utility
 
         [NonAction]
+        protected virtual async Task<IList<ProductSpecificationAttributeModel>> PrepareProductSpecificationAttributeModelAsync(Product product, SpecificationAttributeGroup group)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            var productSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync(
+                    product.Id, specificationAttributeGroupId: group?.Id, showOnProductPage: true);
+
+            var result = new List<ProductSpecificationAttributeModel>();
+
+            foreach (var psa in productSpecificationAttributes)
+            {
+                var option = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
+
+                var model = result.FirstOrDefault(model => model.Id == option.SpecificationAttributeId);
+                if (model == null)
+                {
+                    var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(option.SpecificationAttributeId);
+                    model = new ProductSpecificationAttributeModel
+                    {
+                        Id = attribute.Id,
+                        Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name)
+                    };
+                    result.Add(model);
+                }
+
+                var value = new ProductSpecificationAttributeValueModel
+                {
+                    AttributeTypeId = psa.AttributeTypeId,
+                    ColorSquaresRgb = option.ColorSquaresRgb,
+                    ValueRaw = psa.AttributeType switch
+                    {
+                        SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
+                        SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
+                        SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
+                        SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
+                        _ => null
+                    }
+                };
+
+                model.Values.Add(value);
+            }
+
+            return result;
+        }
+
+        [NonAction]
+        public virtual async Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            var model = new ProductSpecificationModel();
+
+            // Add non-grouped attributes first
+            model.Groups.Add(new ProductSpecificationAttributeGroupModel
+            {
+                Attributes = await PrepareProductSpecificationAttributeModelAsync(product, null)
+            });
+
+            // Add grouped attributes
+            var groups = await _specificationAttributeService.GetProductSpecificationAttributeGroupsAsync(product.Id);
+            foreach (var group in groups)
+            {
+                model.Groups.Add(new ProductSpecificationAttributeGroupModel
+                {
+                    Id = group.Id,
+                    Name = await _localizationService.GetLocalizedAsync(group, x => x.Name),
+                    Attributes = await PrepareProductSpecificationAttributeModelAsync(product, group)
+                });
+            }
+
+            return model;
+        }
+
+        [NonAction]
         protected virtual async Task<IEnumerable<ProductOverviewApiModel>> PrepareApiProductOverviewModels(IEnumerable<Product> products)
         {
             if (products == null)
@@ -229,6 +306,7 @@ namespace Nop.Web.Controllers.Api.Security
                 };
 
                 models.Add(model);
+                model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
             }
 
             return models;

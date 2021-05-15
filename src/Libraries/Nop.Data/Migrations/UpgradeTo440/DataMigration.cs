@@ -10,7 +10,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.UpgradeTo440
 {
-    [NopMigration("2020-06-10 09:30:17:6455424", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6455795", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class DataMigration : Migration
     {

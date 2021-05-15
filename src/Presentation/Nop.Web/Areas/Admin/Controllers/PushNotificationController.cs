@@ -44,108 +44,25 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly CustomerSettings _customerSettings;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly GdprSettings _gdprSettings;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressService _addressService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerModelFactory _customerModelFactory;
-        private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IExportManager _exportManager;
-        private readonly IForumService _forumService;
-        private readonly IGdprService _gdprService;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ILocalizationService _localizationService;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly IRewardPointService _rewardPointService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly TaxSettings _taxSettings;
 
         #endregion
 
         #region Ctor
 
-        public PushNotificationController(CustomerSettings customerSettings,
-            DateTimeSettings dateTimeSettings,
-            EmailAccountSettings emailAccountSettings,
-            ForumSettings forumSettings,
-            GdprSettings gdprSettings,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressService addressService,
-            ICustomerActivityService customerActivityService,
-            ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
+        public PushNotificationController(
             ICustomerModelFactory customerModelFactory,
-            ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper,
-            IEmailAccountService emailAccountService,
-            IEventPublisher eventPublisher,
-            IExportManager exportManager,
-            IForumService forumService,
-            IGdprService gdprService,
-            IGenericAttributeService genericAttributeService,
-            ILocalizationService localizationService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            INotificationService notificationService,
             IPermissionService permissionService,
-            IQueuedEmailService queuedEmailService,
-            IRewardPointService rewardPointService,
-            IStoreContext storeContext,
-            IStoreService storeService,
-            ITaxService taxService,
-            IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService,
-            TaxSettings taxSettings)
+            IWorkContext workContext)
         {
-            _customerSettings = customerSettings;
-            _dateTimeSettings = dateTimeSettings;
-            _emailAccountSettings = emailAccountSettings;
-            _forumSettings = forumSettings;
-            _gdprSettings = gdprSettings;
-            _addressAttributeParser = addressAttributeParser;
-            _addressService = addressService;
-            _customerActivityService = customerActivityService;
-            _customerAttributeParser = customerAttributeParser;
-            _customerAttributeService = customerAttributeService;
             _customerModelFactory = customerModelFactory;
-            _customerRegistrationService = customerRegistrationService;
             _customerService = customerService;
-            _dateTimeHelper = dateTimeHelper;
-            _emailAccountService = emailAccountService;
-            _eventPublisher = eventPublisher;
-            _exportManager = exportManager;
-            _forumService = forumService;
-            _gdprService = gdprService;
-            _genericAttributeService = genericAttributeService;
-            _localizationService = localizationService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
-            _notificationService = notificationService;
             _permissionService = permissionService;
-            _queuedEmailService = queuedEmailService;
-            _rewardPointService = rewardPointService;
-            _storeContext = storeContext;
-            _storeService = storeService;
-            _taxService = taxService;
             _workContext = workContext;
-            _workflowMessageService = workflowMessageService;
-            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -156,6 +73,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
+
+            var customer = await _workContext.GetCurrentCustomerAsync();
 
             //prepare model
             var model = new PushNotificationModel();
@@ -169,6 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             IPagedList<Customer> notificationCustomers = new PagedList<Customer>(new List<Customer>(), 0, 0, null);
             if (model.NotificationType == "Offers")
             {
@@ -199,6 +119,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var pushTicketReq = new PushTicketRequest()
                     {
                         PushTo = new List<string>() { customer.PushToken },
+                        PushTitle = model.MessageTitle,
                         PushBody = model.MessageBody
                     };
                     var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
