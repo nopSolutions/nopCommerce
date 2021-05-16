@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-gdpt-tools-page");
+}
+@section left
+    {
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.GdprTools })
+}
+
+<div class="page account-page gdpr-tools-page">
+    <div class="page-title panel-heading">
+        <h1>@T("Account.MyAccount") - @T("Account.Gdpr")</h1>
+    </div>
+    <div class="page-body">
+        @if (!string.IsNullOrEmpty(Model.Result))
+        {
+            <div class="result alert alert-success">
+                @Model.Result
+            </div>
+        }
+        <form asp-route="GdprTools" method="post">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="fieldset">
+                        <div class="title">
+                            <strong>@T("Account.Gdpr.Export")</strong>
+                        </div>
+                        <div class="form-fields">
+                            @T("Account.Gdpr.Export.Hint")
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" name="export-data" class="btn btn-primary gdpr-export-data-button">@T("Account.Gdpr.Export.Button")</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="fieldset">
+                        <div class="title">
+                            <strong>@T("Account.Gdpr.Delete")</strong>
+                        </div>
+                        <div class="form-fields">
+                            @T("Account.Gdpr.Delete.Hint")
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" id="delete-account" name="delete-account" class="btn btn-primary gdpr-delete-account-button">@T("Account.Gdpr.Delete.Button")</button>
+                            <script asp-location="Footer">
+                        $(document).ready(function() {
+                            $('#delete-account').on('click', function() {
+                                return confirm('@T("Common.AreYouSure")');
+                            });
+                        });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

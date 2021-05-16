@@ -1,0 +1,108 @@
+﻿@model CatalogProductsModel
+
+@if (Model.Products.Count <= 0 &&
+     !Model.PriceRangeFilter.Enabled &&
+     !Model.SpecificationFilter.Enabled &&
+     !Model.ManufacturerFilter.Enabled)
+{
+    return;
+}
+<div class="product-selectors clearfix">
+    @*sorting*@
+    @if (Model.AllowProductSorting)
+    {
+        <div class="product-sorting col-xs-6 col-sm-4 col-md-4">
+            <div class="row">
+                <div class="col-sm-5 col-md-4 product-span">
+                    <label>@T("Catalog.OrderBy")</label>
+                </div>
+                <div class="col-sm-7 col-md-8 remove_left_padding">
+                    @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { aria_label = T("Catalog.OrderBy.Label"), @class = "form-control dropdown-filter" })
+                </div>
+            </div>
+        </div>
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                var $orderByEl = $('#products-orderby');
+                $orderByEl.on('change', function () {
+                    CatalogProducts.getProducts();
+                });
+
+                $(CatalogProducts).on('before', function (e) {
+                    e.payload.urlBuilder
+                        .addParameter('orderby', $orderByEl.val());
+                });
+            });
+        </script>
+    }
+    @*page size*@
+    @if (Model.AllowCustomersToSelectPageSize)
+    {
+        <div class="product-page-size col-xs-6 col-sm-4 col-md-4">
+            <div class="row">
+                <div class="col-sm-5 col-md-4 product-span">
+                    <label>@T("Catalog.PageSize")</label>
+                </div>
+                <div class="col-sm-4 col-md-4 remove_left_padding">
+                    @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { aria_label = T("Catalog.PageSize.Label"), @class = "form-control dropdown-filter" })
+                </div>
+                @*<div class="col-md-4 page">
+                    <label>@T("Catalog.PageSize.PerPage")</label>
+                </div>*@
+            </div>
+        </div>
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                var $pageSizeEl = $('#products-pagesize');
+                $pageSizeEl.on('change', function () {
+                    CatalogProducts.getProducts();
+                });
+
+                $(CatalogProducts).on('before', function (e) {
+                    e.payload.urlBuilder
+                        .addParameter('pagesize', $pageSizeEl.val());
+                });
+            });
+        </script>
+    }
+    @*view mode*@
+    @if (Model.AllowProductViewModeChanging)
+    {
+        <div class="product-viewmode col-xs-12 col-sm-4 col-md-4">
+            <div class="row">
+                @*<div class="col-md-5 product-span">
+                    <label>@T("Catalog.ViewMode")</label>
+                </div>*@
+                @if (Model.AvailableViewModes.Count > 1)
+                {
+                    var gridMode = Model.AvailableViewModes[0];
+                    var listMode = Model.AvailableViewModes[1];
+                    <div class="col-md-4 grid-list-icon">
+                        <a class="viewmode-icon grid @if (gridMode.Selected){<text>selected</text>}" data-viewmode="@gridMode.Value" title="@gridMode.Text"><i class="fa fa-th"></i>@*@gridMode.Text*@</a>
+                        <a class="viewmode-icon list @if (listMode.Selected){<text>selected</text>}" data-viewmode="@listMode.Value" title="@listMode.Text"><i class="fa fa-th-list"></i>@*@listMode.Text*@</a>
+                    </div>
+                }
+            </div>
+        </div>
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                var $viewModeEls = $('[data-viewmode]');
+                $viewModeEls.on('click', function () {
+                    if (!$(this).hasClass('selected')) {
+                        $viewModeEls.toggleClass('selected');
+                        CatalogProducts.getProducts();
+                    }
+                    return false;
+                });
+
+                $(CatalogProducts).on('before', function (e) {
+                    var $viewModeEl = $('[data-viewmode].selected');
+                    if ($viewModeEl) {
+                        e.payload.urlBuilder
+                            .addParameter('viewmode', $viewModeEl.data('viewmode'));
+                    }
+                });
+            });
+        </script>
+    }
+</div>

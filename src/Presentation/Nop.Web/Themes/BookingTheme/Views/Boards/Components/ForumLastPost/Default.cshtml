@@ -1,0 +1,29 @@
+﻿@model LastPostModel
+@if (Model.Id > 0)
+{
+    <div class="date">@Model.PostCreatedOnStr</div>
+    if (Model.ShowTopic)
+    {
+        <div class="origin">
+            <label>@T("Forum.In"):</label>
+            @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })
+        </div>
+    }
+    <div class="author">
+        <label>@T("Forum.By"):</label>
+        @if (Model.AllowViewingProfiles)
+        {
+            @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
+        }
+        else
+        {
+            <span>@Model.CustomerName</span>
+        }
+    </div>
+}
+else
+{
+    <div class="no-post">
+        @T("Forum.NoPosts")
+    </div>
+}
