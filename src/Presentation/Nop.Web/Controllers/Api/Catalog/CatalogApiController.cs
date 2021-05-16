@@ -292,16 +292,6 @@ namespace Nop.Web.Controllers.Api.Security
                     ImageUrl = await _pictureService.GetPictureUrlAsync(picsById.Any() ? picsById.FirstOrDefault().Id : 0, showDefaultPicture: true),
                     RibbonEnable = product.RibbonEnable,
                     RibbonText = product.RibbonText,
-                    Vegetarian = product.Vegetarian,
-                    Vegan = product.Vegan,
-                    GluttenFree = product.GluttenFree,
-                    Halal = product.Halal,
-                    AllergyFriendly = product.AllergyFriendly,
-                    WellPacked = product.WellPacked,
-                    SustainablePackaging = product.SustainablePackaging,
-                    FastAndReliable = product.FastAndReliable,
-                    ExcellentValue = product.ExcellentValue,
-                    FollowOrderNotes = product.FollowOrderNotes,
                     VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
                 };
 

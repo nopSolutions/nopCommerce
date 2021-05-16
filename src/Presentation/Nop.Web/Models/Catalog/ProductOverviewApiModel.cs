@@ -12,16 +12,7 @@ namespace Nop.Web.Models.Catalog
         {
             ProductSpecificationModel = new ProductSpecificationModel();
         }
-        public bool Vegetarian { get; set; }
-        public bool Vegan { get; set; }
-        public bool GluttenFree { get; set; }
-        public bool Halal { get; set; }
-        public bool AllergyFriendly { get; set; }
-        public bool WellPacked { get; set; }
-        public bool SustainablePackaging { get; set; }
-        public bool FastAndReliable { get; set; }
-        public bool ExcellentValue { get; set; }
-        public bool FollowOrderNotes { get; set; }
+        
         public bool Minimum { get; set; }
         public bool Average { get; set; }
         public bool Expensive { get; set; }
