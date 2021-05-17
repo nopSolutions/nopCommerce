@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Demo",
+  "FriendlyName": "Demo CreateRoom",
+  "SystemName": "Demo.CreateRoom",
+  "Version": "1.12",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "demo team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Demo.CreateRoom.dll",
+  "Description": "This plugin is made to create demo room."
+}
