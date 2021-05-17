@@ -69,7 +69,7 @@
                     <div class="form-fields">
                         <div class="inputs">
                             <label asp-for="AddNewComment.CommentText" asp-postfix=":"></label>
-                            <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text"></textarea>
+                            <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text" asp-disabled="@Model.PreventNotRegisteredUsersToLeaveComments"></textarea>
                             <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
@@ -77,10 +77,17 @@
                             <nop-captcha />
                         }
                     </div>
+                @if (!Model.PreventNotRegisteredUsersToLeaveComments)
+                {
                     <div class="buttons">
                         <button type="submit" name="add-comment" class="button-1 blog-post-add-comment-button">@T("Blog.Comments.SubmitButton")</button>
                     </div>
-                </form>
+                }
+                else
+                {
+                    <div class="message-error">@T("Blog.Comments.OnlyRegisteredUsersLeaveComments")</div>
+                }
+                    </form>
             </div>
             if (Model.Comments.Count > 0)
             {

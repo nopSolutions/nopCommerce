@@ -53,10 +53,15 @@ RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpin
 RUN apk add libc-dev --no-cache
 RUN apk add --no-cache tzdata
 
-WORKDIR /app
+# copy entrypoint script
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
+WORKDIR /app        
 RUN mkdir bin
 RUN mkdir logs
 
 COPY --from=build /app/published .
 
-ENTRYPOINT ["dotnet", "Nop.Web.dll"]
+# call entrypoint script instead of dotnet                            
+ENTRYPOINT "/entrypoint.sh"

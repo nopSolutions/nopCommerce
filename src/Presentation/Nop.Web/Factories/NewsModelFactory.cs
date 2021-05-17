@@ -103,6 +103,11 @@ namespace Nop.Web.Factories
             model.Short = newsItem.Short;
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
+
+            model.PreventNotRegisteredUsersToLeaveComments =
+                await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) &&
+                !_newsSettings.AllowNotRegisteredUsersToLeaveComments;
+
             model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
 
