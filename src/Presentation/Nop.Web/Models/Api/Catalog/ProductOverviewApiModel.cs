@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
+using Nop.Web.Models.Api.Catalog;
 using Nop.Web.Models.Media;
 
-namespace Nop.Web.Models.Catalog
+namespace Nop.Web.Models.Api.Catalog
 {
     public partial class ProductOverviewApiModel
     {
         public ProductOverviewApiModel()
         {
-            ProductSpecificationModel = new ProductSpecificationModel();
+            ProductSpecificationModel = new ProductSpecificationApiModel();
         }
         
         public bool Minimum { get; set; }
@@ -29,6 +30,6 @@ namespace Nop.Web.Models.Catalog
         public int RatingSum { get; set; }
         public int TotalReviews { get; set; }
         public string VendorLogoPictureUrl { get; set; }
-        public ProductSpecificationModel ProductSpecificationModel { get; set; }
+        public ProductSpecificationApiModel ProductSpecificationModel { get; set; }
     }
 }

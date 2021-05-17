@@ -27,6 +27,7 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Models.Api.Catalog;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using System;
@@ -55,6 +56,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IStaticCacheManager _cacheManager;
         private readonly ICurrencyService _currencyService;
         private readonly IProductModelFactory _productModelFactory;
+        private readonly IProductTagService _productTagService;
         private readonly IProductService _productService;
         private readonly ILocalizationService _localizationService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
@@ -111,6 +113,7 @@ namespace Nop.Web.Controllers.Api.Security
             ITopicModelFactory topicModelFactory,
             ICategoryService categoryService,
             IProductService productService,
+            IProductTagService productTagService,
             ILocalizationService localizationService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             IAclService aclService,
@@ -151,6 +154,7 @@ namespace Nop.Web.Controllers.Api.Security
             _catalogModelFactory = catalogModelService;
             _topicModelFactory = topicModelFactory;
             _productService = productService;
+            _productTagService = productTagService;
             _shoppingCartService = shoppingCartService;
             _localizationService = localizationService;
             _recentlyViewedProductsService = recentlyViewedProductsService;
@@ -178,79 +182,92 @@ namespace Nop.Web.Controllers.Api.Security
         #region Utility
 
         [NonAction]
-        protected virtual async Task<IList<ProductSpecificationAttributeModel>> PrepareProductSpecificationAttributeModelAsync(Product product, SpecificationAttributeGroup group)
+        protected virtual async Task<ProductSpecificationApiModel> PrepareProductSpecificationAttributeModelAsync(Product product)
         {
+            var result = new ProductSpecificationApiModel();
             if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            {
+                var productAllSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync();
+                foreach (var psa in productAllSpecificationAttributes)
+                {
+                    var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
+                    var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId);
+                    if (checkModel == null)
+                    {
+                        var model1 = new ProductSpecificationAttributeApiModel();
+                        var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(singleOption.SpecificationAttributeId);
+                        model1.Id = attribute.Id;
+                        model1.Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name);
+                        var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(attribute.Id);
+                        foreach (var option in options)
+                        {
+                            model1.Values.Add(new ProductSpecificationAttributeValueApiModel
+                            {
+                                AttributeTypeId = psa.AttributeTypeId,
+                                ColorSquaresRgb = option.ColorSquaresRgb,
+                                ValueRaw = psa.AttributeType switch
+                                {
+                                    SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
+                                    SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
+                                    SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
+                                    SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
+                                    _ => null
+                                }
+                            });
+                        }
+                        result.ProductSpecificationAttribute.Add(model1);
+                    }
+                }
+                var allProductTags = await _productTagService.GetAllProductTagsAsync();
+                result.ProductTags = allProductTags.Select(x => new ProductTagApiModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+                return result;
+            }
 
             var productSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync(
-                    product.Id, specificationAttributeGroupId: group?.Id, showOnProductPage: true);
-
-            var result = new List<ProductSpecificationAttributeModel>();
+                product.Id, showOnProductPage: true);
 
             foreach (var psa in productSpecificationAttributes)
             {
-                var option = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
-
-                var model = result.FirstOrDefault(model => model.Id == option.SpecificationAttributeId);
-                if (model == null)
+                var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
+                var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId);
+                if (checkModel == null)
                 {
-                    var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(option.SpecificationAttributeId);
-                    model = new ProductSpecificationAttributeModel
+                    var model1 = new ProductSpecificationAttributeApiModel();
+                    var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(singleOption.SpecificationAttributeId);
+                    model1.Id = attribute.Id;
+                    model1.Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name);
+                    var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(psa.Id);
+                    foreach (var option in options)
                     {
-                        Id = attribute.Id,
-                        Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name)
-                    };
-                    result.Add(model);
-                }
-
-                var value = new ProductSpecificationAttributeValueModel
-                {
-                    AttributeTypeId = psa.AttributeTypeId,
-                    ColorSquaresRgb = option.ColorSquaresRgb,
-                    ValueRaw = psa.AttributeType switch
-                    {
-                        SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
-                        SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
-                        SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
-                        SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
-                        _ => null
+                        model1.Values.Add(new ProductSpecificationAttributeValueApiModel
+                        {
+                            AttributeTypeId = psa.AttributeTypeId,
+                            ColorSquaresRgb = option.ColorSquaresRgb,
+                            ValueRaw = psa.AttributeType switch
+                            {
+                                SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
+                                SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
+                                SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
+                                SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
+                                _ => null
+                            }
+                        });
                     }
-                };
-
-                model.Values.Add(value);
+                    result.ProductSpecificationAttribute.Add(model1);
+                }
             }
+            var productTags = await _productTagService.GetAllProductTagsByProductIdAsync(product.Id);
+            result.ProductTags = productTags.Select(x => new ProductTagApiModel
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToList();
 
             return result;
-        }
-
-        [NonAction]
-        public virtual async Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product)
-        {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            var model = new ProductSpecificationModel();
-
-            // Add non-grouped attributes first
-            model.Groups.Add(new ProductSpecificationAttributeGroupModel
-            {
-                Attributes = await PrepareProductSpecificationAttributeModelAsync(product, null)
-            });
-
-            // Add grouped attributes
-            var groups = await _specificationAttributeService.GetProductSpecificationAttributeGroupsAsync(product.Id);
-            foreach (var group in groups)
-            {
-                model.Groups.Add(new ProductSpecificationAttributeGroupModel
-                {
-                    Id = group.Id,
-                    Name = await _localizationService.GetLocalizedAsync(group, x => x.Name),
-                    Attributes = await PrepareProductSpecificationAttributeModelAsync(product, group)
-                });
-            }
-
-            return model;
         }
 
         [NonAction]
@@ -296,7 +313,7 @@ namespace Nop.Web.Controllers.Api.Security
                 };
 
                 models.Add(model);
-                model.ProductSpecificationModel = await PrepareProductSpecificationModelAsync(product);
+                model.ProductSpecificationModel = await PrepareProductSpecificationAttributeModelAsync(product);
             }
 
             return models;
@@ -418,6 +435,14 @@ namespace Nop.Web.Controllers.Api.Security
                           })
                 .ToList();
             return Json(result);
+        }
+
+        [HttpGet("product-specification-attributes-and producttags")]
+        public async Task<IActionResult> AllProductSpecificationAndProductTags()
+        {
+            //model
+            var model = await PrepareProductSpecificationAttributeModelAsync(null);
+            return Ok(model);
         }
 
         [HttpGet("product-search")]
@@ -628,8 +653,8 @@ namespace Nop.Web.Controllers.Api.Security
                     await _workflowMessageService.SendProductReviewNotificationMessageAsync(productReview, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-               await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
-                    string.Format(await  _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddProductReview",
+                     string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddProductReview"), product.Name), product);
 
                 //raise event
                 if (productReview.IsApproved)

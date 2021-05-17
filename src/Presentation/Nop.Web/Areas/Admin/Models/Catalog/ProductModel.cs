@@ -67,38 +67,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
 
         #region Properties
-
-        //Custom Fields
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vegetarian")]
-        public bool Vegetarian { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vegan")]
-        public bool Vegan { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.GluttenFree")]
-        public bool GluttenFree { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Halal")]
-        public bool Halal { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllergyFriendly")]
-        public bool AllergyFriendly { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.WellPacked")]
-        public bool WellPacked { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SustainablePackaging")]
-        public bool SustainablePackaging { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.FastAndReliable")]
-        public bool FastAndReliable { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ExcellentValue")]
-        public bool ExcellentValue { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.FollowOrderNotes")]
-        public bool FollowOrderNotes { get; set; }
-
+        
+        //custom fields
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Minimum")]
         public bool Minimum { get; set; }
 

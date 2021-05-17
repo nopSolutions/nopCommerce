@@ -1,11 +1,11 @@
 ﻿using Nop.Web.Framework.Models;
 
-namespace Nop.Web.Models.Catalog
+namespace Nop.Web.Models.Api.Catalog
 {
     /// <summary>
     /// Represents a product specification attribute value model
     /// </summary>
-    public record ProductSpecificationAttributeValueModel : BaseNopModel
+    public record ProductSpecificationAttributeValueApiModel : BaseNopModel
     {
         #region Properties
 
@@ -13,6 +13,7 @@ namespace Nop.Web.Models.Catalog
         /// Gets or sets the attribute type id
         /// </summary>
         public int AttributeTypeId { get; set; }
+
         public bool AllowFiltering { get; set; }
 
         /// <summary>
