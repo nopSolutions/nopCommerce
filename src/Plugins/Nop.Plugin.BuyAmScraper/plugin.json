@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "BuyAm Scraper",
+  "SystemName": "BuyAmScraper",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "Edgar Isajanyan",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.BuyAmScraper.dll",
+  "Description": "This plugin scrapes products from buy.am"
+}
