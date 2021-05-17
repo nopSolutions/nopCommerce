@@ -696,10 +696,10 @@ namespace Nop.Services.Catalog
                 query = from p in query
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
                         LinqToDB.Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
+                        orderby p.CreatedOnUtc descending
                         select p;
 
-                return query.Take(_catalogSettings.NewProductsNumber)
-                    .OrderBy(ProductSortingEnum.CreatedOn);
+                return query.Take(_catalogSettings.NewProductsNumber);
             });
         }
 
