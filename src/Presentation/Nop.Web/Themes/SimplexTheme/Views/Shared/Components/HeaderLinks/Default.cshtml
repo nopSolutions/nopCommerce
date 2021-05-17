@@ -1,0 +1,64 @@
+﻿@model HeaderLinksModel
+@using Nop.Core.Domain.Customers
+@inject Nop.Core.IWebHelper webHelper
+<div class="header-links header-top-right">
+    <ul>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderLinksBefore })
+        @await Component.InvokeAsync("AdminHeaderLinks")
+        @if (Model.IsAuthenticated)
+        {
+            <li class="my-account"><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">@T("Account.MyAccount")@*@Model.CustomerName*@</a></li>
+        }
+        else
+        {
+            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
+                ? url.ToString()
+                : webHelper.GetRawUrl(Context.Request);
+
+            @if (Model.RegistrationType != UserRegistrationType.Disabled)
+            {
+                <li class="register"><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register"><span>@T("Account.Register")</span></a></li>
+            }
+        }
+        @if (Model.WishlistEnabled)
+        {
+            <li class="my-wishlist">
+                <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
+                    <span class="wishlist-label">@T("Wishlist")</span>
+                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
+            </li>
+        }
+        @if (Model.AllowPrivateMessages)
+        {
+            <li>
+                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">
+                    <span class="inbox-label">@T("PrivateMessages.Inbox")</span>
+                    <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+                </a>
+            </li>
+        }
+        @if (Model.IsAuthenticated)
+        {
+            <li class="logout"><a href="@Url.RouteUrl("Logout")" class="ico-logout"><span>@T("Account.Logout")</span></a></li>
+        }
+        else
+        {
+            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
+                ? url.ToString()
+                : webHelper.GetRawUrl(Context.Request);
+
+            <li class="login"><a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login"><span>@T("Account.Login")</span></a></li>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderLinksAfter })
+    </ul>
+    @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+    {
+        //new private message notification
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
+            });
+        </script>
+    }
+</div>

@@ -1,0 +1,92 @@
+﻿@model PrivateMessageListModel
+<div class="private-messages-box">
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            $('#selectall-sent').on('click', function () {
+                $('#pm-sent-table .rowcheckbox').prop('checked', $(this).is(':checked')).trigger('change');
+            });
+
+            $('#pm-sent-table .rowcheckbox').on('change', function (e) {
+                var numChkBoxes = $('#pm-sent-table .rowcheckbox').length;
+                var numChkBoxesChecked = $('#pm-sent-table .rowcheckbox:checked').length;
+                $('#selectall-sent').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            });
+        });
+    </script>
+    @if (Model.Messages.Count > 0)
+    {
+        <form asp-route="PrivateMessagesSent" method="post">
+            <div class="panel panel-default">
+                <table class="table table-bordered" id="pm-sent-table">
+                    <colgroup>
+                        <col width="5%" />
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="a-center select-boxes">
+                                <input type="checkbox" id="selectall-sent" />
+                            </th>
+                            <th class="a-center to">
+                                @T("PrivateMessages.Inbox.ToColumn")
+                            </th>
+                            <th class="a-center subject">
+                                @T("PrivateMessages.Inbox.SubjectColumn")
+                            </th>
+                            <th class="a-center date">
+                                @T("PrivateMessages.Inbox.DateColumn")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Messages.Count; i++)
+                        {
+                            var item = Model.Messages[i];
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            <td class="a-center select-boxes">
+                                <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
+                            </td>
+                            <td class="a-left to">
+                                @if (item.AllowViewingToProfile)
+                                    {
+                                    @Html.RouteLink(item.CustomerToName, "CustomerProfile", new { Id = item.ToCustomerId })
+                                    }
+                                    else
+                                    {
+                                    @item.CustomerToName
+                                    }
+                            </td>
+                            <td class="a-left subject">
+                                @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
+                            </td>
+                            <td class="a-left date">
+                                @item.CreatedOn
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @{
+                var pager = await Html.PagerAsync(Model.PagerModel);
+            }
+            @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
+            {
+            <div class="pagination">
+                <div class="pager">
+                    @pager
+                </div>
+            </div>
+            }
+            <div class="buttons">
+                <button class="btn btn-default delete-selected-pm-button" name="delete-sent" type="submit">@T("PrivateMessages.Inbox.DeleteSelected")</button>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="no-items">@T("PrivateMessages.Sent.NoItems")</div>
+    }
+</div>

@@ -1,0 +1,35 @@
+﻿@model IList<VendorModel>
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendors").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-vendor-list-page");
+}
+<div class="page vendor-list-page">
+    <div class="page-title panel-heading">
+        <h1>@T("Vendors.List")</h1>
+    </div>
+    <div class="page-body">
+        <div class="vendor-grid row">
+            @foreach (var item in Model)
+            {
+                <div class="item-box col-xs-12 col-sm-4 col-md-4">
+                    <div class="vendor-item product-category-item">
+                        <div class="picture">
+                            <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title" class="product-img">
+                                <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            </a>
+                            <div class="title">
+                                <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                                    @item.Name
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

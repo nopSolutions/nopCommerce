@@ -1,0 +1,826 @@
+﻿@model TopicModel
+@inject IThemeContext ThemeContext
+@{
+    var currentThemeName = await ThemeContext.GetWorkingThemeNameAsync();
+    var imagesPath = "~/Themes/" + currentThemeName + "/Content/images/";
+
+}
+@if (Model.IsPasswordProtected)
+{
+    <script asp-location="Footer">
+    $(document).ready(function () {
+        $('#button-password-@Model.Id').on('click', function() {
+            var postData = {
+                id: $("#topic-@Model.Id").val(),
+                password: $('#password-@Model.Id').val()
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("TopicAuthenticate")",
+                data: postData,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    if (data.Authenticated) {
+                        $('#ph-topic-@Model.Id #ph-title-@Model.Id h2').html(data.Title);
+                        if ($('#ph-topic-@Model.Id #ph-title-@Model.Id h2').text().length == 0) {
+                            $('#ph-title-@Model.Id').hide();
+                        }
+                        $('#ph-topic-@Model.Id .topic-block-body').html(data.Body);
+                        $('#ph-password-@Model.Id').hide();
+                        $('#ph-topic-@Model.Id').show();
+                        //we need to re-run the validation plugin after the content is loaded after successful authentication
+                        $.validator.unobtrusive.parse('#ph-topic-@Model.Id');
+                    } else {
+                        $('#password-error-@Model.Id').text(data.Error).fadeIn("slow");
+                        $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
+                    }
+                }
+            });
+            return false;
+        });
+    });
+
+    $(document).ready(function() {
+        $('#ph-topic-@Model.Id').hide();
+        $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
+    });
+    </script>
+    <div class="topic-password" id="ph-password-@Model.Id">
+        <form asp-route="TopicAuthenticate" method="post" autocomplete="off">
+            <input asp-for="Id" id="topic-@Model.Id" type="hidden" />
+            <div class="enter-password-title">
+                @T("Topic.EnterPassword")
+            </div>
+            <div class="enter-password-form">
+                <input name="password" type="password" id="password-@(Model.Id)" />
+                <button type="submit" id="button-password-@Model.Id" class="button-1 topic-password-button">@T("Topic.Button")</button>
+            </div>
+            <div class="password-error" id="password-error-@Model.Id" style="display: none;"></div>
+        </form>
+    </div>
+    <div class="topic-html-content" id="ph-topic-@Model.Id">
+        <div id="ph-title-@Model.Id">
+            <div class="topic-html-content-title">
+                <h2 class="topic-html-content-header">
+                    @Model.Title
+                </h2>
+            </div>
+        </div>
+        <div class="topic-html-content-body">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+}
+else
+{
+    <!-- Banner -->
+    <div class="container container--sm section">
+        <div class="mt--42"></div>
+        <div>
+            <div data-v-5b8436ed="" class="big-banner d-none d-sm-block">
+                <div data-v-5b8436ed="" id="bannerSliderPC">
+                    <div style="width: 100%; display: inline-block;"><a href="https://www.luxstay.com/vi/s"><img src="@Url.Content(imagesPath + "banner_slide_1.png")" alt=""></a></div>
+                    <div style="width: 100%; display: inline-block;"><a href="https://www.luxstay.com/vi/s"><img src="@Url.Content(imagesPath + "banner_slide_2.png")" alt=""></a></div>
+                    <div style="width: 100%; display: inline-block;"><a href="https://www.luxstay.com/vi/s"><img src="@Url.Content(imagesPath + "banner_slide_3.png")" alt=""></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Greeting -->
+    <div class="mt--42"></div>
+    <div class="container container--sm section">
+        <div class="greeting section">
+            <div class="title mb--12">
+                <h3>Chào mừng đến với DiHotel!</h3>
+            </div>
+            <p class="mb--6">Đặt chỗ ở, homestay, cho thuê xe, trải nghiệm và nhiều hơn nữa trên DiHotel</p>
+            <p>
+                <a href="https://www.luxstay.com/vi/auth/sign/in" class="">Đăng nhập</a> <span class="text-lowercase">Hoặc</span> <a href="https://www.luxstay.com/vi/auth/sign/up" class="">Đăng ký</a>
+                để trải nghiệm !
+            </p>
+        </div>
+    </div>
+
+    <!-- Suggestion -->
+    <div class="container container--sm section">
+        <div>
+            <div class="slide-item-has-shadow slide-default-left">
+                <div class="mt--24">
+                    <div>
+                        <div>
+                            <div style="width: 100%; display: inline-block;">
+                                <a href="https://www.luxstay.com/vi/s" class="search-direction" tabindex="0">
+                                    <div class="bg-img is-relative bg-img--95" data-src="https://cdn.luxstay.com/home/suggestion/location_6_1572858402.png" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/suggestion/location_6_1572858402.png&quot;);"></div>
+                                    <div class="search-direction__content">
+                                        <h4 class="mb--0">Homestay</h4>
+                                        <p class="semi-bold c-gray-9 p--small mb--0">Căn hộ dịch vụ &amp; Biệt thự</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="width: 100%; display: inline-block;">
+                                <a href="https://www.klook.com/vi/promo/vn-luxstay?aid=13927" class="search-direction" tabindex="0">
+                                    <div class="bg-img is-relative bg-img--95" data-src="https://cdn.luxstay.com/home/klook/entire-houses.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/klook/entire-houses.jpg&quot;);"></div>
+                                    <div class="search-direction__content">
+                                        <h4 class="mb--0">Vé tham quan</h4>
+                                        <p class="semi-bold c-gray-9 p--small mb--0">Mua vé thật dễ dàng</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location -->
+    <div class="section fadeIn">
+        <div class="container container--sm">
+            <div>
+                <div id="29" readmore="29">
+                    <div class="title">
+                        <h2 class="extra-bold p--giant">Địa điểm nổi bật</h2>
+                        <p class="d-none d-md-block">Cùng Luxstay bắt đầu chuyến hành trình chinh phục thế giới của bạn</p>
+                    </div>
+                    <div>
+                        <div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/ha-noi" target="_blank" tabindex="0" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_1_1559734709.png" src="https://cdn.luxstay.com/home/location/location_1_1559734709.png" lazy="loaded"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">Hà Nội</div>
+                                            <span class="product__price d-block"><b>2902</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/ho-chi-minh" target="_blank" tabindex="0" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_5_1559735011.png" src="https://cdn.luxstay.com/home/location/location_5_1559735011.png" lazy="loaded"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">TP. Hồ Chí Minh</div>
+                                            <span class="product__price d-block"><b>2371</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/ba-ria-vung-tau/vung-tau" target="_blank" tabindex="0" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_10_1559303118.png" src="https://cdn.luxstay.com/home/location/location_10_1559303118.png" lazy="loaded"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">Vũng Tàu</div>
+                                            <span class="product__price d-block"><b>539</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/lam-dong/da-lat" target="_blank" tabindex="0" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_4_1559786177.png" src="https://cdn.luxstay.com/home/location/location_4_1559786177.png" lazy="loaded"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">Đà Lạt</div>
+                                            <span class="product__price d-block"><b>1444</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/da-nang" target="_blank" tabindex="0" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_16_1559303173.png" src="https://cdn.luxstay.com/home/location/location_16_1559303173.png" lazy="loaded"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">Đà Nẵng</div>
+                                            <span class="product__price d-block"><b>907</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/khanh-hoa/nha-trang" target="_blank" tabindex="-1" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_1_1559373089.png" src="https://cdn.luxstay.com/home/location/location_1_1559373089.png" lazy="loading"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">Nha Trang</div>
+                                            <span class="product__price d-block"><b>635</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/quang-ninh" target="_blank" tabindex="-1" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_5_1559786196.png" src="https://cdn.luxstay.com/home/location/location_5_1559786196.png" lazy="loading"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">Quảng Ninh</div>
+                                            <span class="product__price d-block"><b>213</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="https://www.luxstay.com/vi/vietnam/quang-nam/hoi-an" target="_blank" tabindex="-1" style="width: 100%; display: inline-block;">
+                                    <div class="product is-relative">
+                                        <div class="product__cover"><img width="336" height="420" class="product__image" data-src="https://cdn.luxstay.com/home/location/location_6_1559786202.png" src="https://cdn.luxstay.com/home/location/location_6_1559786202.png" lazy="loading"></div>
+                                        <div class="product__content is-absolute white-deep">
+                                            <div class="product__title extra-bold">Hội An</div>
+                                            <span class="product__price d-block"><b>321</b> Chỗ ở</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promotion -->
+    <div class="section fadeIn">
+        <div class="container container--sm">
+            <div>
+                <div id="28" readmore="28">
+                    <div class="is-flex jbetween align-end">
+                        <div class="title title-w-sub">
+                            <h2 class="extra-bold p--giant">
+                                Ưu đãi độc quyền
+                            </h2>
+                            <p>Chỉ có tại Luxstay, hấp dẫn và hữu hạn, book ngay!</p>
+                        </div>
+                        <a href="https://www.luxstay.com/promotion" class="text-orange semi-bold d-none d-sm-inline">
+                            Xem thêm
+                        </a>
+                    </div>
+                    <div class="row mt--12 promotion-slider slide-item-has-shadow">
+                        <div class="col-xs-12">
+                            <div>
+                                <div>
+                                    <div>
+                                        <a href="https://www.luxstay.com/vi/promotion/44203" class="box-image-frame box-image-frame--promotion" tabindex="0" style="width: 100%; display: inline-block;">
+                                            <img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_6_1619804014.jpg" src="https://cdn.luxstay.com/home/event/event_6_1619804014.jpg" lazy="loaded"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_7_1619804014.jpg" src="https://cdn.luxstay.com/home/event/event_7_1619804014.jpg" lazy="loading">
+                                            <div class="frame-shadow"><img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_6_1619804014.jpg" src="https://cdn.luxstay.com/home/event/event_6_1619804014.jpg" lazy="loaded"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_7_1619804014.jpg" src="https://cdn.luxstay.com/home/event/event_7_1619804014.jpg" lazy="loading"></div>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="https://www.luxstay.com/vi/promotion/44219" class="box-image-frame box-image-frame--promotion" tabindex="0" style="width: 100%; display: inline-block;">
+                                            <img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_1_1619803807.jpg" src="https://cdn.luxstay.com/home/event/event_1_1619803807.jpg" lazy="loaded"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_2_1619803808.jpg" src="https://cdn.luxstay.com/home/event/event_2_1619803808.jpg" lazy="loading">
+                                            <div class="frame-shadow"><img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_1_1619803807.jpg" src="https://cdn.luxstay.com/home/event/event_1_1619803807.jpg" lazy="loaded"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_2_1619803808.jpg" src="https://cdn.luxstay.com/home/event/event_2_1619803808.jpg" lazy="loading"></div>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="https://www.luxstay.com/vi/promotion/44191" class="box-image-frame box-image-frame--promotion" tabindex="0" style="width: 100%; display: inline-block;">
+                                            <img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_1_1614658965.jpg" src="https://cdn.luxstay.com/home/event/event_1_1614658965.jpg" lazy="loaded"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_2_1614658966.jpg" src="https://cdn.luxstay.com/home/event/event_2_1614658966.jpg" lazy="loading">
+                                            <div class="frame-shadow"><img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_1_1614658965.jpg" src="https://cdn.luxstay.com/home/event/event_1_1614658965.jpg" lazy="loaded"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_2_1614658966.jpg" src="https://cdn.luxstay.com/home/event/event_2_1614658966.jpg" lazy="loading"></div>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a href="https://www.luxstay.com/vi/promotion/44087" class="box-image-frame box-image-frame--promotion" tabindex="-1" style="width: 100%; display: inline-block;">
+                                            <img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_1_1596604498.jpg" src="https://cdn.luxstay.com/home/event/event_1_1596604498.jpg" lazy="loading"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_2_1596604498.jpg" src="https://cdn.luxstay.com/home/event/event_2_1596604498.jpg" lazy="loading">
+                                            <div class="frame-shadow"><img class="d-none d-sm-block" data-src="https://cdn.luxstay.com/home/event/event_1_1596604498.jpg" src="https://cdn.luxstay.com/home/event/event_1_1596604498.jpg" lazy="loading"> <img class="d-block d-sm-none" data-src="https://cdn.luxstay.com/home/event/event_2_1596604498.jpg" src="https://cdn.luxstay.com/home/event/event_2_1596604498.jpg" lazy="loading"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://www.luxstay.com/promotion" class="text-orange semi-bold d-block d-sm-none mt--12">
+                        Xem thêm
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Destination -->
+    <div class="section fadeIn">
+        <div class="container container--sm">
+            <div>
+                <div id="93" readmore="93">
+                    <div class="title mb--18">
+                        <h2 class="extra-bold p--giant">Gợi ý từ Luxstay</h2>
+                        <p>Những địa điểm thường đến mà Luxstay gợi ý dành cho bạn</p>
+                    </div>
+                    <div>
+                        <div class="destination-wrap">
+                            <div>
+                                <div>
+                                    <a href="https://www.luxstay.com/vi/homestay/explore/vung-tau-biet-thu-ho-boi-618" class="article is-relative" tabindex="-1" style="width: 100%; display: inline-block;">
+                                        <span class="is-block bg-img bg-img--85 radius-xs" data-src="https://cdn.luxstay.com/home/apartment/apartment_2_1614588617.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/apartment/apartment_2_1614588617.jpg&quot;);"></span>
+                                        <div class="article__content">
+                                            <div class="article__title bold">Vũng Tàu Biệt thự hồ bơi</div>
+                                            <span class="article__excerpt">
+                                                <p>Những căn biệt thự có hồ bơi dành cho kỳ nghỉ của bạn tại Vũng Tàu</p>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://www.luxstay.com/vi/homestay/explore/vi-vu-ngoai-thanh-ha-noi-619" class="article is-relative" tabindex="-1" style="width: 100%; display: inline-block;">
+                                        <span class="is-block bg-img bg-img--85 radius-xs" data-src="https://cdn.luxstay.com/home/apartment/apartment_1_1614588454.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/apartment/apartment_1_1614588454.jpg&quot;);"></span>
+                                        <div class="article__content">
+                                            <div class="article__title bold">Vi vu ngoại thành Hà Nội</div>
+                                            <span class="article__excerpt">
+                                                <p><span style="color: rgb(21, 27, 38);">Trải nghiệm không gian thoáng đãng cho chuyến đi ngay gần Hà Nội</span></p>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://www.luxstay.com/vi/homestay/explore/ha-noi-noi-thanh-lang-man-620" class="article is-relative" tabindex="-1" style="width: 100%; display: inline-block;">
+                                        <span class="is-block bg-img bg-img--85 radius-xs" data-src="https://cdn.luxstay.com/home/apartment/apartment_1_1614660728.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/apartment/apartment_1_1614660728.jpg&quot;);"></span>
+                                        <div class="article__content">
+                                            <div class="article__title bold">Hà Nội nội thành lãng mạn</div>
+                                            <span class="article__excerpt">
+                                                <p><span style="color: rgb(21, 27, 38);">Không gian lãng mạn dành cho cặp đôi tại trung tâm Hà Nội</span></p>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://www.luxstay.com/vi/homestay/explore/sai-gon-can-la-co-ngay-621" class="article is-relative" tabindex="0" style="width: 100%; display: inline-block;">
+                                        <span class="is-block bg-img bg-img--85 radius-xs" data-src="https://cdn.luxstay.com/home/apartment/apartment_2_1615794965.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/apartment/apartment_2_1615794965.jpg&quot;);"></span>
+                                        <div class="article__content">
+                                            <div class="article__title bold">Sài Gòn cần là có ngay</div>
+                                            <span class="article__excerpt">
+                                                <p>Những căn homestay có 01 phòng ngủ tại Sài Gòn có thể đặt nhanh chóng</p>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://www.luxstay.com/vi/homestay/explore/be-boi-bbq-468" class="article is-relative" tabindex="0" style="width: 100%; display: inline-block;">
+                                        <span class="is-block bg-img bg-img--85 radius-xs" data-src="https://cdn.luxstay.com/home/apartment/apartment_1_1584606781.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/apartment/apartment_1_1584606781.jpg&quot;);"></span>
+                                        <div class="article__content">
+                                            <div class="article__title bold">Bể bơi &amp; BBQ</div>
+                                            <span class="article__excerpt">
+                                                <p>Trải nghiệm đẳng cấp tại những căn homestay có bể bơi đẹp và khu vực BBQ ấm cúng.</p>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://www.luxstay.com/vi/homestay/explore/sieu-giam-gia-471" class="article is-relative" tabindex="0" style="width: 100%; display: inline-block;">
+                                        <span class="is-block bg-img bg-img--85 radius-xs" data-src="https://cdn.luxstay.com/home/apartment/apartment_2_1584606872.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/apartment/apartment_2_1584606872.jpg&quot;);"></span>
+                                        <div class="article__content">
+                                            <div class="article__title bold">Siêu giảm giá!</div>
+                                            <span class="article__excerpt">
+                                                <p>Top chỗ ở giảm giá đến 50% từ các chủ nhà thân thiện trên Luxstay.</p>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="https://www.luxstay.com/vi/homestay/explore/gan-trung-tam-314" class="article is-relative" tabindex="0" style="width: 100%; display: inline-block;">
+                                        <span class="is-block bg-img bg-img--85 radius-xs" data-src="https://cdn.luxstay.com/home/apartment/apartment_10_1584602562.jpg" lazy="loaded" style="background-image: url(&quot;https://cdn.luxstay.com/home/apartment/apartment_10_1584602562.jpg&quot;);"></span>
+                                        <div class="article__content">
+                                            <div class="article__title bold">Gần Trung tâm!</div>
+                                            <span class="article__excerpt">
+                                                <p><span style="color: rgb(21, 27, 38);">Dễ dàng di chuyển khắp nơi với top chỗ ở khu vực trung tâm thành phố Hồ Chí Minh</span></p>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discovery -->
+    <div class="section fadeIn">
+        <div class="container container--sm">
+            <div>
+                <div id="32" readmore="32">
+                    <div class="title">
+                        <h2 class="extra-bold p--giant">Gợi ý khám phá</h2>
+                        <p>Để mỗi chuyến đi là một hành trình truyền cảm hứng, mỗi căn phòng là một khoảng trời an yên</p>
+                    </div>
+                    <div class="discovery">
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/resort-hang-sang-o-Viet-Nam-4-1024x650.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/resort-hang-sang-o-Viet-Nam-4-1024x650.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22945" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="-1">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22945" target="_blank" tabindex="-1">5 resort hạng sang ở Việt Nam xuất hiện trên tạp chí du lịch Anh</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/du-lich-can-tho-8-824x1024.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/du-lich-can-tho-8-824x1024.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22936" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="-1">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22936" target="_blank" tabindex="-1">Du lịch Cần Thơ nhất định phải ghé thăm những địa điểm này</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/tuan-le-toi-yeu-banh-my-sai-gon-3.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/tuan-le-toi-yeu-banh-my-sai-gon-3.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22905" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/du-lich-ho-chi-minh" target="_blank" class="post__category" tabindex="-1">TP. Hồ Chí Minh</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22905" target="_blank" tabindex="-1">Tuần lễ “Tôi yêu bánh mì Sài Gòn” chính thức diễn ra từ ngày 24/3</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/so-thu-zoodoo-da-lat-7.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/so-thu-zoodoo-da-lat-7.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22846" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="-1">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22846" target="_blank" tabindex="-1">Trải nghiệm thú vị ở sở thú Zoodoo Đà Lạt</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/hoi-an-lap-chot-quan-ly-du-khach-deo-khau-trang-4-1024x657.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/hoi-an-lap-chot-quan-ly-du-khach-deo-khau-trang-4-1024x657.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22841" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/du-lich-hoi-an" target="_blank" class="post__category" tabindex="-1">Hội An</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22841" target="_blank" tabindex="-1">Hội An sẽ lập chốt quản lý du khách đeo khẩu trang khi vào thành phố</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/cach-ly-tai-khach-san-o-viet-nam-3.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/cach-ly-tai-khach-san-o-viet-nam-3.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22835" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="-1">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22835" target="_blank" tabindex="-1">Mức phí cách ly tại khách sạn, resort ở Việt Nam cho du khách có nhu cầu</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/thu-do-ha-noi-4.png&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/thu-do-ha-noi-4.png" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22798" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="-1">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22798" target="_blank" tabindex="-1">Thủ đô Hà Nội nằm trong danh sách những thành phố đẹp nhất thế giới</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/cach-dat-phong-tai-da-lat-2.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/cach-dat-phong-tai-da-lat-2.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22703" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="-1">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22703" target="_blank" tabindex="-1">Cách đặt phòng tại Đà Lạt cho chuyến du lịch tiết kiệm nhất</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/lap-ke-hoach-tai-chinh-cho-chuyen-du-lich-3.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/lap-ke-hoach-tai-chinh-cho-chuyen-du-lich-3.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22697" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="-1">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22697" target="_blank" tabindex="-1">Cách lập kế hoạch tài chính cho chuyến du lịch hoàn hảo</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/homestay-vung-tau-cho-nhom-dong-nguoi-7-1024x683.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/homestay-vung-tau-cho-nhom-dong-nguoi-7-1024x683.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22596" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/du-lich-vung-tau" target="_blank" class="post__category" tabindex="-1">Vũng Tàu</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22596" target="_blank" tabindex="-1">List homestay Vũng Tàu cho nhóm đông người, vui cười hưởng giá tốt!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/the-gioi-dao-lon-o-vung-tao-2.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/the-gioi-dao-lon-o-vung-tao-2.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22592" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/du-lich-vung-tau" target="_blank" class="post__category" tabindex="-1">Vũng Tàu</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22592" target="_blank" tabindex="-1">Xuất hiện thế giới đảo lộn ở Vũng Tàu, bạn sẵn sàng thử chưa?</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/nhung-dieu-nen-tuan-thu-truoc-khi-tra-phong-homestay-7-1024x471.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/nhung-dieu-nen-tuan-thu-truoc-khi-tra-phong-homestay-7-1024x471.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22537" target="_blank" tabindex="-1"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/du-lich-ho-chi-minh" target="_blank" class="post__category" tabindex="-1">TP. Hồ Chí Minh</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22537" target="_blank" tabindex="-1">Những điều nên tuân thủ trước khi trả phòng homestay để lợi cả đôi đường</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/Lakeside-Villa-Garden-4-1024x768.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/Lakeside-Villa-Garden-4-1024x768.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22504" target="_blank" tabindex="0"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/thong-tin-cho-chu-nha" target="_blank" class="post__category" tabindex="0">Thông tin hữu ích dành cho chủ nhà (For host)</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22504" target="_blank" tabindex="0">Lakeside villa garden: điểm dừng chân mới toanh của giới trẻ Hà thành</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/nhung-dieu-kieng-ki-khi-o-homestay-3.jpg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/nhung-dieu-kieng-ki-khi-o-homestay-3.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22446" target="_blank" tabindex="0"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="0">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22446" target="_blank" tabindex="0">Những điều kiêng kị khi ở homestay dưới góc nhìn độc &amp; lạ của Tạ Quốc Kỳ Nam</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="post bg-img bg-img--85 radius-xs is-relative" style="width: 100%; display: inline-block; background-image: url(&quot;https://www.luxstay.com/blog/wp-content/uploads/2020/03/da-lat-la-thanh-pho-tinh-yeu-5-1024x1004.jpeg&quot;);" data-src="https://www.luxstay.com/blog/wp-content/uploads/2020/03/da-lat-la-thanh-pho-tinh-yeu-5-1024x1004.jpeg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/?p=22398" target="_blank" tabindex="0"></a>
+                                <div class="post__inner  between-xs is-absolute is-absolute--tl w--100 h--100">
+                                    <div class="post__header">
+                                        <a href="https://www.luxstay.com/blog/homestay" target="_blank" class="post__category" tabindex="0">Thông tin homestay</a>
+                                    </div>
+                                    <div class="post__title bold">
+                                        <a href="https://www.luxstay.com/blog/?p=22398" target="_blank" tabindex="0">Tại sao gọi Đà Lạt là thành phố tình yêu?</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Manual -->
+    <div class="section fadeIn">
+        <div class="container container--sm">
+            <div>
+                <div id="36" readmore="36">
+                    <div class="title">
+                        <h2 class="extra-bold p--giant">Hướng dẫn sử dụng</h2>
+                        <p>Đặt chỗ nhanh, thanh toán đơn giản, sử dụng dễ dàng</p>
+                    </div>
+                    <div class="user_manual">
+                        <div>
+                            <div class="bg-img bg-img--95 is-relative radius-xs gutter-mt" style="width: 100%; display: inline-block; background-image: url(&quot;https://cdn.luxstay.com/home/theme/theme_3_1583838065.jpg&quot;);" data-src="https://cdn.luxstay.com/home/theme/theme_3_1583838065.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/cau-hoi-thuong-gap/dat-phong-tren-luxstay.html" target="_blank" rel="noopener" tabindex="0">
+                                    <div class="card is-absolute is-absolute--tl w--100 h--100">
+                                        <div class="card__inner"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="bg-img bg-img--95 is-relative radius-xs gutter-mt" style="width: 100%; display: inline-block; background-image: url(&quot;https://cdn.luxstay.com/home/theme/theme_4_1583838088.jpg&quot;);" data-src="https://cdn.luxstay.com/home/theme/theme_4_1583838088.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/cau-hoi-thuong-gap/huong-dan-su-dung-ma-khuyen-mai.html" target="_blank" rel="noopener" tabindex="0">
+                                    <div class="card is-absolute is-absolute--tl w--100 h--100">
+                                        <div class="card__inner"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="bg-img bg-img--95 is-relative radius-xs gutter-mt" style="width: 100%; display: inline-block; background-image: url(&quot;https://cdn.luxstay.com/home/theme/theme_10_1583894021.jpg&quot;);" data-src="https://cdn.luxstay.com/home/theme/theme_10_1583894021.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/cau-hoi-thuong-gap/huong-dan-thanh-toan-truc-tuyen.html" target="_blank" rel="noopener" tabindex="0">
+                                    <div class="card is-absolute is-absolute--tl w--100 h--100">
+                                        <div class="card__inner"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="bg-img bg-img--95 is-relative radius-xs gutter-mt" style="width: 100%; display: inline-block; background-image: url(&quot;https://cdn.luxstay.com/home/theme/theme_2_1583837926.jpg&quot;);" data-src="https://cdn.luxstay.com/home/theme/theme_2_1583837926.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/cau-hoi-thuong-gap/huong-dan-thanh-toan-chuyen-khoan-ngan-hang.html" target="_blank" rel="noopener" tabindex="0">
+                                    <div class="card is-absolute is-absolute--tl w--100 h--100">
+                                        <div class="card__inner"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="bg-img bg-img--95 is-relative radius-xs gutter-mt" style="width: 100%; display: inline-block; background-image: url(&quot;https://cdn.luxstay.com/home/theme/theme_1_1584074526.jpg&quot;);" data-src="https://cdn.luxstay.com/home/theme/theme_1_1584074526.jpg" lazy="loaded">
+                                <a href="https://www.luxstay.com/blog/cau-hoi-thuong-gap" target="_blank" rel="noopener" tabindex="0">
+                                    <div class="card is-absolute is-absolute--tl w--100 h--100">
+                                        <div class="card__inner"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Introdution -->
+    <div class="section fadeIn">
+        <div class="container container--sm">
+            <div>
+                <div id="37" title="Introduction about luxstay" description="Introduction about luxstay" readmore="37">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 app-introduce">
+                            <svg version="1.1" viewBox="0 0 244 50" class="mb--18 mb--sm-42 app-introduce__logo svg-icon svg-fill">
+                                <path pid="0" d="M25.093 0c13.781.06 24.94 11.317 24.882 25.106C49.917 38.894 38.663 50.058 24.88 50 11.1 49.942-.059 38.683.001 24.894.057 11.106 11.31-.058 25.092 0zm11.801 31.9L14.398 16.053c.241-.26.48-.518.74-.777 2.7-2.687 5.971-4.031 9.775-4.015 3.804.015 7.064 1.388 9.741 4.098.238.241.476.482.694.743l-5.951 4.133 2.381 1.688 5.153-3.576v.02L39.33 16.7c-.692-1.203-1.584-2.325-2.616-3.39-3.231-3.292-7.167-4.947-11.788-4.967-4.6-.019-8.53 1.603-11.809 4.867a17.806 17.806 0 00-2.682 3.408l1.429 1.004 23.429 16.51c-.24.26-.48.518-.74.777-2.7 2.687-5.971 4.011-9.775 3.996-3.803-.016-7.063-1.37-9.74-4.08-.258-.26-.496-.521-.734-.782l6.111-4.251-.139-.181-2.183-1.528-5.373 3.735v-.021l-2.377 1.65a17.824 17.824 0 002.654 3.43c3.253 3.291 7.169 4.946 11.769 4.965 4.62.021 8.549-1.602 11.83-4.866 1.06-1.075 1.96-2.21 2.682-3.406l-2.383-1.67zm45.839 2.652l-12.45-.05.096-21.789a.957.957 0 00-.965-.945l-.678-.003a.96.96 0 00-.974.939v.047c-.048.095-.05.236-.05.33l-.098 22.636a1.337 1.337 0 001.351 1.326l13.805.056a.958.958 0 00.973-.938l.003-.662a1.037 1.037 0 00-1.013-.946v-.001zm27.64-22.67l-.871-.003c-.563-.003-1.027.42-1.027.937l-.075 15.878c-.014 3.157-3.252 5.735-7.197 5.72-3.943-.014-7.158-2.618-7.144-5.775l.123-15.5.052-.282a.957.957 0 00-.201-.756 1.128 1.128 0 00-.767-.332l-.87-.004c-.513-.002-.924.326-1.028.75a.857.857 0 00-.156.47l-.073 15.69c-.02 4.616 4.47 8.402 9.95 8.424 5.48.022 10.004-3.73 10.025-8.3l.122-15.5.054-.282a.952.952 0 00-.203-.755c-.152-.189-.458-.379-.714-.38zm48.638 11.226c-3.275-1.249-6.696-2.496-6.688-4.393.01-2.42 2.721-4.401 6.05-4.387 3.331.014 6.025 2.017 6.014 4.436l-.002.38a.96.96 0 00.961.953l.675.003a.96.96 0 00.971-.945v-.38c.009-1.66-.709-3.276-2.006-4.515-1.635-1.618-4.092-2.532-6.65-2.494-4.873-.02-8.698 3.047-8.715 6.938.03 3.748 4.416 5.38 8.656 6.962 3.324 1.247 6.795 2.495 6.785 4.487-.01 2.372-3.155 4.399-6.775 4.385-3.668-.016-6.747-2.07-6.737-4.44l.001-.38a.961.961 0 00-.96-.954l-.676-.002a.96.96 0 00-.97.945v.38c-.018 3.843 4.215 6.991 9.38 7.012 5.163.022 9.423-3.092 9.44-6.934-.033-3.796-4.464-5.427-8.754-7.057zM193.66 11.84l-18.844-.076c-.547-.003-.996.42-.999.94l-.002.66c-.002.52.443.946.99.949l8.103.032-.095 21.802c-.003.52.443.947.99.949l.696.002c.546.003.996-.42 1-.94l.095-21.802 8.055.031c.547.003.996-.42.999-.94l.003-.66c.003-.52-.443-.946-.99-.947zm49.264.515c-.144-.33-.481-.52-.867-.52l-.87-.005a.963.963 0 00-.677.28l-.145.14-.147.142-6.609 9.677-6.72-9.734c-.048-.046-.096-.094-.096-.14l-.143-.143a.97.97 0 00-.675-.285l-.774-.003a1.021 1.021 0 00-.872.515 1.03 1.03 0 00.045.988l7.966 11.576-.049 11.307c.006.527.437.95.964.946l.675.002a.957.957 0 00.97-.937l.049-11.308 7.923-11.509c.194-.329.243-.705.052-.989zm-37.898 12.047l3.75-7.994 3.728 8.023-7.478-.03zm15.615 10.954v-.047l-10.5-22.733c-.15-.425-.549-.71-1.102-.807-.603-.049-1.156.231-1.41.703v.046l-10.705 22.697v.047l-.204.471c-.095.283-.06.595.097.849.188.258.483.416.802.428l.854.004c.453.001.806-.282.958-.657l.05-.141 4.314-9.277 9.95.04 4.28 9.31.049.14c.15.38.5.664.952.667l.854.002c.352.002.654-.139.806-.422.152-.281.254-.563.104-.847l-.149-.473zm-86.008-15.15l.817.003a.963.963 0 00.729-.347l4.755-6.218.412-.478a.763.763 0 00.095-.915c-.135-.306-.453-.482-.816-.483l-.863-.004a.929.929 0 00-.868.608l-4.983 6.522a.94.94 0 00-.096.915c.135.22.453.394.816.397h.002zm-6.998 8.45l-.819-.002a.96.96 0 00-.728.347l-4.755 6.207-.413.48a.77.77 0 00-.094.92c.135.309.452.485.816.488l.864.002a.91.91 0 00.82-.478l5.03-6.601a.949.949 0 00.095-.92 1.027 1.027 0 00-.816-.443zm8.019-.453l.148.14 5.55 7.248c.248.284.246.662.095.99-.15.332-.5.519-.9.517l-.896-.004a1.013 1.013 0 01-.697-.286l-.149-.14c-.03-.002-.042-.02-.059-.044a.212.212 0 00-.04-.052l-5.501-7.151a1.005 1.005 0 01-.15-.237l-11.694-15.39-.446-.521c-.248-.285-.246-.662-.096-.993.15-.33.501-.518.9-.516l.897.004a.99.99 0 01.845.428l.15.19 11.992 15.721s.05.048.05.096z"></path>
+                            </svg>
+                            <h2 class="app-introduce__heading" style="text-transform: uppercase;">TÌM KIẾM CHỖ Ở GIÁ TỐT NHẤT</h2>
+                            <p>Luxstay hiện là nền tảng đặt phòng trực tuyến #1 Việt Nam. Đồng hành cùng chúng tôi, bạn có những chuyến đi mang đầy trải nghiệm. Với Luxstay, việc đặt chỗ ở, biệt thự nghỉ dưỡng, khách sạn, nhà riêng, chung cư... trở nên nhanh chóng, thuận tiện và dễ dàng.</p>
+                            <div class="app-introduce__action mt--12 mt--md--24 mt--lg--48 mt--xl--72">
+                                <div class="row row--wide">
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="qr-code mr--12 d-none d-md-inline-block"><img alt="Luxstay" width="180" height="56" data-src="/qr-code.png" src="https://www.luxstay.com/qr-code.png" lazy="loaded"></div>
+                                    </div>
+                                    <div class="col-md-6 col-xl-8 is-flex align-center">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-6"><a target="_blank" rel="nofollow" href="https://itunes.apple.com/us/app/luxstay-%C4%91%E1%BA%B7t-ph%C3%B2ng-homestay/id1339510380?mt=8" class="d-inline-block mb--18 mb--xl--36"><img alt="Apple Store" width="180" height="56" data-src="/icons/apple-store.svg" src="https://www.luxstay.com/icons/apple-store.svg" lazy="loaded"></a></div>
+                                            <div class="col-xs-12 col-sm-6"><a target="_blank" rel="nofollow" href="https://wap2.hispace.hicloud.com/uowap/index.jsp#/detailApp/C101516187?accessId=058e904ea40444f1baba622a16bb9466" class="d-inline-block mb--18 mb--xl--36"><img alt="Huawei Store" width="180" height="56" data-src="/icons/huawei.svg" src="https://www.luxstay.com/icons/huawei.svg" lazy="loaded"></a></div>
+                                            <div class="col-xs-12 col-sm-6"><a target="_blank" rel="nofollow" href="https://play.google.com/store/apps/details?id=net.luxstay.android" class="d-inline-block mb--18 mb--sm--0"><img alt="Google Play" width="180" height="56" data-src="/icons/google-play.svg" src="https://www.luxstay.com/icons/google-play.svg" lazy="loaded"></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pb--24 pb--md--0"></div>
+                        </div>
+                        <div class="col-md-6 col-xs-12 end-md"><img alt="Home 02" width="707" height="648" data-src="/home/home-02.png" src="https://www.luxstay.com/home/home-02.png" lazy="loaded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Banner
+            $("#bannerSliderPC").slick({
+                arrows: false,
+                dots: true,
+                autoplay: true,
+                autoplaySpeed: 4000
+            });
+
+            // Suggestion
+            $(".slide-item-has-shadow .mt--24 div").first().slick({
+                arrows: false,
+                slidesToShow: 6,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }
+                ]
+            });
+
+            // Location
+            $("div#29 div").slice(2, 3).slick({
+                arrows: true,
+                infinite: false,
+                slidesToShow: 5,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 2,
+                        }
+                    }
+                ]
+            });
+
+            // Promotion
+            $(".promotion-slider div").slice(2, 3).slick({
+                arrows: true,
+                infinite: false,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }
+                ]
+            });
+
+            // Destination
+            $(".destination-wrap div").first().slick({
+                arrows: true,
+                infinite: false,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }
+                ]
+            });
+
+            // Discovery
+            $(".discovery").slick({
+                arrows: true,
+                infinite: false,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }
+                ]
+            });
+
+            // User Manual
+            $(".user_manual").slick({
+                arrows: true,
+                infinite: false,
+                slidesToShow: 5,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}

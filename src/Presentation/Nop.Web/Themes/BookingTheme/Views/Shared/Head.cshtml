@@ -1,0 +1,33 @@
+﻿@using Nop.Core
+@using Nop.Services.Helpers
+@using Nop.Web.Framework.UI
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@{
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    var themeName = await themeContext.GetWorkingThemeNameAsync();
+
+
+    //add main CSS file
+    if (supportRtl)
+    {
+        //RTL is not supported by Simplex Theme
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/simplex.styles.responsive.rtl.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/simplex.styles.rtl.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.min.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/simplex.styles.responsive.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/simplex.styles.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.min.css");
+    }
+
+    Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.min.css");
+    Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/font-awesome.min.css");
+
+    //add jQuery UI css file
+    Html.AppendCssFileParts("~/lib_npm/jquery-ui-dist/jquery-ui.min.css");
+
+}

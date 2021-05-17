@@ -1,0 +1,34 @@
+﻿@model CatalogProductsModel
+
+@{
+    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.catalogproducts.js");
+}
+
+<div class="products-container">
+    <div class="ajax-products-busy"></div>
+    <div class="products-wrapper">
+        @await Html.PartialAsync("_ProductsInGridOrLines", Model)
+    </div>
+</div>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        CatalogProducts.init({
+            ajax: @Model.UseAjaxLoading.ToString().ToLower(),
+            browserPath: '@Context.Request.Path',
+            fetchUrl: '@ViewData["fetchUrl"]'
+        });
+
+        addPagerHandlers();
+        $(CatalogProducts).on('loaded', function () {
+            addPagerHandlers();
+        });
+    });
+
+    function addPagerHandlers() {
+        $('[data-page]').on('click', function (e) {
+            e.preventDefault();
+            CatalogProducts.getProducts($(this).data('page'));
+            return false;
+        });
+    }
+</script>

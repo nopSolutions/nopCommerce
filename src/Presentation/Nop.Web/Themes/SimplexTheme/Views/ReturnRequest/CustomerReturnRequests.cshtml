@@ -1,0 +1,70 @@
+﻿@model CustomerReturnRequestsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-return-request-list-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+}
+<div class="page account-page return-request-list-page">
+    <div class="page-title panel-heading">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerReturnRequests")</h1>
+    </div>
+    <div class="page-body">
+        <div class="row">
+            @foreach (var item in Model.Items)
+            {
+                <div class="col-sm-6 col-md-6">
+                    <div class="section request-item">
+                        <div class="title">
+                            <strong>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.CustomNumber, item.ReturnRequestStatus)</strong>
+                        </div>
+                        <ul class="details">
+                            <li class="product">
+                                <label>@T("Account.CustomerReturnRequests.Item")</label>
+                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                <span>x @item.Quantity</span>
+                            </li>
+                            <li class="reason">
+                                <label>@T("Account.CustomerReturnRequests.Reason")</label>
+                                <span>@item.ReturnReason</span>
+                            </li>
+                            <li class="action">
+                                <label>@T("Account.CustomerReturnRequests.Action")</label>
+                                <span>@item.ReturnAction</span>
+                            </li>
+                            <li class="date">
+                                <label>@T("Account.CustomerReturnRequests.Date")</label>
+                                <span>@item.CreatedOn.ToString()</span>
+                            </li>
+                            @if (item.UploadedFileGuid != Guid.Empty)
+                            {
+                                <li class="uploaded-file">
+                                    <label>@T("Account.CustomerReturnRequests.UploadedFile")</label>
+                                    <span>
+                                        <a href="@Url.Action("GetFileUpload", "Download", new {downloadId = item.UploadedFileGuid.ToString()})">
+                                            @T("Account.CustomerReturnRequests.UploadedFile.Download")
+                                        </a>
+                                    </span>
+                                </li>
+                            }
+                            @if (!string.IsNullOrEmpty(item.Comments))
+                        {
+                        <li class="comments">
+                            <label>@T("Account.CustomerReturnRequests.Comments")</label>
+                            <div>@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))</div>
+                        </li>
+                        }
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

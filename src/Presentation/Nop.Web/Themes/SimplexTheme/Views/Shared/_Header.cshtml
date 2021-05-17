@@ -1,0 +1,417 @@
+﻿<div class="header-wrap">
+    <div class="header">
+        <div class="container container--md w--100">
+            <div class="row middle-xs">
+                <div class="col-xs-10 col-md-6 is-flex align-center flex-nowrap">
+                    <a href="https://www.luxstay.com/vi/" aria-current="page" class="header__logo is-inline-block nuxt-link-exact-active nuxt-link-active">
+                        <svg version="1.1" viewBox="0 0 50 50" class="svg-icon svg-fill" style="width: 50px; height: 50px;">
+                            <path pid="0" d="M25.093 0c13.781.06 24.94 11.317 24.882 25.106C49.917 38.894 38.663 50.058 24.88 50 11.1 49.942-.059 38.683.001 24.894.057 11.106 11.31-.058 25.092 0zm11.801 31.9L14.398 16.053c.241-.26.48-.518.74-.777 2.7-2.687 5.971-4.031 9.775-4.015 3.804.015 7.064 1.388 9.741 4.098.238.241.476.482.694.743l-5.951 4.133 2.381 1.688 5.153-3.576v.02L39.33 16.7c-.692-1.203-1.584-2.325-2.616-3.39-3.231-3.292-7.167-4.947-11.788-4.967-4.6-.019-8.53 1.603-11.809 4.867a17.806 17.806 0 00-2.682 3.408l1.429 1.004 23.429 16.51c-.24.26-.48.518-.74.777-2.7 2.687-5.971 4.011-9.775 3.996-3.803-.016-7.063-1.37-9.74-4.08-.258-.26-.496-.521-.734-.782l6.111-4.251-.139-.181-2.183-1.528-5.373 3.735v-.021l-2.377 1.65a17.824 17.824 0 002.654 3.43c3.253 3.291 7.169 4.946 11.769 4.965 4.62.021 8.549-1.602 11.83-4.866 1.06-1.075 1.96-2.21 2.682-3.406l-2.383-1.67z"></path>
+                        </svg>
+                    </a>
+                    <!---->
+                    <div class="app-header-search is-flex">
+                        <div class="search__wrapper">
+                            <div class="search-box">
+                                <div class="search-field__wrap is-relative">
+                                    <!---->
+                                    <div class="search-location">
+                                        <div class="booking__field is-relative">
+                                            <svg version="1.1" viewBox="0 0 15 15" class="mr--12 svg-icon svg-fill" style="width: 14px; height: 14px;">
+                                                <g stroke="#919191" stroke-width="2" fill="none" fill-rule="evenodd">
+                                                    <path pid="0" d="M10 10l4 4"></path>
+                                                    <circle pid="1" cx="6.5" cy="6.5" r="5.5"></circle>
+                                                </g>
+                                            </svg>
+                                            <div class="booking__input"><input type="text" autocomplete="off" placeholder="Tìm kiếm" id="search-input" class="booking__input-text bold"></div>
+                                            <svg version="1.1" viewBox="0 0 12 12" class="icon--12 pointer svg-icon svg-fill" style="margin-left: 5px; display: none;">
+                                                <defs>
+                                                    <path fill="#ccc" stroke="none" pid="0" id="svgicon_close-icon_a" d="M6 4.586L10.182.404a.5.5 0 01.707 0l.707.707a.5.5 0 010 .707L7.414 6l4.182 4.182a.5.5 0 010 .707l-.707.707a.5.5 0 01-.707 0L6 7.414l-4.182 4.182a.5.5 0 01-.707 0l-.707-.707a.5.5 0 010-.707L4.586 6 .404 1.818a.5.5 0 010-.707L1.11.404a.5.5 0 01.707 0L6 4.586z"></path>
+                                                </defs>
+                                                <use fill="#FFF" fill-rule="evenodd" xlink:href="#svgicon_close-icon_a"></use>
+                                            </svg>
+                                            <!---->
+                                        </div>
+                                    </div>
+                                    <div class="search-date mt--12 mt--md--0">
+                                        <div class="booking__field">
+                                            <svg version="1.1" viewBox="0 0 14 16" class="mr--12 svg-icon svg-fill" style="width: 14px; height: 16px;">
+                                                <path pid="0" d="M9 2V1a1 1 0 112 0v1a3 3 0 013 3v8a3 3 0 01-3 3H3a3 3 0 01-3-3V5a3 3 0 013-3V1a1 1 0 112 0v1h4zM2 7v6a1 1 0 001 1h8a1 1 0 001-1V7H2z" fill="#666" fill-rule="evenodd"></path>
+                                            </svg>
+                                            <div class="date-search-button">
+                                                <div class="datepicker-range">
+                                                    <button id="trigger-date-range" class="btn btn-outline--gray btn-xs search-filter__button">
+                                                        Ngày
+                                                        <!---->
+                                                    </button>
+                                                    <div id="airbnb-style-datepicker-wrapper-zdBKh" class="asd__wrapper" style="position: absolute; top: 54px; left: 0px; width: 700px; z-index: 100; display: none;">
+                                                        <!---->
+                                                        <div class="asd__datepicker-header">
+                                                            <div class="asd__change-month-button asd__change-month-button--previous">
+                                                                <button type="button" aria-label="Move backward to switch to the previous month.">
+                                                                    <svg viewBox="0 0 1000 1000">
+                                                                        <path d="M336.2 274.5l-210.1 210h805.4c13 0 23 10 23 23s-10 23-23 23H126.1l210.1 210.1c11 11 11 21 0 32-5 5-10 7-16 7s-11-2-16-7l-249.1-249c-11-11-11-21 0-32l249.1-249.1c21-21.1 53 10.9 32 32z"></path>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                            <div class="asd__change-month-button asd__change-month-button--next">
+                                                                <button type="button" aria-label="Move forward to switch to the next month.">
+                                                                    <svg viewBox="0 0 1000 1000">
+                                                                        <path d="M694.4 242.4l249.1 249.1c11 11 11 21 0 32L694.4 772.7c-5 5-10 7-16 7s-11-2-16-7c-11-11-11-21 0-32l210.1-210.1H67.1c-13 0-23-10-23-23s10-23 23-23h805.4L662.4 274.5c-21-21.1 11-53.1 32-32.1z"></path>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                            <div class="asd__days-legend" style="width: 350px; left: 0px;">
+                                                                <div class="asd__day-title">Mon</div>
+                                                                <div class="asd__day-title">Tue</div>
+                                                                <div class="asd__day-title">Wed</div>
+                                                                <div class="asd__day-title">Thu</div>
+                                                                <div class="asd__day-title">Fri</div>
+                                                                <div class="asd__day-title">Sat</div>
+                                                                <div class="asd__day-title">Sun</div>
+                                                            </div>
+                                                            <div class="asd__days-legend" style="width: 350px; left: 350px;">
+                                                                <div class="asd__day-title">Mon</div>
+                                                                <div class="asd__day-title">Tue</div>
+                                                                <div class="asd__day-title">Wed</div>
+                                                                <div class="asd__day-title">Thu</div>
+                                                                <div class="asd__day-title">Fri</div>
+                                                                <div class="asd__day-title">Sat</div>
+                                                                <div class="asd__day-title">Sun</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="asd__inner-wrapper" style="margin-left: -350px;">
+                                                            <div>
+                                                                <div class="asd__month asd__month--hidden" style="width: 350px;">
+                                                                    <div class="asd__month-name"><span>April</span> <span>2021</span></div>
+                                                                    <table role="presentation" class="asd__month-table">
+                                                                        <tbody>
+                                                                            <tr class="asd__week">
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td data-date="2021-04-01" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-01" disabled="disabled" class="asd__day-button">1</button></td>
+                                                                                <td data-date="2021-04-02" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-02" disabled="disabled" class="asd__day-button">2</button></td>
+                                                                                <td data-date="2021-04-03" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-03" disabled="disabled" class="asd__day-button">3</button></td>
+                                                                                <td data-date="2021-04-04" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-04" disabled="disabled" class="asd__day-button">4</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-04-05" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-05" disabled="disabled" class="asd__day-button">5</button></td>
+                                                                                <td data-date="2021-04-06" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-06" disabled="disabled" class="asd__day-button">6</button></td>
+                                                                                <td data-date="2021-04-07" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-07" disabled="disabled" class="asd__day-button">7</button></td>
+                                                                                <td data-date="2021-04-08" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-08" disabled="disabled" class="asd__day-button">8</button></td>
+                                                                                <td data-date="2021-04-09" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-09" disabled="disabled" class="asd__day-button">9</button></td>
+                                                                                <td data-date="2021-04-10" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-10" disabled="disabled" class="asd__day-button">10</button></td>
+                                                                                <td data-date="2021-04-11" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-11" disabled="disabled" class="asd__day-button">11</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-04-12" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-12" disabled="disabled" class="asd__day-button">12</button></td>
+                                                                                <td data-date="2021-04-13" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-13" disabled="disabled" class="asd__day-button">13</button></td>
+                                                                                <td data-date="2021-04-14" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-14" disabled="disabled" class="asd__day-button">14</button></td>
+                                                                                <td data-date="2021-04-15" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-15" disabled="disabled" class="asd__day-button">15</button></td>
+                                                                                <td data-date="2021-04-16" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-16" disabled="disabled" class="asd__day-button">16</button></td>
+                                                                                <td data-date="2021-04-17" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-17" disabled="disabled" class="asd__day-button">17</button></td>
+                                                                                <td data-date="2021-04-18" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-18" disabled="disabled" class="asd__day-button">18</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-04-19" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-19" disabled="disabled" class="asd__day-button">19</button></td>
+                                                                                <td data-date="2021-04-20" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-20" disabled="disabled" class="asd__day-button">20</button></td>
+                                                                                <td data-date="2021-04-21" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-21" disabled="disabled" class="asd__day-button">21</button></td>
+                                                                                <td data-date="2021-04-22" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-22" disabled="disabled" class="asd__day-button">22</button></td>
+                                                                                <td data-date="2021-04-23" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-23" disabled="disabled" class="asd__day-button">23</button></td>
+                                                                                <td data-date="2021-04-24" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-24" disabled="disabled" class="asd__day-button">24</button></td>
+                                                                                <td data-date="2021-04-25" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-25" disabled="disabled" class="asd__day-button">25</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-04-26" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-26" disabled="disabled" class="asd__day-button">26</button></td>
+                                                                                <td data-date="2021-04-27" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-27" disabled="disabled" class="asd__day-button">27</button></td>
+                                                                                <td data-date="2021-04-28" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-28" disabled="disabled" class="asd__day-button">28</button></td>
+                                                                                <td data-date="2021-04-29" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-29" disabled="disabled" class="asd__day-button">29</button></td>
+                                                                                <td data-date="2021-04-30" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-04-30" disabled="disabled" class="asd__day-button">30</button></td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="asd__month" style="width: 350px;">
+                                                                    <div class="asd__month-name"><span>May</span> <span>2021</span></div>
+                                                                    <table role="presentation" class="asd__month-table">
+                                                                        <tbody>
+                                                                            <tr class="asd__week">
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td data-date="2021-05-01" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-01" disabled="disabled" class="asd__day-button">1</button></td>
+                                                                                <td data-date="2021-05-02" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-02" disabled="disabled" class="asd__day-button">2</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-05-03" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-03" disabled="disabled" class="asd__day-button">3</button></td>
+                                                                                <td data-date="2021-05-04" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-04" disabled="disabled" class="asd__day-button">4</button></td>
+                                                                                <td data-date="2021-05-05" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-05" disabled="disabled" class="asd__day-button">5</button></td>
+                                                                                <td data-date="2021-05-06" tabindex="-1" class="asd__day asd__day--enabled asd__day--disabled" style="width: 45.7143px; background: rgb(255, 255, 255); color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-06" disabled="disabled" class="asd__day-button">6</button></td>
+                                                                                <td data-date="2021-05-07" tabindex="-1" class="asd__day asd__day--enabled asd__day--today" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-07" class="asd__day-button">7</button></td>
+                                                                                <td data-date="2021-05-08" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-08" class="asd__day-button">8</button></td>
+                                                                                <td data-date="2021-05-09" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-09" class="asd__day-button">9</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-05-10" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-10" class="asd__day-button">10</button></td>
+                                                                                <td data-date="2021-05-11" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-11" class="asd__day-button">11</button></td>
+                                                                                <td data-date="2021-05-12" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-12" class="asd__day-button">12</button></td>
+                                                                                <td data-date="2021-05-13" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-13" class="asd__day-button">13</button></td>
+                                                                                <td data-date="2021-05-14" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-14" class="asd__day-button">14</button></td>
+                                                                                <td data-date="2021-05-15" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-15" class="asd__day-button">15</button></td>
+                                                                                <td data-date="2021-05-16" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-16" class="asd__day-button">16</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-05-17" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-17" class="asd__day-button">17</button></td>
+                                                                                <td data-date="2021-05-18" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-18" class="asd__day-button">18</button></td>
+                                                                                <td data-date="2021-05-19" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-19" class="asd__day-button">19</button></td>
+                                                                                <td data-date="2021-05-20" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-20" class="asd__day-button">20</button></td>
+                                                                                <td data-date="2021-05-21" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-21" class="asd__day-button">21</button></td>
+                                                                                <td data-date="2021-05-22" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-22" class="asd__day-button">22</button></td>
+                                                                                <td data-date="2021-05-23" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-23" class="asd__day-button">23</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-05-24" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-24" class="asd__day-button">24</button></td>
+                                                                                <td data-date="2021-05-25" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-25" class="asd__day-button">25</button></td>
+                                                                                <td data-date="2021-05-26" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-26" class="asd__day-button">26</button></td>
+                                                                                <td data-date="2021-05-27" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-27" class="asd__day-button">27</button></td>
+                                                                                <td data-date="2021-05-28" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-28" class="asd__day-button">28</button></td>
+                                                                                <td data-date="2021-05-29" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-29" class="asd__day-button">29</button></td>
+                                                                                <td data-date="2021-05-30" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-30" class="asd__day-button">30</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-05-31" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-05-31" class="asd__day-button">31</button></td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="asd__month" style="width: 350px;">
+                                                                    <div class="asd__month-name"><span>June</span> <span>2021</span></div>
+                                                                    <table role="presentation" class="asd__month-table">
+                                                                        <tbody>
+                                                                            <tr class="asd__week">
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td data-date="2021-06-01" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-01" class="asd__day-button">1</button></td>
+                                                                                <td data-date="2021-06-02" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-02" class="asd__day-button">2</button></td>
+                                                                                <td data-date="2021-06-03" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-03" class="asd__day-button">3</button></td>
+                                                                                <td data-date="2021-06-04" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-04" class="asd__day-button">4</button></td>
+                                                                                <td data-date="2021-06-05" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-05" class="asd__day-button">5</button></td>
+                                                                                <td data-date="2021-06-06" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-06" class="asd__day-button">6</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-06-07" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-07" class="asd__day-button">7</button></td>
+                                                                                <td data-date="2021-06-08" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-08" class="asd__day-button">8</button></td>
+                                                                                <td data-date="2021-06-09" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-09" class="asd__day-button">9</button></td>
+                                                                                <td data-date="2021-06-10" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-10" class="asd__day-button">10</button></td>
+                                                                                <td data-date="2021-06-11" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-11" class="asd__day-button">11</button></td>
+                                                                                <td data-date="2021-06-12" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-12" class="asd__day-button">12</button></td>
+                                                                                <td data-date="2021-06-13" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-13" class="asd__day-button">13</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-06-14" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-14" class="asd__day-button">14</button></td>
+                                                                                <td data-date="2021-06-15" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-15" class="asd__day-button">15</button></td>
+                                                                                <td data-date="2021-06-16" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-16" class="asd__day-button">16</button></td>
+                                                                                <td data-date="2021-06-17" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-17" class="asd__day-button">17</button></td>
+                                                                                <td data-date="2021-06-18" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-18" class="asd__day-button">18</button></td>
+                                                                                <td data-date="2021-06-19" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-19" class="asd__day-button">19</button></td>
+                                                                                <td data-date="2021-06-20" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-20" class="asd__day-button">20</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-06-21" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-21" class="asd__day-button">21</button></td>
+                                                                                <td data-date="2021-06-22" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-22" class="asd__day-button">22</button></td>
+                                                                                <td data-date="2021-06-23" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-23" class="asd__day-button">23</button></td>
+                                                                                <td data-date="2021-06-24" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-24" class="asd__day-button">24</button></td>
+                                                                                <td data-date="2021-06-25" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-25" class="asd__day-button">25</button></td>
+                                                                                <td data-date="2021-06-26" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-26" class="asd__day-button">26</button></td>
+                                                                                <td data-date="2021-06-27" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-27" class="asd__day-button">27</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-06-28" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-28" class="asd__day-button">28</button></td>
+                                                                                <td data-date="2021-06-29" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-29" class="asd__day-button">29</button></td>
+                                                                                <td data-date="2021-06-30" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-06-30" class="asd__day-button">30</button></td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="asd__month asd__month--hidden" style="width: 350px;">
+                                                                    <div class="asd__month-name"><span>July</span> <span>2021</span></div>
+                                                                    <table role="presentation" class="asd__month-table">
+                                                                        <tbody>
+                                                                            <tr class="asd__week">
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                                <td data-date="2021-07-01" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-01" class="asd__day-button">1</button></td>
+                                                                                <td data-date="2021-07-02" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-02" class="asd__day-button">2</button></td>
+                                                                                <td data-date="2021-07-03" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-03" class="asd__day-button">3</button></td>
+                                                                                <td data-date="2021-07-04" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-04" class="asd__day-button">4</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-07-05" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-05" class="asd__day-button">5</button></td>
+                                                                                <td data-date="2021-07-06" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-06" class="asd__day-button">6</button></td>
+                                                                                <td data-date="2021-07-07" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-07" class="asd__day-button">7</button></td>
+                                                                                <td data-date="2021-07-08" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-08" class="asd__day-button">8</button></td>
+                                                                                <td data-date="2021-07-09" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-09" class="asd__day-button">9</button></td>
+                                                                                <td data-date="2021-07-10" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-10" class="asd__day-button">10</button></td>
+                                                                                <td data-date="2021-07-11" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-11" class="asd__day-button">11</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-07-12" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-12" class="asd__day-button">12</button></td>
+                                                                                <td data-date="2021-07-13" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-13" class="asd__day-button">13</button></td>
+                                                                                <td data-date="2021-07-14" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-14" class="asd__day-button">14</button></td>
+                                                                                <td data-date="2021-07-15" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-15" class="asd__day-button">15</button></td>
+                                                                                <td data-date="2021-07-16" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-16" class="asd__day-button">16</button></td>
+                                                                                <td data-date="2021-07-17" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-17" class="asd__day-button">17</button></td>
+                                                                                <td data-date="2021-07-18" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-18" class="asd__day-button">18</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-07-19" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-19" class="asd__day-button">19</button></td>
+                                                                                <td data-date="2021-07-20" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-20" class="asd__day-button">20</button></td>
+                                                                                <td data-date="2021-07-21" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-21" class="asd__day-button">21</button></td>
+                                                                                <td data-date="2021-07-22" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-22" class="asd__day-button">22</button></td>
+                                                                                <td data-date="2021-07-23" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-23" class="asd__day-button">23</button></td>
+                                                                                <td data-date="2021-07-24" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-24" class="asd__day-button">24</button></td>
+                                                                                <td data-date="2021-07-25" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-25" class="asd__day-button">25</button></td>
+                                                                            </tr>
+                                                                            <tr class="asd__week">
+                                                                                <td data-date="2021-07-26" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-26" class="asd__day-button">26</button></td>
+                                                                                <td data-date="2021-07-27" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-27" class="asd__day-button">27</button></td>
+                                                                                <td data-date="2021-07-28" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-28" class="asd__day-button">28</button></td>
+                                                                                <td data-date="2021-07-29" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-29" class="asd__day-button">29</button></td>
+                                                                                <td data-date="2021-07-30" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-30" class="asd__day-button">30</button></td>
+                                                                                <td data-date="2021-07-31" tabindex="-1" class="asd__day asd__day--enabled" style="width: 45.7143px; color: rgb(86, 90, 92);"><button type="button" tabindex="-1" date="2021-07-31" class="asd__day-button">31</button></td>
+                                                                                <td tabindex="-1" class="asd__day asd__day--empty" style="width: 45.7143px; color: rgb(86, 90, 92);">
+                                                                                    <!---->
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <!---->
+                                                        </div>
+                                                        <div class="asd__action-buttons"><button type="button">Xoá</button> <button type="button" style="color: rgb(246, 94, 57);">Áp dụng</button></div>
+                                                        <!---->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="search-guest-button" class="search-guest mt--12 mt--md--0 cursor">
+                                        <div class="booking__field is-relative">
+                                            <svg version="1.1" viewBox="0 0 16 16" class="mr--12 svg-icon svg-fill" style="width: 14px; height: 14px;">
+                                                <path pid="0" d="M8 8a4 4 0 110-8 4 4 0 010 8zm0 1c4.926 0 7.59 1.966 7.995 5.898A1.002 1.002 0 0114.994 16H1.006a1.003 1.003 0 01-1-1.102C.408 10.966 3.073 9 8 9z" fill="#666" fill-rule="evenodd"></path>
+                                            </svg>
+                                            <div class="booking__input">
+                                                <div>
+                                                    <div data-v-0ae22c83="">
+                                                        <span data-v-0ae22c83="">
+                                                            <div data-v-0ae22c83="" class="modal-booking-time el-popover__reference" aria-describedby="el-popover-7779" tabindex="0">
+                                                                <p data-v-0ae22c83="" class="cursor">
+                                                                    Số khách
+                                                                </p>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" id="search-btn" class="booking__btn btn btn--secondary bold mt--12 mt--md--0">
+                                    <svg version="1.1" viewBox="0 0 15 15" class="svg-icon svg-fill" style="width: 14px; height: 14px;">
+                                        <g stroke="#FFF" stroke-width="2" fill="none" fill-rule="evenodd">
+                                            <path pid="0" d="M10 10l4 4"></path>
+                                            <circle pid="1" cx="6.5" cy="6.5" r="5.5"></circle>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2 end-xs col-md-6 menu-wrapper">
+                    <a href="#" class="menu-mobile--open"><img src="https://www.luxstay.com/icons/menu.svg" width="24" height="24"></a>
+                    <ul class="menu is-flex end-xs middle-xs">
+                        <li class="menu__item is-logo">
+                            <!---->
+                        </li>
+                        <li class="menu__item"><a href="https://host.luxstay.net/login" rel="nofollow" class="menu__link is-become-host d-inline-block">Host</a></li>
+                        <!---->
+                        <li class="menu__item"><a href="https://www.luxstay.com/vi/auth/sign/up?return_url=%2Fvi%2F" class="menu__link bold" data-action="close-mobile-menu" rel="nofollow">Đăng ký</a></li>
+                        <li class="menu__item"><a href="https://www.luxstay.com/vi/auth/sign/in?return_url=%2Fvi%2F" class="menu__link bold" data-action="close-mobile-menu" rel="nofollow">Đăng nhập</a></li>
+                        <li class="menu__item is-relative">
+                            <div data-v-0550aeae="">
+                                <span data-v-0550aeae="" data-action="popover" class="menu__link btn--dropdown semi-bold is-flex middle-xs is-relative pointer"><img data-v-0550aeae="" src="https://www.luxstay.com/icons/vi.svg" width="24" height="24"> <span data-v-0550aeae="" class="ml--6">VND</span></span>
+                                <div data-v-0550aeae="" class="popover">
+                                    <div data-v-0550aeae="" class="row is-relative currency-box">
+                                        <div data-v-0550aeae="" class="col-md-6 col-xs-12"><a data-v-0550aeae="" class="is-flex middle-xs is-relative pointer is-checked"><img data-v-0550aeae="" src="https://www.luxstay.com/icons/vi.svg" width="16" height="16"> <span data-v-0550aeae="" class="px--12">Tiếng Việt</span></a><a data-v-0550aeae="" class="is-flex middle-xs is-relative pointer"><img data-v-0550aeae="" src="https://www.luxstay.com/icons/en.svg" width="16" height="16"> <span data-v-0550aeae="" class="px--12">English</span></a><a data-v-0550aeae="" class="is-flex middle-xs is-relative pointer"><img data-v-0550aeae="" src="https://www.luxstay.com/icons/ko.svg" width="16" height="16"> <span data-v-0550aeae="" class="px--12">Korean</span></a></div>
+                                        <div data-v-0550aeae="" class="col-md-6 col-xs-12"><a data-v-0550aeae="" class="is-flex middle-xs is-relative pointer is-checked"><b data-v-0550aeae="">VND</b> <span data-v-0550aeae="" class="px--12">Việt Nam Đồng</span></a><a data-v-0550aeae="" class="is-flex middle-xs is-relative pointer"><b data-v-0550aeae="">USD</b> <span data-v-0550aeae="" class="px--12">United States Dollar</span></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li data-action="close-mobile-menu" class="menu-mobile--close"><img src="https://www.luxstay.com/icons/close.svg" alt="Menu" width="24" height="24"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-after"></div>
+</div>
+
+<script>
+    $(function () {
+        /* Menu Mobile */
+        $(".menu-mobile--open").click(function () {
+            $("ul.menu").toggleClass("menu--opened");
+        });
+
+        $(".menu-mobile--close").click(function () {
+            $("ul.menu").removeClass("menu--opened");
+        });
+    });
+</script>

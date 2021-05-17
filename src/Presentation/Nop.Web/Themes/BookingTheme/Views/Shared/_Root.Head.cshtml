@@ -1,0 +1,107 @@
+﻿@using Nop.Core.Domain
+@using StackExchange.Profiling
+@using Nop.Core.Configuration
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Seo
+@using Nop.Services.Events
+@using Nop.Services.Security
+@using Nop.Web.Framework.Events
+@using Nop.Core
+@using Nop.Core.Events
+@using Nop.Web.Framework.UI
+@inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
+@inject IPermissionService permissionService
+@inject IWorkContext workContext
+@inject SeoSettings seoSettings
+@inject AppSettings appSettings
+@inject Nop.Services.Localization.ILanguageService languageService
+
+@{
+
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+
+    if (supportRtl)
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/Themes/SimplexTheme/Content/js/simplex.rtl.js");
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/Themes/SimplexTheme/Content/js/bootstrap.min.rtl.js");
+    }
+    else
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/Themes/SimplexTheme/Content/js/simplex.js");
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/Themes/SimplexTheme/Content/js/bootstrap.min.js");
+    }
+
+    //resources
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/Themes/SimplexTheme/Content/js/owl.carousel.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/Themes/SimplexTheme/Content/js/head.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    //when jQuery migrate script logging is active you will see the log in the browser console
+    if (commonSettings.JqueryMigrateScriptLoggingActive)
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+    }
+    else
+    {
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.min.js");
+    }
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
+
+    //custom tag(s);
+    if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
+    {
+        Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+    }
+    var displayMiniProfiler = appSettings.CommonConfig.MiniProfilerEnabled && await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessProfiling);
+    //event
+    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
+}
+<!DOCTYPE html>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(await this.ShouldUseRtlThemeAsync() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+<head>
+    <title>@Html.NopTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(Html.NopMetaDescription())" />
+    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="generator" content="nopCommerce" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+    @Html.NopHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Html.PartialAsync("Head")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeadHtmlTag })
+    @Html.NopCssFiles(ResourceLocation.Head)
+    @Html.NopScripts(ResourceLocation.Head)
+    @Html.NopCanonicalUrls()
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @*Insert favicon and app icons head code*@
+    @await Component.InvokeAsync("Favicon")
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
+    @Html.NopInlineScripts(ResourceLocation.Head)
+    <!--Powered by nopCommerce - https://www.nopCommerce.com-->
+    <!--Theme Designed by nopAccelerate Themes - http://themes.nopaccelerate.com/themes/ -->
+    <!--Copyright (c) 2014-->
+    <!--[if lt IE 9]>
+           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+    @RenderBody()
+    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopScripts(ResourceLocation.Footer)
+    @Html.NopInlineScripts(ResourceLocation.Footer)
+</body>
+</html>

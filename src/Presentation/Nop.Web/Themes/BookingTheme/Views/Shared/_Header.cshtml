@@ -1,0 +1,46 @@
+﻿<div class="header">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderBefore })
+    <div class="header-upper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="header-selectors-wrapper">
+                        @await Component.InvokeAsync("TaxTypeSelector")
+
+                        @await Component.InvokeAsync("CurrencySelector")
+
+                        @await Component.InvokeAsync("LanguageSelector")
+
+                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
+                    </div>
+                </div>
+                <div class="col-md-8 header-upper-right pull-right">
+                    <div class="header-links-wrapper">
+                        @await Component.InvokeAsync("HeaderLinks")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMiddle })
+    <div class="header-lower">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 pull-left">
+                    <div class="search-box">
+                        @await Component.InvokeAsync("SearchBox")
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="header-logo">
+                        @await Component.InvokeAsync("Logo")
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    @await Component.InvokeAsync("FlyoutShoppingCart")
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderAfter })
+</div>

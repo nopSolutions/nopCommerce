@@ -1,0 +1,56 @@
+﻿@model ProfileInfoModel
+<div class="profile-info-box">
+    <div class="user-details">
+        @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+        {
+            <div class="avatar">
+                <img src="@(Model.AvatarUrl)" class="avatar-img" alt="Avatar" />
+            </div>         
+        }
+        @if (Model.LocationEnabled)
+        {            
+            <ul class="user-stats">
+                <li class="location">
+                    <label>@T("Profile.Country"):</label>
+                    <span>@Model.Location</span>
+                </li>
+           </ul>
+        }
+        @if (Model.PMEnabled)
+        {
+            <div class="send-pm-box">
+                @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-link-button" })
+            </div>
+        }
+    </div>
+    <div class="profile-stats">
+        <div class="title">
+            @T("Profile.Statistics")
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProfilePageInfoUserdetails, additionalData = Model })
+        <ul>
+            @if (Model.TotalPostsEnabled)
+            {
+                <li>
+                    <label>@T("Profile.TotalPosts"):</label>
+                    <span>@Model.TotalPosts</span>
+                </li>
+            }
+            @if (Model.JoinDateEnabled)
+            {
+                <li>
+                    <label>@T("Profile.JoinDate"):</label>
+                    <span>@Model.JoinDate</span>
+                </li>
+            }
+            @if (Model.DateOfBirthEnabled)
+            {
+                <li>
+                    <label>@T("Profile.DateOfBirth"):</label>
+                    <span>@Model.DateOfBirth</span>
+                </li>
+            }
+        </ul>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProfilePageInfoUserstats, additionalData = Model })
+    </div>
+</div>
