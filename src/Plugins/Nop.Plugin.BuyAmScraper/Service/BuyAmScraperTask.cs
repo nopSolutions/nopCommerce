@@ -9,20 +9,27 @@ using Nop.Services.Logging;
 using PuppeteerSharp;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Services.Customers;
+using Nop.Services.Vendors;
 
 namespace Nop.Plugin.BuyAmScraper.Service
 {
     class BuyAmScraperTask : Services.Tasks.IScheduleTask
     {
         private const int SCROLL_HEIGHT = 300;
-//        private const string BUY_AM_CUSTOMER
+        private const string CARREFOUR_CUSTOMER_NAME = "Carrefour";
         private readonly string[] _categoryUrlsToScrape;
 
         private ILogger _logger;
         private IProductService _productService;
         private ICustomerService _customerService;
+        private IVendorService _vendorService;
+        private ICategoryService _categoryService;
 
-        public BuyAmScraperTask(ILogger logger, IProductService productService, ICustomerService customerService)
+        public BuyAmScraperTask(ILogger logger, 
+            IProductService productService, 
+            ICustomerService customerService, 
+            IVendorService vendorService,
+            ICategoryService categoryService)
         {
             this._categoryUrlsToScrape = new string[] {
                 "https://buy.am/hy/carrefour/bakery-pastry",
@@ -32,6 +39,8 @@ namespace Nop.Plugin.BuyAmScraper.Service
             this._logger = logger;
             this._productService = productService;
             this._customerService = customerService;
+            this._vendorService = vendorService;
+            this._categoryService = categoryService;
         }
 
         private async Task ScrollUntilEnd(Page page)
@@ -113,6 +122,14 @@ namespace Nop.Plugin.BuyAmScraper.Service
 
         async Task AddProductsIfMissing(IReadOnlyList<ProductDTO> productDTOs)
         {
+            var allCategories = await _categoryService.GetAllCategoriesAsync();
+            var carrefourVendor = (await _vendorService.GetAllVendorsAsync(CARREFOUR_CUSTOMER_NAME)).FirstOrDefault();
+            if(carrefourVendor == null)
+            {
+                await _logger.ErrorAsync($"Vendor with name {CARREFOUR_CUSTOMER_NAME} doesn't exist");
+                return;
+            }
+
             foreach (var productDTO in productDTOs)
             {
                 var existingProduct = await _productService.GetProductBySkuAsync(productDTO.Code.ToString());
@@ -128,7 +145,67 @@ namespace Nop.Plugin.BuyAmScraper.Service
                 product.Price = productDTO.Price;
                 product.ShortDescription = productDTO.ShortDescription;
                 product.FullDescription = productDTO.FullDescription;
-                //product.VendorId = _customerService.GetCustomerRolesAsync();
+                product.VendorId = carrefourVendor.Id;
+                product.IsShipEnabled = true;
+                product.DisableWishlistButton = true;
+                product.Published = true;
+                product.CreatedOnUtc = DateTime.Now;
+                product.UpdatedOnUtc = DateTime.Now;
+
+                await _productService.InsertProductAsync(product);
+
+                var vendorCategory = allCategories.FirstOrDefault(c => string.Equals(c.Name, CARREFOUR_CUSTOMER_NAME));
+                if(vendorCategory == null)
+                {
+                    vendorCategory = new Core.Domain.Catalog.Category
+                    {
+                        Name = CARREFOUR_CUSTOMER_NAME,
+                        IncludeInTopMenu = true,
+                        CreatedOnUtc = DateTime.Now,
+                        UpdatedOnUtc = DateTime.Now
+                    };
+
+                    await _categoryService.InsertCategoryAsync(vendorCategory);
+
+                    allCategories = await _categoryService.GetAllCategoriesAsync();
+                }
+
+                var productCategory = allCategories.FirstOrDefault(c => string.Equals(c.Name, productDTO.Category));
+                if(productCategory == null)
+                {
+                    productCategory = new Core.Domain.Catalog.Category
+                    {
+                        Name = productDTO.Category,
+                        CreatedOnUtc = DateTime.Now,
+                        UpdatedOnUtc = DateTime.Now,
+                        ParentCategoryId = vendorCategory.Id
+                    };
+
+                    await _categoryService.InsertCategoryAsync(productCategory);
+
+                    allCategories = await _categoryService.GetAllCategoriesAsync();
+                }
+
+                var productSubCategory = allCategories.FirstOrDefault(c => string.Equals(c.Name, productDTO.SubCategory));
+                if (productSubCategory == null)
+                {
+                    productSubCategory = new Core.Domain.Catalog.Category
+                    {
+                        Name = productDTO.SubCategory,
+                        CreatedOnUtc = DateTime.Now,
+                        UpdatedOnUtc = DateTime.Now,
+                        ParentCategoryId = productCategory.Id
+                    };
+
+                    await _categoryService.InsertCategoryAsync(productSubCategory);
+
+                    allCategories = await _categoryService.GetAllCategoriesAsync();
+                }
+
+                await _categoryService.InsertProductCategoryAsync(new Core.Domain.Catalog.ProductCategory {
+                    ProductId = product.Id,
+                    CategoryId = productSubCategory.Id
+                });
             }
             
         }
@@ -159,7 +236,6 @@ namespace Nop.Plugin.BuyAmScraper.Service
 
         public async Task ExecuteAsync()
         {
-
             await ScrapeAndAddProducts();
         }
     }

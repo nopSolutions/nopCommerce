@@ -3,7 +3,7 @@
   "FriendlyName": "BuyAm Scraper",
   "SystemName": "BuyAmScraper",
   "Version": "1.0",
-  "SupportedVersions": [ "4.30" ],
+  "SupportedVersions": [ "4.30", "4.40", "4.50" ],
   "Author": "Edgar Isajanyan",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.BuyAmScraper.dll",
