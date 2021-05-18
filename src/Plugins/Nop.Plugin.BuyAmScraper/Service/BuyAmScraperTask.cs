@@ -63,7 +63,16 @@ namespace Nop.Plugin.BuyAmScraper.Service
         private async Task<byte[]> DownloadImage(string url)
         {
             using var httpClient = new WebClient();
-            return await httpClient.DownloadDataTaskAsync(url);
+            try
+            {
+                return await httpClient.DownloadDataTaskAsync(url);
+            }
+            catch (Exception exc)
+            {
+                await _logger.ErrorAsync($"Exception while downloading image: {url}, message: {exc.Message}");
+            }
+
+            return Array.Empty<byte>();
         }
 
         private async Task<IReadOnlyList<ProductDTO>> ExtractProducts(Page page)
@@ -71,6 +80,13 @@ namespace Nop.Plugin.BuyAmScraper.Service
             var products = new List<ProductDTO>();
             var productsInDom = await page.QuerySelectorAllAsync("div.product--box.box--minimal .image--media img");
             var categoryName = await page.EvaluateExpressionAsync<string>("document.querySelector('li.is--active span.breadcrumb--title').innerText");
+
+            if(categoryName == null)
+            {
+                await _logger.ErrorAsync($"Category for page {page.Url} is null");
+                return products;
+            }
+
             foreach (var current in productsInDom)
             {
                 await current.ClickAsync();
@@ -101,16 +117,29 @@ namespace Nop.Plugin.BuyAmScraper.Service
 
                 var description = parseResults.Value<string>("Description");
                 var code = parseResults.Value<int>("Code");
+                var name = parseResults.Value<string>("Name");
+                var subCategory = parseResults.Value<string>("SubCategory");
+                var priceAsString = parseResults.Value<string>("Price");
+                int price = 0;
+                var imageUrl = parseResults.Value<string>("ImageUrl");
+
+                if (description == null || name == null || subCategory == null || priceAsString == null ||
+                    !int.TryParse(priceAsString, out price) || imageUrl == null)
+                {
+                    await _logger.WarningAsync($"Field is missing from product. code={code}, description={description}, name={name}, subCategory={subCategory}, priceAsString={priceAsString}, imageUrl={imageUrl}");
+                    continue;
+                }
+
                 var product = new ProductDTO
                 {
                     Category = categoryName,
-                    Name = parseResults.Value<string>("Name"),
-                    SubCategory = parseResults.Value<string>("SubCategory"),
+                    Name = name,
+                    SubCategory = subCategory,
                     ShortDescription = $"Code: {code}\n" + description.Substring(0, Math.Min(100, description.Length)),
                     FullDescription = $"Code: {code}\n" + description,
-                    Price = int.Parse(parseResults.Value<string>("Price"), System.Globalization.NumberStyles.AllowDecimalPoint),
+                    Price = price,
                     Code = code,
-                    Image = await DownloadImage(parseResults.Value<string>("ImageUrl"))
+                    Image = await DownloadImage(imageUrl)
                 };
                 products.Add(product);
 
