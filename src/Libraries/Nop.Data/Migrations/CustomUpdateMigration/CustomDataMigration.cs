@@ -26,9 +26,117 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
         /// </summary>
         public override void Up()
         {
+            
             var productTableName = NameCompatibilityManager.GetTableName(typeof(Product));
             var orderTableName = NameCompatibilityManager.GetTableName(typeof(Order));
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
+
+            //custom migrtion code
+            var vegetarianColumnName = "Vegetarian";
+            if (!Schema.Table(productTableName).Column(vegetarianColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(vegetarianColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var veganColumnName = "Vegan";
+            if (!Schema.Table(productTableName).Column(veganColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(veganColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var gluttenFreeColumnName = "GluttenFree";
+            if (!Schema.Table(productTableName).Column(gluttenFreeColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(gluttenFreeColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var halalColumnName = "Halal";
+            if (!Schema.Table(productTableName).Column(halalColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(halalColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var allergyFriendlyColumnName = "AllergyFriendly";
+            if (!Schema.Table(productTableName).Column(allergyFriendlyColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(allergyFriendlyColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var wellPackedColumnName = "WellPacked";
+            if (!Schema.Table(productTableName).Column(wellPackedColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(wellPackedColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var sustainablePackagingColumnName = "SustainablePackaging";
+            if (!Schema.Table(productTableName).Column(sustainablePackagingColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(sustainablePackagingColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var fastAndReliableColumnName = "FastAndReliable";
+            if (!Schema.Table(productTableName).Column(fastAndReliableColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(fastAndReliableColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var excellentValueColumnName = "ExcellentValue";
+            if (!Schema.Table(productTableName).Column(excellentValueColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(excellentValueColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var followOrderNotesColumnName = "FollowOrderNotes";
+            if (!Schema.Table(productTableName).Column(followOrderNotesColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(followOrderNotesColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var minimumColumnName = "Minimum";
+            if (!Schema.Table(productTableName).Column(minimumColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(minimumColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var averageColumnName = "Average";
+            if (!Schema.Table(productTableName).Column(averageColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(averageColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var expensiveColumnName = "Expensive";
+            if (!Schema.Table(productTableName).Column(expensiveColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(expensiveColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+
+            var ribbonEnableColumnName = "RibbonEnable";
+            if (!Schema.Table(productTableName).Column(ribbonEnableColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(ribbonEnableColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+            }
+
+            var ribbonTextColumnName = "RibbonText";
+            if (!Schema.Table(productTableName).Column(ribbonTextColumnName).Exists())
+            {
+                Alter.Table(productTableName)
+                    .AddColumn(ribbonTextColumnName).AsString().Nullable().SetExistingRowsTo(null);
+            }
 
             //order
             var scheduleDateColumnName = "ScheduleDate";
