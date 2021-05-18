@@ -180,6 +180,7 @@ namespace Nop.Plugin.BuyAmScraper.Service
                 product.Published = true;
                 product.CreatedOnUtc = DateTime.Now;
                 product.UpdatedOnUtc = DateTime.Now;
+                product.RibbonEnable = false;
 
                 await _productService.InsertProductAsync(product);
 
