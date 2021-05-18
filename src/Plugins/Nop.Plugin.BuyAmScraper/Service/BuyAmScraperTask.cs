@@ -124,7 +124,7 @@ namespace Nop.Plugin.BuyAmScraper.Service
                 var imageUrl = parseResults.Value<string>("ImageUrl");
 
                 if (description == null || name == null || subCategory == null || priceAsString == null ||
-                    !int.TryParse(priceAsString, out price) || imageUrl == null)
+                    !int.TryParse(priceAsString, System.Globalization.NumberStyles.AllowDecimalPoint, null, out price) || imageUrl == null)
                 {
                     await _logger.WarningAsync($"Field is missing from product. code={code}, description={description}, name={name}, subCategory={subCategory}, priceAsString={priceAsString}, imageUrl={imageUrl}");
                     continue;

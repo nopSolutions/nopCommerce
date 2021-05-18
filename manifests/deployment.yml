@@ -24,6 +24,9 @@ spec:
             - mountPath: /app/App_Data/dataSettings.json
               name: config
               subPath: dataSettings.json
+            - mountPath: /app/App_Data/plugins.json
+              name: config
+              subPath: plugins.json
 
       volumes:
       - name: config
