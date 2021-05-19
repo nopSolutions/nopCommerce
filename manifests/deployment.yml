@@ -24,7 +24,12 @@ spec:
             - mountPath: /app/App_Data/dataSettings.json
               name: datasettings-config
               subPath: dataSettings.json
+            - mountPath: /app/persistent/
+              name: nopcommerce-persistent
       volumes:
       - name: datasettings-config
         configMap:
           name: mysnacks-datasettings-config
+      - name: nopcommerce-persistent
+        persistentVolumeClaim:
+          claimName: nopcommerce-pv-claim
