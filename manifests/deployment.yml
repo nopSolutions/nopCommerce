@@ -22,13 +22,9 @@ spec:
             value: http://*:5000
           volumeMounts:
             - mountPath: /app/App_Data/dataSettings.json
-              name: config
+              name: datasettings-config
               subPath: dataSettings.json
-            - mountPath: /app/App_Data/plugins.json
-              name: config
-              subPath: plugins.json
-
       volumes:
-      - name: config
+      - name: datasettings-config
         configMap:
           name: mysnacks-datasettings-config
