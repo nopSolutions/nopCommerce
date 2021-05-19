@@ -65,10 +65,15 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
 RUN apk add libc-dev --no-cache
 
+# copy entrypoint script
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
 WORKDIR /app        
 RUN mkdir bin
 RUN mkdir logs  
                                                             
 COPY --from=build /app/published .
-                            
-ENTRYPOINT ["dotnet", "Nop.Web.dll"]
+
+# call entrypoint script instead of dotnet                            
+ENTRYPOINT "/entrypoint.sh"

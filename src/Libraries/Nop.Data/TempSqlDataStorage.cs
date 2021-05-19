@@ -12,9 +12,10 @@ namespace Nop.Data
     {
         #region Ctor
 
-        public TempSqlDataStorage(string storageName, IQueryable<T> query, DataConnection dataConnection)
-            : base(dataConnection, storageName, query)
+        public TempSqlDataStorage(string storageName, IQueryable<T> query, IDataContext dataConnection)
+            : base(dataConnection, storageName, query, tableOptions: TableOptions.NotSet | TableOptions.DropIfExists)
         {
+            dataConnection.CloseAfterUse = true;
         }
 
         #endregion

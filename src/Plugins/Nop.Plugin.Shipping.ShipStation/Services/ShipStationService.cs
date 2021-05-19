@@ -569,6 +569,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             }
 
             await writer.WriteEndElementAsync();
+            await writer.WriteEndDocumentAsync();
+            await writer.FlushAsync();
 
             xml = Encoding.UTF8.GetString(stream.ToArray());
 

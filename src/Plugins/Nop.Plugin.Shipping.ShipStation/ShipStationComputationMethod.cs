@@ -108,7 +108,7 @@ namespace Nop.Plugin.Shipping.ShipStation
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
-            return null;
+            return Task.FromResult<decimal?>(null);
         }
 
         /// <summary>

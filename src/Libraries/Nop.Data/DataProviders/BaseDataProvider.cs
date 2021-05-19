@@ -280,7 +280,7 @@ namespace Nop.Data.DataProviders
         {
             //we don't use the Merge API on this level, because this API not support all databases.
             //you may see all supported databases by the following link: https://linq2db.github.io/articles/sql/merge/Merge-API.html#supported-databases
-            foreach (var entity in entities) 
+            foreach (var entity in entities)
                 await UpdateEntityAsync(entity);
         }
 
@@ -361,7 +361,7 @@ namespace Nop.Data.DataProviders
             UpdateOutputParameters(dataContext, dataParameters);
             return affectedRecords;
         }
-        
+
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type
@@ -411,7 +411,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Gets or sets a value that indicates whether should use MiniProfiler for the current connection
         /// </summary>
-        protected bool MiniProfillerEnabled => EngineContext.Current.Resolve<AppSettings>().CommonConfig.MiniProfilerEnabled;
+        protected bool MiniProfillerEnabled => Singleton<AppSettings>.Instance.CommonConfig.MiniProfilerEnabled;
 
         /// <summary>
         /// Database connection string

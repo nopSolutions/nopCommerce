@@ -101,6 +101,11 @@ namespace Nop.Web.Factories
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
+
+            model.PreventNotRegisteredUsersToLeaveComments =
+                await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) &&
+                !_blogSettings.AllowNotRegisteredUsersToLeaveComments;
+
             model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = await _blogService.ParseTagsAsync(blogPost);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
