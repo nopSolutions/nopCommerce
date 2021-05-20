@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Expo.Server.Client;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -32,6 +33,7 @@ using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Models.Api.Security;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -471,14 +473,29 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (order == null)
                 return RedirectToAction("List");
 
+            //try to get an customer with the order id
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            if (customer == null)
+                return RedirectToAction("List");
+
             //a vendor does not have access to this functionality
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("Edit", "Order", new { id });
 
+            //PushNotification send working
             try
             {
                 await _orderProcessingService.CancelOrderAsync(order, true);
                 await LogEditOrderAsync(order.Id);
+
+                var expoSDKClient = new PushApiClient();
+                var pushTicketReq = new PushTicketRequest()
+                {
+                    PushTo = new List<string>() { customer.PushToken },
+                    PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderCancelTitle"),
+                    PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderCancelBody")
+                };
+                var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
 
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
@@ -546,6 +563,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (order == null)
                 return RedirectToAction("List");
 
+            //try to get an customer with the order id
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            if (customer == null)
+                return RedirectToAction("List");
+
             //a vendor does not have access to this functionality
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("Edit", "Order", new { id });
@@ -554,6 +576,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 await _orderProcessingService.MarkOrderAsPaidAsync(order);
                 await LogEditOrderAsync(order.Id);
+
+                var expoSDKClient = new PushApiClient();
+                var pushTicketReq = new PushTicketRequest()
+                {
+                    PushTo = new List<string>() { customer.PushToken },
+                    PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderPaidTitle"),
+                    PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderPaidBody")
+                };
+                var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
 
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
@@ -815,6 +846,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (order == null)
                 return RedirectToAction("List");
 
+            //try to get an customer with the order id
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            if (customer == null)
+                return RedirectToAction("List");
+
             //a vendor does not have access to this functionality
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("Edit", "Order", new { id });
@@ -834,6 +870,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
 
                 await LogEditOrderAsync(order.Id);
+
+                var expoSDKClient = new PushApiClient();
+                var pushTicketReq = new PushTicketRequest()
+                {
+                    PushTo = new List<string>() { customer.PushToken },
+                    PushTitle = string.Format(await _localizationService.GetResourceAsync("PushNotification.OrderPaidTitle"), await _localizationService.GetLocalizedEnumAsync(order.OrderStatus)),
+                    PushBody = string.Format(await _localizationService.GetResourceAsync("PushNotification.OrderPaidBody"), await _localizationService.GetLocalizedEnumAsync(order.OrderStatus))
+                };
+                var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
 
                 //prepare model
                 model = await _orderModelFactory.PrepareOrderModelAsync(model, order);

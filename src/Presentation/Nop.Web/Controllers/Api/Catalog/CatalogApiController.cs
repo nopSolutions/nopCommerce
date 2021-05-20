@@ -27,6 +27,7 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Api.Catalog;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
@@ -87,6 +88,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPaymentService _paymentService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -132,7 +134,8 @@ namespace Nop.Web.Controllers.Api.Security
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IPaymentService paymentService,
-            IOrderProcessingService orderProcessingService)
+            IOrderProcessingService orderProcessingService,
+            IStaticCacheManager staticCacheManager)
         {
             _shoppingCartSettings = shoppingCartSettings;
             _localizationSettings = localizationSettings;
@@ -175,6 +178,7 @@ namespace Nop.Web.Controllers.Api.Security
             _dateTimeHelper = dateTimeHelper;
             _paymentService = paymentService;
             _orderProcessingService = orderProcessingService;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -187,8 +191,63 @@ namespace Nop.Web.Controllers.Api.Security
             var result = new ProductSpecificationApiModel();
             if (product == null)
             {
-                var productAllSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync();
-                foreach (var psa in productAllSpecificationAttributes)
+                var allProductSpecifications = new ProductSpecificationApiModel();
+                var specificationCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.AllProductSpecificationsModelKey, product, await _storeContext.GetCurrentStoreAsync());
+
+                allProductSpecifications = await _staticCacheManager.GetAsync(specificationCacheKey, async () =>
+                {
+                    var productAllSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync();
+                    foreach (var psa in productAllSpecificationAttributes)
+                    {
+                        var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
+                        var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId);
+                        if (checkModel == null)
+                        {
+                            var model1 = new ProductSpecificationAttributeApiModel();
+                            var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(singleOption.SpecificationAttributeId);
+                            model1.Id = attribute.Id;
+                            model1.Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name);
+                            var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(attribute.Id);
+                            foreach (var option in options)
+                            {
+                                model1.Values.Add(new ProductSpecificationAttributeValueApiModel
+                                {
+                                    AttributeTypeId = psa.AttributeTypeId,
+                                    ColorSquaresRgb = option.ColorSquaresRgb,
+                                    ValueRaw = psa.AttributeType switch
+                                    {
+                                        SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
+                                        SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
+                                        SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
+                                        SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
+                                        _ => null
+                                    }
+                                });
+                            }
+                            result.ProductSpecificationAttribute.Add(model1);
+                        }
+                    }
+                    var allProductTags = await _productTagService.GetAllProductTagsAsync();
+                    result.ProductTags = allProductTags.Select(x => new ProductTagApiModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList();
+                    return result;
+                });
+
+                return allProductSpecifications;
+            }
+
+            var productSpecifications = new ProductSpecificationApiModel();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductSpecificationsModelKey, product, await _storeContext.GetCurrentStoreAsync());
+
+            productSpecifications = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var productSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync(
+                product.Id, showOnProductPage: true);
+
+                foreach (var psa in productSpecificationAttributes)
                 {
                     var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
                     var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId);
@@ -198,7 +257,7 @@ namespace Nop.Web.Controllers.Api.Security
                         var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(singleOption.SpecificationAttributeId);
                         model1.Id = attribute.Id;
                         model1.Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name);
-                        var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(attribute.Id);
+                        var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(psa.Id);
                         foreach (var option in options)
                         {
                             model1.Values.Add(new ProductSpecificationAttributeValueApiModel
@@ -218,56 +277,15 @@ namespace Nop.Web.Controllers.Api.Security
                         result.ProductSpecificationAttribute.Add(model1);
                     }
                 }
-                var allProductTags = await _productTagService.GetAllProductTagsAsync();
-                result.ProductTags = allProductTags.Select(x => new ProductTagApiModel
+                var productTags = await _productTagService.GetAllProductTagsByProductIdAsync(product.Id);
+                result.ProductTags = productTags.Select(x => new ProductTagApiModel
                 {
                     Id = x.Id,
                     Name = x.Name
                 }).ToList();
                 return result;
-            }
-
-            var productSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributesAsync(
-                product.Id, showOnProductPage: true);
-
-            foreach (var psa in productSpecificationAttributes)
-            {
-                var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
-                var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId);
-                if (checkModel == null)
-                {
-                    var model1 = new ProductSpecificationAttributeApiModel();
-                    var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(singleOption.SpecificationAttributeId);
-                    model1.Id = attribute.Id;
-                    model1.Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name);
-                    var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(psa.Id);
-                    foreach (var option in options)
-                    {
-                        model1.Values.Add(new ProductSpecificationAttributeValueApiModel
-                        {
-                            AttributeTypeId = psa.AttributeTypeId,
-                            ColorSquaresRgb = option.ColorSquaresRgb,
-                            ValueRaw = psa.AttributeType switch
-                            {
-                                SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
-                                SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
-                                SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
-                                SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
-                                _ => null
-                            }
-                        });
-                    }
-                    result.ProductSpecificationAttribute.Add(model1);
-                }
-            }
-            var productTags = await _productTagService.GetAllProductTagsByProductIdAsync(product.Id);
-            result.ProductTags = productTags.Select(x => new ProductTagApiModel
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).ToList();
-
-            return result;
+            });
+            return productSpecifications;
         }
 
         [NonAction]
@@ -700,11 +718,15 @@ namespace Nop.Web.Controllers.Api.Security
         public async Task<IActionResult> GetScheduleDates()
         {
             string[] dates = null;
-            var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", 1, false);
-            if (orderscheduleDate1 != null)
-                dates = orderscheduleDate1.ResourceValue.Split(',');
-
-            return Ok(new { success = true, dates });
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate
+               , await _storeContext.GetCurrentStoreAsync(), _webHelper.IsCurrentConnectionSecured());
+            var newDates = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", 1, false);
+                if (orderscheduleDate1 != null)
+                    dates = orderscheduleDate1.ResourceValue.Split(',');
+            });
+            return Ok(new { success = true, dates = newDates });
         }
 
         #endregion

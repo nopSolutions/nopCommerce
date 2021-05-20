@@ -11,6 +11,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -43,6 +44,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IPaymentService _paymentService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion
 
@@ -62,7 +64,8 @@ namespace Nop.Web.Controllers.Api.Security
             IDateTimeHelper dateTimeHelper,
             IPaymentService paymentService,
             IOrderProcessingService orderProcessingService,
-            IOrderTotalCalculationService orderTotalCalculationService)
+            IOrderTotalCalculationService orderTotalCalculationService,
+            ICustomerActivityService customerActivityService)
         {
             _orderService = orderService;
             _priceFormatter = priceFormatter;
@@ -79,18 +82,12 @@ namespace Nop.Web.Controllers.Api.Security
             _paymentService = paymentService;
             _orderProcessingService = orderProcessingService;
             _orderTotalCalculationService = orderTotalCalculationService;
+            _customerActivityService = customerActivityService;
         }
 
         #endregion
 
-        #region Order
-
-        public class CartErrorModel
-        {
-            public bool Success { get; set; }
-            public int Id { get; set; }
-            public string Message { get; set; }
-        }
+        #region Utility
 
         protected virtual async Task<CartErrorModel> AddProductToCart(int productId = 0, int quantity = 0)
         {
@@ -142,6 +139,38 @@ namespace Nop.Web.Controllers.Api.Security
             }
 
             return await Task.FromResult(new CartErrorModel { Success = true, Id = productId, Message = await _localizationService.GetResourceAsync("Product.Added.Successfully.To.Cart") });
+        }
+
+        protected virtual async Task LogEditOrderAsync(int orderId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+
+            await _customerActivityService.InsertActivityAsync("EditOrder",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditOrder"), order.CustomOrderNumber), order);
+        }
+
+        #endregion
+
+        #region Order
+
+        public class CartErrorModel
+        {
+            public bool Success { get; set; }
+            public int Id { get; set; }
+            public string Message { get; set; }
+        }
+
+        [HttpPost("cancel-order/{id}")]
+        public async Task<IActionResult> CancelOrder(int id)
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+            if (order == null)
+                return Ok(new { success = false, message = "No Order found with the specified id" });
+
+            await _orderProcessingService.CancelOrderAsync(order, true);
+            await LogEditOrderAsync(order.Id);
+
+            return Ok(new { success = true, message = "Order Cancelled Successfully" });
         }
 
         [HttpPost("delete-cart/{ids}")]

@@ -7,11 +7,13 @@ using Microsoft.Extensions.Configuration;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Media;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -38,6 +40,8 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IConfiguration _config;
         private readonly IAddressService _addressService;
         private readonly IEncryptionService _encryptionService;
+        private readonly MediaSettings _mediaSettings;
+        private readonly IPictureService _pictureService;
 
         #endregion
 
@@ -57,7 +61,9 @@ namespace Nop.Web.Controllers.Api.Security
             IShoppingCartService shoppingCartService,
             IConfiguration config,
             IAddressService addressService,
-            IEncryptionService encryptionService)
+            IEncryptionService encryptionService,
+            MediaSettings mediaSettings,
+            IPictureService pictureService)
         {
             _storeContext = storeContext;
             _customerRegistrationService = customerRegistrationService;
@@ -74,6 +80,8 @@ namespace Nop.Web.Controllers.Api.Security
             _config = config;
             _addressService = addressService;
             _encryptionService = encryptionService;
+            _mediaSettings = mediaSettings;
+            _pictureService = pictureService;
         }
 
         #endregion
@@ -122,7 +130,16 @@ namespace Nop.Web.Controllers.Api.Security
                         var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
                         var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
 
-                        return Ok(new { success = true, message = "Login Successfully", token, shippingAddress, firstName, lastName });
+                        return Ok(new
+                        {
+                            success = true,
+                            message = "Login Successfully",
+                            token,
+                            shippingAddress,
+                            firstName,
+                            lastName,
+                            avatar = await _pictureService.GetPictureUrlAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute), _mediaSettings.AvatarPictureSize, false)
+                        });
                     }
                 case CustomerLoginResults.CustomerNotExist:
                     return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Login.WrongCredentials.CustomerNotExist") });

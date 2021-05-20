@@ -117,6 +117,17 @@ namespace Nop.Web.Infrastructure.Cache
         public static string ProductReviewsPrefixCacheKey => "Nop.pres.product.reviews";
         public static string ProductReviewsPrefixCacheKeyById => "Nop.pres.product.reviews-{0}-";
 
+
+        //All product specification attribute cache working 
+        public static CacheKey AllProductSpecificationsModelKey => new CacheKey("Nop.pres.all.product.specifications-{0}-{1}", AllProductSpecificationsPrefixCacheKey, AllProductSpecificationsPrefixCacheKeyById);
+        public static string AllProductSpecificationsPrefixCacheKey => "Nop.pres.all.product.specifications";
+        public static string AllProductSpecificationsPrefixCacheKeyById => "Nop.pres.all.product.specifications-{0}-";
+
+        //product specification attribute cache working 
+        public static CacheKey ProductSpecificationsModelKey => new CacheKey("Nop.pres.product.specifications-{0}-{1}", ProductSpecificationsPrefixCacheKey, ProductSpecificationsPrefixCacheKeyById);
+        public static string ProductSpecificationsPrefixCacheKey => "Nop.pres.product.specifications";
+        public static string ProductSpecificationsPrefixCacheKeyById => "Nop.pres.product.specifications-{0}-";
+
         /// <summary>
         /// Key for product attribute picture caching on the product details page
         /// </summary>
@@ -249,6 +260,11 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public static CacheKey StoreLogoPath => new CacheKey("Nop.pres.logo-{0}-{1}-{2}", StoreLogoPathPrefixCacheKey);
         public static string StoreLogoPathPrefixCacheKey => "Nop.pres.logo";
+
+
+        //Schedule Date Setting Cache Keys
+        public static CacheKey StoreScheduleDate => new CacheKey("Nop.pres.scheduledate-{0}-{1}", StoreScheduleDatePrefixCacheKey);
+        public static string StoreScheduleDatePrefixCacheKey => "Nop.pres.scheduledate";
 
         /// <summary>
         /// Key for sitemap on the sitemap page
