@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Localization;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Localization.Caching
 {
@@ -12,12 +13,13 @@ namespace Nop.Services.Localization.Caching
         /// Clear cache by entity event type
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(LocaleStringResource entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(LocaleStringResource entity)
         {
-            Remove(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity.LanguageId);
-            Remove(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity.LanguageId);
-            Remove(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity.LanguageId);
-            RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesByNamePrefix, entity.LanguageId);
+            await RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity.LanguageId);
+            await RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity.LanguageId);
+            await RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity.LanguageId);
+            await RemoveByPrefixAsync(NopLocalizationDefaults.LocaleStringResourcesByNamePrefix, entity.LanguageId);
         }
     }
 }

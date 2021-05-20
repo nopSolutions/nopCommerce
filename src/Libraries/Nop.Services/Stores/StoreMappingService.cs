@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -38,34 +39,87 @@ namespace Nop.Services.Stores
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Inserts a store mapping record
+        /// </summary>
+        /// <param name="storeMapping">Store mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task InsertStoreMappingAsync(StoreMapping storeMapping)
+        {
+            await _storeMappingRepository.InsertAsync(storeMapping);
+        }
+
+        /// <summary>
+        /// Get a value indicating whether a store mapping exists for an entity type
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if exists; otherwise false
+        /// </returns>
+        protected virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported
+        {
+            var entityName = typeof(TEntity).Name;
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
+
+            var query = from sm in _storeMappingRepository.Table
+                        where sm.EntityName == entityName
+                        select sm.StoreId;
+
+            return await _staticCacheManager.GetAsync(key, query.Any);
+        }
+
+        #endregion
+
         #region Methods
+
+        /// <summary>
+        /// Apply store mapping to the passed query
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <param name="query">Query to filter</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the filtered query
+        /// </returns>
+        public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId)
+            where TEntity : BaseEntity, IStoreMappingSupported
+        {
+            if (query is null)
+                throw new ArgumentNullException(nameof(query));
+
+            if (storeId == 0 || _catalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
+                return query;
+
+            return from entity in query
+                   where !entity.LimitedToStores || _storeMappingRepository.Table.Any(sm =>
+                         sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id && sm.StoreId == storeId)
+                   select entity;
+        }
 
         /// <summary>
         /// Deletes a store mapping record
         /// </summary>
         /// <param name="storeMapping">Store mapping record</param>
-        public virtual void DeleteStoreMapping(StoreMapping storeMapping)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteStoreMappingAsync(StoreMapping storeMapping)
         {
-            _storeMappingRepository.Delete(storeMapping);
-        }
-
-        /// <summary>
-        /// Gets a store mapping record
-        /// </summary>
-        /// <param name="storeMappingId">Store mapping record identifier</param>
-        /// <returns>Store mapping record</returns>
-        public virtual StoreMapping GetStoreMappingById(int storeMappingId)
-        {
-            return _storeMappingRepository.GetById(storeMappingId);
+            await _storeMappingRepository.DeleteAsync(storeMapping);
         }
 
         /// <summary>
         /// Gets store mapping records
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>Store mapping records</returns>
-        public virtual IList<StoreMapping> GetStoreMappings<T>(T entity) where T : BaseEntity, IStoreMappingSupported
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store mapping records
+        /// </returns>
+        public virtual async Task<IList<StoreMapping>> GetStoreMappingsAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -80,7 +134,7 @@ namespace Nop.Services.Stores
                         sm.EntityName == entityName
                         select sm;
 
-            var storeMappings = _staticCacheManager.Get(key, query.ToList);
+            var storeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return storeMappings;
         }
@@ -88,19 +142,11 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Inserts a store mapping record
         /// </summary>
-        /// <param name="storeMapping">Store mapping</param>
-        protected virtual void InsertStoreMapping(StoreMapping storeMapping)
-        {
-            _storeMappingRepository.Insert(storeMapping);
-        }
-
-        /// <summary>
-        /// Inserts a store mapping record
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="storeId">Store id</param>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
         /// <param name="entity">Entity</param>
-        public virtual void InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
+        /// <param name="storeId">Store id</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertStoreMappingAsync<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -118,16 +164,19 @@ namespace Nop.Services.Stores
                 StoreId = storeId
             };
 
-            InsertStoreMapping(storeMapping);
+            await InsertStoreMappingAsync(storeMapping);
         }
 
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>Store identifiers</returns>
-        public virtual int[] GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store identifiers
+        /// </returns>
+        public virtual async Task<int[]> GetStoresIdsWithAccessAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -138,32 +187,38 @@ namespace Nop.Services.Stores
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsCacheKey, entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
-                where sm.EntityId == entityId &&
-                      sm.EntityName == entityName
-                select sm.StoreId;
+                        where sm.EntityId == entityId &&
+                              sm.EntityName == entityName
+                        select sm.StoreId;
 
-            return _staticCacheManager.Get(key, query.ToArray);
+            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
         }
 
         /// <summary>
         /// Authorize whether entity could be accessed in the current store (mapped to this store)
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize<T>(T entity) where T : BaseEntity, IStoreMappingSupported
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
+        public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            return Authorize(entity, _storeContext.CurrentStore.Id);
+            return await AuthorizeAsync(entity, (await _storeContext.GetCurrentStoreAsync()).Id);
         }
 
         /// <summary>
         /// Authorize whether entity could be accessed in a store (mapped to this store)
         /// </summary>
-        /// <typeparam name="T">Type</typeparam>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
         /// <param name="entity">Entity</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue - authorized; otherwise, false
+        /// </returns>
+        public virtual async Task<bool> AuthorizeAsync<TEntity>(TEntity entity, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 return false;
@@ -178,7 +233,7 @@ namespace Nop.Services.Stores
             if (!entity.LimitedToStores)
                 return true;
 
-            foreach (var storeIdWithAccess in GetStoresIdsWithAccess(entity))
+            foreach (var storeIdWithAccess in await GetStoresIdsWithAccessAsync(entity))
                 if (storeId == storeIdWithAccess)
                     //yes, we have such permission
                     return true;

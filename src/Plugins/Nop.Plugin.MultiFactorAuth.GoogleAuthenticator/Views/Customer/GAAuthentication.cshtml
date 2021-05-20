@@ -41,14 +41,14 @@
         <div>
             <input asp-for="SecretKey" type="hidden" />
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <div class="inputs">
                 <label asp-for="Code" asp-postfix=":"></label>
                 <input asp-for="Code" />
                 <span asp-validation-for="Code"></span>
             </div>
             <div class="buttons">
-                <input type="submit" value="@T("Plugins.MultiFactorAuth.GoogleAuthenticator.Customer.SendCode")" name="save-info-button" class="button-1 save-customer-info-button" />
+                <button type="submit" name="save-info-button" class="button-1 save-customer-info-button">@T("Plugins.MultiFactorAuth.GoogleAuthenticator.Customer.SendCode")</button>
             </div>
         </div>
     </form>

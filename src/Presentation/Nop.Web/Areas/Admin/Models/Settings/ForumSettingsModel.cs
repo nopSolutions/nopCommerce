@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a forum settings model
     /// </summary>
-    public partial class ForumSettingsModel : BaseNopModel, ISettingsModel
+    public partial record ForumSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

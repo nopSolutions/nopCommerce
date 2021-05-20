@@ -43,10 +43,6 @@
                     <div class="table-wrapper">
                         <table class="cart">
                             <colgroup>
-                                @if (Model.IsEditable)
-                                {
-                                    <col width="1" />
-                                }
                                 @if (Model.DisplayAddToCart)
                                 {
                                     <col width="1" />
@@ -63,15 +59,13 @@
                                 <col width="1" />
                                 <col width="1" />
                                 <col width="1" />
+                                @if (Model.IsEditable)
+                                {
+                                    <col width="1" />
+                                }
                             </colgroup>
                             <thead>
                                 <tr>
-                                    @if (Model.IsEditable)
-                                    {
-                                        <th class="remove-from-cart">
-                                            @T("ShoppingCart.Remove")
-                                        </th>
-                                    }
                                     @if (Model.DisplayAddToCart)
                                     {
                                         <th class="add-to-cart">
@@ -102,19 +96,18 @@
                                     <th class="subtotal">
                                         @T("ShoppingCart.ItemTotal")
                                     </th>
+                                    @if (Model.IsEditable)
+                                    {
+                                        <th class="remove-from-cart">
+                                            @T("ShoppingCart.Remove")
+                                        </th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.Items)
                                 {
                                     <tr>
-                                        @if (Model.IsEditable)
-                                        {
-                                            <td class="remove-from-cart">
-                                                <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                                <input type="checkbox" name="removefromcart" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                            </td>
-                                        }
                                         @if (Model.DisplayAddToCart)
                                         {
                                             <td class="add-to-cart">
@@ -157,7 +150,7 @@
                                             }
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {
-                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.CurrentRequestProtocol);
+                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.GetCurrentRequestProtocol());
                                                 editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -218,6 +211,13 @@
                                                 }
                                             }
                                         </td>
+                                        @if (Model.IsEditable)
+                                        {
+                                            <td class="remove-from-cart">
+                                                <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
+                                                <button name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true);"></button>
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -225,25 +225,25 @@
                     </div>
                     @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
                     {
-                        var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+                        var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
                         //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                         //of course, you can modify appropriate locales to include VAT info there
                         <div class="tax-shipping-info">
-                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                            @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("shippinginfo") }))
                         </div>
                     }
                     <div class="buttons">
                         @if (Model.IsEditable)
                         {
-                            <input type="submit" name="updatecart" value="@T("Wishlist.UpdateCart")" class="button-2 update-wishlist-button" />
+                            <button type="submit" name="updatecart" class="button-2 update-wishlist-button">@T("Wishlist.UpdateCart")</button>
                         }
                         @if (Model.DisplayAddToCart)
                         {
-                            <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" class="button-2 wishlist-add-to-cart-button" />
+                            <button type="submit" name="addtocartbutton" class="button-2 wishlist-add-to-cart-button">@T("ShoppingCart.AddToCart")</button>
                         }
                         @if (Model.IsEditable && Model.EmailWishlistEnabled)
                         {
-                            <input type="button" value="@T("Wishlist.EmailAFriend")" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
+                            <button type="button" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">@T("Wishlist.EmailAFriend")</button>
                         }
                     </div>
                 </form>
@@ -257,7 +257,7 @@
         }
         @if (Model.IsEditable && Model.Items.Count > 0)
         {
-            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, webHelper.CurrentRequestProtocol);
+            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, webHelper.GetCurrentRequestProtocol());
             <div class="share-info">
                 <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
                 <a href="@wishlistUrl" class="share-link">@wishlistUrl</a>

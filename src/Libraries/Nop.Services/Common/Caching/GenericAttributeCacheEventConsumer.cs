@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Common;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Common;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Common.Caching
@@ -12,9 +13,10 @@ namespace Nop.Services.Common.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(GenericAttribute entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(GenericAttribute entity)
         {
-            Remove(NopCommonDefaults.GenericAttributeCacheKey, entity.EntityId, entity.KeyGroup);
+            await RemoveAsync(NopCommonDefaults.GenericAttributeCacheKey, entity.EntityId, entity.KeyGroup);
         }
     }
 }

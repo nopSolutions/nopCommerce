@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -15,13 +15,13 @@ namespace Nop.Plugin.Pickup.PickupInStore.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="appSettings">App settings</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, AppSettings appSettings)
+        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
         {
-            builder.RegisterType<StorePickupPointService>().As<IStorePickupPointService>().InstancePerLifetimeScope();
-            builder.RegisterType<StorePickupPointModelFactory>().As<IStorePickupPointModelFactory>().InstancePerLifetimeScope();
+            services.AddScoped<IStorePickupPointService, StorePickupPointService>();
+            services.AddScoped<IStorePickupPointModelFactory, StorePickupPointModelFactory>();
         }
 
         /// <summary>

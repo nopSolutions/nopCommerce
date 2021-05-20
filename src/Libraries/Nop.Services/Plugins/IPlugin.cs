@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Plugins
+﻿using System.Threading.Tasks;
+
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Interface denoting plug-in attributes that are displayed throughout 
@@ -19,23 +21,27 @@
         /// <summary>
         /// Install plugin
         /// </summary>
-        void Install();
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InstallAsync();
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        void Uninstall();
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UninstallAsync();
 
         /// <summary>
         /// Update plugin
         /// </summary>
         /// <param name="currentVersion">Current version of plugin</param>
         /// <param name="targetVersion">New version of plugin</param>
-        void Update(string currentVersion, string targetVersion);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateAsync(string currentVersion, string targetVersion);
 
         /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
-        void PreparePluginToUninstall();
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task PreparePluginToUninstallAsync();
     }
 }

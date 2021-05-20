@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -9,7 +10,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
-using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -82,15 +82,18 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// Gets tax rate
         /// </summary>
         /// <param name="taxRateRequest">Tax rate request</param>
-        /// <returns>Tax</returns>
-        public TaxRateResult GetTaxRate(TaxRateRequest taxRateRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax
+        /// </returns>
+        public async Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
             var result = new TaxRateResult();
 
             //the tax rate calculation by fixed rate
             if (!_countryStateZipSettings.CountryStateZipEnabled)
             {
-                result.TaxRate = _settingService.GetSettingByKey<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxRateRequest.TaxCategoryId));
+                result.TaxRate = await _settingService.GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxRateRequest.TaxCategoryId));
                 return result;
             }
 
@@ -103,7 +106,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
             //first, load all tax rate records (cached) - loaded only once
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY);
-            var allTaxRates = _staticCacheManager.Get(cacheKey, () => _taxRateService.GetAllTaxRates().Select(taxRate => new TaxRate
+            var allTaxRates = await _staticCacheManager.GetAsync(cacheKey, async () => (await _taxRateService.GetAllTaxRatesAsync()).Select(taxRate => new TaxRate
             {
                 Id = taxRate.Id,
                 StoreId = taxRate.StoreId,
@@ -146,96 +149,115 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// Gets tax total
         /// </summary>
         /// <param name="taxTotalRequest">Tax total request</param>
-        /// <returns>Tax total</returns>
-        public TaxTotalResult GetTaxTotal(TaxTotalRequest taxTotalRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax total
+        /// </returns>
+        public async Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest)
         {
-            if (!(_httpContextAccessor.HttpContext.Items.TryGetValue("nop.TaxTotal", out var result) && result is TaxTotalResult taxTotalResult))
+            if (_httpContextAccessor.HttpContext.Items.TryGetValue("nop.TaxTotal", out var result)
+                && result is (TaxTotalResult taxTotalResult, decimal paymentTax))
             {
-                var taxRates = new SortedDictionary<decimal, decimal>();
+                //short-circuit to avoid circular reference when calculating payment method additional fee during the checkout process
+                if (!taxTotalRequest.UsePaymentMethodAdditionalFee)
+                    return new TaxTotalResult { TaxTotal = taxTotalResult.TaxTotal - paymentTax };
 
-                //order sub total (items + checkout attributes)
-                _orderTotalCalculationService
-                    .GetShoppingCartSubTotal(taxTotalRequest.ShoppingCart, false, out _, out _, out _, out _, out var orderSubTotalTaxRates);
-                var subTotalTaxTotal = decimal.Zero;
-                foreach (var kvp in orderSubTotalTaxRates)
-                {
-                    var taxRate = kvp.Key;
-                    var taxValue = kvp.Value;
-                    subTotalTaxTotal += taxValue;
-
-                    if (taxRate > decimal.Zero && taxValue > decimal.Zero)
-                    {
-                        if (!taxRates.ContainsKey(taxRate))
-                            taxRates.Add(taxRate, taxValue);
-                        else
-                            taxRates[taxRate] = taxRates[taxRate] + taxValue;
-                    }
-                }
-
-                //shipping
-                var shippingTax = decimal.Zero;
-                if (_taxSettings.ShippingIsTaxable)
-                {
-                    var shippingExclTax = _orderTotalCalculationService
-                        .GetShoppingCartShippingTotal(taxTotalRequest.ShoppingCart, false, out _);
-                    var shippingInclTax = _orderTotalCalculationService
-                        .GetShoppingCartShippingTotal(taxTotalRequest.ShoppingCart, true, out var taxRate);
-                    if (shippingExclTax.HasValue && shippingInclTax.HasValue)
-                    {
-                        shippingTax = shippingInclTax.Value - shippingExclTax.Value;
-                        if (shippingTax < decimal.Zero)
-                            shippingTax = decimal.Zero;
-
-                        if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
-                        {
-                            if (!taxRates.ContainsKey(taxRate))
-                                taxRates.Add(taxRate, shippingTax);
-                            else
-                                taxRates[taxRate] = taxRates[taxRate] + shippingTax;
-                        }
-                    }
-                }
-
-                //add at least one tax rate (0%)
-                if (!taxRates.Any())
-                    taxRates.Add(decimal.Zero, decimal.Zero);
-
-                var taxTotal = subTotalTaxTotal + shippingTax;
-
-                if (taxTotal < decimal.Zero)
-                    taxTotal = decimal.Zero;
-
-                taxTotalResult = new TaxTotalResult { TaxTotal = taxTotal, TaxRates = taxRates };
-                _httpContextAccessor.HttpContext.Items.TryAdd("nop.TaxTotal", taxTotalResult);
+                return taxTotalResult;
             }
 
+            var taxRates = new SortedDictionary<decimal, decimal>();
+            var taxTotal = decimal.Zero;
+
+            //order sub total (items + checkout attributes)
+            var (_, _, _, _, orderSubTotalTaxRates) = await _orderTotalCalculationService
+                .GetShoppingCartSubTotalAsync(taxTotalRequest.ShoppingCart, false);
+            var subTotalTaxTotal = decimal.Zero;
+            foreach (var kvp in orderSubTotalTaxRates)
+            {
+                var taxRate = kvp.Key;
+                var taxValue = kvp.Value;
+                subTotalTaxTotal += taxValue;
+
+                if (taxRate > decimal.Zero && taxValue > decimal.Zero)
+                {
+                    if (!taxRates.ContainsKey(taxRate))
+                        taxRates.Add(taxRate, taxValue);
+                    else
+                        taxRates[taxRate] = taxRates[taxRate] + taxValue;
+                }
+            }
+            taxTotal += subTotalTaxTotal;
+
+            //shipping
+            var shippingTax = decimal.Zero;
+            if (_taxSettings.ShippingIsTaxable)
+            {
+                var (shippingExclTax, _, _) = await _orderTotalCalculationService
+                    .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, false);
+                var (shippingInclTax, taxRate, _) = await _orderTotalCalculationService
+                    .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, true);
+                if (shippingExclTax.HasValue && shippingInclTax.HasValue)
+                {
+                    shippingTax = shippingInclTax.Value - shippingExclTax.Value;
+                    if (shippingTax < decimal.Zero)
+                        shippingTax = decimal.Zero;
+
+                    if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
+                    {
+                        if (!taxRates.ContainsKey(taxRate))
+                            taxRates.Add(taxRate, shippingTax);
+                        else
+                            taxRates[taxRate] = taxRates[taxRate] + shippingTax;
+                    }
+                }
+            }
+            taxTotal += shippingTax;
+
+            //short-circuit to avoid circular reference when calculating payment method additional fee during the checkout process
+            if (!taxTotalRequest.UsePaymentMethodAdditionalFee)
+                return new TaxTotalResult { TaxTotal = taxTotal };
+
             //payment method additional fee
-            if (taxTotalRequest.UsePaymentMethodAdditionalFee && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
+            var paymentMethodAdditionalFeeTax = decimal.Zero;
+            if (_taxSettings.PaymentMethodAdditionalFeeIsTaxable)
             {
                 var paymentMethodSystemName = taxTotalRequest.Customer != null
-                    ? _genericAttributeService.GetAttribute<string>(taxTotalRequest.Customer,
-                        NopCustomerDefaults.SelectedPaymentMethodAttribute, taxTotalRequest.StoreId)
+                    ? await _genericAttributeService
+                        .GetAttributeAsync<string>(taxTotalRequest.Customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, taxTotalRequest.StoreId)
                     : string.Empty;
-                var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(taxTotalRequest.ShoppingCart, paymentMethodSystemName);
-                var paymentMethodAdditionalFeeExclTax = _taxService
-                    .GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, taxTotalRequest.Customer, out _);
-                var paymentMethodAdditionalFeeInclTax = _taxService
-                    .GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, taxTotalRequest.Customer, out var taxRate);
-                var paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
 
+                var paymentMethodAdditionalFee = await _paymentService
+                    .GetAdditionalHandlingFeeAsync(taxTotalRequest.ShoppingCart, paymentMethodSystemName);
+                var (paymentMethodAdditionalFeeExclTax, _) = await _taxService
+                    .GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, false, taxTotalRequest.Customer);
+                var (paymentMethodAdditionalFeeInclTax, taxRate) = await _taxService
+                    .GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, true, taxTotalRequest.Customer);
+
+                paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
                 if (paymentMethodAdditionalFeeTax < decimal.Zero)
                     paymentMethodAdditionalFeeTax = decimal.Zero;
 
-                taxTotalResult.TaxTotal += paymentMethodAdditionalFeeTax;
-
                 if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
                 {
-                    if (!taxTotalResult.TaxRates.ContainsKey(taxRate))
-                        taxTotalResult.TaxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
+                    if (!taxRates.ContainsKey(taxRate))
+                        taxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
                     else
-                        taxTotalResult.TaxRates[taxRate] = taxTotalResult.TaxRates[taxRate] + paymentMethodAdditionalFeeTax;
+                        taxRates[taxRate] = taxRates[taxRate] + paymentMethodAdditionalFeeTax;
                 }
             }
+            taxTotal += paymentMethodAdditionalFeeTax;
+
+            //add at least one tax rate (0%)
+            if (!taxRates.Any())
+                taxRates.Add(decimal.Zero, decimal.Zero);
+
+            if (taxTotal < decimal.Zero)
+                taxTotal = decimal.Zero;
+
+            taxTotalResult = new TaxTotalResult { TaxTotal = taxTotal, TaxRates = taxRates, };
+
+            //store values within the scope of the request to avoid duplicate calculations
+            _httpContextAccessor.HttpContext.Items.TryAdd("nop.TaxTotal", (taxTotalResult, paymentMethodAdditionalFeeTax));
 
             return taxTotalResult;
         }
@@ -251,15 +273,18 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task InstallAsync()
         {
             //settings
-            _settingService.SaveSetting(new FixedOrByCountryStateZipTaxSettings());
+            await _settingService.SaveSettingAsync(new FixedOrByCountryStateZipTaxSettings());
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fixed"] = "Fixed rate",
+                ["Plugins.Tax.FixedOrByCountryStateZip.Tax.Categories.Manage"] = "Manage tax categories",
+                ["Plugins.Tax.FixedOrByCountryStateZip.TaxCategoriesCanNotLoaded"] = "No tax categories can be loaded. You may manage tax categories by <a href='{0}'>this link</a>",
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip"] = "By Country",
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fields.TaxCategoryName"] = "Tax category",
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fields.Rate"] = "Rate",
@@ -279,27 +304,28 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 ["Plugins.Tax.FixedOrByCountryStateZip.AddRecordTitle"] = "New tax rate"
             });
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UninstallAsync()
         {
             //settings
-            _settingService.DeleteSetting<FixedOrByCountryStateZipTaxSettings>();
+            await _settingService.DeleteSettingAsync<FixedOrByCountryStateZipTaxSettings>();
 
             //fixed rates
-            var fixedRates = _taxCategoryService.GetAllTaxCategories()
-                .Select(taxCategory => _settingService.GetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)))
-                .Where(setting => setting != null).ToList();
-            _settingService.DeleteSettings(fixedRates);
+            var fixedRates = await (await _taxCategoryService.GetAllTaxCategoriesAsync())
+                .SelectAwait(async taxCategory => await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)))
+                .Where(setting => setting != null).ToListAsync();
+            await _settingService.DeleteSettingsAsync(fixedRates);
 
             //locales
-            _localizationService.DeleteLocaleResources("Plugins.Tax.FixedOrByCountryStateZip");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Tax.FixedOrByCountryStateZip");
 
-            base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

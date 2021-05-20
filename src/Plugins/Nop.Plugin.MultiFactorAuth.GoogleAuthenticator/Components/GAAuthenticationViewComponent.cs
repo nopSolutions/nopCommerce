@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
 using Nop.Web.Framework.Components;
@@ -33,11 +34,14 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var model = new AuthModel();
-            model = _authenticationModelFactory.PrepareAuthModel(model);
+            model = await _authenticationModelFactory.PrepareAuthModel(model);
 
             return View("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Customer/GAAuthentication.cshtml", model);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
@@ -54,8 +55,11 @@ namespace Nop.Services.Payments
         /// Process a payment
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
-        public virtual ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the process payment result
+        /// </returns>
+        public virtual async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest.OrderTotal == decimal.Zero)
             {
@@ -73,38 +77,42 @@ namespace Nop.Services.Payments
                 processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", string.Empty);
             }
 
-            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
+            var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.ProcessPayment(processPaymentRequest);
+            return await paymentMethod.ProcessPaymentAsync(processPaymentRequest);
         }
 
         /// <summary>
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        public virtual void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //already paid or order.OrderTotal == decimal.Zero
             if (postProcessPaymentRequest.Order.PaymentStatus == PaymentStatus.Paid)
                 return;
 
-            var customer = _customerService.GetCustomerById(postProcessPaymentRequest.Order.CustomerId);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName, customer, postProcessPaymentRequest.Order.StoreId)
+            var customer = await _customerService.GetCustomerByIdAsync(postProcessPaymentRequest.Order.CustomerId);
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(postProcessPaymentRequest.Order.PaymentMethodSystemName, customer, postProcessPaymentRequest.Order.StoreId)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            paymentMethod.PostProcessPayment(postProcessPaymentRequest);
+            await paymentMethod.PostProcessPaymentAsync(postProcessPaymentRequest);
         }
 
         /// <summary>
         /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Result</returns>
-        public virtual bool CanRePostProcessPayment(Order order)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> CanRePostProcessPaymentAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -112,8 +120,8 @@ namespace Nop.Services.Payments
             if (!_paymentSettings.AllowRePostingPayments)
                 return false;
 
-            var customer = _customerService.GetCustomerById(order.CustomerId);
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName, customer, order.StoreId);
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName, customer, order.StoreId);
             if (paymentMethod == null)
                 return false; //Payment method couldn't be loaded (for example, was uninstalled)
 
@@ -129,7 +137,7 @@ namespace Nop.Services.Payments
             if (order.PaymentStatus != PaymentStatus.Pending)
                 return false;  //payment status should be Pending
 
-            return paymentMethod.CanRePostProcessPayment(order);
+            return await paymentMethod.CanRePostProcessPaymentAsync(order);
         }
 
         /// <summary>
@@ -137,18 +145,21 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>Additional handling fee</returns>
-        public virtual decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart, string paymentMethodSystemName)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the additional handling fee
+        /// </returns>
+        public virtual async Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart, string paymentMethodSystemName)
         {
             if (string.IsNullOrEmpty(paymentMethodSystemName))
                 return decimal.Zero;
 
-            var customer = _customerService.GetCustomerById(cart.FirstOrDefault()?.CustomerId ?? 0);
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName, customer, cart.FirstOrDefault()?.StoreId ?? 0);
+            var customer = await _customerService.GetCustomerByIdAsync(cart.FirstOrDefault()?.CustomerId ?? 0);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, cart.FirstOrDefault()?.StoreId ?? 0);
             if (paymentMethod == null)
                 return decimal.Zero;
 
-            var result = paymentMethod.GetAdditionalHandlingFee(cart);
+            var result = await paymentMethod.GetAdditionalHandlingFeeAsync(cart);
             if (result < decimal.Zero)
                 result = decimal.Zero;
 
@@ -156,7 +167,7 @@ namespace Nop.Services.Payments
                 return result;
 
             var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
-            result = priceCalculationService.RoundPrice(result);
+            result = await priceCalculationService.RoundPriceAsync(result);
 
             return result;
         }
@@ -165,10 +176,13 @@ namespace Nop.Services.Payments
         /// Gets a value indicating whether capture is supported by payment method
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>A value indicating whether capture is supported</returns>
-        public virtual bool SupportCapture(string paymentMethodSystemName)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether capture is supported
+        /// </returns>
+        public virtual async Task<bool> SupportCaptureAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportCapture;
@@ -178,23 +192,29 @@ namespace Nop.Services.Payments
         /// Captures payment
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
-        /// <returns>Capture payment result</returns>
-        public virtual CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the capture payment result
+        /// </returns>
+        public virtual async Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(capturePaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(capturePaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.Capture(capturePaymentRequest);
+            return await paymentMethod.CaptureAsync(capturePaymentRequest);
         }
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported by payment method
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>A value indicating whether partial refund is supported</returns>
-        public virtual bool SupportPartiallyRefund(string paymentMethodSystemName)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether partial refund is supported
+        /// </returns>
+        public virtual async Task<bool> SupportPartiallyRefundAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportPartiallyRefund;
@@ -204,10 +224,13 @@ namespace Nop.Services.Payments
         /// Gets a value indicating whether refund is supported by payment method
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>A value indicating whether refund is supported</returns>
-        public virtual bool SupportRefund(string paymentMethodSystemName)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether refund is supported
+        /// </returns>
+        public virtual async Task<bool> SupportRefundAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportRefund;
@@ -217,23 +240,29 @@ namespace Nop.Services.Payments
         /// Refunds a payment
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
-        /// <returns>Result</returns>
-        public virtual RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(refundPaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(refundPaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.Refund(refundPaymentRequest);
+            return await paymentMethod.RefundAsync(refundPaymentRequest);
         }
 
         /// <summary>
         /// Gets a value indicating whether void is supported by payment method
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>A value indicating whether void is supported</returns>
-        public virtual bool SupportVoid(string paymentMethodSystemName)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether void is supported
+        /// </returns>
+        public virtual async Task<bool> SupportVoidAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportVoid;
@@ -243,25 +272,32 @@ namespace Nop.Services.Payments
         /// Voids a payment
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
-        /// <returns>Result</returns>
-        public virtual VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(voidPaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(voidPaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.Void(voidPaymentRequest);
+            return await paymentMethod.VoidAsync(voidPaymentRequest);
         }
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
-        /// <returns>A recurring payment type of payment method</returns>
-        public virtual RecurringPaymentType GetRecurringPaymentType(string paymentMethodSystemName)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a recurring payment type of payment method
+        /// </returns>
+        public virtual async Task<RecurringPaymentType> GetRecurringPaymentTypeAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RecurringPaymentType.NotSupported;
+            
             return paymentMethod.RecurringPaymentType;
         }
 
@@ -269,8 +305,11 @@ namespace Nop.Services.Payments
         /// Process recurring payment
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
-        /// <returns>Process payment result</returns>
-        public virtual ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the process payment result
+        /// </returns>
+        public virtual async Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest.OrderTotal == decimal.Zero)
             {
@@ -281,28 +320,31 @@ namespace Nop.Services.Payments
                 return result;
             }
 
-            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
+            var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.ProcessRecurringPayment(processPaymentRequest);
+            return await paymentMethod.ProcessRecurringPaymentAsync(processPaymentRequest);
         }
 
         /// <summary>
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
-        /// <returns>Result</returns>
-        public virtual CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             if (cancelPaymentRequest.Order.OrderTotal == decimal.Zero)
                 return new CancelRecurringPaymentResult();
 
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(cancelPaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(cancelPaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.CancelRecurringPayment(cancelPaymentRequest);
+            return await paymentMethod.CancelRecurringPaymentAsync(cancelPaymentRequest);
         }
 
         /// <summary>
@@ -318,7 +360,7 @@ namespace Nop.Services.Payments
             if (creditCardNumber.Length <= 4)
                 return creditCardNumber;
 
-            var last4 = creditCardNumber.Substring(creditCardNumber.Length - 4, 4);
+            var last4 = creditCardNumber[(creditCardNumber.Length - 4)..creditCardNumber.Length];
             var maskedChars = string.Empty;
             for (var i = 0; i < creditCardNumber.Length - 4; i++)
             {
@@ -334,8 +376,11 @@ namespace Nop.Services.Payments
         /// <param name="cart">Shopping cart</param>
         /// <param name="fee">Fee value</param>
         /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
-        /// <returns>Result</returns>
-        public virtual decimal CalculateAdditionalFee(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<decimal> CalculateAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage)
         {
             if (fee <= 0)
                 return fee;
@@ -345,7 +390,7 @@ namespace Nop.Services.Payments
             {
                 //percentage
                 var orderTotalCalculationService = EngineContext.Current.Resolve<IOrderTotalCalculationService>();
-                var orderTotalWithoutPaymentFee = orderTotalCalculationService.GetShoppingCartTotal(cart, usePaymentMethodAdditionalFee: false);
+                var orderTotalWithoutPaymentFee = (await orderTotalCalculationService.GetShoppingCartTotalAsync(cart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? 0;
                 result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
             }
             else

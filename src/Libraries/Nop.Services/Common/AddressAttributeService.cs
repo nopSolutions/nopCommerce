@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
@@ -38,18 +39,22 @@ namespace Nop.Services.Common
         /// Deletes an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        public virtual void DeleteAddressAttribute(AddressAttribute addressAttribute)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteAddressAttributeAsync(AddressAttribute addressAttribute)
         {
-            _addressAttributeRepository.Delete(addressAttribute);
+            await _addressAttributeRepository.DeleteAsync(addressAttribute);
         }
 
         /// <summary>
         /// Gets all address attributes
         /// </summary>
-        /// <returns>Address attributes</returns>
-        public virtual IList<AddressAttribute> GetAllAddressAttributes()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attributes
+        /// </returns>
+        public virtual async Task<IList<AddressAttribute>> GetAllAddressAttributesAsync()
         {
-            return _addressAttributeRepository.GetAll(query=>
+            return await _addressAttributeRepository.GetAllAsync(query=>
             {
                 return from aa in query
                     orderby aa.DisplayOrder, aa.Id
@@ -61,45 +66,54 @@ namespace Nop.Services.Common
         /// Gets an address attribute 
         /// </summary>
         /// <param name="addressAttributeId">Address attribute identifier</param>
-        /// <returns>Address attribute</returns>
-        public virtual AddressAttribute GetAddressAttributeById(int addressAttributeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute
+        /// </returns>
+        public virtual async Task<AddressAttribute> GetAddressAttributeByIdAsync(int addressAttributeId)
         {
-            return _addressAttributeRepository.GetById(addressAttributeId, cache => default);
+            return await _addressAttributeRepository.GetByIdAsync(addressAttributeId, cache => default);
         }
 
         /// <summary>
         /// Inserts an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        public virtual void InsertAddressAttribute(AddressAttribute addressAttribute)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertAddressAttributeAsync(AddressAttribute addressAttribute)
         {
-            _addressAttributeRepository.Insert(addressAttribute);
+            await _addressAttributeRepository.InsertAsync(addressAttribute);
         }
 
         /// <summary>
         /// Updates the address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        public virtual void UpdateAddressAttribute(AddressAttribute addressAttribute)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateAddressAttributeAsync(AddressAttribute addressAttribute)
         {
-            _addressAttributeRepository.Update(addressAttribute);
+            await _addressAttributeRepository.UpdateAsync(addressAttribute);
         }
 
         /// <summary>
         /// Deletes an address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        public virtual void DeleteAddressAttributeValue(AddressAttributeValue addressAttributeValue)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue)
         {
-            _addressAttributeValueRepository.Delete(addressAttributeValue);
+            await _addressAttributeValueRepository.DeleteAsync(addressAttributeValue);
         }
 
         /// <summary>
         /// Gets address attribute values by address attribute identifier
         /// </summary>
         /// <param name="addressAttributeId">The address attribute identifier</param>
-        /// <returns>Address attribute values</returns>
-        public virtual IList<AddressAttributeValue> GetAddressAttributeValues(int addressAttributeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute values
+        /// </returns>
+        public virtual async Task<IList<AddressAttributeValue>> GetAddressAttributeValuesAsync(int addressAttributeId)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributeValuesByAttributeCacheKey, addressAttributeId);
 
@@ -107,7 +121,7 @@ namespace Nop.Services.Common
                 orderby aav.DisplayOrder, aav.Id
                 where aav.AddressAttributeId == addressAttributeId
                 select aav;
-            var addressAttributeValues = _staticCacheManager.Get(key, query.ToList);
+            var addressAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return addressAttributeValues;
         }
@@ -116,28 +130,33 @@ namespace Nop.Services.Common
         /// Gets an address attribute value
         /// </summary>
         /// <param name="addressAttributeValueId">Address attribute value identifier</param>
-        /// <returns>Address attribute value</returns>
-        public virtual AddressAttributeValue GetAddressAttributeValueById(int addressAttributeValueId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute value
+        /// </returns>
+        public virtual async Task<AddressAttributeValue> GetAddressAttributeValueByIdAsync(int addressAttributeValueId)
         {
-            return _addressAttributeValueRepository.GetById(addressAttributeValueId, cache => default);
+            return await _addressAttributeValueRepository.GetByIdAsync(addressAttributeValueId, cache => default);
         }
 
         /// <summary>
         /// Inserts an address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        public virtual void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue)
         {
-            _addressAttributeValueRepository.Insert(addressAttributeValue);
+            await _addressAttributeValueRepository.InsertAsync(addressAttributeValue);
         }
 
         /// <summary>
         /// Updates the address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        public virtual void UpdateAddressAttributeValue(AddressAttributeValue addressAttributeValue)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue)
         {
-            _addressAttributeValueRepository.Update(addressAttributeValue);
+            await _addressAttributeValueRepository.UpdateAsync(addressAttributeValue);
         }
 
         #endregion

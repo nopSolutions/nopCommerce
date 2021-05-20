@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.News;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.News.Caching
 {
@@ -9,16 +10,13 @@ namespace Nop.Services.News.Caching
     public partial class NewsCommentCacheEventConsumer : CacheEventConsumer<NewsComment>
     {
         /// <summary>
-        /// entity
+        /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        /// <param name="entityEventType">Entity event type</param>
-        protected override void ClearCache(NewsComment entity, EntityEventType entityEventType)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(NewsComment entity)
         {
-            if (entityEventType == EntityEventType.Delete)
-                RemoveByPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity.NewsItemId);
-
-            base.ClearCache(entity, entityEventType);
+            await RemoveByPrefixAsync(NopNewsDefaults.NewsCommentsNumberPrefix, entity.NewsItemId);
         }
     }
 }

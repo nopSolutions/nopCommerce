@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
@@ -30,7 +31,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter enabling honeypot validation
         /// </summary>
-        private class ValidateHoneypotFilter : IAuthorizationFilter
+        private class ValidateHoneypotFilter : IAsyncAuthorizationFilter
         {
             #region Fields
 
@@ -53,21 +54,22 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
-            /// <param name="filterContext">Authorization filter context</param>
-            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            /// <param name="context">Authorization filter context</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task ValidateHoneypotAsync(AuthorizationFilterContext context)
             {
-                if (filterContext == null)
-                    throw new ArgumentNullException(nameof(filterContext));
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
 
-                if (filterContext.HttpContext.Request == null)
+                if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //whether honeypot is enabled
@@ -75,17 +77,32 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //try get honeypot input value 
-                var inputValue = filterContext.HttpContext.Request.Form[_securitySettings.HoneypotInputName];
+                var inputValue = context.HttpContext.Request.Form[_securitySettings.HoneypotInputName];
 
                 //if exists, bot is caught
                 if (!StringValues.IsNullOrEmpty(inputValue))
                 {
                     //warning admin about it
-                    _logger.Warning("A bot detected. Honeypot.");
+                    await _logger.WarningAsync("A bot detected. Honeypot.");
 
                     //and redirect to the original page
-                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true));
+                    var page = _webHelper.GetThisPageUrl(true);
+                    context.Result = new RedirectResult(page);
                 }
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called early in the filter pipeline to confirm request is authorized
+            /// </summary>
+            /// <param name="context">Authorization filter context</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+            {
+                await ValidateHoneypotAsync(context);
             }
 
             #endregion

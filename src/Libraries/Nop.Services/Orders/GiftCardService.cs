@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -47,19 +48,23 @@ namespace Nop.Services.Orders
         /// Deletes a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public virtual void DeleteGiftCard(GiftCard giftCard)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteGiftCardAsync(GiftCard giftCard)
         {
-            _giftCardRepository.Delete(giftCard);
+            await _giftCardRepository.DeleteAsync(giftCard);
         }
 
         /// <summary>
         /// Gets a gift card
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
-        /// <returns>Gift card entry</returns>
-        public virtual GiftCard GetGiftCardById(int giftCardId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift card entry
+        /// </returns>
+        public virtual async Task<GiftCard> GetGiftCardByIdAsync(int giftCardId)
         {
-            return _giftCardRepository.GetById(giftCardId, cache => default);
+            return await _giftCardRepository.GetByIdAsync(giftCardId, cache => default);
         }
 
         /// <summary>
@@ -74,14 +79,17 @@ namespace Nop.Services.Orders
         /// <param name="recipientName">Recipient name; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Gift cards</returns>
-        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift cards
+        /// </returns>
+        public virtual async Task<IPagedList<GiftCard>> GetAllGiftCardsAsync(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var giftCards = _giftCardRepository.GetAllPaged(query =>
+            var giftCards = await _giftCardRepository.GetAllPagedAsync(query =>
             {
                 if (purchasedWithOrderId.HasValue)
                 {
@@ -119,26 +127,31 @@ namespace Nop.Services.Orders
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public virtual void InsertGiftCard(GiftCard giftCard)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertGiftCardAsync(GiftCard giftCard)
         {
-            _giftCardRepository.Insert(giftCard);
+            await _giftCardRepository.InsertAsync(giftCard);
         }
 
         /// <summary>
         /// Updates the gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public virtual void UpdateGiftCard(GiftCard giftCard)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateGiftCardAsync(GiftCard giftCard)
         {
-            _giftCardRepository.Update(giftCard);
+            await _giftCardRepository.UpdateAsync(giftCard);
         }
 
         /// <summary>
         /// Gets gift cards by 'PurchasedWithOrderItemId'
         /// </summary>
         /// <param name="purchasedWithOrderItemId">Purchased with order item identifier</param>
-        /// <returns>Gift card entries</returns>
-        public virtual IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(int purchasedWithOrderItemId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift card entries
+        /// </returns>
+        public virtual async Task<IList<GiftCard>> GetGiftCardsByPurchasedWithOrderItemIdAsync(int purchasedWithOrderItemId)
         {
             if (purchasedWithOrderItemId == 0)
                 return new List<GiftCard>();
@@ -147,7 +160,8 @@ namespace Nop.Services.Orders
             query = query.Where(gc => gc.PurchasedWithOrderItemId.HasValue && gc.PurchasedWithOrderItemId.Value == purchasedWithOrderItemId);
             query = query.OrderBy(gc => gc.Id);
 
-            var giftCards = query.ToList();
+            var giftCards = await query.ToListAsync();
+
             return giftCards;
         }
 
@@ -155,22 +169,23 @@ namespace Nop.Services.Orders
         /// Get active gift cards that are applied by a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <returns>Active gift cards</returns>
-        public virtual IList<GiftCard> GetActiveGiftCardsAppliedByCustomer(Customer customer)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the active gift cards
+        /// </returns>
+        public virtual async Task<IList<GiftCard>> GetActiveGiftCardsAppliedByCustomerAsync(Customer customer)
         {
             var result = new List<GiftCard>();
             if (customer == null)
                 return result;
 
-            var couponCodes = _customerService.ParseAppliedGiftCardCouponCodes(customer);
+            var couponCodes = await _customerService.ParseAppliedGiftCardCouponCodesAsync(customer);
             foreach (var couponCode in couponCodes)
             {
-                var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
+                var giftCards = await GetAllGiftCardsAsync(isGiftCardActivated: true, giftCardCouponCode: couponCode);
                 foreach (var gc in giftCards)
-                {
-                    if (IsGiftCardValid(gc))
+                    if (await IsGiftCardValidAsync(gc))
                         result.Add(gc);
-                }
             }
 
             return result;
@@ -185,7 +200,7 @@ namespace Nop.Services.Orders
             var length = 13;
             var result = Guid.NewGuid().ToString();
             if (result.Length > length)
-                result = result.Substring(0, length);
+                result = result[0..length];
             return result;
         }
 
@@ -193,34 +208,38 @@ namespace Nop.Services.Orders
         /// Delete gift card usage history
         /// </summary>
         /// <param name="order">Order</param>
-        public virtual void DeleteGiftCardUsageHistory(Order order)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteGiftCardUsageHistoryAsync(Order order)
         {
-            var giftCardUsageHistory = GetGiftCardUsageHistory(order);
+            var giftCardUsageHistory = await GetGiftCardUsageHistoryAsync(order);
 
-            _giftCardUsageHistoryRepository.Delete(giftCardUsageHistory);
+            await _giftCardUsageHistoryRepository.DeleteAsync(giftCardUsageHistory);
 
             var query = _giftCardRepository.Table;
 
             var giftCardIds = giftCardUsageHistory.Select(gcuh => gcuh.GiftCardId).ToArray();
-            var giftCards = query.Where(bp => giftCardIds.Contains(bp.Id)).ToList();
+            var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToListAsync();
 
             //event notification
             foreach (var giftCard in giftCards) 
-                _eventPublisher.EntityUpdated(giftCard);
+                await _eventPublisher.EntityUpdatedAsync(giftCard);
         }
 
         /// <summary>
         /// Gets a gift card remaining amount
         /// </summary>
-        /// <returns>Gift card remaining amount</returns>
-        public virtual decimal GetGiftCardRemainingAmount(GiftCard giftCard)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gift card remaining amount
+        /// </returns>
+        public virtual async Task<decimal> GetGiftCardRemainingAmountAsync(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
             var result = giftCard.Amount;
 
-            foreach (var gcuh in GetGiftCardUsageHistory(giftCard))
+            foreach (var gcuh in await GetGiftCardUsageHistoryAsync(giftCard))
                 result -= gcuh.UsedValue;
 
             if (result < decimal.Zero)
@@ -233,43 +252,57 @@ namespace Nop.Services.Orders
         /// Gets a gift card usage history entries
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        /// <returns>Result</returns>
-        public virtual IList<GiftCardUsageHistory> GetGiftCardUsageHistory(GiftCard giftCard)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(GiftCard giftCard)
         {
             if (giftCard is null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            return _giftCardUsageHistoryRepository.Table.Where(gcuh => gcuh.GiftCardId == giftCard.Id).ToList();
+            return await _giftCardUsageHistoryRepository.Table
+                .Where(gcuh => gcuh.GiftCardId == giftCard.Id)
+                .ToListAsync();
         }
 
         /// <summary>
         /// Gets a gift card usage history entries
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Result</returns>
-        public virtual IList<GiftCardUsageHistory> GetGiftCardUsageHistory(Order order)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistoryAsync(Order order)
         {
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
 
-            return _giftCardUsageHistoryRepository.Table.Where(gcuh => gcuh.UsedWithOrderId == order.Id).ToList();
+            return await _giftCardUsageHistoryRepository.Table
+                .Where(gcuh => gcuh.UsedWithOrderId == order.Id)
+                .ToListAsync();
         }
 
         /// <summary>
         /// Inserts a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
-        public virtual void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertGiftCardUsageHistoryAsync(GiftCardUsageHistory giftCardUsageHistory)
         {
-            _giftCardUsageHistoryRepository.Insert(giftCardUsageHistory);
+            await _giftCardUsageHistoryRepository.InsertAsync(giftCardUsageHistory);
         }
 
         /// <summary>
         /// Is gift card valid
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        /// <returns>Result</returns>
-        public virtual bool IsGiftCardValid(GiftCard giftCard)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> IsGiftCardValidAsync(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
@@ -277,7 +310,7 @@ namespace Nop.Services.Orders
             if (!giftCard.IsGiftCardActivated)
                 return false;
 
-            var remainingAmount = GetGiftCardRemainingAmount(giftCard);
+            var remainingAmount = await GetGiftCardRemainingAmountAsync(giftCard);
             if (remainingAmount > decimal.Zero)
                 return true;
 

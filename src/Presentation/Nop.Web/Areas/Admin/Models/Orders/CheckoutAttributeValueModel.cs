@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a checkout attribute value model
     /// </summary>
-    public partial class CheckoutAttributeValueModel : BaseNopEntityModel, ILocalizedModel<CheckoutAttributeValueLocalizedModel>
+    public partial record CheckoutAttributeValueModel : BaseNopEntityModel, ILocalizedModel<CheckoutAttributeValueLocalizedModel>
     {
         #region Ctor
 
@@ -48,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         #endregion
     }
 
-    public partial class CheckoutAttributeValueLocalizedModel : ILocalizedLocaleModel
+    public partial record CheckoutAttributeValueLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

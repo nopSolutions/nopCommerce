@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a setting mode model
     /// </summary>
-    public partial class SettingModeModel : BaseNopModel
+    public partial record SettingModeModel : BaseNopModel
     {
         #region Properties
 

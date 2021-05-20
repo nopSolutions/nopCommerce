@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
     /// <summary>
     /// Represents an URL record model
     /// </summary>
-    public partial class UrlRecordModel : BaseNopEntityModel
+    public partial record UrlRecordModel : BaseNopEntityModel
     {
         #region Properties
 

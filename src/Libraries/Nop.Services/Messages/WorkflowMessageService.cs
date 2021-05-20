@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -14,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
+using Nop.Data.Extensions;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -99,11 +101,14 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>List of message templates</returns>
-        protected virtual IList<MessageTemplate> GetActiveMessageTemplates(string messageTemplateName, int storeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of message templates
+        /// </returns>
+        protected virtual async Task<IList<MessageTemplate>> GetActiveMessageTemplatesAsync(string messageTemplateName, int storeId)
         {
             //get message templates by the name
-            var messageTemplates = _messageTemplateService.GetMessageTemplatesByName(messageTemplateName, storeId);
+            var messageTemplates = await _messageTemplateService.GetMessageTemplatesByNameAsync(messageTemplateName, storeId);
 
             //no template found
             if (!messageTemplates?.Any() ?? true)
@@ -120,16 +125,19 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>EmailAccount</returns>
-        protected virtual EmailAccount GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the emailAccount
+        /// </returns>
+        protected virtual async Task<EmailAccount> GetEmailAccountOfMessageTemplateAsync(MessageTemplate messageTemplate, int languageId)
         {
-            var emailAccountId = _localizationService.GetLocalized(messageTemplate, mt => mt.EmailAccountId, languageId);
+            var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.EmailAccountId, languageId);
             //some 0 validation (for localizable "Email account" dropdownlist which saves 0 if "Standard" value is chosen)
             if (emailAccountId == 0)
                 emailAccountId = messageTemplate.EmailAccountId;
 
-            var emailAccount = (_emailAccountService.GetEmailAccountById(emailAccountId) ?? _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId)) ??
-                               _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+            var emailAccount = (await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId) ?? await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)) ??
+                               (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
             return emailAccount;
         }
 
@@ -138,22 +146,25 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Return a value language identifier</returns>
-        protected virtual int EnsureLanguageIsActive(int languageId, int storeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the return a value language identifier
+        /// </returns>
+        protected virtual async Task<int> EnsureLanguageIsActiveAsync(int languageId, int storeId)
         {
             //load language by specified ID
-            var language = _languageService.GetLanguageById(languageId);
+            var language = await _languageService.GetLanguageByIdAsync(languageId);
 
             if (language == null || !language.Published)
             {
                 //load any language from the specified store
-                language = _languageService.GetAllLanguages(storeId: storeId).FirstOrDefault();
+                language = (await _languageService.GetAllLanguagesAsync(storeId: storeId)).FirstOrDefault();
             }
 
             if (language == null || !language.Published)
             {
                 //load any language
-                language = _languageService.GetAllLanguages().FirstOrDefault();
+                language = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
             }
 
             if (language == null)
@@ -173,39 +184,42 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerRegisteredNotificationMessage(Customer customer, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendCustomerRegisteredNotificationMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerRegisteredNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerRegisteredNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -213,39 +227,42 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerWelcomeMessage(Customer customer, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendCustomerWelcomeMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerWelcomeMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerWelcomeMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -253,39 +270,42 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerEmailValidationMessage(Customer customer, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendCustomerEmailValidationMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerEmailValidationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerEmailValidationMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -293,40 +313,43 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerEmailRevalidationMessage(Customer customer, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendCustomerEmailRevalidationMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerEmailRevalidationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerEmailRevalidationMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 //email to re-validate
                 var toEmail = customer.EmailToRevalidate;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -334,39 +357,42 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendCustomerPasswordRecoveryMessage(Customer customer, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendCustomerPasswordRecoveryMessageAsync(Customer customer, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.CustomerPasswordRecoveryMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CustomerPasswordRecoveryMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         #endregion
@@ -379,8 +405,11 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPlacedVendorNotification(Order order, Vendor vendor, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPlacedVendorNotificationAsync(Order order, Vendor vendor, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -388,34 +417,34 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPlacedVendorNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedVendorNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId, vendor.Id);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId, vendor.Id);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = vendor.Email;
                 var toName = vendor.Name;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -423,40 +452,43 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPlacedStoreOwnerNotification(Order order, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPlacedStoreOwnerNotificationAsync(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -464,46 +496,49 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPlacedAffiliateNotification(Order order, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPlacedAffiliateNotificationAsync(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPlacedAffiliateNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedAffiliateNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
+                var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
                 var toEmail = affiliateAddress.Email;
                 var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -511,40 +546,43 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPaidStoreOwnerNotification(Order order, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPaidStoreOwnerNotificationAsync(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPaidStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -552,46 +590,49 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPaidAffiliateNotification(Order order, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPaidAffiliateNotificationAsync(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(order.AffiliateId);
 
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPaidAffiliateNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidAffiliateNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
+                var affiliateAddress = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
                 var toEmail = affiliateAddress.Email;
                 var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -601,44 +642,47 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPaidCustomerNotification(Order order, int languageId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPaidCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPaidCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     attachmentFilePath, attachmentFileName);
-            }).ToList();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -647,8 +691,11 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPaidVendorNotification(Order order, Vendor vendor, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPaidVendorNotificationAsync(Order order, Vendor vendor, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -656,34 +703,34 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPaidVendorNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPaidVendorNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId, vendor.Id);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId, vendor.Id);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = vendor.Email;
                 var toName = vendor.Name;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -693,44 +740,47 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderPlacedCustomerNotification(Order order, int languageId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderPlacedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderPlacedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderPlacedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     attachmentFilePath, attachmentFileName);
-            }).ToList();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -738,47 +788,50 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendShipmentSentCustomerNotification(Shipment shipment, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendShipmentSentCustomerNotificationAsync(Shipment shipment, int languageId)
         {
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ShipmentSentCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentSentCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddShipmentTokens(commonTokens, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddShipmentTokensAsync(commonTokens, shipment, languageId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -786,48 +839,51 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendShipmentDeliveredCustomerNotification(Shipment shipment, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendShipmentDeliveredCustomerNotificationAsync(Shipment shipment, int languageId)
         {
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = _orderService.GetOrderById(shipment.OrderId);
+            var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ShipmentDeliveredCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddShipmentTokens(commonTokens, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddShipmentTokensAsync(commonTokens, shipment, languageId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -837,44 +893,47 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderCompletedCustomerNotification(Order order, int languageId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderCompletedCustomerNotificationAsync(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderCompletedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderCompletedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     attachmentFilePath, attachmentFileName);
-            }).ToList();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -882,42 +941,45 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderCancelledCustomerNotification(Order order, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderCancelledCustomerNotificationAsync(Order order, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderCancelledCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderCancelledCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -926,41 +988,44 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderRefundedStoreOwnerNotificationAsync(Order order, decimal refundedAmount, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderRefundedStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddOrderRefundedTokens(commonTokens, order, refundedAmount);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddOrderRefundedTokensAsync(commonTokens, order, refundedAmount);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -969,43 +1034,46 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendOrderRefundedCustomerNotificationAsync(Order order, decimal refundedAmount, int languageId)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.OrderRefundedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.OrderRefundedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddOrderRefundedTokens(commonTokens, order, refundedAmount);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddOrderRefundedTokensAsync(commonTokens, order, refundedAmount);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1013,48 +1081,51 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="orderNote">Order note</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewOrderNoteAddedCustomerNotificationAsync(OrderNote orderNote, int languageId)
         {
             if (orderNote == null)
                 throw new ArgumentNullException(nameof(orderNote));
 
-            var order = _orderService.GetOrderById(orderNote.OrderId);
+            var order = await _orderService.GetOrderByIdAsync(orderNote.OrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewOrderNoteAddedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderNoteTokens(commonTokens, orderNote);
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddOrderNoteTokensAsync(commonTokens, orderNote);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1062,46 +1133,49 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendRecurringPaymentCancelledStoreOwnerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var order = _orderService.GetOrderById(recurringPayment.InitialOrderId);
+            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
-            _messageTokenProvider.AddRecurringPaymentTokens(commonTokens, recurringPayment);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1109,48 +1183,51 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendRecurringPaymentCancelledCustomerNotification(RecurringPayment recurringPayment, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendRecurringPaymentCancelledCustomerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var order = _orderService.GetOrderById(recurringPayment.InitialOrderId);
+            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
-            _messageTokenProvider.AddRecurringPaymentTokens(commonTokens, recurringPayment);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1158,48 +1235,51 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendRecurringPaymentFailedCustomerNotification(RecurringPayment recurringPayment, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendRecurringPaymentFailedCustomerNotificationAsync(RecurringPayment recurringPayment, int languageId)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var order = _orderService.GetOrderById(recurringPayment.InitialOrderId);
+            var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
 
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
-            _messageTokenProvider.AddRecurringPaymentTokens(commonTokens, recurringPayment);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, order.CustomerId);
+            await _messageTokenProvider.AddRecurringPaymentTokensAsync(commonTokens, recurringPayment);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var toEmail = billingAddress.Email;
                 var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         #endregion
@@ -1211,36 +1291,39 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewsLetterSubscriptionActivationMessageAsync(NewsLetterSubscription subscription, int languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsletterSubscriptionActivationMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddNewsLetterSubscriptionTokens(commonTokens, subscription);
+            await _messageTokenProvider.AddNewsLetterSubscriptionTokensAsync(commonTokens, subscription);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1248,36 +1331,39 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="subscription">Newsletter subscription</param>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewsLetterSubscriptionDeactivationMessageAsync(NewsLetterSubscription subscription, int languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsletterSubscriptionDeactivationMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddNewsLetterSubscriptionTokens(commonTokens, subscription);
+            await _messageTokenProvider.AddNewsLetterSubscriptionTokensAsync(commonTokens, subscription);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, subscription.Email, string.Empty);
+            }).ToListAsync();
         }
 
         #endregion
@@ -1293,8 +1379,11 @@ namespace Nop.Services.Messages
         /// <param name="customerEmail">Customer's email</param>
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendProductEmailAFriendMessage(Customer customer, int languageId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendProductEmailAFriendMessageAsync(Customer customer, int languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage)
         {
             if (customer == null)
@@ -1303,33 +1392,33 @@ namespace Nop.Services.Messages
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.EmailAFriendMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.EmailAFriendMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
-            _messageTokenProvider.AddProductTokens(commonTokens, product, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
             commonTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage, true));
             commonTokens.Add(new Token("EmailAFriend.Email", customerEmail));
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1340,39 +1429,42 @@ namespace Nop.Services.Messages
         /// <param name="customerEmail">Customer's email</param>
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendWishlistEmailAFriendMessage(Customer customer, int languageId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendWishlistEmailAFriendMessageAsync(Customer customer, int languageId,
              string customerEmail, string friendsEmail, string personalMessage)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.WishlistToFriendMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.WishlistToFriendMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
             commonTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage, true));
             commonTokens.Add(new Token("Wishlist.Email", customerEmail));
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, friendsEmail, string.Empty);
+            }).ToListAsync();
         }
 
         #endregion
@@ -1386,8 +1478,11 @@ namespace Nop.Services.Messages
         /// <param name="orderItem">Order item</param>
         /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewReturnRequestStoreOwnerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order, int languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException(nameof(returnRequest));
@@ -1398,35 +1493,35 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, returnRequest.CustomerId);
-            _messageTokenProvider.AddReturnRequestTokens(commonTokens, returnRequest, orderItem);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, returnRequest.CustomerId);
+            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1435,8 +1530,11 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
         /// <param name="order">Order</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewReturnRequestCustomerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException(nameof(returnRequest));
@@ -1447,43 +1545,43 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            var languageId = EnsureLanguageIsActive(order.CustomerLanguageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var languageId = await EnsureLanguageIsActiveAsync(order.CustomerLanguageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewReturnRequestCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewReturnRequestCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
-            _messageTokenProvider.AddReturnRequestTokens(commonTokens, returnRequest, orderItem);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
-                var toEmail = _customerService.IsGuest(customer) ?
-                    billingAddress.Email :
-                    customer.Email;
-                var toName = _customerService.IsGuest(customer) ?
-                    billingAddress.FirstName :
-                    _customerService.GetCustomerFullName(customer);
+                var toEmail = (await _customerService.IsGuestAsync(customer))
+                    ? billingAddress.Email
+                    : customer.Email;
+                var toName = (await _customerService.IsGuestAsync(customer))
+                    ? billingAddress.FirstName
+                    : await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1492,8 +1590,11 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
         /// <param name="order">Order</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendReturnRequestStatusChangedCustomerNotificationAsync(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException(nameof(returnRequest));
@@ -1504,43 +1605,43 @@ namespace Nop.Services.Messages
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            var languageId = EnsureLanguageIsActive(order.CustomerLanguageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var languageId = await EnsureLanguageIsActiveAsync(order.CustomerLanguageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
-            _messageTokenProvider.AddReturnRequestTokens(commonTokens, returnRequest, orderItem);
+            await _messageTokenProvider.AddOrderTokensAsync(commonTokens, order, languageId);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await _messageTokenProvider.AddReturnRequestTokensAsync(commonTokens, returnRequest, orderItem, languageId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
-                var toEmail = _customerService.IsGuest(customer) ?
-                    billingAddress.Email :
-                    customer.Email;
-                var toName = _customerService.IsGuest(customer) ?
-                    billingAddress.FirstName :
-                    _customerService.GetCustomerFullName(customer);
+                var toEmail = (await _customerService.IsGuestAsync(customer))
+                    ? billingAddress.Email
+                    : customer.Email;
+                var toName = (await _customerService.IsGuestAsync(customer))
+                    ? billingAddress.FirstName
+                    : await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         #endregion
@@ -1554,40 +1655,43 @@ namespace Nop.Services.Messages
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewForumTopicMessage(Customer customer, ForumTopic forumTopic, Forum forum, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewForumTopicMessageAsync(Customer customer, ForumTopic forumTopic, Forum forum, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewForumTopicMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewForumTopicMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddForumTopicTokens(commonTokens, forumTopic);
-            _messageTokenProvider.AddForumTokens(commonTokens, forum);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic);
+            await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1599,42 +1703,45 @@ namespace Nop.Services.Messages
         /// <param name="forum">Forum</param>
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewForumPostMessage(Customer customer, ForumPost forumPost, ForumTopic forumTopic,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewForumPostMessageAsync(Customer customer, ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewForumPostMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewForumPostMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddForumPostTokens(commonTokens, forumPost);
-            _messageTokenProvider.AddForumTopicTokens(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
-            _messageTokenProvider.AddForumTokens(commonTokens, forum);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddForumPostTokensAsync(commonTokens, forumPost);
+            await _messageTokenProvider.AddForumTopicTokensAsync(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
+            await _messageTokenProvider.AddForumTokensAsync(commonTokens, forum);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1642,40 +1749,43 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="privateMessage">Private message</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendPrivateMessageNotificationAsync(PrivateMessage privateMessage, int languageId)
         {
             if (privateMessage == null)
                 throw new ArgumentNullException(nameof(privateMessage));
 
-            var store = _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
+            var store = await _storeService.GetStoreByIdAsync(privateMessage.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.PrivateMessageNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.PrivateMessageNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddPrivateMessageTokens(commonTokens, privateMessage);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, privateMessage.ToCustomerId);
+            await _messageTokenProvider.AddPrivateMessageTokensAsync(commonTokens, privateMessage);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, privateMessage.ToCustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-                var customer = _customerService.GetCustomerById(privateMessage.ToCustomerId);
+                var customer = await _customerService.GetCustomerByIdAsync(privateMessage.ToCustomerId);
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         #endregion
@@ -1688,8 +1798,11 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer</param>
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewVendorAccountApplyStoreOwnerNotificationAsync(Customer customer, Vendor vendor, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1697,34 +1810,34 @@ namespace Nop.Services.Messages
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewVendorAccountApplyStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
-            _messageTokenProvider.AddVendorTokens(commonTokens, vendor);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await _messageTokenProvider.AddVendorTokensAsync(commonTokens, vendor);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1732,39 +1845,42 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendVendorInformationChangeNotification(Vendor vendor, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendVendorInformationChangeNotificationAsync(Vendor vendor, int languageId)
         {
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.VendorInformationChangeNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.VendorInformationChangeNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddVendorTokens(commonTokens, vendor);
+            await _messageTokenProvider.AddVendorTokensAsync(commonTokens, vendor);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1772,42 +1888,45 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendGiftCardNotification(GiftCard giftCard, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendGiftCardNotificationAsync(GiftCard giftCard, int languageId)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+            var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
 
-            var store = order != null ? _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore : _storeContext.CurrentStore;
+            var store = order != null ? await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync() : await _storeContext.GetCurrentStoreAsync();
 
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.GiftCardNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.GiftCardNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddGiftCardTokens(commonTokens, giftCard);
+            await _messageTokenProvider.AddGiftCardTokensAsync(commonTokens, giftCard);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = giftCard.RecipientEmail;
                 var toName = giftCard.RecipientName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1815,40 +1934,43 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendProductReviewNotificationMessage(ProductReview productReview, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendProductReviewNotificationMessageAsync(ProductReview productReview, int languageId)
         {
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ProductReviewStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ProductReviewStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddProductReviewTokens(commonTokens, productReview);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, productReview.CustomerId);
+            await _messageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, productReview.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1856,42 +1978,45 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendProductReviewReplyCustomerNotificationMessage(ProductReview productReview, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendProductReviewReplyCustomerNotificationMessageAsync(ProductReview productReview, int languageId)
         {
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var store = _storeService.GetStoreById(productReview.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(productReview.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ProductReviewReplyCustomerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ProductReviewReplyCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var customer = _customerService.GetCustomerById(productReview.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(productReview.CustomerId);
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddProductReviewTokens(commonTokens, productReview);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
+            await _messageTokenProvider.AddProductReviewTokensAsync(commonTokens, productReview);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1899,38 +2024,41 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendQuantityBelowStoreOwnerNotification(Product product, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendQuantityBelowStoreOwnerNotificationAsync(Product product, int languageId)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QuantityBelowStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddProductTokens(commonTokens, product, languageId);
+            await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1938,41 +2066,44 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendQuantityBelowStoreOwnerNotificationAsync(ProductAttributeCombination combination, int languageId)
         {
             if (combination == null)
                 throw new ArgumentNullException(nameof(combination));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.QuantityBelowAttributeCombinationStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             var commonTokens = new List<Token>();
-            var product = _productService.GetProductById(combination.ProductId);
+            var product = await _productService.GetProductByIdAsync(combination.ProductId);
 
-            _messageTokenProvider.AddProductTokens(commonTokens, product, languageId);
-            _messageTokenProvider.AddAttributeCombinationTokens(commonTokens, combination, languageId);
+            await _messageTokenProvider.AddProductTokensAsync(commonTokens, product, languageId);
+            await _messageTokenProvider.AddAttributeCombinationTokensAsync(commonTokens, combination, languageId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -1982,41 +2113,44 @@ namespace Nop.Services.Messages
         /// <param name="vatName">Received VAT name</param>
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewVatSubmittedStoreOwnerNotification(Customer customer,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewVatSubmittedStoreOwnerNotificationAsync(Customer customer,
             string vatName, string vatAddress, int languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewVatSubmittedStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
-            commonTokens.Add(new Token("VatValidationResult.Name", vatName));
-            commonTokens.Add(new Token("VatValidationResult.Address", vatAddress));
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            commonTokens.Add(new Token("VatValidatio.Name", vatName));
+            commonTokens.Add(new Token("VatValidatio.Address", vatAddress));
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -2024,40 +2158,43 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>List of queued email identifiers</returns>
-        public virtual IList<int> SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of queued email identifiers
+        /// </returns>
+        public virtual async Task<IList<int>> SendBlogCommentNotificationMessageAsync(BlogComment blogComment, int languageId)
         {
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.BlogCommentNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BlogCommentNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddBlogCommentTokens(commonTokens, blogComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, blogComment.CustomerId);
+            await _messageTokenProvider.AddBlogCommentTokensAsync(commonTokens, blogComment);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, blogComment.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -2065,40 +2202,43 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsComment">News comment</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendNewsCommentNotificationMessageAsync(NewsComment newsComment, int languageId)
         {
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewsCommentNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.NewsCommentNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddNewsCommentTokens(commonTokens, newsComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, newsComment.CustomerId);
+            await _messageTokenProvider.AddNewsCommentTokensAsync(commonTokens, newsComment);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, newsComment.CustomerId);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -2106,13 +2246,16 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="subscription">Subscription</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendBackInStockNotification(BackInStockSubscription subscription, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendBackInStockNotificationAsync(BackInStockSubscription subscription, int languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
-            var customer = _customerService.GetCustomerById(subscription.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(subscription.CustomerId);
 
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -2121,34 +2264,34 @@ namespace Nop.Services.Messages
             if (!CommonHelper.IsValidEmail(customer.Email))
                 return new List<int>();
 
-            var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeService.GetStoreByIdAsync(subscription.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.BackInStockNotification, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.BackInStockNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
-            _messageTokenProvider.AddBackInStockTokens(commonTokens, subscription);
+            await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+            await _messageTokenProvider.AddBackInStockTokensAsync(commonTokens, subscription);
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = customer.Email;
-                var toName = _customerService.GetCustomerFullName(customer);
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
-            }).ToList();
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -2159,14 +2302,17 @@ namespace Nop.Services.Messages
         /// <param name="senderName">Sender name</param>
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendContactUsMessage(int languageId, string senderEmail,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendContactUsMessageAsync(int languageId, string senderEmail,
             string senderName, string subject, string body)
         {
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ContactUsMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ContactUsMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2178,13 +2324,13 @@ namespace Nop.Services.Messages
                 new Token("ContactUs.Body", body, true)
             };
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 string fromEmail;
                 string fromName;
@@ -2202,18 +2348,18 @@ namespace Nop.Services.Messages
                 }
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = emailAccount.Email;
                 var toName = emailAccount.DisplayName;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     fromEmail: fromEmail,
                     fromName: fromName,
                     subject: subject,
                     replyToEmailAddress: senderEmail,
                     replyToName: senderName);
-            }).ToList();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -2225,17 +2371,20 @@ namespace Nop.Services.Messages
         /// <param name="senderName">Sender name</param>
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendContactVendorMessage(Vendor vendor, int languageId, string senderEmail,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<IList<int>> SendContactVendorMessageAsync(Vendor vendor, int languageId, string senderEmail,
             string senderName, string subject, string body)
         {
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var store = _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
 
-            var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ContactVendorMessage, store.Id);
+            var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.ContactVendorMessage, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
@@ -2247,10 +2396,10 @@ namespace Nop.Services.Messages
                 new Token("ContactUs.Body", body, true)
             };
 
-            return messageTemplates.Select(messageTemplate =>
+            return await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 //email account
-                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
                 string fromEmail;
                 string fromName;
@@ -2268,21 +2417,21 @@ namespace Nop.Services.Messages
                 }
 
                 var tokens = new List<Token>(commonTokens);
-                _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
                 var toEmail = vendor.Email;
                 var toName = vendor.Name;
 
-                return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     fromEmail: fromEmail,
                     fromName: fromName,
                     subject: subject,
                     replyToEmailAddress: senderEmail,
                     replyToName: senderName);
-            }).ToList();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -2292,21 +2441,31 @@ namespace Nop.Services.Messages
         /// <param name="sendToEmail">Send to email</param>
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual int SendTestEmail(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<int> SendTestEmailAsync(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId)
         {
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(messageTemplateId);
             if (messageTemplate == null)
                 throw new ArgumentException("Template cannot be loaded");
 
             //email account
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var emailAccount = await GetEmailAccountOfMessageTemplateAsync(messageTemplate, languageId);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
-            return SendNotification(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
+            //force sending
+            messageTemplate.DelayBeforeSend = null;
+
+            return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
         }
+
+        #endregion
+
+        #region Common
 
         /// <summary>
         /// Send notification
@@ -2324,9 +2483,12 @@ namespace Nop.Services.Messages
         /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual int SendNotification(MessageTemplate messageTemplate,
-            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email identifier
+        /// </returns>
+        public virtual async Task<int> SendNotificationAsync(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, int languageId, IList<Token> tokens,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null,
@@ -2339,10 +2501,10 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(emailAccount));
 
             //retrieve localized message template data
-            var bcc = _localizationService.GetLocalized(messageTemplate, mt => mt.BccEmailAddresses, languageId);
+            var bcc = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.BccEmailAddresses, languageId);
             if (string.IsNullOrEmpty(subject))
-                subject = _localizationService.GetLocalized(messageTemplate, mt => mt.Subject, languageId);
-            var body = _localizationService.GetLocalized(messageTemplate, mt => mt.Body, languageId);
+                subject = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Subject, languageId);
+            var body = await _localizationService.GetLocalizedAsync(messageTemplate, mt => mt.Body, languageId);
 
             //Replace subject and body tokens 
             var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
@@ -2373,7 +2535,7 @@ namespace Nop.Services.Messages
                     : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
             };
 
-            _queuedEmailService.InsertQueuedEmail(email);
+            await _queuedEmailService.InsertQueuedEmailAsync(email);
             return email.Id;
         }
 

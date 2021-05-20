@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -128,82 +129,86 @@ namespace Nop.Web.Factories
         /// Prepares the checkout pickup points model
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>The checkout pickup points model</returns>
-        protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel(IList<ShoppingCartItem> cart)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout pickup points model
+        /// </returns>
+        protected virtual async Task<CheckoutPickupPointsModel> PrepareCheckoutPickupPointsModelAsync(IList<ShoppingCartItem> cart)
         {
-            var model = new CheckoutPickupPointsModel()
+            var model = new CheckoutPickupPointsModel
             {
                 AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
-            if (model.AllowPickupInStore)
+
+            if (!model.AllowPickupInStore) 
+                return model;
+
+            model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
+            model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
+            var pickupPointProviders = await _pickupPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+            if (pickupPointProviders.Any())
             {
-                model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
-                model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
-                var pickupPointProviders = _pickupPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                if (pickupPointProviders.Any())
-                {
-                    var languageId = _workContext.WorkingLanguage.Id;
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddressId ?? 0,
-                        _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
-                    if (pickupPointsResponse.Success)
-                        model.PickupPoints = pickupPointsResponse.PickupPoints.Select(point =>
-                        {
-                            var country = _countryService.GetCountryByTwoLetterIsoCode(point.CountryCode);
-                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(point.StateAbbreviation, country?.Id);
-
-                            var pickupPointModel = new CheckoutPickupPointModel
-                            {
-                                Id = point.Id,
-                                Name = point.Name,
-                                Description = point.Description,
-                                ProviderSystemName = point.ProviderSystemName,
-                                Address = point.Address,
-                                City = point.City,
-                                County = point.County,
-                                StateName = state != null ? _localizationService.GetLocalized(state, x => x.Name, languageId) : string.Empty,
-                                CountryName = country != null ? _localizationService.GetLocalized(country, x => x.Name, languageId) : string.Empty,
-                                ZipPostalCode = point.ZipPostalCode,
-                                Latitude = point.Latitude,
-                                Longitude = point.Longitude,
-                                OpeningHours = point.OpeningHours
-                            };
-
-                            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
-                            var amount = _orderTotalCalculationService.IsFreeShipping(cart) ? 0 : point.PickupFee;
-
-                            if (amount > 0)
-                            {
-                                amount = _taxService.GetShippingPrice(amount, _workContext.CurrentCustomer);
-                                amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
-                                pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
-                            }
-
-                            //adjust rate
-                            var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(point.PickupFee, cart, out var _, true);
-                            var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                            var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
-                            pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(rate, true);
-
-                            return pickupPointModel;
-                        }).ToList();
-                    else
-                        foreach (var error in pickupPointsResponse.Errors)
-                            model.Warnings.Add(error);
-                }
-
-                //only available pickup points
-                var shippingProviders = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                if (!shippingProviders.Any())
-                {
-                    if (!pickupPointProviders.Any())
+                var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
+                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync((await _workContext.GetCurrentCustomerAsync()).BillingAddressId ?? 0,
+                    await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                if (pickupPointsResponse.Success)
+                    model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
                     {
-                        model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
-                        model.Warnings.Add(_localizationService.GetResource("Checkout.PickupPoints.NotAvailable"));
-                    }
-                    model.PickupInStoreOnly = true;
-                    model.PickupInStore = true;
-                    return model;
+                        var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(point.CountryCode);
+                        var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(point.StateAbbreviation, country?.Id);
+
+                        var pickupPointModel = new CheckoutPickupPointModel
+                        {
+                            Id = point.Id,
+                            Name = point.Name,
+                            Description = point.Description,
+                            ProviderSystemName = point.ProviderSystemName,
+                            Address = point.Address,
+                            City = point.City,
+                            County = point.County,
+                            StateName = state != null ? await _localizationService.GetLocalizedAsync(state, x => x.Name, languageId) : string.Empty,
+                            CountryName = country != null ? await _localizationService.GetLocalizedAsync(country, x => x.Name, languageId) : string.Empty,
+                            ZipPostalCode = point.ZipPostalCode,
+                            Latitude = point.Latitude,
+                            Longitude = point.Longitude,
+                            OpeningHours = point.OpeningHours
+                        };
+
+                        var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var amount = await _orderTotalCalculationService.IsFreeShippingAsync(cart) ? 0 : point.PickupFee;
+
+                        if (amount > 0)
+                        {
+                            (amount, _) = await _taxService.GetShippingPriceAsync(amount, await _workContext.GetCurrentCustomerAsync());
+                            amount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(amount, await _workContext.GetWorkingCurrencyAsync());
+                            pickupPointModel.PickupFee = await _priceFormatter.FormatShippingPriceAsync(amount, true);
+                        }
+
+                        //adjust rate
+                        var (shippingTotal, _) = await _orderTotalCalculationService.AdjustShippingRateAsync(point.PickupFee, cart, true);
+                        var (rateBase, _) = await _taxService.GetShippingPriceAsync(shippingTotal, await _workContext.GetCurrentCustomerAsync());
+                        var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
+                        pickupPointModel.PickupFee = await _priceFormatter.FormatShippingPriceAsync(rate, true);
+
+                        return pickupPointModel;
+                    }).ToListAsync();
+                else
+                    foreach (var error in pickupPointsResponse.Errors)
+                        model.Warnings.Add(error);
+            }
+
+            //only available pickup points
+            var shippingProviders = await _shippingPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+            if (!shippingProviders.Any())
+            {
+                if (!pickupPointProviders.Any())
+                {
+                    model.Warnings.Add(await _localizationService.GetResourceAsync("Checkout.ShippingIsNotAllowed"));
+                    model.Warnings.Add(await _localizationService.GetResourceAsync("Checkout.PickupPoints.NotAvailable"));
                 }
+                model.PickupInStoreOnly = true;
+                model.PickupInStore = true;
+                return model;
             }
 
             return model;
@@ -220,38 +225,41 @@ namespace Nop.Web.Factories
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
-        /// <returns>Billing address model</returns>
-        public virtual CheckoutBillingAddressModel PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the billing address model
+        /// </returns>
+        public virtual async Task<CheckoutBillingAddressModel> PrepareBillingAddressModelAsync(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false,
             string overrideAttributesXml = "")
         {
             var model = new CheckoutBillingAddressModel
             {
-                ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart),
+                ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart),
                 //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
                 ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
             };
 
             //existing addresses
-            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
-                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+                .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
                     country.Published &&
                     //allow billing
                     country.AllowsBilling &&
                     //enabled for the current store
-                    _storeMappingService.Authorize(country)))
-                .ToList();
+                    await _storeMappingService.AuthorizeAsync(country)))
+                .ToListAsync();
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                _addressModelFactory.PrepareAddressModel(addressModel,
+                await _addressModelFactory.PrepareAddressModelAsync(addressModel,
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings);
 
-                if (_addressService.IsAddressValid(address))
+                if (await _addressService.IsAddressValidAsync(address))
                 {
                     model.ExistingAddresses.Add(addressModel);
                 }
@@ -263,13 +271,13 @@ namespace Nop.Web.Factories
 
             //new address
             model.BillingNewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.BillingNewAddress,
+            await _addressModelFactory.PrepareAddressModelAsync(model.BillingNewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
-                loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
+                loadCountries: async () => await _countryService.GetAllCountriesForBillingAsync((await _workContext.GetWorkingLanguageAsync()).Id),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
-                customer: _workContext.CurrentCustomer,
+                customer: await _workContext.GetCurrentCustomerAsync(),
                 overrideAttributesXml: overrideAttributesXml);
             return model;
         }
@@ -281,37 +289,40 @@ namespace Nop.Web.Factories
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
-        /// <returns>Shipping address model</returns>
-        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(IList<ShoppingCartItem> cart, 
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping address model
+        /// </returns>
+        public virtual async Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, 
             int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
-            var model = new CheckoutShippingAddressModel()
+            var model = new CheckoutShippingAddressModel
             {
                 DisplayPickupInStore = !_orderSettings.DisplayPickupInStoreOnShippingMethodPage
             };
 
             if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
-                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
+                model.PickupPointsModel = await PrepareCheckoutPickupPointsModelAsync(cart);
 
             //existing addresses
-            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
-                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+                .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
                     country.Published &&
                     //allow shipping
                     country.AllowsShipping &&
                     //enabled for the current store
-                    _storeMappingService.Authorize(country)))
-                .ToList();
+                    await _storeMappingService.AuthorizeAsync(country)))
+                .ToListAsync();
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                _addressModelFactory.PrepareAddressModel(addressModel,
+                await _addressModelFactory.PrepareAddressModelAsync(addressModel,
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings);
 
-                if (_addressService.IsAddressValid(address))
+                if (await _addressService.IsAddressValidAsync(address))
                 {
                     model.ExistingAddresses.Add(addressModel);
                 }
@@ -323,13 +334,13 @@ namespace Nop.Web.Factories
 
             //new address
             model.ShippingNewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.ShippingNewAddress,
+            await _addressModelFactory.PrepareAddressModelAsync(model.ShippingNewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
-                loadCountries: () => _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id),
+                loadCountries: async () => await _countryService.GetAllCountriesForShippingAsync((await _workContext.GetWorkingLanguageAsync()).Id),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
-                customer: _workContext.CurrentCustomer,
+                customer: await _workContext.GetCurrentCustomerAsync(),
                 overrideAttributesXml: overrideAttributesXml);
 
             return model;
@@ -340,26 +351,29 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="shippingAddress">Shipping address</param>
-        /// <returns>Shipping method model</returns>
-        public virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart, Address shippingAddress)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping method model
+        /// </returns>
+        public virtual async Task<CheckoutShippingMethodModel> PrepareShippingMethodModelAsync(IList<ShoppingCartItem> cart, Address shippingAddress)
         {
-            var model = new CheckoutShippingMethodModel()
+            var model = new CheckoutShippingMethodModel
             {
                 DisplayPickupInStore = _orderSettings.DisplayPickupInStoreOnShippingMethodPage
             };
 
             if (_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
-                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
+                model.PickupPointsModel = await PrepareCheckoutPickupPointsModelAsync(cart);
 
-            var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
+            var getShippingOptionResponse = await _shippingService.GetShippingOptionsAsync(cart, shippingAddress, await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
             if (getShippingOptionResponse.Success)
             {
                 //performance optimization. cache returned shipping options.
                 //we'll use them later (after a customer has selected an option).
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                                                        NopCustomerDefaults.OfferedShippingOptionsAttribute,
                                                        getShippingOptionResponse.ShippingOptions,
-                                                       _storeContext.CurrentStore.Id);
+                                                       (await _storeContext.GetCurrentStoreAsync()).Id);
 
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
@@ -372,18 +386,18 @@ namespace Nop.Web.Factories
                     };
 
                     //adjust rate
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _, shippingOption.IsPickupInStore);
+                    var (shippingTotal, _) = await _orderTotalCalculationService.AdjustShippingRateAsync(shippingOption.Rate, cart, shippingOption.IsPickupInStore);
 
-                    var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                    var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
-                    soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
+                    var (rateBase, _) = await _taxService.GetShippingPriceAsync(shippingTotal, await _workContext.GetCurrentCustomerAsync());
+                    var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
+                    soModel.Fee = await _priceFormatter.FormatShippingPriceAsync(rate, true);
 
                     model.ShippingMethods.Add(soModel);
                 }
 
                 //find a selected (previously) shipping method
-                var selectedShippingOption = _genericAttributeService.GetAttribute<ShippingOption>(_workContext.CurrentCustomer,
-                        NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
+                var selectedShippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(await _workContext.GetCurrentCustomerAsync(),
+                        NopCustomerDefaults.SelectedShippingOptionAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (selectedShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
@@ -427,62 +441,65 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="filterByCountryId">Filter by country identifier</param>
-        /// <returns>Payment method model</returns>
-        public virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, int filterByCountryId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment method model
+        /// </returns>
+        public virtual async Task<CheckoutPaymentMethodModel> PreparePaymentMethodModelAsync(IList<ShoppingCartItem> cart, int filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
 
             //reward points
-            if (_rewardPointsSettings.Enabled && !_shoppingCartService.ShoppingCartIsRecurring(cart))
+            if (_rewardPointsSettings.Enabled && !await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
             {
-                var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync((await _workContext.GetCurrentCustomerAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id);
                 rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
 
-                var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
+                var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
+                var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
                 if (rewardPointsAmount > decimal.Zero &&
                     _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
                     model.DisplayRewardPoints = true;
-                    model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
+                    model.RewardPointsAmount = await _priceFormatter.FormatPriceAsync(rewardPointsAmount, true, false);
                     model.RewardPointsBalance = rewardPointsBalance;
 
                     //are points enough to pay for entire order? like if this option (to use them) was selected
-                    model.RewardPointsEnoughToPayForOrder = !_orderProcessingService.IsPaymentWorkflowRequired(cart, true);
+                    model.RewardPointsEnoughToPayForOrder = !await _orderProcessingService.IsPaymentWorkflowRequiredAsync(cart, true);
                 }
             }
 
             //filter by country
-            var paymentMethods = _paymentPluginManager
-                .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
+            var paymentMethods = await (await _paymentPluginManager
+                .LoadActivePluginsAsyncAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id, filterByCountryId))
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
-                .Where(pm => !pm.HidePaymentMethod(cart))
-                .ToList();
+                .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart))
+                .ToListAsync();
             foreach (var pm in paymentMethods)
             {
-                if (_shoppingCartService.ShoppingCartIsRecurring(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
+                if (await _shoppingCartService.ShoppingCartIsRecurringAsync(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
                 {
-                    Name = _localizationService.GetLocalizedFriendlyName(pm, _workContext.WorkingLanguage.Id),
-                    Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
+                    Name = await _localizationService.GetLocalizedFriendlyNameAsync(pm, (await _workContext.GetWorkingLanguageAsync()).Id),
+                    Description = _paymentSettings.ShowPaymentMethodDescriptions ? await pm.GetPaymentMethodDescriptionAsync() : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
-                    LogoUrl = _paymentPluginManager.GetPluginLogoUrl(pm)
+                    LogoUrl = await _paymentPluginManager.GetPluginLogoUrlAsync(pm)
                 };
                 //payment method additional fee
-                var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
-                var rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
-                var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(cart, pm.PluginDescriptor.SystemName);
+                var (rateBase, _) = await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, await _workContext.GetCurrentCustomerAsync());
+                var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
                 if (rate > decimal.Zero)
-                    pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
+                    pmModel.Fee = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(rate, true);
 
                 model.PaymentMethods.Add(pmModel);
             }
 
             //find a selected (previously) payment method
-            var selectedPaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
-                NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
+            var selectedPaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(),
+                NopCustomerDefaults.SelectedPaymentMethodAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()
@@ -505,22 +522,28 @@ namespace Nop.Web.Factories
         /// Prepare payment info model
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
-        /// <returns>Payment info model</returns>
-        public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the payment info model
+        /// </returns>
+        public virtual Task<CheckoutPaymentInfoModel> PreparePaymentInfoModelAsync(IPaymentMethod paymentMethod)
         {
-            return new CheckoutPaymentInfoModel
+            return Task.FromResult(new CheckoutPaymentInfoModel
             {
                 PaymentViewComponentName = paymentMethod.GetPublicViewComponentName(),
                 DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
-            };
+            });
         }
 
         /// <summary>
         /// Prepare confirm order model
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>Confirm order model</returns>
-        public virtual CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the confirm order model
+        /// </returns>
+        public virtual async Task<CheckoutConfirmModel> PrepareConfirmOrderModelAsync(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutConfirmModel
             {
@@ -529,11 +552,11 @@ namespace Nop.Web.Factories
                 TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks
             };
             //min order amount validation
-            var minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
+            var minOrderTotalAmountOk = await _orderProcessingService.ValidateMinOrderTotalAmountAsync(cart);
             if (!minOrderTotalAmountOk)
             {
-                var minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
-                model.MinOrderTotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false));
+                var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(_orderSettings.MinOrderTotalAmount, await _workContext.GetWorkingCurrencyAsync());
+                model.MinOrderTotalWarning = string.Format(await _localizationService.GetResourceAsync("Checkout.MinOrderTotalAmount"), await _priceFormatter.FormatPriceAsync(minOrderTotalAmount, true, false));
             }
             return model;
         }
@@ -542,8 +565,11 @@ namespace Nop.Web.Factories
         /// Prepare checkout completed model
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Checkout completed model</returns>
-        public virtual CheckoutCompletedModel PrepareCheckoutCompletedModel(Order order)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout completed model
+        /// </returns>
+        public virtual Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -555,35 +581,42 @@ namespace Nop.Web.Factories
                 CustomOrderNumber = order.CustomOrderNumber
             };
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
         /// Prepare checkout progress model
         /// </summary>
         /// <param name="step">Step</param>
-        /// <returns>Checkout progress model</returns>
-        public virtual CheckoutProgressModel PrepareCheckoutProgressModel(CheckoutProgressStep step)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the checkout progress model
+        /// </returns>
+        public virtual Task<CheckoutProgressModel> PrepareCheckoutProgressModelAsync(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel { CheckoutProgressStep = step };
-            return model;
+            
+            return Task.FromResult(model);
         }
 
         /// <summary>
         /// Prepare one page checkout model
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <returns>One page checkout model</returns>
-        public virtual OnePageCheckoutModel PrepareOnePageCheckoutModel(IList<ShoppingCartItem> cart)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the one page checkout model
+        /// </returns>
+        public virtual async Task<OnePageCheckoutModel> PrepareOnePageCheckoutModelAsync(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
             var model = new OnePageCheckoutModel
             {
-                ShippingRequired = _shoppingCartService.ShoppingCartRequiresShipping(cart),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id).Any(),
-                BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
+                ShippingRequired = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart),
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id)).Any(),
+                BillingAddress = await PrepareBillingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return model;
         }

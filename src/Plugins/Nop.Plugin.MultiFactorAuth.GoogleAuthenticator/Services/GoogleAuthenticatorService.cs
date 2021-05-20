@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Google.Authenticator;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -58,39 +59,41 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// Insert the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
-        protected void InsertConfiguration(GoogleAuthenticatorRecord configuration)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected async Task InsertConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _repository.Insert(configuration);
-            _staticCacheManager.RemoveByPrefix(GoogleAuthenticatorDefaults.PrefixCacheKey);
+            await _repository.InsertAsync(configuration);
+            await _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
         }
 
         /// <summary>
         /// Update the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
-        protected void UpdateConfiguration(GoogleAuthenticatorRecord configuration)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected async Task UpdateConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _repository.Update(configuration);
-            _staticCacheManager.RemoveByPrefix(GoogleAuthenticatorDefaults.PrefixCacheKey);
+            await _repository.UpdateAsync(configuration);
+            await _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
         }
 
         /// <summary>
         /// Delete the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
-        internal void DeleteConfiguration(GoogleAuthenticatorRecord configuration)
+        internal async Task DeleteConfigurationAsync(GoogleAuthenticatorRecord configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _repository.Delete(configuration);
-            _staticCacheManager.RemoveByPrefix(GoogleAuthenticatorDefaults.PrefixCacheKey);
+            await _repository.DeleteAsync(configuration);
+            await _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
         }
 
         /// <summary>
@@ -98,13 +101,13 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// </summary>
         /// <param name="configurationId">Configuration identifier</param>
         /// <returns>Configuration</returns>
-        internal GoogleAuthenticatorRecord GetConfigurationById(int configurationId)
+        internal async Task<GoogleAuthenticatorRecord> GetConfigurationByIdAsync(int configurationId)
         {
             if (configurationId == 0)
                 return null;
 
-            return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(GoogleAuthenticatorDefaults.ConfigurationCacheKey, configurationId), () =>
-                _repository.GetById(configurationId));
+            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(GoogleAuthenticatorDefaults.ConfigurationCacheKey, configurationId), async () =>
+                await _repository.GetByIdAsync(configurationId));
         }
 
         internal GoogleAuthenticatorRecord GetConfigurationByCustomerEmail(string email)
@@ -113,7 +116,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
                 return null;
 
             var query = _repository.Table;
-            return query.Where(record => record.Customer == email).FirstOrDefault();
+            return query.FirstOrDefault(record => record.Customer == email);
         }
 
         #endregion
@@ -123,17 +126,21 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// <summary>
         /// Get configurations
         /// </summary>
+        /// <param name="email">Email</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Paged list of configurations</returns>
-        public IPagedList<GoogleAuthenticatorRecord> GetPagedConfigurations(string email = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paged list of configurations
+        /// </returns>
+        public async Task<IPagedList<GoogleAuthenticatorRecord>> GetPagedConfigurationsAsync(string email = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _repository.Table;
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Customer.Contains(email));
             query = query.OrderBy(configuration => configuration.Id);
 
-            return new PagedList<GoogleAuthenticatorRecord>(query, pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -151,15 +158,16 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// </summary>
         /// <param name="customerEmail">Customer email</param>
         /// <param name="key">Secret key</param>
-        public void AddGoogleAuthenticatorAccount(string customerEmail, string key)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task AddGoogleAuthenticatorAccountAsync(string customerEmail, string key)
         {
             var account = new GoogleAuthenticatorRecord
             {
                 Customer = customerEmail,
                 SecretKey = key,
             };
-            InsertConfiguration(account);
 
+            await InsertConfigurationAsync(account);
         }
 
         /// <summary>
@@ -167,13 +175,14 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// </summary>
         /// <param name="customerEmail">Customer email</param>
         /// <param name="key">Secret key</param>
-        public void UpdateGoogleAuthenticatorAccount(string customerEmail, string key)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task UpdateGoogleAuthenticatorAccountAsync(string customerEmail, string key)
         {
             var account = GetConfigurationByCustomerEmail(customerEmail);
             if (account != null)
             {
                 account.SecretKey = key;
-                UpdateConfiguration(account);
+                await UpdateConfigurationAsync(account);
             }
         }
 
@@ -181,12 +190,15 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// Generate a setup code for a Google Authenticator user to scan
         /// </summary>
         /// <param name="secretkey">Secret key</param>
-        /// <returns></returns>
-        public SetupCode GenerateSetupCode(string secretkey)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
+        public async Task<SetupCode> GenerateSetupCode(string secretkey)
         {
             return TwoFactorAuthenticator.GenerateSetupCode(
                 _googleAuthenticatorSettings.BusinessPrefix, 
-                _workContext.CurrentCustomer.Email, 
+                (await _workContext.GetCurrentCustomerAsync()).Email, 
                 secretkey, false, _googleAuthenticatorSettings.QRPixelsPerModule);
         }
 

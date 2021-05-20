@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "states-grid",
@@ -52,14 +52,14 @@
             }
         })
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <div width="100%">
             <button type="submit" id="btnAddNewState"
                     onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 450, true); return false;"
                     class="btn btn-primary">
                 @T("Admin.Configuration.Countries.States.AddNew")
             </button>
-            <input type="submit" id="btnRefresh" style="display: none" />
+            <button type="submit" id="btnRefresh" style="display: none"></button>
             <script>
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
@@ -76,13 +76,13 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Configuration.Countries.States.SaveBeforeEdit")
     </div>
 }
 
 <script>
     function renderColumnEdit(data, type, row, meta) {
-        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Country/StateEditPopup/")' + data + '?btnId=btnRefresh&formId=country-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Country/StateEditPopup/")' + data + '?btnId=btnRefresh&formId=country-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
     }
 </script>

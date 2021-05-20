@@ -105,32 +105,21 @@
 
 }
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T(configureLocale) - @friendlyName
         <small>
-            <i class="fa fa-arrow-circle-left"></i>
+            <i class="fas fa-arrow-circle-left"></i>
             <a asp-action="@listActionMethodName" asp-controller="@listControllerName">@T(backToLocale)</a>
         </small>
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
     </div>
 </div>
-<div class="content">
-    <div class="form-horizontal">
-        @*@if (plugin != null)
-        {*@
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
             @RenderBody()
-        @*}
-        else
-        {
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @T("Admin.Common.ConfigurationNotRequired")
-                    </div>
-                </div>
-            </div>
-        }*@
+        </div>
     </div>
-</div>
+</section>

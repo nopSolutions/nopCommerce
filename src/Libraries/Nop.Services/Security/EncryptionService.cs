@@ -98,8 +98,8 @@ namespace Nop.Services.Security
 
             using var provider = new TripleDESCryptoServiceProvider
             {
-                Key = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(0, 16)),
-                IV = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(8, 8))
+                Key = Encoding.ASCII.GetBytes(encryptionPrivateKey[0..16]),
+                IV = Encoding.ASCII.GetBytes(encryptionPrivateKey[8..16])
             };
 
             var encryptedBinary = EncryptTextToMemory(plainText, provider.Key, provider.IV);
@@ -122,8 +122,8 @@ namespace Nop.Services.Security
 
             using var provider = new TripleDESCryptoServiceProvider
             {
-                Key = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(0, 16)),
-                IV = Encoding.ASCII.GetBytes(encryptionPrivateKey.Substring(8, 8))
+                Key = Encoding.ASCII.GetBytes(encryptionPrivateKey[0..16]),
+                IV = Encoding.ASCII.GetBytes(encryptionPrivateKey[8..16])
             };
 
             var buffer = Convert.FromBase64String(cipherText);

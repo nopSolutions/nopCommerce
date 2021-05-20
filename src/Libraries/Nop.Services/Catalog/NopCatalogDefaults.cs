@@ -8,6 +8,20 @@ namespace Nop.Services.Catalog
     /// </summary>
     public static partial class NopCatalogDefaults
     {
+        #region Common
+
+        /// <summary>
+        /// Gets a default price range 'from'
+        /// </summary>
+        public static decimal DefaultPriceRangeFrom => 0;
+
+        /// <summary>
+        /// Gets a default price range 'to'
+        /// </summary>
+        public static decimal DefaultPriceRangeTo => 10000;
+
+        #endregion
+
         #region Products
 
         /// <summary>
@@ -166,6 +180,19 @@ namespace Nop.Services.Catalog
         /// </remarks>
         public static string ProductManufacturersByProductPrefix => "Nop.productmanufacturer.byproduct.{0}";
 
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : category ID
+        /// </remarks>
+        public static CacheKey ManufacturersByCategoryCacheKey => new CacheKey("Nop.manufacturer.bycategory.{0}", ManufacturersByCategoryPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ManufacturersByCategoryPrefix => "Nop.manufacturer.bycategory.";
+
         #endregion
 
         #region Products
@@ -199,6 +226,30 @@ namespace Nop.Services.Catalog
         /// Gets a key for caching
         /// </summary>
         public static CacheKey ProductsHomepageCacheKey => new CacheKey("Nop.product.homepage.");
+
+        /// <summary>
+        /// Key for caching identifiers of category featured products
+        /// </summary>
+        /// <remarks>
+        /// {0} : category id
+        /// {1} : customer role Ids
+        /// {2} : current store ID
+        /// </remarks>
+        public static CacheKey CategoryFeaturedProductsIdsKey => new CacheKey("Nop.product.featured.bycategory.{0}-{1}-{2}", CategoryFeaturedProductsIdsPrefix, FeaturedProductIdsPrefix);
+        public static string CategoryFeaturedProductsIdsPrefix => "Nop.product.featured.bycategory.{0}";
+
+        /// <summary>
+        /// Key for caching of a value indicating whether a manufacturer has featured products
+        /// </summary>
+        /// <remarks>
+        /// {0} : manufacturer id
+        /// {1} : customer role Ids
+        /// {2} : current store ID
+        /// </remarks>
+        public static CacheKey ManufacturerFeaturedProductIdsKey => new CacheKey("Nop.product.featured.bymanufacturer.{0}-{1}-{2}", ManufacturerFeaturedProductIdsPrefix, FeaturedProductIdsPrefix);
+        public static string ManufacturerFeaturedProductIdsPrefix => "Nop.product.featured.bymanufacturer.{0}";
+
+        public static string FeaturedProductIdsPrefix => "Nop.product.featured.";
 
         /// <summary>
         /// Gets a key for product prices
@@ -336,6 +387,27 @@ namespace Nop.Services.Catalog
         /// {0} : specification attribute ID
         /// </remarks>
         public static CacheKey SpecificationAttributeOptionsCacheKey => new CacheKey("Nop.specificationattributeoption.byattribute.{0}");
+
+        /// <summary>
+        /// Key for specification attribute options by category ID caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : category ID
+        /// </remarks>
+        public static CacheKey SpecificationAttributeOptionsByCategoryCacheKey => new CacheKey("Nop.specificationattributeoption.bycategory.{0}", FilterableSpecificationAttributeOptionsPrefix);
+
+        /// <summary>
+        /// Key for specification attribute options by manufacturer ID caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : manufacturer ID
+        /// </remarks>
+        public static CacheKey SpecificationAttributeOptionsByManufacturerCacheKey => new CacheKey("Nop.specificationattributeoption.bymanufacturer.{0}", FilterableSpecificationAttributeOptionsPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string FilterableSpecificationAttributeOptionsPrefix => "Nop.filterablespecificationattributeoptions";
 
         /// <summary>
         /// Gets a key for specification attribute groups caching by product id

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
@@ -33,7 +34,8 @@ namespace Nop.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void InsertEmailAccount(EmailAccount emailAccount)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
@@ -56,14 +58,15 @@ namespace Nop.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            _emailAccountRepository.Insert(emailAccount);
+            await _emailAccountRepository.InsertAsync(emailAccount);
         }
 
         /// <summary>
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void UpdateEmailAccount(EmailAccount emailAccount)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
@@ -86,41 +89,48 @@ namespace Nop.Services.Messages
             emailAccount.Username = CommonHelper.EnsureMaximumLength(emailAccount.Username, 255);
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
-            _emailAccountRepository.Update(emailAccount);
+            await _emailAccountRepository.UpdateAsync(emailAccount);
         }
 
         /// <summary>
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        public virtual void DeleteEmailAccount(EmailAccount emailAccount)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteEmailAccountAsync(EmailAccount emailAccount)
         {
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
 
-            if (GetAllEmailAccounts().Count == 1)
+            if ((await GetAllEmailAccountsAsync()).Count == 1)
                 throw new NopException("You cannot delete this email account. At least one account is required.");
 
-            _emailAccountRepository.Delete(emailAccount);
+            await _emailAccountRepository.DeleteAsync(emailAccount);
         }
 
         /// <summary>
         /// Gets an email account by identifier
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
-        /// <returns>Email account</returns>
-        public virtual EmailAccount GetEmailAccountById(int emailAccountId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account
+        /// </returns>
+        public virtual async Task<EmailAccount> GetEmailAccountByIdAsync(int emailAccountId)
         {
-            return _emailAccountRepository.GetById(emailAccountId, cache => default);
+            return await _emailAccountRepository.GetByIdAsync(emailAccountId, cache => default);
         }
 
         /// <summary>
         /// Gets all email accounts
         /// </summary>
-        /// <returns>Email accounts list</returns>
-        public virtual IList<EmailAccount> GetAllEmailAccounts()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email accounts list
+        /// </returns>
+        public virtual async Task<IList<EmailAccount>> GetAllEmailAccountsAsync()
         {
-            var emailAccounts = _emailAccountRepository.GetAll(query =>
+            var emailAccounts = await _emailAccountRepository.GetAllAsync(query =>
             {
                 return from ea in query
                     orderby ea.Id

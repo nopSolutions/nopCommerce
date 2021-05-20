@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
 {
@@ -21,8 +25,10 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IPriceFormatter _priceFormatter;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
@@ -31,14 +37,18 @@ namespace Nop.Services.Orders
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public OrderReportService(CatalogSettings catalogSettings,
+        public OrderReportService(
+            CurrencySettings currencySettings,
+            ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
+            IPriceFormatter priceFormatter,
             IRepository<Address> addressRepository,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
@@ -47,10 +57,13 @@ namespace Nop.Services.Orders
             IRepository<ProductCategory> productCategoryRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
-            IRepository<StoreMapping> storeMappingRepository)
+            IStoreMappingService storeMappingService,
+            IWorkContext workContext)
         {
-            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
             _addressRepository = addressRepository;
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
@@ -59,7 +72,93 @@ namespace Nop.Services.Orders
             _productCategoryRepository = productCategoryRepository;
             _productManufacturerRepository = productManufacturerRepository;
             _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
-            _storeMappingRepository = storeMappingRepository;
+            _storeMappingService = storeMappingService;
+            _workContext = workContext;
+        }
+
+        #endregion
+
+        #region Utils
+
+        /// <summary>
+        /// Search order items
+        /// </summary>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="categoryId">Category identifier; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Result query</returns>
+        private IQueryable<OrderItem> SearchOrderItems(
+            int categoryId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            ShippingStatus? ss = null,
+            int billingCountryId = 0,
+            bool showHidden = false)
+        {
+            int? orderStatusId = null;
+            if (os.HasValue)
+                orderStatusId = (int)os.Value;
+
+            int? paymentStatusId = null;
+            if (ps.HasValue)
+                paymentStatusId = (int)ps.Value;
+
+            int? shippingStatusId = null;
+            if (ss.HasValue)
+                shippingStatusId = (int)ss.Value;
+
+            var orderItems = from orderItem in _orderItemRepository.Table
+                    join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                    where (storeId == 0 || storeId == o.StoreId) &&
+                        (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                        (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                        (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
+                        (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
+                        (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
+                        !o.Deleted && !p.Deleted &&
+                        (vendorId == 0 || p.VendorId == vendorId) &&
+                        (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
+                        (showHidden || p.Published)
+                    select orderItem;
+
+            if (categoryId > 0)
+            {
+                orderItems = from orderItem in orderItems
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
+                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                    into p_pc
+                    from pc in p_pc.DefaultIfEmpty()
+                    where pc.CategoryId == categoryId
+                    select orderItem;
+            }
+
+            if (manufacturerId > 0)
+            {
+                orderItems = from orderItem in orderItems
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
+                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                    into p_pm
+                    from pm in p_pm.DefaultIfEmpty()
+                    where pm.ManufacturerId == manufacturerId
+                    select orderItem;
+            }
+
+            return orderItems;
         }
 
         #endregion
@@ -75,8 +174,11 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
-        /// <returns>Result</returns>
-        public virtual IList<OrderByCountryReportLine> GetCountryReport(int storeId, OrderStatus? os,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<IList<OrderByCountryReportLine>> GetCountryReportAsync(int storeId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
         {
             int? orderStatusId = null;
@@ -106,7 +208,7 @@ namespace Nop.Services.Orders
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
-            var report = (from oq in query
+            var report = await (from oq in query
                           join a in _addressRepository.Table on oq.BillingAddressId equals a.Id
                           group oq by a.CountryId
                           into result
@@ -122,7 +224,8 @@ namespace Nop.Services.Orders
                     CountryId = r.CountryId,
                     TotalOrders = r.TotalOrders,
                     SumOrders = r.SumOrders
-                }).ToList();
+                })
+                .ToListAsync();
 
             return report;
         }
@@ -146,8 +249,11 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <returns>Result</returns>
-        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<OrderAverageReportLine> GetOrderAverageReportLineAsync(int storeId = 0,
             int vendorId = 0, int productId = 0, int warehouseId = 0, int billingCountryId = 0,
             int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
@@ -226,7 +332,7 @@ namespace Nop.Services.Orders
                     where n.Note.Contains(orderNotes)
                     select o;
 
-            var item = (from oq in query
+            var item = await (from oq in query
                 group oq by 1
                 into result
                 select new
@@ -238,14 +344,15 @@ namespace Nop.Services.Orders
                     OrderTotalSum = result.Sum(o => o.OrderTotal),
                     OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
                 }).Select(r => new OrderAverageReportLine
-                    {
-                        CountOrders = r.OrderCount,
-                        SumShippingExclTax = r.OrderShippingExclTaxSum,
-                        OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
-                        SumTax = r.OrderTaxSum,
-                        SumOrders = r.OrderTotalSum,
-                        SumRefundedAmount = r.OrederRefundedAmountSum
-                }).FirstOrDefault();
+                {
+                    CountOrders = r.OrderCount,
+                    SumShippingExclTax = r.OrderShippingExclTaxSum,
+                    OrderPaymentFeeExclTaxSum = r.OrderPaymentFeeExclTaxSum,
+                    SumTax = r.OrderTaxSum,
+                    SumOrders = r.OrderTotalSum,
+                    SumRefundedAmount = r.OrederRefundedAmountSum
+                })
+                .FirstOrDefaultAsync();
 
             item ??= new OrderAverageReportLine
             {
@@ -263,8 +370,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
-        /// <returns>Result</returns>
-        public virtual OrderAverageReportLineSummary OrderAverageReport(int storeId, OrderStatus os)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<OrderAverageReportLineSummary> OrderAverageReportAsync(int storeId, OrderStatus os)
         {
             var item = new OrderAverageReportLineSummary
             {
@@ -272,13 +382,13 @@ namespace Nop.Services.Orders
             };
             var orderStatuses = new List<int> { (int)os };
 
-            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var nowDt = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var timeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
 
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
-            var todayResult = GetOrderAverageReportLine(storeId,
+            var todayResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime1);
             item.SumTodayOrders = todayResult.SumOrders;
@@ -289,7 +399,7 @@ namespace Nop.Services.Orders
             var today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             var t2 = today.AddDays(-(today.DayOfWeek - fdow));
             DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
-            var weekResult = GetOrderAverageReportLine(storeId,
+            var weekResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime2);
             item.SumThisWeekOrders = weekResult.SumOrders;
@@ -298,7 +408,7 @@ namespace Nop.Services.Orders
             //month
             var t3 = new DateTime(nowDt.Year, nowDt.Month, 1);
             DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
-            var monthResult = GetOrderAverageReportLine(storeId,
+            var monthResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime3);
             item.SumThisMonthOrders = monthResult.SumOrders;
@@ -307,18 +417,234 @@ namespace Nop.Services.Orders
             //year
             var t4 = new DateTime(nowDt.Year, 1, 1);
             DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
-            var yearResult = GetOrderAverageReportLine(storeId,
+            var yearResult = await GetOrderAverageReportLineAsync(storeId,
                 osIds: orderStatuses,
                 startTimeUtc: startTime4);
             item.SumThisYearOrders = yearResult.SumOrders;
             item.CountThisYearOrders = yearResult.CountOrders;
 
             //all time
-            var allTimeResult = GetOrderAverageReportLine(storeId, osIds: orderStatuses);
+            var allTimeResult = await GetOrderAverageReportLineAsync(storeId, osIds: orderStatuses);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
             return item;
+        }
+
+        /// <summary>
+        /// Get sales summary report
+        /// </summary>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="categoryId">Category identifier; 0 to load all records</param>
+        /// <param name="productId">Product identifier; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
+        /// <param name="groupBy">0 - group by day, 1 - group by week, 2 - group by total month</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<IPagedList<SalesSummaryReportLine>> SalesSummaryReportAsync(
+            int categoryId = 0,
+            int productId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            int billingCountryId = 0,
+            GroupByOptions groupBy = GroupByOptions.Day,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue)
+        {
+            int? orderStatusId = null;
+            if (os.HasValue)
+                orderStatusId = (int)os.Value;
+
+            int? paymentStatusId = null;
+            if (ps.HasValue)
+                paymentStatusId = (int)ps.Value;
+
+            //var orderItems = SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, null, billingCountryId);
+            
+            var query = _orderRepository.Table;            
+            query = query.Where(o => !o.Deleted);
+
+            //filter by date
+            if (createdFromUtc.HasValue)
+                query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
+
+            if (createdToUtc.HasValue)
+                query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+
+            //filter by order status
+            if (orderStatusId.HasValue)
+                query = query.Where(o => o.OrderStatusId == orderStatusId);
+
+            //filter by payment status
+            if (paymentStatusId.HasValue)
+                query = query.Where(o => o.PaymentStatusId == paymentStatusId);
+
+            //filter by category
+            if (categoryId > 0)
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                    where pc.CategoryId == categoryId                        
+                    select o;
+
+            //filter by manufacturer
+            if (manufacturerId > 0)
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                    where pm.ManufacturerId == manufacturerId
+                    select o;
+
+            //filter by country
+            if (billingCountryId > 0)
+                query = from o in query
+                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                    where
+                        billingCountryId <= 0 || oba.CountryId == billingCountryId
+                    select o;
+
+            //filter by product
+            if (productId > 0)
+                query = from o in query
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        where oi.ProductId == productId
+                        select o;            
+
+            //filter by store
+            if (storeId > 0)
+                query = query.Where(o => o.StoreId == storeId);
+
+            var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
+
+            var items = groupBy switch
+            {
+                GroupByOptions.Day => from oq in query
+                                          group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}-{oq.CreatedOnUtc.Day}" into result
+                                          let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                          select new
+                                          {
+                                              OrderSummary = result.Key,
+                                              OrderSummaryType = groupBy,
+                                              OrderCount = result.Count(),
+                                              OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                              OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                                              OrderTaxSum = result.Sum(o => o.OrderTax),
+                                              OrderTotalSum = result.Sum(o => o.OrderTotal),
+                                              OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
+                                              OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
+                                          },
+                GroupByOptions.Week => from oq in query
+                                            group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}-{oq.CreatedOnUtc.Day - (int)oq.CreatedOnUtc.DayOfWeek}" into result
+                                            let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                            select new
+                                            {
+                                                OrderSummary = result.Key,
+                                                OrderSummaryType = groupBy,
+                                                OrderCount = result.Count(),
+                                                OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                                OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                                                OrderTaxSum = result.Sum(o => o.OrderTax),
+                                                OrderTotalSum = result.Sum(o => o.OrderTotal),
+                                                OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
+                                                OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
+                                            },
+                GroupByOptions.Month => from oq in query
+                                            group oq by $"{oq.CreatedOnUtc.Year}-{oq.CreatedOnUtc.Month}" into result
+                                            let orderItems = _orderItemRepository.Table.Where(oi => oi.OrderId == result.FirstOrDefault().Id)
+                                            select new
+                                            {
+                                                OrderSummary = result.Key,
+                                                OrderSummaryType = groupBy,
+                                                OrderCount = result.Count(),
+                                                OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                                OrderPaymentFeeExclTaxSum = result.Sum(o => o.PaymentMethodAdditionalFeeExclTax),
+                                                OrderTaxSum = result.Sum(o => o.OrderTax),
+                                                OrderTotalSum = result.Sum(o => o.OrderTotal),
+                                                OrederRefundedAmountSum = result.Sum(o => o.RefundedAmount),
+                                                OrderTotalCost = orderItems.Sum(oi => (decimal?)oi.OriginalProductCost * oi.Quantity)
+                                            },
+                _ => throw new ArgumentException("Wrong grouBy parameter", nameof(groupBy)),
+            };
+
+            var ssReport =
+                from orderItem in items
+                orderby orderItem.OrderSummary descending
+                select new SalesSummaryReportLine
+                {
+                    Summary = orderItem.OrderSummary,
+                    SummaryType = (int)orderItem.OrderSummaryType,
+                    NumberOfOrders = orderItem.OrderCount,
+                    Profit = orderItem.OrderTotalSum
+                         - orderItem.OrderShippingExclTaxSum
+                         - orderItem.OrderPaymentFeeExclTaxSum
+                         - orderItem.OrderTaxSum
+                         - orderItem.OrederRefundedAmountSum
+                         - Convert.ToDecimal(orderItem.OrderTotalCost),
+                    Shipping = orderItem.OrderShippingExclTaxSum.ToString(CultureInfo.CurrentCulture),
+                    Tax = orderItem.OrderTaxSum.ToString(CultureInfo.CurrentCulture),
+                    OrderTotal = orderItem.OrderTotalSum.ToString(CultureInfo.CurrentCulture)
+                };
+
+            var report = await ssReport.ToPagedListAsync(pageIndex, pageSize);
+            var dayFormat = "MMM dd, yyyy";
+
+            foreach (var reportLine in report)
+            {
+                var isCorrectDate =
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM-dd", null, DateTimeStyles.None, out var date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M-d", null, DateTimeStyles.None, out date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-MM", null, DateTimeStyles.None, out date) ||
+                    DateTime.TryParseExact(reportLine.Summary, "yyyy-M", null, DateTimeStyles.None, out date);
+
+                if (groupBy == GroupByOptions.Week)
+                {
+                    if (!isCorrectDate)
+                    {
+                        var data = reportLine.Summary.Replace("--", "-").Split("-").Select(int.Parse).ToList();
+                        date = new DateTime(data[0], data[1], 1).AddDays((data[2] + 1) * -1);
+                    }
+
+                    var date1 = date.ToString(dayFormat);
+                    var date2 = date.AddDays(6).ToString(dayFormat);
+                    reportLine.Summary = $"{date1} - {date2}";
+                }
+                else if (isCorrectDate)
+                {
+                    var dateFormat = groupBy switch
+                    {
+                        GroupByOptions.Day => dayFormat,
+                        GroupByOptions.Month => "MMMM, yyyy",
+                        _ => ""
+                    };
+
+                    reportLine.Summary = date.ToString(dateFormat);
+                }
+
+                reportLine.ProfitStr = await _priceFormatter.FormatPriceAsync(reportLine.Profit, true, false);
+                reportLine.Shipping = await _priceFormatter
+                    .FormatShippingPriceAsync(Convert.ToDecimal(reportLine.Shipping), true, primaryStoreCurrency, (await _workContext.GetWorkingLanguageAsync()).Id, false);
+                reportLine.Tax = await _priceFormatter.FormatPriceAsync(Convert.ToDecimal(reportLine.Tax), true, false);
+                reportLine.OrderTotal = await _priceFormatter.FormatPriceAsync(Convert.ToDecimal(reportLine.OrderTotal), true, false);
+            }
+
+            return report;            
         }
 
         /// <summary>
@@ -335,77 +661,33 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Result</returns>
-        public virtual IPagedList<BestsellersReportLine> BestSellersReport(
-            int categoryId = 0, int manufacturerId = 0,
-            int storeId = 0, int vendorId = 0,
-            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<IPagedList<BestsellersReportLine>> BestSellersReportAsync(
+            int categoryId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            ShippingStatus? ss = null,
             int billingCountryId = 0,
             OrderByEnum orderBy = OrderByEnum.OrderByQuantity,
-            int pageIndex = 0, int pageSize = int.MaxValue,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue,
             bool showHidden = false)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
 
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
+            var bestSellers = SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden);
 
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
-            var query1 = from orderItem in _orderItemRepository.Table
-                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                         where (storeId == 0 || storeId == o.StoreId) &&
-                               (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                               (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                               (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                               (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
-                               (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                               //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                               //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
-                               //0) &&
-                               !o.Deleted && 
-                               !p.Deleted &&
-                               (vendorId == 0 || p.VendorId == vendorId) &&
-                               (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
-                               (showHidden || p.Published)
-                         select orderItem;
-
-            if (categoryId > 0)
-            {
-                query1 = from orderItem in query1
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                            into p_pc
-                         from pc in p_pc.DefaultIfEmpty()
-                         where pc.CategoryId == categoryId
-                         select orderItem;
-            }
-
-            if (manufacturerId > 0)
-            {
-                query1 = from orderItem in query1
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                            into p_pm
-                         from pm in p_pm.DefaultIfEmpty()
-                         where pm.ManufacturerId == manufacturerId
-                         select orderItem;
-            }
-
-            var query2 =
+            var bsReport =
                 //group by products
-                from orderItem in query1
+                from orderItem in bestSellers
                 group orderItem by orderItem.ProductId into g
                 select new BestsellersReportLine
                 {
@@ -414,14 +696,51 @@ namespace Nop.Services.Orders
                     TotalQuantity = g.Sum(x => x.Quantity)
                 };
 
-            query2 = orderBy switch
+            bsReport = orderBy switch
             {
-                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.TotalQuantity),
-                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.TotalAmount),
+                OrderByEnum.OrderByQuantity => bsReport.OrderByDescending(x => x.TotalQuantity),
+                OrderByEnum.OrderByTotalAmount => bsReport.OrderByDescending(x => x.TotalAmount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
-            var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
+
+            var result = await bsReport.ToPagedListAsync(pageIndex, pageSize);
+
             return result;
+        }
+
+        /// <summary>
+        /// Get best sellers total amount
+        /// </summary>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="categoryId">Category identifier; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<decimal> BestSellersReportTotalAmountAsync(
+            int categoryId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            ShippingStatus? ss = null,
+            int billingCountryId = 0,
+            bool showHidden = false)
+        {            
+            return await SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden: showHidden)
+                .SumAsync(bestseller => bestseller.Quantity * bestseller.PriceExclTax);
         }
 
         /// <summary>
@@ -432,8 +751,11 @@ namespace Nop.Services.Orders
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
-        public virtual int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
+        public virtual async Task<int[]> GetAlsoPurchasedProductsIdsAsync(int storeId, int productId,
             int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false)
         {
             if (productId == 0)
@@ -468,7 +790,7 @@ namespace Nop.Services.Orders
             if (recordsToReturn > 0)
                 query3 = query3.Take(recordsToReturn);
 
-            var report = query3.ToList();
+            var report = await query3.ToListAsync();
 
             var ids = new List<int>();
             foreach (var reportLine in report)
@@ -489,56 +811,63 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Products</returns>
-        public virtual IPagedList<Product> ProductsNeverSold(int vendorId = 0, int storeId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the products
+        /// </returns>
+        public virtual async Task<IPagedList<Product>> ProductsNeverSoldAsync(int vendorId = 0, int storeId = 0,
             int categoryId = 0, int manufacturerId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            //this inner query should retrieve all purchased product identifiers
-            var query_tmp = (from orderItem in _orderItemRepository.Table
-                             join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                             where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                                   (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                                   !o.Deleted
-                             select orderItem.ProductId).Distinct();
-
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
-            var query = from p in _productRepository.Table
-                        join pm in _productManufacturerRepository.Table on p.Id 
-                            equals pm.ProductId 
-                            into p_pm
-                from pm in p_pm.DefaultIfEmpty()
-                        join pc in _productCategoryRepository.Table on p.Id 
-                            equals pc.ProductId 
-                            into p_pc
-                from pc in p_pc.DefaultIfEmpty()
-                        where !query_tmp.Contains(p.Id) &&
-                              //include only simple products
-                              p.ProductTypeId == simpleProductTypeId &&
-                              !p.Deleted &&
-                              (vendorId == 0 || p.VendorId == vendorId) &&
-                              //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                              //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
-                              (manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
-                              (categoryId == 0 || pc.CategoryId == categoryId) &&
-                              (showHidden || p.Published)
-                        select p;
+            var availableProductsQuery =
+                from oi in _orderItemRepository.Table
+                join o in _orderRepository.Table on oi.OrderId equals o.Id
+                where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                      (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                      !o.Deleted
+                select new { ProductId = oi.ProductId };
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            var query = 
+                from p in _productRepository.Table
+                join oi in availableProductsQuery on p.Id equals oi.ProductId
+                    into p_oi
+                from oi in p_oi.DefaultIfEmpty()
+                where oi == null &&
+                      p.ProductTypeId == simpleProductTypeId &&
+                      !p.Deleted &&
+                      (vendorId == 0 || p.VendorId == vendorId) &&
+                      (showHidden || p.Published)
+                select p;
+
+            if (categoryId > 0)
             {
                 query = from p in query
-                        join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
-                        from sm in p_sm.DefaultIfEmpty()
-                        where !p.LimitedToStores || storeId == sm.StoreId
+                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                            into p_pc
+                        from pc in p_pc.DefaultIfEmpty()
+                        where pc.CategoryId == categoryId
                         select p;
             }
 
+            if (manufacturerId > 0)
+            {
+                query = from p in query
+                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                            into p_pm
+                        from pm in p_pm.DefaultIfEmpty()
+                        where pm.ManufacturerId == manufacturerId
+                        select p;
+            }
+
+            //apply store mapping constraints
+            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
             query = query.OrderBy(p => p.Name);
 
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
+            var products = await query.ToPagedListAsync(pageIndex, pageSize);
             return products;
         }
 
@@ -561,8 +890,11 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
-        /// <returns>Result</returns>
-        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0, int productId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<decimal> ProfitReportAsync(int storeId = 0, int vendorId = 0, int productId = 0,
             int warehouseId = 0, int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
@@ -621,9 +953,9 @@ namespace Nop.Services.Orders
                            oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
                 select orderItem;
 
-            var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
+            var productCost = Convert.ToDecimal(await query.SumAsync(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 
-            var reportSummary = GetOrderAverageReportLine(
+            var reportSummary = await GetOrderAverageReportLineAsync(
                 storeId,
                 vendorId,
                 productId,

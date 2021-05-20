@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Cms;
@@ -37,10 +38,13 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
+        public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return new List<string> { PublicWidgetZones.HomepageTop };
+            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HomepageTop });
         }
 
         /// <summary>
@@ -64,7 +68,8 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task InstallAsync()
         {
             //pictures
             var sampleImagesPath = _fileProvider.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
@@ -72,19 +77,19 @@ namespace Nop.Plugin.Widgets.NivoSlider
             //settings
             var settings = new NivoSliderSettings
             {
-                Picture1Id = _pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner1.jpg")), MimeTypes.ImagePJpeg, "banner_1").Id,
+                Picture1Id = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "banner1.jpg")), MimeTypes.ImagePJpeg, "banner_1")).Id,
                 Text1 = "",
                 Link1 = _webHelper.GetStoreLocation(false),
-                Picture2Id = _pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner2.jpg")), MimeTypes.ImagePJpeg, "banner_2").Id,
+                Picture2Id = (await _pictureService.InsertPictureAsync(await _fileProvider.ReadAllBytesAsync(_fileProvider.Combine(sampleImagesPath, "banner2.jpg")), MimeTypes.ImagePJpeg, "banner_2")).Id,
                 Text2 = "",
                 Link2 = _webHelper.GetStoreLocation(false)
                 //Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(_fileProvider.Combine(sampleImagesPath,"banner3.jpg")), MimeTypes.ImagePJpeg, "banner_3").Id,
                 //Text3 = "",
                 //Link3 = _webHelper.GetStoreLocation(false),
             };
-            _settingService.SaveSetting(settings);
+            await _settingService.SaveSettingAsync(settings);
 
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.NivoSlider.Picture1"] = "Picture 1",
                 ["Plugins.Widgets.NivoSlider.Picture2"] = "Picture 2",
@@ -101,21 +106,22 @@ namespace Nop.Plugin.Widgets.NivoSlider
                 ["Plugins.Widgets.NivoSlider.AltText.Hint"] = "Enter alternate text that will be added to image."
             });
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UninstallAsync()
         {
             //settings
-            _settingService.DeleteSetting<NivoSliderSettings>();
+            await _settingService.DeleteSettingAsync<NivoSliderSettings>();
 
             //locales
-            _localizationService.DeleteLocaleResources("Plugins.Widgets.NivoSlider");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.NivoSlider");
 
-            base.Uninstall();
+            await base.UninstallAsync();
         }
 
         /// <summary>

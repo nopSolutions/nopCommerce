@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
@@ -77,12 +78,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyDiscountsMapping(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyDiscountsMappingAsync(Product product, Product productCopy)
         {
-            foreach (var discountMapping in _productService.GetAllDiscountsAppliedToProduct(product.Id))
+            foreach (var discountMapping in await _productService.GetAllDiscountsAppliedToProductAsync(product.Id))
             {
-                _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId });
-                _productService.UpdateProduct(productCopy);
+                await _productService.InsertDiscountProductMappingAsync(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId });
+                await _productService.UpdateProductAsync(productCopy);
             }
         }
 
@@ -94,19 +96,20 @@ namespace Nop.Services.Catalog
         /// <param name="copyImages">A value indicating whether to copy images</param>
         /// <param name="copyAssociatedProducts">A value indicating whether to copy associated products</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyAssociatedProducts(Product product, bool isPublished, bool copyImages, bool copyAssociatedProducts, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyAssociatedProductsAsync(Product product, bool isPublished, bool copyImages, bool copyAssociatedProducts, Product productCopy)
         {
             if (!copyAssociatedProducts)
                 return;
 
-            var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
+            var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, showHidden: true);
             foreach (var associatedProduct in associatedProducts)
             {
-                var associatedProductCopy = CopyProduct(associatedProduct,
+                var associatedProductCopy = await CopyProductAsync(associatedProduct,
                     string.Format(NopCatalogDefaults.ProductCopyNameTemplate, associatedProduct.Name),
                     isPublished, copyImages, false);
                 associatedProductCopy.ParentGroupedProductId = productCopy.Id;
-                _productService.UpdateProduct(associatedProductCopy);
+                await _productService.UpdateProductAsync(associatedProductCopy);
             }
         }
 
@@ -115,11 +118,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyTierPrices(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyTierPricesAsync(Product product, Product productCopy)
         {
-            foreach (var tierPrice in _productService.GetTierPricesByProduct(product.Id))
-            {
-                _productService.InsertTierPrice(new TierPrice
+            foreach (var tierPrice in await _productService.GetTierPricesByProductAsync(product.Id))
+                await _productService.InsertTierPriceAsync(new TierPrice
                 {
                     ProductId = productCopy.Id,
                     StoreId = tierPrice.StoreId,
@@ -129,7 +132,6 @@ namespace Nop.Services.Catalog
                     StartDateTimeUtc = tierPrice.StartDateTimeUtc,
                     EndDateTimeUtc = tierPrice.EndDateTimeUtc
                 });
-            }
         }
 
         /// <summary>
@@ -138,7 +140,8 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
         /// <param name="originalNewPictureIdentifiers">Identifiers of pictures</param>
-        protected virtual void CopyAttributesMapping(Product product, Product productCopy, Dictionary<int, int> originalNewPictureIdentifiers)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyAttributesMappingAsync(Product product, Product productCopy, Dictionary<int, int> originalNewPictureIdentifiers)
         {
             var associatedAttributes = new Dictionary<int, int>();
             var associatedAttributeValues = new Dictionary<int, int>();
@@ -149,9 +152,9 @@ namespace Nop.Services.Catalog
             //all product attribute mapping copies
             var productAttributeMappingCopies = new Dictionary<int, ProductAttributeMapping>();
 
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = await _languageService.GetAllLanguagesAsync(true);
 
-            foreach (var productAttributeMapping in _productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
+            foreach (var productAttributeMapping in await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
             {
                 var productAttributeMappingCopy = new ProductAttributeMapping
                 {
@@ -167,13 +170,13 @@ namespace Nop.Services.Catalog
                     ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
                     DefaultValue = productAttributeMapping.DefaultValue
                 };
-                _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
+                await _productAttributeService.InsertProductAttributeMappingAsync(productAttributeMappingCopy);
                 //localization
                 foreach (var lang in languages)
                 {
-                    var textPrompt = _localizationService.GetLocalized(productAttributeMapping, x => x.TextPrompt, lang.Id, false, false);
+                    var textPrompt = await _localizationService.GetLocalizedAsync(productAttributeMapping, x => x.TextPrompt, lang.Id, false, false);
                     if (!string.IsNullOrEmpty(textPrompt))
-                        _localizedEntityService.SaveLocalizedValue(productAttributeMappingCopy, x => x.TextPrompt, textPrompt,
+                        await _localizedEntityService.SaveLocalizedValueAsync(productAttributeMappingCopy, x => x.TextPrompt, textPrompt,
                             lang.Id);
                 }
 
@@ -188,14 +191,12 @@ namespace Nop.Services.Catalog
                 associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
 
                 // product attribute values
-                var productAttributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
+                var productAttributeValues = await _productAttributeService.GetProductAttributeValuesAsync(productAttributeMapping.Id);
                 foreach (var productAttributeValue in productAttributeValues)
                 {
                     var attributeValuePictureId = 0;
-                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
-                    {
+                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId)) 
                         attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
-                    }
 
                     var attributeValueCopy = new ProductAttributeValue
                     {
@@ -218,12 +219,12 @@ namespace Nop.Services.Catalog
                     if (productAttributeValue.ImageSquaresPictureId > 0)
                     {
                         var origImageSquaresPicture =
-                            _pictureService.GetPictureById(productAttributeValue.ImageSquaresPictureId);
+                            await _pictureService.GetPictureByIdAsync(productAttributeValue.ImageSquaresPictureId);
                         if (origImageSquaresPicture != null)
                         {
                             //copy the picture
-                            var imageSquaresPictureCopy = _pictureService.InsertPicture(
-                                _pictureService.LoadPictureBinary(origImageSquaresPicture),
+                            var imageSquaresPictureCopy = await _pictureService.InsertPictureAsync(
+                                await _pictureService.LoadPictureBinaryAsync(origImageSquaresPicture),
                                 origImageSquaresPicture.MimeType,
                                 origImageSquaresPicture.SeoFilename,
                                 origImageSquaresPicture.AltAttribute,
@@ -232,7 +233,7 @@ namespace Nop.Services.Catalog
                         }
                     }
 
-                    _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
+                    await _productAttributeService.InsertProductAttributeValueAsync(attributeValueCopy);
 
                     //save associated value (used for combinations copying)
                     associatedAttributeValues.Add(productAttributeValue.Id, attributeValueCopy.Id);
@@ -240,9 +241,9 @@ namespace Nop.Services.Catalog
                     //localization
                     foreach (var lang in languages)
                     {
-                        var name = _localizationService.GetLocalized(productAttributeValue, x => x.Name, lang.Id, false, false);
+                        var name = await _localizationService.GetLocalizedAsync(productAttributeValue, x => x.Name, lang.Id, false, false);
                         if (!string.IsNullOrEmpty(name))
-                            _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id);
+                            await _localizedEntityService.SaveLocalizedValueAsync(attributeValueCopy, x => x.Name, name, lang.Id);
                     }
                 }
             }
@@ -250,15 +251,15 @@ namespace Nop.Services.Catalog
             //copy attribute conditions
             foreach (var productAttributeMapping in oldCopyWithConditionAttributes)
             {
-                var oldConditionAttributeMapping = _productAttributeParser
-                    .ParseProductAttributeMappings(productAttributeMapping.ConditionAttributeXml).FirstOrDefault();
+                var oldConditionAttributeMapping = (await _productAttributeParser
+                    .ParseProductAttributeMappingsAsync(productAttributeMapping.ConditionAttributeXml)).FirstOrDefault();
 
                 if (oldConditionAttributeMapping == null)
                     continue;
 
-                var oldConditionValues =
-                    _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml,
-                        oldConditionAttributeMapping.Id);
+                var oldConditionValues = await _productAttributeParser.ParseProductAttributeValuesAsync(
+                    productAttributeMapping.ConditionAttributeXml,
+                    oldConditionAttributeMapping.Id);
 
                 if (!oldConditionValues.Any())
                     continue;
@@ -278,21 +279,21 @@ namespace Nop.Services.Catalog
                 var conditionAttribute = productAttributeMappingCopies[attributeMappingId];
                 conditionAttribute.ConditionAttributeXml = newConditionAttributeXml;
 
-                _productAttributeService.UpdateProductAttributeMapping(conditionAttribute);
+                await _productAttributeService.UpdateProductAttributeMappingAsync(conditionAttribute);
             }
 
             //attribute combinations
-            foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
+            foreach (var combination in await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id))
             {
                 //generate new AttributesXml according to new value IDs
                 var newAttributesXml = string.Empty;
-                var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(combination.AttributesXml);
+                var parsedProductAttributes = await _productAttributeParser.ParseProductAttributeMappingsAsync(combination.AttributesXml);
                 foreach (var oldAttribute in parsedProductAttributes)
                 {
                     if (!associatedAttributes.ContainsKey(oldAttribute.Id))
                         continue;
 
-                    var newAttribute = _productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
+                    var newAttribute = await _productAttributeService.GetProductAttributeMappingByIdAsync(associatedAttributes[oldAttribute.Id]);
 
                     if (newAttribute == null)
                         continue;
@@ -308,7 +309,7 @@ namespace Nop.Services.Catalog
                             if (!associatedAttributeValues.ContainsKey(oldAttributeValue))
                                 continue;
 
-                            var newAttributeValue = _productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
+                            var newAttributeValue = await _productAttributeService.GetProductAttributeValueByIdAsync(associatedAttributeValues[oldAttributeValue]);
 
                             if (newAttributeValue != null)
                             {
@@ -333,6 +334,7 @@ namespace Nop.Services.Catalog
                     ProductId = productCopy.Id,
                     AttributesXml = newAttributesXml,
                     StockQuantity = combination.StockQuantity,
+                    MinStockQuantity = combination.MinStockQuantity,
                     AllowOutOfStockOrders = combination.AllowOutOfStockOrders,
                     Sku = combination.Sku,
                     ManufacturerPartNumber = combination.ManufacturerPartNumber,
@@ -341,12 +343,12 @@ namespace Nop.Services.Catalog
                     NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow,
                     PictureId = combinationPictureId
                 };
-                _productAttributeService.InsertProductAttributeCombination(combinationCopy);
+                await _productAttributeService.InsertProductAttributeCombinationAsync(combinationCopy);
 
                 //quantity change history
-                _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity,
+                await _productService.AddStockQuantityHistoryEntryAsync(productCopy, combination.StockQuantity,
                     combination.StockQuantity,
-                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id);
+                    message: string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id);
             }
         }
 
@@ -355,9 +357,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyProductSpecifications(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyProductSpecificationsAsync(Product product, Product productCopy)
         {
-            foreach (var productSpecificationAttribute in _specificationAttributeService.GetProductSpecificationAttributes(product.Id))
+            foreach (var productSpecificationAttribute in await _specificationAttributeService.GetProductSpecificationAttributesAsync(product.Id))
             {
                 var psaCopy = new ProductSpecificationAttribute
                 {
@@ -369,7 +372,7 @@ namespace Nop.Services.Catalog
                     ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
                     DisplayOrder = productSpecificationAttribute.DisplayOrder
                 };
-                _specificationAttributeService.InsertProductSpecificationAttribute(psaCopy);
+                await _specificationAttributeService.InsertProductSpecificationAttributeAsync(psaCopy);
             }
         }
 
@@ -378,17 +381,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyCrossSellsMapping(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyCrossSellsMappingAsync(Product product, Product productCopy)
         {
-            foreach (var csProduct in _productService.GetCrossSellProductsByProductId1(product.Id, true))
-            {
-                _productService.InsertCrossSellProduct(
+            foreach (var csProduct in await _productService.GetCrossSellProductsByProductId1Async(product.Id, true))
+                await _productService.InsertCrossSellProductAsync(
                     new CrossSellProduct
                     {
                         ProductId1 = productCopy.Id,
                         ProductId2 = csProduct.ProductId2
                     });
-            }
         }
 
         /// <summary>
@@ -396,18 +398,17 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyRelatedProductsMapping(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyRelatedProductsMappingAsync(Product product, Product productCopy)
         {
-            foreach (var relatedProduct in _productService.GetRelatedProductsByProductId1(product.Id, true))
-            {
-                _productService.InsertRelatedProduct(
+            foreach (var relatedProduct in await _productService.GetRelatedProductsByProductId1Async(product.Id, true))
+                await _productService.InsertRelatedProductAsync(
                     new RelatedProduct
                     {
                         ProductId1 = productCopy.Id,
                         ProductId2 = relatedProduct.ProductId2,
                         DisplayOrder = relatedProduct.DisplayOrder
                     });
-            }
         }
 
         /// <summary>
@@ -415,9 +416,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyManufacturersMapping(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyManufacturersMappingAsync(Product product, Product productCopy)
         {
-            foreach (var productManufacturers in _manufacturerService.GetProductManufacturersByProductId(product.Id, true))
+            foreach (var productManufacturers in await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id, true))
             {
                 var productManufacturerCopy = new ProductManufacturer
                 {
@@ -427,7 +429,7 @@ namespace Nop.Services.Catalog
                     DisplayOrder = productManufacturers.DisplayOrder
                 };
 
-                _manufacturerService.InsertProductManufacturer(productManufacturerCopy);
+                await _manufacturerService.InsertProductManufacturerAsync(productManufacturerCopy);
             }
         }
 
@@ -436,9 +438,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyCategoriesMapping(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyCategoriesMappingAsync(Product product, Product productCopy)
         {
-            foreach (var productCategory in _categoryService.GetProductCategoriesByProductId(product.Id, showHidden: true))
+            foreach (var productCategory in await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, showHidden: true))
             {
                 var productCategoryCopy = new ProductCategory
                 {
@@ -448,7 +451,7 @@ namespace Nop.Services.Catalog
                     DisplayOrder = productCategory.DisplayOrder
                 };
 
-                _categoryService.InsertProductCategory(productCategoryCopy);
+                await _categoryService.InsertProductCategoryAsync(productCategoryCopy);
             }
         }
 
@@ -457,11 +460,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyWarehousesMapping(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyWarehousesMappingAsync(Product product, Product productCopy)
         {
-            foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(product.Id))
+            foreach (var pwi in await _productService.GetAllProductWarehouseInventoryRecordsAsync(product.Id))
             {
-                _productService.InsertProductWarehouseInventory(
+                await _productService.InsertProductWarehouseInventoryAsync(
                     new ProductWarehouseInventory
                     {
                         ProductId = productCopy.Id,
@@ -471,11 +475,11 @@ namespace Nop.Services.Catalog
                     });
 
                 //quantity change history
-                var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
-                _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
+                var message = $"{await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
+                await _productService.AddStockQuantityHistoryEntryAsync(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
             }
 
-            _productService.UpdateProduct(productCopy);
+            await _productService.UpdateProductAsync(productCopy);
         }
 
         /// <summary>
@@ -485,24 +489,27 @@ namespace Nop.Services.Catalog
         /// <param name="newName">New product name</param>
         /// <param name="copyImages"></param>
         /// <param name="productCopy">New product</param>
-        /// <returns>Identifiers of old and new pictures</returns>
-        protected virtual Dictionary<int, int> CopyProductPictures(Product product, string newName, bool copyImages, Product productCopy)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the identifiers of old and new pictures
+        /// </returns>
+        protected virtual async Task<Dictionary<int, int>> CopyProductPicturesAsync(Product product, string newName, bool copyImages, Product productCopy)
         {
             //variable to store original and new picture identifiers
             var originalNewPictureIdentifiers = new Dictionary<int, int>();
             if (!copyImages)
                 return originalNewPictureIdentifiers;
 
-            foreach (var productPicture in _productService.GetProductPicturesByProductId(product.Id))
+            foreach (var productPicture in await _productService.GetProductPicturesByProductIdAsync(product.Id))
             {
-                var picture = _pictureService.GetPictureById(productPicture.PictureId);
-                var pictureCopy = _pictureService.InsertPicture(
-                    _pictureService.LoadPictureBinary(picture),
+                var picture = await _pictureService.GetPictureByIdAsync(productPicture.PictureId);
+                var pictureCopy = await _pictureService.InsertPictureAsync(
+                    await _pictureService.LoadPictureBinaryAsync(picture),
                     picture.MimeType,
-                    _pictureService.GetPictureSeName(newName),
+                    await _pictureService.GetPictureSeNameAsync(newName),
                     picture.AltAttribute,
                     picture.TitleAttribute);
-                _productService.InsertProductPicture(new ProductPicture
+                await _productService.InsertProductPictureAsync(new ProductPicture
                 {
                     ProductId = productCopy.Id,
                     PictureId = pictureCopy.Id,
@@ -519,39 +526,40 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productCopy">New product</param>
-        protected virtual void CopyLocalizationData(Product product, Product productCopy)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task CopyLocalizationDataAsync(Product product, Product productCopy)
         {
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = await _languageService.GetAllLanguagesAsync(true);
 
             //localization
             foreach (var lang in languages)
             {
-                var name = _localizationService.GetLocalized(product, x => x.Name, lang.Id, false, false);
+                var name = await _localizationService.GetLocalizedAsync(product, x => x.Name, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(name))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.Name, name, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(productCopy, x => x.Name, name, lang.Id);
 
-                var shortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription, lang.Id, false, false);
+                var shortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(shortDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.ShortDescription, shortDescription, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(productCopy, x => x.ShortDescription, shortDescription, lang.Id);
 
-                var fullDescription = _localizationService.GetLocalized(product, x => x.FullDescription, lang.Id, false, false);
+                var fullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(fullDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.FullDescription, fullDescription, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(productCopy, x => x.FullDescription, fullDescription, lang.Id);
 
-                var metaKeywords = _localizationService.GetLocalized(product, x => x.MetaKeywords, lang.Id, false, false);
+                var metaKeywords = await _localizationService.GetLocalizedAsync(product, x => x.MetaKeywords, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(metaKeywords))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaKeywords, metaKeywords, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(productCopy, x => x.MetaKeywords, metaKeywords, lang.Id);
 
-                var metaDescription = _localizationService.GetLocalized(product, x => x.MetaDescription, lang.Id, false, false);
+                var metaDescription = await _localizationService.GetLocalizedAsync(product, x => x.MetaDescription, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(metaDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaDescription, metaDescription, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(productCopy, x => x.MetaDescription, metaDescription, lang.Id);
 
-                var metaTitle = _localizationService.GetLocalized(product, x => x.MetaTitle, lang.Id, false, false);
+                var metaTitle = await _localizationService.GetLocalizedAsync(product, x => x.MetaTitle, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(metaTitle))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
 
                 //search engine name
-                _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, name, false), lang.Id);
+                await _urlRecordService.SaveSlugAsync(productCopy, await _urlRecordService.ValidateSeNameAsync(productCopy, string.Empty, name, false), lang.Id);
             }
         }
 
@@ -561,15 +569,18 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="newName">New product name</param>
         /// <param name="isPublished">A value indicating whether a new product is published</param>
-        /// <returns></returns>
-        protected virtual Product CopyBaseProductData(Product product, string newName, bool isPublished)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
+        protected virtual async Task<Product> CopyBaseProductDataAsync(Product product, string newName, bool isPublished)
         {
             //product download & sample download
             var downloadId = product.DownloadId;
             var sampleDownloadId = product.SampleDownloadId;
             if (product.IsDownload)
             {
-                var download = _downloadService.GetDownloadById(product.DownloadId);
+                var download = await _downloadService.GetDownloadByIdAsync(product.DownloadId);
                 if (download != null)
                 {
                     var downloadCopy = new Download
@@ -583,13 +594,13 @@ namespace Nop.Services.Catalog
                         Extension = download.Extension,
                         IsNew = download.IsNew
                     };
-                    _downloadService.InsertDownload(downloadCopy);
+                    await _downloadService.InsertDownloadAsync(downloadCopy);
                     downloadId = downloadCopy.Id;
                 }
 
                 if (product.HasSampleDownload)
                 {
-                    var sampleDownload = _downloadService.GetDownloadById(product.SampleDownloadId);
+                    var sampleDownload = await _downloadService.GetDownloadByIdAsync(product.SampleDownloadId);
                     if (sampleDownload != null)
                     {
                         var sampleDownloadCopy = new Download
@@ -603,14 +614,14 @@ namespace Nop.Services.Catalog
                             Extension = sampleDownload.Extension,
                             IsNew = sampleDownload.IsNew
                         };
-                        _downloadService.InsertDownload(sampleDownloadCopy);
+                        await _downloadService.InsertDownloadAsync(sampleDownloadCopy);
                         sampleDownloadId = sampleDownloadCopy.Id;
                     }
                 }
             }
 
             var newSku = !string.IsNullOrWhiteSpace(product.Sku)
-                ? string.Format(_localizationService.GetResource("Admin.Catalog.Products.Copy.SKU.New"), product.Sku)
+                ? string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Copy.SKU.New"), product.Sku)
                 : product.Sku;
             // product
             var productCopy = new Product
@@ -715,10 +726,10 @@ namespace Nop.Services.Catalog
             };
 
             //validate search engine name
-            _productService.InsertProduct(productCopy);
+            await _productService.InsertProductAsync(productCopy);
 
             //search engine name
-            _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, productCopy.Name, true), 0);
+            await _urlRecordService.SaveSlugAsync(productCopy, await _urlRecordService.ValidateSeNameAsync(productCopy, string.Empty, productCopy.Name, true), 0);
             return productCopy;
         }
 
@@ -734,8 +745,11 @@ namespace Nop.Services.Catalog
         /// <param name="isPublished">A value indicating whether the product duplicate should be published</param>
         /// <param name="copyImages">A value indicating whether the product images should be copied</param>
         /// <param name="copyAssociatedProducts">A value indicating whether the copy associated products</param>
-        /// <returns>Product copy</returns>
-        public virtual Product CopyProduct(Product product, string newName,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product copy
+        /// </returns>
+        public virtual async Task<Product> CopyProductAsync(Product product, string newName,
             bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true)
         {
             if (product == null)
@@ -744,59 +758,55 @@ namespace Nop.Services.Catalog
             if (string.IsNullOrEmpty(newName))
                 throw new ArgumentException("Product name is required");
 
-            var productCopy = CopyBaseProductData(product, newName, isPublished);
+            var productCopy = await CopyBaseProductDataAsync(product, newName, isPublished);
 
             //localization
-            CopyLocalizationData(product, productCopy);
+            await CopyLocalizationDataAsync(product, productCopy);
 
             //copy product tags
-            foreach (var productTag in _productTagService.GetAllProductTagsByProductId(product.Id))
-            {
-                _productTagService.InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = productCopy.Id });
-            }
+            foreach (var productTag in await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)) 
+                await _productTagService.InsertProductProductTagMappingAsync(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = productCopy.Id });
 
-            _productService.UpdateProduct(productCopy);
+            await _productService.UpdateProductAsync(productCopy);
 
             //copy product pictures
-            var originalNewPictureIdentifiers = CopyProductPictures(product, newName, copyImages, productCopy);
+            var originalNewPictureIdentifiers = await CopyProductPicturesAsync(product, newName, copyImages, productCopy);
 
             //quantity change history
-            _productService.AddStockQuantityHistoryEntry(productCopy, product.StockQuantity, product.StockQuantity, product.WarehouseId,
-                string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id));
+            await _productService.AddStockQuantityHistoryEntryAsync(productCopy, product.StockQuantity, product.StockQuantity, product.WarehouseId,
+                string.Format(await _localizationService.GetResourceAsync("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id));
 
             //product specifications
-            CopyProductSpecifications(product, productCopy);
+            await CopyProductSpecificationsAsync(product, productCopy);
 
             //product <-> warehouses mappings
-            CopyWarehousesMapping(product, productCopy);
+            await CopyWarehousesMappingAsync(product, productCopy);
             //product <-> categories mappings
-            CopyCategoriesMapping(product, productCopy);
+            await CopyCategoriesMappingAsync(product, productCopy);
             //product <-> manufacturers mappings
-            CopyManufacturersMapping(product, productCopy);
+            await CopyManufacturersMappingAsync(product, productCopy);
             //product <-> related products mappings
-            CopyRelatedProductsMapping(product, productCopy);
+            await CopyRelatedProductsMappingAsync(product, productCopy);
             //product <-> cross sells mappings
-            CopyCrossSellsMapping(product, productCopy);
+            await CopyCrossSellsMappingAsync(product, productCopy);
             //product <-> attributes mappings
-            CopyAttributesMapping(product, productCopy, originalNewPictureIdentifiers);
+            await CopyAttributesMappingAsync(product, productCopy, originalNewPictureIdentifiers);
             //product <-> discounts mapping
-            CopyDiscountsMapping(product, productCopy);
+            await CopyDiscountsMappingAsync(product, productCopy);
             //store mapping
-            var selectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product);
-            foreach (var id in selectedStoreIds)
-            {
-                _storeMappingService.InsertStoreMapping(productCopy, id);
-            }
+            var selectedStoreIds = await _storeMappingService.GetStoresIdsWithAccessAsync(product);
+            foreach (var id in selectedStoreIds) 
+                await _storeMappingService.InsertStoreMappingAsync(productCopy, id);
 
             //tier prices
-            CopyTierPrices(product, productCopy);
+            await CopyTierPricesAsync(product, productCopy);
 
             //update "HasTierPrices" and "HasDiscountsApplied" properties
-            _productService.UpdateHasTierPricesProperty(productCopy);
-            _productService.UpdateHasDiscountsApplied(productCopy);
+            await _productService.UpdateHasTierPricesPropertyAsync(productCopy);
+            await _productService.UpdateHasDiscountsAppliedAsync(productCopy);
 
             //associated products
-            CopyAssociatedProducts(product, isPublished, copyImages, copyAssociatedProducts, productCopy);
+            await CopyAssociatedProductsAsync(product, isPublished, copyImages, copyAssociatedProducts, productCopy);
 
             return productCopy;
         }

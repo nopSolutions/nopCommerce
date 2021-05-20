@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.News
     /// <summary>
     /// Represents a news item model
     /// </summary>
-    public partial class NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel
+    public partial record NewsItemModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
         #region Ctor
 

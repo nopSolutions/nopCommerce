@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a shipping settings model
     /// </summary>
-    public partial class ShippingSettingsModel : BaseNopModel, ISettingsModel
+    public partial record ShippingSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 
@@ -69,6 +69,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled")]
         public bool EstimateShippingProductPageEnabled { get; set; }
         public bool EstimateShippingProductPageEnabled_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.EstimateShippingCityNameEnabled")]
+        public bool EstimateShippingCityNameEnabled { get; set; }
+        public bool EstimateShippingCityNameEnabled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers")]
         public bool DisplayShipmentEventsToCustomers { get; set; }

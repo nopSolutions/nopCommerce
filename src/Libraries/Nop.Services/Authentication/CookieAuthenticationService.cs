@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Customers;
@@ -43,7 +44,8 @@ namespace Nop.Services.Authentication
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
-        public virtual async void SignIn(Customer customer, bool isPersistent)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task SignInAsync(Customer customer, bool isPersistent)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -78,7 +80,8 @@ namespace Nop.Services.Authentication
         /// <summary>
         /// Sign out
         /// </summary>
-        public virtual async void SignOut()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task SignOutAsync()
         {
             //reset cached customer
             _cachedCustomer = null;
@@ -90,15 +93,18 @@ namespace Nop.Services.Authentication
         /// <summary>
         /// Get authenticated customer
         /// </summary>
-        /// <returns>Customer</returns>
-        public virtual Customer GetAuthenticatedCustomer()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer
+        /// </returns>
+        public virtual async Task<Customer> GetAuthenticatedCustomerAsync()
         {
             //whether there is a cached customer
             if (_cachedCustomer != null)
                 return _cachedCustomer;
 
             //try to get authenticated user identity
-            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(NopAuthenticationDefaults.AuthenticationScheme).Result;
+            var authenticateResult = await _httpContextAccessor.HttpContext.AuthenticateAsync(NopAuthenticationDefaults.AuthenticationScheme);
             if (!authenticateResult.Succeeded)
                 return null;
 
@@ -109,7 +115,7 @@ namespace Nop.Services.Authentication
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
-                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
+                    customer = await _customerService.GetCustomerByUsernameAsync(usernameClaim.Value);
             }
             else
             {
@@ -117,11 +123,11 @@ namespace Nop.Services.Authentication
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
-                    customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                    customer = await _customerService.GetCustomerByEmailAsync(emailClaim.Value);
             }
 
             //whether the found customer is available
-            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !_customerService.IsRegistered(customer))
+            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !await _customerService.IsRegisteredAsync(customer))
                 return null;
 
             //cache authenticated customer

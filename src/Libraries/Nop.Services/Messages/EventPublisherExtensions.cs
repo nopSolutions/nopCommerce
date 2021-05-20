@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Threading.Tasks;
+using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
 
@@ -14,9 +15,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="subscription">The newsletter subscription.</param>
-        public static void PublishNewsletterSubscribe(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public static async Task PublishNewsletterSubscribeAsync(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
         {
-            eventPublisher.Publish(new EmailSubscribedEvent(subscription));
+            await eventPublisher.PublishAsync(new EmailSubscribedEvent(subscription));
         }
 
         /// <summary>
@@ -24,9 +26,10 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="subscription">The newsletter subscription.</param>
-        public static void PublishNewsletterUnsubscribe(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public static async Task PublishNewsletterUnsubscribeAsync(this IEventPublisher eventPublisher, NewsLetterSubscription subscription)
         {
-            eventPublisher.Publish(new EmailUnsubscribedEvent(subscription));
+            await eventPublisher.PublishAsync(new EmailUnsubscribedEvent(subscription));
         }
 
         /// <summary>
@@ -37,9 +40,10 @@ namespace Nop.Services.Messages
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="entity">Entity</param>
         /// <param name="tokens">Tokens</param>
-        public static void EntityTokensAdded<T, U>(this IEventPublisher eventPublisher, T entity, System.Collections.Generic.IList<U> tokens) where T : BaseEntity
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public static async Task EntityTokensAddedAsync<T, U>(this IEventPublisher eventPublisher, T entity, System.Collections.Generic.IList<U> tokens) where T : BaseEntity
         {
-            eventPublisher.Publish(new EntityTokensAddedEvent<T, U>(entity, tokens));
+            await eventPublisher.PublishAsync(new EntityTokensAddedEvent<T, U>(entity, tokens));
         }
 
         /// <summary>
@@ -49,9 +53,10 @@ namespace Nop.Services.Messages
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="message">Message</param>
         /// <param name="tokens">Tokens</param>
-        public static void MessageTokensAdded<U>(this IEventPublisher eventPublisher, MessageTemplate message, System.Collections.Generic.IList<U> tokens)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public static async Task MessageTokensAddedAsync<U>(this IEventPublisher eventPublisher, MessageTemplate message, System.Collections.Generic.IList<U> tokens)
         {
-            eventPublisher.Publish(new MessageTokensAddedEvent<U>(message, tokens));
+            await eventPublisher.PublishAsync(new MessageTokensAddedEvent<U>(message, tokens));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
@@ -16,8 +17,11 @@ namespace Nop.Services.Cms
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>Widget zones</returns>
-        IList<string> GetWidgetZones();
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget zones
+        /// </returns>
+        Task<IList<string>> GetWidgetZonesAsync();
 
         /// <summary>
         /// Gets a name of a view component for displaying widget

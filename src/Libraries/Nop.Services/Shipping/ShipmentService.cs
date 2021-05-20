@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -59,9 +60,10 @@ namespace Nop.Services.Shipping
         /// Deletes a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        public virtual void DeleteShipment(Shipment shipment)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteShipmentAsync(Shipment shipment)
         {
-            _shipmentRepository.Delete(shipment);
+            await _shipmentRepository.DeleteAsync(shipment);
         }
 
         /// <summary>
@@ -81,8 +83,11 @@ namespace Nop.Services.Shipping
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Shipments</returns>
-        public virtual IPagedList<Shipment> GetAllShipments(int vendorId = 0, int warehouseId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipments
+        /// </returns>
+        public virtual async Task<IPagedList<Shipment>> GetAllShipmentsAsync(int vendorId = 0, int warehouseId = 0,
             int shippingCountryId = 0,
             int shippingStateId = 0,
             string shippingCounty = null,
@@ -94,7 +99,7 @@ namespace Nop.Services.Shipping
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var shipments = _shipmentRepository.GetAllPaged(query =>
+            var shipments = await _shipmentRepository.GetAllPagedAsync(query =>
             {
                 if (orderId > 0)
                     query = query.Where(o => o.OrderId == orderId);
@@ -190,20 +195,26 @@ namespace Nop.Services.Shipping
         /// Get shipment by identifiers
         /// </summary>
         /// <param name="shipmentIds">Shipment identifiers</param>
-        /// <returns>Shipments</returns>
-        public virtual IList<Shipment> GetShipmentsByIds(int[] shipmentIds)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipments
+        /// </returns>
+        public virtual async Task<IList<Shipment>> GetShipmentsByIdsAsync(int[] shipmentIds)
         {
-            return _shipmentRepository.GetByIds(shipmentIds);
+            return await _shipmentRepository.GetByIdsAsync(shipmentIds);
         }
 
         /// <summary>
         /// Gets a shipment
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
-        /// <returns>Shipment</returns>
-        public virtual Shipment GetShipmentById(int shipmentId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment
+        /// </returns>
+        public virtual async Task<Shipment> GetShipmentByIdAsync(int shipmentId)
         {
-            return _shipmentRepository.GetById(shipmentId);
+            return await _shipmentRepository.GetByIdAsync(shipmentId);
         }
 
         /// <summary>
@@ -212,88 +223,67 @@ namespace Nop.Services.Shipping
         /// <param name="orderId">Order identifier</param>
         /// <param name="shipped">A value indicating whether to count only shipped or not shipped shipments; pass null to ignore</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore</param>
-        /// <returns>Result</returns>
-        public virtual IList<Shipment> GetShipmentsByOrderId(int orderId, bool? shipped = null, int vendorId = 0)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<IList<Shipment>> GetShipmentsByOrderIdAsync(int orderId, bool? shipped = null, int vendorId = 0)
         {
             if (orderId == 0)
                 return new List<Shipment>();
 
             var shipments = _shipmentRepository.Table;
 
-            if (shipped.HasValue)
-            {
+            if (shipped.HasValue) 
                 shipments = shipments.Where(s => s.ShippedDateUtc.HasValue == shipped);
-            }
 
-            return shipments.Where(shipment => shipment.OrderId == orderId).ToList();
+            return await shipments.Where(shipment => shipment.OrderId == orderId).ToListAsync();
         }
 
         /// <summary>
         /// Inserts a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        public virtual void InsertShipment(Shipment shipment)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertShipmentAsync(Shipment shipment)
         {
-            _shipmentRepository.Insert(shipment);
+            await _shipmentRepository.InsertAsync(shipment);
         }
 
         /// <summary>
         /// Updates the shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        public virtual void UpdateShipment(Shipment shipment)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateShipmentAsync(Shipment shipment)
         {
-            _shipmentRepository.Update(shipment);
+            await _shipmentRepository.UpdateAsync(shipment);
         }
-
-        /// <summary>
-        /// Deletes a shipment item
-        /// </summary>
-        /// <param name="shipmentItem">Shipment item</param>
-        public virtual void DeleteShipmentItem(ShipmentItem shipmentItem)
-        {
-            _siRepository.Delete(shipmentItem);
-        }
-
+        
         /// <summary>
         /// Gets a shipment items of shipment
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
-        /// <returns>Shipment items</returns>
-        public virtual IList<ShipmentItem> GetShipmentItemsByShipmentId(int shipmentId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment items
+        /// </returns>
+        public virtual async Task<IList<ShipmentItem>> GetShipmentItemsByShipmentIdAsync(int shipmentId)
         {
             if (shipmentId == 0)
                 return null;
 
-            return _siRepository.Table.Where(si => si.ShipmentId == shipmentId).ToList();
-        }
-
-        /// <summary>
-        /// Gets a shipment item
-        /// </summary>
-        /// <param name="shipmentItemId">Shipment item identifier</param>
-        /// <returns>Shipment item</returns>
-        public virtual ShipmentItem GetShipmentItemById(int shipmentItemId)
-        {
-            return _siRepository.GetById(shipmentItemId);
+            return await _siRepository.Table.Where(si => si.ShipmentId == shipmentId).ToListAsync();
         }
 
         /// <summary>
         /// Inserts a shipment item
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
-        public virtual void InsertShipmentItem(ShipmentItem shipmentItem)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertShipmentItemAsync(ShipmentItem shipmentItem)
         {
-            _siRepository.Insert(shipmentItem);
-        }
-
-        /// <summary>
-        /// Updates the shipment item
-        /// </summary>
-        /// <param name="shipmentItem">Shipment item</param>
-        public virtual void UpdateShipmentItem(ShipmentItem shipmentItem)
-        {
-            _siRepository.Update(shipmentItem);
+            await _siRepository.InsertAsync(shipmentItem);
         }
 
         /// <summary>
@@ -303,8 +293,11 @@ namespace Nop.Services.Shipping
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
-        /// <returns>Quantity</returns>
-        public virtual int GetQuantityInShipments(Product product, int warehouseId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the quantity
+        /// </returns>
+        public virtual async Task<int> GetQuantityInShipmentsAsync(Product product, int warehouseId,
             bool ignoreShipped, bool ignoreDelivered)
         {
             if (product == null)
@@ -354,7 +347,7 @@ namespace Nop.Services.Shipping
                     select si;
 
             //some null validation
-            var result = Convert.ToInt32(query.Sum(si => (int?)si.Quantity));
+            var result = Convert.ToInt32(await query.SumAsync(si => (int?)si.Quantity));
             return result;
         }
 
@@ -362,21 +355,24 @@ namespace Nop.Services.Shipping
         /// Get the tracker of the shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        /// <returns>Shipment tracker</returns>
-        public virtual IShipmentTracker GetShipmentTracker(Shipment shipment)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment tracker
+        /// </returns>
+        public virtual async Task<IShipmentTracker> GetShipmentTrackerAsync(Shipment shipment)
         {
-            var order = _orderRepository.GetById(shipment.OrderId, cache => default);
+            var order = await _orderRepository.GetByIdAsync(shipment.OrderId, cache => default);
 
             if (!order.PickupInStore)
             {
-                var shippingRateComputationMethod = _shippingPluginManager
-                    .LoadPluginBySystemName(order.ShippingRateComputationMethodSystemName);
+                var shippingRateComputationMethod = await _shippingPluginManager
+                    .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
 
                 return shippingRateComputationMethod?.ShipmentTracker;
             }
 
-            var pickupPointProvider = _pickupPluginManager
-                .LoadPluginBySystemName(order.ShippingRateComputationMethodSystemName);
+            var pickupPointProvider = await _pickupPluginManager
+                .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
             return pickupPointProvider?.ShipmentTracker;
         }
 

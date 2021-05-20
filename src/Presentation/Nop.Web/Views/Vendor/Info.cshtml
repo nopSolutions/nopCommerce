@@ -46,7 +46,7 @@
                         {
                             <div class="vendor-picture">
                                 <img src="@(Model.PictureUrl)" alt="picture" />
-                                <input type="submit" name="remove-picture" class="button-2 remove-picture-button" value="@T("Account.VendorInfo.Picture.Remove")" />
+                                <button type="submit" name="remove-picture" class="button-2 remove-picture-button">@T("Account.VendorInfo.Picture.Remove")</button>
                             </div>
                         }
                     </div>
@@ -61,7 +61,7 @@
             </div>
         }
             <div class="buttons">
-                <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-vendorinfo-button" />
+                <button type="submit" name="save-info-button" class="button-1 save-vendorinfo-button">@T("Common.Save")</button>
             </div>
         </form>
     </div>

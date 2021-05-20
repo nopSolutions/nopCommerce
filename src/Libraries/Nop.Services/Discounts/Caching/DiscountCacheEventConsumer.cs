@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Discounts;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Discounts;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Discounts.Caching
@@ -12,11 +13,12 @@ namespace Nop.Services.Discounts.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Discount entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(Discount entity)
         {
-            Remove(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity);
-            RemoveByPrefix(NopDiscountDefaults.CategoryIdsByDiscountPrefix, entity);
-            RemoveByPrefix(NopDiscountDefaults.ManufacturerIdsByDiscountPrefix, entity);
+            await RemoveAsync(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity);
+            await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsByDiscountPrefix, entity);
+            await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsByDiscountPrefix, entity);
         }
     }
 }

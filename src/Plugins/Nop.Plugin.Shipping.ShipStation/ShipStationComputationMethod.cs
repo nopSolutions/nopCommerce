@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.ShipStation.Services;
@@ -51,8 +52,11 @@ namespace Nop.Plugin.Shipping.ShipStation
         ///  Gets available shipping options
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
-        /// <returns>Represents a response of getting shipping rate options</returns>
-        public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the represents a response of getting shipping rate options
+        /// </returns>
+        public async Task<GetShippingOptionResponse> GetShippingOptionsAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -73,7 +77,7 @@ namespace Nop.Plugin.Shipping.ShipStation
 
             try
             {
-                foreach (var rate in _shipStationService.GetAllRates(getShippingOptionRequest))
+                foreach (var rate in await _shipStationService.GetAllRatesAsync(getShippingOptionRequest))
                 {
                     response.ShippingOptions.Add(new ShippingOption
                     {
@@ -95,13 +99,16 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// Gets fixed shipping rate (if shipping rate computation method allows it and the rate can be calculated before checkout).
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
-        /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the fixed shipping rate; or null in case there's no fixed shipping rate
+        /// </returns>
+        public Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
-            return null;
+            return Task.FromResult<decimal?>(null);
         }
 
         /// <summary>
@@ -115,17 +122,18 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task InstallAsync()
         {
             //settings
             var settings = new ShipStationSettings
             {
                 PackingPackageVolume = 5184
             };
-            _settingService.SaveSetting(settings);
+            await _settingService.SaveSettingAsync(settings);
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume"] = "Pack by volume",
@@ -145,32 +153,28 @@ namespace Nop.Plugin.Shipping.ShipStation
                 ["Plugins.Shipping.ShipStation.Fields.UserName.Hint"] = "Specify ShipStation user name"
             });
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UninstallAsync()
         {
             //settings
-            _settingService.DeleteSetting<ShipStationSettings>();
+            await _settingService.DeleteSettingAsync<ShipStationSettings>();
 
             //locales
-            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.ShipStation");
-            _localizationService.DeleteLocaleResources("Plugins.Shipping.ShipStation");
+            await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Shipping.ShipStation");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Shipping.ShipStation");
 
-            base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets a shipping rate computation method type
-        /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType => ShippingRateComputationMethodType.Realtime;
 
         /// <summary>
         /// Gets a shipment tracker

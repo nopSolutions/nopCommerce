@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,16 +29,18 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Resolve dependency
         /// </summary>
+        /// <param name="scope">Scope</param>
         /// <typeparam name="T">Type of resolved service</typeparam>
         /// <returns>Resolved service</returns>
-        T Resolve<T>() where T : class;
+        T Resolve<T>(IServiceScope scope = null) where T : class;
 
         /// <summary>
         /// Resolve dependency
         /// </summary>
         /// <param name="type">Type of resolved service</param>
+        /// <param name="scope">Scope</param>
         /// <returns>Resolved service</returns>
-        object Resolve(Type type);
+        object Resolve(Type type, IServiceScope scope = null);
 
         /// <summary>
         /// Resolve dependencies
@@ -58,8 +59,8 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Register dependencies
         /// </summary>
-        /// <param name="containerBuilder">Container builder</param>
+        /// <param name="services">Collection of service descriptors</param>
         /// <param name="appSettings">App settings</param>
-        void RegisterDependencies(ContainerBuilder containerBuilder, AppSettings appSettings);
+        void RegisterDependencies(IServiceCollection services, AppSettings appSettings);
     }
 }

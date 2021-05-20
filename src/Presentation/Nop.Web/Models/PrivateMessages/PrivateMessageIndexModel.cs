@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.PrivateMessages
 {
-    public partial class PrivateMessageIndexModel : BaseNopModel
+    public partial record PrivateMessageIndexModel : BaseNopModel
     {
         public int InboxPage { get; set; }
         public int SentItemsPage { get; set; }

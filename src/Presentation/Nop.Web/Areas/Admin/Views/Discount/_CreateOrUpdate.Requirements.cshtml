@@ -3,8 +3,8 @@
     Html.AddScriptParts("~/lib_npm/jsrender/jsrender.min.js");
 }
 
-<div class="panel-body">
-    <div class="panel-group">
+<div class="card-body">
+    <div class="cards-group">
         @if (Model.Id > 0)
         {
             <p>
@@ -35,19 +35,19 @@
                 if (ruleSystemName) {
                     var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                     if (groupsElement.find('option').length > 1) {
-                        $("#pnlGroup").show();
+                        $("#pnlGroup").showElement();
                     }
                     else {
-                        $("#pnlGroup").hide();
+                        $("#pnlGroup").hideElement();
                     }
                     if (ruleSystemName == 'AddGroup') {
-                        $("#pnlAddNewGroup").show();
-                        $("#pnlGroupName").show();
+                        $("#pnlAddNewGroup").showElement();
+                        $("#pnlGroupName").showElement();
                         $('#addrequirementplaceholder').html('');
                     }
                     else {
-                        $("#pnlAddNewGroup").hide();
-                        $("#pnlGroupName").hide();
+                        $("#pnlAddNewGroup").hideElement();
+                        $("#pnlGroupName").hideElement();
                         $.ajax({
                             cache: false,
                             url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
@@ -64,9 +64,9 @@
                         });
                     }
                 } else {
-                    $("#pnlGroupName").hide();
-                    $("#pnlGroup").hide();
-                    $("#pnlAddNewGroup").hide();
+                    $("#pnlGroupName").hideElement();
+                    $("#pnlGroup").hideElement();
+                    $("#pnlAddNewGroup").hideElement();
                     $('#addrequirementplaceholder').html('');
                 }
             };
@@ -113,10 +113,10 @@
                         });
                         var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
                         if (ruleSystemName && groupsElement.find('option').length > 1) {
-                            $("#pnlGroup").show();
+                            $("#pnlGroup").showElement();
                         }
                         else {
-                            $("#pnlGroup").hide();
+                            $("#pnlGroup").hideElement();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -189,13 +189,13 @@
                 <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{>DiscountRequirementId}}">
                     <div class="requirement-heading clearfix">
                         {{if IsGroup}}
-                        <span class="pull-left margin-r-5">
+                        <span class="float-left margin-r-5">
                             @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
                             <i>{{:RuleName}}</i>
                         </span>
-                        <div class="interaction-type pull-left clearfix">
-                            <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
-                            <select class="form-control input-sm pull-left" id="interactiontype{{>DiscountRequirementId}}" 
+                        <div class="interaction-type float-left clearfix">
+                            <span class="float-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
+                            <select class="form-control input-sm float-left" id="interactiontype{{>DiscountRequirementId}}" 
                                     name="interactiontype{{>DiscountRequirementId}}" 
                                     onchange="changeInteraction({{> DiscountRequirementId}}, {{if ParentId}} {{>ParentId}} {{else}} null {{/if}}, this.value)">
                                 {{for AvailableInteractionTypes}}
@@ -208,14 +208,14 @@
                             </select>
                         </div>
                         {{else}}
-                        <div class="pull-left">
+                        <div class="float-left">
                             @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
                             <i>{{:RuleName}}</i>
                         </div>
                         {{/if}}
                         {{if ParentId}}
                         <button type="button" class="btn btn-link" id="deleterequirement{{>DiscountRequirementId}}" onclick="deleteRequirement({{>DiscountRequirementId}})">
-                            <i class="fa fa-trash"></i>
+                            <i class="far fa-trash-alt"></i>
                             {{if IsGroup}}
                                 @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
                             {{else}}
@@ -235,12 +235,12 @@
                 {{/if}}
             </script>
 
-            <div class="panel panel-default panel-add-requirement">
-                <div class="panel-heading">
+            <div class="card card-default card-add-requirement">
+                <div class="card-header">
                     @T("Admin.Promotions.Discounts.Requirements.AddNew")
                 </div>
-                <div class="panel-body">
-                    <div class="form-group">
+                <div class="card-body">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="AddDiscountRequirement" />
                         </div>
@@ -249,7 +249,7 @@
                             <span asp-validation-for="AddDiscountRequirement"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlGroup" style="display: none">
+                    <div class="form-group row d-none" id="pnlGroup">
                         <div class="col-md-3">
                             <nop-label asp-for="RequirementGroupId" />
                         </div>
@@ -259,7 +259,7 @@
                         </div>
                     </div>
                     <div id="addrequirementplaceholder"></div>
-                    <div class="form-group" id="pnlGroupName" style="display: none">
+                    <div class="form-group row d-none" id="pnlGroupName">
                         <div class="col-md-3">
                             <nop-label asp-for="GroupName" />
                         </div>
@@ -268,9 +268,9 @@
                             <span asp-validation-for="GroupName"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlAddNewGroup" style="display: none">
-                        <div class="col-md-9 col-md-offset-3">
-                            <input type="button" id="saverequirement" class="btn btn-primary" value="@T("Admin.Common.Save")" onclick="addNewGroup()" />
+                    <div class="form-group row d-none" id="pnlAddNewGroup">
+                        <div class="col-md-9 offset-md-3">
+                            <button type="button" id="saverequirement" class="btn btn-primary" onclick="addNewGroup()">@T("Admin.Common.Save")</button>
                         </div>
                     </div>
                 </div>
@@ -278,8 +278,8 @@
         }
         else
         {
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
                 </div>
             </div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Customers;
@@ -38,10 +39,13 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <param name="systemName">Filter by pickup point provider system name; pass null to load all plugins</param>
-        /// <returns>List of active pickup point providers</returns>
-        public virtual IList<IPickupPointProvider> LoadActivePlugins(Customer customer = null, int storeId = 0, string systemName = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of active pickup point providers
+        /// </returns>
+        public virtual async Task<IList<IPickupPointProvider>> LoadActivePluginsAsync(Customer customer = null, int storeId = 0, string systemName = null)
         {
-            var pickupPointProviders = LoadActivePlugins(_shippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
+            var pickupPointProviders = await LoadActivePluginsAsync(_shippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
 
             //filter by passed system name
             if (!string.IsNullOrEmpty(systemName))
@@ -70,10 +74,13 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="systemName">System name of pickup point provider to check</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Result</returns>
-        public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0)
         {
-            var pickupPointProvider = LoadPluginBySystemName(systemName, customer, storeId);
+            var pickupPointProvider = await LoadPluginBySystemNameAsync(systemName, customer, storeId);
             return IsPluginActive(pickupPointProvider);
         }
 

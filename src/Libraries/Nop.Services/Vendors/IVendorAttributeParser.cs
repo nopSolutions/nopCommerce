@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Vendors
@@ -12,15 +13,21 @@ namespace Nop.Services.Vendors
         /// Gets vendor attributes from XML
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>List of vendor attributes</returns>
-        IList<VendorAttribute> ParseVendorAttributes(string attributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of vendor attributes
+        /// </returns>
+        Task<IList<VendorAttribute>> ParseVendorAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Get vendor attribute values from XML
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>List of vendor attribute values</returns>
-        IList<VendorAttributeValue> ParseVendorAttributeValues(string attributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of vendor attribute values
+        /// </returns>
+        Task<IList<VendorAttributeValue>> ParseVendorAttributeValuesAsync(string attributesXml);
 
         /// <summary>
         /// Gets values of the selected vendor attribute
@@ -43,7 +50,10 @@ namespace Nop.Services.Vendors
         /// Validates vendor attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Warnings</returns>
-        IList<string> GetAttributeWarnings(string attributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
+        Task<IList<string>> GetAttributeWarningsAsync(string attributesXml);
     }
 }

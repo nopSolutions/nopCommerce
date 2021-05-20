@@ -19,6 +19,16 @@ namespace Nop.Core.Domain.Seo
         public PageTitleSeoAdjustment PageTitleSeoAdjustment { get; set; }
 
         /// <summary>
+        /// Home page title
+        /// </summary>
+        public string HomepageTitle { get; set; }
+
+        /// <summary>
+        /// Home page description
+        /// </summary>
+        public string HomepageDescription { get; set; }
+
+        /// <summary>
         /// Default title
         /// </summary>
         public string DefaultTitle { get; set; }

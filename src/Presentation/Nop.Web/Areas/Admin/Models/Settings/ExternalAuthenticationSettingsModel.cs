@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents an external authentication settings model
     /// </summary>
-    public partial class ExternalAuthenticationSettingsModel : BaseNopModel, ISettingsModel
+    public partial record ExternalAuthenticationSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

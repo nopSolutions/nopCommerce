@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
@@ -65,14 +66,17 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// Get pickup points for the address
         /// </summary>
         /// <param name="address">Address</param>
-        /// <returns>Represents a response of getting pickup points</returns>
-        public GetPickupPointsResponse GetPickupPoints(Address address)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the represents a response of getting pickup points
+        /// </returns>
+        public async Task<GetPickupPointsResponse> GetPickupPointsAsync(Address address)
         {
             var result = new GetPickupPointsResponse();
 
-            foreach (var point in _storePickupPointService.GetAllStorePickupPoints(_storeContext.CurrentStore.Id))
+            foreach (var point in await _storePickupPointService.GetAllStorePickupPointsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
             {
-                var pointAddress = _addressService.GetAddressById(point.AddressId);
+                var pointAddress = await _addressService.GetAddressByIdAsync(point.AddressId);
                 if (pointAddress == null)
                     continue;
 
@@ -84,8 +88,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
                     Address = pointAddress.Address1,
                     City = pointAddress.City,
                     County = pointAddress.County,
-                    StateAbbreviation = _stateProvinceService.GetStateProvinceByAddress(pointAddress)?.Abbreviation ?? string.Empty,
-                    CountryCode = _countryService.GetCountryByAddress(pointAddress)?.TwoLetterIsoCode ?? string.Empty,
+                    StateAbbreviation = (await _stateProvinceService.GetStateProvinceByAddressAsync(pointAddress))?.Abbreviation ?? string.Empty,
+                    CountryCode = (await _countryService.GetCountryByAddressAsync(pointAddress))?.TwoLetterIsoCode ?? string.Empty,
                     ZipPostalCode = pointAddress.ZipPostalCode,
                     OpeningHours = point.OpeningHours,
                     PickupFee = point.PickupFee,
@@ -98,7 +102,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
             }
 
             if (!result.PickupPoints.Any())
-                result.AddError(_localizationService.GetResource("Plugins.Pickup.PickupInStore.NoPickupPoints"));
+                result.AddError(await _localizationService.GetResourceAsync("Plugins.Pickup.PickupInStore.NoPickupPoints"));
 
             return result;
         }
@@ -114,11 +118,12 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// <summary>
         /// Install the plugin
         /// </summary>
-        public override void Install()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task InstallAsync()
         {
             //sample pickup point
-            var country = _countryService.GetCountryByThreeLetterIsoCode("USA");
-            var state = _stateProvinceService.GetStateProvinceByAbbreviation("NY", country?.Id);
+            var country = await _countryService.GetCountryByThreeLetterIsoCodeAsync("USA");
+            var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync("NY", country?.Id);
 
             var address = new Address
             {
@@ -129,7 +134,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _addressService.InsertAddress(address);
+            await _addressService.InsertAddressAsync(address);
 
             var pickupPoint = new StorePickupPoint
             {
@@ -138,10 +143,10 @@ namespace Nop.Plugin.Pickup.PickupInStore
                 OpeningHours = "10.00 - 19.00",
                 PickupFee = 1.99m
             };
-            _storePickupPointService.InsertStorePickupPoint(pickupPoint);
+            await _storePickupPointService.InsertStorePickupPointAsync(pickupPoint);
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Pickup.PickupInStore.AddNew"] = "Add a new pickup point",
                 ["Plugins.Pickup.PickupInStore.Fields.Description"] = "Description",
@@ -171,18 +176,19 @@ namespace Nop.Plugin.Pickup.PickupInStore
                 ["Plugins.Pickup.PickupInStore.NoPickupPoints"] = "No pickup points are available"
             });
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
-        public override void Uninstall()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UninstallAsync()
         {
             //locales
-            _localizationService.DeleteLocaleResources("Plugins.Pickup.PickupInStore");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Pickup.PickupInStore");
 
-            base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

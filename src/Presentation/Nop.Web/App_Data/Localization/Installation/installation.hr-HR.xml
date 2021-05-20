@@ -1,55 +1,58 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Hrvatski" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
-    <Value>Email administratora</Value>
+    <Value>Admin korisnički email</Value>
   </LocaleResource>
   <LocaleResource Name="AdminEmailRequired">
-    <Value>Unesi email administratora</Value>
+    <Value>Unesite adresu e-pošte administratora</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPassword">
-    <Value>Lozinka administratora</Value>
+    <Value>Korisnička lozinka administratora</Value>
   </LocaleResource>
   <LocaleResource Name="AdminPasswordRequired">
-    <Value>Unesi lozinku administratora</Value>
+    <Value>Unesite lozinku administratora</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>Račun '{0}' nema ovlasti za vršenje promjena nad datotekom '{1}'. Molimo konfigurirajte ove ovlasti.</Value>
+    <Value>Račun '{0}' nije odobren s dopuštenjem Modify u mapi '{1}'. Konfigurirajte ta dopuštenja.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>Račun '{0}' nema ovlasti za vršenje promjena nad fajlom '{1}'. Molimo konfigurirajte ove ovlasti.</Value>
+    <Value>Račun '{0}' nije odobren s dopuštenjem Modify na datoteci '{1}'. Konfigurirajte ta dopuštenja.</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
-    <Value>Potvrdite lozinku</Value>
+    <Value>Potvrdite zaporku</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPasswordRequired">
-    <Value>Unesite potvrdu lozinke</Value>
+    <Value>Potrebno je potvrditi lozinku</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionString">
-    <Value>String za povezivanje</Value>
+    <Value>Podaci za povezivanje</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringRequired">
-    <Value>SQL string za povezivanje je obavezan</Value>
-  </LocaleResource>
-  <LocaleResource Name="ConnectionStringValues">
-    <Value>Unesi SQL vrijednosti za povezivanje</Value>
+    <Value>Potrebni su SQL podaci za povezivanje</Value>
   </LocaleResource>
   <LocaleResource Name="ConnectionStringWrongFormat">
-    <Value>Pogrešan format SQL stringa za povezivanje</Value>
+    <Value>Krivi format SQL podataka za povezivanje</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Select your country...</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>Kreiraj bazu podataka ako ona već ne postoji</Value>
+    <Value>Stvorite bazu podataka ako ne postoji</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>Kreiraj primjere podataka</Value>
+    <Value>Kreiraj uzorke podataka</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Navedite SQL Server collation</Value>
+    <Value>Navedite prilagođen collation u bazi</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Baza podataka</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>Pojavila se greška prilikom kreiranja baze podataka: {0}</Value>
+    <Value>Došlo je do pogreške tijekom kreiranja baze podataka: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Informacije o bazi podataka</Value>
@@ -57,20 +60,17 @@
   <LocaleResource Name="DatabaseName">
     <Value>Naziv baze podataka</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseNameRequired">
-    <Value>Naziv baze podataka je obavezan</Value>
-  </LocaleResource>
   <LocaleResource Name="DatabaseNotExists">
-    <Value>Baza podataka ne postoji ili vi nemate ovlasti da se s njom povežete</Value>
+    <Value>Baza podataka ne postoji ili nemate dopuštenja za povezivanje s njom</Value>
   </LocaleResource>
   <LocaleResource Name="DataProviderRequired">
-    <Value>Odaberite davatelja podataka</Value>
+    <Value>Odaberite data providera</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation1">
-    <Value>Ako su vam potrebne informacije o tome kako se koristi nopCommerce, posjetite</Value>
+    <Value>Ako su vam potrebne informacije o tome kako koristiti nopCommerce, posjetite</Value>
   </LocaleResource>
   <LocaleResource Name="Documentation2">
-    <Value>odjeljak dokumentacije na nopCommerce.com</Value>
+    <Value>odjeljak s dokumentacijom na nopCommerce.com</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
     <Value>Primjer</Value>
@@ -79,10 +79,10 @@
     <Value>Instalacija</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Instaliram nopCommerce...</Value>
+    <Value>Instaliranje nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="IntegratedAuthentication">
-    <Value>Koristi internu Windows autentifikaciju</Value>
+    <Value>Koristite integriranu Windows autentifikaciju</Value>
   </LocaleResource>
   <LocaleResource Name="MySql">
     <Value>MySQL</Value>
@@ -90,35 +90,35 @@
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Lozinke se ne podudaraju</Value>
   </LocaleResource>
-  <LocaleResource Name="RawConnectionString">
-    <Value>Unesite sirovi string za povezivanje (napredno)</Value>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="Recommended">
-    <Value>[Preporuka]</Value>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Upišite podatke za povezivanje s bazom - Connection String (napredno)</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>Ponovo pokreni instalaciju</Value>
+    <Value>Ponovno pokrenite instalaciju</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
-    <Value>Klikni za ponovo pokretanje procesa instalacije (očisti sve vrijednosti u međuspremniku)</Value>
+    <Value>Kliknite za ponovno pokretanje postupka instalacije (očistite sve predmemorirane vrijednosti)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Ponovno pokretanje...</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>Naziv SQL Servera</Value>
+    <Value>Naziv servera:</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>Naziv SQL Servera je obavezan</Value>
+    <Value>Naziv Servera je obavezan</Value>
   </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Setup nije uspio: {0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlAuthentication">
-    <Value>Koristi SQL Server račun</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL lozinka</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPasswordRequired">
-    <Value>SQL lozinka je obavezna</Value>
+    <Value>Potrebna je SQL lozinka</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
@@ -127,18 +127,15 @@
     <Value>SQL korisničko ime</Value>
   </LocaleResource>
   <LocaleResource Name="SqlUsernameRequired">
-    <Value>SQL korisničko ime je obavezno</Value>
+    <Value>Potrebno je SQL korisničko ime</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Informacije o prodavnici</Value>
+    <Value>Informacije trgovine</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>nopCommerce instalacija</Value>
-  </LocaleResource>
-  <LocaleResource Name="Tooltip1">
-    <Value>nopCommerce je vodeće ASP.NET e-commerce rješenje za online prodavnice. Ovaj čarobnjak će vas voditi kroz proces konfiguracije nopCommerca</Value>
+    <Value>instalacija nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>Za kompletiranje ovog čarobnjaka, morate znati neke informacije o vašoj bazi podataka ("string za povezivanje"). Molimo da kontaktirate vašeg ISP-a ako je to potrebno. Ako instalaciju vršite na lokalnoj mašini ili lokalnom serveru informacije možete tražiti od vašeg sistemskog administratora.</Value>
+    <Value>Da biste dovršili ovaj čarobnjak, morate znati neke podatke koji se odnose na vaš server baze podataka ("Podaci za povezivanje"). Po potrebi kontaktirajte svog davatelja internetskih usluga. Ako instalirate na lokalni poslužitelj, možda će vam trebati podaci s vašeg administratora sustava.</Value>
   </LocaleResource>
 </Language>

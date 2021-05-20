@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Messages;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Messages.Caching
 {
@@ -12,9 +13,10 @@ namespace Nop.Services.Messages.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(MessageTemplate entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(MessageTemplate entity)
         {
-            RemoveByPrefix(NopMessageDefaults.MessageTemplatesByNamePrefix, entity.Name);
+            await RemoveByPrefixAsync(NopMessageDefaults.MessageTemplatesByNamePrefix, entity.Name);
         }
     }
 }

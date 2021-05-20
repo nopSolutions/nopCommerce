@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
@@ -81,6 +82,20 @@ namespace Nop.Services.Gdpr
 
         #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Insert a GDPR log
+        /// </summary>
+        /// <param name="gdprLog">GDPR log</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task InsertLogAsync(GdprLog gdprLog)
+        {
+            await _gdprLogRepository.InsertAsync(gdprLog);
+        }
+
+        #endregion
+
         #region Methods
 
         #region GDPR consent
@@ -89,19 +104,25 @@ namespace Nop.Services.Gdpr
         /// Get a GDPR consent
         /// </summary>
         /// <param name="gdprConsentId">The GDPR consent identifier</param>
-        /// <returns>GDPR consent</returns>
-        public virtual GdprConsent GetConsentById(int gdprConsentId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR consent
+        /// </returns>
+        public virtual async Task<GdprConsent> GetConsentByIdAsync(int gdprConsentId)
         {
-            return _gdprConsentRepository.GetById(gdprConsentId, cache => default);
+            return await _gdprConsentRepository.GetByIdAsync(gdprConsentId, cache => default);
         }
 
         /// <summary>
         /// Get all GDPR consents
         /// </summary>
-        /// <returns>GDPR consent</returns>
-        public virtual IList<GdprConsent> GetAllConsents()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR consent
+        /// </returns>
+        public virtual async Task<IList<GdprConsent>> GetAllConsentsAsync()
         {
-            var gdprConsents = _gdprConsentRepository.GetAll(query =>
+            var gdprConsents = await _gdprConsentRepository.GetAllAsync(query =>
             {
                 return from c in query
                     orderby c.DisplayOrder, c.Id
@@ -115,27 +136,30 @@ namespace Nop.Services.Gdpr
         /// Insert a GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
-        public virtual void InsertConsent(GdprConsent gdprConsent)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertConsentAsync(GdprConsent gdprConsent)
         {
-            _gdprConsentRepository.Insert(gdprConsent);
+            await _gdprConsentRepository.InsertAsync(gdprConsent);
         }
 
         /// <summary>
         /// Update the GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
-        public virtual void UpdateConsent(GdprConsent gdprConsent)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateConsentAsync(GdprConsent gdprConsent)
         {
-            _gdprConsentRepository.Update(gdprConsent);
+            await _gdprConsentRepository.UpdateAsync(gdprConsent);
         }
 
         /// <summary>
         /// Delete a GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
-        public virtual void DeleteConsent(GdprConsent gdprConsent)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteConsentAsync(GdprConsent gdprConsent)
         {
-            _gdprConsentRepository.Delete(gdprConsent);
+            await _gdprConsentRepository.DeleteAsync(gdprConsent);
         }
 
         /// <summary>
@@ -143,11 +167,14 @@ namespace Nop.Services.Gdpr
         /// </summary>
         /// <param name="consentId">Consent identifier</param>
         /// <param name="customerId">Customer identifier</param>
-        /// <returns>Result; null if previous a customer hasn't been asked</returns>
-        public virtual bool? IsConsentAccepted(int consentId, int customerId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result; null if previous a customer hasn't been asked
+        /// </returns>
+        public virtual async Task<bool?> IsConsentAcceptedAsync(int consentId, int customerId)
         {
             //get latest record
-            var log = GetAllLog(customerId: customerId, consentId: consentId, pageIndex: 0, pageSize: 1).FirstOrDefault();
+            var log = (await GetAllLogAsync(customerId: customerId, consentId: consentId, pageIndex: 0, pageSize: 1)).FirstOrDefault();
             if (log == null)
                 return null;
 
@@ -158,20 +185,11 @@ namespace Nop.Services.Gdpr
                 _ => null,
             };
         }
+
         #endregion
 
         #region GDPR log
-
-        /// <summary>
-        /// Get a GDPR log
-        /// </summary>
-        /// <param name="gdprLogId">The GDPR log identifier</param>
-        /// <returns>GDPR log</returns>
-        public virtual GdprLog GetLogById(int gdprLogId)
-        {
-            return _gdprLogRepository.GetById(gdprLogId);
-        }
-
+        
         /// <summary>
         /// Get all GDPR log records
         /// </summary>
@@ -181,12 +199,15 @@ namespace Nop.Services.Gdpr
         /// <param name="requestType">GDPR request type</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>GDPR log records</returns>
-        public virtual IPagedList<GdprLog> GetAllLog(int customerId = 0, int consentId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR log records
+        /// </returns>
+        public virtual async Task<IPagedList<GdprLog>> GetAllLogAsync(int customerId = 0, int consentId = 0,
             string customerInfo = "", GdprRequestType? requestType = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return _gdprLogRepository.GetAllPaged(query =>
+            return await _gdprLogRepository.GetAllPagedAsync(query =>
             {
                 if (customerId > 0) 
                     query = query.Where(log => log.CustomerId == customerId);
@@ -212,20 +233,12 @@ namespace Nop.Services.Gdpr
         /// <summary>
         /// Insert a GDPR log
         /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        public virtual void InsertLog(GdprLog gdprLog)
-        {
-            _gdprLogRepository.Insert(gdprLog);
-        }
-
-        /// <summary>
-        /// Insert a GDPR log
-        /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="consentId">Consent identifier</param>
         /// <param name="requestType">Request type</param>
         /// <param name="requestDetails">Request details</param>
-        public virtual void InsertLog(Customer customer, int consentId, GdprRequestType requestType, string requestDetails)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertLogAsync(Customer customer, int consentId, GdprRequestType requestType, string requestDetails)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -239,27 +252,10 @@ namespace Nop.Services.Gdpr
                 RequestDetails = requestDetails,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            InsertLog(gdprLog);
-        }
 
-        /// <summary>
-        /// Update the GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        public virtual void UpdateLog(GdprLog gdprLog)
-        {
-            _gdprLogRepository.Update(gdprLog);
+            await InsertLogAsync(gdprLog);
         }
-
-        /// <summary>
-        /// Delete a GDPR log
-        /// </summary>
-        /// <param name="gdprLog">GDPR log</param>
-        public virtual void DeleteLog(GdprLog gdprLog)
-        {
-            _gdprLogRepository.Delete(gdprLog);
-        }
-
+        
         #endregion
 
         #region Customer
@@ -268,77 +264,76 @@ namespace Nop.Services.Gdpr
         /// Permanent delete of customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual void PermanentDeleteCustomer(Customer customer)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PermanentDeleteCustomerAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
             //blog comments
-            var blogComments = _blogService.GetAllComments(customerId: customer.Id);
-            _blogService.DeleteBlogComments(blogComments);
+            var blogComments = await _blogService.GetAllCommentsAsync(customerId: customer.Id);
+            await _blogService.DeleteBlogCommentsAsync(blogComments);
 
             //news comments
-            var newsComments = _newsService.GetAllComments(customerId: customer.Id);
-            _newsService.DeleteNewsComments(newsComments);
+            var newsComments = await _newsService.GetAllCommentsAsync(customerId: customer.Id);
+            await _newsService.DeleteNewsCommentsAsync(newsComments);
 
             //back in stock subscriptions
-            var backInStockSubscriptions = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id);
+            var backInStockSubscriptions = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerIdAsync(customer.Id);
             foreach (var backInStockSubscription in backInStockSubscriptions)
-                _backInStockSubscriptionService.DeleteSubscription(backInStockSubscription);
+                await _backInStockSubscriptionService.DeleteSubscriptionAsync(backInStockSubscription);
 
             //product review
-            var productReviews = _productService.GetAllProductReviews(customer.Id);
-            var reviewedProducts = _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
-            _productService.DeleteProductReviews(productReviews);
+            var productReviews = await _productService.GetAllProductReviewsAsync(customer.Id);
+            var reviewedProducts = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());
+            await _productService.DeleteProductReviewsAsync(productReviews);
             //update product totals
-            foreach (var product in reviewedProducts)
-            {
-                _productService.UpdateProductReviewTotals(product);
-            }
-            
+            foreach (var product in reviewedProducts) 
+                await _productService.UpdateProductReviewTotalsAsync(product);
+
             //external authentication record
-            foreach (var ear in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
-                _externalAuthenticationService.DeleteExternalAuthenticationRecord(ear);
+            foreach (var ear in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
+                await _externalAuthenticationService.DeleteExternalAuthenticationRecordAsync(ear);
 
             //forum subscriptions
-            var forumSubscriptions = _forumService.GetAllSubscriptions(customer.Id);
+            var forumSubscriptions = await _forumService.GetAllSubscriptionsAsync(customer.Id);
             foreach (var forumSubscription in forumSubscriptions)
-                _forumService.DeleteSubscription(forumSubscription);
+                await _forumService.DeleteSubscriptionAsync(forumSubscription);
 
             //shopping cart items
-            foreach (var sci in _shoppingCartService.GetShoppingCart(customer))
-                _shoppingCartService.DeleteShoppingCartItem(sci);
+            foreach (var sci in await _shoppingCartService.GetShoppingCartAsync(customer))
+                await _shoppingCartService.DeleteShoppingCartItemAsync(sci);
 
             //private messages (sent)
-            foreach (var pm in _forumService.GetAllPrivateMessages(0, customer.Id, 0, null, null, null, null))
-                _forumService.DeletePrivateMessage(pm);
+            foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, customer.Id, 0, null, null, null, null))
+                await _forumService.DeletePrivateMessageAsync(pm);
 
             //private messages (received)
-            foreach (var pm in _forumService.GetAllPrivateMessages(0, 0, customer.Id, null, null, null, null))
-                _forumService.DeletePrivateMessage(pm);
+            foreach (var pm in await _forumService.GetAllPrivateMessagesAsync(0, 0, customer.Id, null, null, null, null))
+                await _forumService.DeletePrivateMessageAsync(pm);
 
             //newsletter
-            var allStores = _storeService.GetAllStores();
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
-                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                 if (newsletter != null)
-                    _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+                    await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(newsletter);
             }
 
             //addresses
-            foreach (var address in _customerService.GetAddressesByCustomerId(customer.Id))
+            foreach (var address in await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
             {
-                _customerService.RemoveCustomerAddress(customer, address);
-                _customerService.UpdateCustomer(customer);
+                await _customerService.RemoveCustomerAddressAsync(customer, address);
+                await _customerService.UpdateCustomerAsync(customer);
                 //now delete the address record
-                _addressService.DeleteAddress(address);
+                await _addressService.DeleteAddressAsync(address);
             }
 
             //generic attributes
             var keyGroup = customer.GetType().Name;
-            var genericAttributes = _genericAttributeService.GetAttributesForEntity(customer.Id, keyGroup);
-            _genericAttributeService.DeleteAttributes(genericAttributes);
+            var genericAttributes = await _genericAttributeService.GetAttributesForEntityAsync(customer.Id, keyGroup);
+            await _genericAttributeService.DeleteAttributesAsync(genericAttributes);
 
             //ignore ActivityLog
             //ignore ForumPost, ForumTopic, ignore ForumPostVote
@@ -351,16 +346,16 @@ namespace Nop.Services.Gdpr
             //and we do not delete orders
 
             //remove from Registered role, add to Guest one
-            if (_customerService.IsRegistered(customer))
+            if (await _customerService.IsRegisteredAsync(customer))
             {
-                var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
-                _customerService.RemoveCustomerRoleMapping(customer, registeredRole);
+                var registeredRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
+                await _customerService.RemoveCustomerRoleMappingAsync(customer, registeredRole);
             }
 
-            if (!_customerService.IsGuest(customer))
+            if (!await _customerService.IsGuestAsync(customer))
             {
-                var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
-                _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
+                var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
+                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
             }
 
             var email = customer.Email;
@@ -372,10 +367,10 @@ namespace Nop.Services.Gdpr
             customer.Active = false;
             customer.Deleted = true;
             
-            _customerService.UpdateCustomer(customer);
+            await _customerService.UpdateCustomerAsync(customer);
 
             //raise event
-            _eventPublisher.Publish(new CustomerPermanentlyDeleted(customer.Id, email));
+            await _eventPublisher.PublishAsync(new CustomerPermanentlyDeleted(customer.Id, email));
         }
 
         #endregion

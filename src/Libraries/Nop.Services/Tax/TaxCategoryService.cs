@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
 
@@ -31,18 +32,22 @@ namespace Nop.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void DeleteTaxCategory(TaxCategory taxCategory)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteTaxCategoryAsync(TaxCategory taxCategory)
         {
-            _taxCategoryRepository.Delete(taxCategory);
+            await _taxCategoryRepository.DeleteAsync(taxCategory);
         }
 
         /// <summary>
         /// Gets all tax categories
         /// </summary>
-        /// <returns>Tax categories</returns>
-        public virtual IList<TaxCategory> GetAllTaxCategories()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax categories
+        /// </returns>
+        public virtual async Task<IList<TaxCategory>> GetAllTaxCategoriesAsync()
         {
-            var taxCategories = _taxCategoryRepository.GetAll(query=>
+            var taxCategories = await _taxCategoryRepository.GetAllAsync(query=>
             {
                 return from tc in query
                     orderby tc.DisplayOrder, tc.Id
@@ -56,28 +61,33 @@ namespace Nop.Services.Tax
         /// Gets a tax category
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <returns>Tax category</returns>
-        public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax category
+        /// </returns>
+        public virtual async Task<TaxCategory> GetTaxCategoryByIdAsync(int taxCategoryId)
         {
-            return _taxCategoryRepository.GetById(taxCategoryId, cache => default);
+            return await _taxCategoryRepository.GetByIdAsync(taxCategoryId, cache => default);
         }
 
         /// <summary>
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void InsertTaxCategory(TaxCategory taxCategory)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertTaxCategoryAsync(TaxCategory taxCategory)
         {
-            _taxCategoryRepository.Insert(taxCategory);
+            await _taxCategoryRepository.InsertAsync(taxCategory);
         }
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void UpdateTaxCategory(TaxCategory taxCategory)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateTaxCategoryAsync(TaxCategory taxCategory)
         {
-            _taxCategoryRepository.Update(taxCategory);
+            await _taxCategoryRepository.UpdateAsync(taxCategory);
         }
 
         #endregion

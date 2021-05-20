@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Catalog.Caching
@@ -13,15 +14,19 @@ namespace Nop.Services.Catalog.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected override void ClearCache(SpecificationAttribute entity, EntityEventType entityEventType)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(SpecificationAttribute entity, EntityEventType entityEventType)
         {
-            Remove(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
+            await RemoveAsync(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
 
             if (entityEventType != EntityEventType.Insert)
             {
-                RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
-                RemoveByPrefix(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
+                await RemoveByPrefixAsync(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
+                await RemoveByPrefixAsync(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
+                await RemoveByPrefixAsync(NopCatalogDefaults.FilterableSpecificationAttributeOptionsPrefix);
             }
+
+            await base.ClearCacheAsync(entity, entityEventType);
         }
     }
 }

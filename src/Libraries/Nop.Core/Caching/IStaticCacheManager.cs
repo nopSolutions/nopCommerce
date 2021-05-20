@@ -14,8 +14,23 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <returns>The cached value associated with the specified key</returns>
-        T Get<T>(CacheKey key, Func<T> acquire);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key
+        /// </returns>
+        Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire);
+
+        /// <summary>
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the cached value associated with the specified key
+        /// </returns>
+        Task<T> GetAsync<T>(CacheKey key, Func<T> acquire);
 
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
@@ -24,40 +39,37 @@ namespace Nop.Core.Caching
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
         /// <returns>The cached value associated with the specified key</returns>
-        Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire);
+        T Get<T>(CacheKey key, Func<T> acquire);
 
         /// <summary>
         /// Remove the value with the specified key from the cache
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        void Remove(CacheKey cacheKey, params object[] cacheKeyParameters);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters);
 
         /// <summary>
         /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        void Set(CacheKey key, object data);
-
-        /// <summary>
-        /// Get a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        bool IsSet(CacheKey key);
-
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task SetAsync(CacheKey key, object data);
+        
         /// <summary>
         /// Remove items by cache key prefix
         /// </summary>
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-        void RemoveByPrefix(string prefix, params object[] prefixParameters);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters);
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        void Clear();
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ClearAsync();
 
         #region Cache key
 

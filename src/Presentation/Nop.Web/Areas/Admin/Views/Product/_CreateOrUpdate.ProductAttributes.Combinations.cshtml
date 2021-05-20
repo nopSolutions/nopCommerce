@@ -1,9 +1,9 @@
 @model ProductModel
 
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsTop, additionalData = Model })
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
             <p>
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")
             </p>
@@ -94,28 +94,29 @@
                 }
 
                 function renderProductAttributesCombinationsColumnEdit(data, type, row, meta) {
-                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeCombinationEditPopup/")' + data + '?btnId=btnRefreshCombinations&formId=product-form\', 800, 700, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeCombinationEditPopup/")' + data + '?btnId=btnRefreshCombinations&formId=product-form\', 800, 700, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
                 }
             </script>
             
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-primary">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
             </button>
-            <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">
+            <button type="button" id="btnGenerateAllCombinations" class="btn btn-info">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
             </button>
-            <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn bg-aqua">
+
+            <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-info">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral")
             </button>
             <nop-action-confirmation asp-button-id="btnGenerateAllCombinations" />
-            <input type="submit" id="btnRefreshCombinations" style="display: none" />
+            <button type="submit" id="btnRefreshCombinations" style="display: none"></button>
             <script type="text/javascript">
             $(document).ready(function() {
                 $('#btnRefreshCombinations').click(function() {
                     //refresh grid
-                    $("#attributecombinations-grid").DataTable().ajax.reload();                    
+                    $("#attributecombinations-grid").DataTable().ajax.reload();
 
                     //return false to don't reload a page
                     return false;

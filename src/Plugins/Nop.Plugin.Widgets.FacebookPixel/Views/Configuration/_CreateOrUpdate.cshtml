@@ -12,16 +12,16 @@
             <em>Note: As an additional parameter, some events include product SKU or product combination SKU; make sure that they are filled out correctly in your catalog.</em><br />
             <br />
             If predefined standard events aren't suitable for your needs, you can track your own custom events, which also can be used to define custom audiences for ad optimization.<br />
-            You can configure them below. Specify the name and choose widget zones in which the custom event will be tracked. If you don't know which zone to use for your custom event, you can ask about it in <a href="https://www.nopcommerce.com/boards" target="_blank">our forums</a>.<br />
+            You can configure them below. Specify the name and choose widget zones in which the custom event will be tracked. If you don't know which zone to use for your custom event, you can ask about it in <a href="@Nop.Services.Common.NopLinksDefaults.OfficialSite.Boards" target="_blank">our forums</a>.<br />
             <br />
             The General Data Protection Regulation (GDPR) took effect on May 25, 2018, and creates consistent data protection rules across Europe. Businesses who advertise with the Facebook companies can continue to use Facebook platforms and solutions in the same way they do today.<br />
             If you already enabled the <a href="@Url.Action("GeneralCommon", "Setting", new { area = AreaNames.Admin })" target="_blank">settings</a> to display Cookie Consent for users, you can pause sending pixel fires to Facebook for users who have not accepted Cookie Consent by enabling the appropriate settings below.<br />
             See also <a href="https://developers.facebook.com/docs/facebook-pixel/support#pixelcollect" target="_blank">What data does the Facebook pixel collect?</a><br />
         </p>
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="form-group">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="Enabled" />
                         </div>
@@ -30,7 +30,7 @@
                             <span asp-validation-for="Enabled"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="PixelId" />
                         </div>
@@ -49,7 +49,7 @@
                     </div>
                     @if (!Model.HideStoresList)
                     {
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="StoreId" />
                             </div>
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                     }
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="UseAdvancedMatching" />
                         </div>
@@ -76,7 +76,7 @@
                             <span asp-validation-for="UseAdvancedMatching"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="PassUserProperties" />
                         </div>
@@ -85,7 +85,7 @@
                             <span asp-validation-for="PassUserProperties"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackPageView" />
                         </div>
@@ -94,7 +94,7 @@
                             <span asp-validation-for="TrackPageView"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackAddToCart" />
                         </div>
@@ -103,7 +103,7 @@
                             <span asp-validation-for="TrackAddToCart"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackPurchase" />
                         </div>
@@ -112,7 +112,7 @@
                             <span asp-validation-for="TrackPurchase"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackViewContent" />
                         </div>
@@ -121,7 +121,7 @@
                             <span asp-validation-for="TrackViewContent"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackAddToWishlist" />
                         </div>
@@ -130,7 +130,7 @@
                             <span asp-validation-for="TrackAddToWishlist"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackInitiateCheckout" />
                         </div>
@@ -139,7 +139,7 @@
                             <span asp-validation-for="TrackInitiateCheckout"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackSearch" />
                         </div>
@@ -148,7 +148,7 @@
                             <span asp-validation-for="TrackSearch"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackContact" />
                         </div>
@@ -157,7 +157,7 @@
                             <span asp-validation-for="TrackContact"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="TrackCompleteRegistration" />
                         </div>
@@ -166,7 +166,7 @@
                             <span asp-validation-for="TrackCompleteRegistration"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="DisableForUsersNotAcceptingCookieConsent" />
                         </div>
@@ -189,20 +189,19 @@
                 </div>
             </div>
         </div>
-
-        @if (Model.Id > 0)
-        {
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents")
-                    </div>
-                    <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-header">
+                    @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents")
+                </div>
+                @if (Model.Id > 0)
+                {
+                    <div class="card-body">
                         @if (!Model.HideCustomEventsSearch)
                         {
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-3">
                                             <nop-label asp-for="@Model.CustomEventSearchModel.WidgetZone" />
                                         </div>
@@ -210,10 +209,10 @@
                                             <nop-editor asp-for="@Model.CustomEventSearchModel.WidgetZone" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-md-9 col-md-offset-4">
+                                    <div class="form-group row">
+                                        <div class="col-md-9 offset-md-4">
                                             <button type="button" id="search" class="btn btn-primary btn-search">
-                                                <i class="fa fa-search"></i>
+                                                <i class="fas fa-search"></i>
                                                 @T("Admin.Common.Search")
                                             </button>
                                         </div>
@@ -255,8 +254,8 @@
                             }
                         })
                     </div>
-                    <div class="panel-footer">
-                        <div class="form-group">
+                    <div class="card-footer">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="@Model.CustomEventSearchModel.AddCustomEvent.EventName" />
                             </div>
@@ -265,7 +264,7 @@
                                 <span asp-validation-for="@Model.CustomEventSearchModel.AddCustomEvent.EventName"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="@Model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds" />
                             </div>
@@ -282,8 +281,8 @@
                                 </script>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
                                 <button type="button" id="add" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
                             </div>
                         </div>
@@ -326,8 +325,14 @@
                             });
                         </script>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="card-body">
+                        @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.SaveBeforeEdit")
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
 </div>

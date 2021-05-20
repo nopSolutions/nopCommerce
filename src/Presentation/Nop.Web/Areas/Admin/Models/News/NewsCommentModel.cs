@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.News
     /// <summary>
     /// Represents a news comment model
     /// </summary>
-    public partial class NewsCommentModel : BaseNopEntityModel
+    public partial record NewsCommentModel : BaseNopEntityModel
     {
         #region Properties
 

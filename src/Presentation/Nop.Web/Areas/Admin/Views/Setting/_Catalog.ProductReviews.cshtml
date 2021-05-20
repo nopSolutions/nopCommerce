@@ -1,7 +1,7 @@
 @model CatalogSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ProductReviewsMustBeApproved_OverrideForStore" asp-input="ProductReviewsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ProductReviewsMustBeApproved" />
@@ -11,7 +11,17 @@
             <span asp-validation-for="ProductReviewsMustBeApproved"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="OneReviewPerProductFromCustomer_OverrideForStore" asp-input="OneReviewPerProductFromCustomer" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="OneReviewPerProductFromCustomer"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="OneReviewPerProductFromCustomer"/>
+            <span asp-validation-for="OneReviewPerProductFromCustomer"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowAnonymousUsersToReviewProduct_OverrideForStore" asp-input="AllowAnonymousUsersToReviewProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowAnonymousUsersToReviewProduct" />
@@ -21,7 +31,7 @@
             <span asp-validation-for="AllowAnonymousUsersToReviewProduct"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore" asp-input="ProductReviewPossibleOnlyAfterPurchasing" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ProductReviewPossibleOnlyAfterPurchasing" />
@@ -31,7 +41,7 @@
             <span asp-validation-for="ProductReviewPossibleOnlyAfterPurchasing"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="NotifyStoreOwnerAboutNewProductReviews_OverrideForStore" asp-input="NotifyStoreOwnerAboutNewProductReviews" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="NotifyStoreOwnerAboutNewProductReviews" />
@@ -41,7 +51,7 @@
             <span asp-validation-for="NotifyStoreOwnerAboutNewProductReviews"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="NotifyCustomerAboutProductReviewReply_OverrideForStore" asp-input="NotifyCustomerAboutProductReviewReply" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="NotifyCustomerAboutProductReviewReply" />
@@ -51,7 +61,7 @@
             <span asp-validation-for="NotifyCustomerAboutProductReviewReply"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowProductReviewsPerStore_OverrideForStore" asp-input="ShowProductReviewsPerStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowProductReviewsPerStore" />
@@ -61,7 +71,7 @@
             <span asp-validation-for="ShowProductReviewsPerStore"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowProductReviewsOnAccountPage_OverrideForStore" asp-input="ShowProductReviewsTabOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowProductReviewsTabOnAccountPage" />
@@ -72,7 +82,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowProductReviewsTabOnAccountPage">
-        <div class="form-group advanced-setting" id="pnlProductReviewsPageSizeOnAccountPage">
+        <div class="form-group row advanced-setting" id="pnlProductReviewsPageSizeOnAccountPage">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ProductReviewsPageSizeOnAccountPage_OverrideForStore" asp-input="ProductReviewsPageSizeOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ProductReviewsPageSizeOnAccountPage" />
@@ -83,7 +93,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ProductReviewsSortByCreatedDateAscending_OverrideForStore" asp-input="ProductReviewsSortByCreatedDateAscending" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ProductReviewsSortByCreatedDateAscending" />
@@ -103,9 +113,9 @@
 
     function toggleProductReviewsPageSizeOnAccountPage() {
         if ($('#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
-            $('#pnlProductReviewsPageSizeOnAccountPage').show();
+            $('#pnlProductReviewsPageSizeOnAccountPage').showElement();
         } else {
-            $('#pnlProductReviewsPageSizeOnAccountPage').hide();
+            $('#pnlProductReviewsPageSizeOnAccountPage').hideElement();
         }
     }
 </script>

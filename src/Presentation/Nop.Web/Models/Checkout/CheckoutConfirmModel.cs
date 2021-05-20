@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Checkout
 {
-    public partial class CheckoutConfirmModel : BaseNopModel
+    public partial record CheckoutConfirmModel : BaseNopModel
     {
         public CheckoutConfirmModel()
         {

@@ -1,46 +1,64 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
     /// <summary>
-    /// textarea tag helper
+    /// "textarea" tag helper
     /// </summary>
-    [HtmlTargetElement("textarea", Attributes = ForAttributeName)]
+    [HtmlTargetElement("textarea", Attributes = FOR_ATTRIBUTE_NAME)]
     public class TextAreaTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper
     {
-        private const string ForAttributeName = "asp-for";
+        #region Constants
+
+        private const string FOR_ATTRIBUTE_NAME = "asp-for";
+        private const string DISABLED_ATTRIBUTE_NAME = "asp-disabled";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Indicates whether the input is disabled
         /// </summary>
-        [HtmlAttributeName("asp-disabled")]
+        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
         public string IsDisabled { set; get; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="generator">HTML generator</param>
+        #endregion
+
+        #region Ctor
+
         public TextAreaTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 
-        /// <summary>
-        /// Process
-        /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            //add disabled attribute
-            bool.TryParse(IsDisabled, out bool disabled);
-            if (disabled)
-            {
-                var d = new TagHelperAttribute("disabled", "disabled");
-                output.Attributes.Add(d);
-            }
+        #endregion
 
-            base.Process(context, output);
+        #region Methods
+
+        /// <summary>
+        /// Asynchronously executes the tag helper with the given context and output
+        /// </summary>
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
+            //add disabled attribute
+            if (bool.TryParse(IsDisabled, out var disabled) && disabled)
+                output.Attributes.Add(new TagHelperAttribute("disabled", "disabled"));
+
+            await base.ProcessAsync(context, output);
         }
+
+        #endregion
     }
 }

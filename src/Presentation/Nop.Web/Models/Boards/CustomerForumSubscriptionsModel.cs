@@ -4,7 +4,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class CustomerForumSubscriptionsModel : BaseNopModel
+    public partial record CustomerForumSubscriptionsModel : BaseNopModel
     {
         public CustomerForumSubscriptionsModel()
         {
@@ -16,7 +16,7 @@ namespace Nop.Web.Models.Boards
 
         #region Nested classes
 
-        public partial class ForumSubscriptionModel : BaseNopEntityModel
+        public partial record ForumSubscriptionModel : BaseNopEntityModel
         {
             public int ForumId { get; set; }
             public int ForumTopicId { get; set; }

@@ -7,9 +7,9 @@
 }
 
 <form asp-controller="PickupInStore" asp-action="Configure" method="post" id="pickup-instore-form">
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
                 @await Html.PartialAsync("Table", new DataTablesModel
            {
                Name = "pickup-points-grid",
@@ -64,13 +64,14 @@
 
             <script>
                 function renderColumnEdit(data, type, row, meta) {
-                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/PickupInStore/Edit/")' + data + '?btnId=btnRefresh&formId=pickup-instore-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/PickupInStore/Edit/")' + data + '?btnId=btnRefresh&formId=pickup-instore-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
                 }
             </script>
 
-            <div class="panel-footer">
-                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
-                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
+            <div class="card-footer">
+                <button type="submit" id="btnAddNewOption" name="save" class="btn btn-primary" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;">@T("Plugins.Pickup.PickupInStore.AddNew")</button>
+
+                <button id="btnRefresh" type="submit" name="save" class="btn btn-default" style="display: none"></button>
             </div>
             <script>
                 $(document).ready(function () {

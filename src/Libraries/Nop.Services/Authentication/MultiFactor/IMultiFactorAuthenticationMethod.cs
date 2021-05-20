@@ -1,4 +1,5 @@
-﻿using Nop.Services.Plugins;
+﻿using System.Threading.Tasks;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.MultiFactor
 {
@@ -26,14 +27,11 @@ namespace Nop.Services.Authentication.MultiFactor
         /// <returns>View component name</returns>
         string GetVerificationViewComponentName();
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store
         /// </summary>
-        string Description { get; }
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task<string> GetDescriptionAsync();
 
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Blogs;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Blogs;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Blogs.Caching
@@ -12,9 +13,10 @@ namespace Nop.Services.Blogs.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(BlogComment entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(BlogComment entity)
         {
-            RemoveByPrefix(NopBlogsDefaults.BlogCommentsNumberPrefix, entity.BlogPostId);
+            await RemoveByPrefixAsync(NopBlogsDefaults.BlogCommentsNumberPrefix, entity.BlogPostId);
         }
     }
 }

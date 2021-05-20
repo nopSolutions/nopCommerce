@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Checkout
 {
-    public partial class CheckoutPickupPointModel : BaseNopModel
+    public partial record CheckoutPickupPointModel : BaseNopModel
     {
         public string Id { get; set; }
 

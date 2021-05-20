@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using Azure.Identity;
+using Azure.Storage.Blobs;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -9,20 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
-using Nop.Core.Redis;
 using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Authentication;
@@ -34,8 +30,9 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
+using Nop.Web.Framework.Validators;
 using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNetCore3;
+using WebMarkupMin.AspNetCore5;
 using WebMarkupMin.NUglify;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -55,8 +52,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static (IEngine, AppSettings) ConfigureApplicationServices(this IServiceCollection services,
             IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
-            //most of API providers require TLS 1.2 nowadays
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            //let the operating system decide what TLS protocol version to use
+            //see https://docs.microsoft.com/dotnet/framework/network-programming/tls
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
 
             //create default file provider
             CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment);
@@ -78,6 +76,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var engine = EngineContext.Create();
 
             engine.ConfigureServices(services, configuration);
+            engine.RegisterDependencies(services, appSettings);
 
             return (engine, appSettings);
         }
@@ -123,10 +122,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             services.AddAntiforgery(options =>
             {
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.AntiforgeryCookie}";
-
-                //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
         }
 
@@ -140,10 +136,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.SessionCookie}";
                 options.Cookie.HttpOnly = true;
-
-                //whether to allow the use of session values from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
         }
 
@@ -153,7 +146,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddThemes(this IServiceCollection services)
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             //themes support
@@ -164,41 +157,64 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Adds services required for distributed cache
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddDistributedCache(this IServiceCollection services)
+        {
+            var appSettings = Singleton<AppSettings>.Instance;
+            var distributedCacheConfig = appSettings.DistributedCacheConfig;
+
+            if (!distributedCacheConfig.Enabled)
+                return;
+
+            switch (distributedCacheConfig.DistributedCacheType)
+            {
+                case DistributedCacheType.Memory:
+                    services.AddDistributedMemoryCache();
+                    break;
+
+                case DistributedCacheType.SqlServer:
+                    services.AddDistributedSqlServerCache(options =>
+                    {
+                        options.ConnectionString = distributedCacheConfig.ConnectionString;
+                        options.SchemaName = distributedCacheConfig.SchemaName;
+                        options.TableName = distributedCacheConfig.TableName;
+                    });
+                    break;
+
+                case DistributedCacheType.Redis:
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+                        options.Configuration = distributedCacheConfig.ConnectionString;
+                    });
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Adds data protection services
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopDataProtection(this IServiceCollection services)
         {
-            //check whether to persist data protection in Redis
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
-            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StoreDataProtectionKeys)
+            var appSettings = Singleton<AppSettings>.Instance;
+            if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
             {
-                //store keys in Redis
-                services.AddDataProtection().PersistKeysToStackExchangeRedis(() =>
-                {
-                    //For some reason, data protection services are registered earlier. This configuration is called even before the request queue starts. 
-                    //Service provider has not yet been built and we cannot get the required service. 
-                    //So we create a new instance of RedisConnectionWrapper() bypassing the DI.
-                    var redisConnectionWrapper = new RedisConnectionWrapper(appSettings);
-                    return redisConnectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
-                }, NopDataProtectionDefaults.RedisDataProtectionKey);
-            }
-            else if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
-            {
-                var cloudStorageAccount = CloudStorageAccount.Parse(appSettings.AzureBlobConfig.ConnectionString);
+                var blobServiceClient = new BlobServiceClient(appSettings.AzureBlobConfig.ConnectionString);
+                var blobContainerClient = blobServiceClient.GetBlobContainerClient(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);
+                var blobClient = blobContainerClient.GetBlobClient(NopDataProtectionDefaults.AzureDataProtectionKeyFile);
 
-                var client = cloudStorageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);
-
-                var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(container, NopDataProtectionDefaults.AzureDataProtectionKeyFile);
+                var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(blobClient);
 
                 if (!appSettings.AzureBlobConfig.DataProtectionKeysEncryptWithVault)
                     return;
 
-                var tokenProvider = new AzureServiceTokenProvider();
-                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
+                var keyIdentifier = appSettings.AzureBlobConfig.DataProtectionKeysVaultId;
+                var credentialOptions = new DefaultAzureCredentialOptions();
+                var tokenCredential = new DefaultAzureCredential(credentialOptions);
 
-                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, appSettings.AzureBlobConfig.DataProtectionKeysVaultId);
+                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(new Uri(keyIdentifier), tokenCredential);
             }
             else
             {
@@ -229,12 +245,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.AuthenticationCookie}";
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 options.LoginPath = NopAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
-
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //add external authentication
@@ -242,12 +255,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ExternalAuthenticationCookie}";
                 options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 options.LoginPath = NopAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
-
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
             //register and configure external authentication plugins now
@@ -272,7 +282,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             mvcBuilder.AddRazorRuntimeCompilation();
 
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.CommonConfig.UseSessionStateTempDataProvider)
             {
                 //use session-based temp data provider
@@ -284,10 +294,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 mvcBuilder.AddCookieTempDataProvider(options =>
                 {
                     options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.TempDataCookie}";
-
-                    //whether to allow the use of cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
-                        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 });
             }
 
@@ -296,11 +303,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-            //add custom display metadata provider
-            mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
+            //set some options
+            mvcBuilder.AddMvcOptions(options =>
+            {
+                //add custom display metadata provider
+                options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider());
 
-            //add custom model binder provider (to the top of the provider list)
-            mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
+                //in .NET model binding for a non-nullable property may fail with an error message "The value '' is invalid"
+                //here we set the locale name as the message, we'll replace it with the actual one later when not-null validation failed
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ => NopValidationDefaults.NotNullValidationLocaleName);
+            });
 
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration =>
@@ -329,7 +341,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopRedirectResultExecutor(this IServiceCollection services)
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
+            services.AddScoped<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
         }
 
         /// <summary>
@@ -339,10 +351,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopMiniProfiler(this IServiceCollection services)
         {
             //whether database is already installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            var appSettings = Singleton<AppSettings>.Instance;
             if (appSettings.CommonConfig.MiniProfilerEnabled)
             {
                 services.AddMiniProfiler(miniProfilerOptions =>
@@ -351,7 +363,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.CacheConfig.DefaultCacheTime);
 
                     //determine who can access the MiniProfiler results
-                    miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessProfiling);
+                    miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().AuthorizeAsync(StandardPermissionProvider.AccessProfiling).Result;
                 });
             }
         }
@@ -363,7 +375,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopWebMarkupMin(this IServiceCollection services)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             services

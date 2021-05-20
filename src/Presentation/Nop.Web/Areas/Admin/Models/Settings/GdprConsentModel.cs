@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a GDPR consent model
     /// </summary>
-    public partial class GdprConsentModel : BaseNopEntityModel, ILocalizedModel<GdprConsentLocalizedModel>
+    public partial record GdprConsentModel : BaseNopEntityModel, ILocalizedModel<GdprConsentLocalizedModel>
     {
         #region Ctor
 

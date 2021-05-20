@@ -10,22 +10,22 @@
 
 @{
     const string hideSearchBlockAttributeName = "LocaLPluginsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Configuration.Plugins.Local")
-        </h1>
-        <div class="pull-right">
+        </h1>    
+        <div class="float-right">
             @if (Model.NeedToRestart)
             {
-                <button type="submit" name="plugin-apply-changes" class="btn bg-green">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
-                <button type="submit" name="plugin-discard-changes" class="btn bg-red">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
+                <button type="submit" name="plugin-apply-changes" class="btn btn-success">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
+                <button type="submit" name="plugin-discard-changes" class="btn btn-danger">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
             }
 
-            <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
+            <button type="submit" name="plugin-reload-grid" class="btn btn-primary">@T("Admin.Configuration.Plugins.ReloadList")</button>
             <script>
                 $(document).ready(function() {
                     $("button[name='plugin-reload-grid']").on("click",
@@ -46,14 +46,15 @@
                 });
             </script>
             <button type="button" name="uploadplugin" class="btn bg-olive" data-toggle="modal" data-target="#uploadplugin-window">
-                <i class="fa fa-upload"></i>
+                <i class="fas fa-upload"></i>
                 @T("Admin.Configuration.Plugins.Upload")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginListButtons })
         </div>
     </div>
 
-    <div class="content">
+    <section class="content">
+    <div class="container-fluid">
         <div class="form-horizontal">
             <script>
                 $(document).ready(function () {
@@ -97,13 +98,13 @@
                 });
             </script>
 
-            <div class="panel-group">
-                <div class="panel panel-default panel-search">
-                    <div class="panel-body">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -118,11 +119,11 @@
                                 </ol>
                             </p>
                             <p>
-                                @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
+                                @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins", OfficialSite.Marketplace + Utm.OnAdminAllPlugins)
                             </p>
                             <div class="row">
-                                <div class="col-md-5">
-                                    <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchFriendlyName" />
                                         </div>
@@ -130,7 +131,7 @@
                                             <nop-editor asp-for="SearchFriendlyName" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchGroup" />
                                         </div>
@@ -139,8 +140,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-7">
-                                    <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchLoadModeId" />
                                         </div>
@@ -148,9 +149,7 @@
                                             <nop-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchAuthor" />
                                         </div>
@@ -161,9 +160,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-7 col-md-offset-5">
+                                <div class="text-center col-12">
                                     <button type="button" id="search-plugins-local" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
+                                        <i class="fas fa-search"></i>
                                         @T("Admin.Common.Search")
                                     </button>
                                 </div>
@@ -172,8 +171,10 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Plugins", Docs.Plugins + Utm.OnAdmin)" />
+
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "plugins-local-grid",
@@ -183,9 +184,9 @@
                             LengthMenu = Model.AvailablePageSizes,
                             Filters = new List<FilterParameter>
                             {
-                                new FilterParameter(nameof(Model.SearchLoadModeId)),
-                                 new FilterParameter(nameof(Model.SearchFriendlyName)),
+                                new FilterParameter(nameof(Model.SearchFriendlyName)),
                                 new FilterParameter(nameof(Model.SearchGroup)),
+                                new FilterParameter(nameof(Model.SearchLoadModeId)),
                                 new FilterParameter(nameof(Model.SearchAuthor))
                             },
                             ColumnCollection = new List<ColumnProperty>
@@ -222,7 +223,7 @@
                                 }
                             }
                         })
-                        
+
                         <script>
                             var textRenderer = $.fn.dataTable.render.text().display;
 
@@ -235,10 +236,10 @@
                                 res = res + '<br />';
                                 //allow configuration only when a plugin has a configuration URL specified
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
+                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
                                 }
                                 if (row.Installed) {
-                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
+                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
                                 }
 
                                 return res;
@@ -247,21 +248,21 @@
                             function renderColumnFriendlyName(data, type, row, meta) {
                                 var isInstall = '<li>@T("Admin.Configuration.Plugins.Fields.Installed").Text: ';
                                 if (row.Installed) {
-                                    isInstall = isInstall + '<i class="fa fa-check true-icon"></i></li>';
+                                    isInstall = isInstall + '<i class="fas fa-check true-icon"></i></li>';
                                 }
                                 else {
-                                    isInstall = isInstall + '<i class="fa fa-close false-icon"></i></li>';
+                                    isInstall = isInstall + '<i class="fas fa-times false-icon"></i></li>';
                                 }
 
                                 var canChange = '';
                                 if (row.CanChangeEnabled) {
                                     canChange = canChange + '<li>@T("Admin.Configuration.Plugins.Fields.IsEnabled").Text: ';
                                     if (row.IsEnabled) {
-                                        canChange = canChange + '<i class="fa fa-check true-icon"></i>';
+                                        canChange = canChange + '<i class="fas fa-check true-icon"></i>';
                                     }
                                     else {
-                                        canChange = canChange + '<i class="fa fa-close false-icon"></i>';
-                                    };   
+                                        canChange = canChange + '<i class="fas fa-times false-icon"></i>';
+                                    };
                                     canChange = canChange + '</li>';
                                 };
 
@@ -270,7 +271,7 @@
                                     '<li>@T("Admin.Configuration.Plugins.Fields.Author").Text: ' + row.Author + '</li>' +
                                     '<li>@T("Admin.Configuration.Plugins.Fields.SystemName").Text: ' + row.SystemName + '</li>' +
                                     '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text: ' + row.DisplayOrder + '</li>' +
-                                    isInstall + 
+                                    isInstall +
                                     canChange;
                             }
 
@@ -288,8 +289,8 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     <h4 class="modal-title" id="plugindelete-confirmation-title">@T("Admin.Common.AreYouSure")</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>                                    
                                 </div>
                                 <div class="form-horizontal">
                                     <div class="modal-body">
@@ -297,7 +298,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
-                                        <button type="submit" class="btn bg-red pull-right">@T("Admin.Common.Delete")</button>
+                                        <button type="submit" class="btn btn-danger float-right">@T("Admin.Common.Delete")</button>
                                     </div>
                                 </div>
                             </div>
@@ -305,7 +306,7 @@
                     </div>
 
                     <div>
-                        <input type="submit" id="btnRefreshList" style="display: none" />
+                        <button type="submit" id="btnRefreshList" style="display: none"></button>
                         <script>
                             $(document).ready(function () {
                                 $('#btnRefreshList').click(function () {
@@ -322,7 +323,7 @@
             </div>
         </div>
     </div>
-
+    </section>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsBlock, additionalData = Model })
 </form>
 
@@ -331,8 +332,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="uploadplugin-window-title">@T("Admin.Configuration.Plugins.Upload")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Plugin" asp-action="UploadPluginsAndThemes" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
@@ -351,10 +352,10 @@
                                 <em>@T("Admin.Configuration.Plugins.Upload.Hint4")</em>
                             </li>
                         </ul>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
-                                    <label class="control-label">
+                                    <label class="col-form-label">
                                         @T("Admin.Common.ZipFile")
                                     </label>
                                 </div>

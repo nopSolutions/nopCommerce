@@ -1,3 +1,5 @@
+﻿using System.Threading.Tasks;
+
 namespace Nop.Services.Vendors
 {
     /// <summary>
@@ -11,7 +13,10 @@ namespace Nop.Services.Vendors
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
-        /// <returns>Formatted attributes</returns>
-        string FormatAttributes(string attributesXml, string separator = "<br />", bool htmlEncode = true);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the formatted attributes
+        /// </returns>
+        Task<string> FormatAttributesAsync(string attributesXml, string separator = "<br />", bool htmlEncode = true);
     }
 }

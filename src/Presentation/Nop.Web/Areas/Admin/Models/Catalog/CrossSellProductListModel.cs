@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a cross-sell product list model
     /// </summary>
-    public partial class CrossSellProductListModel : BasePagedListModel<CrossSellProductModel>
+    public partial record CrossSellProductListModel : BasePagedListModel<CrossSellProductModel>
     {
     }
 }

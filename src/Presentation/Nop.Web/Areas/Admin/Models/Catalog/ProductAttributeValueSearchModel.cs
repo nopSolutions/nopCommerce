@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product attribute value search model
     /// </summary>
-    public partial class ProductAttributeValueSearchModel : BaseSearchModel
+    public partial record ProductAttributeValueSearchModel : BaseSearchModel
     {
         #region Properties
 

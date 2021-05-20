@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a plugin configuration model
     /// </summary>
-    public partial class PluginConfigModel : BaseNopModel, IConfigModel
+    public partial record PluginConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
 

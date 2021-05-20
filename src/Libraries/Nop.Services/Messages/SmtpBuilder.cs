@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Nop.Core;
@@ -37,12 +38,15 @@ namespace Nop.Services.Messages
         /// Create a new SMTP client for a specific email account
         /// </summary>
         /// <param name="emailAccount">Email account to use. If null, then would be used EmailAccount by default</param>
-        /// <returns>An SMTP client that can be used to send email messages</returns>
-        public virtual SmtpClient Build(EmailAccount emailAccount = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the an SMTP client that can be used to send email messages
+        /// </returns>
+        public virtual async Task<SmtpClient> BuildAsync(EmailAccount emailAccount = null)
         {
             if (emailAccount is null)
             {
-                emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId)
+                emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
                 ?? throw new NopException("Email account could not be loaded");
             }
 
@@ -52,18 +56,18 @@ namespace Nop.Services.Messages
 
             try
             {
-                client.Connect(
+                await client.ConnectAsync(
                     emailAccount.Host,
                     emailAccount.Port,
                     emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable);
 
                 if (emailAccount.UseDefaultCredentials)
                 {
-                    client.Authenticate(CredentialCache.DefaultNetworkCredentials);
+                    await client.AuthenticateAsync(CredentialCache.DefaultNetworkCredentials);
                 } 
                 else if (!string.IsNullOrWhiteSpace(emailAccount.Username))
                 {
-                    client.Authenticate(new NetworkCredential(emailAccount.Username, emailAccount.Password));
+                    await client.AuthenticateAsync(new NetworkCredential(emailAccount.Username, emailAccount.Password));
                 }
 
                 return client;

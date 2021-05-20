@@ -26,12 +26,7 @@ namespace Nop.Services.Authentication
         /// The default value for the login path
         /// </summary>
         public static PathString LoginPath => new PathString("/login");
-
-        /// <summary>
-        /// The default value used for the logout path
-        /// </summary>
-        public static PathString LogoutPath => new PathString("/logout");
-
+        
         /// <summary>
         /// The default value for the access denied path
         /// </summary>

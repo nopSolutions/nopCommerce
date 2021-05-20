@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "customerattributevalues-grid",
@@ -48,20 +48,20 @@
     
         <script>
             function renderColumnEdit(data, type, row, meta) {
-                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=customerattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=customerattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
             }
         </script>    
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CustomerAttribute", new { customerAttributeId = Model.Id, btnId = "btnRefresh", formId = "customerattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
             @T("Admin.Customers.CustomerAttributes.Values.AddNew")
         </button>
-        <input type="submit" id="btnRefresh" style="display: none" />
+        <button type="submit" id="btnRefresh" style="display: none"></button>
         <script>
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {
                     //refresh grid
-                     updateTable('#customerattributevalues-grid');
+                    updateTable('#customerattributevalues-grid');
 
                     //return false to don't reload a page
                     return false;
@@ -72,7 +72,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Customers.CustomerAttributes.Values.SaveBeforeEdit")
     </div>
 }

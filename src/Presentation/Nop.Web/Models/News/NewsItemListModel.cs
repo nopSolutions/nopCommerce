@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.News
 {
-    public partial class NewsItemListModel : BaseNopModel
+    public partial record NewsItemListModel : BaseNopModel
     {
         public NewsItemListModel()
         {

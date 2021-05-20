@@ -6,7 +6,7 @@ namespace Nop.Web.Models.Catalog
     /// <summary>
     /// Represents a grouped product specification attribute model
     /// </summary>
-    public partial class ProductSpecificationAttributeGroupModel : BaseNopEntityModel
+    public partial record ProductSpecificationAttributeGroupModel : BaseNopEntityModel
     {
         #region Properties
 

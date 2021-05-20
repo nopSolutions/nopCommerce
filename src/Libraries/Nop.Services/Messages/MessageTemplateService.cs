@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -18,35 +17,30 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
         #region Ctor
 
-        public MessageTemplateService(CatalogSettings catalogSettings,
+        public MessageTemplateService(
             IStaticCacheManager staticCacheManager,
             ILanguageService languageService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             IRepository<MessageTemplate> messageTemplateRepository,
-            IRepository<StoreMapping> storeMappingRepository,
             IStoreMappingService storeMappingService)
         {
-            _catalogSettings = catalogSettings;
             _staticCacheManager = staticCacheManager;
             _languageService = languageService;
             _localizationService = localizationService;
             _localizedEntityService = localizedEntityService;
             _messageTemplateRepository = messageTemplateRepository;
-            _storeMappingRepository = storeMappingRepository;
             _storeMappingService = storeMappingService;
         }
 
@@ -58,37 +52,43 @@ namespace Nop.Services.Messages
         /// Delete a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public virtual void DeleteMessageTemplate(MessageTemplate messageTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteMessageTemplateAsync(MessageTemplate messageTemplate)
         {
-            _messageTemplateRepository.Delete(messageTemplate);
+            await _messageTemplateRepository.DeleteAsync(messageTemplate);
         }
 
         /// <summary>
         /// Inserts a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public virtual void InsertMessageTemplate(MessageTemplate messageTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertMessageTemplateAsync(MessageTemplate messageTemplate)
         {
-            _messageTemplateRepository.Insert(messageTemplate);
+            await _messageTemplateRepository.InsertAsync(messageTemplate);
         }
 
         /// <summary>
         /// Updates a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        public virtual void UpdateMessageTemplate(MessageTemplate messageTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateMessageTemplateAsync(MessageTemplate messageTemplate)
         {
-            _messageTemplateRepository.Update(messageTemplate);
+            await _messageTemplateRepository.UpdateAsync(messageTemplate);
         }
 
         /// <summary>
         /// Gets a message template
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
-        /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateById(int messageTemplateId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message template
+        /// </returns>
+        public virtual async Task<MessageTemplate> GetMessageTemplateByIdAsync(int messageTemplateId)
         {
-            return _messageTemplateRepository.GetById(messageTemplateId, cache => default);
+            return await _messageTemplateRepository.GetByIdAsync(messageTemplateId, cache => default);
         }
 
         /// <summary>
@@ -96,24 +96,28 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
-        /// <returns>List of message templates</returns>
-        public virtual IList<MessageTemplate> GetMessageTemplatesByName(string messageTemplateName, int? storeId = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of message templates
+        /// </returns>
+        public virtual async Task<IList<MessageTemplate>> GetMessageTemplatesByNameAsync(string messageTemplateName, int? storeId = null)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException(nameof(messageTemplateName));
 
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId);
 
-            return _staticCacheManager.Get(key, () =>
+            return await _staticCacheManager.GetAsync(key, async () =>
             {
                 //get message templates with the passed name
-                var templates = _messageTemplateRepository.Table
+                var templates = await _messageTemplateRepository.Table
                     .Where(messageTemplate => messageTemplate.Name.Equals(messageTemplateName))
-                    .OrderBy(messageTemplate => messageTemplate.Id).ToList();
+                    .OrderBy(messageTemplate => messageTemplate.Id)
+                    .ToListAsync();
 
                 //filter by the store
                 if (storeId.HasValue && storeId.Value > 0)
-                    templates = templates.Where(messageTemplate => _storeMappingService.Authorize(messageTemplate, storeId.Value)).ToList();
+                    templates = await templates.WhereAwait(async messageTemplate => await _storeMappingService.AuthorizeAsync(messageTemplate, storeId.Value)).ToListAsync();
 
                 return templates;
             });
@@ -123,29 +127,18 @@ namespace Nop.Services.Messages
         /// Gets all message templates
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
-        /// <returns>Message template list</returns>
-        public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message template list
+        /// </returns>
+        public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId)
         {
-            return _messageTemplateRepository.GetAll(query =>
+            return await _messageTemplateRepository.GetAllAsync(async query =>
             {
-                query = query.OrderBy(t => t.Name);
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
-                if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations)
-                    return query;
-
-                //store mapping
-                query = from t in query
-                    join sm in _storeMappingRepository.Table
-                        on new {c1 = t.Id, c2 = nameof(MessageTemplate)}
-                        equals new {c1 = sm.EntityId, c2 = sm.EntityName}
-                        into tSm
-                    from sm in tSm.DefaultIfEmpty()
-                    where !t.LimitedToStores || storeId == sm.StoreId
-                    select t;
-
-                query = query.Distinct();
-
-                return query;
+                return query.OrderBy(t => t.Name);
             }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
         }
 
@@ -153,8 +146,11 @@ namespace Nop.Services.Messages
         /// Create a copy of message template with all depended data
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
-        /// <returns>Message template copy</returns>
-        public virtual MessageTemplate CopyMessageTemplate(MessageTemplate messageTemplate)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the message template copy
+        /// </returns>
+        public virtual async Task<MessageTemplate> CopyMessageTemplateAsync(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException(nameof(messageTemplate));
@@ -173,36 +169,34 @@ namespace Nop.Services.Messages
                 DelayPeriod = messageTemplate.DelayPeriod
             };
 
-            InsertMessageTemplate(mtCopy);
+            await InsertMessageTemplateAsync(mtCopy);
 
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = await _languageService.GetAllLanguagesAsync(true);
 
             //localization
             foreach (var lang in languages)
             {
-                var bccEmailAddresses = _localizationService.GetLocalized(messageTemplate, x => x.BccEmailAddresses, lang.Id, false, false);
+                var bccEmailAddresses = await _localizationService.GetLocalizedAsync(messageTemplate, x => x.BccEmailAddresses, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(bccEmailAddresses))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
 
-                var subject = _localizationService.GetLocalized(messageTemplate, x => x.Subject, lang.Id, false, false);
+                var subject = await _localizationService.GetLocalizedAsync(messageTemplate, x => x.Subject, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(subject))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(mtCopy, x => x.Subject, subject, lang.Id);
 
-                var body = _localizationService.GetLocalized(messageTemplate, x => x.Body, lang.Id, false, false);
+                var body = await _localizationService.GetLocalizedAsync(messageTemplate, x => x.Body, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(body))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(mtCopy, x => x.Body, body, lang.Id);
 
-                var emailAccountId = _localizationService.GetLocalized(messageTemplate, x => x.EmailAccountId, lang.Id, false, false);
+                var emailAccountId = await _localizationService.GetLocalizedAsync(messageTemplate, x => x.EmailAccountId, lang.Id, false, false);
                 if (emailAccountId > 0)
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.EmailAccountId, emailAccountId, lang.Id);
+                    await _localizedEntityService.SaveLocalizedValueAsync(mtCopy, x => x.EmailAccountId, emailAccountId, lang.Id);
             }
 
             //store mapping
-            var selectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate);
+            var selectedStoreIds = await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate);
             foreach (var id in selectedStoreIds)
-            {
-                _storeMappingService.InsertStoreMapping(mtCopy, id);
-            }
+                await _storeMappingService.InsertStoreMappingAsync(mtCopy, id);
 
             return mtCopy;
         }

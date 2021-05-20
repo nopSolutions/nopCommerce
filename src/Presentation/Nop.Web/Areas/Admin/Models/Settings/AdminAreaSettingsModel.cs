@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents an admin area settings model
     /// </summary>
-    public partial class AdminAreaSettingsModel : BaseNopModel, ISettingsModel
+    public partial record AdminAreaSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 

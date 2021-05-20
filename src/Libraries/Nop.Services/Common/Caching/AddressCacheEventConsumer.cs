@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Common;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Common;
 using Nop.Services.Caching;
 using Nop.Services.Customers;
 
@@ -13,9 +14,10 @@ namespace Nop.Services.Common.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Address entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(Address entity)
         {
-            RemoveByPrefix(NopCustomerServicesDefaults.CustomerAddressesPrefix);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesPrefix);
         }
     }
 }

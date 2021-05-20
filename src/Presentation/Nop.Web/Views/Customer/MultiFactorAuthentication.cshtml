@@ -6,7 +6,7 @@
 @inject ICustomerService customerService
 
 @{
-    var isRegisterCustomer = customerService.IsRegistered(workContext.CurrentCustomer);
+    var isRegisterCustomer = await customerService.IsRegisteredAsync(await workContext.GetCurrentCustomerAsync());
     Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
 
     //title
@@ -34,7 +34,7 @@
             <h1>@T("PageTitle.MultiFactorAuthentication")</h1>
         }
     </div>
-    <div class="page-body">
+    <div class="page-body">        
         <div class="description">
             @T("Account.MultiFactorAuthentication.Description")
         </div>
@@ -44,6 +44,12 @@
                     <strong>@T("Account.MultiFactorAuthentication.Settings")</strong>
                 </div>
                 <div class="form-fields">
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="message-error">
+                            @Model.Message
+                        </div>
+                    }
                     <div class="inputs">
                         <label asp-for="IsEnabled" asp-postfix=":"></label>
                         <input asp-for="IsEnabled" />
@@ -70,7 +76,7 @@
             </div>
             
             <div class="buttons">
-                <input type="submit" id="save-mfa-settings-button" value="@T("Common.Save")" name="save-mfa-settsing-button" class="button-1 save-customer-mfa-button" />
+                <button type="submit" id="save-mfa-settings-button" name="save-mfa-settsing-button" class="button-1 save-customer-mfa-button">@T("Common.Save")</button>
             </div>
         </form>        
     </div>

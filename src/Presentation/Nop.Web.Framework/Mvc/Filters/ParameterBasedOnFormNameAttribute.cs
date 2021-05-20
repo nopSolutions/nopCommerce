@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -29,7 +30,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that check existence of passed form key and return result as an action parameter
         /// </summary>
-        private class ParameterBasedOnFormNameFilter : IActionFilter
+        private class ParameterBasedOnFormNameFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -48,19 +49,20 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private Task CheckParameterBasedOnFormNameAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
                 if (context.HttpContext.Request == null)
-                    return;
+                    return Task.CompletedTask;
 
                 //if form key with '_formKeyName' exists, then set specified '_actionParameterName' to true
                 context.ActionArguments[_actionParameterName] = context.HttpContext.Request.Form.Keys.Any(key => key.Equals(_formKeyName));
@@ -68,15 +70,25 @@ namespace Nop.Web.Framework.Mvc.Filters
                 //we check whether form key with '_formKeyName' exists only
                 //uncomment the code below if you want to check whether form value is specified
                 //context.ActionArguments[_actionParameterName] = !string.IsNullOrEmpty(context.HttpContext.Request.Form[_formKeyName]);
+
+                return Task.CompletedTask;
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await CheckParameterBasedOnFormNameAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

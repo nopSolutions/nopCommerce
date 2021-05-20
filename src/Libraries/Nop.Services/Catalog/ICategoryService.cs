@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -15,21 +16,26 @@ namespace Nop.Services.Catalog
         /// Clean up category references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        void ClearDiscountCategoryMapping(Discount discount);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ClearDiscountCategoryMappingAsync(Discount discount);
 
         /// <summary>
         /// Delete category
         /// </summary>
         /// <param name="category">Category</param>
-        void DeleteCategory(Category category);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteCategoryAsync(Category category);
 
         /// <summary>
         /// Gets all categories
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
-        IList<Category> GetAllCategories(int storeId = 0, bool showHidden = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
+        Task<IList<Category>> GetAllCategoriesAsync(int storeId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets all categories
@@ -44,8 +50,11 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
-        /// <returns>Categories</returns>
-        IPagedList<Category> GetAllCategories(string categoryName, int storeId = 0,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
+        Task<IPagedList<Category>> GetAllCategoriesAsync(string categoryName, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, bool? overridePublished = null);
 
         /// <summary>
@@ -53,23 +62,32 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
-        IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId, bool showHidden = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
+        Task<IList<Category>> GetAllCategoriesByParentCategoryIdAsync(int parentCategoryId, bool showHidden = false);
 
         /// <summary>
         /// Gets all categories displayed on the home page
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
-        IList<Category> GetAllCategoriesDisplayedOnHomepage(bool showHidden = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
+        Task<IList<Category>> GetAllCategoriesDisplayedOnHomepageAsync(bool showHidden = false);
 
         /// <summary>
         /// Get category identifiers to which a discount is applied
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Category identifiers</returns>
-        IList<int> GetAppliedCategoryIds(Discount discount, Customer customer);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category identifiers
+        /// </returns>
+        Task<IList<int>> GetAppliedCategoryIdsAsync(Discount discount, Customer customer);
 
         /// <summary>
         /// Gets child category identifiers
@@ -77,15 +95,21 @@ namespace Nop.Services.Catalog
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Category identifiers</returns>
-        IList<int> GetChildCategoryIds(int parentCategoryId, int storeId = 0, bool showHidden = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category identifiers
+        /// </returns>
+        Task<IList<int>> GetChildCategoryIdsAsync(int parentCategoryId, int storeId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets a category
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
-        /// <returns>Category</returns>
-        Category GetCategoryById(int categoryId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category
+        /// </returns>
+        Task<Category> GetCategoryByIdAsync(int categoryId);
 
         /// <summary>
         /// Get categories for which a discount is applied
@@ -94,53 +118,65 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to load deleted categories</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of categories</returns>
-        IPagedList<Category> GetCategoriesByAppliedDiscount(int? discountId = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of categories
+        /// </returns>
+        Task<IPagedList<Category>> GetCategoriesByAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        void InsertCategory(Category category);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertCategoryAsync(Category category);
 
         /// <summary>
         /// Updates the category
         /// </summary>
         /// <param name="category">Category</param>
-        void UpdateCategory(Category category);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateCategoryAsync(Category category);
 
         /// <summary>
         /// Delete a list of categories
         /// </summary>
         /// <param name="categories">Categories</param>
-        void DeleteCategories(IList<Category> categories);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteCategoriesAsync(IList<Category> categories);
 
         /// <summary>
         /// Deletes a product category mapping
         /// </summary>
         /// <param name="productCategory">Product category</param>
-        void DeleteProductCategory(ProductCategory productCategory);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteProductCategoryAsync(ProductCategory productCategory);
 
         /// <summary>
         /// Get a discount-category mapping record
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <param name="discountId">Discount identifier</param>
-        /// <returns>Result</returns>
-        DiscountCategoryMapping GetDiscountAppliedToCategory(int categoryId, int discountId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        Task<DiscountCategoryMapping> GetDiscountAppliedToCategoryAsync(int categoryId, int discountId);
 
         /// <summary>
         /// Inserts a discount-category mapping record
         /// </summary>
         /// <param name="discountCategoryMapping">Discount-category mapping</param>
-        void InsertDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertDiscountCategoryMappingAsync(DiscountCategoryMapping discountCategoryMapping);
 
         /// <summary>
         /// Deletes a discount-category mapping record
         /// </summary>
         /// <param name="discountCategoryMapping">Discount-category mapping</param>
-        void DeleteDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteDiscountCategoryMappingAsync(DiscountCategoryMapping discountCategoryMapping);
 
         /// <summary>
         /// Gets product category mapping collection
@@ -149,8 +185,11 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product a category mapping collection</returns>
-        IPagedList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product a category mapping collection
+        /// </returns>
+        Task<IPagedList<ProductCategory>> GetProductCategoriesByCategoryIdAsync(int categoryId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
@@ -158,68 +197,67 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product category mapping collection</returns>
-        IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false);
-
-        /// <summary>
-        /// Gets a product category mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
-        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns> Product category mapping collection</returns>
-        IList<ProductCategory> GetProductCategoriesByProductId(int productId, int storeId, bool showHidden = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product category mapping collection
+        /// </returns>
+        Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product category mapping 
         /// </summary>
         /// <param name="productCategoryId">Product category mapping identifier</param>
-        /// <returns>Product category mapping</returns>
-        ProductCategory GetProductCategoryById(int productCategoryId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product category mapping
+        /// </returns>
+        Task<ProductCategory> GetProductCategoryByIdAsync(int productCategoryId);
 
         /// <summary>
         /// Inserts a product category mapping
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        void InsertProductCategory(ProductCategory productCategory);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertProductCategoryAsync(ProductCategory productCategory);
 
         /// <summary>
         /// Updates the product category mapping 
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        void UpdateProductCategory(ProductCategory productCategory);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateProductCategoryAsync(ProductCategory productCategory);
 
         /// <summary>
         /// Returns a list of names of not existing categories
         /// </summary>
         /// <param name="categoryIdsNames">The names and/or IDs of the categories to check</param>
-        /// <returns>List of names and/or IDs not existing categories</returns>
-        string[] GetNotExistingCategories(string[] categoryIdsNames);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of names and/or IDs not existing categories
+        /// </returns>
+        Task<string[]> GetNotExistingCategoriesAsync(string[] categoryIdsNames);
 
         /// <summary>
         /// Get category IDs for products
         /// </summary>
         /// <param name="productIds">Products IDs</param>
-        /// <returns>Category IDs for products</returns>
-        IDictionary<int, int[]> GetProductCategoryIds(int[] productIds);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category IDs for products
+        /// </returns>
+        Task<IDictionary<int, int[]>> GetProductCategoryIdsAsync(int[] productIds);
 
         /// <summary>
         /// Gets categories by identifier
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <returns>Categories</returns>
-        IList<Category> GetCategoriesByIds(int[] categoryIds);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the categories
+        /// </returns>
+        Task<IList<Category>> GetCategoriesByIdsAsync(int[] categoryIds);
 
-        /// <summary>
-        /// Sort categories for tree representation
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="parentId">Parent category identifier</param>
-        /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
-        /// <returns>Sorted categories</returns>
-        IList<Category> SortCategoriesForTree(IList<Category> source, int parentId = 0,
-            bool ignoreCategoriesWithoutExistingParent = false);
-
+        //TODO: migrate to an extension method
         /// <summary>
         /// Returns a ProductCategory that has the specified values
         /// </summary>
@@ -237,8 +275,11 @@ namespace Nop.Services.Catalog
         /// <param name="allCategories">All categories</param>
         /// <param name="separator">Separator</param>
         /// <param name="languageId">Language identifier for localization</param>
-        /// <returns>Formatted breadcrumb</returns>
-        string GetFormattedBreadCrumb(Category category, IList<Category> allCategories = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the formatted breadcrumb
+        /// </returns>
+        Task<string> GetFormattedBreadCrumbAsync(Category category, IList<Category> allCategories = null,
             string separator = ">>", int languageId = 0);
 
         /// <summary>
@@ -247,7 +288,10 @@ namespace Nop.Services.Catalog
         /// <param name="category">Category</param>
         /// <param name="allCategories">All categories</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
-        /// <returns>Category breadcrumb </returns>
-        IList<Category> GetCategoryBreadCrumb(Category category, IList<Category> allCategories = null, bool showHidden = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category breadcrumb 
+        /// </returns>
+        Task<IList<Category>> GetCategoryBreadCrumbAsync(Category category, IList<Category> allCategories = null, bool showHidden = false);
     }
 }

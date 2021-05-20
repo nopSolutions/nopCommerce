@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// <summary>
     /// Represents a product availability range model
     /// </summary>
-    public partial class ProductAvailabilityRangeModel : BaseNopEntityModel, ILocalizedModel<ProductAvailabilityRangeLocalizedModel>
+    public partial record ProductAvailabilityRangeModel : BaseNopEntityModel, ILocalizedModel<ProductAvailabilityRangeLocalizedModel>
     {
         #region Ctor
 
@@ -31,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
         #endregion
     }
 
-    public partial class ProductAvailabilityRangeLocalizedModel : ILocalizedLocaleModel
+    public partial record ProductAvailabilityRangeLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

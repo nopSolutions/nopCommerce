@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -29,7 +30,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that saves last customer activity date
         /// </summary>
-        private class SaveLastActivityFilter : IActionFilter
+        private class SaveLastActivityFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -52,13 +53,14 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task SaveLastActivityAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -70,26 +72,35 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //update last activity date
-                if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(_customerSettings.LastActivityMinutes) < DateTime.UtcNow)
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (customer.LastActivityDateUtc.AddMinutes(_customerSettings.LastActivityMinutes) < DateTime.UtcNow)
                 {
-                    _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
+                    customer.LastActivityDateUtc = DateTime.UtcNow;
 
                     //update customer without event notification
-                    _customerRepository.Update(_workContext.CurrentCustomer, false);
+                    await _customerRepository.UpdateAsync(customer, false);
                 }
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await SaveLastActivityAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

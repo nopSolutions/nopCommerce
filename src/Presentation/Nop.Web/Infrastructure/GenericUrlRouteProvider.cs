@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Nop.Data;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
@@ -17,46 +18,67 @@ namespace Nop.Web.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            var pattern = GetRouterPattern(endpointRouteBuilder, seoCode: "{SeName}");
+            var lang = GetLanguageRoutePattern();
 
-            endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
+            //default routes
+            //these routes are not generic, they are just default to map requests that don't match other patterns, 
+            //but we define them here since this route provider is with the lowest priority, to allow to add additional routes before them
+            if (!string.IsNullOrEmpty(lang))
+            {
+                endpointRouteBuilder.MapControllerRoute(name: "DefaultWithLanguageCode",
+                    pattern: $"{lang}/{{controller=Home}}/{{action=Index}}/{{id?}}");
+            }
 
-            //and default one
-            endpointRouteBuilder.MapControllerRoute(
-                name: "Default",
+            endpointRouteBuilder.MapControllerRoute(name: "Default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            //generic URLs
-            endpointRouteBuilder.MapControllerRoute(
-                name: "GenericUrl",
-                pattern: "{GenericSeName}",
-                new { controller = "Common", action = "GenericUrl" });
+            if (!DataSettingsManager.IsDatabaseInstalled())
+                return;
 
-            //define this routes to use in UI views (in case if you want to customize some of them later)
-            endpointRouteBuilder.MapControllerRoute("Product", pattern,
-                new { controller = "Product", action = "ProductDetails" });
+            //generic routes
+            var genericPattern = $"{lang}/{{SeName}}";
 
-            endpointRouteBuilder.MapControllerRoute("Category", pattern,
-                new { controller = "Catalog", action = "Category" });
+            endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(genericPattern);
 
-            endpointRouteBuilder.MapControllerRoute("Manufacturer", pattern,
-                new { controller = "Catalog", action = "Manufacturer" });
+            endpointRouteBuilder.MapControllerRoute(name: "GenericUrl",
+                pattern: "{genericSeName}",
+                defaults: new { controller = "Common", action = "GenericUrl" });
 
-            endpointRouteBuilder.MapControllerRoute("Vendor", pattern,
-                new { controller = "Catalog", action = "Vendor" });
+            endpointRouteBuilder.MapControllerRoute(name: "GenericUrlWithParameter",
+                pattern: "{genericSeName}/{genericParameter}",
+                defaults: new { controller = "Common", action = "GenericUrl" });
 
-            endpointRouteBuilder.MapControllerRoute("NewsItem", pattern,
-                new { controller = "News", action = "NewsItem" });
+            endpointRouteBuilder.MapControllerRoute(name: "Product",
+                pattern: genericPattern,
+                defaults: new { controller = "Product", action = "ProductDetails" });
 
-            endpointRouteBuilder.MapControllerRoute("BlogPost", pattern,
-                new { controller = "Blog", action = "BlogPost" });
+            endpointRouteBuilder.MapControllerRoute(name: "Category",
+                pattern: genericPattern,
+                defaults: new { controller = "Catalog", action = "Category" });
 
-            endpointRouteBuilder.MapControllerRoute("Topic", pattern,
-                new { controller = "Topic", action = "TopicDetails" });
+            endpointRouteBuilder.MapControllerRoute(name: "Manufacturer",
+                pattern: genericPattern,
+                defaults: new { controller = "Catalog", action = "Manufacturer" });
 
-            //product tags
-            endpointRouteBuilder.MapControllerRoute("ProductsByTag", pattern,
-                new { controller = "Catalog", action = "ProductsByTag" });
+            endpointRouteBuilder.MapControllerRoute(name: "Vendor",
+                pattern: genericPattern,
+                defaults: new { controller = "Catalog", action = "Vendor" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "NewsItem",
+                pattern: genericPattern,
+                defaults: new { controller = "News", action = "NewsItem" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "BlogPost",
+                pattern: genericPattern,
+                defaults: new { controller = "Blog", action = "BlogPost" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "Topic",
+                pattern: genericPattern,
+                defaults: new { controller = "Topic", action = "TopicDetails" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "ProductsByTag",
+                pattern: genericPattern,
+                defaults: new { controller = "Catalog", action = "ProductsByTag" });
         }
 
         #endregion

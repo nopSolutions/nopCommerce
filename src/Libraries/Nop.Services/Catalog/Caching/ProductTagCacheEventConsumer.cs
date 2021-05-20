@@ -1,3 +1,4 @@
+﻿﻿using System.Threading.Tasks;
 ﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
@@ -14,9 +15,10 @@ namespace Nop.Services.Catalog.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected override void ClearCache(ProductTag entity, EntityEventType entityEventType)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(ProductTag entity, EntityEventType entityEventType)
         {
-            RemoveByPrefix(NopEntityCacheDefaults<ProductTag>.Prefix);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<ProductTag>.Prefix);
         }
     }
 }

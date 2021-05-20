@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Data;
@@ -12,12 +13,6 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public sealed class AuthorizeAdminAttribute : TypeFilterAttribute
     {
-        #region Fields
-
-        private readonly bool _ignoreFilter;
-
-        #endregion
-
         #region Ctor
 
         /// <summary>
@@ -26,7 +21,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public AuthorizeAdminAttribute(bool ignore = false) : base(typeof(AuthorizeAdminFilter))
         {
-            _ignoreFilter = ignore;
+            IgnoreFilter = ignore;
             Arguments = new object[] { ignore };
         }
 
@@ -37,17 +32,16 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Gets a value indicating whether to ignore the execution of filter actions
         /// </summary>
-        public bool IgnoreFilter => _ignoreFilter;
+        public bool IgnoreFilter { get; }
 
         #endregion
-
 
         #region Nested filter
 
         /// <summary>
         /// Represents a filter that confirms access to the admin panel
         /// </summary>
-        private class AuthorizeAdminFilter : IAuthorizationFilter
+        private class AuthorizeAdminFilter : IAsyncAuthorizationFilter
         {
             #region Fields
 
@@ -66,36 +60,53 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
-            /// <param name="filterContext">Authorization filter context</param>
-            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            /// <param name="context">Authorization filter context</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task AuthorizeAdminAsync(AuthorizationFilterContext context)
             {
-                if (filterContext == null)
-                    throw new ArgumentNullException(nameof(filterContext));
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
+                    return;
 
                 //check whether this filter has been overridden for the action
-                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
                     .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
-                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<AuthorizeAdminAttribute>().FirstOrDefault();
+                    .Select(filterDescriptor => filterDescriptor.Filter)
+                    .OfType<AuthorizeAdminAttribute>()
+                    .FirstOrDefault();
 
                 //ignore filter (the action is available even if a customer hasn't access to the admin area)
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
-                    return;
-
                 //there is AdminAuthorizeFilter, so check access
-                if (filterContext.Filters.Any(filter => filter is AuthorizeAdminFilter))
+                if (context.Filters.Any(filter => filter is AuthorizeAdminFilter))
                 {
                     //authorize permission of access to the admin area
-                    if (!_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
-                        filterContext.Result = new ChallengeResult();
+                    if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))
+                        context.Result = new ChallengeResult();
                 }
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Called early in the filter pipeline to confirm request is authorized
+            /// </summary>
+            /// <param name="context">Authorization filter context</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+            {
+                await AuthorizeAdminAsync(context);
             }
 
             #endregion

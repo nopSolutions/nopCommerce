@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Catalog.Caching
@@ -12,11 +13,12 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(ProductAttributeMapping entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(ProductAttributeMapping entity)
         {
-            Remove(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, entity.ProductId);
-            Remove(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, entity);
-            Remove(NopCatalogDefaults.ProductAttributeCombinationsByProductCacheKey, entity.ProductId);
+            await RemoveAsync(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, entity.ProductId);
+            await RemoveAsync(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, entity);
+            await RemoveAsync(NopCatalogDefaults.ProductAttributeCombinationsByProductCacheKey, entity.ProductId);
         }
     }
 }

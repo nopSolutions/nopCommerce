@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services;
@@ -30,16 +31,17 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories
 
         #region Methods
 
-        public AuthModel PrepareAuthModel(AuthModel model)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<AuthModel> PrepareAuthModel(AuthModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var secretkey = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
-            var setupInfo = _googleAuthenticatorService.GenerateSetupCode(secretkey);
+            var secretkey = Guid.NewGuid().ToString().Replace("-", "")[0..10];
+            var setupInfo = await _googleAuthenticatorService.GenerateSetupCode(secretkey);
 
             model.SecretKey = secretkey;
-            model.Account = $"{_googleAuthenticatorSettings.BusinessPrefix} ({_workContext.CurrentCustomer.Email})";
+            model.Account = $"{_googleAuthenticatorSettings.BusinessPrefix} ({(await _workContext.GetCurrentCustomerAsync()).Email})";
             model.ManualEntryQrCode = setupInfo.ManualEntryKey;
             model.QrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
 

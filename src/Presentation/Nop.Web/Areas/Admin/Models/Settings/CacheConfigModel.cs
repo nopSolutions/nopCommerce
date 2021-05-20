@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a cache configuration model
     /// </summary>
-    public partial class CacheConfigModel : BaseNopModel, IConfigModel
+    public partial record CacheConfigModel : BaseNopModel, IConfigModel
     {
         #region Properties
 

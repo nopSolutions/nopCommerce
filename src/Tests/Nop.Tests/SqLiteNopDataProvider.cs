@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -68,7 +69,7 @@ namespace Nop.Tests
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            ExecuteNonQuery("PRAGMA journal_mode=WAL;");
+            Task.FromResult(ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;"));
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace Nop.Tests
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations();
+            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
         }
 
         /// <summary>
@@ -110,15 +111,36 @@ namespace Nop.Tests
         }
 
         /// <summary>
+        /// Insert a new entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Entity</returns>
+        public Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            InsertEntity(entity);
+
+            return Task.FromResult(entity);
+        }
+
+        /// <summary>
         /// Updates record in table, using values from entity parameter. 
         /// Record to update identified by match on primary key value from obj value.
         /// </summary>
         /// <param name="entity">Entity with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker)) 
                 DataContext.Update(entity);
+
+            return Task.CompletedTask;
+        }
+
+        public async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            foreach (var entity in entities) 
+                await UpdateEntityAsync(entity);
         }
 
         /// <summary>
@@ -127,10 +149,12 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="entity">Entity for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker))
                 DataContext.Delete(entity);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -138,11 +162,13 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
+        public Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker))
                 foreach (var entity in entities)
                     DataContext.Delete(entity);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -150,10 +176,10 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        public Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            DataContext.GetTable<TEntity>()
-                 .Where(predicate).Delete();
+            return Task.FromResult(DataContext.GetTable<TEntity>()
+                .Where(predicate).Delete());
         }
 
         /// <summary>
@@ -161,10 +187,12 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        public Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker))
                 DataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(DataContext));
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -233,7 +261,7 @@ namespace Nop.Tests
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual void BackupDatabase(string fileName)
+        public virtual Task BackupDatabaseAsync(string fileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -242,7 +270,7 @@ namespace Nop.Tests
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual void RestoreDatabase(string backupFileName)
+        public virtual Task RestoreDatabaseAsync(string backupFileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -250,10 +278,12 @@ namespace Nop.Tests
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public void ReIndexTables()
+        public Task ReIndexTablesAsync()
         {
             using (new ReaderWriteLockDisposable(_locker))
                 DataContext.Execute("VACUUM;");
+
+            return Task.CompletedTask;
         }
 
         public string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
@@ -280,7 +310,7 @@ namespace Nop.Tests
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        public void SetTableIdent<TEntity>(int ident) where TEntity : BaseEntity
+        public Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker))
             {
@@ -288,6 +318,8 @@ namespace Nop.Tests
 
                 DataContext.Execute($"update sqlite_sequence set seq = {ident} where name = \"{tableName}\"");
             }
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -308,15 +340,10 @@ namespace Nop.Tests
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
+        public Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-            {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
-                var rez = command.QueryProc<T>()?.ToList();
-                UpdateOutputParameters(DataContext, parameters);
-                return rez ?? new List<T>();
-            }
+            //stored procedure is not support by SqLite
+            return Task.FromResult<IList<T>>(new List<T>());
         }
 
         /// <summary>
@@ -326,70 +353,49 @@ namespace Nop.Tests
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
         /// <returns>Collection of values of specified type</returns>
-        public IList<T> Query<T>(string sql, params DataParameter[] parameters)
+        public Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-                return DataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+                return Task.FromResult<IList<T>>(DataContext.Query<T>(sql, parameters).ToList());
         }
 
         /// <summary>
-        /// Executes command returns number of affected records.
+        /// Executes command asynchronously and returns number of affected records
         /// </summary>
-        /// <param name="sqlStatement">Command text</param>
+        /// <param name="sql">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
+        public Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = new CommandInfo(DataContext, sqlStatement, dataParameters);
+                var command = new CommandInfo(DataContext, sql, dataParameters);
                 var affectedRecords = command.Execute();
 
                 UpdateOutputParameters(DataContext, dataParameters);
 
-                return affectedRecords;
+                return  Task.FromResult<int>(affectedRecords);
             }
         }
 
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// single value
-        /// </summary>
-        /// <typeparam name="T">Result record type</typeparam>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Resulting value</returns>
-        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
+        public Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storageKey, IQueryable<TItem> query) where TItem : class
         {
-            using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-            {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
-
-                var result = command.ExecuteProc<T>();
-                UpdateOutputParameters(DataContext, parameters);
-
-                return result;
-            }
+            return Task.FromResult<ITempDataStorage<TItem>>(new TempSqlDataStorage<TItem>(storageKey, query, DataContext));
         }
 
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// number of affected records.
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
+        public Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity
         {
-            using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-            {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
+            return Task.FromResult(GetTable<TEntity>());
+        }
 
-                var affectedRecords = command.ExecuteProc();
-                UpdateOutputParameters(DataContext, parameters);
+        public Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
+        {
+            return Task.FromResult(GetTableIdent<TEntity>());
+        }
 
-                return affectedRecords;
-            }
+        public Task<bool> DatabaseExistsAsync()
+        {
+            return Task.FromResult(DatabaseExists());
         }
 
         #endregion
@@ -399,7 +405,7 @@ namespace Nop.Tests
         protected DataConnection DataContext =>
             _dataContext ??= new DataConnection(LinqToDbDataProvider, CreateDbConnection(), AdditionalSchema)
             {
-                CommandTimeout = DataSettingsManager.SQLCommandTimeout
+                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
             };
 
         /// <summary>

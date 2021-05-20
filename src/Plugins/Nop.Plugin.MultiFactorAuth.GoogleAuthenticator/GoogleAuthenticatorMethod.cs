@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -73,17 +74,18 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         /// <summary>
         /// Install the plugin
         /// </summary>
-        public override void Install()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task InstallAsync()
         {
             //settings
-            _settingService.SaveSetting(new GoogleAuthenticatorSettings()
+            await _settingService.SaveSettingAsync(new GoogleAuthenticatorSettings
             {
-                BusinessPrefix = _storeContext.CurrentStore.Name,
+                BusinessPrefix = (await _storeContext.GetCurrentStoreAsync()).Name,
                 QRPixelsPerModule = GoogleAuthenticatorDefaults.DefaultQRPixelsPerModule
             });
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 //admin config 
                 ["Plugins.MultiFactorAuth.GoogleAuthenticator.BusinessPrefix"] = "Business prefix",
@@ -115,21 +117,33 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
                 ["Plugins.MultiFactorAuth.GoogleAuthenticator.Record.Notfound"] = "Failed to match user credentials to active authentication provider settings record."
             });
 
-            base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
-        public override void Uninstall()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UninstallAsync()
         {
             //settings
-            _settingService.DeleteSetting<GoogleAuthenticatorSettings>();
+            await _settingService.DeleteSettingAsync<GoogleAuthenticatorSettings>();
 
             //locales
-            _localizationService.DeleteLocaleResources("Plugins.MultiFactorAuth.GoogleAuthenticator");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.MultiFactorAuth.GoogleAuthenticator");
 
-            base.Uninstall();
+            await base.UninstallAsync();
+        }
+
+        /// <summary>
+        /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<string> GetDescriptionAsync()
+        {
+            return await _localizationService
+                .GetResourceAsync(
+                    "Plugins.MultiFactorAuth.GoogleAuthenticator.MultiFactorAuthenticationMethodDescription");
         }
 
         #endregion
@@ -137,11 +151,6 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
         #region Properies
 
         public MultiFactorAuthenticationType Type => MultiFactorAuthenticationType.ApplicationVerification;
-
-        /// <summary>
-        /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store
-        /// </summary>
-        public string Description => _localizationService.GetResource("Plugins.MultiFactorAuth.GoogleAuthenticator.MultiFactorAuthenticationMethodDescription");
 
         #endregion
     }

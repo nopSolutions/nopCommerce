@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class MultiFactorAuthenticationModel : BaseNopModel
+    public partial record MultiFactorAuthenticationModel : BaseNopModel
     {
         public MultiFactorAuthenticationModel()
         {
@@ -15,6 +15,8 @@ namespace Nop.Web.Models.Customer
         public bool IsEnabled { get; set; }
 
         public List<MultiFactorAuthenticationProviderModel> Providers { get; set; }
+
+        public string Message { get; set; }
         
     }
 }

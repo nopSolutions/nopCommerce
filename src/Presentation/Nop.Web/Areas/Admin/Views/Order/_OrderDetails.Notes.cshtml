@@ -1,59 +1,57 @@
 @model OrderModel
 
-<div class="panel-body">
-    <div class="sub-panel">
-        @await Html.PartialAsync("Table", new DataTablesModel
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "ordernotes-grid",
+        UrlRead = new DataUrl("OrderNotesSelect", "Order", new RouteValueDictionary { [nameof(Model.OrderNoteSearchModel.OrderId)] = Model.OrderNoteSearchModel.OrderId }),
+        UrlDelete = new DataUrl("OrderNoteDelete", "Order", new RouteValueDictionary { [nameof(Model.OrderNoteSearchModel.OrderId)] = Model.OrderNoteSearchModel.OrderId }),
+        Length = Model.OrderNoteSearchModel.PageSize,
+        LengthMenu = Model.OrderNoteSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
         {
-            Name = "ordernotes-grid",
-            UrlRead = new DataUrl("OrderNotesSelect", "Order", new RouteValueDictionary { [nameof(Model.OrderNoteSearchModel.OrderId)] = Model.OrderNoteSearchModel.OrderId }),
-            UrlDelete = new DataUrl("OrderNoteDelete", "Order", new RouteValueDictionary { [nameof(Model.OrderNoteSearchModel.OrderId)] = Model.OrderNoteSearchModel.OrderId }),
-            Length = Model.OrderNoteSearchModel.PageSize,
-            LengthMenu = Model.OrderNoteSearchModel.AvailablePageSizes,
-            ColumnCollection = new List<ColumnProperty>
+            new ColumnProperty(nameof(OrderNoteModel.CreatedOn))
             {
-                new ColumnProperty(nameof(OrderNoteModel.CreatedOn))
-                {
-                    Title = T("Admin.Orders.OrderNotes.Fields.CreatedOn").Text,
-                    Width = "200",
-                    Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(OrderNoteModel.Note))
-                {
-                    Title = T("Admin.Orders.OrderNotes.Fields.Note").Text,
-                    Encode = false
-                },
-                new ColumnProperty(nameof(OrderNoteModel.DownloadId))
-                {
-                    Title = T("Admin.Orders.OrderNotes.Fields.Download").Text,
-                    Width = "200",
-                    ClassName =  NopColumnClassDefaults.Button,
-                    Render = new RenderCustom("renderColumnDownloadId")
-                },
-                new ColumnProperty(nameof(OrderNoteModel.DisplayToCustomer))
-                {
-                    Title = T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer").Text,
-                    Width = "150",
-                    ClassName =  NopColumnClassDefaults.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(OrderNoteModel.Id))
-                {
-                    Title = T("Admin.Common.Delete").Text,
-                    Width = "100",
-                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
-                    ClassName =  NopColumnClassDefaults.Button
-                }
+                Title = T("Admin.Orders.OrderNotes.Fields.CreatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            },
+            new ColumnProperty(nameof(OrderNoteModel.Note))
+            {
+                Title = T("Admin.Orders.OrderNotes.Fields.Note").Text,
+                Encode = false
+            },
+            new ColumnProperty(nameof(OrderNoteModel.DownloadId))
+            {
+                Title = T("Admin.Orders.OrderNotes.Fields.Download").Text,
+                Width = "200",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderCustom("renderColumnDownloadId")
+            },
+            new ColumnProperty(nameof(OrderNoteModel.DisplayToCustomer))
+            {
+                Title = T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer").Text,
+                Width = "150",
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(OrderNoteModel.Id))
+            {
+                Title = T("Admin.Common.Delete").Text,
+                Width = "100",
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                ClassName =  NopColumnClassDefaults.Button
             }
-        })
+        }
+    })
 
-        <script>
-            function renderColumnDownloadId(data, type, row, meta) {
-                return (row.DownloadId > 0) ? '<a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=' + row.DownloadGuid + '"><i class="fa fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link").Text</a>' : '@T("Admin.Orders.OrderNotes.Fields.Download.Link.No").Text';
-            }
-        </script>
-    </div>
+    <script>
+        function renderColumnDownloadId(data, type, row, meta) {
+            return (row.DownloadId > 0) ? '<a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=' + row.DownloadGuid + '"><i class="fas fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link").Text</a>' : '@T("Admin.Orders.OrderNotes.Fields.Download.Link.No").Text';
+        }
+    </script>
 
-    <div class="panel panel-default">
+    <div class="card card-default">
         <script>
             $(document).ready(function () {
                 $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
@@ -62,20 +60,20 @@
 
             function toggleAddOrderNoteHasDownload() {
                 if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
-                    $('#pnlAddOrderNoteDownloadId').show();
+                    $('#pnlAddOrderNoteDownloadId').showElement();
                 }
                 else {
-                    $('#pnlAddOrderNoteDownloadId').hide();
+                    $('#pnlAddOrderNoteDownloadId').hideElement();
                 }
             }
         </script>
 
-        <div class="panel-heading">
+        <div class="card-header">
             @T("Admin.Orders.OrderNotes.AddTitle")
         </div>
 
-        <div class="panel-body">
-            <div class="form-group">
+        <div class="card-body">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="AddOrderNoteMessage" />
                 </div>
@@ -84,14 +82,14 @@
                     <span asp-validation-for="AddOrderNoteMessage"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="AddOrderNoteDownloadId" />
                 </div>
                 <div class="col-md-9">
-                    <div class="checkbox">
-                        <label>
-                            <nop-editor asp-for="AddOrderNoteHasDownload" />
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" asp-for="AddOrderNoteHasDownload" />
                             @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
                         </label>
                     </div>
@@ -101,7 +99,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="AddOrderNoteDisplayToCustomer" />
                 </div>
@@ -110,8 +108,8 @@
                     <span asp-validation-for="AddOrderNoteDisplayToCustomer"></span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-9 col-md-offset-3">
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
                     <button type="button" id="addOrderNote" class="btn btn-primary">@T("Admin.Orders.OrderNotes.AddButton")</button>
                 </div>
             </div>

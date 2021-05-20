@@ -1,7 +1,7 @@
 @model ShippingSettingsModel
 
-<div class="panel-body">
-    <div class="form-group advanced-setting">
+<div class="card-body">    
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="HideShippingTotal_OverrideForStore" asp-input="HideShippingTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="HideShippingTotal" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="HideShippingTotal"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShipToSameAddress_OverrideForStore" asp-input="ShipToSameAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShipToSameAddress" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="ShipToSameAddress"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="BypassShippingMethodSelectionIfOnlyOne_OverrideForStore" asp-input="BypassShippingMethodSelectionIfOnlyOne" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="BypassShippingMethodSelectionIfOnlyOne" />
@@ -44,27 +44,27 @@
 
     function toggleAllowPickupInStore() {
         if ($('#@Html.IdFor(model => model.AllowPickupInStore)').is(':checked')) {
-            $('#pnlDisplayPickupPointsOnMap').show();
-            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').show();
+            $('#pnlDisplayPickupPointsOnMap').showElement();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').showElement();
             if ($('#@Html.IdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
-                $('#pnlGoogleMapsApiKey').show();
+                $('#pnlGoogleMapsApiKey').showElement();
             } else {
-                $('#pnlGoogleMapsApiKey').hide();
+                $('#pnlGoogleMapsApiKey').hideElement();
             }
         } else {
-            $('#pnlDisplayPickupPointsOnMap').hide();
-            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').hide();
-            $('#pnlGoogleMapsApiKey').hide();
+            $('#pnlDisplayPickupPointsOnMap').hideElement();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').hideElement();
+            $('#pnlGoogleMapsApiKey').hideElement();
         }
     }
 
     function toggleFreeShippingOverX() {
         if ($('#@Html.IdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
-            $('#pnlValueOfX').show();
-            $('#pnlValueOfXincltax').show();
+            $('#pnlValueOfX').showElement();
+            $('#pnlValueOfXincltax').showElement();
         } else {
-            $('#pnlValueOfX').hide();
-            $('#pnlValueOfXincltax').hide();
+            $('#pnlValueOfX').hideElement();
+            $('#pnlValueOfXincltax').hideElement();
         }
     }
 </script>

@@ -7,7 +7,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CustomerInfoModel : BaseNopModel
+    public partial record CustomerInfoModel : BaseNopModel
     {
         public CustomerInfoModel()
         {
@@ -155,7 +155,7 @@ namespace Nop.Web.Models.Customer
 
         #region Nested classes
 
-        public partial class AssociatedExternalAuthModel : BaseNopEntityModel
+        public partial record AssociatedExternalAuthModel : BaseNopEntityModel
         {
             public string Email { get; set; }
 

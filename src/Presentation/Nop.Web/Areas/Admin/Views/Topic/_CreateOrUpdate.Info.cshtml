@@ -1,9 +1,10 @@
 @model TopicModel
 
-<div class="panel-body">
-    @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
+<div class="card-body">
+    <div id="info-area">
+    @(await Html.LocalizedEditorAsync<TopicModel, TopicLocalizedModel>("topic-info-localized",
                                     @<div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <div class="col-md-3">
                                                 <nop-label asp-for="@Model.Locales[item].Title" />
                                             </div>
@@ -12,7 +13,7 @@
                                                 <span asp-validation-for="@Model.Locales[item].Title"></span>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <div class="col-md-3">
                                                 <nop-label asp-for="@Model.Locales[item].Body" />
                                             </div>
@@ -25,7 +26,7 @@
                                     </div>
                                     ,
                                         @<div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <div class="col-md-3">
                                                     <nop-label asp-for="Title" />
                                                 </div>
@@ -34,7 +35,7 @@
                                                     <span asp-validation-for="Title"></span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <div class="col-md-3">
                                                     <nop-label asp-for="Body" />
                                                 </div>
@@ -45,9 +46,11 @@
                                             </div>
                                         </div>
                                         ))
+    </div>
+
     @if (Model.Id > 0)
     {
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="Url" />
             </div>

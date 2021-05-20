@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
     /// <summary>
     /// Represents an activity log type search model
     /// </summary>
-    public partial class ActivityLogTypeSearchModel : BaseSearchModel
+    public partial record ActivityLogTypeSearchModel : BaseSearchModel
     {
         #region Properties       
 

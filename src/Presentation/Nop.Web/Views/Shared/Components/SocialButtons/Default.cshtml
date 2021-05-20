@@ -2,11 +2,11 @@
 <ul class="networks">
 	@if (!string.IsNullOrEmpty(Model.FacebookLink))
 	{
-		<li class="facebook"><a href="@Model.FacebookLink" target="_blank">@T("Footer.FollowUs.Facebook")</a></li>
+		<li class="facebook"><a href="@Model.FacebookLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Facebook")</a></li>
 	}
 	@if (!string.IsNullOrEmpty(Model.TwitterLink))
 	{
-		<li class="twitter"><a href="@Model.TwitterLink" target="_blank">@T("Footer.FollowUs.Twitter")</a></li>
+		<li class="twitter"><a href="@Model.TwitterLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Twitter")</a></li>
 	}
 	@if (Model.NewsEnabled)
 	{
@@ -14,6 +14,6 @@
 	}
 	@if (!string.IsNullOrEmpty(Model.YoutubeLink))
 	{
-		<li class="youtube"><a href="@Model.YoutubeLink" target="_blank">@T("Footer.FollowUs.Youtube")</a></li>
+		<li class="youtube"><a href="@Model.YoutubeLink" target="_blank" rel="noopener noreferrer">@T("Footer.FollowUs.Youtube")</a></li>
 	}
 </ul>

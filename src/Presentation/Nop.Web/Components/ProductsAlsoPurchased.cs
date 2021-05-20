@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -43,27 +44,28 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
 
             //load and cache report
-            var productIds = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, _storeContext.CurrentStore),
-                () => _orderReportService.GetAlsoPurchasedProductsIds(_storeContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
+            var productIds = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, await _storeContext.GetCurrentStoreAsync()),
+                async () => await _orderReportService.GetAlsoPurchasedProductsIdsAsync((await _storeContext.GetCurrentStoreAsync()).Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
             );
 
             //load products
-            var products = _productService.GetProductsByIds(productIds);
+            var products = await (await _productService.GetProductsByIdsAsync(productIds))
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+            .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
             if (!products.Any())
                 return Content("");
 
-            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
             return View(model);
         }
     }

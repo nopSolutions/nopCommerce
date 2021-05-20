@@ -130,7 +130,7 @@ namespace Nop.Services.Helpers
                 //in 99% of cases it's enough to use the approach suggested by http://detectmobilebrowsers.com/
 
                 var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
-                var mobile = _firstMobileDeviceRegex.IsMatch(userAgent) || _secondMobileDeviceRegex.IsMatch(userAgent.Substring(0, 4));
+                var mobile = _firstMobileDeviceRegex.IsMatch(userAgent) || _secondMobileDeviceRegex.IsMatch(userAgent[0..4]);
                 return mobile;
             }
             catch
@@ -139,21 +139,6 @@ namespace Nop.Services.Helpers
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Get a value indicating whether the request is made by IE8 browser
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool IsIe8()
-        {
-            if (_httpContextAccessor?.HttpContext == null)
-                return false;
-
-            //https://blogs.msdn.microsoft.com/ie/2009/01/09/the-internet-explorer-8-user-agent-string-updated-edition/
-
-            var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
-            return !string.IsNullOrEmpty(userAgent) && userAgent.IndexOf("MSIE 8.0", StringComparison.InvariantCultureIgnoreCase) >= 0;
         }
 
         #endregion

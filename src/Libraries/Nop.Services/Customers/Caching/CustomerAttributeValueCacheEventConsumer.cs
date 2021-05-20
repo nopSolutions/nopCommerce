@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Customers.Caching
@@ -12,9 +13,10 @@ namespace Nop.Services.Customers.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(CustomerAttributeValue entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(CustomerAttributeValue entity)
         {
-            Remove(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, entity.CustomerAttributeId);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, entity.CustomerAttributeId);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Data;
@@ -33,18 +34,24 @@ namespace Nop.Services.Media
         /// Gets a download
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
-        /// <returns>Download</returns>
-        public virtual Download GetDownloadById(int downloadId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the download
+        /// </returns>
+        public virtual async Task<Download> GetDownloadByIdAsync(int downloadId)
         {
-            return _downloadRepository.GetById(downloadId);
+            return await _downloadRepository.GetByIdAsync(downloadId);
         }
 
         /// <summary>
         /// Gets a download by GUID
         /// </summary>
         /// <param name="downloadGuid">Download GUID</param>
-        /// <returns>Download</returns>
-        public virtual Download GetDownloadByGuid(Guid downloadGuid)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the download
+        /// </returns>
+        public virtual async Task<Download> GetDownloadByGuidAsync(Guid downloadGuid)
         {
             if (downloadGuid == Guid.Empty)
                 return null;
@@ -53,47 +60,44 @@ namespace Nop.Services.Media
                         where o.DownloadGuid == downloadGuid
                         select o;
 
-            return query.FirstOrDefault();
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <summary>
         /// Deletes a download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual void DeleteDownload(Download download)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteDownloadAsync(Download download)
         {
-            _downloadRepository.Delete(download);
+            await _downloadRepository.DeleteAsync(download);
         }
 
         /// <summary>
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual void InsertDownload(Download download)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertDownloadAsync(Download download)
         {
-            _downloadRepository.Insert(download);
-        }
-
-        /// <summary>
-        /// Updates the download
-        /// </summary>
-        /// <param name="download">Download</param>
-        public virtual void UpdateDownload(Download download)
-        {
-            _downloadRepository.Update(download);
+            await _downloadRepository.InsertAsync(download);
         }
 
         /// <summary>
         /// Gets the download binary array
         /// </summary>
         /// <param name="file">File</param>
-        /// <returns>Download binary array</returns>
-        public virtual byte[] GetDownloadBits(IFormFile file)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the download binary array
+        /// </returns>
+        public virtual async Task<byte[]> GetDownloadBitsAsync(IFormFile file)
         {
-            using var fileStream = file.OpenReadStream();
-            using var ms = new MemoryStream();
-            fileStream.CopyTo(ms);
+            await using var fileStream = file.OpenReadStream();
+            await using var ms = new MemoryStream();
+            await fileStream.CopyToAsync(ms);
             var fileBytes = ms.ToArray();
+
             return fileBytes;
         }
 

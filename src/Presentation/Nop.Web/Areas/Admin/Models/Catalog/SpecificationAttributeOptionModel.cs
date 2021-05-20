@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a specification attribute option model
     /// </summary>
-    public partial class SpecificationAttributeOptionModel : BaseNopEntityModel, ILocalizedModel<SpecificationAttributeOptionLocalizedModel>
+    public partial record SpecificationAttributeOptionModel : BaseNopEntityModel, ILocalizedModel<SpecificationAttributeOptionLocalizedModel>
     {
         #region Ctor
 
@@ -42,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class SpecificationAttributeOptionLocalizedModel : ILocalizedLocaleModel
+    public partial record SpecificationAttributeOptionLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

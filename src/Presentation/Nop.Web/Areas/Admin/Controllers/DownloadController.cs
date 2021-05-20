@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Media;
@@ -37,9 +38,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult DownloadFile(Guid downloadGuid)
+        public virtual async Task<IActionResult> DownloadFile(Guid downloadGuid)
         {
-            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
             if (download == null)
                 return Content("No download record found with the specified id");
 
@@ -48,7 +49,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-                //use stored data
+            //use stored data
             if (download.DownloadBinary == null)
                 return Content($"Download data is not available any more. Download GD={download.Id}");
 
@@ -65,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult SaveDownloadUrl(string downloadUrl)
+        public virtual async Task<IActionResult> SaveDownloadUrl(string downloadUrl)
         {
             //don't allow to save empty download object
             if (string.IsNullOrEmpty(downloadUrl))
@@ -85,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DownloadUrl = downloadUrl,
                 IsNew = true
             };
-            _downloadService.InsertDownload(download);
+            await _downloadService.InsertDownloadAsync(download);
 
             return Json(new { success = true, downloadId = download.Id });
         }
@@ -93,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         //do not validate request token (XSRF)
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult AsyncUpload()
+        public virtual async Task<IActionResult> AsyncUpload()
         {
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
@@ -105,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-            var fileBinary = _downloadService.GetDownloadBits(httpPostedFile);
+            var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -135,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _downloadService.InsertDownload(download);
+                await _downloadService.InsertDownloadAsync(download);
 
                 //when returning JSON the mime-type must be set to text/plain
                 //otherwise some browsers will pop-up a "Save As" dialog.
@@ -148,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _logger.Error(exc.Message, exc, _workContext.CurrentCustomer);
+                await _logger.ErrorAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
 
                 return Json(new
                 {

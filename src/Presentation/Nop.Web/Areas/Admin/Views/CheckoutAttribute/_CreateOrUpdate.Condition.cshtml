@@ -11,15 +11,15 @@
 
         function toggleEnableCondition() {
             if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
-                $('#pnlAttributes').show();
+                $('#pnlAttributes').showElement();
             } else {
-                $('#pnlAttributes').hide();
+                $('#pnlAttributes').hideElement();
             }
         }
     </script>
 
-    <div class="panel-body">
-        <div class="form-group">
+    <div class="card-body">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="ConditionModel.EnableCondition" />
             </div>
@@ -31,7 +31,7 @@
         <nop-nested-setting asp-for="ConditionModel.EnableCondition" id="pnlAttributes">
             @if (Model.ConditionModel.ConditionAttributes.Count > 0)
             {
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="ConditionModel.SelectedAttributeId" />
                     </div>
@@ -49,13 +49,13 @@
                             function toggleConditionAttributes() {
                                 var selectedCheckoutAttributeId =
                                     $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)").val();
-                                $('[id^="pnl_attribute_values_"]').hide();
-                                $('#pnl_attribute_values_' + selectedCheckoutAttributeId).show();
+                                $('[id^="pnl_attribute_values_"]').hideElement();
+                                $('#pnl_attribute_values_' + selectedCheckoutAttributeId).showElement();
                             }
                         </script>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">&nbsp;</div>
                     <div class="col-md-9">
                         @for (var i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
@@ -72,9 +72,9 @@
                                     case AttributeControlType.ImageSquares:
                                         foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
                                         {
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" value="@value.Value" checked="@value.Selected" />
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" value="@value.Value" checked="@value.Selected" >
                                                     @value.Text
                                                 </label>
                                             </div>
@@ -83,10 +83,11 @@
                                     case AttributeControlType.Checkboxes:
                                         for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
                                         {
-                                            <div class="checkbox">
-                                                <label>
+                                            
+                                            <div class="form-check">
+                                                <label class="form-check-label">
                                                     <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
-                                                    <input type="checkbox" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected"/>
+                                                    <input class="form-check-input" type="checkbox" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
                                                     @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
                                                 </label>
                                             </div>
@@ -108,8 +109,8 @@
             }
             else
             {
-                <div class="form-group">
-                    <div class="col-md-9 col-md-offset-3">
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 mt-3">
                         @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
                     </div>
                 </div>
@@ -119,7 +120,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit")
     </div>
 }

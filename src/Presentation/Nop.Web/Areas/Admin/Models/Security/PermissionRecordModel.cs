@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Security
     /// <summary>
     /// Represents a permission record model
     /// </summary>
-    public partial class PermissionRecordModel : BaseNopModel
+    public partial record PermissionRecordModel : BaseNopModel
     {
         #region Properties
 

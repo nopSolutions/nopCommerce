@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Customers
@@ -12,16 +13,23 @@ namespace Nop.Services.Customers
         /// Gets selected customer attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected customer attributes</returns>
-        IList<CustomerAttribute> ParseCustomerAttributes(string attributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected customer attributes
+        /// </returns>
+        Task<IList<CustomerAttribute>> ParseCustomerAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Get customer attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Customer attribute values</returns>
-        IList<CustomerAttributeValue> ParseCustomerAttributeValues(string attributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer attribute values
+        /// </returns>
+        Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValuesAsync(string attributesXml);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Gets selected customer attribute value
         /// </summary>
@@ -30,6 +38,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute value</returns>
         IList<string> ParseValues(string attributesXml, int customerAttributeId);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Adds an attribute
         /// </summary>
@@ -43,7 +52,10 @@ namespace Nop.Services.Customers
         /// Validates customer attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Warnings</returns>
-        IList<string> GetAttributeWarnings(string attributesXml);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
+        Task<IList<string>> GetAttributeWarningsAsync(string attributesXml);
     }
 }

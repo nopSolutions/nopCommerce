@@ -1,7 +1,7 @@
 ﻿@model VendorAttributeModel
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "vendorattributevalues-grid",
@@ -46,15 +46,15 @@
         })
         <script>
             function renderColumnEdit(data, type, row, meta) {
-                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/VendorAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=vendorattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/VendorAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=vendorattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
             }
         </script>
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "VendorAttribute", new { vendorAttributeId = Model.Id, btnId = "btnRefresh", formId = "vendorattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
             @T("Admin.Vendors.VendorAttributes.Values.AddNew")
         </button>
-        <input type="submit" id="btnRefresh" style="display: none" />
+        <button type="submit" id="btnRefresh" style="display: none"></button>
         <script>
             $(document).ready(function () {
                 $('#btnRefresh').click(function () {
@@ -70,7 +70,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Vendors.VendorAttributes.Values.SaveBeforeEdit")
     </div>
 }

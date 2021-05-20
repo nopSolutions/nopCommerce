@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 
@@ -31,18 +32,22 @@ namespace Nop.Services.Catalog
         /// Delete manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate)
         {
-            _manufacturerTemplateRepository.Delete(manufacturerTemplate);
+            await _manufacturerTemplateRepository.DeleteAsync(manufacturerTemplate);
         }
 
         /// <summary>
         /// Gets all manufacturer templates
         /// </summary>
-        /// <returns>Manufacturer templates</returns>
-        public virtual IList<ManufacturerTemplate> GetAllManufacturerTemplates()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer templates
+        /// </returns>
+        public virtual async Task<IList<ManufacturerTemplate>> GetAllManufacturerTemplatesAsync()
         {
-            var templates = _manufacturerTemplateRepository.GetAll(query =>
+            var templates = await _manufacturerTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -56,28 +61,33 @@ namespace Nop.Services.Catalog
         /// Gets a manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplateId">Manufacturer template identifier</param>
-        /// <returns>Manufacturer template</returns>
-        public virtual ManufacturerTemplate GetManufacturerTemplateById(int manufacturerTemplateId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer template
+        /// </returns>
+        public virtual async Task<ManufacturerTemplate> GetManufacturerTemplateByIdAsync(int manufacturerTemplateId)
         {
-            return _manufacturerTemplateRepository.GetById(manufacturerTemplateId, cache => default);
+            return await _manufacturerTemplateRepository.GetByIdAsync(manufacturerTemplateId, cache => default);
         }
 
         /// <summary>
         /// Inserts manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate)
         {
-            _manufacturerTemplateRepository.Insert(manufacturerTemplate);
+            await _manufacturerTemplateRepository.InsertAsync(manufacturerTemplate);
         }
 
         /// <summary>
         /// Updates the manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateManufacturerTemplateAsync(ManufacturerTemplate manufacturerTemplate)
         {
-            _manufacturerTemplateRepository.Update(manufacturerTemplate);
+            await _manufacturerTemplateRepository.UpdateAsync(manufacturerTemplate);
         }
 
         #endregion

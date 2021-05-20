@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 
@@ -26,72 +27,14 @@ namespace Nop.Services.Stores
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Deletes a store
-        /// </summary>
-        /// <param name="store">Store</param>
-        public virtual void DeleteStore(Store store)
-        {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
-
-            var allStores = GetAllStores();
-            if (allStores.Count == 1)
-                throw new Exception("You cannot delete the only configured store");
-
-            _storeRepository.Delete(store);
-        }
-
-        /// <summary>
-        /// Gets all stores
-        /// </summary>
-        /// <returns>Stores</returns>
-        public virtual IList<Store> GetAllStores()
-        {
-            var result = _storeRepository.GetAll(query =>
-            {
-                return from s in query orderby s.DisplayOrder, s.Id select s;
-            }, cache => default);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a store 
-        /// </summary>
-        /// <param name="storeId">Store identifier</param>
-        /// <returns>Store</returns>
-        public virtual Store GetStoreById(int storeId)
-        {
-            return _storeRepository.GetById(storeId, cache => default);
-        }
-
-        /// <summary>
-        /// Inserts a store
-        /// </summary>
-        /// <param name="store">Store</param>
-        public virtual void InsertStore(Store store)
-        {
-            _storeRepository.Insert(store);
-        }
-
-        /// <summary>
-        /// Updates the store
-        /// </summary>
-        /// <param name="store">Store</param>
-        public virtual void UpdateStore(Store store)
-        {
-            _storeRepository.Update(store);
-        }
+        #region Utilities
 
         /// <summary>
         /// Parse comma-separated Hosts
         /// </summary>
         /// <param name="store">Store</param>
         /// <returns>Comma-separated hosts</returns>
-        public virtual string[] ParseHostValues(Store store)
+        protected virtual string[] ParseHostValues(Store store)
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
@@ -109,6 +52,77 @@ namespace Nop.Services.Stores
             }
 
             return parsedValues.ToArray();
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Deletes a store
+        /// </summary>
+        /// <param name="store">Store</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteStoreAsync(Store store)
+        {
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            var allStores = await GetAllStoresAsync();
+            if (allStores.Count == 1)
+                throw new Exception("You cannot delete the only configured store");
+
+            await _storeRepository.DeleteAsync(store);
+        }
+
+        /// <summary>
+        /// Gets all stores
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the stores
+        /// </returns>
+        public virtual async Task<IList<Store>> GetAllStoresAsync()
+        {
+            var result = await _storeRepository.GetAllAsync(query =>
+            {
+                return from s in query orderby s.DisplayOrder, s.Id select s;
+            }, cache => default);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets a store 
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store
+        /// </returns>
+        public virtual async Task<Store> GetStoreByIdAsync(int storeId)
+        {
+            return await _storeRepository.GetByIdAsync(storeId, cache => default);
+        }
+
+        /// <summary>
+        /// Inserts a store
+        /// </summary>
+        /// <param name="store">Store</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertStoreAsync(Store store)
+        {
+            await _storeRepository.InsertAsync(store);
+        }
+
+        /// <summary>
+        /// Updates the store
+        /// </summary>
+        /// <param name="store">Store</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateStoreAsync(Store store)
+        {
+            await _storeRepository.UpdateAsync(store);
         }
 
         /// <summary>
@@ -134,8 +148,11 @@ namespace Nop.Services.Stores
         /// Returns a list of names of not existing stores
         /// </summary>
         /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
-        /// <returns>List of names and/or IDs not existing stores</returns>
-        public string[] GetNotExistingStores(string[] storeIdsNames)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of names and/or IDs not existing stores
+        /// </returns>
+        public async Task<string[]> GetNotExistingStoresAsync(string[] storeIdsNames)
         {
             if (storeIdsNames == null)
                 throw new ArgumentNullException(nameof(storeIdsNames));
@@ -143,7 +160,9 @@ namespace Nop.Services.Stores
             var query = _storeRepository.Table;
             var queryFilter = storeIdsNames.Distinct().ToArray();
             //filtering by name
-            var filter = query.Select(store => store.Name).Where(store => queryFilter.Contains(store)).ToList();
+            var filter = await query.Select(store => store.Name)
+                .Where(store => queryFilter.Contains(store))
+                .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
@@ -151,7 +170,9 @@ namespace Nop.Services.Stores
                 return queryFilter.ToArray();
 
             //filtering by IDs
-            filter = query.Select(store => store.Id.ToString()).Where(store => queryFilter.Contains(store)).ToList();
+            filter = await query.Select(store => store.Id.ToString())
+                .Where(store => queryFilter.Contains(store))
+                .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             return queryFilter.ToArray();
