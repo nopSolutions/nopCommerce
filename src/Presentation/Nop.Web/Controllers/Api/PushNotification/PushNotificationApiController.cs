@@ -65,10 +65,9 @@ namespace Nop.Web.Controllers.Api.Security
 
         public class PushNotifcationModel
         {
-            public bool Offers { get; set; }
-            public bool Rewards { get; set; }
-            public bool EatsPass { get; set; }
-            public bool Other { get; set; }
+            public bool OrderStatusNotification { get; set; }
+            public bool RemindMeNotification { get; set; }
+            public bool RateReminderNotification { get; set; }
         }
 
         #endregion
@@ -82,10 +81,9 @@ namespace Nop.Web.Controllers.Api.Security
             if (customer == null)
                 return Ok(new { success = false, message = "'customer' could not be loaded" });
 
-            customer.Offers = model.Offers;
-            customer.Rewards = model.Rewards;
-            customer.EatsPass = model.EatsPass;
-            customer.Other = model.Other;
+            customer.OrderStatusNotification = model.OrderStatusNotification;
+            customer.RateReminderNotification = model.RateReminderNotification;
+            customer.RemindMeNotification= model.RemindMeNotification;
             await _customerService.UpdateCustomerAsync(customer);
 
             return Ok(new { success = true, message = "Notification settings updated successfully" });

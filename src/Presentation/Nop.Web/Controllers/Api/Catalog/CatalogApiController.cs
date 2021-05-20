@@ -52,10 +52,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly MediaSettings _mediaSettings;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly ICurrencyService _currencyService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductTagService _productTagService;
         private readonly IProductService _productService;
@@ -72,43 +69,28 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly ICategoryService _categoryService;
         private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly ITopicModelFactory _topicModelFactory;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly ICountryService _countryService;
         private readonly IPictureService _pictureService;
         private readonly IUrlRecordService _urlRecordService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly ISearchTermService _searchTermService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly VendorSettings _vendorSettings;
         private readonly IVendorService _vendorService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPaymentService _paymentService;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CatalogApiController(ICurrencyService currencyService,
+        public CatalogApiController(
             ShoppingCartSettings shoppingCartSettings,
         LocalizationSettings localizationSettings,
             IWorkflowMessageService workflowMessageService,
             IOrderService orderService,
             IPriceFormatter priceFormatter,
-            MediaSettings mediaSettings,
             ISpecificationAttributeService specificationAttributeService,
-            IStaticCacheManager cacheManager,
-            IManufacturerService manufacturerService,
             IPictureService pictureService,
             IUrlRecordService urlRecordService,
-            IStateProvinceService stateProvinceService,
-            ICountryService countryService,
-            IGenericAttributeService genericAttributeService,
             IWebHelper webHelper,
             ICatalogModelFactory catalogModelService,
             IProductModelFactory productModelFactory,
@@ -126,15 +108,10 @@ namespace Nop.Web.Controllers.Api.Security
             IStoreContext storeContext,
             IWorkContext workContext,
             IShoppingCartService shoppingCartService,
-            VendorSettings vendorSettings,
-            IHttpContextAccessor httpContextAccessor,
-            ISearchTermService searchTermService,
             IEventPublisher eventPublisher,
             IVendorService vendorService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IPaymentService paymentService,
-            IOrderProcessingService orderProcessingService,
             IStaticCacheManager staticCacheManager)
         {
             _shoppingCartSettings = shoppingCartSettings;
@@ -142,17 +119,10 @@ namespace Nop.Web.Controllers.Api.Security
             _workflowMessageService = workflowMessageService;
             _orderService = orderService;
             _priceFormatter = priceFormatter;
-            _mediaSettings = mediaSettings;
             _specificationAttributeService = specificationAttributeService;
-            _cacheManager = cacheManager;
-            _currencyService = currencyService;
-            _manufacturerService = manufacturerService;
             _pictureService = pictureService;
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
-            _stateProvinceService = stateProvinceService;
-            _countryService = countryService;
-            _genericAttributeService = genericAttributeService;
             _categoryService = categoryService;
             _catalogModelFactory = catalogModelService;
             _topicModelFactory = topicModelFactory;
@@ -169,15 +139,10 @@ namespace Nop.Web.Controllers.Api.Security
             _storeContext = storeContext;
             _productModelFactory = productModelFactory;
             _workContext = workContext;
-            _vendorSettings = vendorSettings;
-            _httpContextAccessor = httpContextAccessor;
-            _searchTermService = searchTermService;
             _vendorService = vendorService;
             _eventPublisher = eventPublisher;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _paymentService = paymentService;
-            _orderProcessingService = orderProcessingService;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -455,7 +420,7 @@ namespace Nop.Web.Controllers.Api.Security
             return Json(result);
         }
 
-        [HttpGet("product-specification-attributes-and producttags")]
+        [HttpGet("product-specification-attributes-and-producttags")]
         public async Task<IActionResult> AllProductSpecificationAndProductTags()
         {
             //model
@@ -719,10 +684,10 @@ namespace Nop.Web.Controllers.Api.Security
         {
             string[] dates = null;
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate
-               , await _storeContext.GetCurrentStoreAsync(), _webHelper.IsCurrentConnectionSecured());
+               , await _storeContext.GetCurrentStoreAsync());
             var newDates = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", 1, false);
+                var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ",_storeContext.GetCurrentStoreAsync().Id, false);
                 if (orderscheduleDate1 != null)
                     dates = orderscheduleDate1.ResourceValue.Split(',');
             });

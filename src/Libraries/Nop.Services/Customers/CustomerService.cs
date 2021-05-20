@@ -288,20 +288,17 @@ namespace Nop.Services.Customers
         }
 
 
-        public virtual async Task<IPagedList<Customer>> GetAllPushNotificationCustomersAsync(bool isOffers = false, bool isRewards = false,
-            bool isEatsPass = false, bool isOther = false,
-          int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<Customer>> GetAllPushNotificationCustomersAsync(bool isRateReminderNotification = false, bool isRemindMeNotification = false,
+            bool isOrderStatusNotification = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var customers = await _customerRepository.GetAllPagedAsync(query =>
             {
-                if (isOffers)
-                    query = query.Where(c => c.Offers == isOffers);
-                if (isRewards)
-                    query = query.Where(c => c.Rewards == isRewards);
-                if (isEatsPass)
-                    query = query.Where(c => c.EatsPass == isEatsPass);
-                if (isOther)
-                    query = query.Where(c => c.Other == isOther);
+                if (isRateReminderNotification)
+                    query = query.Where(c => c.RateReminderNotification == isRateReminderNotification);
+                if (isRemindMeNotification)
+                    query = query.Where(c => c.RemindMeNotification == isRemindMeNotification);
+                if (isOrderStatusNotification)
+                    query = query.Where(c => c.OrderStatusNotification == isOrderStatusNotification);
                 query = query.Where(c => !c.Deleted);
 
                 query = query.OrderByDescending(c => c.CreatedOnUtc);
@@ -483,9 +480,9 @@ namespace Nop.Services.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
-           
+
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
-            
+
             return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 

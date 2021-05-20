@@ -263,7 +263,7 @@ namespace Nop.Web.Infrastructure.Cache
 
 
         //Schedule Date Setting Cache Keys
-        public static CacheKey StoreScheduleDate => new CacheKey("Nop.pres.scheduledate-{0}-{1}", StoreScheduleDatePrefixCacheKey);
+        public static CacheKey StoreScheduleDate => new CacheKey("Nop.pres.scheduledate-{0}", StoreScheduleDatePrefixCacheKey);
         public static string StoreScheduleDatePrefixCacheKey => "Nop.pres.scheduledate";
 
         /// <summary>

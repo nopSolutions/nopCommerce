@@ -135,9 +135,8 @@ namespace Nop.Core.Domain.Customers
 
         //custom fields
         public string PushToken { get; set; }
-        public bool Offers { get; set; }
-        public bool Rewards { get; set; }
-        public bool EatsPass { get; set; }
-        public bool Other { get; set; }
+        public bool RateReminderNotification { get; set; }
+        public bool RemindMeNotification { get; set; }
+        public bool OrderStatusNotification { get; set; }
     }
 }

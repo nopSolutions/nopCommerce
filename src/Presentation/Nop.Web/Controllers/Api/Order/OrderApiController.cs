@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Expo.Server.Client;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -18,6 +20,7 @@ using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Models.Api.Security;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers.Api.Security
@@ -29,6 +32,7 @@ namespace Nop.Web.Controllers.Api.Security
     {
         #region Fields
 
+        private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
@@ -51,6 +55,7 @@ namespace Nop.Web.Controllers.Api.Security
         #region Ctor
 
         public OrderApiController(ICurrencyService currencyService,
+            ICustomerService customerService,
             IOrderService orderService,
             IPriceFormatter priceFormatter,
             IPictureService pictureService,
@@ -68,6 +73,7 @@ namespace Nop.Web.Controllers.Api.Security
             ICustomerActivityService customerActivityService)
         {
             _orderService = orderService;
+            _customerService = customerService;
             _priceFormatter = priceFormatter;
             _currencyService = currencyService;
             _pictureService = pictureService;
@@ -167,8 +173,22 @@ namespace Nop.Web.Controllers.Api.Security
             if (order == null)
                 return Ok(new { success = false, message = "No Order found with the specified id" });
 
+            //try to get an customer with the order id
+            var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            if (customer == null)
+                return RedirectToAction("List");
+
             await _orderProcessingService.CancelOrderAsync(order, true);
             await LogEditOrderAsync(order.Id);
+
+            var expoSDKClient = new PushApiClient();
+            var pushTicketReq = new PushTicketRequest()
+            {
+                PushTo = new List<string>() { customer.PushToken },
+                PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderCancelTitle"),
+                PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderCancelBody")
+            };
+            var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
 
             return Ok(new { success = true, message = "Order Cancelled Successfully" });
         }

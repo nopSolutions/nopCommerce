@@ -46,14 +46,15 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.PushToken")]
         public string PushToken { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Offers")]
-        public bool Offers { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Rewards")]
-        public bool Rewards { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.EatsPass")]
-        public bool EatsPass { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Other")]
-        public bool Other { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.RateReminderNotification")]
+        public bool RateReminderNotification { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.RemindMeNotification")]
+        public bool RemindMeNotification { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.OrderStatusNotification")]
+        public bool OrderStatusNotification { get; set; }
 
         public bool UsernamesEnabled { get; set; }
 

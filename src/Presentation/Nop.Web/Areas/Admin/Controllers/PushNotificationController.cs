@@ -90,25 +90,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             IPagedList<Customer> notificationCustomers = new PagedList<Customer>(new List<Customer>(), 0, 0, null);
-            if (model.NotificationType == "Offers")
+            if (model.NotificationType == "RateReminderNotification")
             {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(true);
+                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isRateReminderNotification: true);
             }
-            else if (model.NotificationType == "Rewards")
+            else if (model.NotificationType == "RemindMeNotification")
             {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isRewards: true);
+                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
             }
-            else if (model.NotificationType == "EatsPass")
+            else if (model.NotificationType == "OrderStatusNotification")
             {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isEatsPass: true);
-            }
-            else if (model.NotificationType == "Other")
-            {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isOther: true);
+                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isOrderStatusNotification: true);
             }
             else if (model.NotificationType == "All")
             {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(true, true, true, true);
+                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(true, true, true);
             }
 
             foreach (var customer in notificationCustomers)

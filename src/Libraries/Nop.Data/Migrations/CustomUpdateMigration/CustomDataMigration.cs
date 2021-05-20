@@ -10,7 +10,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.CustomUpdateMigration
 {
-    [NopMigration("2020-06-10 09:30:17:6455448", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6457469", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class CustomDataMigration : Migration
     {
@@ -60,29 +60,23 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
                 Alter.Table(customerTableName)
                     .AddColumn(pushTokenColumnName).AsString().Nullable().SetExistingRowsTo(null);
             }
-            var offersColumnName = "Offers";
-            if (!Schema.Table(customerTableName).Column(offersColumnName).Exists())
+            var rateReminderNotificationColumnName = "RateReminderNotification";
+            if (!Schema.Table(customerTableName).Column(rateReminderNotificationColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(offersColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+                    .AddColumn(rateReminderNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
-            var rewardsColumnName = "Rewards";
-            if (!Schema.Table(customerTableName).Column(rewardsColumnName).Exists())
+            var remindMeNotificationColumnName = "RemindMeNotification";
+            if (!Schema.Table(customerTableName).Column(remindMeNotificationColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(rewardsColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+                    .AddColumn(remindMeNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
-            var eatsPassColumnName = "EatsPass";
-            if (!Schema.Table(customerTableName).Column(eatsPassColumnName).Exists())
+            var orderStatusNotificationColumnName = "OrderStatusNotification";
+            if (!Schema.Table(customerTableName).Column(orderStatusNotificationColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(eatsPassColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
-            }
-            var otherColumnName = "Other";
-            if (!Schema.Table(customerTableName).Column(otherColumnName).Exists())
-            {
-                Alter.Table(customerTableName)
-                    .AddColumn(otherColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+                    .AddColumn(orderStatusNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
             }
         }
 

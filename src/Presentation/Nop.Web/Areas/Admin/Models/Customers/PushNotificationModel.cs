@@ -14,10 +14,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         {
             NotificationTypes = new List<SelectListItem>();
             NotificationTypes.Add(new SelectListItem() { Text = "All", Value = "All" });
-            NotificationTypes.Add(new SelectListItem() { Text = "Offers", Value = "Offers" });
-            NotificationTypes.Add(new SelectListItem() { Text = "Rewards", Value = "Rewards" });
-            NotificationTypes.Add(new SelectListItem() { Text = "EatsPass", Value = "EatsPass" });
-            NotificationTypes.Add(new SelectListItem() { Text = "Other", Value = "Other" });
+            NotificationTypes.Add(new SelectListItem() { Text = "Rate Reminder Notification", Value = "RateReminderNotification" });
+            NotificationTypes.Add(new SelectListItem() { Text = "Remind Me Notification", Value = "RemindMeNotification" });
+            NotificationTypes.Add(new SelectListItem() { Text = "Order Status Notification", Value = "OrderStatusNotification" });
         }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.MessageTitle")]
