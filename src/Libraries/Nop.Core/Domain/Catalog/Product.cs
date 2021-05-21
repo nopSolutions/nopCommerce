@@ -532,10 +532,6 @@ namespace Nop.Core.Domain.Catalog
         public bool Deleted { get; set; }
 
         //Custom Fields
-       public bool Minimum { get; set; }
-        public bool Average { get; set; }
-        public bool Expensive { get; set; }
-
         public bool RibbonEnable { get; set; }
         public string RibbonText { get; set; }
 

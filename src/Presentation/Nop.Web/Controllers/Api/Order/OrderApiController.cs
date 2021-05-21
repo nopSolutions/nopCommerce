@@ -263,7 +263,7 @@ namespace Nop.Web.Controllers.Api.Security
             _paymentService.GenerateOrderGuid(processPaymentRequest);
             processPaymentRequest.StoreId = _storeContext.GetCurrentStore().Id;
             processPaymentRequest.CustomerId = customer.Id;
-            processPaymentRequest.PaymentMethodSystemName = "Payments.PurchaseOrder";
+            processPaymentRequest.PaymentMethodSystemName = "Payments.CheckMoneyOrder";
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
             if (placeOrderResult.Success)
             {

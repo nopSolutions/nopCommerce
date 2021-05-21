@@ -14,10 +14,6 @@ namespace Nop.Web.Models.Api.Catalog
         {
             ProductSpecificationModel = new ProductSpecificationApiModel();
         }
-        
-        public bool Minimum { get; set; }
-        public bool Average { get; set; }
-        public bool Expensive { get; set; }
         public bool RibbonEnable { get; set; }
         public string RibbonText { get; set; }
         public string CategoryName { get; set; }
@@ -28,6 +24,7 @@ namespace Nop.Web.Models.Api.Catalog
         public string SeName { get; set; }
         public string ImageUrl { get; set; }
         public string Price { get; set; }
+        public decimal PriceValue { get; set; }
         public int RatingSum { get; set; }
         public int TotalReviews { get; set; }
         public string VendorLogoPictureUrl { get; set; }
