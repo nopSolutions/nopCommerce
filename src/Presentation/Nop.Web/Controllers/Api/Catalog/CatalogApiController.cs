@@ -680,15 +680,10 @@ namespace Nop.Web.Controllers.Api.Security
         [HttpGet("get-schedule-dates")]
         public async Task<IActionResult> GetScheduleDates()
         {
-            string[] dates = null;
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate, await _storeContext.GetCurrentStoreAsync());
-            var newDates = await _staticCacheManager.GetAsync(cacheKey, async () =>
-            {
-                var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", _storeContext.GetCurrentStoreAsync().Id, false);
-                if (orderscheduleDate1 != null)
-                    dates = orderscheduleDate1.ResourceValue.Split(',');
-            });
-            return Ok(new { success = true, dates = newDates });
+            var dates = (await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate, await _storeContext.GetCurrentStoreAsync()),
+                async () => await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", _workContext.GetWorkingLanguageAsync().Id, false) != null ? _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", _workContext.GetWorkingLanguageAsync().Id, false).GetAwaiter().GetResult().ResourceValue.Split(',') : null ));
+           
+            return Ok(new { success = true, dates = dates });
         }
 
         #endregion
