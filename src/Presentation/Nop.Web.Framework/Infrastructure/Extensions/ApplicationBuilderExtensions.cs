@@ -84,7 +84,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //install and update plugins
                 var pluginService = engine.Resolve<IPluginService>();
                 pluginService.InstallPluginsAsync().Wait();
-                //pluginService.UpdatePluginsAsync().Wait();
+                pluginService.UpdatePluginsAsync().Wait();
 
                 //update nopCommerce core and db
                 var migrationManager = engine.Resolve<IMigrationManager>();
