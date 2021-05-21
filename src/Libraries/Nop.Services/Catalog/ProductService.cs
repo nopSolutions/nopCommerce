@@ -827,6 +827,7 @@ namespace Nop.Services.Catalog
             productsQuery =
                 from p in productsQuery
                 where !p.Deleted &&
+                    (!visibleIndividuallyOnly || p.VisibleIndividually) &&
                     (vendorId == 0 || p.VendorId == vendorId) &&
                     (
                         warehouseId == 0 ||
