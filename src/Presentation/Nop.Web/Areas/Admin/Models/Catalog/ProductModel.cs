@@ -68,16 +68,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         #region Properties
         
-        //custom fields
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Minimum")]
-        public bool Minimum { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Average")]
-        public bool Average { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Expensive")]
-        public bool Expensive { get; set; }
-
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }

@@ -290,6 +290,9 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public string CustomOrderNumber { get; set; }
 
+        public int Rating { get; set; }
+        public string RatingText { get; set; }
+
         /// <summary>
         /// Gets or sets the reward points history record (spent by a customer when placing this order)
         /// </summary>

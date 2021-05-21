@@ -5,12 +5,13 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Vendors;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.CustomUpdateMigration
 {
-    [NopMigration("2020-06-10 09:30:17:6457469", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6457745", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class CustomDataMigration : Migration
     {
@@ -30,6 +31,22 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             var productTableName = NameCompatibilityManager.GetTableName(typeof(Product));
             var orderTableName = NameCompatibilityManager.GetTableName(typeof(Order));
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
+            var scheduleTaskTable = _dataProvider.GetTable<ScheduleTask>();
+
+            if (!scheduleTaskTable.Any(alt => string.Compare(alt.Name, "Remind Me And Rate Reminder Notification Task", true) == 0))
+                _dataProvider.InsertEntity(
+                    new ScheduleTask
+                    {
+                        LastEndUtc = null,
+                        LastStartUtc = null,
+                        LastSuccessUtc = null,
+                        StopOnError = true,
+                        Type = "Nop.Services.Common.RemindMeAndRateRemainderNotificationTask, Nop.Services",
+                        Enabled = true,
+                        Seconds = 2400,
+                        Name = "Remind Me And Rate Reminder Notification Task"
+                    }
+                );
 
             var ribbonEnableColumnName = "RibbonEnable";
             if (!Schema.Table(productTableName).Column(ribbonEnableColumnName).Exists())
@@ -51,6 +68,19 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             {
                 Alter.Table(orderTableName)
                     .AddColumn(scheduleDateColumnName).AsString().Nullable().SetExistingRowsTo(null);
+            }
+            
+            var ratingColumnName = "Rating";
+            if (!Schema.Table(orderTableName).Column(ratingColumnName).Exists())
+            {
+                Alter.Table(orderTableName)
+                    .AddColumn(ratingColumnName).AsInt32().NotNullable().SetExistingRowsTo(0);
+            }
+            var ratingTextColumnName = "RatingText";
+            if (!Schema.Table(orderTableName).Column(ratingTextColumnName).Exists())
+            {
+                Alter.Table(orderTableName)
+                    .AddColumn(ratingTextColumnName).AsString().Nullable().SetExistingRowsTo(null);
             }
 
             //customer

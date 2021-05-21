@@ -683,11 +683,10 @@ namespace Nop.Web.Controllers.Api.Security
         public async Task<IActionResult> GetScheduleDates()
         {
             string[] dates = null;
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate
-               , await _storeContext.GetCurrentStoreAsync());
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate, await _storeContext.GetCurrentStoreAsync());
             var newDates = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ",_storeContext.GetCurrentStoreAsync().Id, false);
+                var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date ", _storeContext.GetCurrentStoreAsync().Id, false);
                 if (orderscheduleDate1 != null)
                     dates = orderscheduleDate1.ResourceValue.Split(',');
             });

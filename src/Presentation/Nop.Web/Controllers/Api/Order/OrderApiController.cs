@@ -166,6 +166,13 @@ namespace Nop.Web.Controllers.Api.Security
             public string Message { get; set; }
         }
 
+        public class OrderRatingModel
+        {
+            public int OrderId { get; set; }
+            public int Rating { get; set; }
+            public string RatingText { get; set; }
+        }
+
         [HttpPost("cancel-order/{id}")]
         public async Task<IActionResult> CancelOrder(int id)
         {
@@ -266,6 +273,19 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(new { success = true, message = "Order Placed Successfully" });
             }
             return Ok(new { success = false, message = string.Join(", ", placeOrderResult.Errors).ToString() });
+        }
+
+        [HttpPost("order-rating")]
+        public async Task<IActionResult> OrderRating(OrderRatingModel model)
+        {
+            var order = await _orderService.GetOrderByIdAsync(model.OrderId);
+            if (order == null)
+                return Ok(new { success = false, message = "No Order Found With The Specified Ids" });
+
+            order.Rating = model.Rating;
+            order.RatingText = model.RatingText;
+            await _orderService.UpdateOrderAsync(order);
+            return Ok(new { success = true, message = "Order Rated Successfully" });
         }
 
         [HttpGet("get-todays-orders")]
