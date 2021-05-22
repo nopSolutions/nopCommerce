@@ -11,7 +11,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.CustomUpdateMigration
 {
-    [NopMigration("2020-06-10 09:30:17:6457745", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6458859", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class CustomDataMigration : Migration
     {
@@ -94,19 +94,19 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             if (!Schema.Table(customerTableName).Column(rateReminderNotificationColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(rateReminderNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+                    .AddColumn(rateReminderNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
             }
             var remindMeNotificationColumnName = "RemindMeNotification";
             if (!Schema.Table(customerTableName).Column(remindMeNotificationColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(remindMeNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+                    .AddColumn(remindMeNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
             }
             var orderStatusNotificationColumnName = "OrderStatusNotification";
             if (!Schema.Table(customerTableName).Column(orderStatusNotificationColumnName).Exists())
             {
                 Alter.Table(customerTableName)
-                    .AddColumn(orderStatusNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(false);
+                    .AddColumn(orderStatusNotificationColumnName).AsBoolean().NotNullable().SetExistingRowsTo(true);
             }
         }
 

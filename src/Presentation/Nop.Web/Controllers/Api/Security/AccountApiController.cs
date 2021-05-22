@@ -138,7 +138,7 @@ namespace Nop.Web.Controllers.Api.Security
                             shippingAddress,
                             firstName,
                             lastName,
-                            avatar = await _pictureService.GetPictureUrlAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute), _mediaSettings.AvatarPictureSize, false)
+                            avatar = await _pictureService.GetPictureUrlAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute), _mediaSettings.AvatarPictureSize, true)
                         });
                     }
                 case CustomerLoginResults.CustomerNotExist:

@@ -172,5 +172,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether to display order amounts in customer's currency on the order details page in the admin area
         /// </summary>
         public bool DisplayCustomerCurrencyOnOrders { get; set; }
+
+        public string ScheduleDate { get; set; }
     }
 }

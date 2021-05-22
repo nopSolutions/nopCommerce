@@ -27,6 +27,7 @@ namespace Nop.Web.Models.Api.Catalog
         public decimal PriceValue { get; set; }
         public int RatingSum { get; set; }
         public int TotalReviews { get; set; }
+        public int PopularityCount { get; set; }
         public string VendorLogoPictureUrl { get; set; }
         public ProductSpecificationApiModel ProductSpecificationModel { get; set; }
     }

@@ -158,7 +158,13 @@ namespace Nop.Web.Controllers.Api.Security
         #endregion
 
         #region Order
-
+        public class ReOrderModel
+        {
+            public bool Success { get; set; }
+            public int Id { get; set; }
+            public int Quantity { get; set; }
+            public string Message { get; set; }
+        }
         public class CartErrorModel
         {
             public bool Success { get; set; }
@@ -274,7 +280,27 @@ namespace Nop.Web.Controllers.Api.Security
             }
             return Ok(new { success = false, message = string.Join(", ", placeOrderResult.Errors).ToString() });
         }
+        [HttpPost("reorder/{orderId}")]
+        public virtual async Task<IActionResult> ReOrder(int orderId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Order.NoOrderFound")});
 
+            var productsList = new List<ReOrderModel>();
+            //move shopping cart items (if possible)
+            foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
+            {
+                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                if (!product.Published || product.Deleted)
+                    productsList.Add(new ReOrderModel { Success = false, Id = product.Id, Message = product.Name + " is not valid", Quantity = orderItem.Quantity });
+                else
+                {
+                    productsList.Add(new ReOrderModel { Success = true, Id = product.Id, Quantity = orderItem.Quantity });
+                }
+            }
+            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.ReOrdered"), productsList });
+        }
         [HttpPost("order-rating")]
         public async Task<IActionResult> OrderRating(OrderRatingModel model)
         {

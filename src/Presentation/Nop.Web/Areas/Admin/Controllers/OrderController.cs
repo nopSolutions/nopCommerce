@@ -15,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
@@ -69,6 +70,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly OrderSettings _orderSettings;
+        private readonly IStoreContext _storeContext;
+        private readonly ISettingService _settingService;
 
         #endregion
 
@@ -101,7 +104,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IShoppingCartService shoppingCartService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            OrderSettings orderSettings)
+            OrderSettings orderSettings,
+            IStoreContext storeContext,
+            ISettingService settingService)
         {
             _addressAttributeParser = addressAttributeParser;
             _addressService = addressService;
@@ -131,6 +136,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _orderSettings = orderSettings;
+            _storeContext = storeContext;
+            _settingService = settingService;
         }
 
         #endregion
@@ -1844,12 +1851,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var orderSettings = await _settingService.LoadSettingAsync<OrderSettings>(storeId);
             var model = new OrderScheduleModel();
-            var langModel = await _workContext.GetWorkingLanguageAsync();
-            var orderscheduleDate1 = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", langModel.Id, false);
-            if (orderscheduleDate1 != null)
+
+            var scheduleDateSetting = await _settingService.SettingExistsAsync(orderSettings, x => x.ScheduleDate, storeId);
+            if (scheduleDateSetting)
             {
-                var value = orderscheduleDate1.ResourceValue.Split(',');
+                var value = orderSettings.ScheduleDate.Split(',');//orderscheduleDate1.ResourceValue.Split(',');
                 model.ScheduleDate1 = value[0];
                 model.ScheduleDate2 = value[1];
                 model.ScheduleDate3 = value[2];
@@ -1875,27 +1884,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 model.ScheduleDate3 = model.ScheduleDate3.Trim();
             }
-            var langModel = await _workContext.GetWorkingLanguageAsync();
-            var orderscheduleDate = await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", langModel.Id, false);
-            if (orderscheduleDate != null)
-            {
-                if (String.IsNullOrWhiteSpace(model.ScheduleDate1) && String.IsNullOrWhiteSpace(model.ScheduleDate2) && String.IsNullOrWhiteSpace(model.ScheduleDate3))
-                    orderscheduleDate.ResourceValue = "-";
-                else
-                    orderscheduleDate.ResourceValue = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
 
-                await _localizationService.UpdateLocaleStringResourceAsync(orderscheduleDate);
-            }
-            else
-            {
-                var resource = new LocaleStringResource { LanguageId = langModel.Id };
-                resource.ResourceName = "orderschedule.Date";
-                if (String.IsNullOrWhiteSpace(model.ScheduleDate1) && String.IsNullOrWhiteSpace(model.ScheduleDate2) && String.IsNullOrWhiteSpace(model.ScheduleDate3))
-                    resource.ResourceValue = "-";
-                else
-                    resource.ResourceValue = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
-                await _localizationService.InsertLocaleStringResourceAsync(resource);
-            }
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var orderSettings = await _settingService.LoadSettingAsync<OrderSettings>(storeId);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+
+            orderSettings.ScheduleDate = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
+            await _settingService.SaveSettingAsync(orderSettings, x => x.ScheduleDate, clearCache: true);
 
             return RedirectToAction("ScheduleDate");
         }

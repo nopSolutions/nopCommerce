@@ -11,6 +11,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -51,6 +52,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly LocalizationSettings _localizationSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IOrderService _orderService;
+        private readonly IOrderReportService _orderReportService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IProductModelFactory _productModelFactory;
@@ -77,6 +79,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly ISettingService _settingService;
 
         #endregion
 
@@ -87,6 +90,7 @@ namespace Nop.Web.Controllers.Api.Security
         LocalizationSettings localizationSettings,
             IWorkflowMessageService workflowMessageService,
             IOrderService orderService,
+            IOrderReportService orderReportService,
             IPriceFormatter priceFormatter,
             ISpecificationAttributeService specificationAttributeService,
             IPictureService pictureService,
@@ -112,11 +116,13 @@ namespace Nop.Web.Controllers.Api.Security
             IVendorService vendorService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IStaticCacheManager staticCacheManager)
+            IStaticCacheManager staticCacheManager,
+            ISettingService settingService)
         {
             _shoppingCartSettings = shoppingCartSettings;
             _localizationSettings = localizationSettings;
             _workflowMessageService = workflowMessageService;
+            _orderReportService = orderReportService;
             _orderService = orderService;
             _priceFormatter = priceFormatter;
             _specificationAttributeService = specificationAttributeService;
@@ -144,6 +150,7 @@ namespace Nop.Web.Controllers.Api.Security
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _staticCacheManager = staticCacheManager;
+            _settingService = settingService;
         }
 
         #endregion
@@ -165,7 +172,7 @@ namespace Nop.Web.Controllers.Api.Security
                     foreach (var psa in productAllSpecificationAttributes)
                     {
                         var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
-                        var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId);
+                        var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId || model.Name == singleOption.Name);
                         if (checkModel == null)
                         {
                             var model1 = new ProductSpecificationAttributeApiModel();
@@ -215,7 +222,7 @@ namespace Nop.Web.Controllers.Api.Security
                 foreach (var psa in productSpecificationAttributes)
                 {
                     var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
-                    var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId);
+                    var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId || model.Name == singleOption.Name);
                     if (checkModel == null)
                     {
                         var model1 = new ProductSpecificationAttributeApiModel();
@@ -273,6 +280,7 @@ namespace Nop.Web.Controllers.Api.Security
                         categoryName += cat.Name + ",";
                     }
                 }
+                var popularity = await _orderReportService.BestSellersReportAsync(showHidden: true, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0, orderBy: OrderByEnum.OrderByQuantity);
                 var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: _storeContext.GetCurrentStore().Id);
                 var picsById = await _pictureService.GetPicturesByProductIdAsync(product.Id);
                 var model = new ProductOverviewApiModel
@@ -287,6 +295,7 @@ namespace Nop.Web.Controllers.Api.Security
                     PriceValue = product.Price,
                     RatingSum = productReviews.Sum(pr => pr.Rating),
                     TotalReviews = productReviews.Count,
+                    PopularityCount = popularity.Where(x => x.ProductId == product.Id).Any() ? popularity.Where(x => x.ProductId == product.Id).FirstOrDefault().TotalQuantity : 0,
                     ImageUrl = await _pictureService.GetPictureUrlAsync(picsById.Any() ? picsById.FirstOrDefault().Id : 0, showDefaultPicture: true),
                     RibbonEnable = product.RibbonEnable,
                     RibbonText = product.RibbonText,
@@ -680,11 +689,24 @@ namespace Nop.Web.Controllers.Api.Security
         [HttpGet("get-schedule-dates")]
         public async Task<IActionResult> GetScheduleDates()
         {
-            var langModel = await _workContext.GetWorkingLanguageAsync();
-            var dates = (await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate, await _storeContext.GetCurrentStoreAsync()),
-                async () => await _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", langModel.Id, false) != null ? _localizationService.GetLocaleStringResourceByNameAsync("orderschedule.Date", langModel.Id, false).GetAwaiter().GetResult().ResourceValue.Split(',') : null ));
-           
-            return Ok(new { success = true, dates = dates });
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var orderSettings = await _settingService.LoadSettingAsync<OrderSettings>(storeId);
+
+            string[] dates = null;
+            var scheduleDateSetting = await _settingService.SettingExistsAsync(orderSettings, x => x.ScheduleDate, storeId);
+            if (scheduleDateSetting)
+            {
+                dates = (await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreScheduleDate, await _storeContext.GetCurrentStoreAsync()),
+                async () =>
+                {
+                    var scheduleDate = await _settingService.GetSettingAsync("ordersettings.scheduledate", (await _storeContext.GetCurrentStoreAsync()).Id, true);
+                    return scheduleDate.Value.Split(',');
+                }));
+
+                return Ok(new { success = true, dates = dates });
+            }
+
+            return Ok(new { success = true, dates, message = "No setting found" });
         }
 
         #endregion
