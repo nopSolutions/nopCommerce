@@ -221,32 +221,46 @@ namespace Nop.Web.Controllers.Api.Security
 
                 foreach (var psa in productSpecificationAttributes)
                 {
-                    var singleOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
-                    var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == singleOption.SpecificationAttributeId || model.Name == singleOption.Name);
+                    var option = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId);
+                    var checkModel = result.ProductSpecificationAttribute.FirstOrDefault(model => model.Id == option.SpecificationAttributeId);
+                    var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(option.SpecificationAttributeId);
+                    var attributeName = await _localizationService.GetLocalizedAsync(attribute, x => x.Name);
                     if (checkModel == null)
                     {
                         var model1 = new ProductSpecificationAttributeApiModel();
-                        var attribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(singleOption.SpecificationAttributeId);
                         model1.Id = attribute.Id;
                         model1.Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name);
-                        var options = await _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttributeAsync(psa.Id);
-                        foreach (var option in options)
+                        model1.Values.Add(new ProductSpecificationAttributeValueApiModel
                         {
-                            model1.Values.Add(new ProductSpecificationAttributeValueApiModel
+                            AttributeTypeId = psa.AttributeTypeId,
+                            ColorSquaresRgb = option.ColorSquaresRgb,
+                            ValueRaw = psa.AttributeType switch
                             {
-                                AttributeTypeId = psa.AttributeTypeId,
-                                ColorSquaresRgb = option.ColorSquaresRgb,
-                                ValueRaw = psa.AttributeType switch
-                                {
-                                    SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
-                                    SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
-                                    SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
-                                    SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
-                                    _ => null
-                                }
-                            });
-                        }
+                                SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
+                                SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
+                                SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
+                                SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
+                                _ => null
+                            }
+                        });
                         result.ProductSpecificationAttribute.Add(model1);
+                    }
+                    else if (result.ProductSpecificationAttribute.Select(x => x.Name == attributeName).Any())
+                    {
+                        var addAttributeModel = result.ProductSpecificationAttribute.Where(x => x.Name == attributeName).FirstOrDefault();
+                        addAttributeModel.Values.Add(new ProductSpecificationAttributeValueApiModel
+                        {
+                            AttributeTypeId = psa.AttributeTypeId,
+                            ColorSquaresRgb = option.ColorSquaresRgb,
+                            ValueRaw = psa.AttributeType switch
+                            {
+                                SpecificationAttributeType.Option => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(option, x => x.Name)),
+                                SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue)),
+                                SpecificationAttributeType.CustomHtmlText => await _localizationService.GetLocalizedAsync(psa, x => x.CustomValue),
+                                SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
+                                _ => null
+                            }
+                        });
                     }
                 }
                 var productTags = await _productTagService.GetAllProductTagsByProductIdAsync(product.Id);

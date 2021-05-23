@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers.Api.Security
         #region Push Notification
 
         [HttpPost("save-notification-settings")]
-        public async Task<IActionResult> SavePushNotification(PushNotifcationModel model)
+        public async Task<IActionResult> SavePushNotification([FromBody] PushNotifcationModel model)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)

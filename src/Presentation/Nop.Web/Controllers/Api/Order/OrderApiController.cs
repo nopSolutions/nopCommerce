@@ -273,7 +273,7 @@ namespace Nop.Web.Controllers.Api.Security
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
             if (placeOrderResult.Success)
             {
-                placeOrderResult.PlacedOrder.ScheduleDate = Convert.ToDateTime(scheduleDate);
+                placeOrderResult.PlacedOrder.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(Convert.ToDateTime(scheduleDate));
                 await _orderService.UpdateOrderAsync(placeOrderResult.PlacedOrder);
 
                 return Ok(new { success = true, message = "Order Placed Successfully" });
@@ -319,7 +319,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
-            var perviousOrders = orders.Where(x => x.ScheduleDate.Date == DateTime.UtcNow.Date).ToList();
+            var perviousOrders = orders.Where(x => x.ScheduleDate.Date == DateTime.Now.Date).ToList();
             if (perviousOrders.Any())
             {
                 var languageId = _workContext.GetWorkingLanguageAsync().Id;
@@ -412,7 +412,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
-            var perviousOrders = orders.Where(x => x.ScheduleDate.Date <= DateTime.UtcNow.Date);
+            var perviousOrders = orders.Where(x => x.ScheduleDate.Date < DateTime.Now.Date);
             if (perviousOrders.Any())
             {
                 var languageId = _workContext.GetWorkingLanguageAsync().Id;
@@ -505,7 +505,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(customerId: customer.Id);
-            var perviousOrders = orders.Where(x => x.ScheduleDate.Date > DateTime.UtcNow.Date);
+            var perviousOrders = orders.Where(x => x.ScheduleDate.Date > DateTime.Now.Date);
             if (perviousOrders.Any())
             {
                 var languageId = _workContext.GetWorkingLanguageAsync().Id;
