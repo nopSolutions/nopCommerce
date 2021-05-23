@@ -336,7 +336,9 @@ namespace Nop.Web.Controllers.Api.Security
                         PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus),
                         ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus),
                         IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
-                        CustomOrderNumber = order.CustomOrderNumber
+                        CustomOrderNumber = order.CustomOrderNumber,
+                        Rating = order.Rating,
+                        RatingText = order.RatingText
                     };
                     var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                     orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.GetWorkingLanguageAsync().Id);
@@ -429,7 +431,9 @@ namespace Nop.Web.Controllers.Api.Security
                         PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus),
                         ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus),
                         IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
-                        CustomOrderNumber = order.CustomOrderNumber
+                        CustomOrderNumber = order.CustomOrderNumber,
+                        Rating = order.Rating,
+                        RatingText = order.RatingText
                     };
                     var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                     orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.GetWorkingLanguageAsync().Id);
@@ -523,6 +527,8 @@ namespace Nop.Web.Controllers.Api.Security
                         IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
                         CustomOrderNumber = order.CustomOrderNumber,
                         ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(order.ScheduleDate, DateTimeKind.Utc),
+                        Rating = order.Rating,
+                        RatingText = order.RatingText
                     };
                     var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
                     orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.GetWorkingLanguageAsync().Id);

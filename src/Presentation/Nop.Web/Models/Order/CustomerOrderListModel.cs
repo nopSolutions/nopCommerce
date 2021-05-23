@@ -29,6 +29,8 @@ namespace Nop.Web.Models.Order
             }
             public IList<OrderItemModel> Items { get; set; }
             public DateTime ScheduleDate { get; set; }
+            public int Rating { get; set; }
+            public string RatingText { get; set; }
             public string CustomOrderNumber { get; set; }
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }

@@ -120,16 +120,16 @@
                                     </button>
                                     <nop-action-confirmation asp-button-id="cancelorder" />
                                 }
-                                <button type="submit" name="btnChangeOrderStatus" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn btn-primary" >
+                                <button type="submit" name="btnChangeOrderStatus" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.OrderStatus.Change")
                                 </button>
                                 <div id="pnlChangeOrderStatus">
-                                    <nop-select asp-for="OrderStatusId" asp-items="@await (((OrderStatus) Model.OrderStatusId).ToSelectListAsync())" class="mt-1"/>
-                                    <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary mt-1 mr-1" >
+                                    <nop-select asp-for="OrderStatusId" asp-items="@await (((OrderStatus) Model.OrderStatusId).ToSelectListAsync())" class="mt-1" />
+                                    <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary mt-1 mr-1">
                                         @T("Admin.Common.Save")
                                     </button>
                                     <nop-action-confirmation asp-button-id="btnSaveOrderStatus" />
-                                    <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn btn-secondary mt-1" >
+                                    <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn btn-secondary mt-1">
                                         @T("Admin.Common.Cancel")
                                     </button>
                                     <div class="input-group-btn-hint">
@@ -157,6 +157,27 @@
                         </div>
                     </div>
                 }
+            }
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ScheduleDate" />
+                </div>
+                <div class="col-md-9">
+                    <div class="form-text-row">@Model.ScheduleDate</div>
+                </div>
+            </div>
+
+            @if (Model.OrderStatusId == (int)OrderStatus.Complete)
+            {
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Rating" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-text-row">(@(Model.Rating)) @Model.RatingText</div>
+                    </div>
+                </div>
             }
         </div>
     </div>

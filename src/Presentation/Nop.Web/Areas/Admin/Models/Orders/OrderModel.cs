@@ -241,6 +241,12 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public OrderNoteSearchModel OrderNoteSearchModel { get; set; }
 
+        //extra feilds
+        [NopResourceDisplayName("Admin.Orders.Fields.ScheduleDate")]
+        public DateTime ScheduleDate { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Rating")]
+        public int Rating { get; set; }
+        public string RatingText { get; set; }
         #endregion
 
         #region Nested Classes
