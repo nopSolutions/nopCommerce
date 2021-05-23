@@ -46,17 +46,19 @@ namespace Nop.Web.Controllers.Api.Security
 
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
-
+        private readonly ILocalizationService _localizationService;
         #endregion
 
         #region Ctor
 
         public PushNotificationApiController(
             IWorkContext workContext,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            ILocalizationService localizationService)
         {
             _workContext = workContext;
             _customerService = customerService;
+            _localizationService = localizationService;
         }
 
         #endregion
@@ -79,14 +81,14 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
-                return Ok(new { success = false, message = "'customer' could not be loaded" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
 
             customer.OrderStatusNotification = model.OrderStatusNotification;
             customer.RateReminderNotification = model.RateReminderNotification;
             customer.RemindMeNotification= model.RemindMeNotification;
             await _customerService.UpdateCustomerAsync(customer);
 
-            return Ok(new { success = true, message = "Notification settings updated successfully" });
+            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Customer.Notification.Settings.Updated") });
         }
 
         #endregion

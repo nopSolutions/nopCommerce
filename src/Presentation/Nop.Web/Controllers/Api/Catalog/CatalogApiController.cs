@@ -408,7 +408,7 @@ namespace Nop.Web.Controllers.Api.Security
                              };
                 return Ok(result);
             }
-            return Ok(new { message = "No Category Found" });
+            return Ok(new { message = await _localizationService.GetResourceAsync("Category.Not.Found") });
         }
 
         #endregion
@@ -454,7 +454,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword);
             if (!products.Any())
-                return Ok(new { success = true, message = "No Product Found" });
+                return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
             //model
             var model = await PrepareApiProductOverviewModels(products);
@@ -466,7 +466,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var product = await _productService.GetProductByIdAsync(id);
             if (product == null || product.Deleted)
-                return Ok(new { success = false, message = "No product found" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
             var notAvailable =
                 //published?
@@ -480,7 +480,7 @@ namespace Nop.Web.Controllers.Api.Security
             //Check whether the current user has a "Manage products" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
             if (notAvailable && !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return Ok(new { success = false, message = "No product found" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
             //update existing shopping cart or wishlist  item?
             ShoppingCartItem updatecartitem = null;
@@ -507,7 +507,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
             if (category == null || category.Deleted)
-                return Ok(new { success = false, message = "No category found." });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Category.Not.Found") });
 
             //activity log
             await _customerActivityService.InsertActivityAsync("PublicStore.ViewCategory",
@@ -525,11 +525,11 @@ namespace Nop.Web.Controllers.Api.Security
 
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
-                return Ok(new { success = false, message = "invalid customer" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
 
             var product = await _productService.GetProductByIdAsync(productId);
             if (product == null)
-                return Ok(new { success = false, message = "No product found" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
             var cartType = (ShoppingCartType)1;
             if (product.OrderMinimumQuantity > quantity)
@@ -609,7 +609,7 @@ namespace Nop.Web.Controllers.Api.Security
             var product = await _productService.GetProductByIdAsync(model.Id);
             var curCus = await _workContext.GetCurrentCustomerAsync();
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
-                return Ok(new { success = false, message = "Product Not Found" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
             if (await _customerService.IsGuestAsync(curCus) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews") });
@@ -678,7 +678,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (await _customerService.IsGuestAsync(customer))
-                return Ok(new { success = false, message = "Customer Not Found" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
 
             var model = PrepareCustomerProductReviewsModel(0, customer.Id);
             return Ok(new { success = true, data = model });
@@ -720,7 +720,7 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(new { success = true, dates = dates });
             }
 
-            return Ok(new { success = true, dates, message = "No setting found" });
+            return Ok(new { success = true, dates, message = await _localizationService.GetResourceAsync("Setting.Not.Found") });
         }
 
         #endregion

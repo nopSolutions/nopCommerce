@@ -3,7 +3,7 @@
   "FriendlyName": "External authentication",
   "SystemName": "ExternalAuth",
   "Version": "1.1",
-  "SupportedVersions": [ "4.30" ],
+  "SupportedVersions": [ "4.30", "4.40", "4.50" ],
   "Author": "Sangeet Shah",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.ExternalAuth.ExtendedAuth.dll",

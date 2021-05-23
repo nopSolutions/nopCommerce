@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers.Api.Security
                     {
                         var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
                         if (customer == null)
-                            return Ok(new { success = false, message = "'User' could not be loaded" });
+                            return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
 
                         customer.PushToken = model.PushToken;
                         await _customerService.UpdateCustomerAsync(customer);
@@ -133,7 +133,7 @@ namespace Nop.Web.Controllers.Api.Security
                         return Ok(new
                         {
                             success = true,
-                            message = "Login Successfully",
+                            message = await _localizationService.GetResourceAsync("Customer.Login.Successfully"),
                             token,
                             shippingAddress,
                             firstName,
@@ -166,7 +166,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
             if (customer == null)
-                return Ok(new { success = false, message = "'customer' could not be loaded" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
 
             //customer.PushToken = null;
             //await _customerService.UpdateCustomerAsync(customer);
@@ -174,7 +174,7 @@ namespace Nop.Web.Controllers.Api.Security
             //standard logout 
             await _authenticationService.SignOutAsync();
 
-            return Ok(new { success = true, message = "logout successfully" });
+            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Customer.Logout.Successfully") });
         }
 
         [HttpGet("check-customer-token")]

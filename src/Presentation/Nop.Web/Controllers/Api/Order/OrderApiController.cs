@@ -184,7 +184,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null)
-                return Ok(new { success = false, message = "No Order found with the specified id" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Order.Cancelled.Failed") });
 
             //try to get an customer with the order id
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
@@ -203,7 +203,7 @@ namespace Nop.Web.Controllers.Api.Security
             };
             var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
 
-            return Ok(new { success = true, message = "Order Cancelled Successfully" });
+            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Cancelled.Successfully") });
         }
 
         [HttpPost("delete-cart/{ids}")]
@@ -276,7 +276,7 @@ namespace Nop.Web.Controllers.Api.Security
                 placeOrderResult.PlacedOrder.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(Convert.ToDateTime(scheduleDate));
                 await _orderService.UpdateOrderAsync(placeOrderResult.PlacedOrder);
 
-                return Ok(new { success = true, message = "Order Placed Successfully" });
+                return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Placed.Successfully") });
             }
             return Ok(new { success = false, message = string.Join(", ", placeOrderResult.Errors).ToString() });
         }
@@ -302,16 +302,16 @@ namespace Nop.Web.Controllers.Api.Security
             return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.ReOrdered"), productsList });
         }
         [HttpPost("order-rating")]
-        public async Task<IActionResult> OrderRating(OrderRatingModel model)
+        public async Task<IActionResult> OrderRating([FromBody] OrderRatingModel model)
         {
             var order = await _orderService.GetOrderByIdAsync(model.OrderId);
             if (order == null)
-                return Ok(new { success = false, message = "No Order Found With The Specified Ids" });
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Order.Rating.Failed") });
 
             order.Rating = model.Rating;
             order.RatingText = model.RatingText;
             await _orderService.UpdateOrderAsync(order);
-            return Ok(new { success = true, message = "Order Rated Successfully" });
+            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Rating.Added") });
         }
 
         [HttpGet("get-todays-orders")]
