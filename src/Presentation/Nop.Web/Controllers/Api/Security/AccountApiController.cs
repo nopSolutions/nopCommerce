@@ -138,6 +138,9 @@ namespace Nop.Web.Controllers.Api.Security
                             shippingAddress,
                             firstName,
                             lastName,
+                            RemindMeNotification = customer.RemindMeNotification,
+                            RateReminderNotification = customer.RateReminderNotification,
+                            OrderStatusNotification = customer.OrderStatusNotification,
                             avatar = await _pictureService.GetPictureUrlAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute), _mediaSettings.AvatarPictureSize, true)
                         });
                     }
