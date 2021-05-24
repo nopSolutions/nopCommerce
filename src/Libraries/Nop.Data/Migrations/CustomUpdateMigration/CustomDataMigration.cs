@@ -11,7 +11,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.CustomUpdateMigration
 {
-    [NopMigration("2020-06-10 09:30:17:6458859", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6453239", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class CustomDataMigration : Migration
     {
@@ -81,6 +81,12 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             {
                 Alter.Table(orderTableName)
                     .AddColumn(ratingTextColumnName).AsString().Nullable().SetExistingRowsTo(null);
+            }
+            var rateNotificationSendColumnName = "RateNotificationSend";
+            if (!Schema.Table(orderTableName).Column(rateNotificationSendColumnName).Exists())
+            {
+                Alter.Table(orderTableName)
+                    .AddColumn(rateNotificationSendColumnName).AsBoolean().Nullable().SetExistingRowsTo(false);
             }
 
             //customer
