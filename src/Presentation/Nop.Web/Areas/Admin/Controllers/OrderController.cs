@@ -882,8 +882,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var pushTicketReq = new PushTicketRequest()
                 {
                     PushTo = new List<string>() { customer.PushToken },
-                    PushTitle = string.Format(await _localizationService.GetResourceAsync("PushNotification.OrderPaidTitle"), await _localizationService.GetLocalizedEnumAsync(order.OrderStatus)),
-                    PushBody = string.Format(await _localizationService.GetResourceAsync("PushNotification.OrderPaidBody"), await _localizationService.GetLocalizedEnumAsync(order.OrderStatus))
+                    PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderStatusChangeTitle"),
+                    PushBody = string.Format(await _localizationService.GetResourceAsync("PushNotification.OrderStatusChangeBody"), await _localizationService.GetLocalizedEnumAsync(order.OrderStatus))
                 };
                 var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
 

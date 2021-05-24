@@ -221,9 +221,9 @@ namespace Nop.Services.Orders
                 return null;
 
             return await (from o in _orderRepository.Table
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    where oi.Id == orderItemId
-                    select o).FirstOrDefaultAsync();
+                          join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                          where oi.Id == orderItemId
+                          select o).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the order
         /// </returns>
-        public virtual async Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds) 
+        public virtual async Task<IList<Order>> GetOrdersByIdsAsync(int[] orderIds)
         {
             return await _orderRepository.GetByIdsAsync(orderIds, includeDeleted: false);
         }
@@ -304,7 +304,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "",
-            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool isRateNotificationSend = false)
         {
             var query = _orderRepository.Table;
 
@@ -314,10 +314,10 @@ namespace Nop.Services.Orders
             if (vendorId > 0)
             {
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    where p.VendorId == vendorId
-                    select o;
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        where p.VendorId == vendorId
+                        select o;
 
                 query = query.Distinct();
             }
@@ -327,19 +327,19 @@ namespace Nop.Services.Orders
 
             if (productId > 0)
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    where oi.ProductId == productId
-                    select o;
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        where oi.ProductId == productId
+                        select o;
 
             if (warehouseId > 0)
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
                 query = from o in query
-                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId into ps
-                    from pwi in ps.DefaultIfEmpty()
+                        join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                        join p in _productRepository.Table on oi.ProductId equals p.Id
+                        join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId into ps
+                        from pwi in ps.DefaultIfEmpty()
                         where
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
@@ -347,7 +347,7 @@ namespace Nop.Services.Orders
                         //"Use multiple warehouses" disabled
                         //we use standard "warehouse" property
                         ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
-                    select o;
+                        select o;
             }
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
@@ -375,13 +375,16 @@ namespace Nop.Services.Orders
                 query = query.Where(o => _orderNoteRepository.Table.Any(oNote => oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)));
 
             query = from o in query
-                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                where
-                    (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
-                    (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
-                    (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
-                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
-                select o;
+                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                    where
+                        (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
+                        (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
+                        (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                        (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
+                    select o;
+
+            if (isRateNotificationSend)
+                query = query.Where(o => !o.RateNotificationSend);
 
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
@@ -563,9 +566,9 @@ namespace Nop.Services.Orders
                 return null;
 
             return await (from p in _productRepository.Table
-                    join oi in _orderItemRepository.Table on p.Id equals oi.ProductId
-                    where oi.Id == orderItemId
-                    select p).SingleOrDefaultAsync();
+                          join oi in _orderItemRepository.Table on p.Id equals oi.ProductId
+                          where oi.Id == orderItemId
+                          select p).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -585,13 +588,13 @@ namespace Nop.Services.Orders
                 return new List<OrderItem>();
 
             return await (from oi in _orderItemRepository.Table
-                    join p in _productRepository.Table on oi.ProductId equals p.Id
-                    where
-                    oi.OrderId == orderId &&
-                    (!isShipEnabled.HasValue || (p.IsShipEnabled == isShipEnabled.Value)) &&
-                    (!isNotReturnable.HasValue || (p.NotReturnable == isNotReturnable)) &&
-                    (vendorId <= 0 || (p.VendorId == vendorId))
-                    select oi).ToListAsync();
+                          join p in _productRepository.Table on oi.ProductId equals p.Id
+                          where
+                          oi.OrderId == orderId &&
+                          (!isShipEnabled.HasValue || (p.IsShipEnabled == isShipEnabled.Value)) &&
+                          (!isNotReturnable.HasValue || (p.NotReturnable == isNotReturnable)) &&
+                          (vendorId <= 0 || (p.VendorId == vendorId))
+                          select oi).ToListAsync();
         }
 
         /// <summary>
@@ -984,7 +987,7 @@ namespace Nop.Services.Orders
                          select rp;
 
             var recurringPayments = await query2.ToPagedListAsync(pageIndex, pageSize);
-            
+
             return recurringPayments;
         }
 

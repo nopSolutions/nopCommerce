@@ -135,6 +135,7 @@ namespace Nop.Web.Controllers.Api.Security
                             success = true,
                             message = await _localizationService.GetResourceAsync("Customer.Login.Successfully"),
                             token,
+                            pushToken = customer.PushToken,
                             shippingAddress,
                             firstName,
                             lastName,
@@ -177,12 +178,52 @@ namespace Nop.Web.Controllers.Api.Security
             return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Customer.Logout.Successfully") });
         }
 
+        [AllowAnonymous]
         [HttpGet("check-customer-token")]
-        public IActionResult CheckCustomerToken(string token)
+        public async Task<IActionResult> CheckCustomerToken()
         {
-            var decryptedToken = _encryptionService.DecryptText(token);
-            return Ok(new { success = true, message = "", decryptedToken });
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (customer == null)
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
+
+            var jwt = new JwtService(_config);
+            var token = jwt.GenerateSecurityToken(customer.Email, customer.Id);
+            var shippingAddress = customer.ShippingAddressId.HasValue ? await _addressService.GetAddressByIdAsync(customer.ShippingAddressId.Value) : null;
+            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+
+            return Ok(new
+            {
+                success = true,
+                token,
+                pushToken = customer.PushToken,
+                shippingAddress,
+                firstName,
+                lastName,
+                RemindMeNotification = customer.RemindMeNotification,
+                RateReminderNotification = customer.RateReminderNotification,
+                OrderStatusNotification = customer.OrderStatusNotification,
+                avatar = await _pictureService.GetPictureUrlAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute), _mediaSettings.AvatarPictureSize, true)
+            });
         }
+
+        [AllowAnonymous]
+        [HttpPost("set-customer-pushtoken/{pushToken}")]
+        public async Task<IActionResult> SetCustomerPushToken(string pushToken)
+        {
+            if (!string.IsNullOrWhiteSpace(pushToken))
+            {
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (customer == null)
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
+
+                customer.PushToken = pushToken;
+                await _customerService.UpdateCustomerAsync(customer);
+                return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenUpdated") });
+            }
+            return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenNotFound") });
+        }
+
         #endregion
     }
 }

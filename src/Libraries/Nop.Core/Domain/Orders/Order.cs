@@ -283,6 +283,7 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
+        public bool RateNotificationSend { get; set; }
         public DateTime ScheduleDate { get; set; }
 
         /// <summary>

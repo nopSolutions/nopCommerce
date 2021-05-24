@@ -1132,6 +1132,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.CustomOrderNumber = order.CustomOrderNumber;
                 model.CustomerIp = order.CustomerIp;
                 model.CustomerId = customer.Id;
+                model.ScheduleDate = order.ScheduleDate;
+                model.Rating = order.Rating;
                 model.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
                 model.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
                 model.CustomerInfo = await _customerService.IsRegisteredAsync(customer) ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");

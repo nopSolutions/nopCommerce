@@ -681,6 +681,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.VendorId = customer.VendorId;
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
+                    model.PushToken = customer.PushToken;
                     model.Active = customer.Active;
                     model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
                     model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);

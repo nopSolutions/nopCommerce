@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Expo.Server.Client;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Common.PushApiTask;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -74,7 +75,7 @@ namespace Nop.Services.Common
                 DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
                 foreach (var rateRemainderCustomer in rateRemainderCustomers)
                 {
-                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, createdToUtc: currentDate);
+                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, createdToUtc: currentDate, osIds: new List<int> { (int)OrderStatus.Complete }, isRateNotificationSend: true);
                     if (customerOrders.Count > 0)
                     {
                         foreach (var customerOrder in customerOrders)
@@ -93,6 +94,9 @@ namespace Nop.Services.Common
                                         PushData = new { customerOrder.Id }
                                     };
                                     var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
+
+                                    customerOrder.RateNotificationSend = true;
+                                    await _orderService.UpdateOrderAsync(customerOrder);
                                 }
                             }
                         }
