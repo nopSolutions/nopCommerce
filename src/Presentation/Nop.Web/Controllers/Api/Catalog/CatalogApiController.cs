@@ -199,11 +199,12 @@ namespace Nop.Web.Controllers.Api.Security
                             result.ProductSpecificationAttribute.Add(model1);
                         }
                     }
-                    var allProductTags = await _productTagService.GetAllProductTagsAsync();
-                    result.ProductTags = allProductTags.Select(x => new ProductTagApiModel
+                    var allVendors = await _vendorService.GetAllVendorsAsync();
+                    result.ProductVendors = allVendors.Select(x => new VendorBriefInfoModel
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
+                        SeName = _urlRecordService.GetSeNameAsync(x).GetAwaiter().GetResult()
                     }).ToList();
                     return result;
                 });
@@ -263,12 +264,16 @@ namespace Nop.Web.Controllers.Api.Security
                         });
                     }
                 }
-                var productTags = await _productTagService.GetAllProductTagsByProductIdAsync(product.Id);
-                result.ProductTags = productTags.Select(x => new ProductTagApiModel
+                var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
+                if (vendor != null)
                 {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToList();
+                    result.ProductVendors.Add(new VendorBriefInfoModel
+                    {
+                        Id = vendor.Id,
+                        Name = vendor.Name,
+                        SeName = _urlRecordService.GetSeNameAsync(vendor).GetAwaiter().GetResult()
+                    });
+                }
                 return result;
             });
             return productSpecifications;
@@ -441,8 +446,8 @@ namespace Nop.Web.Controllers.Api.Security
             return Json(result);
         }
 
-        [HttpGet("product-specification-attributes-and-producttags")]
-        public async Task<IActionResult> AllProductSpecificationAndProductTags()
+        [HttpGet("product-specification-attributes-and-productvendors")]
+        public async Task<IActionResult> AllProductSpecificationAndProductVendors()
         {
             //model
             var model = await PrepareProductSpecificationAttributeModelAsync(null);

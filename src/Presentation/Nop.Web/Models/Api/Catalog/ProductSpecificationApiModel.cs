@@ -8,11 +8,11 @@ namespace Nop.Web.Models.Catalog
     {
         public ProductSpecificationApiModel()
         {
-            ProductTags = new List<ProductTagApiModel>();
+            ProductVendors = new List<VendorBriefInfoModel>();
             ProductSpecificationAttribute = new List<ProductSpecificationAttributeApiModel>();
         }
 
-        public List<ProductTagApiModel> ProductTags { get; set; }
+        public List<VendorBriefInfoModel> ProductVendors { get; set; }
         public IList<ProductSpecificationAttributeApiModel> ProductSpecificationAttribute { get; set; }
 
     }
