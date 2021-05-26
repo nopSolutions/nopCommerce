@@ -287,6 +287,39 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
+        /// Deletes a shipment item
+        /// </summary>
+        /// <param name="shipmentItem">Shipment Item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteShipmentItemAsync(ShipmentItem shipmentItem)
+        {
+            await _siRepository.DeleteAsync(shipmentItem);
+        }
+
+        /// <summary>
+        /// Updates a shipment item
+        /// </summary>
+        /// <param name="shipmentItem">Shipment item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateShipmentItemAsync(ShipmentItem shipmentItem)
+        {
+            await _siRepository.UpdateAsync(shipmentItem);
+        }
+
+        /// <summary>
+        /// Gets a shipment item
+        /// </summary>
+        /// <param name="shipmentItemId">Shipment item identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment item
+        /// </returns>
+        public virtual async Task<ShipmentItem> GetShipmentItemByIdAsync(int shipmentItemId)
+        {
+            return await _siRepository.GetByIdAsync(shipmentItemId);
+        }
+
+        /// <summary>
         /// Get quantity in shipments. For example, get planned quantity to be shipped
         /// </summary>
         /// <param name="product">Product</param>

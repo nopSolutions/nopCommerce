@@ -117,6 +117,30 @@ namespace Nop.Services.Shipping
         Task InsertShipmentItemAsync(ShipmentItem shipmentItem);
 
         /// <summary>
+        /// Deletes a shipment item
+        /// </summary>
+        /// <param name="shipmentItem">Shipment Item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteShipmentItemAsync(ShipmentItem shipmentItem);
+
+        /// <summary>
+        /// Updates a shipment item
+        /// </summary>
+        /// <param name="shipmentItem">Shipment item</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateShipmentItemAsync(ShipmentItem shipmentItem);
+
+        /// <summary>
+        /// Gets a shipment item
+        /// </summary>
+        /// <param name="shipmentItemId">Shipment item identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipment item
+        /// </returns>
+        Task<ShipmentItem> GetShipmentItemByIdAsync(int shipmentItemId);
+
+        /// <summary>
         /// Get quantity in shipments. For example, get planned quantity to be shipped
         /// </summary>
         /// <param name="product">Product</param>
