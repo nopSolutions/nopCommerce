@@ -10374,6 +10374,12 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords">
+    <Value>Search keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint">
+    <Value>Search message template(s) by specific keywords.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test">
     <Value>Test template</Value>
   </LocaleResource>

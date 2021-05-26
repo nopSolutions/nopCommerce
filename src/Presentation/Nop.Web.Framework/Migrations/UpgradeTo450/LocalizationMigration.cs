@@ -27,6 +27,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
             localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
+                //#5696
+                ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
+                ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint"] = "Search message template(s) by specific keywords.",
             }).Wait();
 
             // rename locales
