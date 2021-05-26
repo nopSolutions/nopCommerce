@@ -4368,6 +4368,33 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys.Hint">
     <Value>Enable this setting to store the Data Protection keys in Azure Blob Storage.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AwsS3">
+    <Value>Aws S3 storage configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AwsS3.Region">
+    <Value>Aws S3 region</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AwsS3.Region.Hint">
+    <Value>Specify the region for S3 bucket</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Bucket">
+    <Value>Aws S3 bucket name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Bucket.Hint">
+    <Value>Specify the name for S3 bucket</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AccessKeyId">
+    <Value>Aws S3 access key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AccessKeyId.Hint">
+    <Value>AccessKeyId of S3 user from Aws console</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.SecretAccessKey">
+    <Value>Aws S3 secret key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.SecretAccessKey.Hint">
+    <Value>SecretAccessKey of S3 user from Aws console</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
     <Value>Cache configuration</Value>
   </LocaleResource>

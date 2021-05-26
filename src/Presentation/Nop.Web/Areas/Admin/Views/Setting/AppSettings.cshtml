@@ -12,6 +12,8 @@
     var hideDistributedCacheBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDistributedCacheBlockAttributeName);
     const string hideAzureBlobBlockAttributeName = "AppSettingsPage.HideAzureBlobBlock";
     var hideAzureBlobBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAzureBlobBlockAttributeName);
+    const string hideAwsS3bBlockAttributeName = "AppSettingsPage.HideAwsS3Block";
+    var hideAwsS3Block = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAwsS3bBlockAttributeName);
     const string hideInstallationBlockAttributeName = "AppSettingsPage.HideInstallationBlock";
     var hideInstallationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInstallationBlockAttributeName);
     const string hidePluginBlockAttributeName = "AppSettingsPage.HidePluginBlock";
@@ -53,6 +55,7 @@
                 <nop-card asp-name="app-settings-distributed-cache" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.DistributedCache")" asp-hide-block-attribute-name="@hideDistributedCacheBlockAttributeName" asp-hide="@hideDistributedCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.DistributedCache", Model)</nop-card>
                 <nop-card asp-name="app-settings-hosting" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Hosting")" asp-hide-block-attribute-name="@hideHostingBlockAttributeName" asp-hide="@hideHostingBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Hosting", Model)</nop-card>
                 <nop-card asp-name="app-settings-azure-blob" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.AzureBlob")" asp-hide-block-attribute-name="@hideAzureBlobBlockAttributeName" asp-hide="@hideAzureBlobBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.AzureBlob", Model)</nop-card>
+                <nop-card asp-name="app-settings-aws-s3" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.AwsS3")" asp-hide-block-attribute-name="@hideAwsS3bBlockAttributeName" asp-hide="@hideAwsS3Block" asp-advanced="false">@await Html.PartialAsync("_AppSettings.AwsS3", Model)</nop-card>
                 <nop-card asp-name="app-settings-installation" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Installation")" asp-hide-block-attribute-name="@hideInstallationBlockAttributeName" asp-hide="@hideInstallationBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Installation", Model)</nop-card>
                 <nop-card asp-name="app-settings-plugin" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Plugin")" asp-hide-block-attribute-name="@hidePluginBlockAttributeName" asp-hide="@hidePluginBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Plugin", Model)</nop-card>
                 <nop-card asp-name="app-settings-common" asp-icon="fas fa-cogs" asp-title="@T("Admin.Configuration.AppSettings.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Common", Model)</nop-card>
