@@ -20,11 +20,35 @@ namespace Nop.Services.Security
         Task<IList<PermissionRecord>> GetAllPermissionRecordsAsync();
 
         /// <summary>
+        /// Inserts a permission
+        /// </summary>
+        /// <param name="permission">Permission</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertPermissionRecordAsync(PermissionRecord permission);
+
+        /// <summary>
+        /// Gets a permission record by identifier
+        /// </summary>
+        /// <param name="permission">Permission</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a permission record
+        /// </returns>
+        Task<PermissionRecord> GetPermissionRecordByIdAsync(int permissionId);
+
+        /// <summary>
         /// Updates the permission
         /// </summary>
         /// <param name="permission">Permission</param>
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdatePermissionRecordAsync(PermissionRecord permission);
+
+        /// <summary>
+        /// Deletes the permission
+        /// </summary>
+        /// <param name="permission">Permission</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeletePermissionRecordAsync(PermissionRecord permission);
 
         /// <summary>
         /// Install permissions
