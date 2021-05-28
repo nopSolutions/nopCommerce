@@ -17,7 +17,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
 
         public override void Up()
         {
-            //_migrationManager.BuildTable<TaxRate>(Create);
+            _migrationManager.BuildTable<TaxRate>(Create);
         }
     }
 }

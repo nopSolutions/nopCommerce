@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Expo.Server.Client;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -49,6 +51,7 @@ namespace Nop.Web.Controllers.Api.Security
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -70,7 +73,8 @@ namespace Nop.Web.Controllers.Api.Security
             IPaymentService paymentService,
             IOrderProcessingService orderProcessingService,
             IOrderTotalCalculationService orderTotalCalculationService,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            ICompanyService companyService)
         {
             _orderService = orderService;
             _customerService = customerService;
@@ -89,6 +93,7 @@ namespace Nop.Web.Controllers.Api.Security
             _orderProcessingService = orderProcessingService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _customerActivityService = customerActivityService;
+            _companyService = companyService;
         }
 
         #endregion
@@ -179,6 +184,50 @@ namespace Nop.Web.Controllers.Api.Security
             public string RatingText { get; set; }
         }
 
+        public class CompanyDetailsModel
+        {
+            public CompanyDetailsModel()
+            {
+                Adresses = new List<Address>();
+            }
+            public List<Address> Adresses { get; set; }
+            public decimal AmoutLimit { get; set; }
+            public string CompanyName { get; set; }
+        }
+
+        [HttpGet("company-details")]
+        public async Task<IActionResult> GetCompanyDetails()
+        {
+            var companyDetails = new CompanyDetailsModel();
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            var company = await _companyService.GetCompanyByCustomerIdAsync(currentCustomer.Id);
+            if (company != null)
+            {
+                companyDetails.CompanyName = company.Name;
+                companyDetails.AmoutLimit = company.AmountLimit;
+                var companyCustomerIds = await _companyService.GetCompanyCustomersByCompanyIdAsync(company.Id);
+                if (companyCustomerIds.Any())
+                {
+                    var customers = await _customerService.GetCustomersByIdsAsync(companyCustomerIds.Select(x => x.CustomerId).ToArray());
+                    if (customers.Any())
+                    {
+                        var addresses = new List<Address>();
+                        foreach (var customer in customers)
+                        {
+                            foreach (var address in await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
+                            {
+                                addresses.Add(address);
+                            }
+                        }
+                        companyDetails.Adresses = addresses;
+                    }
+                }
+                return Ok(new { success = true, companyDetails });
+            }
+
+            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Company.NotFound") });
+        }
+
         [HttpPost("cancel-order/{id}")]
         public async Task<IActionResult> CancelOrder(int id)
         {
@@ -250,8 +299,7 @@ namespace Nop.Web.Controllers.Api.Security
 
                 counter++;
             }
-            var sdad = errorList.Where(x => x.Success);
-            var ssss = errorList.Where(x => x.Success).Select(x => x.Message).FirstOrDefault();
+
             var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, _storeContext.GetCurrentStore().Id);
 
             var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false);
@@ -276,6 +324,10 @@ namespace Nop.Web.Controllers.Api.Security
                 placeOrderResult.PlacedOrder.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(Convert.ToDateTime(scheduleDate));
                 await _orderService.UpdateOrderAsync(placeOrderResult.PlacedOrder);
 
+                customer.BillingAddressId = placeOrderResult.PlacedOrder.BillingAddressId;
+                customer.ShippingAddressId = placeOrderResult.PlacedOrder.ShippingAddressId;
+                await _customerService.UpdateCustomerAsync(customer);
+
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Placed.Successfully") });
             }
             return Ok(new { success = false, message = string.Join(", ", placeOrderResult.Errors).ToString() });
@@ -285,7 +337,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
-                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Order.NoOrderFound")});
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Order.NoOrderFound") });
 
             var productsList = new List<ReOrderModel>();
             //move shopping cart items (if possible)

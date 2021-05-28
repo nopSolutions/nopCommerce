@@ -23,7 +23,8 @@ namespace Nop.Services.Companies
         Task DeleteCompanyCustomerAsync(CompanyCustomer companyCustomer);
         Task<IPagedList<CompanyCustomer>> GetCompanyCustomersByCompanyIdAsync(int companyId,
            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
-        Task<IList<CompanyCustomer>> GetCompanyCustomersByProductIdAsync(int customerId, bool showHidden = false);
+        Task<IList<CompanyCustomer>> GetCompanyCustomersByCustomerIdAsync(int customerId, bool showHidden = false);
+        Task<Company> GetCompanyByCustomerIdAsync(int customerId);
         Task<CompanyCustomer> GetCompanyCustomersByIdAsync(int companyCustomersId);
         Task InsertCompanyCustomerAsync(CompanyCustomer companyCustomer);
         Task UpdateCompanyCustomerAsync(CompanyCustomer companyCustomer);
