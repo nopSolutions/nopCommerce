@@ -13,6 +13,6 @@
         /// <summary>
         /// Gets the name of the key path used to store the protection key list to local file system (used when UseAzureBlobStorageToStoreDataProtectionKeys option not enabled)
         /// </summary>
-        public static string DataProtectionKeysPath => "~/App_Data/DataProtectionKeys";
+        public static string DataProtectionKeysPath => "~/persistent/DataProtectionKeys";
     }
 }
