@@ -39,6 +39,7 @@ namespace Nop.Web.Infrastructure
             services.AddScoped<IBlogModelFactory, BlogModelFactory>();
             services.AddScoped<ICampaignModelFactory, CampaignModelFactory>();
             services.AddScoped<ICategoryModelFactory, CategoryModelFactory>();
+            services.AddScoped<ICompanyModelFactory, CompanyModelFactory>();
             services.AddScoped<ICheckoutAttributeModelFactory, CheckoutAttributeModelFactory>();
             services.AddScoped<ICommonModelFactory, CommonModelFactory>();
             services.AddScoped<ICountryModelFactory, CountryModelFactory>();

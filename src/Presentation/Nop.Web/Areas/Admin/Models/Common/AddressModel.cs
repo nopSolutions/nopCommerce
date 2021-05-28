@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
             AvailableStates = new List<SelectListItem>();
             CustomAddressAttributes = new List<AddressAttributeModel>();
         }
-
+        public int CustomerId{ get; set; }
         [NopResourceDisplayName("Admin.Address.Fields.FirstName")]
         public string FirstName { get; set; }
 

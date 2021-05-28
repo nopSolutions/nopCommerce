@@ -17,6 +17,7 @@ using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
+using Nop.Services.Companies;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -110,6 +111,7 @@ namespace Nop.Web.Framework.Infrastructure
             //services
             services.AddScoped<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<ICompareProductsService, CompareProductsService>();
             services.AddScoped<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
             services.AddScoped<IManufacturerService, ManufacturerService>();

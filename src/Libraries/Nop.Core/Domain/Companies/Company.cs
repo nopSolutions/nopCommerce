@@ -1,0 +1,10 @@
+﻿using Nop.Core.Domain.Localization;
+
+namespace Nop.Core.Domain.Companies
+{
+    public partial class Company : BaseEntity, ILocalizedEntity
+    {
+        public string Name { get; set; }
+        public decimal AmountLimit { get; set; }
+    }
+}
