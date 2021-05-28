@@ -21,7 +21,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets the path to file that contains installed plugin system names
         /// </summary>
-        public static string PluginsInfoFilePath => "~/App_Data/plugins.json";
+        public static string PluginsInfoFilePath => "~/persistent/plugins.json";
 
         /// <summary>
         /// Gets the path to plugins folder
