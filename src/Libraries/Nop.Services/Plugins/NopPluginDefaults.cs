@@ -11,17 +11,17 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets the path to file that contained (in previous versions) installed plugin system names
         /// </summary>
-        public static string ObsoleteInstalledPluginsFilePath => "~/App_Data/InstalledPlugins.txt";
+        public static string ObsoleteInstalledPluginsFilePath => "~/presistence/InstalledPlugins.txt";
 
         /// <summary>
         /// Gets the path to file that contains installed plugin system names
         /// </summary>
-        public static string InstalledPluginsFilePath => "~/App_Data/installedPlugins.json";
+        public static string InstalledPluginsFilePath => "~/presistence/installedPlugins.json";
 
         /// <summary>
         /// Gets the path to file that contains installed plugin system names
         /// </summary>
-        public static string PluginsInfoFilePath => "~/App_Data/plugins.json";
+        public static string PluginsInfoFilePath => "~/presistence/plugins.json";
 
         /// <summary>
         /// Gets the path to plugins folder
@@ -71,7 +71,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets the path to temp directory with uploads
         /// </summary>
-        public static string UploadsTempPath => "~/App_Data/TempUploads";
+        public static string UploadsTempPath => "~/presistence/TempUploads";
 
         /// <summary>
         /// Gets the name of the file containing information about the uploaded items
