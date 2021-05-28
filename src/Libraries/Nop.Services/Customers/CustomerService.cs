@@ -1668,6 +1668,16 @@ namespace Nop.Services.Customers
             return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
+        public virtual async Task<IList<CustomerAddressMapping>> GetCustomerByAddressIdAsync(int addressId)
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var query = from address in _customerAddressMappingRepository.Table
+                        where address.AddressId == addressId
+                        select address;
+
+            return await query.ToListAsync();
+        }
+
         /// <summary>
         /// Gets a address mapped to customer
         /// </summary>

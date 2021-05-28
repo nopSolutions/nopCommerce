@@ -571,6 +571,8 @@ namespace Nop.Services.Customers
         /// </returns>
         Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId);
 
+        Task<IList<CustomerAddressMapping>> GetCustomerByAddressIdAsync(int addressId);
+
         /// <summary>
         /// Gets a address mapped to customer
         /// </summary>

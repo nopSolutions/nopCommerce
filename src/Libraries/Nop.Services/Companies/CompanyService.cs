@@ -116,7 +116,7 @@ namespace Nop.Services.Companies
             return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
-        public virtual async Task<IList<CompanyCustomer>> GetCompanyCustomersByProductIdAsync(int customerId, bool showHidden = false)
+        public virtual async Task<IList<CompanyCustomer>> GetCompanyCustomersByCustomerIdAsync(int customerId, bool showHidden = false)
         {
             return await GetCompanyCustomersByCustomerIdAsync(customerId, (await _storeContext.GetCurrentStoreAsync()).Id, showHidden);
         }
@@ -135,6 +135,21 @@ namespace Nop.Services.Companies
         {
             await _companyCustomerRepository.UpdateAsync(companyCustomer);
 
+        }
+        public virtual async Task<Company> GetCompanyByCustomerIdAsync(int customerId)
+        {
+            if (customerId == 0)
+                return null;
+
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            var companies = _companyRepository.Table;
+
+            companies = from company in companies
+                             join dcm in _companyCustomerRepository.Table on company.Id equals dcm.CompanyId
+                             where dcm.CustomerId == customerId
+                        select company;
+            return companies.FirstOrDefault();
         }
 
         protected virtual async Task<IList<CompanyCustomer>> GetCompanyCustomersByCustomerIdAsync(int customerId, int storeId,

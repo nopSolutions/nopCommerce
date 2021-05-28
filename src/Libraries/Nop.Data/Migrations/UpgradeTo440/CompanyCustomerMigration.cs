@@ -1,44 +1,44 @@
-﻿using FluentMigrator;
-using Nop.Core.Domain.Companies;
-using Nop.Data.Mapping;
+﻿//using FluentMigrator;
+//using Nop.Core.Domain.Companies;
+//using Nop.Data.Mapping;
 
-namespace Nop.Data.Migrations.UpgradeTo440
-{
-    [NopMigration("2020/03/08 11:26:08:9037938", "Company Customer")]
-    [SkipMigrationOnInstall]
-    public class CompanyCustomerMigration : MigrationBase
-    {
-        #region Fields
+//namespace Nop.Data.Migrations.UpgradeTo440
+//{
+//    [NopMigration("2020/03/08 11:26:08:9037938", "Company Customer")]
+//    [SkipMigrationOnInstall]
+//    public class CompanyCustomerMigration : MigrationBase
+//    {
+//        #region Fields
 
-        private readonly IMigrationManager _migrationManager;
+//        private readonly IMigrationManager _migrationManager;
 
-        #endregion
+//        #endregion
 
-        #region Ctor
+//        #region Ctor
 
-        public CompanyCustomerMigration(IMigrationManager migrationManager)
-        {
-            _migrationManager = migrationManager;
-        }
+//        public CompanyCustomerMigration(IMigrationManager migrationManager)
+//        {
+//            _migrationManager = migrationManager;
+//        }
 
-        #endregion
+//        #endregion
 
-        #region Methods
+//        #region Methods
 
-        /// <summary>
-        /// Collect the UP migration expressions
-        /// </summary>
-        public override void Up()
-        {
-            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(CompanyCustomer))).Exists())
-                _migrationManager.BuildTable<CompanyCustomer>(Create);
-        }
+//        /// <summary>
+//        /// Collect the UP migration expressions
+//        /// </summary>
+//        public override void Up()
+//        {
+//            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(CompanyCustomer))).Exists())
+//                _migrationManager.BuildTable<CompanyCustomer>(Create);
+//        }
 
-        public override void Down()
-        {
-            //add the downgrade logic if necessary 
-        }
+//        public override void Down()
+//        {
+//            //add the downgrade logic if necessary 
+//        }
 
-        #endregion
-    }
-}
+//        #endregion
+//    }
+//}

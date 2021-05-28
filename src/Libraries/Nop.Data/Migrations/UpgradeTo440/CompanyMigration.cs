@@ -6,7 +6,7 @@ using Nop.Core.Domain.Companies;
 
 namespace Nop.Data.Migrations.UpgradeTo440
 {
-    [NopMigration("2020/03/08 11:26:08:9037988", "Company")]
+    [NopMigration("2020/03/08 11:26:08:9037989", "Company")]
     [SkipMigrationOnInstall]
     public class CompanyMigration : MigrationBase
     {
@@ -34,6 +34,9 @@ namespace Nop.Data.Migrations.UpgradeTo440
         {
             if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(Company))).Exists())
                 _migrationManager.BuildTable<Company>(Create);
+
+            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(CompanyCustomer))).Exists())
+                _migrationManager.BuildTable<CompanyCustomer>(Create);
         }
 
         public override void Down()

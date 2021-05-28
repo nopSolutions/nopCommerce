@@ -20,6 +20,7 @@ using Nop.Core.Events;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -84,6 +85,7 @@ namespace Nop.Services.Orders
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -131,7 +133,8 @@ namespace Nop.Services.Orders
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            ICompanyService companyService)
         {
             _currencySettings = currencySettings;
             _addressService = addressService;
@@ -176,6 +179,7 @@ namespace Nop.Services.Orders
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
+            _companyService = companyService;
         }
 
         #endregion
@@ -593,7 +597,7 @@ namespace Nop.Services.Orders
                 $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
 
             //order total (and applied discounts, gift cards, reward points)
-            var (orderTotal, orderDiscountAmount, orderAppliedDiscounts, appliedGiftCards, redeemedRewardPoints,  redeemedRewardPointsAmount) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
+            var (orderTotal, orderDiscountAmount, orderAppliedDiscounts, appliedGiftCards, redeemedRewardPoints, redeemedRewardPointsAmount) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
             if (!orderTotal.HasValue)
                 throw new NopException("Order total couldn't be calculated");
 
@@ -709,7 +713,7 @@ namespace Nop.Services.Orders
                     if (await _countryService.GetCountryByAddressAsync(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
                         throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
                 }
-                else if (details.InitialOrder.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(details.InitialOrder.PickupAddressId.Value) is Address pickupAddress) 
+                else if (details.InitialOrder.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(details.InitialOrder.PickupAddressId.Value) is Address pickupAddress)
                     details.PickupAddress = _addressService.CloneAddress(pickupAddress);
 
                 details.ShippingMethodName = details.InitialOrder.ShippingMethod;
@@ -1094,18 +1098,18 @@ namespace Nop.Services.Orders
             }
 
             //reward points
-            if (order.OrderStatus == OrderStatus.Complete) 
+            if (order.OrderStatus == OrderStatus.Complete)
                 await AwardRewardPointsAsync(order);
 
-            if (order.OrderStatus == OrderStatus.Cancelled) 
+            if (order.OrderStatus == OrderStatus.Cancelled)
                 await ReduceRewardPointsAsync(order);
 
             //gift cards activation
-            if (_orderSettings.ActivateGiftCardsAfterCompletingOrder && order.OrderStatus == OrderStatus.Complete) 
+            if (_orderSettings.ActivateGiftCardsAfterCompletingOrder && order.OrderStatus == OrderStatus.Complete)
                 await SetActivatedValueForPurchasedGiftCardsAsync(order, true);
 
             //gift cards deactivation
-            if (_orderSettings.DeactivateGiftCardsAfterCancellingOrder && order.OrderStatus == OrderStatus.Cancelled) 
+            if (_orderSettings.DeactivateGiftCardsAfterCancellingOrder && order.OrderStatus == OrderStatus.Cancelled)
                 await SetActivatedValueForPurchasedGiftCardsAsync(order, false);
         }
 
@@ -1203,7 +1207,7 @@ namespace Nop.Services.Orders
                 return;
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-            
+
             foreach (var customerRole in customerRoles)
             {
                 if (!await _customerService.IsInCustomerRoleAsync(customer, customerRole.SystemName))
@@ -1428,7 +1432,7 @@ namespace Nop.Services.Orders
                     processPaymentResult = (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch
                     {
                         RecurringPaymentType.NotSupported => throw new NopException("Recurring payments are not supported by selected payment method"),
-                        RecurringPaymentType.Manual or 
+                        RecurringPaymentType.Manual or
                         RecurringPaymentType.Automatic => await _paymentService.ProcessRecurringPaymentAsync(processPaymentRequest),
                         _ => throw new NopException("Not supported recurring payment type"),
                     };
@@ -1478,7 +1482,7 @@ namespace Nop.Services.Orders
             foreach (var discount in details.AppliedDiscounts)
             {
                 var d = await _discountService.GetDiscountByIdAsync(discount.Id);
-                if (d == null) 
+                if (d == null)
                     continue;
 
                 await _discountService.InsertDiscountUsageHistoryAsync(new DiscountUsageHistory
@@ -1550,7 +1554,7 @@ namespace Nop.Services.Orders
                                 order.ShippingStatus == ShippingStatus.Delivered;
             }
 
-            if (completed) 
+            if (completed)
                 await SetOrderStatusAsync(order, OrderStatus.Complete, true);
         }
 
@@ -1583,6 +1587,22 @@ namespace Nop.Services.Orders
 
                 if (processPaymentResult.Success)
                 {
+                    //Check Customer today orders total amount is greater than company limited amount
+                    var company = await _companyService.GetCompanyByCustomerIdAsync(details.Customer.Id);
+                    if (company != null)
+                    {
+                        var orders = await _orderService.SearchOrdersAsync(customerId: details.Customer.Id);
+                        if (orders.Any())
+                        {
+                            var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
+                            var todayOrderTotal = orders.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
+                            if (todayOrderTotal > company.AmountLimit)
+                            {
+                                result.Errors.Add(string.Join(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), todayOrderTotal));
+                            }
+                        }
+                    }
+
                     var order = await SaveOrderDetailsAsync(processPaymentRequest, processPaymentResult, details);
                     result.PlacedOrder = order;
 
@@ -1596,7 +1616,7 @@ namespace Nop.Services.Orders
                     await SaveGiftCardUsageHistoryAsync(details, order);
 
                     //recurring orders
-                    if (details.IsRecurringShoppingCart) 
+                    if (details.IsRecurringShoppingCart)
                         await CreateFirstRecurringPaymentAsync(processPaymentRequest, order);
 
                     //notifications
@@ -1775,7 +1795,7 @@ namespace Nop.Services.Orders
 
                 //cancel recurring payments
                 var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
-                foreach (var rp in recurringPayments) 
+                foreach (var rp in recurringPayments)
                     await CancelRecurringPaymentAsync(rp);
 
                 //Adjust inventory for already shipped shipments
@@ -2146,7 +2166,7 @@ namespace Nop.Services.Orders
                 return false;
 
             var orderCustomer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-            
+
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
@@ -2303,12 +2323,12 @@ namespace Nop.Services.Orders
             await ReturnBackRedeemedRewardPointsAsync(order);
 
             //delete gift card usage history
-            if (_orderSettings.DeleteGiftCardUsageHistory) 
+            if (_orderSettings.DeleteGiftCardUsageHistory)
                 await _giftCardService.DeleteGiftCardUsageHistoryAsync(order);
 
             //cancel recurring payments
             var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
-            foreach (var rp in recurringPayments) 
+            foreach (var rp in recurringPayments)
                 await CancelRecurringPaymentAsync(rp);
 
             //Adjust inventory for already shipped shipments
@@ -2375,8 +2395,8 @@ namespace Nop.Services.Orders
 
             //check order status
             await CheckOrderStatusAsync(order);
-        
-            await _eventPublisher.PublishAsync(new OrderAuthorizedEvent(order)); 
+
+            await _eventPublisher.PublishAsync(new OrderAuthorizedEvent(order));
         }
 
         /// <summary>
@@ -2444,7 +2464,7 @@ namespace Nop.Services.Orders
 
                     await CheckOrderStatusAsync(order);
 
-                    if (order.PaymentStatus == PaymentStatus.Paid) 
+                    if (order.PaymentStatus == PaymentStatus.Paid)
                         await ProcessOrderPaidAsync(order);
                 }
             }
@@ -2519,7 +2539,7 @@ namespace Nop.Services.Orders
 
             await CheckOrderStatusAsync(order);
 
-            if (order.PaymentStatus == PaymentStatus.Paid) 
+            if (order.PaymentStatus == PaymentStatus.Paid)
                 await ProcessOrderPaidAsync(order);
         }
 
@@ -3194,7 +3214,7 @@ namespace Nop.Services.Orders
                 return null;
 
             var historyCollection = await _orderService.GetRecurringPaymentHistoryAsync(recurringPayment);
-            if (historyCollection.Count >= recurringPayment.TotalCycles) 
+            if (historyCollection.Count >= recurringPayment.TotalCycles)
                 return null;
 
             //result

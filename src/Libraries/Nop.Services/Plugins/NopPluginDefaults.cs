@@ -11,18 +11,17 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets the path to file that contained (in previous versions) installed plugin system names
         /// </summary>
-        public static string ObsoleteInstalledPluginsFilePath => "~/App_Data/InstalledPlugins.txt";
+        public static string ObsoleteInstalledPluginsFilePath => "~/persistent/InstalledPlugins.txt";
 
         /// <summary>
         /// Gets the path to file that contains installed plugin system names
         /// </summary>
-        public static string InstalledPluginsFilePath => "~/App_Data/installedPlugins.json";
+        public static string InstalledPluginsFilePath => "~/persistent/installedPlugins.json";
 
         /// <summary>
         /// Gets the path to file that contains installed plugin system names
         /// </summary>
         public static string PluginsInfoFilePath => "~/persistent/plugins.json";
-
         /// <summary>
         /// Gets the path to plugins folder
         /// </summary>

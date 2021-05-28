@@ -5,7 +5,7 @@ using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
 {
     [SkipMigrationOnUpdate]
-    [NopMigration("2020/02/03 09:27:23:6455474", "Tax.FixedOrByCountryStateZip base schema")]
+    [NopMigration("2020/02/03 09:27:23:6455432", "Tax.FixedOrByCountryStateZip base schema")]
     public class SchemaMigration : AutoReversingMigration
     {
         protected IMigrationManager _migrationManager;
@@ -17,7 +17,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
 
         public override void Up()
         {
-            //_migrationManager.BuildTable<TaxRate>(Create);
+            _migrationManager.BuildTable<TaxRate>(Create);
         }
     }
 }
