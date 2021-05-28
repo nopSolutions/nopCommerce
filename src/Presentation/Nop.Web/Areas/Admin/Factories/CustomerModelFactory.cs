@@ -18,6 +18,7 @@ using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Gdpr;
@@ -83,6 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly MediaSettings _mediaSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -125,7 +127,8 @@ namespace Nop.Web.Areas.Admin.Factories
             ITaxService taxService,
             MediaSettings mediaSettings,
             RewardPointsSettings rewardPointsSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            ICompanyService companyService)
         {
             _addressSettings = addressSettings;
             _customerSettings = customerSettings;
@@ -165,6 +168,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _mediaSettings = mediaSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _taxSettings = taxSettings;
+            _companyService = companyService;
         }
 
         #endregion
@@ -711,8 +715,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
                         (await _storeService.GetAllStoresAsync()).Select(x => x.Id).Count() > 1;
 
-                    //prepare model affiliate
-                    var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);
+                    var companyCustomers = await _companyService.GetCompanyCustomersByCustomerIdAsync(customer.Id);
+                    if (companyCustomers.Any())
+                        model.CompanyId = companyCustomers.FirstOrDefault().CompanyId;
+
+                        //prepare model affiliate
+                        var affiliate = await _affiliateService.GetAffiliateByIdAsync(customer.AffiliateId);
                     if (affiliate != null)
                     {
                         model.AffiliateId = affiliate.Id;
@@ -780,6 +788,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available vendors
             await _baseAdminModelFactory.PrepareVendorsAsync(model.AvailableVendors,
                 defaultItemText: await _localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Vendor.None"));
+
+            //prepare available vendors
+            await _baseAdminModelFactory.PrepareCompaniesAsync(model.AvailableCompanies, withSpecialDefaultItem: false);
 
             //prepare model customer attributes
             await PrepareCustomerAttributeModelsAsync(model.CustomerAttributes, customer);

@@ -1,0 +1,20 @@
+@model CustomerAddressModel
+
+<div asp-validation-summary="ModelOnly"></div>
+<input type="hidden" asp-for="CustomerId"/>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAddressDetailsTop, additionalData = Model })
+                <div class="card card-default">
+                    <div class="card-body">
+                        <nop-editor asp-for="Address" asp-template="Address"/>
+                    </div>
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAddressDetailsBottom, additionalData = Model })
+            </div>
+        </div>
+    </div>
+</section>

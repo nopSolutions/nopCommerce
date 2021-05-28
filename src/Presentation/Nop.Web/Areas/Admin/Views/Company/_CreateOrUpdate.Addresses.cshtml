@@ -56,9 +56,13 @@
 
     <script>
         function renderProductAttributesCombinationsColumnEdit(data, type, row, meta) {
-            console.log(row + "asdasd")
             return '<a href="/Admin/Customer/AddressEdit?customerId=' + row.CustomerId + '&addressid='+row.Id+'"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</a>';
                 }
     </script>
 </div>
+ <div class="card-body">
+        <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("AddressCreate", new { customerId = Model.Id })'">
+            @T("Admin.Customers.Customers.Addresses.AddButton")
+        </button>
+    </div>
 }

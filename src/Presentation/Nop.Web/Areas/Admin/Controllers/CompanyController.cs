@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Companies;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -56,6 +58,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
+        private readonly ICustomerModelFactory _customerModelFactory;
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressService _addressService;
 
         #endregion
 
@@ -79,7 +84,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService,
             IUrlRecordService urlRecordService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            ICustomerModelFactory customerModelFactory,
+            IAddressAttributeParser addressAttributeParser,
+            IAddressService addressService)
         {
             _aclService = aclService;
             _companyModelFactory = companyModelFactory;
@@ -100,6 +108,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
+            _customerModelFactory = customerModelFactory;
+            _addressAttributeParser = addressAttributeParser;
+            _addressService = addressService;
         }
 
         #endregion
@@ -402,6 +413,68 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        public virtual async Task<IActionResult> AddressCreate(int customerId)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            //try to get a customer with the specified id
+            var company = await _companyService.GetCompanyByIdAsync(customerId);
+            if (company == null)
+                return RedirectToAction("List");
+
+            //prepare model
+            var model = await _companyModelFactory.PrepareCompanyCustomerAddressModelAsync(new CustomerAddressModel(), company, null);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> AddressCreate(CustomerAddressModel model, IFormCollection form)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var companyId = model.CustomerId;
+            //try to get a customer with the specified id
+            var companies = await _companyService.GetCompanyCustomersByCompanyIdAsync(model.CustomerId);
+            if (!companies.Any())
+                return RedirectToAction("List");
+
+            //custom address attributes
+            var customAttributes = await _addressAttributeParser.ParseCustomAddressAttributesAsync(form);
+            var customAttributeWarnings = await _addressAttributeParser.GetAttributeWarningsAsync(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            if (ModelState.IsValid)
+            {
+                foreach (var company in companies)
+                {
+                    var customer = await _customerService.GetCustomerByIdAsync(company.CustomerId);
+                    var address = model.Address.ToEntity<Address>();
+                    address.CustomAttributes = customAttributes;
+                    address.CreatedOnUtc = DateTime.UtcNow;
+
+                    //some validation
+                    if (address.CountryId == 0)
+                        address.CountryId = null;
+                    if (address.StateProvinceId == 0)
+                        address.StateProvinceId = null;
+
+                    await _addressService.InsertAddressAsync(address);
+
+                    await _customerService.InsertCustomerAddressAsync(customer, address);
+                }
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Companies.Company.Addresses.Added"));
+                return RedirectToAction("Edit", new { id = companyId });
+            }
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
         #endregion
     }
 }

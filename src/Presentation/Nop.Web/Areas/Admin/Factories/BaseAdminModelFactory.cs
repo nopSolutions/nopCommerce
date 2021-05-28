@@ -14,6 +14,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
 using Nop.Services.Catalog;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -61,6 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITopicTemplateService _topicTemplateService;
         private readonly IVendorService _vendorService;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -88,7 +90,8 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             ITopicTemplateService topicTemplateService,
-            IVendorService vendorService)
+            IVendorService vendorService,
+            ICompanyService companyService)
         {
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
@@ -113,6 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _taxCategoryService = taxCategoryService;
             _topicTemplateService = topicTemplateService;
             _vendorService = vendorService;
+            _companyService = companyService;
         }
 
         #endregion
@@ -228,6 +232,33 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 var vendors = await _vendorService.GetAllVendorsAsync(showHidden: showHidden);
                 return vendors.Select(v => new SelectListItem
+                {
+                    Text = v.Name,
+                    Value = v.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
+        }
+
+        protected virtual async Task<List<SelectListItem>> GetCompanyListAsync(bool showHidden = true)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CompaniesListKey, showHidden);
+            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var companies = await _companyService.GetAllCompaniesAsync();
+                return companies.Select(v => new SelectListItem
                 {
                     Text = v.Name,
                     Value = v.Id.ToString()
@@ -576,6 +607,22 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available vendors
             var availableVendorItems = await GetVendorListAsync();
+            foreach (var vendorItem in availableVendorItems)
+            {
+                items.Add(vendorItem);
+            }
+
+            //insert special item for the default value
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
+        }
+
+        public virtual async Task PrepareCompaniesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available vendors
+            var availableVendorItems = await GetCompanyListAsync();
             foreach (var vendorItem in availableVendorItems)
             {
                 items.Add(vendorItem);
