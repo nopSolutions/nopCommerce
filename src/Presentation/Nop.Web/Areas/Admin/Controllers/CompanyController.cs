@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = company.Id });
             }
 
@@ -253,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = company.Id });
             }
 
@@ -468,12 +468,39 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     await _customerService.InsertCustomerAddressAsync(customer, address);
                 }
-                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Companies.Company.Addresses.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Companies.Company.Addresses.Added"));
                 return RedirectToAction("Edit", new { id = companyId });
             }
 
             //if we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> AddressDelete(int id, int customerId)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+            var getCompanyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(customerId);
+            foreach (var getCompanyCustomer in getCompanyCustomers)
+            {
+                //try to get a customer with the specified id
+                var customer = await _customerService.GetCustomerByIdAsync(getCompanyCustomer.CustomerId)
+                    ?? throw new ArgumentException("No customer found with the specified id", nameof(getCompanyCustomer.CustomerId));
+
+                //try to get an address with the specified id
+                var address = await _customerService.GetCustomerAddressAsync(customer.Id, id);
+
+                if (address == null)
+                    return Content("No address found with the specified id");
+
+                await _customerService.RemoveCustomerAddressAsync(customer, address);
+                await _customerService.UpdateCustomerAsync(customer);
+
+                //now delete the address record
+                await _addressService.DeleteAddressAsync(address);
+            }
+            return new NullJsonResult();
         }
         #endregion
     }

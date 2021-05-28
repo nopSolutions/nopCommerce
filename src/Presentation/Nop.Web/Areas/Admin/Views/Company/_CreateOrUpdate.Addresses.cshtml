@@ -7,7 +7,7 @@
 {
     Name = "customer-addresses-grid",
     UrlRead = new DataUrl("AddressesSelect", "Company", new RouteValueDictionary { [nameof(Model.CustomerAddressSearchModel.CustomerId)] = Model.Id }),
-    UrlDelete = new DataUrl("AddressDelete", "Customer", new RouteValueDictionary { [nameof(Model.CustomerAddressSearchModel.CustomerId)] = Model.CustomerAddressSearchModel.CustomerId }),
+    UrlDelete = new DataUrl("AddressDelete", "Company", new RouteValueDictionary { [nameof(Model.CustomerAddressSearchModel.CustomerId)] = Model.Id }),
     Length = Model.CustomerAddressSearchModel.PageSize,
     LengthMenu = Model.CustomerAddressSearchModel.AvailablePageSizes,
     ColumnCollection = new List<ColumnProperty>
