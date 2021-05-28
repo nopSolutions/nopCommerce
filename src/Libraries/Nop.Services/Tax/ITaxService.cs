@@ -68,6 +68,17 @@ namespace Nop.Services.Tax
             bool includingTax, Customer customer,
             bool priceIncludesTax);
 
+        /// <summary>
+        /// Gets a value indicating whether a product is tax exempt
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether a product is tax exempt
+        /// </returns>
+        Task<bool> IsTaxExemptAsync(Product product, Customer customer);
+
         #endregion
 
         #region Shipping price

@@ -415,35 +415,6 @@ namespace Nop.Services.Tax
         }
 
         /// <summary>
-        /// Gets a value indicating whether a product is tax exempt
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains a value indicating whether a product is tax exempt
-        /// </returns>
-        protected virtual async Task<bool> IsTaxExemptAsync(Product product, Customer customer)
-        {
-            if (customer != null)
-            {
-                if (customer.IsTaxExempt)
-                    return true;
-
-                if ((await _customerService.GetCustomerRolesAsync(customer)).Any(cr => cr.TaxExempt))
-                    return true;
-            }
-
-            if (product == null)
-                return false;
-
-            if (product.IsTaxExempt)
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
         /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
         /// </summary>
         /// <param name="address">Address</param>
@@ -606,6 +577,35 @@ namespace Nop.Services.Tax
             //    price = decimal.Zero;
 
             return (price, taxRate);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a product is tax exempt
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether a product is tax exempt
+        /// </returns>
+        public virtual async Task<bool> IsTaxExemptAsync(Product product, Customer customer)
+        {
+            if (customer != null)
+            {
+                if (customer.IsTaxExempt)
+                    return true;
+
+                if ((await _customerService.GetCustomerRolesAsync(customer)).Any(cr => cr.TaxExempt))
+                    return true;
+            }
+
+            if (product == null)
+                return false;
+
+            if (product.IsTaxExempt)
+                return true;
+
+            return false;
         }
 
         #endregion
