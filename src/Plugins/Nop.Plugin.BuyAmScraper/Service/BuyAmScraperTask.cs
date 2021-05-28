@@ -10,6 +10,10 @@ using PuppeteerSharp;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Vendors;
+using System.Collections.Generic;
+using Nop.Services.Media;
+using Nop.Core;
+using Nop.Services.Seo;
 
 namespace Nop.Plugin.BuyAmScraper.Service
 {
@@ -24,23 +28,38 @@ namespace Nop.Plugin.BuyAmScraper.Service
         private ICustomerService _customerService;
         private IVendorService _vendorService;
         private ICategoryService _categoryService;
+        private IPictureService _pictureService;
+        private IUrlRecordService _urlRecordService;
 
         public BuyAmScraperTask(ILogger logger, 
             IProductService productService, 
             ICustomerService customerService, 
             IVendorService vendorService,
-            ICategoryService categoryService)
+            ICategoryService categoryService,
+            IPictureService pictureService,
+            IUrlRecordService urlRecordService)
         {
             this._categoryUrlsToScrape = new string[] {
-                "https://buy.am/hy/carrefour/bakery-pastry",
-                "https://buy.am/hy/carrefour/fresh-fruit-vegetable",
-                "https://buy.am/hy/carrefour/dairy-eggs"
+                //"https://buy.am/hy/carrefour/bakery-pastry",
+                //"https://buy.am/hy/carrefour/fresh-fruit-vegetable",
+                //"https://buy.am/hy/carrefour/dairy-eggs",
+                //"https://buy.am/hy/carrefour/frozen-products",
+                //"https://buy.am/hy/carrefour/breakfast-coffee-tea",
+                //"https://buy.am/hy/carrefour/bio-organic",
+                //"https://buy.am/hy/carrefour/sweets-snacks",
+                //"https://buy.am/hy/carrefour/juices-drinks",
+                //"https://buy.am/hy/carrefour/alcoholic-beverages-cigarettes",
+                
+                "https://buy.am/hy/carrefour/shop-in-shop",
+                "https://buy.am/hy/carrefour/household-goods",
             };
             this._logger = logger;
             this._productService = productService;
             this._customerService = customerService;
             this._vendorService = vendorService;
             this._categoryService = categoryService;
+            this._pictureService = pictureService;
+            this._urlRecordService = urlRecordService;
         }
 
         private async Task ScrollUntilEnd(Page page)
@@ -89,69 +108,93 @@ namespace Nop.Plugin.BuyAmScraper.Service
 
             foreach (var current in productsInDom)
             {
-                await current.ClickAsync();
-                var nameTag = await page.WaitForSelectorAsync("div.product--details h1.product--title", new WaitForSelectorOptions { Visible = true });
-
-                if (nameTag == null)
+                try
                 {
-                    await _logger.InformationAsync("Product name tag wasn't found!");
-                    break;
+                    await current.ClickAsync();
+                    var nameTag = await page.WaitForSelectorAsync("div.product--details h1.product--title", new WaitForSelectorOptions { Visible = true });
+
+                    if (nameTag == null)
+                    {
+                        await _logger.InformationAsync("Product name tag wasn't found!");
+                        continue;
+                    }
+
+                    var parseResults = await page.EvaluateFunctionAsync(@"() => {
+                        return {  
+                            'Name': document.querySelector('div.product--details h1.product--title').innerText,
+                            'SubCategory': Array.from(document.querySelectorAll('.product--buybox .entry--property')).map((n) => {return {'key': n.children[0].innerText, 'value': n.children[1].innerText}}).find((n) => n.key == 'Բաժին')?.value,
+                            'Description': document.querySelector('div .product--description.im-collapse-content')?.innerText.replaceAll(/\s{2,}/ig, '\n').trim(),
+                            'Price': document.querySelector('.price--content.content--default').children[0].attributes['content'].value,
+                            'Code': Array.from(document.querySelectorAll('span.entry--content')).find((n) => 'itemprop' in n.attributes && n.attributes['itemprop'].value == 'sku').innerText,
+                            'ImageUrl': document.querySelector('.image-slider--item span.image--element').attributes['data-img-original'].value
+                        }
+                        }
+                    ");
+
+                    var description = parseResults.Value<string>("Description") ?? string.Empty;
+                    var code = parseResults.Value<int>("Code");
+                    var name = parseResults.Value<string>("Name");
+                    var subCategory = parseResults.Value<string>("SubCategory") ?? string.Empty;
+                    var priceAsString = parseResults.Value<string>("Price");
+                    int price = 0;
+                    var imageUrl = parseResults.Value<string>("ImageUrl");
+
+                    if (name == null || priceAsString == null ||
+                        !int.TryParse(priceAsString, System.Globalization.NumberStyles.AllowDecimalPoint, null, out price) || imageUrl == null)
+                    {
+                        await _logger.WarningAsync($"Field is missing from product. code={code}, description={description}, name={name}, subCategory={subCategory}, priceAsString={priceAsString}, imageUrl={imageUrl}");
+                        continue;
+                    }
+
+                    var imageUrlParsed = new Uri(imageUrl);
+
+                    var product = new ProductDTO
+                    {
+                        Category = categoryName,
+                        Name = name,
+                        SubCategory = subCategory,
+                        ShortDescription = $"Code: {code}\n" + description.Substring(0, Math.Min(100, description.Length)),
+                        FullDescription = $"Code: {code}\n" + description,
+                        Price = price,
+                        Code = code,
+                        Image = await DownloadImage(imageUrl),
+                        ImageFileName = imageUrlParsed.Segments[imageUrlParsed.Segments.Length - 1]
+                    };
+
+                    products.Add(product);
+
+                    await _logger.InformationAsync($"Parsed product, name: {product.Name}");
                 }
-
-                var parseResults = await page.EvaluateFunctionAsync(@"() => {
-                    return {  
-                        'Name': document.querySelector('div.product--details h1.product--title').innerText,
-                        'SubCategory': Array.from(document.querySelectorAll('.product--buybox .entry--property')).map((n) => {return {'key': n.children[0].innerText, 'value': n.children[1].innerText}}).find((n) => n.key == 'Բաժին').value,
-                        'Description': document.querySelector('div .product--description.im-collapse-content').innerText.replaceAll(/\s{2,}/ig, '\n').trim(),
-                        'Price': document.querySelector('.price--content.content--default').children[0].attributes['content'].value,
-                        'Code': Array.from(document.querySelectorAll('span.entry--content')).find((n) => 'itemprop' in n.attributes && n.attributes['itemprop'].value == 'sku').innerText,
-                        'ImageUrl': document.querySelector('.image-slider--item span.image--element').attributes['data-img-original'].value
-                    }
-                    }
-                ");
-
-                var closeButton = await page.QuerySelectorAsync(".quickview-close-btn");
-                await closeButton.ClickAsync();
-                await page.WaitForSelectorAsync(".quick-view.is--active", new WaitForSelectorOptions { Hidden = true });
-                await page.WaitForTimeoutAsync(2000);
-
-                var description = parseResults.Value<string>("Description");
-                var code = parseResults.Value<int>("Code");
-                var name = parseResults.Value<string>("Name");
-                var subCategory = parseResults.Value<string>("SubCategory");
-                var priceAsString = parseResults.Value<string>("Price");
-                int price = 0;
-                var imageUrl = parseResults.Value<string>("ImageUrl");
-
-                if (description == null || name == null || subCategory == null || priceAsString == null ||
-                    !int.TryParse(priceAsString, System.Globalization.NumberStyles.AllowDecimalPoint, null, out price) || imageUrl == null)
+                catch (Exception exc)
                 {
-                    await _logger.WarningAsync($"Field is missing from product. code={code}, description={description}, name={name}, subCategory={subCategory}, priceAsString={priceAsString}, imageUrl={imageUrl}");
+                    await _logger.WarningAsync($"Exception thrown when parsing: URL={page.Url}", exc);
                     continue;
                 }
-
-                var product = new ProductDTO
+                finally
                 {
-                    Category = categoryName,
-                    Name = name,
-                    SubCategory = subCategory,
-                    ShortDescription = $"Code: {code}\n" + description.Substring(0, Math.Min(100, description.Length)),
-                    FullDescription = $"Code: {code}\n" + description,
-                    Price = price,
-                    Code = code,
-                    Image = await DownloadImage(imageUrl)
-                };
-                products.Add(product);
-
-                await _logger.InformationAsync($"Parsed product, name: {product.Name}");
+                    try
+                    {
+                        var closeButton = await page.QuerySelectorAsync(".quickview-close-btn");
+                        await closeButton.ClickAsync();
+                        await page.WaitForSelectorAsync(".quick-view.is--active", new WaitForSelectorOptions { Hidden = true });
+                        await page.WaitForTimeoutAsync(1000);
+                    }
+                    catch
+                    {}
+                }
             }
 
             return products;
         }
 
+        private async Task<Core.Domain.Catalog.Category> GetExactCategoryByName(string name)
+        {
+            var categories = await _categoryService.GetAllCategoriesAsync(name);
+            return categories.FirstOrDefault(c => string.Equals(c.Name, name));
+        }
+
         async Task AddProductsIfMissing(IReadOnlyList<ProductDTO> productDTOs)
         {
-            var allCategories = await _categoryService.GetAllCategoriesAsync();
             var carrefourVendor = (await _vendorService.GetAllVendorsAsync(CARREFOUR_CUSTOMER_NAME)).FirstOrDefault();
             if(carrefourVendor == null)
             {
@@ -162,29 +205,33 @@ namespace Nop.Plugin.BuyAmScraper.Service
             foreach (var productDTO in productDTOs)
             {
                 var existingProduct = await _productService.GetProductBySkuAsync(productDTO.Code.ToString());
-                if(existingProduct != null)
+                if (existingProduct != null)
                 {
                     await _logger.InformationAsync($"Product with code {productDTO.Code} exists, skipping");
                     continue;
                 }
 
-                var product = new Core.Domain.Catalog.Product();
-                product.Sku = productDTO.Code.ToString();
-                product.Name = productDTO.Name;
-                product.Price = productDTO.Price;
-                product.ShortDescription = productDTO.ShortDescription;
-                product.FullDescription = productDTO.FullDescription;
-                product.VendorId = carrefourVendor.Id;
-                product.IsShipEnabled = true;
-                product.DisableWishlistButton = true;
-                product.Published = true;
-                product.CreatedOnUtc = DateTime.Now;
-                product.UpdatedOnUtc = DateTime.Now;
-                product.RibbonEnable = false;
+                var picture = await _pictureService.InsertPictureAsync(productDTO.Image, MimeTypes.ImageJpeg, productDTO.ImageFileName);
+
+                var product = new Core.Domain.Catalog.Product()
+                {
+                    Sku = productDTO.Code.ToString(),
+                    Name = productDTO.Name,
+                    Price = productDTO.Price,
+                    ShortDescription = productDTO.ShortDescription,
+                    FullDescription = productDTO.FullDescription,
+                    VendorId = carrefourVendor.Id,
+                    IsShipEnabled = true,
+                    DisableWishlistButton = true,
+                    Published = true,
+                    CreatedOnUtc = DateTime.Now,
+                    UpdatedOnUtc = DateTime.Now,
+                    RibbonEnable = false
+                };
 
                 await _productService.InsertProductAsync(product);
 
-                var vendorCategory = allCategories.FirstOrDefault(c => string.Equals(c.Name, CARREFOUR_CUSTOMER_NAME));
+                var vendorCategory = await GetExactCategoryByName(CARREFOUR_CUSTOMER_NAME);
                 if(vendorCategory == null)
                 {
                     vendorCategory = new Core.Domain.Catalog.Category
@@ -192,15 +239,24 @@ namespace Nop.Plugin.BuyAmScraper.Service
                         Name = CARREFOUR_CUSTOMER_NAME,
                         IncludeInTopMenu = true,
                         CreatedOnUtc = DateTime.Now,
-                        UpdatedOnUtc = DateTime.Now
+                        UpdatedOnUtc = DateTime.Now,
+                        Published = true,
+                        AllowCustomersToSelectPageSize = true,
+                        PageSizeOptions = "6, 3, 9"
                     };
 
                     await _categoryService.InsertCategoryAsync(vendorCategory);
-
-                    allCategories = await _categoryService.GetAllCategoriesAsync();
+                    await _urlRecordService.InsertUrlRecordAsync(new Core.Domain.Seo.UrlRecord { 
+                        EntityId = vendorCategory.Id,
+                        EntityName = "Category",
+                        IsActive = true,
+                        LanguageId = 0,
+                        Slug = vendorCategory.Name
+                    });
+                    
                 }
 
-                var productCategory = allCategories.FirstOrDefault(c => string.Equals(c.Name, productDTO.Category));
+                var productCategory = await GetExactCategoryByName(productDTO.Category);
                 if(productCategory == null)
                 {
                     productCategory = new Core.Domain.Catalog.Category
@@ -208,33 +264,58 @@ namespace Nop.Plugin.BuyAmScraper.Service
                         Name = productDTO.Category,
                         CreatedOnUtc = DateTime.Now,
                         UpdatedOnUtc = DateTime.Now,
-                        ParentCategoryId = vendorCategory.Id
+                        ParentCategoryId = vendorCategory.Id,
+                        Published = true,
+                        AllowCustomersToSelectPageSize = true,
+                        PageSizeOptions = "6, 3, 9"
                     };
 
                     await _categoryService.InsertCategoryAsync(productCategory);
-
-                    allCategories = await _categoryService.GetAllCategoriesAsync();
+                    await _urlRecordService.InsertUrlRecordAsync(new Core.Domain.Seo.UrlRecord
+                    {
+                        EntityId = productCategory.Id,
+                        EntityName = "Category",
+                        IsActive = true,
+                        LanguageId = 0,
+                        Slug = productCategory.Name
+                    });
                 }
 
-                var productSubCategory = allCategories.FirstOrDefault(c => string.Equals(c.Name, productDTO.SubCategory));
-                if (productSubCategory == null)
+                bool haveSubCategorySpecified = productDTO.SubCategory == null ? true : false;
+                var productSubCategory = haveSubCategorySpecified ? await GetExactCategoryByName(productDTO.SubCategory) : null;
+                if (haveSubCategorySpecified && productSubCategory == null)
                 {
                     productSubCategory = new Core.Domain.Catalog.Category
                     {
                         Name = productDTO.SubCategory,
                         CreatedOnUtc = DateTime.Now,
                         UpdatedOnUtc = DateTime.Now,
-                        ParentCategoryId = productCategory.Id
+                        ParentCategoryId = productCategory.Id,
+                        Published = true,
+                        AllowCustomersToSelectPageSize = true,
+                        PageSizeOptions = "6, 3, 9"
                     };
 
                     await _categoryService.InsertCategoryAsync(productSubCategory);
-
-                    allCategories = await _categoryService.GetAllCategoriesAsync();
+                    await _urlRecordService.InsertUrlRecordAsync(new Core.Domain.Seo.UrlRecord
+                    {
+                        EntityId = productSubCategory.Id,
+                        EntityName = "Category",
+                        IsActive = true,
+                        LanguageId = 0,
+                        Slug = productSubCategory.Name
+                    });
                 }
 
                 await _categoryService.InsertProductCategoryAsync(new Core.Domain.Catalog.ProductCategory {
                     ProductId = product.Id,
-                    CategoryId = productSubCategory.Id
+                    CategoryId = haveSubCategorySpecified ? productSubCategory.Id : productCategory.Id
+                });
+
+                await _productService.InsertProductPictureAsync(new Core.Domain.Catalog.ProductPicture
+                {
+                    PictureId = picture.Id,
+                    ProductId = product.Id
                 });
             }
             
@@ -247,7 +328,7 @@ namespace Nop.Plugin.BuyAmScraper.Service
             var browserFetcher = new BrowserFetcher();
             await browserFetcher.DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(
-                new LaunchOptions { Headless = true, DefaultViewport = new ViewPortOptions { Width = 1920, Height = 1024 } });
+                new LaunchOptions { Headless = false, DefaultViewport = new ViewPortOptions { Width = 1920, Height = 1024 } });
 
             foreach (var categoryUrl in _categoryUrlsToScrape)
             {

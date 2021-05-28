@@ -11,6 +11,7 @@ namespace Nop.Plugin.Misc.BuyAmScraper.Models
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
         public byte[] Image { get; set; }
+        public string ImageFileName { get; set; }
         public string Category { get; set; }
         public string SubCategory { get; set; }
     }
