@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -25,8 +21,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string AccessKeyId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.AppSettings.AwsS3.SecretAccessKey")]
-        public bool SecretAccessKey { get; set; }
+        public string SecretAccessKey { get; set; }
 
-        #endregion
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.AwsS3.Enabled")]
+        public bool Enabled { get; set; }
+
+        #endregion Properties
     }
 }

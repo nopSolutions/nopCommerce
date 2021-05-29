@@ -162,6 +162,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
+                ["Admin.System.Warnings.MultipleStorageEnabled.Warning"] = "Multiple media storages are enabled.Please enable either azure blob or aws s3",
                 ["Admin.Configuration.AppSettings"] = "App settings",
                 ["Admin.Configuration.AppSettings.Cache"] = "Cache configuration",
                 ["Admin.Configuration.AppSettings.Cache.DefaultCacheTime"] = "Default cache time",
@@ -192,6 +193,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName.Hint"] = "Specify the container name for the Data Protection keys. This should be a private container separate from the Blob container used for media storage.",
                 ["Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId"] = "Key vault ID",
                 ["Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId.Hint"] = "Specify the Azure key vault ID used to encrypt the Data Protection keys.",
+                ["Admin.Configuration.AppSettings.AzureBlob.Enabled"] = "Enable",
+                ["Admin.Configuration.AppSettings.AzureBlob.Enabled.Hint"] = "Enable to use azure blob as storage",
                 ["Admin.Configuration.AppSettings.AwsS3"] = "Aws S3 storage configuration",
                 ["Admin.Configuration.AppSettings.AwsS3.Region"] = "Aws S3 region",
                 ["Admin.Configuration.AppSettings.AwsS3.Region.Hint"] = "Specify the region for S3 bucket",
@@ -200,6 +203,8 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.AppSettings.AwsS3.AccessKeyId"] = "Aws S3 access key",
                 ["Admin.Configuration.AppSettings.AwsS3.AccessKeyId.Hint"] = "AccessKeyId of S3 user from Aws console",
                 ["Admin.Configuration.AppSettings.AwsS3.SecretAccessKey"] = "Aws S3 secret key",
+                ["Admin.Configuration.AppSettings.AwsS3.Enabled"] = "Enable",
+                ["Admin.Configuration.AppSettings.AwsS3.Enabled.Hint"] = "Enable to use aws S3 as storage",
                 ["Admin.Configuration.AppSettings.AwsS3.SecretAccessKey.Hint"] = "SecretAccessKey of S3 user from Aws console",
                 ["Admin.Configuration.AppSettings.Installation"] = "Installation configuration",
                 ["Admin.Configuration.AppSettings.Installation.DisableSampleData"] = "Disable sample data",
@@ -748,7 +753,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published" },
-                
+
                 //#475
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder"},
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName"},
@@ -758,7 +763,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Configure", NewName = "Admin.Configuration.Authentication.ExternalMethods.Configure"},
                 new { Name = "Admin.Configuration.ExternalAuthenticationMethods", NewName = "Admin.Configuration.Authentication.ExternalMethods"},
                 new { Name = "Permission.ManageExternalAuthenticationMethods", NewName = "Permission.Authentication.ManageExternalMethods"},
-                
+
                 //#4564
                 new { Name = "Nop.Web.Framework.Validators.MaxDecimal", NewName = "Admin.Common.Validation.Decimal.Max"},
 
@@ -767,7 +772,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //#5429
                 new { Name = "Search.NoResultsText", NewName = "Catalog.Products.NoResult"},
-
             };
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -789,7 +793,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
         /// <summary>Collects the DOWN migration expressions</summary>
         public override void Down()
         {
-            //add the downgrade logic if necessary 
+            //add the downgrade logic if necessary
         }
     }
 }

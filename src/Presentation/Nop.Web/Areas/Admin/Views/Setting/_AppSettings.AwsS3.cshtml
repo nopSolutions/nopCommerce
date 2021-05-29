@@ -37,4 +37,13 @@
             <span asp-validation-for="AwsS3ConfigModel.SecretAccessKey"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="AwsS3ConfigModel.Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AwsS3ConfigModel.Enabled" />
+            <span asp-validation-for="AwsS3ConfigModel.Enabled"></span>
+        </div>
+    </div>
 </div>

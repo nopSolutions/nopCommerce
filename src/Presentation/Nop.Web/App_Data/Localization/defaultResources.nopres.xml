@@ -4368,6 +4368,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys.Hint">
     <Value>Enable this setting to store the Data Protection keys in Azure Blob Storage.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.Enabled">
+    <Value>Enable.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.Enabled.Hint">
+    <Value>Enable to use azure blob as storage.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.AwsS3">
     <Value>Aws S3 storage configuration</Value>
   </LocaleResource>
@@ -4394,6 +4400,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.SecretAccessKey.Hint">
     <Value>SecretAccessKey of S3 user from Aws console</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Enabled">
+    <Value>Enable aws S3 storage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Enabled.Hint">
+    <Value>Enable</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
     <Value>Cache configuration</Value>
@@ -9643,7 +9655,7 @@
     <Value>“Powered by” link</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Text">
-    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src="../../js/admintour/images/product-page.jpg"/></div>]]></Value>
+    <Value><![CDATA[Enter the relevant product details in these fields. The screenshot below shows how they will be displayed on the product page with the default nopCommerce theme: <div><img src="../../js/admintour/images/product-page.jpg" /></div>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.Product.Details.Title">
     <Value>Product details</Value>
@@ -15497,6 +15509,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.ProxyConnection.OK">
     <Value>Proxy connection is OK</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.MultipleStorageEnabled.Warning">
+    <Value>Multiple media storages are enabled.Please enable either azure blob or aws s3</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.URL.Match">
     <Value>Specified store URL matches this store URL</Value>

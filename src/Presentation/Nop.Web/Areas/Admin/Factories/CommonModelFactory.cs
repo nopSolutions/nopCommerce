@@ -98,7 +98,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly NopHttpClient _nopHttpClient;
         private readonly ProxySettings _proxySettings;
 
-        #endregion
+        #endregion Fields
 
         #region Ctor
 
@@ -187,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _proxySettings = proxySettings;
         }
 
-        #endregion
+        #endregion Ctor
 
         #region Utilities
 
@@ -468,7 +468,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
-            
+
             //check whether there are different plugins which try to override the same interface
             var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
             var overridenServices = _serviceCollection.Where(p =>
@@ -678,7 +678,28 @@ namespace Nop.Web.Areas.Admin.Factories
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Prepare multiple storage enabled warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareMultipleStorageEnabledWarningModelAsync(IList<SystemWarningModel> models)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            if (_appSettings.AzureBlobConfig.Enabled && _appSettings.AzureBlobConfig.Enabled)
+            {
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.MultipleStorageEnabled.Warning")
+                });
+                return;
+            }
+        }
+
+        #endregion Utilities
 
         #region Methods
 
@@ -738,10 +759,9 @@ namespace Nop.Web.Areas.Admin.Factories
                         .FirstOrDefault() is DebuggableAttribute attribute && attribute.IsJITOptimizerDisabled;
 
                     //https://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
-                    //we use a simple method because the more Jeff Atwood's solution doesn't work anymore 
+                    //we use a simple method because the more Jeff Atwood's solution doesn't work anymore
                     //more info at https://blog.codinghorror.com/determining-build-date-the-hard-way/
                     loadedAssemblyModel.BuildDate = assembly.IsDynamic ? null : (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(_fileProvider.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
-
                 }
                 catch
                 {
@@ -750,7 +770,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
-
 
             var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
@@ -848,10 +867,13 @@ namespace Nop.Web.Areas.Admin.Factories
             //proxy connection
             await PrepareProxyConnectionWarningModelAsync(models);
 
+            //multiple storage enabled
+            await PrepareMultipleStorageEnabledWarningModelAsync(models);
+
             //publish event
             var warningEvent = new SystemWarningCreatedEvent();
             await _eventPublisher.PublishAsync(warningEvent);
-            //add another warnings (for example from plugins) 
+            //add another warnings (for example from plugins)
             models.AddRange(warningEvent.SystemWarnings);
 
             return models;
@@ -1008,21 +1030,27 @@ namespace Nop.Web.Areas.Admin.Factories
                         case "blogpost":
                             detailsUrl = urlHelper.Action("BlogPostEdit", "Blog", new { id = urlRecord.EntityId });
                             break;
+
                         case "category":
                             detailsUrl = urlHelper.Action("Edit", "Category", new { id = urlRecord.EntityId });
                             break;
+
                         case "manufacturer":
                             detailsUrl = urlHelper.Action("Edit", "Manufacturer", new { id = urlRecord.EntityId });
                             break;
+
                         case "product":
                             detailsUrl = urlHelper.Action("Edit", "Product", new { id = urlRecord.EntityId });
                             break;
+
                         case "newsitem":
                             detailsUrl = urlHelper.Action("NewsItemEdit", "News", new { id = urlRecord.EntityId });
                             break;
+
                         case "topic":
                             detailsUrl = urlHelper.Action("Edit", "Topic", new { id = urlRecord.EntityId });
                             break;
+
                         case "vendor":
                             detailsUrl = urlHelper.Action("Edit", "Vendor", new { id = urlRecord.EntityId });
                             break;
@@ -1133,6 +1161,6 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
-        #endregion
+        #endregion Methods
     }
 }

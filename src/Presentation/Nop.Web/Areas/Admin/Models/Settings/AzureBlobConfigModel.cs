@@ -31,6 +31,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId")]
         public string DataProtectionKeysVaultId { get; set; }
 
-        #endregion
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.AzureBlob.Enabled")]
+        public bool Enabled { get; set; }
+
+        #endregion Properties
     }
 }

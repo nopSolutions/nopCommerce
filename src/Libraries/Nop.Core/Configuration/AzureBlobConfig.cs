@@ -45,8 +45,7 @@ namespace Nop.Core.Configuration
         /// <summary>
         /// Gets a value indicating whether we should use Azure Blob storage
         /// </summary>
-        [JsonIgnore]
-        public bool Enabled => !string.IsNullOrEmpty(ConnectionString);
+        public bool Enabled { get; set; } = false;
 
         /// <summary>
         /// Whether to use an Azure Key Vault to encrypt the Data Protection Keys

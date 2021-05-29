@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace Nop.Core.Configuration
+﻿namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents Aws S3 storage configuration parameters
@@ -30,13 +23,12 @@ namespace Nop.Core.Configuration
         /// <summary>
         /// Gets or sets Aws secret access key
         /// </summary>
-        public string SecretAccessKey { get; set; } = string.Empty;      
+        public string SecretAccessKey { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets a value indicating whether we should use Aws S3 storage
         /// </summary>
-        [JsonIgnore]
-        public bool Enabled => !string.IsNullOrEmpty(SecretAccessKey) && !string.IsNullOrEmpty(AccessKeyId);
+        public bool Enabled { get; set; } = false;
 
         /// <summary>
         /// Aws S3 object url template
