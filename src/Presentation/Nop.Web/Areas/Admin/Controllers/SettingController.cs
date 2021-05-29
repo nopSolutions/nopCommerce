@@ -207,6 +207,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 appSettings.DistributedCacheConfig =
                     model.DistributedCacheConfigModel.ToConfig(appSettings.DistributedCacheConfig);
                 appSettings.AzureBlobConfig = model.AzureBlobConfigModel.ToConfig(appSettings.AzureBlobConfig);
+                appSettings.AwsS3Config = model.AwsS3ConfigModel.ToConfig(appSettings.AwsS3Config);
                 appSettings.InstallationConfig = model.InstallationConfigModel.ToConfig(appSettings.InstallationConfig);
                 appSettings.PluginConfig = model.PluginConfigModel.ToConfig(appSettings.PluginConfig);
                 appSettings.CommonConfig = model.CommonConfigModel.ToConfig(appSettings.CommonConfig);

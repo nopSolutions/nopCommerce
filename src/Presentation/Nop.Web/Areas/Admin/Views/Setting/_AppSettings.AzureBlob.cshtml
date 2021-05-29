@@ -65,6 +65,15 @@
                 <span asp-validation-for="AzureBlobConfigModel.DataProtectionKeysVaultId"></span>
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="AzureBlobConfigModel.Enabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AzureBlobConfigModel.Enabled" />
+                <span asp-validation-for="AzureBlobConfigModel.Enabled"></span>
+            </div>
+        </div>
     </nop-nested-setting>
 </div>
 <script>

@@ -43,11 +43,11 @@ using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
-using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Areas.Admin.Models.Messages;
+using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Payments;
@@ -173,12 +173,12 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             });
         }
 
-        #endregion
+        #endregion Ctor
 
         #region Utilities
 
         /// <summary>
-        /// Create configuration maps 
+        /// Create configuration maps
         /// </summary>
         protected virtual void CreateConfigMaps()
         {
@@ -187,15 +187,18 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<HostingConfig, HostingConfigModel>();
             CreateMap<HostingConfigModel, HostingConfig>();
-            
+
             CreateMap<DistributedCacheConfig, DistributedCacheConfigModel>()
                 .ForMember(model => model.DistributedCacheTypeValues, options => options.Ignore());
             CreateMap<DistributedCacheConfigModel, DistributedCacheConfig>();
 
             CreateMap<AzureBlobConfig, AzureBlobConfigModel>();
             CreateMap<AzureBlobConfigModel, AzureBlobConfig>()
-                .ForMember(entity => entity.Enabled, options => options.Ignore())
                 .ForMember(entity => entity.DataProtectionKeysEncryptWithVault, options => options.Ignore());
+
+            CreateMap<AwsS3Config, AwsS3ConfigModel>();
+            CreateMap<AwsS3ConfigModel, AwsS3Config>()
+                .ForMember(entity => entity.ObjectUrlTemplate, options => options.Ignore());
 
             CreateMap<InstallationConfig, InstallationConfigModel>();
             CreateMap<InstallationConfigModel, InstallationConfig>();
@@ -208,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create affiliates maps 
+        /// Create affiliates maps
         /// </summary>
         protected virtual void CreateAffiliatesMaps()
         {
@@ -229,11 +232,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<Customer, AffiliatedCustomerModel>()
                 .ForMember(model => model.Name, options => options.Ignore());
-
         }
 
         /// <summary>
-        /// Create authentication maps 
+        /// Create authentication maps
         /// </summary>
         protected virtual void CreateAuthenticationMaps()
         {
@@ -241,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create multi-factor authentication maps 
+        /// Create multi-factor authentication maps
         /// </summary>
         protected virtual void CreateMultiFactorAuthenticationMaps()
         {
@@ -249,7 +251,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create blogs maps 
+        /// Create blogs maps
         /// </summary>new
         protected virtual void CreateBlogsMaps()
         {
@@ -290,7 +292,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create catalog maps 
+        /// Create catalog maps
         /// </summary>
         protected virtual void CreateCatalogMaps()
         {
@@ -657,7 +659,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create CMS maps 
+        /// Create CMS maps
         /// </summary>
         protected virtual void CreateCmsMaps()
         {
@@ -667,7 +669,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create common maps 
+        /// Create common maps
         /// </summary>
         protected virtual void CreateCommonMaps()
         {
@@ -715,7 +717,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create customers maps 
+        /// Create customers maps
         /// </summary>
         protected virtual void CreateCustomersMaps()
         {
@@ -875,7 +877,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create directory maps 
+        /// Create directory maps
         /// </summary>
         protected virtual void CreateDirectoryMaps()
         {
@@ -906,7 +908,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create discounts maps 
+        /// Create discounts maps
         /// </summary>
         protected virtual void CreateDiscountsMaps()
         {
@@ -943,7 +945,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create forums maps 
+        /// Create forums maps
         /// </summary>
         protected virtual void CreateForumsMaps()
         {
@@ -1005,7 +1007,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create GDPR maps 
+        /// Create GDPR maps
         /// </summary>
         protected virtual void CreateGdprMaps()
         {
@@ -1027,7 +1029,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create localization maps 
+        /// Create localization maps
         /// </summary>
         protected virtual void CreateLocalizationMaps()
         {
@@ -1041,7 +1043,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create logging maps 
+        /// Create logging maps
         /// </summary>
         protected virtual void CreateLoggingMaps()
         {
@@ -1069,7 +1071,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create media maps 
+        /// Create media maps
         /// </summary>
         protected virtual void CreateMediaMaps()
         {
@@ -1098,7 +1100,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create messages maps 
+        /// Create messages maps
         /// </summary>
         protected virtual void CreateMessagesMaps()
         {
@@ -1158,7 +1160,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create news maps 
+        /// Create news maps
         /// </summary>
         protected virtual void CreateNewsMaps()
         {
@@ -1199,7 +1201,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create orders maps 
+        /// Create orders maps
         /// </summary>
         protected virtual void CreateOrdersMaps()
         {
@@ -1349,7 +1351,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create payments maps 
+        /// Create payments maps
         /// </summary>
         protected virtual void CreatePaymentsMaps()
         {
@@ -1384,7 +1386,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create plugins maps 
+        /// Create plugins maps
         /// </summary>
         protected virtual void CreatePluginsMaps()
         {
@@ -1394,7 +1396,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create polls maps 
+        /// Create polls maps
         /// </summary>
         protected virtual void CreatePollsMaps()
         {
@@ -1409,7 +1411,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create security maps 
+        /// Create security maps
         /// </summary>
         protected virtual void CreateSecurityMaps()
         {
@@ -1440,7 +1442,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create SEO maps 
+        /// Create SEO maps
         /// </summary>
         protected virtual void CreateSeoMaps()
         {
@@ -1454,7 +1456,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create shipping maps 
+        /// Create shipping maps
         /// </summary>
         protected virtual void CreateShippingMaps()
         {
@@ -1514,7 +1516,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create stores maps 
+        /// Create stores maps
         /// </summary>
         protected virtual void CreateStoresMaps()
         {
@@ -1524,7 +1526,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create tasks maps 
+        /// Create tasks maps
         /// </summary>
         protected virtual void CreateTasksMaps()
         {
@@ -1537,7 +1539,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create tax maps 
+        /// Create tax maps
         /// </summary>
         protected virtual void CreateTaxMaps()
         {
@@ -1583,7 +1585,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create topics maps 
+        /// Create topics maps
         /// </summary>
         protected virtual void CreateTopicsMaps()
         {
@@ -1599,7 +1601,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create vendors maps 
+        /// Create vendors maps
         /// </summary>
         protected virtual void CreateVendorsMaps()
         {
@@ -1645,7 +1647,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         }
 
         /// <summary>
-        /// Create warehouse maps 
+        /// Create warehouse maps
         /// </summary>
         protected virtual void CreateWarehouseMaps()
         {
@@ -1655,7 +1657,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.AddressId, options => options.Ignore());
         }
 
-        #endregion
+        #endregion Utilities
 
         #region Properties
 
@@ -1664,6 +1666,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         public int Order => 0;
 
-        #endregion
+        #endregion Properties
     }
 }

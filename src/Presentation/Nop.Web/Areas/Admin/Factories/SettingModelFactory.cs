@@ -783,6 +783,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
                 DistributedCacheConfigModel = _appSettings.DistributedCacheConfig.ToConfigModel<DistributedCacheConfigModel>(),
                 AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
+                AwsS3ConfigModel = _appSettings.AwsS3Config.ToConfigModel<AwsS3ConfigModel>(),
                 InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
                 PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
                 CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()

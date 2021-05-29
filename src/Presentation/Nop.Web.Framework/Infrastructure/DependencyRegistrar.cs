@@ -243,8 +243,10 @@ namespace Nop.Web.Framework.Infrastructure
             }
 
             //picture service
-            if (appSettings.AzureBlobConfig.Enabled)
+            if (appSettings.AzureBlobConfig.Enabled && !appSettings.AwsS3Config.Enabled)
                 services.AddScoped<IPictureService, AzurePictureService>();
+            if (appSettings.AwsS3Config.Enabled && !appSettings.AzureBlobConfig.Enabled)
+                services.AddScoped<IPictureService, AwsPictureService>();
             else
                 services.AddScoped<IPictureService, PictureService>();
 

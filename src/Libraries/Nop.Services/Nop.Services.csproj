@@ -14,6 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.0.28" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.8.0" />
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.7.0" />

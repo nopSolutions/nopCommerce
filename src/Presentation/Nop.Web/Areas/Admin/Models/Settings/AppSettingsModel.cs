@@ -18,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             DistributedCacheConfigModel = new DistributedCacheConfigModel();
             HostingConfigModel = new HostingConfigModel();
             AzureBlobConfigModel = new AzureBlobConfigModel();
+            AwsS3ConfigModel = new AwsS3ConfigModel();
             InstallationConfigModel = new InstallationConfigModel();
             PluginConfigModel = new PluginConfigModel();
             CommonConfigModel = new CommonConfigModel();
@@ -35,6 +36,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public DistributedCacheConfigModel DistributedCacheConfigModel { get; set; }
 
         public AzureBlobConfigModel AzureBlobConfigModel { get; set; }
+
+        public AwsS3ConfigModel AwsS3ConfigModel { get; set; }
 
         public InstallationConfigModel InstallationConfigModel { get; set; }
 
