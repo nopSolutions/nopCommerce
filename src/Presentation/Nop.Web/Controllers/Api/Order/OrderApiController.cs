@@ -183,51 +183,7 @@ namespace Nop.Web.Controllers.Api.Security
             public int Rating { get; set; }
             public string RatingText { get; set; }
         }
-
-        public class CompanyDetailsModel
-        {
-            public CompanyDetailsModel()
-            {
-                Adresses = new List<Address>();
-            }
-            public List<Address> Adresses { get; set; }
-            public decimal AmoutLimit { get; set; }
-            public string CompanyName { get; set; }
-        }
-
-        [HttpGet("company-details")]
-        public async Task<IActionResult> GetCompanyDetails()
-        {
-            var companyDetails = new CompanyDetailsModel();
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            var company = await _companyService.GetCompanyByCustomerIdAsync(currentCustomer.Id);
-            if (company != null)
-            {
-                companyDetails.CompanyName = company.Name;
-                companyDetails.AmoutLimit = company.AmountLimit;
-                var companyCustomerIds = await _companyService.GetCompanyCustomersByCompanyIdAsync(company.Id);
-                if (companyCustomerIds.Any())
-                {
-                    var customers = await _customerService.GetCustomersByIdsAsync(companyCustomerIds.Select(x => x.CustomerId).ToArray());
-                    if (customers.Any())
-                    {
-                        var addresses = new List<Address>();
-                        foreach (var customer in customers)
-                        {
-                            foreach (var address in await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
-                            {
-                                addresses.Add(address);
-                            }
-                        }
-                        companyDetails.Adresses = addresses;
-                    }
-                }
-                return Ok(new { success = true, companyDetails });
-            }
-
-            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Company.NotFound") });
-        }
-
+       
         [HttpPost("cancel-order/{id}")]
         public async Task<IActionResult> CancelOrder(int id)
         {
@@ -238,7 +194,7 @@ namespace Nop.Web.Controllers.Api.Security
             //try to get an customer with the order id
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
             if (customer == null)
-                return RedirectToAction("List");
+                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("customer.NotFound") });
 
             await _orderProcessingService.CancelOrderAsync(order, true);
             await LogEditOrderAsync(order.Id);

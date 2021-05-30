@@ -153,6 +153,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     locale.Name = await _localizationService.GetLocalizedAsync(company, entity => entity.Name, languageId, false, false);
                 };
+                var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(company.Id);
+                if (companyCustomers.Any())
+                    model.CustomerExist = true;
             }
 
             //prepare localized models
@@ -217,10 +220,18 @@ namespace Nop.Web.Areas.Admin.Factories
                  email: searchModel.SearchCustomerEmail, customerRoleIds: customerRoleIds,
                  pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-            //prepare grid model
-            var model = await new AddCustomerToCompanyListModel().PrepareToGridAsync(searchModel, customers, () =>
+            IPagedList<Customer> filteredCustomers = new PagedList<Customer>(new List<Customer>(), 0, 1);
+            foreach (var customer in customers)
             {
-                return customers.SelectAwait(async customer =>
+                var companyCustomerMapping = await _companyService.GetCompanyCustomersByCustomerIdAsync(customer.Id);
+                if (companyCustomerMapping.Count == 0)
+                    filteredCustomers.Add(customer);
+            }
+
+            //prepare grid model
+            var model = await new AddCustomerToCompanyListModel().PrepareToGridAsync(searchModel, filteredCustomers, () =>
+            {
+                return filteredCustomers.SelectAwait(async customer =>
                 {
                     var customerModel = customer.ToModel<CustomerModel>();
 
@@ -270,7 +281,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
 
-                    var customerAddressMapping = await _customerService.GetCustomerByAddressIdAsync(address.Id);
+                    var customerAddressMapping = await _customerService.GetCustomerAddressesByAddressIdAsync(address.Id);
                     addressModel.CustomerId = customerAddressMapping.Any() ? customerAddressMapping.FirstOrDefault().CustomerId : 0;
                     addressModel.CountryName = (await _countryService.GetCountryByAddressAsync(address))?.Name;
                     addressModel.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Name;

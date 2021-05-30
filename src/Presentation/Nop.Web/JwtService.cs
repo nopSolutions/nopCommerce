@@ -34,7 +34,7 @@ namespace Nop.Web
               _issuer,
               claims: permClaims,
               null,
-              expires: DateTime.Now.AddMinutes(120),
+              expires: DateTime.Now.AddDays(7),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

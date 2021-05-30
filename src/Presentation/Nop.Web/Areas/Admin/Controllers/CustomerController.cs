@@ -416,13 +416,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(model.CompanyId);
                 if (companyCustomers.Any())
                 {
+                    var addressId = 0;
                     foreach (var companyCustomer in companyCustomers)
                     {
                         var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomer.CustomerId);
                         foreach (var address in addresses)
+                        {
                             await _customerService.InsertCustomerAddressAsync(customer, address);
+                            addressId = address.Id;
+                        }
                     }
                     await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = model.CompanyId, CustomerId = customer.Id });
+                    customer.ShippingAddressId = addressId;
+                    customer.BillingAddressId = addressId;
+                    await _customerService.UpdateCustomerAsync(customer);
                 }
 
                 //newsletter subscriptions
@@ -639,12 +646,46 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //vendor
                     customer.VendorId = model.VendorId;
 
+                    ///delete customer address mapping for previous company
+                    var companyCustomersCheck = await _companyService.GetCompanyCustomersByCustomerIdAsync(customer.Id);
+                    if (companyCustomersCheck.Any() && !companyCustomersCheck.Where(x => x.CustomerId == customer.Id && x.CompanyId == model.CompanyId).Any())
+                    {
+                        foreach (var companyCustomer in companyCustomersCheck)
+                        {
+                            var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomer.CustomerId);
+                            foreach (var address in addresses)
+                            {
+                                await _customerService.RemoveCustomerAddressAsync(customer, address);
+                                await _customerService.UpdateCustomerAsync(customer);
+                                await _companyService.DeleteCompanyCustomerAsync(companyCustomer);
+                            }
+                        }
+                    }
+
                     //address customer mapping 
                     var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(model.CompanyId);
                     if (companyCustomers.Any() && !companyCustomers.Where(x=>x.CustomerId == customer.Id).Any())
                     {
+                        var addressId = 0;
+                        foreach (var companyCustomer in companyCustomers)
+                        {
+                            var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomer.CustomerId);
+                            var customerAddresses = await _customerService.GetCustomerAddressesByCustomerIdAsync(customer.Id);
+                            foreach (var address in addresses)
+                            {
+                                if (_customerService.FindCustomerAddressMapping(customerAddresses, customer.Id, address.Id) != null)
+                                    continue;
+
+                                await _customerService.InsertCustomerAddressAsync(customer, address);
+                                addressId = address.Id;
+                            }
+                        }
                         await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = model.CompanyId, CustomerId = customer.Id });
+                        customer.ShippingAddressId = addressId;
+                        customer.BillingAddressId = addressId;
+                        await _customerService.UpdateCustomerAsync(customer);
                     }
+
 
                     //form fields
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)

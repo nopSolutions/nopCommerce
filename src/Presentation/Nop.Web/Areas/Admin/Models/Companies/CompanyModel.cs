@@ -24,6 +24,8 @@ namespace Nop.Web.Areas.Admin.Models.Companies
         public IList<CompanyLocalizedModel> Locales { get; set; }
 
         public CustomerAddressSearchModel CustomerAddressSearchModel { get; set; }
+
+        public bool CustomerExist { get; set; }
     }
 
     public partial record CompanyLocalizedModel : ILocalizedLocaleModel

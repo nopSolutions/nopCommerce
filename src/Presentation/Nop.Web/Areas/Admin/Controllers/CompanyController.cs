@@ -191,6 +191,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 await _companyService.UpdateCompanyAsync(company);
 
+                await _staticCacheManager.ClearAsync();
+
                 //activity log
                 await _customerActivityService.InsertActivityAsync("AddNewCompany",
                     string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewCompany"), company.Name), company);
@@ -242,6 +244,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 company = model.ToEntity(company);
                 await _companyService.UpdateCompanyAsync(company);
 
+                await _staticCacheManager.ClearAsync();
+
                 //locales
                 await UpdateLocalesAsync(company, model);
 
@@ -275,7 +279,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (company == null)
                 return RedirectToAction("List");
 
+            var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(id);
+            foreach (var companyCustomer in companyCustomers)
+            {
+                var customer = await _customerService.GetCustomerByIdAsync(companyCustomer.CustomerId);
+                var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomer.CustomerId);
+                foreach (var address in addresses)
+                {
+                    await _customerService.RemoveCustomerAddressAsync(customer, address);
+                    customer.ShippingAddressId = null;
+                    customer.BillingAddressId = null;
+                    await _customerService.UpdateCustomerAsync(customer);
+                    //now delete the address record
+                    await _addressService.DeleteAddressAsync(address);
+                    await _companyService.DeleteCompanyCustomerAsync(companyCustomer);
+                }
+            }
             await _companyService.DeleteCompanyAsync(company);
+
+            await _staticCacheManager.ClearAsync();
 
             //activity log
             await _customerActivityService.InsertActivityAsync("DeleteCompany",
@@ -331,6 +353,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             var companyCustomer = await _companyService.GetCompanyCustomersByIdAsync(id)
                 ?? throw new ArgumentException("No Customer Company mapping found with the specified id", nameof(id));
 
+            var customer = await _customerService.GetCustomerByIdAsync(companyCustomer.CustomerId);
+            var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomer.CustomerId);
+            foreach (var address in addresses)
+            {
+                await _customerService.RemoveCustomerAddressAsync(customer, address);
+                customer.ShippingAddressId = null;
+                customer.BillingAddressId = null;
+                await _customerService.UpdateCustomerAsync(customer);
+            }
+
             await _companyService.DeleteCompanyCustomerAsync(companyCustomer);
 
             return new NullJsonResult();
@@ -379,12 +411,46 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (_companyService.FindCompanyCustomer(existingCompanyCustomers, customer.Id, model.CompanyId) != null)
                         continue;
 
-                    //insert the new product Company mapping
-                    await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer
+                    var addressId = 0;
+                    foreach (var existingCompanyCustomer in existingCompanyCustomers)
                     {
-                        CompanyId = model.CompanyId,
-                        CustomerId = customer.Id
-                    });
+                        var addresses = await _customerService.GetAddressesByCustomerIdAsync(existingCompanyCustomer.CustomerId);
+                        var customerAddresses = await _customerService.GetCustomerAddressesByCustomerIdAsync(existingCompanyCustomer.CustomerId);
+                        foreach (var address in addresses)
+                        {
+                            if (_customerService.FindCustomerAddressMapping(customerAddresses, customer.Id, address.Id) != null)
+                            {
+                                addressId = address.Id;
+                                continue;
+                            }
+
+                            await _customerService.InsertCustomerAddressAsync(customer, address);
+                            addressId = address.Id;
+                        }
+                    }
+                    await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = model.CompanyId, CustomerId = customer.Id });
+                    if (addressId > 0)
+                    {
+                        customer.ShippingAddressId = addressId;
+                        customer.BillingAddressId = addressId;
+                        await _customerService.UpdateCustomerAsync(customer);
+                    }
+                    else if(existingCompanyCustomers.Any())
+                    {
+                        var newAddressId = 0;
+                        foreach (var existingCompanyCustomer in existingCompanyCustomers)
+                        {
+                            var addressMappings = await _customerService.GetCustomerAddressesByCustomerIdAsync(existingCompanyCustomer.CustomerId);
+                            if (addressMappings.Any())
+                                newAddressId = addressMappings.FirstOrDefault().AddressId;
+                        }
+                        if (newAddressId > 0)
+                        {
+                            customer.ShippingAddressId = newAddressId;
+                            customer.BillingAddressId = newAddressId;
+                            await _customerService.UpdateCustomerAsync(customer);
+                        }
+                    }
                 }
             }
 
@@ -451,22 +517,26 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+               
+                var address = model.Address.ToEntity<Address>();
+                address.CustomAttributes = customAttributes;
+                address.CreatedOnUtc = DateTime.UtcNow;
+
+                //some validation
+                if (address.CountryId == 0)
+                    address.CountryId = null;
+                if (address.StateProvinceId == 0)
+                    address.StateProvinceId = null;
+
+                await _addressService.InsertAddressAsync(address);
                 foreach (var company in companies)
                 {
                     var customer = await _customerService.GetCustomerByIdAsync(company.CustomerId);
-                    var address = model.Address.ToEntity<Address>();
-                    address.CustomAttributes = customAttributes;
-                    address.CreatedOnUtc = DateTime.UtcNow;
-
-                    //some validation
-                    if (address.CountryId == 0)
-                        address.CountryId = null;
-                    if (address.StateProvinceId == 0)
-                        address.StateProvinceId = null;
-
-                    await _addressService.InsertAddressAsync(address);
-
                     await _customerService.InsertCustomerAddressAsync(customer, address);
+                    customer.ShippingAddressId = address.Id;
+                    customer.BillingAddressId = address.Id;
+                    await _customerService.UpdateCustomerAsync(customer);
+
                 }
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Companies.Company.Addresses.Added"));
                 return RedirectToAction("Edit", new { id = companyId });
@@ -490,9 +560,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //try to get an address with the specified id
                 var address = await _customerService.GetCustomerAddressAsync(customer.Id, id);
-
                 if (address == null)
-                    return Content("No address found with the specified id");
+                    continue;
 
                 await _customerService.RemoveCustomerAddressAsync(customer, address);
                 await _customerService.UpdateCustomerAsync(customer);

@@ -884,6 +884,14 @@ namespace Nop.Services.Customers
             return result;
         }
 
+        public virtual CustomerAddressMapping FindCustomerAddressMapping(IList<CustomerAddressMapping> source, int customerId, int addresId)
+        {
+            foreach (var customerAddress in source)
+                if (customerAddress.CustomerId == customerId && customerAddress.AddressId == addresId)
+                    return customerAddress;
+
+            return null;
+        }
         /// <summary>
         /// Gets coupon codes
         /// </summary>
@@ -1668,11 +1676,21 @@ namespace Nop.Services.Customers
             return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
-        public virtual async Task<IList<CustomerAddressMapping>> GetCustomerByAddressIdAsync(int addressId)
+        public virtual async Task<IList<CustomerAddressMapping>> GetCustomerAddressesByAddressIdAsync(int addressId)
         {
             var store = await _storeContext.GetCurrentStoreAsync();
             var query = from address in _customerAddressMappingRepository.Table
                         where address.AddressId == addressId
+                        select address;
+
+            return await query.ToListAsync();
+        }
+
+        public virtual async Task<IList<CustomerAddressMapping>> GetCustomerAddressesByCustomerIdAsync(int customerId)
+        {
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var query = from address in _customerAddressMappingRepository.Table
+                        where address.CustomerId == customerId
                         select address;
 
             return await query.ToListAsync();

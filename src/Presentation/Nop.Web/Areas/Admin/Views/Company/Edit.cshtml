@@ -25,6 +25,10 @@
                 <i class="far fa-save"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            <span id="company-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

@@ -262,6 +262,8 @@ namespace Nop.Services.Customers
         /// </returns>
         Task<string> FormatUsernameAsync(Customer customer, bool stripTooLong = false, int maxLength = 0);
 
+        CustomerAddressMapping FindCustomerAddressMapping(IList<CustomerAddressMapping> source, int customerId, int addresId);
+
         /// <summary>
         /// Gets coupon codes
         /// </summary>
@@ -571,8 +573,8 @@ namespace Nop.Services.Customers
         /// </returns>
         Task<IList<Address>> GetAddressesByCustomerIdAsync(int customerId);
 
-        Task<IList<CustomerAddressMapping>> GetCustomerByAddressIdAsync(int addressId);
-
+        Task<IList<CustomerAddressMapping>> GetCustomerAddressesByAddressIdAsync(int addressId);
+        Task<IList<CustomerAddressMapping>> GetCustomerAddressesByCustomerIdAsync(int customerId);
         /// <summary>
         /// Gets a address mapped to customer
         /// </summary>

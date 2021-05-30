@@ -152,7 +152,7 @@
                         </div>
                     }
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressMiddle })
-                    <div class="section new-shipping-address">
+                    @*<div class="section new-shipping-address">
                         <div class="title">
                             @if (Model.ExistingAddresses.Count > 0)
                             {
@@ -171,7 +171,7 @@
                                 @await Html.PartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
                             }
                         </div>
-                    </div>
+                    </div>*@
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressBottom })
                 </div>
             }
