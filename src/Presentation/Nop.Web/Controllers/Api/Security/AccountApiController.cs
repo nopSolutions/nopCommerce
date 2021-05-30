@@ -99,16 +99,6 @@ namespace Nop.Web.Controllers.Api.Security
             public string Password { get; set; }
             public string PushToken { get; set; }
         }
-        public class CompanyDetailsModel
-        {
-            public CompanyDetailsModel()
-            {
-                Adresses = new List<Address>();
-            }
-            public List<Address> Adresses { get; set; }
-            public decimal AmoutLimit { get; set; }
-            public string CompanyName { get; set; }
-        }
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -237,87 +227,6 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenUpdated") });
             }
             return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenNotFound") });
-        }
-
-        [AllowAnonymous]
-        [HttpGet("customer-details")]
-        public async Task<IActionResult> CustomerDetails()
-        {
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (customer == null)
-                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
-
-            var shippingAddress = customer.ShippingAddressId.HasValue ? await _addressService.GetAddressByIdAsync(customer.ShippingAddressId.Value) : null;
-
-            var firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-            var lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
-
-            return Ok(new
-            {
-                success = true,
-                message = await _localizationService.GetResourceAsync("Customer.Login.Successfully"),
-                pushToken = customer.PushToken,
-                shippingAddress,
-                firstName,
-                lastName,
-                RemindMeNotification = customer.RemindMeNotification,
-                RateReminderNotification = customer.RateReminderNotification,
-                OrderStatusNotification = customer.OrderStatusNotification,
-                avatar = await _pictureService.GetPictureUrlAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute), _mediaSettings.AvatarPictureSize, true)
-            });
-        }
-
-        [AllowAnonymous]
-        [HttpPost("set-deliveryaddress/{addressId}")]
-        public async Task<IActionResult> SetDeilverAddress(int addressId)
-        {
-            var address = await _addressService.GetAddressByIdAsync(addressId);
-            if (address == null)
-                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("address.notfound") });
-
-            //try to get an customer with the order id
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            if (customer == null)
-                return Ok(new { success = false, message = await _localizationService.GetResourceAsync("customer.NotFound") });
-
-            customer.BillingAddressId = addressId;
-            customer.ShippingAddressId = addressId;
-            await _customerService.UpdateCustomerAsync(customer);
-
-            return Ok(new { success = true, message = await _localizationService.GetResourceAsync("DeliveryAddressSet.Successfully") });
-        }
-
-        [HttpGet("company-details")]
-        public async Task<IActionResult> GetCompanyDetails()
-        {
-            var companyDetails = new CompanyDetailsModel();
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            var company = await _companyService.GetCompanyByCustomerIdAsync(currentCustomer.Id);
-            if (company != null)
-            {
-                companyDetails.CompanyName = company.Name;
-                companyDetails.AmoutLimit = company.AmountLimit;
-                var companyCustomerIds = await _companyService.GetCompanyCustomersByCompanyIdAsync(company.Id);
-                if (companyCustomerIds.Any())
-                {
-                    var customers = await _customerService.GetCustomersByIdsAsync(companyCustomerIds.Select(x => x.CustomerId).ToArray());
-                    if (customers.Any())
-                    {
-                        var addresses = new List<Address>();
-                        foreach (var customer in customers)
-                        {
-                            foreach (var address in await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
-                            {
-                                if (!addresses.Where(x => x.Id == address.Id).Any())
-                                    addresses.Add(address);
-                            }
-                        }
-                        companyDetails.Adresses = addresses;
-                    }
-                }
-                return Ok(new { success = true, companyDetails });
-            }
-            return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Company.NotFound") });
         }
 
         #endregion

@@ -441,6 +441,8 @@ namespace Nop.Services.Orders
                 throw new NopException("Billing address is not provided");
 
             var billingAddress = await _customerService.GetCustomerBillingAddressAsync(details.Customer);
+            if (billingAddress == null && details.Customer.BillingAddressId is not null)
+                billingAddress = await _addressService.GetAddressByIdAsync(details.Customer.BillingAddressId.Value);
 
             if (!CommonHelper.IsValidEmail(billingAddress?.Email))
                 throw new NopException("Email is not valid");
@@ -1591,17 +1593,27 @@ namespace Nop.Services.Orders
                     var company = await _companyService.GetCompanyByCustomerIdAsync(details.Customer.Id);
                     if (company != null)
                     {
+                        var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
                         var orders = await _orderService.SearchOrdersAsync(customerId: details.Customer.Id);
                         if (orders.Any())
                         {
-                            var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
-                            var todayOrderTotal = orders.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
+                            //Checks if the schedule date has any previous orders, if yes then checks limit according to that!
+                            var scheduleDate = Convert.ToDateTime(processPaymentRequest.ScheduleDate);
+                            var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Date).ToList();
+                            var todayOrderTotal = ordersAccordingToScheduleDate.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
                             if (todayOrderTotal > company.AmountLimit)
-                            {
-                                result.Errors.Add(string.Join(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), todayOrderTotal));
-                            }
+                                result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), todayOrderTotal));
                         }
+                        //if there are no previous orders found then checks for company limit
+                        else if (cartTotal.shoppingCartTotal > company.AmountLimit)
+                            result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), cartTotal.shoppingCartTotal));
                     }
+                    else
+                        result.Errors.Add(await _localizationService.GetResourceAsync("Company.NotFound"));
+
+                    if(result.Errors.Count > 0)
+                        return result;
+
 
                     var order = await SaveOrderDetailsAsync(processPaymentRequest, processPaymentResult, details);
                     result.PlacedOrder = order;

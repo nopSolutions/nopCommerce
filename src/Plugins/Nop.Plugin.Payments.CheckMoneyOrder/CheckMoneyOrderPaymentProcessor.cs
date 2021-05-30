@@ -65,31 +65,35 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// A task that represents the asynchronous operation
         /// The task result contains the process payment result
         /// </returns>
-        public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
-        {
-            var result = new ProcessPaymentResult();
+        //public async Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+        //{
+        //    var result = new ProcessPaymentResult();
 
-            var storeDateTime = await _dateTime.ConvertToUserTimeAsync(DateTime.Now);
-            var todayStart = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 0, 0, 1);
-            var todayEnd = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 23, 59, 59);
+        //    var storeDateTime = await _dateTime.ConvertToUserTimeAsync(DateTime.Now);
+        //    var todayStart = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 0, 0, 1);
+        //    var todayEnd = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 23, 59, 59);
             
-            var customerTodayOrders = await _orderService.SearchOrdersAsync(
-                processPaymentRequest.StoreId, 
-                customerId: processPaymentRequest.CustomerId,
-                createdFromUtc: _dateTime.ConvertToUtcTime(todayStart),
-                createdToUtc: _dateTime.ConvertToUtcTime(todayEnd));
-            var customersOrdersTotal = customerTodayOrders.Sum(x => x.OrderTotal);
+        //    var customerTodayOrders = await _orderService.SearchOrdersAsync(
+        //        processPaymentRequest.StoreId, 
+        //        customerId: processPaymentRequest.CustomerId,
+        //        createdFromUtc: _dateTime.ConvertToUtcTime(todayStart),
+        //        createdToUtc: _dateTime.ConvertToUtcTime(todayEnd));
+        //    var customersOrdersTotal = customerTodayOrders.Sum(x => x.OrderTotal);
 
-            if(processPaymentRequest.OrderTotal > 4000)
-            {
-                result.AddError($"Your current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
-            }
-            else if (customersOrdersTotal + processPaymentRequest.OrderTotal > 4000)
-            {
-                result.AddError($"Your today's existing orders ({customersOrdersTotal} AMD) + current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
-            }
+        //    if(processPaymentRequest.OrderTotal > 4000)
+        //    {
+        //        result.AddError($"Your current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
+        //    }
+        //    else if (customersOrdersTotal + processPaymentRequest.OrderTotal > 4000)
+        //    {
+        //        result.AddError($"Your today's existing orders ({customersOrdersTotal} AMD) + current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
+        //    }
 
-            return result;
+        //    return result;
+        //}
+        public Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest)
+        {
+            return Task.FromResult(new ProcessPaymentResult());
         }
 
         /// <summary>

@@ -273,17 +273,13 @@ namespace Nop.Web.Controllers.Api.Security
             _paymentService.GenerateOrderGuid(processPaymentRequest);
             processPaymentRequest.StoreId = _storeContext.GetCurrentStore().Id;
             processPaymentRequest.CustomerId = customer.Id;
+            processPaymentRequest.ScheduleDate = scheduleDate;
             processPaymentRequest.PaymentMethodSystemName = "Payments.CheckMoneyOrder";
             var placeOrderResult = await _orderProcessingService.PlaceOrderAsync(processPaymentRequest);
             if (placeOrderResult.Success)
             {
                 placeOrderResult.PlacedOrder.ScheduleDate = await _dateTimeHelper.ConvertToUserTimeAsync(Convert.ToDateTime(scheduleDate));
                 await _orderService.UpdateOrderAsync(placeOrderResult.PlacedOrder);
-
-                customer.BillingAddressId = placeOrderResult.PlacedOrder.BillingAddressId;
-                customer.ShippingAddressId = placeOrderResult.PlacedOrder.ShippingAddressId;
-                await _customerService.UpdateCustomerAsync(customer);
-
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Placed.Successfully") });
             }
             return Ok(new { success = false, message = string.Join(", ", placeOrderResult.Errors).ToString() });
