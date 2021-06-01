@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.WebEncoders;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -123,6 +124,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.AntiforgeryCookie}";
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            });
+        }
+
+        /// <summary>
+        /// Adds services required for XSS protection
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="configuration">Configuration of the application</param>
+        public static void AddXssProtection(this IServiceCollection services, IConfiguration configuration)
+        {
+            //gets XSS protection settings
+            var xssProtectionConfig = configuration.GetSection(nameof(XssProtectionConfig)).Get<XssProtectionConfig>();
+
+            //use it to allow not only BasicLatin chars to be unescaped by the encoders  
+            services.Configure<WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = xssProtectionConfig.TextEncoderSettings;
             });
         }
 

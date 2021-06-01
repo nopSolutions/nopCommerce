@@ -18,6 +18,9 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            //adds and turns up XSS protection services
+            services.AddXssProtection(configuration);
+
             //add MiniProfiler services
             services.AddNopMiniProfiler();
 
