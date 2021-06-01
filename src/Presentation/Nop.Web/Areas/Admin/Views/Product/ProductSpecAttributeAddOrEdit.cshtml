@@ -5,6 +5,11 @@
 
 @{
     Html.SetActiveMenuItemSystemName("Products");
+
+    if(Model.SpecificationId == 0)
+        ViewBag.PageTitle = T("Admin.Catalog.Products.SpecificationAttributes.AddNew").Text;
+    else
+        ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails").Text;
 }
 
 <form asp-controller="Product" asp-action="ProductSpecAttrUpdate" id="spec-form" method="post">
