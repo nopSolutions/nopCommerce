@@ -3,7 +3,11 @@
 @{ //page title
     ViewBag.PageTitle = T("Admin.Orders.EditOrderScheduleDetails").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("OrderSchedule"); }
+    Html.AppendScriptParts("~/lib/timeRangePicker/timeRangePicker.js");
+    Html.AppendCssFileParts("~/lib/timeRangePicker/timeRangePicker.css");
+    Html.SetActiveMenuItemSystemName("OrderSchedule");
+
+}
 
 <form asp-controller="Order" asp-action="ScheduleDate" method="post" id="orderschedule-form">
     <div class="content-header clearfix">
@@ -31,7 +35,12 @@
                                 <nop-label asp-for="ScheduleDate1" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="ScheduleDate1" />
+                                <div class="input-group timerange">
+                                    <nop-editor asp-for="ScheduleDate1" />
+                                    <span class="input-group-addon" style="">
+                                        <i aria-hidden="true" class="far fa-calendar"></i>
+                                    </span>
+                                </div>
                                 <span asp-validation-for="ScheduleDate1"></span>
                             </div>
                         </div>
@@ -40,7 +49,12 @@
                                 <nop-label asp-for="ScheduleDate2" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="ScheduleDate2" />
+                                <div class="input-group timerange">
+                                    <nop-editor asp-for="ScheduleDate2" />
+                                    <span class="input-group-addon" style="">
+                                        <i aria-hidden="true" class="far fa-calendar"></i>
+                                    </span>
+                                </div>
                                 <span asp-validation-for="ScheduleDate2"></span>
                             </div>
                         </div>
@@ -49,7 +63,12 @@
                                 <nop-label asp-for="ScheduleDate3" />
                             </div>
                             <div class="col-md-9">
-                                <nop-editor asp-for="ScheduleDate3" />
+                                <div class="input-group timerange">
+                                    <nop-editor asp-for="ScheduleDate3" />
+                                    <span class="input-group-addon" style="">
+                                        <i aria-hidden="true" class="far fa-calendar"></i>
+                                    </span>
+                                </div>
                                 <span asp-validation-for="ScheduleDate3"></span>
                             </div>
                         </div>

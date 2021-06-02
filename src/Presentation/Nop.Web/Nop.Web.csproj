@@ -64,6 +64,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\lib\timeRangePicker\timeRangePicker.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.4" />
