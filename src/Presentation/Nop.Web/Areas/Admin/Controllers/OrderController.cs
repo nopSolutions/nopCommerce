@@ -1872,27 +1872,110 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            var combineValue = "";
+
             if (!String.IsNullOrWhiteSpace(model.ScheduleDate1))
             {
                 model.ScheduleDate1 = model.ScheduleDate1.Trim();
+                combineValue += model.ScheduleDate1 + ",";
             }
             if (!String.IsNullOrWhiteSpace(model.ScheduleDate2))
             {
                 model.ScheduleDate2 = model.ScheduleDate2.Trim();
+                combineValue += model.ScheduleDate2 + ",";
             }
             if (!String.IsNullOrWhiteSpace(model.ScheduleDate3))
             {
                 model.ScheduleDate3 = model.ScheduleDate3.Trim();
+                combineValue += model.ScheduleDate3;
             }
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var orderSettings = await _settingService.LoadSettingAsync<OrderSettings>(storeId);
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            long ticksPerMinute = 600000000;
+            var array = combineValue.Split(',');
+            bool isErrorExist = false;
+            for (int i = 0; i <= array.Length; i++)
+            {
+                if (i == 0)
+                {
+                    var firstRow = Array.ConvertAll(array[i].Split('-'), s => TimeSpan.Parse(s));
+                    if (firstRow.Length == 3)
+                    {
+                        if (firstRow[2].Ticks < firstRow[1].Ticks)
+                        {
+                            _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateWarning"), array[i].ToString()));
+                            isErrorExist = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateValueLengthError"));
+                        isErrorExist = true;
+                        break;
+                    }
+                }
+                if (i > 0 && (i + 1) < array.Length)
+                {
+                    var prevRow = Array.ConvertAll(array[i - 1].Split('-'), s => TimeSpan.Parse(s));
+                    var currentRow = Array.ConvertAll(array[i].Split('-'), s => TimeSpan.Parse(s));
+                    if (currentRow.Length == 3)
+                    {
+                        if (currentRow[0].Ticks > currentRow[1].Ticks || currentRow[2].Ticks < currentRow[1].Ticks)
+                        {
+                            _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateWarning"), array[i].ToString()));
+                            isErrorExist = true;
+                            break;
+                        }
+                        if (currentRow[0].Ticks - prevRow[1].Ticks != ticksPerMinute)
+                        {
+                            _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateWarning"), array[i - 1].ToString()));
+                            isErrorExist = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateValueLengthError"));
+                        isErrorExist = true;
+                        break;
+                    }
+                }
+
+                if ((i + 1) == array.Length)
+                {
+                    var firstRow = Array.ConvertAll(array[0].Split('-'), s => TimeSpan.Parse(s));
+                    var prevRow = Array.ConvertAll(array[i - 1].Split('-'), s => TimeSpan.Parse(s));
+                    var currRow = Array.ConvertAll(array[array.Length - 1].Split('-'), s => TimeSpan.Parse(s));
+                    if (currRow[0].Ticks > currRow[1].Ticks || currRow[2].Ticks < currRow[1].Ticks)
+                    {
+                        _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateWarning"), array[array.Length - 1].ToString()));
+                        isErrorExist = true;
+                        break;
+                    }
+                    if (currRow[0].Ticks - prevRow[1].Ticks != ticksPerMinute)
+                    {
+                        _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateWarning"), array[i - 1].ToString()));
+                        isErrorExist = true;
+                        break;
+                    }
+                    if (firstRow[0].Ticks - currRow[1].Ticks != ticksPerMinute)
+                    {
+                        _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Order.ScheduleDateWarning"), array[0].ToString()));
+                        isErrorExist = true;
+                        break;
+                    }
+                }
+            }
+            if (isErrorExist)
+                return View(model);
 
             orderSettings.ScheduleDate = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
             await _settingService.SaveSettingAsync(orderSettings, x => x.ScheduleDate, clearCache: true);
 
-            return RedirectToAction("ScheduleDate");
+            return View(model);
         }
 
         #endregion
