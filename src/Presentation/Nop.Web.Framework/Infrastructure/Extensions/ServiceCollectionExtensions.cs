@@ -4,6 +4,7 @@ using System.Net;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using FluentValidation.AspNetCore;
+using Ganss.XSS;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -142,6 +143,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.TextEncoderSettings = xssProtectionConfig.TextEncoderSettings;
             });
+
+            //add HtmlSanitizer
+            services.AddSingleton<IHtmlSanitizer>(_ => new HtmlSanitizer());
         }
 
         /// <summary>
