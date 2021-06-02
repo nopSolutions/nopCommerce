@@ -204,7 +204,7 @@
                                         else
                                         {
                                             <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
-                                            <button name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true);"></button>
+                                            <button type="button" name="updatecart" class="remove-btn" onclick="$('#removefromcart@(item.Id)').attr('checked', true); $('#updatecart').click();"></button>
                                         }
                                     </td>
                                 }
@@ -226,7 +226,7 @@
                 @if (Model.IsEditable)
                 {
                     <div class="common-buttons">
-                        <button type="submit" name="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
+                        <button type="submit" name="updatecart" id="updatecart" class="button-2 update-cart-button">@T("ShoppingCart.UpdateCart")</button>
 
                         <button type="submit" name="continueshopping" class="button-2 continue-shopping-button">@T("ShoppingCart.ContinueShopping")</button>
                         @await Component.InvokeAsync("ShoppingCartEstimateShipping")
