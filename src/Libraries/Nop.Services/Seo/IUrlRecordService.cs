@@ -35,6 +35,13 @@ namespace Nop.Services.Seo
         Task InsertUrlRecordAsync(UrlRecord urlRecord);
 
         /// <summary>
+        /// Update an URL record
+        /// </summary>
+        /// <param name="urlRecord">URL record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateUrlRecordAsync(UrlRecord urlRecord);
+
+        /// <summary>
         /// Find URL record
         /// </summary>
         /// <param name="slug">Slug</param>
