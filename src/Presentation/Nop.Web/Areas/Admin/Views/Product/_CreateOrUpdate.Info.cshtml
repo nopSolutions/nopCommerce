@@ -624,7 +624,7 @@
         </div>
     </div>
     <div class="@(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")" id="group-required-other-products">
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RequireOtherProducts" />
             </div>
@@ -634,7 +634,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="RequireOtherProducts">
-            <div class="form-group" id="pnlRequiredProductIds">
+            <div class="form-group row" id="pnlRequiredProductIds">
                 <div class="col-md-3">
                     <nop-label asp-for="RequiredProductIds" />
                     <span id="required-products-check-progress" style="display: none; float: right; clear: both" class="please-wait">
@@ -664,7 +664,7 @@
                     @Html.ValidationMessageFor(model => model.RequiredProductIds)
                 </div>
             </div>
-            <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
+            <div class="form-group row" id="pnlAutomaticallyAddRequiredProducts">
                 <div class="col-md-3">
                     <nop-label asp-for="AutomaticallyAddRequiredProducts" />
                 </div>
@@ -675,7 +675,7 @@
             </div>
         </nop-nested-setting>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AllowCustomerReviews ? null : "advanced-setting")">
+    <div class="form-group row @(Model.ProductEditorSettingsModel.AllowCustomerReviews ? null : "advanced-setting")">
         <div class="col-md-3">
             <nop-label asp-for="AllowCustomerReviews" />
         </div>
