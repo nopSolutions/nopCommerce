@@ -624,11 +624,11 @@ namespace Nop.Web.Controllers
                     await _workflowMessageService.SendCustomerPasswordRecoveryMessageAsync(customer,
                         (await _workContext.GetWorkingLanguageAsync()).Id);
 
-                    model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent");
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent"));
                 }
                 else
                 {
-                    model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailNotFound");
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailNotFound"));
                 }
             }
 
