@@ -23,6 +23,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
             //use localizationService to add, update and delete localization resources
             localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
+                "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps",
+                "Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint",
+                "Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto",
+                "Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto.Hint",
+                "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader",
+                "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint"
             }).Wait();
 
             localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
@@ -30,6 +36,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 //#5696
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords"] = "Search keywords",
                 ["Admin.ContentManagement.MessageTemplates.List.SearchKeywords.Hint"] = "Search message template(s) by specific keywords.",
+
+				//New configurations to forward proxied headers
+                ["Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName"] = "The header used to retrieve the originating client IP",
+                ["Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName.Hint"] = "Specify a custom HTTP header name to determine the originating IP address (e.g., CF-Connecting-IP, X-ProxyUser-Ip).",
+                ["Admin.Configuration.AppSettings.Hosting.ForwardedProtoHeaderName"] = "The header used to retrieve the value for the originating scheme",
+                ["Admin.Configuration.AppSettings.Hosting.ForwardedProtoHeaderName.Hint"] = "Specify a custom HTTP header name for identifying the protocol (HTTP or HTTPS) that a client used to connect to your proxy or load balancer.",
+                ["Admin.Configuration.AppSettings.Hosting.UseProxy"] = "Use proxy servers",
+                ["Admin.Configuration.AppSettings.Hosting.UseProxy.Hint"] = "Enable this setting to apply forwarded headers to their matching fields on the current HTTP-request.",
+                ["Admin.Configuration.AppSettings.Hosting.KnownProxies"] = "Addresses of known proxies",
+                ["Admin.Configuration.AppSettings.Hosting.KnownProxies.Hint"] = "Specify a list of IP addresses (comma separated) to accept forwarded headers.",
             }).Wait();
 
             // rename locales
