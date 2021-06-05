@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         PushTitle = model.MessageTitle,
                         PushBody = model.MessageBody
                     };
-                    var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
+                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
                 }
             }
             //prepare model

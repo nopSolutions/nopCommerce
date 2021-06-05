@@ -199,14 +199,17 @@ namespace Nop.Web.Controllers.Api.Security
             await _orderProcessingService.CancelOrderAsync(order, true);
             await LogEditOrderAsync(order.Id);
 
-            var expoSDKClient = new PushApiClient();
-            var pushTicketReq = new PushTicketRequest()
+            if (customer.OrderStatusNotification)
             {
-                PushTo = new List<string>() { customer.PushToken },
-                PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderCancelTitle"),
-                PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderCancelBody")
-            };
-            var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
+                var expoSDKClient = new PushApiClient();
+                var pushTicketReq = new PushTicketRequest()
+                {
+                    PushTo = new List<string>() { customer.PushToken },
+                    PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderCancelTitle"),
+                    PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderCancelBody")
+                };
+                var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+            }
 
             return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Order.Cancelled.Successfully") });
         }

@@ -20,9 +20,9 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             INopDataProvider dataProvider,
             IStateProvinceService stateProvinceService)
         {
-            RuleFor(x => x.CompanyId)
-                   .NotEqual(0)
-                   .WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Company.Required"));
+            //RuleFor(x => x.CompanyId)
+            //       .NotEqual(0)
+            //       .WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Company.Required"));
 
             //ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
             RuleFor(x => x.Email)

@@ -495,14 +495,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _orderProcessingService.CancelOrderAsync(order, true);
                 await LogEditOrderAsync(order.Id);
 
-                var expoSDKClient = new PushApiClient();
-                var pushTicketReq = new PushTicketRequest()
+                if (customer.OrderStatusNotification)
                 {
-                    PushTo = new List<string>() { customer.PushToken },
-                    PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderCancelTitle"),
-                    PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderCancelBody")
-                };
-                var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
+                    var expoSDKClient = new PushApiClient();
+                    var pushTicketReq = new PushTicketRequest()
+                    {
+                        PushTo = new List<string>() { customer.PushToken },
+                        PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderCancelTitle"),
+                        PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderCancelBody")
+                    };
+                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+                }
 
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
@@ -584,14 +587,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _orderProcessingService.MarkOrderAsPaidAsync(order);
                 await LogEditOrderAsync(order.Id);
 
-                var expoSDKClient = new PushApiClient();
-                var pushTicketReq = new PushTicketRequest()
+                if (customer.OrderStatusNotification)
                 {
-                    PushTo = new List<string>() { customer.PushToken },
-                    PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderPaidTitle"),
-                    PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderPaidBody")
-                };
-                var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
+                    var expoSDKClient = new PushApiClient();
+                    var pushTicketReq = new PushTicketRequest()
+                    {
+                        PushTo = new List<string>() { customer.PushToken },
+                        PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderPaidTitle"),
+                        PushBody = await _localizationService.GetResourceAsync("PushNotification.OrderPaidBody")
+                    };
+                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+                }
 
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
@@ -878,15 +884,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 await LogEditOrderAsync(order.Id);
 
-                var expoSDKClient = new PushApiClient();
-                var pushTicketReq = new PushTicketRequest()
+                if (customer.OrderStatusNotification)
                 {
-                    PushTo = new List<string>() { customer.PushToken },
-                    PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderStatusChangeTitle"),
-                    PushBody = string.Format(await _localizationService.GetResourceAsync("PushNotification.OrderStatusChangeBody"), await _localizationService.GetLocalizedEnumAsync(order.OrderStatus))
-                };
-                var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
-
+                    var expoSDKClient = new PushApiClient();
+                    var pushTicketReq = new PushTicketRequest()
+                    {
+                        PushTo = new List<string>() { customer.PushToken },
+                        PushTitle = await _localizationService.GetResourceAsync("PushNotification.OrderStatusChangeTitle"),
+                        PushBody = string.Format(await _localizationService.GetResourceAsync("PushNotification.OrderStatusChangeBody"), await _localizationService.GetLocalizedEnumAsync(order.OrderStatus))
+                    };
+                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+                }
                 //prepare model
                 model = await _orderModelFactory.PrepareOrderModelAsync(model, order);
 

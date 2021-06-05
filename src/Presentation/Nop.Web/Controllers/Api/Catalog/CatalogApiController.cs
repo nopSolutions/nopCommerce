@@ -457,7 +457,7 @@ namespace Nop.Web.Controllers.Api.Security
         [HttpGet("product-search")]
         public async Task<IActionResult> SearchProducts(SearchProductByFilters searchModel)
         {
-            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword);
+            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword, showHidden: true);
             if (!products.Any())
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
@@ -736,6 +736,7 @@ namespace Nop.Web.Controllers.Api.Security
         {
             //Custom Fields
             public string Keyword { get; set; }
+            public string ScheduleDay { get; set; }
         }
         public partial class ProductReviewsApiModel : BaseEntity
         {

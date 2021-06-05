@@ -332,6 +332,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ModelState.AddModelError(string.Empty, "Username is already registered");
             }
 
+            if (model.VendorId == 0 && model.CompanyId == 0)
+                ModelState.AddModelError(string.Empty, "Company is required");
+
             //validate customer roles
             var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
             var newCustomerRoles = new List<CustomerRole>();

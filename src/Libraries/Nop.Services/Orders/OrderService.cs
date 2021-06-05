@@ -304,7 +304,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "",
-            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool isRateNotificationSend = false)
+            string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool sendRateNotification = false)
         {
             var query = _orderRepository.Table;
 
@@ -383,7 +383,7 @@ namespace Nop.Services.Orders
                         (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
                     select o;
 
-            if (isRateNotificationSend)
+            if (sendRateNotification)
                 query = query.Where(o => !o.RateNotificationSend);
 
             query = query.Where(o => !o.Deleted);

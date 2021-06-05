@@ -63,7 +63,7 @@ namespace Nop.Services.Common
                                     PushTitle = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Title"),
                                     PushBody = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Body")
                                 };
-                                var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
+                                var result = await expoSDKClient.PushSendAsync(pushTicketReq);
                             }
                         }
                     }
@@ -75,12 +75,12 @@ namespace Nop.Services.Common
                 DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
                 foreach (var rateRemainderCustomer in rateRemainderCustomers)
                 {
-                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, createdToUtc: currentDate, osIds: new List<int> { (int)OrderStatus.Complete }, isRateNotificationSend: true);
+                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, createdToUtc: currentDate, osIds: new List<int> { (int)OrderStatus.Complete }, sendRateNotification: true);
                     if (customerOrders.Count > 0)
                     {
                         foreach (var customerOrder in customerOrders)
                         {
-                            TimeSpan diff = DateTime.Now.Subtract(customerOrder.CreatedOnUtc);
+                            TimeSpan diff = DateTime.Now.Subtract(customerOrder.ScheduleDate);
                             if (diff.Hours >= 1)
                             {
                                 if (!string.IsNullOrEmpty(rateRemainderCustomer.PushToken))
@@ -93,7 +93,7 @@ namespace Nop.Services.Common
                                         PushBody = await _localizationService.GetResourceAsync("RateRemainderNotificationTask.Body"),
                                         PushData = new { customerOrder.Id }
                                     };
-                                    var result = expoSDKClient.PushSendAsync(pushTicketReq).GetAwaiter().GetResult();
+                                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
 
                                     customerOrder.RateNotificationSend = true;
                                     await _orderService.UpdateOrderAsync(customerOrder);
