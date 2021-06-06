@@ -212,23 +212,6 @@ namespace Nop.Web.Controllers.Api.Security
             });
         }
 
-        [AllowAnonymous]
-        [HttpPost("set-customer-pushtoken/{pushToken}")]
-        public async Task<IActionResult> SetCustomerPushToken(string pushToken)
-        {
-            if (!string.IsNullOrWhiteSpace(pushToken))
-            {
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                if (customer == null)
-                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
-
-                customer.PushToken = pushToken;
-                await _customerService.UpdateCustomerAsync(customer);
-                return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenUpdated") });
-            }
-            return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenNotFound") });
-        }
-
         #endregion
     }
 }

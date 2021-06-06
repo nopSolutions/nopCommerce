@@ -1594,7 +1594,7 @@ namespace Nop.Services.Orders
                     if (company != null)
                     {
                         var cartTotal = await _orderTotalCalculationService.GetShoppingCartTotalAsync(details.Cart);
-                        var orders = await _orderService.SearchOrdersAsync(customerId: details.Customer.Id);
+                        var orders = await _orderService.SearchOrdersAsync(customerId: details.Customer.Id, osIds: new List<int> { (int)OrderStatus.Complete });
                         if (orders.Any())
                         {
                             //Checks if the schedule date has any previous orders, if yes then checks limit according to that!

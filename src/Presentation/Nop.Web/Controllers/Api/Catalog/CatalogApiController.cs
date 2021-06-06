@@ -736,7 +736,6 @@ namespace Nop.Web.Controllers.Api.Security
         {
             //Custom Fields
             public string Keyword { get; set; }
-            public string ScheduleDay { get; set; }
         }
         public partial class ProductReviewsApiModel : BaseEntity
         {

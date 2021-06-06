@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Expo.Server.Client;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Common.PushApiTask;
 using Nop.Services.Customers;
@@ -17,6 +18,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSetting;
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
@@ -25,10 +27,12 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public RemindMeAndRateRemainderNotificationTask(ICustomerService customerService,
+        public RemindMeAndRateRemainderNotificationTask(CatalogSettings catalogSetting,
+            ICustomerService customerService,
             IOrderService orderService,
             ILocalizationService localizationService)
         {
+            _catalogSetting = catalogSetting;
             _customerService = customerService;
             _orderService = orderService;
             _localizationService = localizationService;
@@ -43,7 +47,7 @@ namespace Nop.Services.Common
         /// </summary>
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
-            if (DateTime.Now.Hour >= 11 && DateTime.Now.Hour <= 12 && DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday)
+            if (DateTime.Now.Hour >= _catalogSetting.StartingTimeOfRemindMeTask && DateTime.Now.Hour <= _catalogSetting.EndingTimeOfRemindMeTask /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
             {
                 var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
                 if (customers.Count > 0)

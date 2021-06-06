@@ -105,6 +105,11 @@ namespace Nop.Web.Controllers.Api.Customer
             public string CompanyName { get; set; }
         }
 
+        public class CustomerPushTokenModel
+        {
+            public string PushToken { get; set; }
+        }
+
         [HttpGet("customer-details")]
         public async Task<IActionResult> CustomerDetails()
         {
@@ -182,6 +187,22 @@ namespace Nop.Web.Controllers.Api.Customer
                 return Ok(new { success = true, companyDetails });
             }
             return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Company.NotFound") });
+        }
+
+        [HttpPost("set-customer-pushtoken")]
+        public async Task<IActionResult> SetCustomerPushToken([FromBody] CustomerPushTokenModel model)
+        {
+            if (!string.IsNullOrWhiteSpace(model.PushToken))
+            {
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                if (customer == null)
+                    return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Customer.Not.Found") });
+
+                customer.PushToken = model.PushToken;
+                await _customerService.UpdateCustomerAsync(customer);
+                return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenUpdated") });
+            }
+            return Ok(new { success = false, message = await _localizationService.GetResourceAsync("Account.Customer.PushTokenNotFound") });
         }
 
         #endregion

@@ -790,7 +790,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 defaultItemText: await _localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Vendor.None"));
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareCompaniesAsync(model.AvailableCompanies, withSpecialDefaultItem: true);
+            await _baseAdminModelFactory.PrepareCompaniesAsync(model.AvailableCompanies, defaultItemText: await _localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Company.None"));
 
             //prepare model customer attributes
             await PrepareCustomerAttributeModelsAsync(model.CustomerAttributes, customer);
