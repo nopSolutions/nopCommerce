@@ -34,7 +34,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.Cache
         static private readonly List<VendorToChatMap> _vendorToChat = new List<VendorToChatMap>{
             new VendorToChatMap{ VendorId = 1, ChatGroupId = -408158341 },  // StrEat Kitchen
             new VendorToChatMap{ VendorId = 2, ChatGroupId = -407631866 },  // Root
-            new VendorToChatMap{ VendorId = 4, ChatGroupId = -558910079 }   // 33 Pizzas
+            new VendorToChatMap{ VendorId = 4, ChatGroupId = -558910079 },  // 33 Pizzas
+            new VendorToChatMap{ VendorId = 6, ChatGroupId = -403350589 }   // Kaufmann
         };
 
         public OrderPlacedEventConsumer(Lazy<ITelegramBotClient> telegramBotClient,
