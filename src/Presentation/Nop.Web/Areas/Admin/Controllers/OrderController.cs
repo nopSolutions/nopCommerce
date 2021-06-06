@@ -1982,6 +1982,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             orderSettings.ScheduleDate = model.ScheduleDate1 + "," + model.ScheduleDate2 + "," + model.ScheduleDate3;
             await _settingService.SaveSettingAsync(orderSettings, x => x.ScheduleDate, clearCache: true);
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Orders.ScheduleDate.Updated"));
 
             return View(model);
         }

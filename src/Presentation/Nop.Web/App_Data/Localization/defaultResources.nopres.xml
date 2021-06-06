@@ -33,8 +33,110 @@
     <LocaleResource Name="Order.NoOrderFound">
         <Value>No Order Found</Value>
     </LocaleResource>
-    <LocaleResource Name="Customer.Login.Successfully">
-        <Value>Customer Login Successfully</Value>
+    <LocaleResource Name="admin.contentmanagement.pushnotifcation">
+        <Value>Push Notification</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies">
+        <Value>Companies</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company">
+        <Value>Company</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.orderschedule">
+        <Value>Order Schedule</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Companies.Company.List.SearchCompanyName">
+        <Value>Search Company Name</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.fields.name">
+        <Value>Name</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.fields.amountlimit">
+        <Value>Amount Limit</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Company.Companies.EditCompanyDetails">
+        <Value>Edit Company Details</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.info">
+        <Value>Info</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.customers">
+        <Value>Customers</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.customers.addnew">
+        <Value>Add new Customers</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.backtolist">
+        <Value>Back To List</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.Fields.MessageTitle">
+        <Value>Message Title</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.Fields.MessageBody">
+        <Value>Message Body</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.common.send">
+        <Value>Send</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.customers.savebeforeedit">
+        <Value>Save company before adding customers</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.addresses.savebeforeedit">
+        <Value>Add customer before adding address</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.company.companies.addnew">
+        <Value>Add new company</Value>
+    </LocaleResource>
+    <LocaleResource Name="Category.Not.Found">
+        <Value>Category Not Found</Value>
+    </LocaleResource>
+    <LocaleResource Name="Product.Added.Successfully.To.Cart">
+        <Value>Product Added Successfully To Cart</Value>
+    </LocaleResource>
+    <LocaleResource Name="Setting.Not.Found">
+        <Value>Schedule date setting not found</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.Cancelled.Failed">
+        <Value>Order Cancelled Failed</Value>
+    </LocaleResource>
+    <LocaleResource Name="PushNotification.OrderCancelTitle">
+        <Value>Order Cancel</Value>
+    </LocaleResource>
+    <LocaleResource Name="PushNotification.OrderCancelBody">
+        <Value>Your order has been cancelled</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.Cancelled.Successfully">
+        <Value>Order Cancelled Successfully</Value>
+    </LocaleResource>
+    <LocaleResource Name="customer.NotFound">
+        <Value>Customer Not Found</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.ReOrdered">
+        <Value>ReOrdered</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.Rating.Failed">
+        <Value>Order Rating Failed</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.Rating.Added">
+        <Value>Order Rating Added</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.Rental.FormattedDate">
+        <Value>Order Rental FormattedDate</Value>
+    </LocaleResource>
+    <LocaleResource Name="address.notfound">
+        <Value>Address not found</Value>
+    </LocaleResource>
+    <LocaleResource Name="DeliveryAddressSet.Successfully">
+        <Value>Delivery Address Set Successfully</Value>
+    </LocaleResource>
+    <LocaleResource Name="Company.NotFound">
+        <Value>Company Not Found</Value>
+    </LocaleResource>
+    <LocaleResource Name="Customer.Notification.Settings.Updated">
+        <Value>Customer Notification Settings Updated</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.Rental.FormattedDate">
+        <Value>Order Rental FormattedDate</Value>
     </LocaleResource>
     <LocaleResource Name="RemindMeNotificationTask.Title">
         <Value>RemindMe Notification</Value>
