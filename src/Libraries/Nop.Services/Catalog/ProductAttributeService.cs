@@ -16,6 +16,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
@@ -32,6 +33,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAttributeValue> productAttributeValueRepository,
+            IRepository<Product> productRepository,
             IStaticCacheManager staticCacheManager)
         {
             _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
@@ -39,6 +41,7 @@ namespace Nop.Services.Catalog
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAttributeValueRepository = productAttributeValueRepository;
+            _productRepository = productRepository;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -395,11 +398,13 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductAttributeCombination>();
 
+            var deleted = (await _productRepository.GetByIdAsync(productId)).Deleted;
+
             var combinations = await _productAttributeCombinationRepository.GetAllAsync(query =>
             {
                 return from c in query
                        orderby c.Id
-                    where c.ProductId == productId
+                    where !deleted && c.ProductId == productId
                     select c;
             }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationsByProductCacheKey, productId));
 
