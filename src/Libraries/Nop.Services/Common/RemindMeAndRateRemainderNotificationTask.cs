@@ -53,9 +53,10 @@ namespace Nop.Services.Common
                 if (customers.Count > 0)
                 {
                     DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                    var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                     foreach (var customer in customers)
                     {
-                        var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate);
+                        var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
                         if (order == null)
                         {
                             if (!string.IsNullOrEmpty(customer.PushToken))
@@ -77,9 +78,10 @@ namespace Nop.Services.Common
             if (rateRemainderCustomers.Count > 0)
             {
                 DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                 foreach (var rateRemainderCustomer in rateRemainderCustomers)
                 {
-                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, createdToUtc: currentDate, osIds: new List<int> { (int)OrderStatus.Complete }, sendRateNotification: true);
+                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, createdToUtc: currentDate, osIds: osIds, sendRateNotification: true);
                     if (customerOrders.Count > 0)
                     {
                         foreach (var customerOrder in customerOrders)

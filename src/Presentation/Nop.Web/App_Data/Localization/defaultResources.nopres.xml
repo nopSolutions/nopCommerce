@@ -27,7 +27,15 @@
     <LocaleResource Name="Customer.Login.Successfully">
         <Value>Customer Login Successfully</Value>
     </LocaleResource>
-
+    <LocaleResource Name="Order.Placed.Successfully">
+        <Value>Order Placed Successfully</Value>
+    </LocaleResource>
+    <LocaleResource Name="Order.NoOrderFound">
+        <Value>No Order Found</Value>
+    </LocaleResource>
+    <LocaleResource Name="Customer.Login.Successfully">
+        <Value>Customer Login Successfully</Value>
+    </LocaleResource>
     <LocaleResource Name="RemindMeNotificationTask.Title">
         <Value>RemindMe Notification</Value>
     </LocaleResource>
