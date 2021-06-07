@@ -57,7 +57,7 @@ namespace Nop.Services.Common
                     foreach (var customer in customers)
                     {
                         var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
-                        if (order == null)
+                        if (order.Count == 0)
                         {
                             if (!string.IsNullOrEmpty(customer.PushToken))
                             {
