@@ -369,8 +369,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 {
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
 
-                    var itemPrice = Math.Round((await _taxService.GetProductPriceAsync(product,
-                       (await _shoppingCartService.GetUnitPriceAsync(item, true)).unitPrice, false, await _workContext.GetCurrentCustomerAsync())).price, 2);
+                    var itemPrice = (await _taxService.GetProductPriceAsync(product,
+                       (await _shoppingCartService.GetUnitPriceAsync(item, true)).unitPrice, false, await _workContext.GetCurrentCustomerAsync())).price;
                     itemTotal += itemPrice * item.Quantity;
                     return new Item
                     {
@@ -393,15 +393,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                     await foreach (var attributeValue in values)
                     {
                         var (attributePrice, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, await _workContext.GetCurrentCustomerAsync());
-                        var roundedAttributePrice = Math.Round(attributePrice, 2);
 
-                        itemTotal += roundedAttributePrice;
+                        itemTotal += attributePrice;
                         purchaseUnit.Items.Add(new Item
                         {
                             Name = CommonHelper.EnsureMaximumLength(attribute.Name, 127),
                             Description = CommonHelper.EnsureMaximumLength($"{attribute.Name} - {attributeValue.Name}", 127),
                             Quantity = 1.ToString(),
-                            UnitAmount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture) }
+                            UnitAmount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = attributePrice.ToString("0.00", CultureInfo.InvariantCulture) }
                         });
                     }
                 }
