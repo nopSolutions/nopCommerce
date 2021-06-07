@@ -764,7 +764,9 @@ namespace Nop.Web.Factories
                     product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
                 model.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
 
-                if (model.PreOrderAvailabilityStartDateTimeUtc.HasValue && _catalogSettings.DisplayDatePreOrderAvailability)
+                if (model.AvailableForPreOrder &&
+                    model.PreOrderAvailabilityStartDateTimeUtc.HasValue &&
+                    _catalogSettings.DisplayDatePreOrderAvailability)
                 {
                     model.PreOrderAvailabilityStartDateTimeUserTime =
                         (await _dateTimeHelper.ConvertToUserTimeAsync(model.PreOrderAvailabilityStartDateTimeUtc.Value)).ToString("D");
