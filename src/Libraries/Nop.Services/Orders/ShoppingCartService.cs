@@ -742,7 +742,6 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Temporary solution
         /// Validates shopping cart item attributes
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -757,7 +756,7 @@ namespace Nop.Services.Orders
         /// A task that represents the asynchronous operation
         /// The task result contains the warnings
         /// </returns>
-        protected virtual async Task<IList<string>> GetShoppingCartItemAttributeWarningsAsync(Customer customer,
+        public virtual async Task<IList<string>> GetShoppingCartItemAttributeWarningsAsync(Customer customer,
             ShoppingCartType shoppingCartType,
             Product product,
             int quantity = 1,
@@ -950,31 +949,6 @@ namespace Nop.Services.Orders
             }
 
             return warnings;
-        }
-
-        /// <summary>
-        /// Validates shopping cart item attributes
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="product">Product</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
-        /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the warnings
-        /// </returns>
-        public virtual async Task<IList<string>> GetShoppingCartItemAttributeWarningsAsync(Customer customer,
-            ShoppingCartType shoppingCartType,
-            Product product,
-            int quantity = 1,
-            string attributesXml = "",
-            bool ignoreNonCombinableAttributes = false,
-            bool ignoreConditionMet = false)
-        {
-            return await GetShoppingCartItemAttributeWarningsAsync(customer, shoppingCartType, product, quantity, attributesXml, ignoreNonCombinableAttributes, ignoreConditionMet, 0);
         }
 
         /// <summary>
