@@ -4,6 +4,7 @@ using Expo.Server.Client;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Common.PushApiTask;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -18,7 +19,8 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSetting;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly ISettingService _settingService;
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
@@ -27,13 +29,15 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public RemindMeAndRateRemainderNotificationTask(CatalogSettings catalogSetting,
+        public RemindMeAndRateRemainderNotificationTask(CatalogSettings catalogSettings,
             ICustomerService customerService,
+            ISettingService settingService,
             IOrderService orderService,
             ILocalizationService localizationService)
         {
-            _catalogSetting = catalogSetting;
+            _catalogSettings = catalogSettings;
             _customerService = customerService;
+            _settingService = settingService;
             _orderService = orderService;
             _localizationService = localizationService;
         }
@@ -47,7 +51,9 @@ namespace Nop.Services.Common
         /// </summary>
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
-            if (DateTime.Now.Hour >= _catalogSetting.StartingTimeOfRemindMeTask && DateTime.Now.Hour <= _catalogSetting.EndingTimeOfRemindMeTask /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
+            var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
+            var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
+            if (DateTime.Now.Hour >= startingHour && DateTime.Now.Hour <= endingHour /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
             {
                 var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
                 if (customers.Count > 0)
