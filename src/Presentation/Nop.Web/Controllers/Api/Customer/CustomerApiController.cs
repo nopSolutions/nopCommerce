@@ -190,7 +190,7 @@ namespace Nop.Web.Controllers.Api.Customer
         }
 
         [HttpPost("set-customer-pushtoken")]
-        public async Task<IActionResult> SetCustomerPushToken([FromBody] CustomerPushTokenModel model)
+        public virtual async Task<IActionResult> SetCustomerPushToken([FromBody] CustomerPushTokenModel model)
         {
             if (!string.IsNullOrWhiteSpace(model.PushToken))
             {
