@@ -3,10 +3,15 @@
 @inject Nop.Core.IWebHelper webHelper
 @inject SeoSettings seoSettings
 @{
-    var isPopup = ViewBag.IsPopup;
-    if (isPopup == null || isPopup == false)
+    var isPopup = ViewBag.IsPopup ?? false;
+
+    if (!isPopup)
     {
         Layout = "_ColumnsOne";
+    }
+    else
+    {
+        Context.Items["nop.IgnoreScriptTagLocation"] = true;
     }
 
     if (!Model.IsPasswordProtected)
