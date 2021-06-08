@@ -150,6 +150,18 @@
   <LocaleResource Name="Company.NotFound">
     <Value>Company Not Found</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customer.Customers.List.SearchCustomerEmail">
+    <Value>Customer Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Companies.Company.Fields.Name">
+    <Value>Company Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Companies.Company.Fields.AmountLimit">
+    <Value>Amount Limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Company.Companies.EditCategoryDetails">
+    <Value>Company Details</Value>
+  </LocaleResource>
   <LocaleResource Name="Customer.Notification.Settings.Updated">
     <Value>Customer Notification Settings Updated</Value>
   </LocaleResource>
