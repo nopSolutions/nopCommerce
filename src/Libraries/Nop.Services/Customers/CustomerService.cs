@@ -289,18 +289,21 @@ namespace Nop.Services.Customers
 
 
         public virtual async Task<IPagedList<Customer>> GetAllPushNotificationCustomersAsync(bool isRateReminderNotification = false, bool isRemindMeNotification = false,
-            bool isOrderStatusNotification = false, int pageIndex = 0, int pageSize = int.MaxValue)
+            bool isOrderStatusNotification = false, bool sendToAll = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var customers = await _customerRepository.GetAllPagedAsync(query =>
             {
-                if (isRateReminderNotification)
-                    query = query.Where(c => c.RateReminderNotification == isRateReminderNotification);
-                if (isRemindMeNotification)
-                    query = query.Where(c => c.RemindMeNotification == isRemindMeNotification);
-                if (isOrderStatusNotification)
-                    query = query.Where(c => c.OrderStatusNotification == isOrderStatusNotification);
-                query = query.Where(c => !c.Deleted);
-
+                if (!sendToAll)
+                {
+                    if (isRateReminderNotification)
+                        query = query.Where(c => c.RateReminderNotification == isRateReminderNotification);
+                    if (isRemindMeNotification)
+                        query = query.Where(c => c.RemindMeNotification == isRemindMeNotification);
+                    if (isOrderStatusNotification)
+                        query = query.Where(c => c.OrderStatusNotification == isOrderStatusNotification);
+                }
+                
+                query = query.Where(c => !c.Deleted && c.PushToken != null);
                 query = query.OrderByDescending(c => c.CreatedOnUtc);
 
                 return query;

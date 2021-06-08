@@ -49,7 +49,7 @@ namespace Nop.Services.Customers
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
         Task<IPagedList<Customer>> GetAllPushNotificationCustomersAsync(bool isRateReminderNotification = false, bool isRemindMeNotification = false,
-            bool isOrderStatusNotification = false, int pageIndex = 0, int pageSize = int.MaxValue);
+            bool isOrderStatusNotification = false, bool sendToAll = false, int pageIndex = 0, int pageSize = int.MaxValue);
         /// <summary>
         /// Gets online customers
         /// </summary>

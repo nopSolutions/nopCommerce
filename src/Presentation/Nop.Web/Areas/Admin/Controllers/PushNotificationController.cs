@@ -74,8 +74,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-
             //prepare model
             var model = new PushNotificationModel();
 
@@ -88,25 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
-            IPagedList<Customer> notificationCustomers = new PagedList<Customer>(new List<Customer>(), 0, 0, null);
-            if (model.NotificationType == "RateReminderNotification")
-            {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isRateReminderNotification: true);
-            }
-            else if (model.NotificationType == "RemindMeNotification")
-            {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
-            }
-            else if (model.NotificationType == "OrderStatusNotification")
-            {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isOrderStatusNotification: true);
-            }
-            else if (model.NotificationType == "All")
-            {
-                notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(true, true, true);
-            }
-
+            IPagedList<Customer> notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(sendToAll: true);
             foreach (var customer in notificationCustomers)
             {
                 if (!string.IsNullOrEmpty(customer.PushToken))

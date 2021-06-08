@@ -14,14 +14,10 @@
         <div class="form-horizontal">
             <div class="card-body">
                 <form asp-controller="PushNotification" asp-action="SendNotification" method="post">
-                    <div class="form-group row">
-                        <div class="col-md-3">
-                            <nop-label asp-for="NotificationType" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-select asp-for="NotificationType" asp-items="Model.NotificationTypes" />
-                            <span asp-validation-for="NotificationType"></span>
-                        </div>
+                    <div class="content-header clearfix">
+                        <h1>
+                            @T("Admin.PushNotification.SendAll")
+                        </h1>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3">
@@ -41,10 +37,14 @@
                             <span asp-validation-for="MessageBody"></span>
                         </div>
                     </div>
-                    <button type="submit" name="save" class="btn btn-primary">
-                        <i class="far fa-save"></i>
-                        @T("Admin.Common.Send")
-                    </button>
+                    <div class="form-group row">
+                        <div class="offset-md-3 col-md-9">
+                            <button type="submit" name="save" class="btn btn-primary">
+                                <i class="far fa-save"></i>
+                                @T("Admin.Common.Send")
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
