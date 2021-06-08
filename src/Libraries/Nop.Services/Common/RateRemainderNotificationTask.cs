@@ -15,7 +15,7 @@ namespace Nop.Services.Common
     /// <summary>
     /// Represents a task for sending reminding notification to customer
     /// </summary>
-    public partial class RemindMeAndRateRemainderNotificationTask : IScheduleTask
+    public partial class RateRemainderNotificationTask : IScheduleTask
     {
         #region Fields
 
@@ -29,7 +29,7 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public RemindMeAndRateRemainderNotificationTask(CatalogSettings catalogSettings,
+        public RateRemainderNotificationTask(CatalogSettings catalogSettings,
             ICustomerService customerService,
             ISettingService settingService,
             IOrderService orderService,
@@ -51,35 +51,6 @@ namespace Nop.Services.Common
         /// </summary>
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
-            var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
-            var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
-            if (DateTime.Now.Hour >= startingHour && DateTime.Now.Hour <= endingHour /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
-            {
-                var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
-                if (customers.Count > 0)
-                {
-                    DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-                    var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
-                    foreach (var customer in customers)
-                    {
-                        var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
-                        if (order.Count == 0)
-                        {
-                            if (!string.IsNullOrEmpty(customer.PushToken))
-                            {
-                                var expoSDKClient = new PushApiTaskClient();
-                                var pushTicketReq = new PushApiTaskTicketRequest()
-                                {
-                                    PushTo = new List<string>() { customer.PushToken },
-                                    PushTitle = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Title"),
-                                    PushBody = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Body")
-                                };
-                                var result = await expoSDKClient.PushSendAsync(pushTicketReq);
-                            }
-                        }
-                    }
-                }
-            }
             var rateRemainderCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isRateReminderNotification: true);
             if (rateRemainderCustomers.Count > 0)
             {

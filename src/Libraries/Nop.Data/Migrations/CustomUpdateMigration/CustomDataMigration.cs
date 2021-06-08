@@ -8,7 +8,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.CustomUpdateMigration
 {
-    [NopMigration("2020-06-10 09:30:17:6453239", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6453545", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class CustomDataMigration : Migration
     {
@@ -30,7 +30,7 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
             var scheduleTaskTable = _dataProvider.GetTable<ScheduleTask>();
 
-            if (!scheduleTaskTable.Any(alt => string.Compare(alt.Name, "Remind Me And Rate Reminder Notification Task", true) == 0))
+            if (!scheduleTaskTable.Any(alt => string.Compare(alt.Name, "Remind Me Notification Task", true) == 0))
                 _dataProvider.InsertEntity(
                     new ScheduleTask
                     {
@@ -38,13 +38,36 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
                         LastStartUtc = null,
                         LastSuccessUtc = null,
                         StopOnError = true,
-                        Type = "Nop.Services.Common.RemindMeAndRateRemainderNotificationTask, Nop.Services",
+                        Type = "Nop.Services.Common.RemindMeNotificationTask, Nop.Services",
                         Enabled = true,
                         Seconds = 2400,
-                        Name = "Remind Me And Rate Reminder Notification Task"
+                        Name = "Remind Me Notification Task"
                     }
                 );
 
+            if (!scheduleTaskTable.Any(alt => string.Compare(alt.Name, "Rate Reminder Notification Task", true) == 0))
+                _dataProvider.InsertEntity(
+                    new ScheduleTask
+                    {
+                        LastEndUtc = null,
+                        LastStartUtc = null,
+                        LastSuccessUtc = null,
+                        StopOnError = true,
+                        Type = "Nop.Services.Common.RateRemainderNotificationTask, Nop.Services",
+                        Enabled = true,
+                        Seconds = 2400,
+                        Name = "Rate Reminder Notification Task"
+                    }
+                );
+
+            if (scheduleTaskTable.Any(alt => string.Compare(alt.Name, "Remind Me And Rate Reminder Notification Task", true) == 1))
+            {
+                var deleteScheduleTask = scheduleTaskTable.Where(x => x.Name == "Remind Me And Rate Reminder Notification Task").Any() ? scheduleTaskTable.Where(x => x.Name == "Remind Me And Rate Reminder Notification Task").FirstOrDefault() : null;
+                if (deleteScheduleTask != null)
+                {
+                    _dataProvider.DeleteEntityAsync(deleteScheduleTask);
+                }
+            }
             var ribbonEnableColumnName = "RibbonEnable";
             if (!Schema.Table(productTableName).Column(ribbonEnableColumnName).Exists())
             {
