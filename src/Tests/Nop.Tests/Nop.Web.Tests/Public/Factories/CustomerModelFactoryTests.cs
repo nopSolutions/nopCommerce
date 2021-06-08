@@ -127,7 +127,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             var model = await _customerModelFactory.PreparePasswordRecoveryModelAsync(new PasswordRecoveryModel{Email = "test@email.com"});
             model.DisplayCaptcha.Should().BeFalse();
             model.Email.Should().Be("test@email.com");
-            model.Result.Should().BeNull();
         }
         
         [Test]
