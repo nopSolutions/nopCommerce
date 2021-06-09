@@ -54,11 +54,11 @@ namespace Nop.Services.Common
             var rateRemainderCustomers = await _customerService.GetAllPushNotificationCustomersAsync(isRateReminderNotification: true);
             if (rateRemainderCustomers.Count > 0)
             {
-                DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                //DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
                 var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                 foreach (var rateRemainderCustomer in rateRemainderCustomers)
                 {
-                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, createdToUtc: currentDate, osIds: osIds, sendRateNotification: true);
+                    var customerOrders = await _orderService.SearchOrdersAsync(customerId: rateRemainderCustomer.Id, osIds: osIds, sendRateNotification: true); //createdToUtc: currentDate,
                     if (customerOrders.Count > 0)
                     {
                         foreach (var customerOrder in customerOrders)
