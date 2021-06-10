@@ -6,6 +6,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Common.PushApiTask;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Tasks;
@@ -19,6 +20,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CatalogSettings _catalogSettings;
         private readonly ISettingService _settingService;
         private readonly ICustomerService _customerService;
@@ -29,12 +31,14 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public RemindMeNotificationTask(CatalogSettings catalogSettings,
+        public RemindMeNotificationTask(IDateTimeHelper dateTimeHelper,
+            CatalogSettings catalogSettings,
             ICustomerService customerService,
             ISettingService settingService,
             IOrderService orderService,
             ILocalizationService localizationService)
         {
+            _dateTimeHelper = dateTimeHelper;
             _catalogSettings = catalogSettings;
             _customerService = customerService;
             _settingService = settingService;
@@ -66,19 +70,23 @@ namespace Nop.Services.Common
                     var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                     foreach (var customer in customers)
                     {
-                        var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
-                        if (order.Count == 0)
+                        var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+                        if (customerTime.Hour == startingHour)
                         {
-                            if (!string.IsNullOrEmpty(customer.PushToken))
+                            var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
+                            if (order.Count == 0)
                             {
-                                var expoSDKClient = new PushApiTaskClient();
-                                var pushTicketReq = new PushApiTaskTicketRequest()
+                                if (!string.IsNullOrEmpty(customer.PushToken))
                                 {
-                                    PushTo = new List<string>() { customer.PushToken },
-                                    PushTitle = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Title"),
-                                    PushBody = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Body")
-                                };
-                                var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+                                    var expoSDKClient = new PushApiTaskClient();
+                                    var pushTicketReq = new PushApiTaskTicketRequest()
+                                    {
+                                        PushTo = new List<string>() { customer.PushToken },
+                                        PushTitle = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Title"),
+                                        PushBody = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Body")
+                                    };
+                                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+                                }
                             }
                         }
                     }
