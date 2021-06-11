@@ -61,8 +61,8 @@ namespace Nop.Services.Common
                 startingHour = 11;
             if (endingHour == 0)
                 endingHour = 12;
-            if (DateTime.Now.Hour >= startingHour && DateTime.Now.Hour <= endingHour /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
-            {
+            //if (DateTime.Now.Hour >= startingHour && DateTime.Now.Hour <= endingHour /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
+            //{
                 var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
                 if (customers.Count > 0)
                 {
@@ -91,7 +91,7 @@ namespace Nop.Services.Common
                         }
                     }
                 }
-            }
+            //}
         }
 
         #endregion
