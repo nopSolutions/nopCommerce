@@ -56,11 +56,11 @@ namespace Nop.Services.Common
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
             var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
-            var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
-            if (startingHour == 0)
-                startingHour = 11;
-            if (endingHour == 0)
-                endingHour = 12;
+            //var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
+            //if (startingHour == 0)
+            //    startingHour = 11;
+            //if (endingHour == 0)
+            //    endingHour = 12;
             //if (DateTime.Now.Hour >= startingHour && DateTime.Now.Hour <= endingHour /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
             //{
                 var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
