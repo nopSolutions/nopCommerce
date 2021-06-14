@@ -57,8 +57,8 @@ namespace Nop.Services.Common
         {
             var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
             //var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
-            //if (startingHour == 0)
-            //    startingHour = 11;
+            if (startingHour == 0)
+                startingHour = 11;
             //if (endingHour == 0)
             //    endingHour = 12;
             //if (DateTime.Now.Hour >= startingHour && DateTime.Now.Hour <= endingHour /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
@@ -70,7 +70,7 @@ namespace Nop.Services.Common
                     var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                     foreach (var customer in customers)
                     {
-                        var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+                        var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
                         if (customerTime.Hour == startingHour)
                         {
                             var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
