@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Expo.Server.Client;
 using Nop.Core.Domain.Catalog;
@@ -10,6 +10,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Tasks;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Common
 {
@@ -26,6 +27,7 @@ namespace Nop.Services.Common
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILogger _logger;
 
         #endregion
 
@@ -36,7 +38,8 @@ namespace Nop.Services.Common
             ICustomerService customerService,
             ISettingService settingService,
             IOrderService orderService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ILogger logger)
         {
             _dateTimeHelper = dateTimeHelper;
             _catalogSettings = catalogSettings;
@@ -44,6 +47,7 @@ namespace Nop.Services.Common
             _settingService = settingService;
             _orderService = orderService;
             _localizationService = localizationService;
+            _logger = logger;
         }
 
         #endregion
@@ -56,6 +60,7 @@ namespace Nop.Services.Common
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
             var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
+             _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "strating time",startingHour);
             //var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
             if (startingHour == 0)
                 startingHour = 11;
@@ -66,14 +71,18 @@ namespace Nop.Services.Common
                 var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
                 if (customers.Count > 0)
                 {
-                    DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                 _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "customer count",customers.Count);
+                    DateTime currentDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
+                    _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "currentDate", currentDate);
                     var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                     foreach (var customer in customers)
                     {
                         var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+                          _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "customer time",customerTime);
                         if (customerTime.Hour == startingHour)
                         {
                             var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
+                             _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "orders count",order.Count);
                             if (order.Count == 0)
                             {
                                 if (!string.IsNullOrEmpty(customer.PushToken))
