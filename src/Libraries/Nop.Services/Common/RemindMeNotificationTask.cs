@@ -10,7 +10,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Tasks;
-using Nop.Services.Logging;
 
 namespace Nop.Services.Common
 {
@@ -27,7 +26,6 @@ namespace Nop.Services.Common
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
 
         #endregion
 
@@ -38,8 +36,7 @@ namespace Nop.Services.Common
             ICustomerService customerService,
             ISettingService settingService,
             IOrderService orderService,
-            ILocalizationService localizationService,
-            ILogger logger)
+            ILocalizationService localizationService)
         {
             _dateTimeHelper = dateTimeHelper;
             _catalogSettings = catalogSettings;
@@ -47,7 +44,6 @@ namespace Nop.Services.Common
             _settingService = settingService;
             _orderService = orderService;
             _localizationService = localizationService;
-            _logger = logger;
         }
 
         #endregion
@@ -60,49 +56,39 @@ namespace Nop.Services.Common
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
             var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
-             _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "strating time", startingHour.ToString());
-            //var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
             if (startingHour == 0)
                 startingHour = 11;
-            //if (endingHour == 0)
-            //    endingHour = 12;
-            //if (DateTime.Now.Hour >= startingHour && DateTime.Now.Hour <= endingHour /*&& DateTime.Now.DayOfWeek >= DayOfWeek.Monday && DateTime.Now.DayOfWeek <= DayOfWeek.Friday*/)
-            //{
-                var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
-                if (customers.Count > 0)
+                
+            var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
+            if (customers.Count > 0)
+            {
+                DateTime currentDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
+                var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
+                foreach (var customer in customers)
                 {
-                 _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "customer count",customers.Count.ToString());
-                    DateTime currentDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
-                    _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "currentDate", currentDate.ToString());
-                    var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
-                    foreach (var customer in customers)
+                    var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
+                    if (customerTime.Hour == startingHour)
                     {
-                        var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
-                          _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "customer time", customerTime.ToString());
-                        if (customerTime.Hour == startingHour)
+                        var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
+                        if (order.Count == 0)
                         {
-                            var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
-                             _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "orders count", order.Count.ToString());
-                            if (order.Count == 0)
+                            if (!string.IsNullOrEmpty(customer.PushToken))
                             {
-                                if (!string.IsNullOrEmpty(customer.PushToken))
+                                var expoSDKClient = new PushApiTaskClient();
+                                var pushTicketReq = new PushApiTaskTicketRequest()
                                 {
-                                    var expoSDKClient = new PushApiTaskClient();
-                                    var pushTicketReq = new PushApiTaskTicketRequest()
-                                    {
-                                        PushTo = new List<string>() { customer.PushToken },
-                                        PushTitle = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Title"),
-                                        PushBody = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Body")
-                                    };
-                                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
-                                }
+                                    PushTo = new List<string>() { customer.PushToken },
+                                    PushTitle = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Title"),
+                                    PushBody = await _localizationService.GetResourceAsync("RemindMeNotificationTask.Body")
+                                };
+                                var result = await expoSDKClient.PushSendAsync(pushTicketReq);
                             }
                         }
                     }
                 }
-            //}
+            }
         }
-
+        
         #endregion
     }
 }
