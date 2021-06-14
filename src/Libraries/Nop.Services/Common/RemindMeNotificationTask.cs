@@ -60,7 +60,7 @@ namespace Nop.Services.Common
         public async System.Threading.Tasks.Task ExecuteAsync()
         {
             var startingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.StartingTimeOfRemindMeTask");
-             _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "strating time",startingHour);
+             _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "strating time",startingHour);
             //var endingHour = await _settingService.GetSettingByKeyAsync<int>("catalogSettings.EndingTimeOfRemindMeTask");
             if (startingHour == 0)
                 startingHour = 11;
@@ -71,18 +71,18 @@ namespace Nop.Services.Common
                 var customers = await _customerService.GetAllPushNotificationCustomersAsync(isRemindMeNotification: true);
                 if (customers.Count > 0)
                 {
-                 _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "customer count",customers.Count);
+                 _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "customer count",customers.Count);
                     DateTime currentDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
-                    _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "currentDate", currentDate);
+                    _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "currentDate", currentDate);
                     var osIds = new List<int> { (int)OrderStatus.Complete, (int)OrderStatus.Pending, (int)OrderStatus.Processing };
                     foreach (var customer in customers)
                     {
                         var customerTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow, TimeZoneInfo.Utc, await _dateTimeHelper.GetCustomerTimeZoneAsync(customer));
-                          _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "customer time",customerTime);
+                          _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "customer time",customerTime);
                         if (customerTime.Hour == startingHour)
                         {
                             var order = await _orderService.SearchOrdersAsync(customerId: customer.Id, createdToUtc: currentDate, osIds: osIds);
-                             _logger.InsertLog(Core.Domain.Logging.LogLevel.Information, "orders count",order.Count);
+                             _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Information, "orders count",order.Count);
                             if (order.Count == 0)
                             {
                                 if (!string.IsNullOrEmpty(customer.PushToken))
