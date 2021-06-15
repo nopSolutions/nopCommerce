@@ -87,7 +87,12 @@ var Checkout = {
             Billing.newAddress(!$('#billing-address-select').val());
         }
         if ($("#shipping-address-select").length > 0) {
-            Shipping.newAddress(!$('#shipping-address-select').val());
+          var checkoutNewAddressSelected = false;
+          var sas = $('#shipping-address-select');
+          if (sas && ('selectedOptions' in sas) && sas.selectedOptions.length > 0 && sas.selectedOptions[0].id == 'checkout-newaddress') {
+            checkoutNewAddressSelected = true;
+          }
+          Shipping.newAddress(checkoutNewAddressSelected);
         }
 
         if (response.goto_section) {
@@ -222,7 +227,12 @@ var Shipping = {
     },
 
     save: function () {
-        if (Checkout.loadWaiting !== false) return;
+      $('#address-selection-error').html('');
+      if (Checkout.loadWaiting !== false) return;
+      if (!$(this.form).find('#shipping-address-select').val()) {
+        $('#address-selection-error').html('Please select address of delivery');
+          return;
+        }
 
         Checkout.setLoadWaiting('shipping');
 

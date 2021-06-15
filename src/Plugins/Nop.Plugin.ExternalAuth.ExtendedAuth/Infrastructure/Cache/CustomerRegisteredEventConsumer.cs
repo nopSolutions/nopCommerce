@@ -32,15 +32,33 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
             return email.EndsWith("@servicetitan.com", StringComparison.InvariantCultureIgnoreCase);
         }
 
+        private void AddAddress(Customer customer, Address address, bool isDefault)
+        {
+            if (_addressService.IsAddressValid(address))
+            {
+                _addressService.InsertAddress(address);
+
+                _customerService.InsertCustomerAddress(customer, address);
+
+                if (isDefault)
+                {
+                    customer.BillingAddressId = address.Id;
+                    customer.ShippingAddressId = address.Id;
+
+                    _customerService.UpdateCustomer(customer);
+                }
+            }
+        }
+
         public void HandleEvent(CustomerRegisteredEvent eventMessage)
         {
             var customer = eventMessage.Customer;
             if(IsServiceTitanEmail(customer.Email))
             {
-                var defaultAddress = new Address
+                AddAddress(customer, new Address
                 {
                     FirstName = "Melik Adamyan 2/2",
-                    LastName = "2nd floor",
+                    LastName = "3rd floor",
                     Email = customer.Email,
                     Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
                     CountryId = _countryService.GetCountryByTwoLetterIsoCode("AM").Id,
@@ -48,24 +66,30 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
                     County = "",
                     City = "Yerevan",
                     Address1 = "Melik Adamyan 2/2",
+                    Address2 = "3rd floor",
+                    ZipPostalCode = "0010",
+                    PhoneNumber = "+374-99-094095",
+                    FaxNumber = "",
+                    CreatedOnUtc = customer.CreatedOnUtc
+                }, true);
+
+                AddAddress(customer, new Address
+                {
+                    FirstName = "Leo 1",
+                    LastName = "2nd floor",
+                    Email = customer.Email,
+                    Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
+                    CountryId = _countryService.GetCountryByTwoLetterIsoCode("AM").Id,
+                    StateProvinceId = null,
+                    County = "",
+                    City = "Yerevan",
+                    Address1 = "Leo 1",
                     Address2 = "2nd floor",
                     ZipPostalCode = "0010",
                     PhoneNumber = "+374-99-094095",
                     FaxNumber = "",
                     CreatedOnUtc = customer.CreatedOnUtc
-                };
-
-                if (_addressService.IsAddressValid(defaultAddress))
-                {
-                    _addressService.InsertAddress(defaultAddress);
-
-                    _customerService.InsertCustomerAddress(customer, defaultAddress);
-
-                    customer.BillingAddressId = defaultAddress.Id;
-                    customer.ShippingAddressId = defaultAddress.Id;
-
-                    _customerService.UpdateCustomer(customer);
-                }
+                }, false);
             }
         }
     }

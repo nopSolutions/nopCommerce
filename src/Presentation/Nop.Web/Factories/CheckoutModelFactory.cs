@@ -555,15 +555,15 @@ namespace Nop.Web.Factories
             var now = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
 
             string message;
-            if(now < new DateTime(now.Year, now.Month, now.Day, 12, 30, 0))
+            if(now < new DateTime(now.Year, now.Month, now.Day, 12, 00, 00))
             {
                 message = "Your lunch will be delivered at 1 PM.";
             }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 13, 30, 0))
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 13, 30, 00))
             {
                 message = "Your lunch will be delivered at 2 PM.";
             }
-            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 30, 0))
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 30, 00))
             {
                 message = "Your lunch will be delivered at 4 PM.";
             }

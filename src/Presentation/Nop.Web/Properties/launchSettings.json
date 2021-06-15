@@ -18,6 +18,7 @@
     "Nop.Web": {
       "commandName": "Project",
       "environmentVariables": {
+        "DOTNET_gcServer": "1",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:55390"
