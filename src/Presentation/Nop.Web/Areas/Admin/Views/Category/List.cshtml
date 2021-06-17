@@ -70,6 +70,15 @@
                             <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
+                        <div class="card card-default card-search">
+                            <div class="card-body">
+                                <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                    <div class="search-text">@T("Admin.Common.None")</div>
+                                    <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
                                 <div class="col-md-6">
