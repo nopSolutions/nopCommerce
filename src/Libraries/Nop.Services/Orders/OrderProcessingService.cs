@@ -994,10 +994,21 @@ namespace Nop.Services.Orders
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
 
             //were some reward points spend on the order
-            foreach (var rewardPoints in await _rewardPointService.GetRewardPointsHistoryAsync(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid))
-                //return back
-                await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPoints.Points, order.StoreId,
-                    string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+            var allRewardPoints = await _rewardPointService.GetRewardPointsHistoryAsync(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid);
+            if (allRewardPoints?.Any() == true)
+            {
+                // Here we get the wrong balance of bonus points and return the wrong number of points to the buyer's account, 
+                // we need to wait one second, because when canceling an order, debiting and accruing bonuses takes less than one second, 
+                // this is because the RewardPointsHistory.CreatedOnUtc property is created / mapped with no fraction for the datetime type, 
+                // we should fix this in the next version.
+                // https://github.com/nopSolutions/nopCommerce/issues/5595
+                await Task.Delay(1000);
+
+                foreach (var rewardPoints in allRewardPoints)
+                    //return back
+                    await _rewardPointService.AddRewardPointsHistoryEntryAsync(customer, -rewardPoints.Points, order.StoreId,
+                        string.Format(await _localizationService.GetResourceAsync("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+            }
         }
 
         /// <summary>
