@@ -1,11 +1,14 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
@@ -362,6 +365,47 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //register all routes
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(endpoints);
             });
+        }
+
+        /// <summary>
+        /// Configure applying forwarded headers to their matching fields on the current request.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopProxy(this IApplicationBuilder application)
+        {
+            var appSettings = EngineContext.Current.Resolve<AppSettings>();
+
+            if (appSettings.HostingConfig.UseProxy)
+            {
+                var options = new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.All,
+                    // IIS already serves as a reverse proxy and will add X-Forwarded headers to all requests,
+                    // so we need to increase this limit, otherwise, passed forwarding headers will be ignored.
+                    ForwardLimit = 2
+                };
+
+                if (!string.IsNullOrEmpty(appSettings.HostingConfig.ForwardedForHeaderName))
+                    options.ForwardedForHeaderName = appSettings.HostingConfig.ForwardedForHeaderName;
+
+                if (!string.IsNullOrEmpty(appSettings.HostingConfig.ForwardedProtoHeaderName))
+                    options.ForwardedProtoHeaderName = appSettings.HostingConfig.ForwardedProtoHeaderName;
+
+                if (!string.IsNullOrEmpty(appSettings.HostingConfig.KnownProxies))
+                {
+                    foreach (var strIp in appSettings.HostingConfig.KnownProxies.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                    {
+                        if (IPAddress.TryParse(strIp, out var ip))
+                            options.KnownProxies.Add(ip);
+                    }
+
+                    if (options.KnownProxies.Count > 1)
+                        options.ForwardLimit = null; //disable the limit, because KnownProxies is configured
+                }
+
+                //configure forwarding
+                application.UseForwardedHeaders(options);
+            }
         }
 
         /// <summary>

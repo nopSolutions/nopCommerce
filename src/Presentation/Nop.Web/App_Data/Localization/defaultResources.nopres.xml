@@ -4488,23 +4488,29 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
     <Value>Hosting configuration</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader">
-    <Value>Forwarded HTTP header</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName">
+    <Value>The header used to retrieve the originating client IP</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint">
-    <Value>Use this setting if your hosting doesn't use 'X-FORWARDED-FOR' header to determine IP address. You can specify a custom HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc).</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedForHeaderName.Hint">
+    <Value>Specify a custom HTTP header name to determine the originating IP address (e.g., CF-Connecting-IP, X-ProxyUser-Ip).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps">
-    <Value>Use HTTP_CLUSTER_HTTPS</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedProtoHeaderName">
+    <Value>The header used to retrieve the value for the originating scheme</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint">
-    <Value>Enable this setting if your hosting uses a load balancer. It'll be used to determine whether the current request is HTTPS.</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedProtoHeaderName.Hint">
+    <Value>Specify a custom HTTP header name for identifying the protocol (HTTP or HTTPS) that a client used to connect to your proxy or load balancer.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto">
-    <Value>Use HTTP_X_FORWARDED_PROTO</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownProxies">
+    <Value>Addresses of known proxies</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto.Hint">
-    <Value>Enable this setting if you use a reverse proxy server (for example, if you host your site on Linux with Nginx/Apache and SSL).</Value>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.KnownProxies.Hint">
+    <Value>Specify a list of IP addresses (comma separated) to accept forwarded headers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseProxy">
+    <Value>Use proxy servers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseProxy.Hint">
+    <Value>Enable this setting to apply forwarded headers to their matching fields on the current HTTP-request.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Installation">
     <Value>Installation configuration</Value>
