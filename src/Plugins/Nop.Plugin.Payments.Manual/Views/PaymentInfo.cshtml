@@ -31,11 +31,10 @@
     </tr>
     <tr>
         <td>
-            <label asp-for="ExpireMonth">@T("Payment.ExpirationDate"):</label>
-        </td>
-        <td>
+            <label asp-for="ExpireMonth">@T("Payment.ExpirationMonth")</label>
             <select asp-for="ExpireMonth" asp-items="Model.ExpireMonths"></select>
             /
+            <label asp-for="ExpireYear">@T("Payment.ExpirationYear")</label>
             <select asp-for="ExpireYear" asp-items="Model.ExpireYears"></select>
         </td>
     </tr>
