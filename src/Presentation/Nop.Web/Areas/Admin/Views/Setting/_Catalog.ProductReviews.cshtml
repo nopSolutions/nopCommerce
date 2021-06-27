@@ -3,6 +3,16 @@
 <div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductReviewsEnabled_OverrideForStore" asp-input="ProductReviewsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductReviewsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductReviewsEnabled" />
+            <span asp-validation-for="ProductReviewsEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ProductReviewsMustBeApproved_OverrideForStore" asp-input="ProductReviewsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ProductReviewsMustBeApproved" />
         </div>
@@ -13,11 +23,11 @@
     </div>
     <div class="form-group row">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="OneReviewPerProductFromCustomer_OverrideForStore" asp-input="OneReviewPerProductFromCustomer" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
-            <nop-label asp-for="OneReviewPerProductFromCustomer"/>
+            <nop-override-store-checkbox asp-for="OneReviewPerProductFromCustomer_OverrideForStore" asp-input="OneReviewPerProductFromCustomer" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="OneReviewPerProductFromCustomer" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="OneReviewPerProductFromCustomer"/>
+            <nop-editor asp-for="OneReviewPerProductFromCustomer" />
             <span asp-validation-for="OneReviewPerProductFromCustomer"></span>
         </div>
     </div>

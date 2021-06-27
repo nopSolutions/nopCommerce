@@ -6,7 +6,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents a manager for caching between HTTP requests (long term caching)
     /// </summary>
-    public interface IStaticCacheManager : IDisposable
+    public partial interface IStaticCacheManager : IDisposable
     {
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it

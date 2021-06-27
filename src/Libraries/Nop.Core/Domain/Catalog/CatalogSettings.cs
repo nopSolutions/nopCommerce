@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Catalog settings
     /// </summary>
-    public class CatalogSettings : ISettings
+    public partial class CatalogSettings : ISettings
     {
         public CatalogSettings()
         {
@@ -99,6 +99,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a share code (e.g. AddThis button code)
         /// </summary>
         public string PageShareCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating if product reviews are enabled
+        /// </summary>
+        public bool ProductReviewsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating product reviews must be approved

@@ -5871,6 +5871,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing.Hint">
     <Value>Check if product can be reviewed only by customer who have already ordered it.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsEnabled">
+    <Value>Enable Product Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsEnabled.Hint">
+    <Value>Check to enable product reviews</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved">
     <Value>Product reviews must be approved</Value>
   </LocaleResource>
