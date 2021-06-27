@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Product editor settings
     /// </summary>
-    public partial class ProductEditorSettings : ISettings
+    public class ProductEditorSettings : ISettings
     {
         /// <summary>
         /// Gets or sets a value indicating whether 'Product type' field is shown

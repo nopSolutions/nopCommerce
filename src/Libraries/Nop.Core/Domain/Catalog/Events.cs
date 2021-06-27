@@ -1,9 +1,9 @@
-﻿namespace Nop.Core.Domain.Catalog
+namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Product review approved event
     /// </summary>
-    public partial class ProductReviewApprovedEvent
+    public class ProductReviewApprovedEvent
     {
         /// <summary>
         /// Ctor

@@ -4,7 +4,7 @@ namespace Nop.Web.Framework.Models
     /// <summary>
     /// Action confirmation model
     /// </summary>
-    public partial class ActionConfirmationModel
+    public class ActionConfirmationModel
     {
         /// <summary>
         /// Controller name

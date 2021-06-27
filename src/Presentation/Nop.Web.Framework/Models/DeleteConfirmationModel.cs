@@ -4,7 +4,7 @@ namespace Nop.Web.Framework.Models
     /// <summary>
     /// Delete confirmation model
     /// </summary>
-    public partial record DeleteConfirmationModel : BaseNopModel
+    public record DeleteConfirmationModel : BaseNopModel
     {
         /// <summary>
         /// Identifier

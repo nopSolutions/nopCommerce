@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Cms
     /// <summary>
     /// Widget settings
     /// </summary>
-    public partial class WidgetSettings : ISettings
+    public class WidgetSettings : ISettings
     {
         public WidgetSettings()
         {

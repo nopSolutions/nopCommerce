@@ -1,9 +1,9 @@
-﻿namespace Nop.Core.Domain.Blogs
+namespace Nop.Core.Domain.Blogs
 {
     /// <summary>
     /// Blog post comment approved event
     /// </summary>
-    public partial class BlogCommentApprovedEvent
+    public class BlogCommentApprovedEvent
     {
         /// <summary>
         /// Ctor

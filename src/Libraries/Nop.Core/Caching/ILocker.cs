@@ -2,7 +2,7 @@
 
 namespace Nop.Core.Caching
 {
-    public partial interface ILocker
+    public interface ILocker
     {
         /// <summary>
         /// Perform some action with exclusive lock
