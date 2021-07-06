@@ -358,7 +358,11 @@ namespace Nop.Services.ExportImport
             //it will only be used if the images are stored in the SQL Server database (not compact)
             var trimByteCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
             var productsImagesIds = await _productService.GetProductsImagesIdsAsync(allProductsBySku.Select(p => p.Id).ToArray());
-            var allPicturesHashes = await _pictureService.GetPicturesHashAsync(productsImagesIds.SelectMany(p => p.Value).ToArray());
+
+            var allProductPictureIds = productsImagesIds.SelectMany(p => p.Value);
+
+            var allPicturesHashes = allProductPictureIds.Any() ? await _dataProvider.GetFieldHashesAsync<PictureBinary>(p => allProductPictureIds.Contains(p.PictureId), 
+                p => p.PictureId, p => p.BinaryData) : new Dictionary<int, string>();
 
             foreach (var product in productPictureMetadata)
             {

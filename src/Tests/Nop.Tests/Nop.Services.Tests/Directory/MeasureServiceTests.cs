@@ -13,7 +13,7 @@ namespace Nop.Tests.Nop.Services.Tests.Directory
 
         private MeasureDimension _measureDimensionInches, _measureDimensionFeet, _measureDimensionMeters, _measureDimensionMillimetres;
         private MeasureWeight _measureWeightOunce, _measureWeightLb, _measureWeightKg, _measureWeightGrams;
-        
+
         [OneTimeSetUp]
         public async Task SetUp()
         {

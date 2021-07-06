@@ -183,5 +183,5 @@ namespace Nop.Services.Directory
         /// The task result contains the converted value
         /// </returns>
         Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight);
-    }   
+    }
 }

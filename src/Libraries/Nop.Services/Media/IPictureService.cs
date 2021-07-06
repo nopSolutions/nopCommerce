@@ -240,16 +240,6 @@ namespace Nop.Services.Media
         Task SetIsStoreInDbAsync(bool isStoreInDb);
 
         /// <summary>
-        /// Get pictures hashes
-        /// </summary>
-        /// <param name="picturesIds">Pictures Ids</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the 
-        /// </returns>
-        Task<IDictionary<int, string>> GetPicturesHashAsync(int[] picturesIds);
-
-        /// <summary>
         /// Get product picture (for shopping cart and order details pages)
         /// </summary>
         /// <param name="product">Product</param>

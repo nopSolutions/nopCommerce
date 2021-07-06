@@ -43,7 +43,7 @@ namespace Nop.Data.DataProviders
             return dataContext;
         }
 
-        protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
+        protected static MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
@@ -60,7 +60,7 @@ namespace Nop.Data.DataProviders
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(nameof(connectionString));
+                throw new ArgumentNullException(nameof(connectionString));
 
             return new MySqlConnection(connectionString);
         }
@@ -180,7 +180,7 @@ namespace Nop.Data.DataProviders
         public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
             using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
             var databaseName = currentConnection.Connection.Database;
 
             //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
@@ -197,7 +197,7 @@ namespace Nop.Data.DataProviders
                     var connection = (IDbConnection)sender;
                     using var internalCommand = connection.CreateCommand();
                     internalCommand.Connection = connection;
-                    internalCommand.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
+                    internalCommand.CommandText = "SET @@SESSION.information_schema_stats_expiry = 0;";
                     internalCommand.ExecuteNonQuery();
                 }
                 //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
@@ -228,7 +228,7 @@ namespace Nop.Data.DataProviders
                 return;
 
             using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
 
             await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
         }

@@ -9,20 +9,6 @@ namespace Nop.Data.Migrations.UpgradeTo440
     [SkipMigrationOnInstall]
     public class SpecificationAttributeGroupingMigration : MigrationBase
     {
-        #region Fields
-
-        private readonly IMigrationManager _migrationManager;
-
-        #endregion
-
-        #region Ctor
-
-        public SpecificationAttributeGroupingMigration(IMigrationManager migrationManager)
-        {
-            _migrationManager = migrationManager;
-        }
-
-        #endregion
 
         #region Methods
 
@@ -32,7 +18,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
         public override void Up()
         {
             if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttributeGroup))).Exists())
-                _migrationManager.BuildTable<SpecificationAttributeGroup>(Create);
+                Create.TableFor<SpecificationAttributeGroup>();
 
             if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Column(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).Exists())
             {

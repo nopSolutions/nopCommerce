@@ -40,7 +40,7 @@ namespace Nop.Data.DataProviders
             return dataContext;
         }
 
-        protected NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
+        protected static NpgsqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new NpgsqlConnectionStringBuilder(GetCurrentConnectionString());
         }
@@ -53,7 +53,7 @@ namespace Nop.Data.DataProviders
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(nameof(connectionString));
+                throw new ArgumentNullException(nameof(connectionString));
 
             return new NpgsqlConnection(connectionString);
         }
@@ -69,13 +69,13 @@ namespace Nop.Data.DataProviders
             if (dataConnection is null)
                 throw new ArgumentNullException(nameof(dataConnection));
 
-            var descriptor = GetEntityDescriptor<TEntity>();
+            var descriptor = GetEntityDescriptor(typeof(TEntity));
 
             if (descriptor is null)
                 throw new NopException($"Mapped entity descriptor is not found: {typeof(TEntity).Name}");
 
-            var tableName = descriptor.TableName;
-            var columnName = descriptor.Columns.FirstOrDefault(x => x.IsIdentity && x.IsPrimaryKey)?.ColumnName;
+            var tableName = descriptor.EntityName;
+            var columnName = descriptor.Fields.FirstOrDefault(x => x.IsIdentity && x.IsPrimaryKey)?.Name;
 
             if (string.IsNullOrEmpty(columnName))
                 throw new NopException("A table's primary key does not have an identity constraint");
@@ -133,7 +133,9 @@ namespace Nop.Data.DataProviders
                     throw new Exception("Unable to connect to the new database. Please try one more time");
 
                 if (!DatabaseExists())
+                {
                     Thread.Sleep(1000);
+                }
                 else
                 {
                     builder.Database = databaseName;
@@ -158,7 +160,7 @@ namespace Nop.Data.DataProviders
             try
             {
                 using var connection = GetInternalDbConnection(GetCurrentConnectionString());
-                
+
                 //just try to connect
                 connection.Open();
 
@@ -182,10 +184,10 @@ namespace Nop.Data.DataProviders
             try
             {
                 await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
-                
+
                 //just try to connect
                 await connection.OpenAsync();
-                
+
                 return true;
             }
             catch

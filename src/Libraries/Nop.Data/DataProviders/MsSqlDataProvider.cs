@@ -46,7 +46,7 @@ namespace Nop.Data.DataProviders
         #endregion
 
         #region Utils
-        
+
         /// <summary>
         /// Gets a connection to the database for a current data provider
         /// </summary>
@@ -55,7 +55,7 @@ namespace Nop.Data.DataProviders
         protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(nameof(connectionString));
+                throw new ArgumentNullException(nameof(connectionString));
 
             return new SqlConnection(connectionString);
         }
@@ -127,7 +127,7 @@ namespace Nop.Data.DataProviders
             try
             {
                 await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
-                
+
                 //just try to connect
                 await connection.OpenAsync();
 
@@ -179,7 +179,7 @@ namespace Nop.Data.DataProviders
         public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
             using var currentConnection = await CreateDataConnectionAsync();
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
 
             var result = currentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
                 .FirstOrDefault();
@@ -200,7 +200,7 @@ namespace Nop.Data.DataProviders
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            var tableName = GetEntityDescriptor(typeof(TEntity)).EntityName;
 
             await currentConnection.ExecuteAsync($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }
@@ -322,7 +322,7 @@ namespace Nop.Data.DataProviders
         }
 
         /// <summary>
-        /// Updates records in table, using values from entity parameter. 
+        /// Updates records in table, using values from entity parameter.
         /// Records to update are identified by match on primary key value from obj value.
         /// </summary>
         /// <param name="entities">Entities with data to update</param>
