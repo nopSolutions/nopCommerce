@@ -910,7 +910,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
 
-                    Link = $"{(_webHelper.GetStoreLocation(false))}db_backups/{_fileProvider.GetFileName(file)}"
+                    Link = $"{_webHelper.GetStoreLocation()}db_backups/{_fileProvider.GetFileName(file)}"
                 });
             });
 
