@@ -119,7 +119,7 @@ namespace Nop.Web.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = _urlRecordService.GetSeNameAsync(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls).Result;
+            hash = AsyncHelper.RunSync(() => _urlRecordService.GetSeNameAsync(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls));
 
             return hash;
         }
@@ -388,7 +388,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
 
-                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
+                    var shouldRebuild = AsyncHelper.RunSync(() => _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true));
 
                     if (shouldRebuild)
                     {
@@ -618,7 +618,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
 
-                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
+                    var shouldRebuild = AsyncHelper.RunSync(() => _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true));
 
                     if (shouldRebuild)
                     {

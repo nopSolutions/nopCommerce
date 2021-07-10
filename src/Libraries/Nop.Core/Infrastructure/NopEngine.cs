@@ -53,7 +53,7 @@ namespace Nop.Core.Infrastructure
 
             //execute tasks
             foreach (var task in instances)
-                task.ExecuteAsync().Wait();
+                AsyncHelper.RunSync(() => task.ExecuteAsync());
         }
 
         /// <summary>

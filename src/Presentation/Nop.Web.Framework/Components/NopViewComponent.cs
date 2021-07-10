@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Nop.Core;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Events;
@@ -26,7 +27,7 @@ namespace Nop.Web.Framework.Components
 
                 //we publish the ModelPrepared event for all models as the BaseNopModel, 
                 //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-                eventPublisher.ModelPreparedAsync(model as BaseNopModel).Wait();
+                AsyncHelper.RunSync(() => eventPublisher.ModelPreparedAsync(model as BaseNopModel));
             }
 
             if (model is IEnumerable<BaseNopModel> modelCollection)
@@ -35,7 +36,7 @@ namespace Nop.Web.Framework.Components
 
                 //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
                 //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-                eventPublisher.ModelPreparedAsync(modelCollection).Wait();
+                AsyncHelper.RunSync(() => eventPublisher.ModelPreparedAsync(modelCollection));
             }
         }
         /// <summary>

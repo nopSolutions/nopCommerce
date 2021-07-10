@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Orders;
@@ -66,7 +67,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders {
         [Test]
         public void ItShouldThrowExceptionIfOrderIsNullWhenDeleteOrder() 
         {
-            Assert.Throws(typeof(AggregateException), () => _orderService.DeleteOrderAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() => AsyncHelper.RunSync(() => _orderService.DeleteOrderAsync(null)));
         }
 
         [Test]
@@ -85,7 +86,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders {
         [Test]
         public void ItShouldThrowIfOrderIsNullWhenInsertOrder()
         {
-            Assert.Throws<AggregateException>(() => _orderService.InsertOrderAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() => AsyncHelper.RunSync(() => _orderService.InsertOrderAsync(null)));
         }
 
         [Test]
@@ -106,7 +107,7 @@ namespace Nop.Tests.Nop.Services.Tests.Orders {
         [Test]
         public void ItShouldThrowIfOrderIsNullWhenUpdateOrder()
         {
-            Assert.Throws<AggregateException>(() => _orderService.UpdateOrderAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() => AsyncHelper.RunSync(() => _orderService.UpdateOrderAsync(null)));
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Nop.Web.Framework.Mvc.Razor
                 {
                     _localizer = (format, args) =>
                     {
-                        var resFormat = _localizationService.GetResourceAsync(format).Result;
+                        var resFormat = AsyncHelper.RunSync(() => _localizationService.GetResourceAsync(format));
                         if (string.IsNullOrEmpty(resFormat))
                         {
                             return new LocalizedString(format);

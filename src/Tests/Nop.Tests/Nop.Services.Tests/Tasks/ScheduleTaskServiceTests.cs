@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using Nop.Core;
 using Nop.Core.Domain.Tasks;
 using Nop.Services.Tasks;
 using NUnit.Framework;
@@ -49,8 +50,8 @@ namespace Nop.Tests.Nop.Services.Tests.Tasks
         [Test]
         public void InsertTaskShouldRaiseExceptionIfTaskIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                 _scheduleTaskService.InsertTaskAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                 AsyncHelper.RunSync(() => _scheduleTaskService.InsertTaskAsync(null)));
         }
 
         [Test]
@@ -85,8 +86,8 @@ namespace Nop.Tests.Nop.Services.Tests.Tasks
         [Test]
         public void UpdateTaskShouldRaiseExceptionIfTaskIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _scheduleTaskService.UpdateTaskAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _scheduleTaskService.UpdateTaskAsync(null)));
         }
 
         public async System.Threading.Tasks.Task CanDeleteTask()
@@ -101,8 +102,8 @@ namespace Nop.Tests.Nop.Services.Tests.Tasks
         [Test]
         public void DeleteTaskShouldRaiseExceptionIfTaskIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _scheduleTaskService.DeleteTaskAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _scheduleTaskService.DeleteTaskAsync(null)));
         }
 
         #endregion

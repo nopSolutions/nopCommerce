@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.ComponentModel;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
@@ -500,23 +501,15 @@ namespace Nop.Services.Media
             var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
             if (!await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
             {
-                //the named mutex helps to avoid creating the same files in different threads,
+                //the named ResourcesLocker helps to avoid creating the same files in different threads,
                 //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                //you should be very careful, mutexes cannot be used in with the await operation
-                //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                using var mutex = new Mutex(false, thumbFileName);
-                mutex.WaitOne();
-                try
+                using (await ResourcesLocker.GetLocker(thumbFileName).LockAsync())
                 {
                     using var image = SKBitmap.Decode(filePath);
                     var codec = SKCodec.Create(filePath);
                     var format = codec.EncodedFormat;
                     var pictureBinary = ImageResize(image, format, targetSize);
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
+                    await SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary);
                 }
             }
 
@@ -602,19 +595,11 @@ namespace Nop.Services.Media
 
                 pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
-                //the named mutex helps to avoid creating the same files in different threads,
+                //the named ResourcesLocker helps to avoid creating the same files in different threads,
                 //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                //you should be very careful, mutexes cannot be used in with the await operation
-                //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                using var mutex = new Mutex(false, thumbFileName);
-                mutex.WaitOne();
-                try
+                using (await ResourcesLocker.GetLocker(thumbFileName).LockAsync())
                 {
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
+                    await SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary);
                 }
             }
             else
@@ -629,13 +614,9 @@ namespace Nop.Services.Media
 
                 pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
-                //the named mutex helps to avoid creating the same files in different threads,
+                //the named ResourcesLocker helps to avoid creating the same files in different threads,
                 //and does not decrease performance significantly, because the code is blocked only for the specific file.
-                //you should be very careful, mutexes cannot be used in with the await operation
-                //we can't use semaphore here, because it produces PlatformNotSupportedException exception on UNIX based systems
-                using var mutex = new Mutex(false, thumbFileName);
-                mutex.WaitOne();
-                try
+                using (await ResourcesLocker.GetLocker(thumbFileName).LockAsync())
                 {
                     if (pictureBinary != null)
                     {
@@ -650,11 +631,7 @@ namespace Nop.Services.Media
                         }
                     }
 
-                    SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary).Wait();
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
+                    await SaveThumbAsync(thumbFilePath, thumbFileName, string.Empty, pictureBinary);
                 }
             }
 

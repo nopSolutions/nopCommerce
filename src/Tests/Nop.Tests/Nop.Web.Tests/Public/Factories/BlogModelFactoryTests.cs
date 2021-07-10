@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
@@ -57,17 +58,17 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareBlogPostModelShouldRaiseExceptionIfBlogPostModelOrBlogPostIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _blogModelFactory.PrepareBlogPostModelAsync(null, new BlogPost(), false).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _blogModelFactory.PrepareBlogPostModelAsync(null, new BlogPost(), false)));
 
-            Assert.Throws<AggregateException>(() =>
-                _blogModelFactory.PrepareBlogPostModelAsync(null, new BlogPost(), true).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _blogModelFactory.PrepareBlogPostModelAsync(null, new BlogPost(), true)));
 
-            Assert.Throws<AggregateException>(() =>
-                _blogModelFactory.PrepareBlogPostModelAsync(new BlogPostModel(), null, false).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _blogModelFactory.PrepareBlogPostModelAsync(new BlogPostModel(), null, false)));
 
-            Assert.Throws<AggregateException>(() =>
-                _blogModelFactory.PrepareBlogPostModelAsync(new BlogPostModel(), null, true).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _blogModelFactory.PrepareBlogPostModelAsync(new BlogPostModel(), null, true)));
         }
 
         [Test]
@@ -181,8 +182,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public void PrepareBlogPostListModelShouldRaiseExceptionIfCommandIsNull()
         {
-            Assert.Throws<AggregateException>(() =>
-                _blogModelFactory.PrepareBlogPostListModelAsync(null).Wait());
+            Assert.Throws<ArgumentNullException>(() =>
+                AsyncHelper.RunSync(() => _blogModelFactory.PrepareBlogPostListModelAsync(null)));
         }
 
         [Test]
