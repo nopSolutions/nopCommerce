@@ -6,13 +6,13 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
 using Nop.Services.Events;
-using Nop.Services.Tasks;
 using Telegram.Bot;
 using System.Security.Claims;
 using Nop.Services.Authentication.External;
 using System.Linq;
 using Nop.Core.Configuration;
 using Nop.Services.Orders;
+using System.Threading.Tasks;
 
 namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.Cache
 {
@@ -28,7 +28,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.Cache
         private readonly Lazy<ITelegramBotClient> _telegramBotClient;
         private readonly ICustomerService _customerService;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly NopConfig _config;
+        private readonly AppSettings _config;
         private readonly IOrderService _orderService;
 
         static private readonly List<VendorToChatMap> _vendorToChat = new List<VendorToChatMap>{
@@ -42,7 +42,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.Cache
         public OrderPlacedEventConsumer(Lazy<ITelegramBotClient> telegramBotClient,
             ICustomerService customerService, 
             IExternalAuthenticationService externalAuthenticationService,
-            NopConfig config,
+            AppSettings config,
             IOrderService orderService)
         {
             this._telegramBotClient = telegramBotClient;
@@ -52,35 +52,32 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.Cache
             this._orderService = orderService;
         }
 
-        public void HandleEvent(OrderPlacedEvent eventMessage)
+        public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
-            if (!_config.TelegramBotEnabled)
+            if (!_config.ExtendedAuthSettings.TelegramBotEnabled)
                 return;
 
             var chatGroupsToNotify =
-                _vendorToChat.Where(x => 
-                    _orderService.GetOrderItems(eventMessage.Order.Id, vendorId: x.VendorId).Any())
+                await _vendorToChat.WhereAwait(async x => (await _orderService.GetOrderItemsAsync(eventMessage.Order.Id, vendorId: x.VendorId)).Any())
                     .Select(x => x.ChatGroupId)
-                    .ToList();
+                    .ToListAsync();
 
             if (!chatGroupsToNotify.Any())
                 return;
 
-            var customer = _customerService.GetCustomerById(eventMessage.Order.CustomerId);
-            var externalRecord = _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer).FirstOrDefault();
+            var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
+            var externalRecord = (await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer)).FirstOrDefault();
             var externalDisplayIdentifier =
                 externalRecord?.ExternalDisplayIdentifier ??
-                _customerService.GetCustomerFullName(customer);
+                await _customerService.GetCustomerFullNameAsync(customer);
 
             if(string.IsNullOrEmpty(externalDisplayIdentifier))
                 externalDisplayIdentifier = "Unknown";
 
-            chatGroupsToNotify.ForEach(chatGroupId => {
-                System.Threading.Tasks.Task.Run(async () => {
-                    var chat = await _telegramBotClient.Value.GetChatAsync(chatGroupId);
-                    await _telegramBotClient.Value.SendTextMessageAsync(chat, $"New order from {externalDisplayIdentifier}");
-                });
-            });
+            foreach(var chatGroupId in chatGroupsToNotify) {
+                var chat = await _telegramBotClient.Value.GetChatAsync(chatGroupId);
+                await _telegramBotClient.Value.SendTextMessageAsync(chat, $"New order from {externalDisplayIdentifier}");
+            }
         }
     }
 }

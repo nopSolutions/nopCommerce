@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a recurring payment history model
     /// </summary>
-    public partial class RecurringPaymentHistoryModel : BaseNopEntityModel
+    public partial record RecurringPaymentHistoryModel : BaseNopEntityModel
     {
         #region Properties
 

@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.Directory;
+﻿using System.Threading.Tasks;
+using Nop.Web.Areas.Admin.Models.Directory;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -11,21 +12,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare measure search model
         /// </summary>
         /// <param name="searchModel">Measure search model</param>
-        /// <returns>Measure search model</returns>
-        MeasureSearchModel PrepareMeasureSearchModel(MeasureSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure search model
+        /// </returns>
+        Task<MeasureSearchModel> PrepareMeasureSearchModelAsync(MeasureSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged measure dimension list model
         /// </summary>
         /// <param name="searchModel">Measure dimension search model</param>
-        /// <returns>Measure dimension list model</returns>
-        MeasureDimensionListModel PrepareMeasureDimensionListModel(MeasureDimensionSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure dimension list model
+        /// </returns>
+        Task<MeasureDimensionListModel> PrepareMeasureDimensionListModelAsync(MeasureDimensionSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged measure weight list model
         /// </summary>
         /// <param name="searchModel">Measure weight search model</param>
-        /// <returns>Measure weight list model</returns>
-        MeasureWeightListModel PrepareMeasureWeightListModel(MeasureWeightSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure weight list model
+        /// </returns>
+        Task<MeasureWeightListModel> PrepareMeasureWeightListModelAsync(MeasureWeightSearchModel searchModel);
     }
 }

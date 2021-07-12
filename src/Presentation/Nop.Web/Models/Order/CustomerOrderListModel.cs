@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Models;
+using static Nop.Web.Models.Order.OrderDetailsModel;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class CustomerOrderListModel : BaseNopModel
+    public partial record CustomerOrderListModel : BaseNopModel
     {
         public CustomerOrderListModel()
         {
@@ -20,8 +21,16 @@ namespace Nop.Web.Models.Order
 
         #region Nested classes
 
-        public partial class OrderDetailsModel : BaseNopEntityModel
+        public partial record OrderDetailsModel : BaseNopEntityModel
         {
+            public OrderDetailsModel()
+            {
+                Items = new List<OrderItemModel>();
+            }
+            public IList<OrderItemModel> Items { get; set; }
+            public DateTime ScheduleDate { get; set; }
+            public int Rating { get; set; }
+            public string RatingText { get; set; }
             public string CustomOrderNumber { get; set; }
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }
@@ -32,7 +41,7 @@ namespace Nop.Web.Models.Order
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class RecurringOrderModel : BaseNopEntityModel
+        public partial record RecurringOrderModel : BaseNopEntityModel
         {
             public string StartDate { get; set; }
             public string CycleInfo { get; set; }

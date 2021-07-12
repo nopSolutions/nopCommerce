@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Polls;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Polls;
 using Nop.Web.Areas.Admin.Models.Polls;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -12,15 +13,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare poll search model
         /// </summary>
         /// <param name="searchModel">Poll search model</param>
-        /// <returns>Poll search model</returns>
-        PollSearchModel PreparePollSearchModel(PollSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the poll search model
+        /// </returns>
+        Task<PollSearchModel> PreparePollSearchModelAsync(PollSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged poll list model
         /// </summary>
         /// <param name="searchModel">Poll search model</param>
-        /// <returns>Poll list model</returns>
-        PollListModel PreparePollListModel(PollSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the poll list model
+        /// </returns>
+        Task<PollListModel> PreparePollListModelAsync(PollSearchModel searchModel);
 
         /// <summary>
         /// Prepare poll model
@@ -28,15 +35,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Poll model</param>
         /// <param name="poll">Poll</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Poll model</returns>
-        PollModel PreparePollModel(PollModel model, Poll poll, bool excludeProperties = false);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the poll model
+        /// </returns>
+        Task<PollModel> PreparePollModelAsync(PollModel model, Poll poll, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged poll answer list model
         /// </summary>
         /// <param name="searchModel">Poll answer search model</param>
         /// <param name="poll">Poll</param>
-        /// <returns>Poll answer list model</returns>
-        PollAnswerListModel PreparePollAnswerListModel(PollAnswerSearchModel searchModel, Poll poll);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the poll answer list model
+        /// </returns>
+        Task<PollAnswerListModel> PreparePollAnswerListModelAsync(PollAnswerSearchModel searchModel, Poll poll);
     }
 }

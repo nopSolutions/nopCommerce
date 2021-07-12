@@ -11,6 +11,7 @@ using Nop.Services.Media;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure.Cache
 {
@@ -21,7 +22,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure.Cache
     {
         #region Methods
 
-        public void HandleEvent(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
+        public async Task HandleEventAsync(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
         {
             if (eventMessage?.Customer == null || eventMessage.AuthenticationParameters == null)
                 return;
@@ -60,13 +61,13 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure.Cache
                     firstName = fullName.FirstOrDefault();
                     lastName = fullName.LastOrDefault();
 
-                    _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.FirstNameAttribute, firstName);
-                    _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.LastNameAttribute, lastName);                    
+                    await _genericAttributeService.SaveAttributeAsync(eventMessage.Customer, NopCustomerDefaults.FirstNameAttribute, firstName);
+                    await _genericAttributeService.SaveAttributeAsync(eventMessage.Customer, NopCustomerDefaults.LastNameAttribute, lastName);                    
                     break;
                 }
                 if (!string.IsNullOrEmpty(firstName))
                 {
-                    _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.FirstNameAttribute, firstName);
+                    await _genericAttributeService.SaveAttributeAsync(eventMessage.Customer, NopCustomerDefaults.FirstNameAttribute, firstName);
                     break;
                 }
             }
@@ -82,7 +83,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure.Cache
                     lastName = eventMessage.AuthenticationParameters.Claims?.FirstOrDefault(claim => claim.Type == lNames)?.Value;
                     if (!string.IsNullOrEmpty(lastName))
                     {
-                        _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.LastNameAttribute, lastName);
+                        await _genericAttributeService.SaveAttributeAsync(eventMessage.Customer, NopCustomerDefaults.LastNameAttribute, lastName);
                         continue;
                     }
                 }
@@ -109,8 +110,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure.Cache
 
                 //save avatar
                 new FileExtensionContentTypeProvider().TryGetContentType(avatarUrl, out string mimeType);
-                var customerAvatar = _pictureService.InsertPicture(customerPictureBinary, mimeType ?? MimeTypes.ImagePng, null);
-                _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.AvatarPictureIdAttribute, customerAvatar.Id);
+                var customerAvatar = await _pictureService.InsertPictureAsync(customerPictureBinary, mimeType ?? MimeTypes.ImagePng, null);
+                await _genericAttributeService.SaveAttributeAsync(eventMessage.Customer, NopCustomerDefaults.AvatarPictureIdAttribute, customerAvatar.Id);
             }
             catch { }
 

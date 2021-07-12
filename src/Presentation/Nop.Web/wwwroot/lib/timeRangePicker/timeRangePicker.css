@@ -1,0 +1,73 @@
+
+.timerangepicker-container {
+  display:flex;
+  position: absolute;
+  z-index: 1;
+  background: white;
+}
+.timerangepicker-label {
+  display: block;
+  line-height: 2em;
+  background-color: #c8c8c880;
+  padding-left: 1em;
+  border-bottom: 1px solid grey;
+  margin-bottom: 0.75em;
+}
+
+.timerangepicker-from,
+.timerangepicker-to,
+.timerangepicker-delivery{
+  border: 1px solid grey;
+  padding-bottom: 0.75em;
+}
+.timerangepicker-from {
+  border-right: none;
+  border-left: none;
+}
+.timerangepicker-display {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 2.5em;
+  height: 2.5em;
+  border: 1px solid grey;
+  line-height: 2.5em;
+  text-align: center;
+  position: relative;
+  margin: 1em 0.175em;
+}
+.timerangepicker-display .increment,
+.timerangepicker-display .decrement {
+  cursor: pointer;
+  position: absolute;
+  font-size: 1.5em;
+  width: 1.5em;
+  text-align: center;
+  left: 0;
+}
+
+.timerangepicker-display .increment {
+  margin-top: -0.25em;
+  top: -1em;
+}
+
+.timerangepicker-display .decrement {
+  margin-bottom: -0.25em;
+  bottom: -1em;
+}
+
+.timerangepicker-display.hour {
+  margin-left: 1em;
+}
+.timerangepicker-display.second {
+  margin-right: 1em;
+}
+
+.input-group-addon{
+    background: white;
+    border: 1px solid #ced4da;
+    padding: 6px 10px
+}
+
+.input-group-addon i{
+    padding:0;
+}

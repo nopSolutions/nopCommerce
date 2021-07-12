@@ -77,16 +77,16 @@
                         </table>
                     </div>
                     @{
-                        var pager = Html.Pager(Model.PagerModel);
+                        var pager = await Html.PagerAsync(Model.PagerModel);
                     }
-                    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+                    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
                     {
                         <div class="pager">
                             @pager
                         </div>
                     }
                     <div class="buttons">
-                        <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="button-1 delete-selected-fs-button" />
+                        <button type="submit" class="button-1 delete-selected-fs-button">@T("Account.ForumSubscriptions.DeleteSelected")</button>
                     </div>
                 </div>
             </form>

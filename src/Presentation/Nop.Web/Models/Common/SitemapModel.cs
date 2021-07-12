@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
-    public partial class SitemapModel : BaseNopModel
+    public partial record SitemapModel : BaseNopModel
     {
         #region Ctor
 
@@ -25,7 +25,7 @@ namespace Nop.Web.Models.Common
 
         #region Nested classes
 
-        public class SitemapItemModel
+        public record SitemapItemModel
         {
             public string GroupTitle { get; set; }
             public string Url { get; set; }

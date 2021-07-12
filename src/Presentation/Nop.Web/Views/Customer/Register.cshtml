@@ -239,7 +239,7 @@
                                 {
                                     <nop-required />
                                 }
-                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
                                 <span asp-validation-for="StateProvinceId"></span>
                             </div>
                         }
@@ -387,7 +387,7 @@
                                 }
                                 else
                                 {
-                                    <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                                    <a class="read" id="read-privacyinfo" href="@Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeNameAsync("privacyinfo") })">@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
                                 }
                             </div>
                         }
@@ -425,7 +425,7 @@
             }
 
             <div class="buttons">
-                <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
+                <button type="submit" name="register-button" id="register-button" class="button-1 register-next-step-button">@T("Account.Register.Button")</button>
             </div>
         </form>
         <div class="external-authentication">

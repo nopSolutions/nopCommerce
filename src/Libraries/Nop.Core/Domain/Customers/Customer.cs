@@ -1,11 +1,12 @@
 ﻿using System;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents a customer
     /// </summary>
-    public partial class Customer : BaseEntity
+    public partial class Customer : BaseEntity, ISoftDeletedEntity
     {
         public Customer()
         {
@@ -131,5 +132,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the shipping address identifier
         /// </summary>
         public int? ShippingAddressId { get; set; }
+
+        //custom fields
+        public string PushToken { get; set; }
+        public bool RateReminderNotification { get; set; }
+        public bool RemindMeNotification { get; set; }
+        public bool OrderStatusNotification { get; set; }
     }
 }

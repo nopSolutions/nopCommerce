@@ -10,15 +10,22 @@
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="taxTotalRequest">Tax total request</param>
         /// <param name="taxTotalResult">Tax total result</param>
-        public TaxTotalCalculatedEvent(TaxTotalResult taxTotalResult)
+        public TaxTotalCalculatedEvent(TaxTotalRequest taxTotalRequest, TaxTotalResult taxTotalResult)
         {
+            TaxTotalRequest = taxTotalRequest;
             TaxTotalResult = taxTotalResult;
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the tax total request
+        /// </summary>
+        public TaxTotalRequest TaxTotalRequest { get; }
 
         /// <summary>
         /// Gets the tax total result

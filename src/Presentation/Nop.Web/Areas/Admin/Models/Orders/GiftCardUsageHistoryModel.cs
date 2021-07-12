@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a gift card usage history model
     /// </summary>
-    public partial class GiftCardUsageHistoryModel : BaseNopEntityModel
+    public partial record GiftCardUsageHistoryModel : BaseNopEntityModel
     {
         #region Properties
 

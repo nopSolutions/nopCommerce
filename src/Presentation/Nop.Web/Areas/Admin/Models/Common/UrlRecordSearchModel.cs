@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
     /// <summary>
     /// Represents an URL record search model
     /// </summary>
-    public partial class UrlRecordSearchModel : BaseSearchModel
+    public partial record UrlRecordSearchModel : BaseSearchModel
     {
         #region Ctor
 

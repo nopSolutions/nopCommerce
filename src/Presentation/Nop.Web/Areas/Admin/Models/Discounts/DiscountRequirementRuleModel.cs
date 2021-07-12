@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount requirement rule model
     /// </summary>
-    public partial class DiscountRequirementRuleModel : BaseNopModel
+    public partial record DiscountRequirementRuleModel : BaseNopModel
     {
         #region Ctor
 
@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
 
         public string ConfigurationUrl { get; set; }
 
-        public int InteractionTypeId { get; set; }
+        public string InteractionType { get; set; }
 
         public int? ParentId { get; set; }
 

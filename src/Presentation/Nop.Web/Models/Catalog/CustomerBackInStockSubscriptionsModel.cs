@@ -4,7 +4,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CustomerBackInStockSubscriptionsModel : BaseNopModel
+    public partial record CustomerBackInStockSubscriptionsModel : BaseNopModel
     {
         public CustomerBackInStockSubscriptionsModel()
         {
@@ -16,7 +16,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public partial class BackInStockSubscriptionModel : BaseNopEntityModel
+        public partial record BackInStockSubscriptionModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
             public string ProductName { get; set; }

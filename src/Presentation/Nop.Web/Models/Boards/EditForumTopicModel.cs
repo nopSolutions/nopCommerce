@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class EditForumTopicModel : BaseNopModel
+    public partial record EditForumTopicModel : BaseNopModel
     {
         #region Ctor
 

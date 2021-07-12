@@ -20,7 +20,13 @@
         {
             <div class="product-review-links">
                 <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@Model.TotalReviews
-                    @T("Reviews.Overview.Reviews")</a> <span class="separator">|</span> <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
+                    @T("Reviews.Overview.Reviews")</a>
+                
+                @if (Model.CanAddNewReview)
+                {
+                    <span class="separator">|</span> <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
+                }
+                
             </div>            
         }
         else

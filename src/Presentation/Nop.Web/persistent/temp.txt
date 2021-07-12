@@ -1,0 +1,1 @@
+this file exists temporary because nopcommerce needs to keep persistent appsettings.json,plugins.json but in kubernetes there is no way to map volume to App_Data without breaking it. needs investigation and fix of plugin api (they need to be immutable or at least keep settings in DB)

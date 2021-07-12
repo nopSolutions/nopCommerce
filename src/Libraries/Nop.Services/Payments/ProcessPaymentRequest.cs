@@ -41,6 +41,8 @@ namespace Nop.Services.Payments
         /// </summary>
         public decimal OrderTotal { get; set; }
 
+        public string ScheduleDate { get; set; }
+
         /// <summary>
         /// /// <summary>
         /// Gets or sets a payment method identifier

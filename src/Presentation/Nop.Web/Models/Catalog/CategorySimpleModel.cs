@@ -3,13 +3,14 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class CategorySimpleModel : BaseNopEntityModel
+    public record CategorySimpleModel : BaseNopEntityModel
     {
         public CategorySimpleModel()
         {
             SubCategories = new List<CategorySimpleModel>();
         }
 
+        public string PictureUrl { get; set; }
         public string Name { get; set; }
 
         public string SeName { get; set; }

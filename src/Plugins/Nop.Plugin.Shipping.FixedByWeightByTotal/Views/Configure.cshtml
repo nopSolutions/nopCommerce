@@ -1,28 +1,35 @@
 ﻿@model Nop.Plugin.Shipping.FixedByWeightByTotal.Models.ConfigurationModel
+@using Nop.Web.Framework.Models.AdminAreaTour
+
 @{
     Layout = "_ConfigurePlugin";
+
+    //tour step
+    ViewBag.TourStep = TourStep.ShippingManual;
 }
 
-<div class="row">
+@await Html.PartialAsync("_AdminTour")
+
+<div class="row pb-3">
     <div class="col-md-3">
         <div class="onoffswitch">
             <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="advanced-settings-mode" checked="@Model.ShippingByWeightByTotalEnabled">
             <label class="onoffswitch-label" for="advanced-settings-mode">
                 <span class="onoffswitch-inner"
-                          data-locale-basic="@T("Plugins.Shipping.FixedByWeightByTotal.Fixed")"
-                          data-locale-advanced="@T("Plugins.Shipping.FixedByWeightByTotal.ShippingByWeight")"></span>
+                      data-locale-basic="@T("Plugins.Shipping.FixedByWeightByTotal.Fixed")"
+                      data-locale-advanced="@T("Plugins.Shipping.FixedByWeightByTotal.ShippingByWeight")"></span>
                 <span class="onoffswitch-switch"></span>
             </label>
         </div>
     </div>
     <div class="col-md-9">
-        <div class="pull-right">
-            <a asp-controller="Shipping" asp-action="Methods" class="btn bg-blue">
-                <i class="fa fa-truck"></i>
+        <div class="float-right">
+            <a asp-controller="Shipping" asp-action="Methods" class="btn btn-primary" id="manage-shipping-methods-button">
+                <i class="fas fa-truck"></i>
                 @T("Admin.Configuration.Shipping.Methods.Manage")
             </a>
-            <a asp-controller="Shipping" asp-action="Restrictions" class="btn bg-blue">
-                <i class="fa fa-globe"></i>
+            <a asp-controller="Shipping" asp-action="Restrictions" class="btn btn-primary">
+                <i class="fas fa-globe"></i>
                 @T("Admin.Configuration.Shipping.Restrictions")
             </a>
         </div>

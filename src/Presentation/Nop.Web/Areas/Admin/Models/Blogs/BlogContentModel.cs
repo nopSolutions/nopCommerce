@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
     /// <summary>
     /// Represents a blog content model
     /// </summary>
-    public partial class BlogContentModel : BaseNopModel
+    public partial record BlogContentModel : BaseNopModel
     {
         #region Ctor
 

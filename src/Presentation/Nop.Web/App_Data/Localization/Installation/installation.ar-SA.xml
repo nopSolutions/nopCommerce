@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="عربي" IsDefault="false" IsRightToLeft="true">
+  <LocaleResource Name="AdminEmail">
+    <Value>البريد الالكتروني لمدير الموقع</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>ادخل البريد الالكتروني لمدير الموقع</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>كلمة المرور لحساب المدير</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>ادخل كلمة المرور لحساب المدير</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>الحساب '{0}' لا يملك حقوق التعديل على المجلد '{1}'. الرجاء منح حقوق التعديل على هذا المجلد</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>الحساب '{0}' لا يملك حقوق التعديل على المجلد '{1}'. الرجاء منح حقوق التعديل على هذا المجلد</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>تأكيد كلمة المرور</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>ادخل تأكيد كلمة المرور</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>سلسلة الاتصال</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>يجب ادخال سلسلة الاتصال الخاصة بـSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>سلسلة الاتصال الخاصة بـSQL غير صحيحة</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>الدولة</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>حدد بلدك</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>قم بإنشاء قاعدة البيانات إذا لم تكن موجودة</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>إضافة المعلومات الإفتراضية</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>تحديد ترتيب مخصص</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>قاعدة بيانات</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>حدث خطأ اثناء إنشاء قاعدة البيانات : {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>معلومات قاعدة البيانات</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>إسم قاعدة البيانات</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>قاعدة البيانات غير موجودة أو انت لا تملك التصريح للاتصال بها.</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>اختر مزود المعلومات</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>إذا كنت تحتاج دليل استخدام موقع nopCommerce, قم بزيارة</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>قيم بزيارة قسم التوثيق على nopCommerce.com </Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>مثلاُ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>تثبيت</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>جاري تثبيت nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>استخدم مصادقة وندوز (Windows Authentication) </Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>كلمات المرور غير متطابقة</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>ادخل raw سلسلة الاتصال (الوضع المتقدم)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>إعادة التثبيت</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>اضغط هنا لإعادة عملية التثبيت (إزالة جميع الملفات المؤقته)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>جارٍ إعادة التشغيل…</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>اسم الخادِم</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>اسم الخادم مطلوب</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>فشل في تنصيب: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>SQL كلمة المرور</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>SQL كلمة المرور مطلوبة</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>SQL اسم المستخدم</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>SQL اسم المستخدم مطلوب</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>معلومات المتجر</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce تنصيب</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>لمتابعة خطوات التثبيت يجب ان تعرف المعلومات التالية حول قاعدة البيانات وخادم SQL مثل سلسلة الاتصال (Conncetion String). الرجاء الاتصال بمزود الخدمة إذا دعت الحاجة لذلك. إذا كنت تريد ان تقوم بتثبيت على جهازك (خادم محلي)، قد تحتاج إلى المعلومات من مدير الخادم لديك (Admin)</Value>
+  </LocaleResource>
+</Language>

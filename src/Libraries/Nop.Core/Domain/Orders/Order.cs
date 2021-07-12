@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -8,7 +9,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Represents an order
     /// </summary>
-    public partial class Order : BaseEntity
+    public partial class Order : BaseEntity, ISoftDeletedEntity
     {
         #region Properties
 
@@ -282,10 +283,16 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
+        public bool RateNotificationSend { get; set; }
+        public DateTime ScheduleDate { get; set; }
+
         /// <summary>
         /// Gets or sets the custom order number without prefix
         /// </summary>
         public string CustomOrderNumber { get; set; }
+
+        public int Rating { get; set; }
+        public string RatingText { get; set; }
 
         /// <summary>
         /// Gets or sets the reward points history record (spent by a customer when placing this order)

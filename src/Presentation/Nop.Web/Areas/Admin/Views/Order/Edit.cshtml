@@ -9,70 +9,72 @@
 
 @{
     const string hideInfoBlockAttributeName = "OrderPage.HideInfoBlock";
-    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
 
     const string hideBillingAndShippingBlockAttributeName = "OrderPage.HideBillingAndShippingBlock";
-    var hideBillingAndShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBillingAndShippingBlockAttributeName);
+    var hideBillingAndShippingBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideBillingAndShippingBlockAttributeName);
 
     const string hideProductsBlockAttributeName = "OrderPage.HideProductsBlock";
-    var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName);
+    var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductsBlockAttributeName);
 
     const string hideNotesBlockAttributeName = "OrderPage.HideNotesBlock";
-    var hideNotesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideNotesBlockAttributeName);
+    var hideNotesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideNotesBlockAttributeName);
 }
 
-<form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
-    <div class="content-header clearfix">
-        <h1 class="pull-left">
-            @T("Admin.Orders.EditOrderDetails") - @Model.CustomOrderNumber
-            <small>
-                <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.Orders.BackToList")</a>
-            </small>
-        </h1>
-        <div class="pull-right">
-            <a asp-action="PdfInvoice" asp-route-orderId="@Model.Id" class="btn bg-purple">
-                <i class="fa fa-file-pdf-o"></i>
-                @T("Admin.Orders.PdfInvoice")
-            </a>
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                <span id="order-delete" class="btn bg-red">
-                    <i class="fa fa-trash-o"></i>
-                    @T("Admin.Common.Delete")
-                </span>
-            }
-            <input type="submit" id="btnRefreshPage" style="display: none" />
-            <script>
-                $(document).ready(function () {
-                    $('#btnRefreshPage').click(function () {
-                        //refresh pageed
-                        location.reload();
-                    });
-                });
-            </script>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsButtons, additionalData = Model })
-        </div>
-    </div>
-
-    <div asp-validation-summary="All"></div>
-
-    <div class="content">
-        <div class="form-horizontal">
-            
-            <nop-panels id="order-panels">
-                <nop-panel asp-name="order-info" asp-icon="fa fa-info" asp-title="@T("Admin.Orders.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-panel>
-                <nop-panel asp-name="order-billing-shipping" asp-icon="fa fa-truck" asp-title="@T("Admin.Orders.BillingShippingInfo")" asp-hide-block-attribute-name="@hideBillingAndShippingBlockAttributeName" asp-hide="@hideBillingAndShippingBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-panel>
-                <nop-panel asp-name="order-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-panel>
-                
+    <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
+        <div class="content-header clearfix">
+            <h1 class="float-left">
+                @T("Admin.Orders.EditOrderDetails") - @Model.CustomOrderNumber
+                <small>
+                    <i class="fas fa-arrow-circle-left"></i>
+                    <a asp-action="List">@T("Admin.Orders.BackToList")</a>
+                </small>
+            </h1>
+            <div class="float-right">
+                <a asp-action="PdfInvoice" asp-route-orderId="@Model.Id" class="btn btn-info">
+                    <i class="far fa-file-pdf"></i>
+                    @T("Admin.Orders.PdfInvoice")
+                </a>
                 @if (!Model.IsLoggedInAsVendor)
                 {
-                    <nop-panel asp-name="order-notes" asp-icon="fa fa-sticky-note-o" asp-title="@T("Admin.Orders.OrderNotes")" asp-hide-block-attribute-name="@hideNotesBlockAttributeName" asp-hide="@hideNotesBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-panel>
+                    <span id="order-delete" class="btn btn-danger">
+                        <i class="far fa-trash-alt"></i>
+                        @T("Admin.Common.Delete")
+                    </span>
                 }
-                
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBlock, additionalData = Model })
-            </nop-panels>
+                <button type="submit" id="btnRefreshPage" style="display: none"></button>
+                <script>
+                    $(document).ready(function () {
+                        $('#btnRefreshPage').click(function () {
+                            //refresh pageed
+                            location.reload();
+                        });
+                    });
+                </script>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsButtons, additionalData = Model })
+            </div>
         </div>
-    </div>
-</form>
+
+        <div asp-validation-summary="All"></div>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="form-horizontal">
+
+                    <nop-cards id="order-cards">
+                        <nop-card asp-name="order-info" asp-icon="fas fa-info" asp-title="@T("Admin.Orders.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-card>
+                        <nop-card asp-name="order-billing-shipping" asp-icon="fas fa-truck" asp-title="@T("Admin.Orders.BillingShippingInfo")" asp-hide-block-attribute-name="@hideBillingAndShippingBlockAttributeName" asp-hide="@hideBillingAndShippingBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-card>
+                        <nop-card asp-name="order-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-card>
+
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            <nop-card asp-name="order-notes" asp-icon="far fa-sticky-note" asp-title="@T("Admin.Orders.OrderNotes")" asp-hide-block-attribute-name="@hideNotesBlockAttributeName" asp-hide="@hideNotesBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-card>
+                        }
+
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBlock, additionalData = Model })
+                    </nop-cards>
+                </div>
+            </div>
+        </section>
+    </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="order-delete" />

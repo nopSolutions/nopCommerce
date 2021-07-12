@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class ShipmentDetailsModel : BaseNopEntityModel
+    public partial record ShipmentDetailsModel : BaseNopEntityModel
     {
         public ShipmentDetailsModel()
         {
@@ -24,7 +24,7 @@ namespace Nop.Web.Models.Order
 
 		#region Nested Classes
 
-        public partial class ShipmentItemModel : BaseNopEntityModel
+        public partial record ShipmentItemModel : BaseNopEntityModel
         {
             public string Sku { get; set; }
             public int ProductId { get; set; }
@@ -37,7 +37,7 @@ namespace Nop.Web.Models.Order
             public int QuantityShipped { get; set; }
         }
 
-        public partial class ShipmentStatusEventModel : BaseNopModel
+        public partial record ShipmentStatusEventModel : BaseNopModel
         {
             public string EventName { get; set; }
             public string Location { get; set; }

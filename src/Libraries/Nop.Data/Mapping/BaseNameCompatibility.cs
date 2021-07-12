@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Companies;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Forums;
@@ -38,6 +39,7 @@ namespace Nop.Data.Mapping
             { typeof(ForumSubscription), "Forums_Subscription" },
             { typeof(ForumTopic), "Forums_Topic" },
             { typeof(PrivateMessage), "Forums_PrivateMessage" },
+            { typeof(CompanyCustomer), "Company_Customer_Mapping" },
             { typeof(NewsItem), "News" }
         };
 

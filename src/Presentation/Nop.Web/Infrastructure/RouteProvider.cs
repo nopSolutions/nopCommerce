@@ -1,10 +1,6 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Domain.Localization;
-using Nop.Data;
-using Nop.Services.Localization;
+using Nop.Services.Installation;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
@@ -12,7 +8,7 @@ namespace Nop.Web.Infrastructure
     /// <summary>
     /// Represents provider that provided basic routes
     /// </summary>
-    public partial class RouteProvider : IRouteProvider
+    public partial class RouteProvider : BaseRouteProvider, IRouteProvider
     {
         #region Methods
 
@@ -22,565 +18,679 @@ namespace Nop.Web.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            var pattern = string.Empty;
-            if (DataSettingsManager.DatabaseIsInstalled)
-            {
-                var localizationSettings = endpointRouteBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
-                if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                {
-                    var langservice = endpointRouteBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                    var languages = langservice.GetAllLanguages().ToList();
-                    pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/";
-                }
-            }
+            //get language pattern
+            //it's not needed to use language pattern in AJAX requests and for actions returning the result directly (e.g. file to download),
+            //use it only for URLs of pages that the user can go to
+            var lang = GetLanguageRoutePattern();
 
             //areas
             endpointRouteBuilder.MapControllerRoute(name: "areaRoute",
-                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                pattern: $"{{area:exists}}/{{controller=Home}}/{{action=Index}}/{{id?}}");
 
             //home page
-            endpointRouteBuilder.MapControllerRoute("Homepage", pattern,
-                new { controller = "Home", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "Homepage", 
+                pattern: $"{lang}",
+                defaults: new { controller = "Home", action = "Index" });
 
             //login
-            endpointRouteBuilder.MapControllerRoute("Login", $"{pattern}login/",
-                new { controller = "Customer", action = "Login" });
+            endpointRouteBuilder.MapControllerRoute(name: "Login",
+                pattern: $"{lang}/login/",
+                defaults: new { controller = "Customer", action = "Login" });
+
+            // multi-factor verification digit code page
+            endpointRouteBuilder.MapControllerRoute(name: "MultiFactorVerification",
+                pattern: $"{lang}/multi-factor-verification/",
+                defaults: new { controller = "Customer", action = "MultiFactorVerification" });
 
             //register
-            endpointRouteBuilder.MapControllerRoute("Register", $"{pattern}register/",
-                new { controller = "Customer", action = "Register" });
+            endpointRouteBuilder.MapControllerRoute(name: "Register",
+                pattern: $"{lang}/register/",
+                defaults: new { controller = "Customer", action = "Register" });
 
             //logout
-            endpointRouteBuilder.MapControllerRoute("Logout", $"{pattern}logout/",
-                new { controller = "Customer", action = "Logout" });
+            endpointRouteBuilder.MapControllerRoute(name: "Logout",
+                pattern: $"{lang}/logout/",
+                defaults: new { controller = "Customer", action = "Logout" });
 
             //shopping cart
-            endpointRouteBuilder.MapControllerRoute("ShoppingCart", $"{pattern}cart/",
-                new { controller = "ShoppingCart", action = "Cart" });
+            endpointRouteBuilder.MapControllerRoute(name: "ShoppingCart",
+                pattern: $"{lang}/cart/",
+                defaults: new { controller = "ShoppingCart", action = "Cart" });
 
-            //estimate shipping
-            endpointRouteBuilder.MapControllerRoute("EstimateShipping", $"{pattern}cart/estimateshipping",
-                new { controller = "ShoppingCart", action = "GetEstimateShipping" });
+            //estimate shipping (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "EstimateShipping", 
+                pattern: $"cart/estimateshipping",
+                defaults: new { controller = "ShoppingCart", action = "GetEstimateShipping" });
 
             //wishlist
-            endpointRouteBuilder.MapControllerRoute("Wishlist", pattern + "wishlist/{customerGuid?}",
-                new { controller = "ShoppingCart", action = "Wishlist" });
+            endpointRouteBuilder.MapControllerRoute(name: "Wishlist",
+                pattern: $"{lang}/wishlist/{{customerGuid?}}",
+                defaults: new { controller = "ShoppingCart", action = "Wishlist" });
 
             //customer account links
-            endpointRouteBuilder.MapControllerRoute("CustomerInfo", $"{pattern}customer/info",
-                new { controller = "Customer", action = "Info" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerInfo",
+                pattern: $"{lang}/customer/info",
+                defaults: new { controller = "Customer", action = "Info" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerAddresses", $"{pattern}customer/addresses",
-                new { controller = "Customer", action = "Addresses" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerAddresses",
+                pattern: $"{lang}/customer/addresses",
+                defaults: new { controller = "Customer", action = "Addresses" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerOrders", $"{pattern}order/history",
-                new { controller = "Order", action = "CustomerOrders" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerOrders",
+                pattern: $"{lang}/order/history",
+                defaults: new { controller = "Order", action = "CustomerOrders" });
 
             //contact us
-            endpointRouteBuilder.MapControllerRoute("ContactUs", $"{pattern}contactus",
-                new { controller = "Common", action = "ContactUs" });
-
-            //sitemap
-            endpointRouteBuilder.MapControllerRoute("Sitemap", $"{pattern}sitemap",
-                new { controller = "Common", action = "Sitemap" });
+            endpointRouteBuilder.MapControllerRoute(name: "ContactUs",
+                pattern: $"{lang}/contactus",
+                defaults: new { controller = "Common", action = "ContactUs" });
 
             //product search
-            endpointRouteBuilder.MapControllerRoute("ProductSearch", $"{pattern}search/",
-                new { controller = "Catalog", action = "Search" });
+            endpointRouteBuilder.MapControllerRoute(name: "ProductSearch",
+                pattern: $"{lang}/search/",
+                defaults: new { controller = "Catalog", action = "Search" });
 
-            endpointRouteBuilder.MapControllerRoute("ProductSearchAutoComplete", $"{pattern}catalog/searchtermautocomplete",
-                new { controller = "Catalog", action = "SearchTermAutoComplete" });
+            //autocomplete search term (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "ProductSearchAutoComplete", 
+                pattern: $"catalog/searchtermautocomplete",
+                defaults: new { controller = "Catalog", action = "SearchTermAutoComplete" });
 
-            //change currency (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("ChangeCurrency", pattern + "changecurrency/{customercurrency:min(0)}",
-                new { controller = "Common", action = "SetCurrency" });
+            //change currency
+            endpointRouteBuilder.MapControllerRoute(name: "ChangeCurrency",
+                pattern: $"{lang}/changecurrency/{{customercurrency:min(0)}}",
+                defaults: new { controller = "Common", action = "SetCurrency" });
 
-            //change language (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("ChangeLanguage", pattern + "changelanguage/{langid:min(0)}",
-                new { controller = "Common", action = "SetLanguage" });
+            //change language
+            endpointRouteBuilder.MapControllerRoute(name: "ChangeLanguage",
+                pattern: $"{lang}/changelanguage/{{langid:min(0)}}",
+                defaults: new { controller = "Common", action = "SetLanguage" });
 
-            //change tax (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("ChangeTaxType", pattern + "changetaxtype/{customertaxtype:min(0)}",
-                new { controller = "Common", action = "SetTaxType" });
+            //change tax
+            endpointRouteBuilder.MapControllerRoute(name: "ChangeTaxType",
+                pattern: $"{lang}/changetaxtype/{{customertaxtype:min(0)}}",
+                defaults: new { controller = "Common", action = "SetTaxType" });
 
             //recently viewed products
-            endpointRouteBuilder.MapControllerRoute("RecentlyViewedProducts", $"{pattern}recentlyviewedproducts/",
-                new { controller = "Product", action = "RecentlyViewedProducts" });
+            endpointRouteBuilder.MapControllerRoute(name: "RecentlyViewedProducts",
+                pattern: $"{lang}/recentlyviewedproducts/",
+                defaults: new { controller = "Product", action = "RecentlyViewedProducts" });
 
             //new products
-            endpointRouteBuilder.MapControllerRoute("NewProducts", $"{pattern}newproducts/",
-                new { controller = "Product", action = "NewProducts" });
+            endpointRouteBuilder.MapControllerRoute(name: "NewProducts",
+                pattern: $"{lang}/newproducts/",
+                defaults: new { controller = "Product", action = "NewProducts" });
 
             //blog
-            endpointRouteBuilder.MapControllerRoute("Blog", $"{pattern}blog",
-                new { controller = "Blog", action = "List" });
+            endpointRouteBuilder.MapControllerRoute(name: "Blog",
+                pattern: $"{lang}/blog",
+                defaults: new { controller = "Blog", action = "List" });
 
             //news
-            endpointRouteBuilder.MapControllerRoute("NewsArchive", $"{pattern}news",
-                new { controller = "News", action = "List" });
+            endpointRouteBuilder.MapControllerRoute(name: "NewsArchive",
+                pattern: $"{lang}/news",
+                defaults: new { controller = "News", action = "List" });
 
             //forum
-            endpointRouteBuilder.MapControllerRoute("Boards", $"{pattern}boards",
-                new { controller = "Boards", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "Boards",
+                pattern: $"{lang}/boards",
+                defaults: new { controller = "Boards", action = "Index" });
 
             //compare products
-            endpointRouteBuilder.MapControllerRoute("CompareProducts", $"{pattern}compareproducts/",
-                new { controller = "Product", action = "CompareProducts" });
+            endpointRouteBuilder.MapControllerRoute(name: "CompareProducts",
+                pattern: $"{lang}/compareproducts/",
+                defaults: new { controller = "Product", action = "CompareProducts" });
 
             //product tags
-            endpointRouteBuilder.MapControllerRoute("ProductTagsAll", $"{pattern}producttag/all/",
-                new { controller = "Catalog", action = "ProductTagsAll" });
+            endpointRouteBuilder.MapControllerRoute(name: "ProductTagsAll",
+                pattern: $"{lang}/producttag/all/",
+                defaults: new { controller = "Catalog", action = "ProductTagsAll" });
 
             //manufacturers
-            endpointRouteBuilder.MapControllerRoute("ManufacturerList", $"{pattern}manufacturer/all/",
-                new { controller = "Catalog", action = "ManufacturerAll" });
+            endpointRouteBuilder.MapControllerRoute(name: "ManufacturerList",
+                pattern: $"{lang}/manufacturer/all/",
+                defaults: new { controller = "Catalog", action = "ManufacturerAll" });
 
             //vendors
-            endpointRouteBuilder.MapControllerRoute("VendorList", $"{pattern}vendor/all/",
-                new { controller = "Catalog", action = "VendorAll" });
+            endpointRouteBuilder.MapControllerRoute(name: "VendorList",
+                pattern: $"{lang}/vendor/all/",
+                defaults: new { controller = "Catalog", action = "VendorAll" });
 
-            //add product to cart (without any attributes and options). used on catalog pages.
-            endpointRouteBuilder.MapControllerRoute("AddProductToCart-Catalog",
-                pattern + "addproducttocart/catalog/{productId:min(0)}/{shoppingCartTypeId:min(0)}/{quantity:min(0)}",
-                new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" });
+            //add product to cart (without any attributes and options). used on catalog pages. (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "AddProductToCart-Catalog",
+                pattern: $"addproducttocart/catalog/{{productId:min(0)}}/{{shoppingCartTypeId:min(0)}}/{{quantity:min(0)}}",
+                defaults: new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" });
 
-            //add product to cart (with attributes and options). used on the product details pages.
-            endpointRouteBuilder.MapControllerRoute("AddProductToCart-Details",
-                pattern + "addproducttocart/details/{productId:min(0)}/{shoppingCartTypeId:min(0)}",
-                new { controller = "ShoppingCart", action = "AddProductToCart_Details" });
+            //add product to cart (with attributes and options). used on the product details pages. (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "AddProductToCart-Details",
+                pattern: $"addproducttocart/details/{{productId:min(0)}}/{{shoppingCartTypeId:min(0)}}",
+                defaults: new { controller = "ShoppingCart", action = "AddProductToCart_Details" });
 
-            //comparing products
-            endpointRouteBuilder.MapControllerRoute("AddProductToCompare", "compareproducts/add/{productId:min(0)}",
-                new { controller = "Product", action = "AddProductToCompareList" });
+            //comparing products (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "AddProductToCompare",
+                pattern: $"compareproducts/add/{{productId:min(0)}}",
+                defaults: new { controller = "Product", action = "AddProductToCompareList" });
 
             //product email a friend
-            endpointRouteBuilder.MapControllerRoute("ProductEmailAFriend",
-                pattern + "productemailafriend/{productId:min(0)}",
-                new { controller = "Product", action = "ProductEmailAFriend" });
+            endpointRouteBuilder.MapControllerRoute(name: "ProductEmailAFriend",
+                pattern: $"{lang}/productemailafriend/{{productId:min(0)}}",
+                defaults: new { controller = "Product", action = "ProductEmailAFriend" });
 
             //reviews
-            endpointRouteBuilder.MapControllerRoute("ProductReviews2", pattern + "productreviews/{productId2}",
-                new { controller = "Product", action = "ProductReviews2" });
+            endpointRouteBuilder.MapControllerRoute(name: "ProductReviews",
+                pattern: $"{lang}/productreviews/{{productId}}",
+                defaults: new { controller = "Product", action = "ProductReviews" });
 
-            endpointRouteBuilder.MapControllerRoute("ProductReviews", pattern + "productreviews/{productId}",
-                new { controller = "Product", action = "ProductReviews" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerProductReviews",
+                pattern: $"{lang}/customer/productreviews",
+                defaults: new { controller = "Product", action = "CustomerProductReviews" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerProductReviews", $"{pattern}customer/productreviews",
-                new { controller = "Product", action = "CustomerProductReviews" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerProductReviewsPaged",
+                pattern: $"{lang}/customer/productreviews/page/{{pageNumber:min(0)}}",
+                defaults: new { controller = "Product", action = "CustomerProductReviews" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerProductReviewsPaged",
-                pattern + "customer/productreviews/page/{pageNumber:min(0)}",
-                new { controller = "Product", action = "CustomerProductReviews" });
+            //back in stock notifications (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "BackInStockSubscribePopup",
+                pattern: $"backinstocksubscribe/{{productId:min(0)}}",
+                defaults: new { controller = "BackInStockSubscription", action = "SubscribePopup" });
 
-            //back in stock notifications
-            endpointRouteBuilder.MapControllerRoute("BackInStockSubscribePopup",
-                pattern + "backinstocksubscribe/{productId:min(0)}",
-                new { controller = "BackInStockSubscription", action = "SubscribePopup" });
+            endpointRouteBuilder.MapControllerRoute(name: "BackInStockSubscribeSend",
+                pattern: $"backinstocksubscribesend/{{productId:min(0)}}",
+                defaults: new { controller = "BackInStockSubscription", action = "SubscribePopupPOST" });
 
-            endpointRouteBuilder.MapControllerRoute("BackInStockSubscribeSend",
-                pattern + "backinstocksubscribesend/{productId:min(0)}",
-                new { controller = "BackInStockSubscription", action = "SubscribePopupPOST" });
-
-            //downloads
-            endpointRouteBuilder.MapControllerRoute("GetSampleDownload",
-                pattern + "download/sample/{productid:min(0)}",
-                new { controller = "Download", action = "Sample" });
+            //downloads (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "GetSampleDownload",
+                pattern: $"download/sample/{{productid:min(0)}}",
+                defaults: new { controller = "Download", action = "Sample" });
 
             //checkout pages
-            endpointRouteBuilder.MapControllerRoute("Checkout", $"{pattern}checkout/",
-                new { controller = "Checkout", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "Checkout",
+                pattern: $"{lang}/checkout/",
+                defaults: new { controller = "Checkout", action = "Index" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutOnePage", $"{pattern}onepagecheckout/",
-                new { controller = "Checkout", action = "OnePageCheckout" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutOnePage",
+                pattern: $"{lang}/onepagecheckout/",
+                defaults: new { controller = "Checkout", action = "OnePageCheckout" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutShippingAddress", $"{pattern}checkout/shippingaddress",
-                new { controller = "Checkout", action = "ShippingAddress" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutShippingAddress",
+                pattern: $"{lang}/checkout/shippingaddress",
+                defaults: new { controller = "Checkout", action = "ShippingAddress" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutSelectShippingAddress", $"{pattern}checkout/selectshippingaddress",
-                new { controller = "Checkout", action = "SelectShippingAddress" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutSelectShippingAddress",
+                pattern: $"{lang}/checkout/selectshippingaddress",
+                defaults: new { controller = "Checkout", action = "SelectShippingAddress" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutBillingAddress", $"{pattern}checkout/billingaddress",
-                new { controller = "Checkout", action = "BillingAddress" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutBillingAddress",
+                pattern: $"{lang}/checkout/billingaddress",
+                defaults: new { controller = "Checkout", action = "BillingAddress" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutSelectBillingAddress", $"{pattern}checkout/selectbillingaddress",
-                new { controller = "Checkout", action = "SelectBillingAddress" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutSelectBillingAddress",
+                pattern: $"{lang}/checkout/selectbillingaddress",
+                defaults: new { controller = "Checkout", action = "SelectBillingAddress" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutShippingMethod", $"{pattern}checkout/shippingmethod",
-                new { controller = "Checkout", action = "ShippingMethod" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutShippingMethod",
+                pattern: $"{lang}/checkout/shippingmethod",
+                defaults: new { controller = "Checkout", action = "ShippingMethod" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutPaymentMethod", $"{pattern}checkout/paymentmethod",
-                new { controller = "Checkout", action = "PaymentMethod" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutPaymentMethod",
+                pattern: $"{lang}/checkout/paymentmethod",
+                defaults: new { controller = "Checkout", action = "PaymentMethod" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutPaymentInfo", $"{pattern}checkout/paymentinfo",
-                new { controller = "Checkout", action = "PaymentInfo" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutPaymentInfo",
+                pattern: $"{lang}/checkout/paymentinfo",
+                defaults: new { controller = "Checkout", action = "PaymentInfo" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutConfirm", $"{pattern}checkout/confirm",
-                new { controller = "Checkout", action = "Confirm" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutConfirm",
+                pattern: $"{lang}/checkout/confirm",
+                defaults: new { controller = "Checkout", action = "Confirm" });
 
-            endpointRouteBuilder.MapControllerRoute("CheckoutCompleted",
-                pattern + "checkout/completed/{orderId:int}",
-                new { controller = "Checkout", action = "Completed" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckoutCompleted",
+                pattern: $"{lang}/checkout/completed/{{orderId:int?}}",
+                defaults: new { controller = "Checkout", action = "Completed" });
 
-            //subscribe newsletters
-            endpointRouteBuilder.MapControllerRoute("SubscribeNewsletter", $"{pattern}subscribenewsletter",
-                new { controller = "Newsletter", action = "SubscribeNewsletter" });
+            //subscribe newsletters (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "SubscribeNewsletter",
+                pattern: $"subscribenewsletter",
+                defaults: new { controller = "Newsletter", action = "SubscribeNewsletter" });
 
             //email wishlist
-            endpointRouteBuilder.MapControllerRoute("EmailWishlist", $"{pattern}emailwishlist",
-                new { controller = "ShoppingCart", action = "EmailWishlist" });
+            endpointRouteBuilder.MapControllerRoute(name: "EmailWishlist",
+                pattern: $"{lang}/emailwishlist",
+                defaults: new { controller = "ShoppingCart", action = "EmailWishlist" });
 
             //login page for checkout as guest
-            endpointRouteBuilder.MapControllerRoute("LoginCheckoutAsGuest", $"{pattern}login/checkoutasguest",
-                new { controller = "Customer", action = "Login", checkoutAsGuest = true });
+            endpointRouteBuilder.MapControllerRoute(name: "LoginCheckoutAsGuest",
+                pattern: $"{lang}/login/checkoutasguest",
+                defaults: new { controller = "Customer", action = "Login", checkoutAsGuest = true });
 
             //register result page
-            endpointRouteBuilder.MapControllerRoute("RegisterResult",
-                pattern + "registerresult/{resultId:min(0)}",
-                new { controller = "Customer", action = "RegisterResult" });
+            endpointRouteBuilder.MapControllerRoute(name: "RegisterResult",
+                pattern: $"{lang}/registerresult/{{resultId:min(0)}}",
+                defaults: new { controller = "Customer", action = "RegisterResult" });
 
-            //check username availability
-            endpointRouteBuilder.MapControllerRoute("CheckUsernameAvailability", $"{pattern}customer/checkusernameavailability",
-                new { controller = "Customer", action = "CheckUsernameAvailability" });
+            //check username availability (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "CheckUsernameAvailability",
+                pattern: $"customer/checkusernameavailability",
+                defaults: new { controller = "Customer", action = "CheckUsernameAvailability" });
 
             //passwordrecovery
-            endpointRouteBuilder.MapControllerRoute("PasswordRecovery", $"{pattern}passwordrecovery",
-                new { controller = "Customer", action = "PasswordRecovery" });
+            endpointRouteBuilder.MapControllerRoute(name: "PasswordRecovery",
+                pattern: $"{lang}/passwordrecovery",
+                defaults: new { controller = "Customer", action = "PasswordRecovery" });
 
             //password recovery confirmation
-            endpointRouteBuilder.MapControllerRoute("PasswordRecoveryConfirm", $"{pattern}passwordrecovery/confirm",
-                new { controller = "Customer", action = "PasswordRecoveryConfirm" });
+            endpointRouteBuilder.MapControllerRoute(name: "PasswordRecoveryConfirm",
+                pattern: $"{lang}/passwordrecovery/confirm",
+                defaults: new { controller = "Customer", action = "PasswordRecoveryConfirm" });
 
-            //topics
-            endpointRouteBuilder.MapControllerRoute("TopicPopup",
-                pattern + "t-popup/{SystemName}",
-                new { controller = "Topic", action = "TopicDetailsPopup" });
+            //topics (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "TopicPopup",
+                pattern: $"t-popup/{{SystemName}}",
+                defaults: new { controller = "Topic", action = "TopicDetailsPopup" });
 
             //blog
-            endpointRouteBuilder.MapControllerRoute("BlogByTag",
-                pattern + "blog/tag/{tag}",
-                new { controller = "Blog", action = "BlogByTag" });
+            endpointRouteBuilder.MapControllerRoute(name: "BlogByTag",
+                pattern: $"{lang}/blog/tag/{{tag}}",
+                defaults: new { controller = "Blog", action = "BlogByTag" });
 
-            endpointRouteBuilder.MapControllerRoute("BlogByMonth",
-                pattern + "blog/month/{month}",
-                new { controller = "Blog", action = "BlogByMonth" });
+            endpointRouteBuilder.MapControllerRoute(name: "BlogByMonth",
+                pattern: $"{lang}/blog/month/{{month}}",
+                defaults: new { controller = "Blog", action = "BlogByMonth" });
 
-            //blog RSS
-            endpointRouteBuilder.MapControllerRoute("BlogRSS",
-                pattern + "blog/rss/{languageId:min(0)}",
-                new { controller = "Blog", action = "ListRss" });
+            //blog RSS (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "BlogRSS",
+                pattern: $"blog/rss/{{languageId:min(0)}}",
+                defaults: new { controller = "Blog", action = "ListRss" });
 
-            //news RSS
-            endpointRouteBuilder.MapControllerRoute("NewsRSS",
-                pattern + "news/rss/{languageId:min(0)}",
-                new { controller = "News", action = "ListRss" });
+            //news RSS (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "NewsRSS",
+                pattern: $"news/rss/{{languageId:min(0)}}",
+                defaults: new { controller = "News", action = "ListRss" });
 
-            //set review helpfulness (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("SetProductReviewHelpfulness", $"{pattern}setproductreviewhelpfulness",
-                new { controller = "Product", action = "SetProductReviewHelpfulness" });
+            //set review helpfulness (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "SetProductReviewHelpfulness",
+                pattern: $"setproductreviewhelpfulness",
+                defaults: new { controller = "Product", action = "SetProductReviewHelpfulness" });
 
             //customer account links
-            endpointRouteBuilder.MapControllerRoute("CustomerReturnRequests", $"{pattern}returnrequest/history",
-                new { controller = "ReturnRequest", action = "CustomerReturnRequests" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerReturnRequests",
+                pattern: $"{lang}/returnrequest/history",
+                defaults: new { controller = "ReturnRequest", action = "CustomerReturnRequests" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerDownloadableProducts", $"{pattern}customer/downloadableproducts",
-                new { controller = "Customer", action = "DownloadableProducts" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerDownloadableProducts",
+                pattern: $"{lang}/customer/downloadableproducts",
+                defaults: new { controller = "Customer", action = "DownloadableProducts" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerBackInStockSubscriptions",
-                pattern + "backinstocksubscriptions/manage/{pageNumber:int?}",
-                new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerBackInStockSubscriptions",
+                pattern: $"{lang}/backinstocksubscriptions/manage/{{pageNumber:int?}}",
+                defaults: new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerRewardPoints", $"{pattern}rewardpoints/history",
-                new { controller = "Order", action = "CustomerRewardPoints" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerRewardPoints",
+                pattern: $"{lang}/rewardpoints/history",
+                defaults: new { controller = "Order", action = "CustomerRewardPoints" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerRewardPointsPaged",
-                pattern + "rewardpoints/history/page/{pageNumber:min(0)}",
-                new { controller = "Order", action = "CustomerRewardPoints" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerRewardPointsPaged",
+                pattern: $"{lang}/rewardpoints/history/page/{{pageNumber:min(0)}}",
+                defaults: new { controller = "Order", action = "CustomerRewardPoints" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerChangePassword", $"{pattern}customer/changepassword",
-                new { controller = "Customer", action = "ChangePassword" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerChangePassword",
+                pattern: $"{lang}/customer/changepassword",
+                defaults: new { controller = "Customer", action = "ChangePassword" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerAvatar", $"{pattern}customer/avatar",
-                new { controller = "Customer", action = "Avatar" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerAvatar",
+                pattern: $"{lang}/customer/avatar",
+                defaults: new { controller = "Customer", action = "Avatar" });
 
-            endpointRouteBuilder.MapControllerRoute("AccountActivation", $"{pattern}customer/activation",
-                new { controller = "Customer", action = "AccountActivation" });
+            endpointRouteBuilder.MapControllerRoute(name: "AccountActivation",
+                pattern: $"{lang}/customer/activation",
+                defaults: new { controller = "Customer", action = "AccountActivation" });
 
-            endpointRouteBuilder.MapControllerRoute("EmailRevalidation", $"{pattern}customer/revalidateemail",
-                new { controller = "Customer", action = "EmailRevalidation" });
+            endpointRouteBuilder.MapControllerRoute(name: "EmailRevalidation",
+                pattern: $"{lang}/customer/revalidateemail",
+                defaults: new { controller = "Customer", action = "EmailRevalidation" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerForumSubscriptions",
-                pattern + "boards/forumsubscriptions/{pageNumber:int?}",
-                new { controller = "Boards", action = "CustomerForumSubscriptions" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerForumSubscriptions",
+                pattern: $"{lang}/boards/forumsubscriptions/{{pageNumber:int?}}",
+                defaults: new { controller = "Boards", action = "CustomerForumSubscriptions" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerAddressEdit",
-                pattern + "customer/addressedit/{addressId:min(0)}",
-                new { controller = "Customer", action = "AddressEdit" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerAddressEdit",
+                pattern: $"{lang}/customer/addressedit/{{addressId:min(0)}}",
+                defaults: new { controller = "Customer", action = "AddressEdit" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerAddressAdd", $"{pattern}customer/addressadd",
-                new { controller = "Customer", action = "AddressAdd" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerAddressAdd",
+                pattern: $"{lang}/customer/addressadd",
+                defaults: new { controller = "Customer", action = "AddressAdd" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerMultiFactorAuthenticationProviderConfig",
+                pattern: $"{lang}/customer/providerconfig",
+                defaults: new { controller = "Customer", action = "ConfigureMultiFactorAuthenticationProvider" });
 
             //customer profile page
-            endpointRouteBuilder.MapControllerRoute("CustomerProfile",
-                pattern + "profile/{id:min(0)}",
-                new { controller = "Profile", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerProfile",
+                pattern: $"{lang}/profile/{{id:min(0)}}",
+                defaults: new { controller = "Profile", action = "Index" });
 
-            endpointRouteBuilder.MapControllerRoute("CustomerProfilePaged",
-                pattern + "profile/{id:min(0)}/page/{pageNumber:min(0)}",
-                new { controller = "Profile", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerProfilePaged",
+                pattern: $"{lang}/profile/{{id:min(0)}}/page/{{pageNumber:min(0)}}",
+                defaults: new { controller = "Profile", action = "Index" });
 
             //orders
-            endpointRouteBuilder.MapControllerRoute("OrderDetails",
-                pattern + "orderdetails/{orderId:min(0)}",
-                new { controller = "Order", action = "Details" });
+            endpointRouteBuilder.MapControllerRoute(name: "OrderDetails",
+                pattern: $"{lang}/orderdetails/{{orderId:min(0)}}",
+                defaults: new { controller = "Order", action = "Details" });
 
-            endpointRouteBuilder.MapControllerRoute("ShipmentDetails",
-                pattern + "orderdetails/shipment/{shipmentId}",
-                new { controller = "Order", action = "ShipmentDetails" });
+            endpointRouteBuilder.MapControllerRoute(name: "ShipmentDetails",
+                pattern: $"{lang}/orderdetails/shipment/{{shipmentId}}",
+                defaults: new { controller = "Order", action = "ShipmentDetails" });
 
-            endpointRouteBuilder.MapControllerRoute("ReturnRequest",
-                pattern + "returnrequest/{orderId:min(0)}",
-                new { controller = "ReturnRequest", action = "ReturnRequest" });
+            endpointRouteBuilder.MapControllerRoute(name: "ReturnRequest",
+                pattern: $"{lang}/returnrequest/{{orderId:min(0)}}",
+                defaults: new { controller = "ReturnRequest", action = "ReturnRequest" });
 
-            endpointRouteBuilder.MapControllerRoute("ReOrder",
-                pattern + "reorder/{orderId:min(0)}",
-                new { controller = "Order", action = "ReOrder" });
+            endpointRouteBuilder.MapControllerRoute(name: "ReOrder",
+                pattern: $"{lang}/reorder/{{orderId:min(0)}}",
+                defaults: new { controller = "Order", action = "ReOrder" });
 
-            endpointRouteBuilder.MapControllerRoute("GetOrderPdfInvoice",
-                pattern + "orderdetails/pdf/{orderId}",
-                new { controller = "Order", action = "GetPdfInvoice" });
+            //pdf invoice (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "GetOrderPdfInvoice",
+                pattern: $"orderdetails/pdf/{{orderId}}",
+                defaults: new { controller = "Order", action = "GetPdfInvoice" });
 
-            endpointRouteBuilder.MapControllerRoute("PrintOrderDetails",
-                pattern + "orderdetails/print/{orderId}",
-                new { controller = "Order", action = "PrintOrderDetails" });
+            endpointRouteBuilder.MapControllerRoute(name: "PrintOrderDetails",
+                pattern: $"{lang}/orderdetails/print/{{orderId}}",
+                defaults: new { controller = "Order", action = "PrintOrderDetails" });
 
-            //order downloads
-            endpointRouteBuilder.MapControllerRoute("GetDownload",
-                pattern + "download/getdownload/{orderItemId:guid}/{agree?}",
-                new { controller = "Download", action = "GetDownload" });
+            //order downloads (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "GetDownload", 
+                pattern: $"download/getdownload/{{orderItemId:guid}}/{{agree?}}",
+                defaults: new { controller = "Download", action = "GetDownload" });
 
-            endpointRouteBuilder.MapControllerRoute("GetLicense",
-                pattern + "download/getlicense/{orderItemId:guid}/",
-                new { controller = "Download", action = "GetLicense" });
+            endpointRouteBuilder.MapControllerRoute(name: "GetLicense",
+                pattern: $"download/getlicense/{{orderItemId:guid}}/",
+                defaults: new { controller = "Download", action = "GetLicense" });
 
-            endpointRouteBuilder.MapControllerRoute("DownloadUserAgreement",
-                pattern + "customer/useragreement/{orderItemId:guid}",
-                new { controller = "Customer", action = "UserAgreement" });
+            endpointRouteBuilder.MapControllerRoute(name: "DownloadUserAgreement",
+                pattern: $"customer/useragreement/{{orderItemId:guid}}",
+                defaults: new { controller = "Customer", action = "UserAgreement" });
 
-            endpointRouteBuilder.MapControllerRoute("GetOrderNoteFile",
-                pattern + "download/ordernotefile/{ordernoteid:min(0)}",
-                new { controller = "Download", action = "GetOrderNoteFile" });
+            endpointRouteBuilder.MapControllerRoute(name: "GetOrderNoteFile",
+                pattern: $"download/ordernotefile/{{ordernoteid:min(0)}}",
+                defaults: new { controller = "Download", action = "GetOrderNoteFile" });
 
             //contact vendor
-            endpointRouteBuilder.MapControllerRoute("ContactVendor",
-                pattern + "contactvendor/{vendorId}",
-                new { controller = "Common", action = "ContactVendor" });
+            endpointRouteBuilder.MapControllerRoute(name: "ContactVendor",
+                pattern: $"{lang}/contactvendor/{{vendorId}}",
+                defaults: new { controller = "Common", action = "ContactVendor" });
 
             //apply for vendor account
-            endpointRouteBuilder.MapControllerRoute("ApplyVendorAccount", $"{pattern}vendor/apply",
-                new { controller = "Vendor", action = "ApplyVendor" });
+            endpointRouteBuilder.MapControllerRoute(name: "ApplyVendorAccount",
+                pattern: $"{lang}/vendor/apply",
+                defaults: new { controller = "Vendor", action = "ApplyVendor" });
 
             //vendor info
-            endpointRouteBuilder.MapControllerRoute("CustomerVendorInfo", $"{pattern}customer/vendorinfo",
-                new { controller = "Vendor", action = "Info" });
+            endpointRouteBuilder.MapControllerRoute(name: "CustomerVendorInfo",
+                pattern: $"{lang}/customer/vendorinfo",
+                defaults: new { controller = "Vendor", action = "Info" });
 
             //customer GDPR
-            endpointRouteBuilder.MapControllerRoute("GdprTools", $"{pattern}customer/gdpr",
-                new { controller = "Customer", action = "GdprTools" });
+            endpointRouteBuilder.MapControllerRoute(name: "GdprTools",
+                pattern: $"{lang}/customer/gdpr",
+                defaults: new { controller = "Customer", action = "GdprTools" });
 
             //customer check gift card balance 
-            endpointRouteBuilder.MapControllerRoute("CheckGiftCardBalance", $"{pattern}customer/checkgiftcardbalance",
-                new { controller = "Customer", action = "CheckGiftCardBalance" });
+            endpointRouteBuilder.MapControllerRoute(name: "CheckGiftCardBalance",
+                pattern: $"{lang}/customer/checkgiftcardbalance",
+                defaults: new { controller = "Customer", action = "CheckGiftCardBalance" });
 
-            //poll vote AJAX link
-            endpointRouteBuilder.MapControllerRoute("PollVote", "poll/vote",
-                new { controller = "Poll", action = "Vote" });
+            //customer multi-factor authentication settings 
+            endpointRouteBuilder.MapControllerRoute(name: "MultiFactorAuthenticationSettings",
+                pattern: $"{lang}/customer/multifactorauthentication",
+                defaults: new { controller = "Customer", action = "MultiFactorAuthentication" });
+
+            //poll vote (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "PollVote",
+                pattern: $"poll/vote",
+                defaults: new { controller = "Poll", action = "Vote" });
 
             //comparing products
-            endpointRouteBuilder.MapControllerRoute("RemoveProductFromCompareList",
-                pattern + "compareproducts/remove/{productId}",
-                new { controller = "Product", action = "RemoveProductFromCompareList" });
+            endpointRouteBuilder.MapControllerRoute(name: "RemoveProductFromCompareList",
+                pattern: $"{lang}/compareproducts/remove/{{productId}}",
+                defaults: new { controller = "Product", action = "RemoveProductFromCompareList" });
 
-            endpointRouteBuilder.MapControllerRoute("ClearCompareList", $"{pattern}clearcomparelist/",
-                new { controller = "Product", action = "ClearCompareList" });
+            endpointRouteBuilder.MapControllerRoute(name: "ClearCompareList",
+                pattern: $"{lang}/clearcomparelist/",
+                defaults: new { controller = "Product", action = "ClearCompareList" });
 
-            //new RSS
-            endpointRouteBuilder.MapControllerRoute("NewProductsRSS", $"{pattern}newproducts/rss",
-                new { controller = "Product", action = "NewProductsRss" });
+            //new RSS (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "NewProductsRSS",
+                pattern: $"newproducts/rss",
+                defaults: new { controller = "Product", action = "NewProductsRss" });
 
-            //get state list by country ID  (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("GetStatesByCountryId", $"{pattern}country/getstatesbycountryid/",
-                new { controller = "Country", action = "GetStatesByCountryId" });
+            //get state list by country ID (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "GetStatesByCountryId", 
+                pattern: $"country/getstatesbycountryid/",
+                defaults: new { controller = "Country", action = "GetStatesByCountryId" });
 
-            //EU Cookie law accept button handler (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("EuCookieLawAccept", $"{pattern}eucookielawaccept",
-                new { controller = "Common", action = "EuCookieLawAccept" });
+            //EU Cookie law accept button handler (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "EuCookieLawAccept",
+                pattern: $"eucookielawaccept",
+                defaults: new { controller = "Common", action = "EuCookieLawAccept" });
 
-            //authenticate topic AJAX link
-            endpointRouteBuilder.MapControllerRoute("TopicAuthenticate", $"{pattern}topic/authenticate",
-                new { controller = "Topic", action = "Authenticate" });
+            //authenticate topic (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "TopicAuthenticate",
+                pattern: $"topic/authenticate",
+                defaults: new { controller = "Topic", action = "Authenticate" });
 
-            //prepare top menu (AJAX link)
-            endpointRouteBuilder.MapControllerRoute("GetCatalogRoot", $"{pattern}catalog/getcatalogroot",
-                new { controller = "Catalog", action = "GetCatalogRoot" });
-            
-            endpointRouteBuilder.MapControllerRoute("GetCatalogSubCategories", $"{pattern}catalog/getcatalogsubcategories",
-                new { controller = "Catalog", action = "GetCatalogSubCategories" });
+            //prepare top menu (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "GetCatalogRoot",
+                pattern: $"catalog/getcatalogroot",
+                defaults: new { controller = "Catalog", action = "GetCatalogRoot" });
 
-            //product attributes with "upload file" type
-            endpointRouteBuilder.MapControllerRoute("UploadFileProductAttribute",
-                pattern + "uploadfileproductattribute/{attributeId:min(0)}",
-                new { controller = "ShoppingCart", action = "UploadFileProductAttribute" });
+            endpointRouteBuilder.MapControllerRoute(name: "GetCatalogSubCategories",
+                pattern: $"catalog/getcatalogsubcategories",
+                defaults: new { controller = "Catalog", action = "GetCatalogSubCategories" });
 
-            //checkout attributes with "upload file" type
-            endpointRouteBuilder.MapControllerRoute("UploadFileCheckoutAttribute",
-                pattern + "uploadfilecheckoutattribute/{attributeId:min(0)}",
-                new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
+            //Catalog products (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "GetCategoryProducts",
+                pattern: $"category/products/",
+                defaults: new { controller = "Catalog", action = "GetCategoryProducts" });
 
-            //return request with "upload file" support
-            endpointRouteBuilder.MapControllerRoute("UploadFileReturnRequest", $"{pattern}uploadfilereturnrequest",
-                new { controller = "ReturnRequest", action = "UploadFileReturnRequest" });
+            endpointRouteBuilder.MapControllerRoute(name: "GetManufacturerProducts",
+                pattern: $"manufacturer/products/",
+                defaults: new { controller = "Catalog", action = "GetManufacturerProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "GetTagProducts",
+                pattern: $"tag/products",
+                defaults: new { controller = "Catalog", action = "GetTagProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "SearchProducts",
+                pattern: $"product/search",
+                defaults: new { controller = "Catalog", action = "SearchProducts" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "GetVendorProducts",
+                pattern: $"vendor/products",
+                defaults: new { controller = "Catalog", action = "GetVendorProducts" });
+
+            //product combinations (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "GetProductCombinations",
+                pattern: $"product/combinations",
+                defaults: new { controller = "Product", action = "GetProductCombinations" });
+
+            //product attributes with "upload file" type (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "UploadFileProductAttribute",
+                pattern: $"uploadfileproductattribute/{{attributeId:min(0)}}",
+                defaults: new { controller = "ShoppingCart", action = "UploadFileProductAttribute" });
+
+            //checkout attributes with "upload file" type (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "UploadFileCheckoutAttribute",
+                pattern: $"uploadfilecheckoutattribute/{{attributeId:min(0)}}",
+                defaults: new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
+
+            //return request with "upload file" support (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "UploadFileReturnRequest",
+                pattern: $"uploadfilereturnrequest",
+                defaults: new { controller = "ReturnRequest", action = "UploadFileReturnRequest" });
 
             //forums
-            endpointRouteBuilder.MapControllerRoute("ActiveDiscussions", $"{pattern}boards/activediscussions",
-                new { controller = "Boards", action = "ActiveDiscussions" });
+            endpointRouteBuilder.MapControllerRoute(name: "ActiveDiscussions",
+                pattern: $"{lang}/boards/activediscussions",
+                defaults: new { controller = "Boards", action = "ActiveDiscussions" });
 
-            endpointRouteBuilder.MapControllerRoute("ActiveDiscussionsPaged",
-                pattern + "boards/activediscussions/page/{pageNumber:int}",
-                new { controller = "Boards", action = "ActiveDiscussions" });
+            endpointRouteBuilder.MapControllerRoute(name: "ActiveDiscussionsPaged",
+                pattern: $"{lang}/boards/activediscussions/page/{{pageNumber:int}}",
+                defaults: new { controller = "Boards", action = "ActiveDiscussions" });
 
-            endpointRouteBuilder.MapControllerRoute("ActiveDiscussionsRSS", $"{pattern}boards/activediscussionsrss",
-                new { controller = "Boards", action = "ActiveDiscussionsRSS" });
+            //forums RSS (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "ActiveDiscussionsRSS",
+                pattern: $"boards/activediscussionsrss",
+                defaults: new { controller = "Boards", action = "ActiveDiscussionsRSS" });
 
-            endpointRouteBuilder.MapControllerRoute("PostEdit",
-                pattern + "boards/postedit/{id:min(0)}",
-                new { controller = "Boards", action = "PostEdit" });
+            endpointRouteBuilder.MapControllerRoute(name: "PostEdit",
+                pattern: $"{lang}/boards/postedit/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "PostEdit" });
 
-            endpointRouteBuilder.MapControllerRoute("PostDelete",
-                pattern + "boards/postdelete/{id:min(0)}",
-                new { controller = "Boards", action = "PostDelete" });
+            endpointRouteBuilder.MapControllerRoute(name: "PostDelete",
+                pattern: $"{lang}/boards/postdelete/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "PostDelete" });
 
-            endpointRouteBuilder.MapControllerRoute("PostCreate",
-                pattern + "boards/postcreate/{id:min(0)}",
-                new { controller = "Boards", action = "PostCreate" });
+            endpointRouteBuilder.MapControllerRoute(name: "PostCreate",
+                pattern: $"{lang}/boards/postcreate/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "PostCreate" });
 
-            endpointRouteBuilder.MapControllerRoute("PostCreateQuote",
-                pattern + "boards/postcreate/{id:min(0)}/{quote:min(0)}",
-                new { controller = "Boards", action = "PostCreate" });
+            endpointRouteBuilder.MapControllerRoute(name: "PostCreateQuote",
+                pattern: $"{lang}/boards/postcreate/{{id:min(0)}}/{{quote:min(0)}}",
+                defaults: new { controller = "Boards", action = "PostCreate" });
 
-            endpointRouteBuilder.MapControllerRoute("TopicEdit",
-                pattern + "boards/topicedit/{id:min(0)}",
-                new { controller = "Boards", action = "TopicEdit" });
+            endpointRouteBuilder.MapControllerRoute(name: "TopicEdit",
+                pattern: $"{lang}/boards/topicedit/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "TopicEdit" });
 
-            endpointRouteBuilder.MapControllerRoute("TopicDelete",
-                pattern + "boards/topicdelete/{id:min(0)}",
-                new { controller = "Boards", action = "TopicDelete" });
+            endpointRouteBuilder.MapControllerRoute(name: "TopicDelete",
+                pattern: $"{lang}/boards/topicdelete/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "TopicDelete" });
 
-            endpointRouteBuilder.MapControllerRoute("TopicCreate",
-                pattern + "boards/topiccreate/{id:min(0)}",
-                new { controller = "Boards", action = "TopicCreate" });
+            endpointRouteBuilder.MapControllerRoute(name: "TopicCreate",
+                pattern: $"{lang}/boards/topiccreate/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "TopicCreate" });
 
-            endpointRouteBuilder.MapControllerRoute("TopicMove",
-                pattern + "boards/topicmove/{id:min(0)}",
-                new { controller = "Boards", action = "TopicMove" });
+            endpointRouteBuilder.MapControllerRoute(name: "TopicMove",
+                pattern: $"{lang}/boards/topicmove/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "TopicMove" });
 
-            endpointRouteBuilder.MapControllerRoute("TopicWatch",
-                pattern + "boards/topicwatch/{id:min(0)}",
-                new { controller = "Boards", action = "TopicWatch" });
+            //topic watch (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "TopicWatch",
+                pattern: $"boards/topicwatch/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "TopicWatch" });
 
-            endpointRouteBuilder.MapControllerRoute("TopicSlug",
-                pattern + "boards/topic/{id:min(0)}/{slug?}",
-                new { controller = "Boards", action = "Topic" });
+            endpointRouteBuilder.MapControllerRoute(name: "TopicSlug",
+                pattern: $"{lang}/boards/topic/{{id:min(0)}}/{{slug?}}",
+                defaults: new { controller = "Boards", action = "Topic" });
 
-            endpointRouteBuilder.MapControllerRoute("TopicSlugPaged",
-                pattern + "boards/topic/{id:min(0)}/{slug?}/page/{pageNumber:int}",
-                new { controller = "Boards", action = "Topic" });
+            endpointRouteBuilder.MapControllerRoute(name: "TopicSlugPaged",
+                pattern: $"{lang}/boards/topic/{{id:min(0)}}/{{slug?}}/page/{{pageNumber:int}}",
+                defaults: new { controller = "Boards", action = "Topic" });
 
-            endpointRouteBuilder.MapControllerRoute("ForumWatch",
-                pattern + "boards/forumwatch/{id:min(0)}",
-                new { controller = "Boards", action = "ForumWatch" });
+            //forum watch (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "ForumWatch",
+                pattern: $"boards/forumwatch/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "ForumWatch" });
 
-            endpointRouteBuilder.MapControllerRoute("ForumRSS",
-                pattern + "boards/forumrss/{id:min(0)}",
-                new { controller = "Boards", action = "ForumRSS" });
+            //forums RSS (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "ForumRSS",
+                pattern: $"boards/forumrss/{{id:min(0)}}",
+                defaults: new { controller = "Boards", action = "ForumRSS" });
 
-            endpointRouteBuilder.MapControllerRoute("ForumSlug",
-                pattern + "boards/forum/{id:min(0)}/{slug?}",
-                new { controller = "Boards", action = "Forum" });
+            endpointRouteBuilder.MapControllerRoute(name: "ForumSlug",
+                pattern: $"{lang}/boards/forum/{{id:min(0)}}/{{slug?}}",
+                defaults: new { controller = "Boards", action = "Forum" });
 
-            endpointRouteBuilder.MapControllerRoute("ForumSlugPaged",
-                pattern + "boards/forum/{id:min(0)}/{slug?}/page/{pageNumber:int}",
-                new { controller = "Boards", action = "Forum" });
+            endpointRouteBuilder.MapControllerRoute(name: "ForumSlugPaged",
+                pattern: $"{lang}/boards/forum/{{id:min(0)}}/{{slug?}}/page/{{pageNumber:int}}",
+                defaults: new { controller = "Boards", action = "Forum" });
 
-            endpointRouteBuilder.MapControllerRoute("ForumGroupSlug",
-                pattern + "boards/forumgroup/{id:min(0)}/{slug?}",
-                new { controller = "Boards", action = "ForumGroup" });
+            endpointRouteBuilder.MapControllerRoute(name: "ForumGroupSlug",
+                pattern: $"{lang}/boards/forumgroup/{{id:min(0)}}/{{slug?}}",
+                defaults: new { controller = "Boards", action = "ForumGroup" });
 
-            endpointRouteBuilder.MapControllerRoute("Search", $"{pattern}boards/search",
-                new { controller = "Boards", action = "Search" });
+            endpointRouteBuilder.MapControllerRoute(name: "Search",
+                pattern: $"{lang}/boards/search",
+                defaults: new { controller = "Boards", action = "Search" });
 
             //private messages
-            endpointRouteBuilder.MapControllerRoute("PrivateMessages",
-                pattern + "privatemessages/{tab?}",
-                new { controller = "PrivateMessages", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "PrivateMessages",
+                pattern: $"{lang}/privatemessages/{{tab?}}",
+                defaults: new { controller = "PrivateMessages", action = "Index" });
 
-            endpointRouteBuilder.MapControllerRoute("PrivateMessagesPaged",
-                pattern + "privatemessages/{tab?}/page/{pageNumber:min(0)}",
-                new { controller = "PrivateMessages", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "PrivateMessagesPaged",
+                pattern: $"{lang}/privatemessages/{{tab?}}/page/{{pageNumber:min(0)}}",
+                defaults: new { controller = "PrivateMessages", action = "Index" });
 
-            endpointRouteBuilder.MapControllerRoute("PrivateMessagesInbox", $"{pattern}inboxupdate",
-                new { controller = "PrivateMessages", action = "InboxUpdate" });
+            endpointRouteBuilder.MapControllerRoute(name: "PrivateMessagesInbox",
+                pattern: $"{lang}/inboxupdate",
+                defaults: new { controller = "PrivateMessages", action = "InboxUpdate" });
 
-            endpointRouteBuilder.MapControllerRoute("PrivateMessagesSent", $"{pattern}sentupdate",
-                new { controller = "PrivateMessages", action = "SentUpdate" });
+            endpointRouteBuilder.MapControllerRoute(name: "PrivateMessagesSent",
+                pattern: $"{lang}/sentupdate",
+                defaults: new { controller = "PrivateMessages", action = "SentUpdate" });
 
-            endpointRouteBuilder.MapControllerRoute("SendPM",
-                pattern + "sendpm/{toCustomerId:min(0)}",
-                new { controller = "PrivateMessages", action = "SendPM" });
+            endpointRouteBuilder.MapControllerRoute(name: "SendPM",
+                pattern: $"{lang}/sendpm/{{toCustomerId:min(0)}}",
+                defaults: new { controller = "PrivateMessages", action = "SendPM" });
 
-            endpointRouteBuilder.MapControllerRoute("SendPMReply",
-                pattern + "sendpm/{toCustomerId:min(0)}/{replyToMessageId:min(0)}",
-                new { controller = "PrivateMessages", action = "SendPM" });
+            endpointRouteBuilder.MapControllerRoute(name: "SendPMReply",
+                pattern: $"{lang}/sendpm/{{toCustomerId:min(0)}}/{{replyToMessageId:min(0)}}",
+                defaults: new { controller = "PrivateMessages", action = "SendPM" });
 
-            endpointRouteBuilder.MapControllerRoute("ViewPM",
-                pattern + "viewpm/{privateMessageId:min(0)}",
-                new { controller = "PrivateMessages", action = "ViewPM" });
+            endpointRouteBuilder.MapControllerRoute(name: "ViewPM",
+                pattern: $"{lang}/viewpm/{{privateMessageId:min(0)}}",
+                defaults: new { controller = "PrivateMessages", action = "ViewPM" });
 
-            endpointRouteBuilder.MapControllerRoute("DeletePM",
-                pattern + "deletepm/{privateMessageId:min(0)}",
-                new { controller = "PrivateMessages", action = "DeletePM" });
+            endpointRouteBuilder.MapControllerRoute(name: "DeletePM",
+                pattern: $"{lang}/deletepm/{{privateMessageId:min(0)}}",
+                defaults: new { controller = "PrivateMessages", action = "DeletePM" });
 
             //activate newsletters
-            endpointRouteBuilder.MapControllerRoute("NewsletterActivation",
-                pattern + "newsletter/subscriptionactivation/{token:guid}/{active}",
-                new { controller = "Newsletter", action = "SubscriptionActivation" });
+            endpointRouteBuilder.MapControllerRoute(name: "NewsletterActivation",
+                pattern: $"{lang}/newsletter/subscriptionactivation/{{token:guid}}/{{active}}",
+                defaults: new { controller = "Newsletter", action = "SubscriptionActivation" });
 
-            //robots.txt
-            endpointRouteBuilder.MapControllerRoute("robots.txt", $"{pattern}robots.txt",
-                new { controller = "Common", action = "RobotsTextFile" });
+            //robots.txt (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "robots.txt",
+                pattern: $"robots.txt",
+                defaults: new { controller = "Common", action = "RobotsTextFile" });
 
-            //sitemap (XML)
-            endpointRouteBuilder.MapControllerRoute("sitemap.xml", $"{pattern}sitemap.xml",
-                new { controller = "Common", action = "SitemapXml" });
+            //sitemap
+            endpointRouteBuilder.MapControllerRoute(name: "Sitemap",
+                pattern: $"{lang}/sitemap",
+                defaults: new { controller = "Common", action = "Sitemap" });
 
-            endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml",
-                pattern + "sitemap-{Id:min(0)}.xml",
-                new { controller = "Common", action = "SitemapXml" });
-            
+            //sitemap.xml (file result)
+            endpointRouteBuilder.MapControllerRoute(name: "sitemap.xml",
+                pattern: $"sitemap.xml",
+                defaults: new { controller = "Common", action = "SitemapXml" });
+
+            endpointRouteBuilder.MapControllerRoute(name: "sitemap-indexed.xml",
+                pattern: $"sitemap-{{Id:min(0)}}.xml",
+                defaults: new { controller = "Common", action = "SitemapXml" });
+
             //store closed
-            endpointRouteBuilder.MapControllerRoute("StoreClosed", $"{pattern}storeclosed",
-                new { controller = "Common", action = "StoreClosed" });
+            endpointRouteBuilder.MapControllerRoute(name: "StoreClosed",
+                pattern: $"{lang}/storeclosed",
+                defaults: new { controller = "Common", action = "StoreClosed" });
 
             //install
-            endpointRouteBuilder.MapControllerRoute("Installation", $"{pattern}install",
-                new { controller = "Install", action = "Index" });
+            endpointRouteBuilder.MapControllerRoute(name: "Installation",
+                pattern: $"{NopInstallationDefaults.InstallPath}",
+                defaults: new { controller = "Install", action = "Index" });
 
             //error page
-            endpointRouteBuilder.MapControllerRoute("Error", "error",
-                new { controller = "Common", action = "Error" });
+            endpointRouteBuilder.MapControllerRoute(name: "Error",
+                pattern: $"error",
+                defaults: new { controller = "Common", action = "Error" });
 
             //page not found
-            endpointRouteBuilder.MapControllerRoute("PageNotFound", $"{pattern}page-not-found",
-                new { controller = "Common", action = "PageNotFound" });
+            endpointRouteBuilder.MapControllerRoute(name: "PageNotFound",
+                pattern: $"{lang}/page-not-found",
+                defaults: new { controller = "Common", action = "PageNotFound" });
         }
 
         #endregion

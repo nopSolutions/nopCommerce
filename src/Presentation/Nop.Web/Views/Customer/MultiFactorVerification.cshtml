@@ -1,0 +1,19 @@
+﻿@model MultiFactorAuthenticationProviderModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.MultiFactorVerification").Text);
+}
+
+<div class="page login-page">
+    <div class="page-title">
+        <h1>@T("Account.Login.Welcome")</h1>
+    </div>
+    <div class="page-body">
+            <div class="provider-verification">
+                @(await Component.InvokeAsync(Model.ViewComponentName)) 
+            </div>
+    </div>
+</div>

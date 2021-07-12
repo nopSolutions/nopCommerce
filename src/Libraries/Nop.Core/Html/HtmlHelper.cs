@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Nop.Core.Html
@@ -10,14 +9,6 @@ namespace Nop.Core.Html
     /// </summary>
     public partial class HtmlHelper
     {
-        #region Fields
-
-        private static readonly Regex _paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
-        private static readonly Regex _paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
-        //private static Regex ampRegex = new Regex("&(?!(?:#[0-9]{2,4};|[a-z0-9]+;))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        #endregion
-
         #region Utilities
 
         private static string EnsureOnlyAllowedHtml(string text)
@@ -30,7 +21,7 @@ namespace Nop.Core.Html
             var m = Regex.Matches(text, "<.*?>", RegexOptions.IgnoreCase);
             for (var i = m.Count - 1; i >= 0; i--)
             {
-                var tag = text.Substring(m[i].Index + 1, m[i].Length - 1).Trim().ToLower();
+                var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
 
                 if (!IsValidTag(tag, allowedTags))
                 {
@@ -44,19 +35,25 @@ namespace Nop.Core.Html
         private static bool IsValidTag(string tag, string tags)
         {
             var allowedTags = tags.Split(',');
-            if (tag.IndexOf("javascript", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
-            if (tag.IndexOf("vbscript", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
-            if (tag.IndexOf("onclick", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
+            if (tag.Contains("javascript", StringComparison.InvariantCultureIgnoreCase))
+                return false;
+            if (tag.Contains("vbscript", StringComparison.InvariantCultureIgnoreCase))
+                return false;
+            if (tag.Contains("onclick", StringComparison.InvariantCultureIgnoreCase))
+                return false;
 
             var endchars = new[] { ' ', '>', '/', '\t' };
 
             var pos = tag.IndexOfAny(endchars, 1);
-            if (pos > 0) tag = tag.Substring(0, pos);
-            if (tag[0] == '/') tag = tag.Substring(1);
+            if (pos > 0)
+                tag = tag[0..pos];
+            if (tag[0] == '/')
+                tag = tag[1..^0];
 
             foreach (var aTag in allowedTags)
             {
-                if (tag == aTag) return true;
+                if (tag == aTag)
+                    return true;
             }
 
             return false;
@@ -78,7 +75,7 @@ namespace Nop.Core.Html
         /// <param name="addNoFollowTag">A value indicating whether to add "noFollow" tag</param>
         /// <returns>Formatted text</returns>
         public static string FormatText(string text, bool stripTags,
-            bool convertPlainTextToHtml, bool allowHtml, 
+            bool convertPlainTextToHtml, bool allowHtml,
             bool allowBBCode, bool resolveLinks, bool addNoFollowTag)
         {
             if (string.IsNullOrEmpty(text))
@@ -92,7 +89,7 @@ namespace Nop.Core.Html
                 }
 
                 text = allowHtml ? EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
-                
+
                 if (convertPlainTextToHtml)
                 {
                     text = ConvertPlainTextToHtml(text);
@@ -120,7 +117,7 @@ namespace Nop.Core.Html
 
             return text;
         }
-        
+
         /// <summary>
         /// Strips tags
         /// </summary>
@@ -183,7 +180,7 @@ namespace Nop.Core.Html
         {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
-            
+
             if (decode)
                 text = WebUtility.HtmlDecode(text);
 
@@ -197,34 +194,6 @@ namespace Nop.Core.Html
                 text = ReplaceAnchorTags(text);
 
             return text;
-        }
-
-        /// <summary>
-        /// Converts text to paragraph
-        /// </summary>
-        /// <param name="text">Text</param>
-        /// <returns>Formatted text</returns>
-        public static string ConvertPlainTextToParagraph(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-
-            text = _paragraphStartRegex.Replace(text, string.Empty);
-            text = _paragraphEndRegex.Replace(text, "\n");
-            text = text.Replace("\r\n", "\n").Replace("\r", "\n");
-            text = text + "\n\n";
-            text = text.Replace("\n\n", "\n");
-            var strArray = text.Split('\n');
-            var builder = new StringBuilder();
-            foreach (var str in strArray)
-            {
-                if (str != null && str.Trim().Length > 0)
-                {
-                    builder.AppendFormat("<p>{0}</p>\n", str);
-                }
-            }
-
-            return builder.ToString();
         }
 
         #endregion

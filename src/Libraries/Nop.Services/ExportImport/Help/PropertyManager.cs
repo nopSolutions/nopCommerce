@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using OfficeOpenXml;
@@ -45,26 +46,17 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Add new property
-        /// </summary>
-        /// <param name="property">Property to add</param>
-        public void AddProperty(PropertyByName<T> property)
-        {
-            if (_properties.ContainsKey(property.PropertyName))
-                return;
-            
-            _properties.Add(property.PropertyName, property);
-        }
-
-        /// <summary>
         /// Export objects to XLSX
         /// </summary>
         /// <typeparam name="T">Type of object</typeparam>
         /// <param name="itemsToExport">The objects to export</param>
-        /// <returns></returns>
-        public virtual byte[] ExportToXlsx(IEnumerable<T> itemsToExport)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the 
+        /// </returns>
+        public virtual async Task<byte[]> ExportToXlsxAsync(IEnumerable<T> itemsToExport)
         {
-            using var stream = new MemoryStream();
+            await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
             using (var xlPackage = new ExcelPackage(stream))
             {
@@ -83,7 +75,7 @@ namespace Nop.Services.ExportImport.Help
                 foreach (var items in itemsToExport)
                 {
                     CurrentObject = items;
-                    WriteToXlsx(worksheet, row++, fWorksheet: fWorksheet);
+                    await WriteToXlsxAsync(worksheet, row++, fWorksheet: fWorksheet);
                 }
 
                 xlPackage.Save();
@@ -112,15 +104,6 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Access object by property name
-        /// </summary>
-        /// <param name="propertyName">Property name</param>
-        /// <returns>Property value</returns>
-        public object this[string propertyName] => _properties.ContainsKey(propertyName) && CurrentObject != null
-            ? _properties[propertyName].GetProperty(CurrentObject)
-            : null;
-
-        /// <summary>
         /// Remove object by property name
         /// </summary>
         /// <param name="propertyName">Property name</param>
@@ -136,7 +119,8 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="row">Row index</param>
         /// <param name="cellOffset">Cell offset</param>
         /// <param name="fWorksheet">Filters worksheet</param>
-        public virtual void WriteToXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0, ExcelWorksheet fWorksheet = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task WriteToXlsxAsync(ExcelWorksheet worksheet, int row, int cellOffset = 0, ExcelWorksheet fWorksheet = null)
         {
             if (CurrentObject == null)
                 return;
@@ -153,7 +137,7 @@ namespace Nop.Services.ExportImport.Help
                         continue;
                     }
 
-                    cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
+                    cell.Value = prop.GetItemText(await prop.GetProperty(CurrentObject));
 
                     if (!UseDropdownLists)
                         continue;
@@ -180,7 +164,7 @@ namespace Nop.Services.ExportImport.Help
                 }
                 else
                 {
-                    cell.Value = prop.GetProperty(CurrentObject);
+                    cell.Value = await prop.GetProperty(CurrentObject);
                 }
             }
         }

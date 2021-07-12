@@ -1,4 +1,5 @@
-﻿using Nop.Core.Caching;
+﻿using System.Collections.Generic;
+using Nop.Core.Caching;
 
 namespace Nop.Services.Seo
 {
@@ -23,6 +24,40 @@ namespace Nop.Services.Seo
         /// that's why we limit it to 200</remarks>
         public static int SearchEngineNameLength => 200;
 
+        /// <summary>
+        /// Gets a default list of slugs (sename) reserved for some other needs
+        /// </summary>
+        public static List<string> ReservedUrlRecordSlugs => new List<string>
+        {
+            //routes that redirected customers to the specific actions
+            "admin",
+            "blog",
+            "boards",
+            "cart",
+            "checkout",
+            "clearcomparelist",
+            "compareproducts",
+            "contactus",
+            "emailwishlist",
+            "install",
+            "login",
+            "logout",
+            "multi-factor-verification",
+            "newproducts",
+            "news",
+            "onepagecheckout",
+            "page-not-found",
+            "passwordrecovery",
+            "privatemessages",
+            "profile",
+            "recentlyviewedproducts",
+            "register",
+            "search",
+            "sitemap",
+            "storeclosed",
+            "wishlist",
+        };
+
         #region Sitemap
 
         /// <summary>
@@ -39,13 +74,6 @@ namespace Nop.Services.Seo
 
         #region Caching defaults
 
-        #region URL records
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey UrlRecordAllCacheKey => new CacheKey("Nop.urlrecord.all");
-
         /// <summary>
         /// Gets a key for caching
         /// </summary>
@@ -54,20 +82,7 @@ namespace Nop.Services.Seo
         /// {1} : entity name
         /// {2} : language ID
         /// </remarks>
-        public static CacheKey UrlRecordActiveByIdNameLanguageCacheKey => new CacheKey("Nop.urlrecord.active.id-name-language-{0}-{1}-{2}");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : IDs hash
-        /// </remarks>
-        public static CacheKey UrlRecordByIdsCacheKey => new CacheKey("Nop.urlrecord.byids-{0}", UrlRecordByIdsPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string UrlRecordByIdsPrefixCacheKey => "Nop.urlrecord.byids";
+        public static CacheKey UrlRecordCacheKey => new CacheKey("Nop.urlrecord.{0}-{1}-{2}");
 
         /// <summary>
         /// Gets a key for caching
@@ -75,9 +90,7 @@ namespace Nop.Services.Seo
         /// <remarks>
         /// {0} : slug
         /// </remarks>
-        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.active.slug-{0}");
-
-        #endregion
+        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.byslug.{0}");
 
         #endregion
     }

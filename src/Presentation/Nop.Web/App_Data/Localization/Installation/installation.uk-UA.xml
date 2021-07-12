@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Українська" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email адміністратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Введіть Email адміністратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Пароль адміністратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Введіть пароль адміністратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Системний користувач "{0}" не має дозволу на зміну папки "{1}". Налаштуйте ці дозволи.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Системний користувач "{0}" не має дозволу на запис файлу "{1}". Налаштуйте ці дозволи.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Підтвердіть пароль</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Підтвердження пароля</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Рядок підключення</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Необхідно вказати рядок SQL підключення</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Невірний формат рядка SQL підключення</Value>
+  </LocaleResource>
+  <LocaleResource Name="Country">
+    <Value>Країна</Value>
+  </LocaleResource>
+  <LocaleResource Name="CountrySelect">
+    <Value>Виберіть країну...</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Створити базу даних, якщо її не існує</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Створити демонстраційні дані</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Вказати параметри сортування (collation)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>База даних</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Помилка під час створення бази даних: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Інформація про базу даних</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Назва бази даних</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>База даних не існує або у вас немає прав для підключення до неї</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Виберіть постачальника даних</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Якщо вам потрібна інформація про налаштування та використання nopCommerce, відвідайте</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>розділ документації на сайті nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Зразок</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Встановити</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Встановлення nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Використовувати інтегровану автентифікацію Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Паролі не співпадають</Value>
+  </LocaleResource>
+  <LocaleResource Name="PostgreSQL">
+    <Value>PostgreSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Вказати рядок підключення (raw)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Перезапустити встановлення</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Натисніть, щоб перезапустити процес встановлення (очистити всі кешовані значення)</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Перезавантаження...</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Ім'я сервера</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Ім'я сервера обов'язкове</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Помилка встановлення: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPassword">
+    <Value>Пароль облікового запису SQL сервера</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>Пароль облікового запису SQL обов'язковий</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
+    <Value>Ім'я облікового запису SQL сервера</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>Необхідно вказати ім'я користувача SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Інформація про магазин</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Встановлення nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Для завершення майстра встановлення ви повинні знати рядок підключення до вашої бази даних. Будь ласка, зв'яжіться з вашим провайдером, якщо це необхідно. Якщо ви встановлюєте на локальному комп'ютері або сервері, ви можете дізнатися його у вашого системного адміністратора.</Value>
+  </LocaleResource>
+</Language>

@@ -8,7 +8,7 @@
         <strong>@T("Forum.ActiveDiscussions")</strong>
     </div>
     @{
-        var pager = Html.Pager(new PagerModel
+        var pager = await Html.PagerAsync(new PagerModel
         {
             PageSize = Model.TopicPageSize,
             TotalRecords = Model.TopicTotalRecords,
@@ -19,7 +19,7 @@
             RouteValues = new ForumActiveDiscussionsRouteValues()
         });
     }
-    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
     {
         <div class="pager upper">
             @pager
@@ -73,7 +73,7 @@
                                     @if (topic.NumPosts > Model.PostsPageSize)
                                     {
                                         <div class="topic-pager">
-                                            @Html.ForumTopicSmallPager(topic)
+                                            @await Html.ForumTopicSmallPagerAsync(topic)
                                         </div>
                                     }
                                     <div class="topic-starter">
@@ -113,7 +113,7 @@
             </div>
         }
     </div>
-    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
     {
         <div class="pager lower">
             @pager

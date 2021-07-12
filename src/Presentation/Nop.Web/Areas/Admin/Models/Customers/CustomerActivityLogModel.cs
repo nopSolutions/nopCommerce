@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer activity log model
     /// </summary>
-    public partial class CustomerActivityLogModel : BaseNopEntityModel
+    public partial record CustomerActivityLogModel : BaseNopEntityModel
     {
         #region Properties
 

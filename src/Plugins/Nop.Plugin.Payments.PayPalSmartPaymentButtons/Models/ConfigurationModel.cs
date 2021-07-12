@@ -9,7 +9,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models
     /// <summary>
     /// Represents configuration model
     /// </summary>
-    public class ConfigurationModel : BaseNopModel
+    public record ConfigurationModel : BaseNopModel
     {
         #region Ctor
 
@@ -30,7 +30,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models
 
         [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey")]
         [DataType(DataType.Password)]
-        [NoTrim]
         public string SecretKey { get; set; }
         public bool SecretKey_OverrideForStore { get; set; }
 

@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -12,13 +13,17 @@ namespace Nop.Services.Catalog
         /// Gets a "recently viewed products" list
         /// </summary>
         /// <param name="number">Number of products to load</param>
-        /// <returns>"recently viewed products" list</returns>
-        IList<Product> GetRecentlyViewedProducts(int number);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the "recently viewed products" list
+        /// </returns>
+        Task<IList<Product>> GetRecentlyViewedProductsAsync(int number);
 
         /// <summary>
         /// Adds a product to a recently viewed products list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        void AddProductToRecentlyViewedList(int productId);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task AddProductToRecentlyViewedListAsync(int productId);
     }
 }

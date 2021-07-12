@@ -33,6 +33,8 @@ namespace Nop.Web.Framework.Infrastructure
         {
             //configure authentication
             application.UseNopAuthentication();
+
+            application.UseAuthorization();
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 @model CatalogSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowProductViewModeChanging_OverrideForStore" asp-input="AllowProductViewModeChanging" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowProductViewModeChanging" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="AllowProductViewModeChanging"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="DefaultViewMode_OverrideForStore" asp-input="DefaultViewMode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="DefaultViewMode" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="DefaultViewMode"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowProductsFromSubcategories_OverrideForStore" asp-input="ShowProductsFromSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowProductsFromSubcategories" />
@@ -31,7 +31,7 @@
             <span asp-validation-for="ShowProductsFromSubcategories"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowCategoryProductNumber_OverrideForStore" asp-input="ShowCategoryProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowCategoryProductNumber" />
@@ -42,7 +42,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowCategoryProductNumber">
-        <div class="form-group" id="pnlShowCategoryProductNumberIncludingSubcategories">
+        <div class="form-group row" id="pnlShowCategoryProductNumberIncludingSubcategories">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ShowCategoryProductNumberIncludingSubcategories_OverrideForStore" asp-input="ShowCategoryProductNumberIncludingSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ShowCategoryProductNumberIncludingSubcategories" />
@@ -53,7 +53,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="CategoryBreadcrumbEnabled_OverrideForStore" asp-input="CategoryBreadcrumbEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="CategoryBreadcrumbEnabled" />
@@ -63,7 +63,7 @@
             <span asp-validation-for="CategoryBreadcrumbEnabled"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ManufacturersBlockItemsToDisplay_OverrideForStore" asp-input="ManufacturersBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ManufacturersBlockItemsToDisplay" />
@@ -71,6 +71,36 @@
         <div class="col-md-9">
             <nop-editor asp-for="ManufacturersBlockItemsToDisplay" />
             <span asp-validation-for="ManufacturersBlockItemsToDisplay"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="UseAjaxCatalogProductsLoading_OverrideForStore" asp-input="UseAjaxCatalogProductsLoading" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="UseAjaxCatalogProductsLoading" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="UseAjaxCatalogProductsLoading" />
+            <span asp-validation-for="UseAjaxCatalogProductsLoading"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnableManufacturerFiltering_OverrideForStore" asp-input="EnableManufacturerFiltering" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnableManufacturerFiltering" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnableManufacturerFiltering" />
+            <span asp-validation-for="EnableManufacturerFiltering"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EnablePriceRangeFiltering_OverrideForStore" asp-input="EnablePriceRangeFiltering" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EnablePriceRangeFiltering" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EnablePriceRangeFiltering" />
+            <span asp-validation-for="EnablePriceRangeFiltering"></span>
         </div>
     </div>
 </div>

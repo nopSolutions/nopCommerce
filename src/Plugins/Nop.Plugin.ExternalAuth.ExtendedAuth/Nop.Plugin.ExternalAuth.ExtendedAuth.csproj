@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net5.0</TargetFramework>
 		<Copyright>Sangeet Shah</Copyright>
 		<Company>Sangeet Shah</Company>
 		<Authors>Sangeet Shah</Authors>

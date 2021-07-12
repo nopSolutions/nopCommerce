@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 
@@ -14,39 +15,49 @@ namespace Nop.Services.Messages
         /// Inserts a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        void InsertQueuedEmail(QueuedEmail queuedEmail);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task InsertQueuedEmailAsync(QueuedEmail queuedEmail);
 
         /// <summary>
         /// Updates a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        void UpdateQueuedEmail(QueuedEmail queuedEmail);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateQueuedEmailAsync(QueuedEmail queuedEmail);
 
         /// <summary>
         /// Deleted a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        void DeleteQueuedEmail(QueuedEmail queuedEmail);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteQueuedEmailAsync(QueuedEmail queuedEmail);
 
         /// <summary>
         /// Deleted a queued emails
         /// </summary>
         /// <param name="queuedEmails">Queued emails</param>
-        void DeleteQueuedEmails(IList<QueuedEmail> queuedEmails);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteQueuedEmailsAsync(IList<QueuedEmail> queuedEmails);
 
         /// <summary>
         /// Gets a queued email by identifier
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>
-        /// <returns>Queued email</returns>
-        QueuedEmail GetQueuedEmailById(int queuedEmailId);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued email
+        /// </returns>
+        Task<QueuedEmail> GetQueuedEmailByIdAsync(int queuedEmailId);
 
         /// <summary>
         /// Get queued emails by identifiers
         /// </summary>
         /// <param name="queuedEmailIds">queued email identifiers</param>
-        /// <returns>Queued emails</returns>
-        IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued emails
+        /// </returns>
+        Task<IList<QueuedEmail>> GetQueuedEmailsByIdsAsync(int[] queuedEmailIds);
 
         /// <summary>
         /// Search queued emails
@@ -61,8 +72,11 @@ namespace Nop.Services.Messages
         /// <param name="loadNewest">A value indicating whether we should sort queued email descending; otherwise, ascending.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Queued emails</returns>
-        IPagedList<QueuedEmail> SearchEmails(string fromEmail,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queued emails
+        /// </returns>
+        Task<IPagedList<QueuedEmail>> SearchEmailsAsync(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue);
@@ -72,12 +86,16 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
-        /// <returns>Number of deleted emails</returns>
-        int DeleteAlreadySentEmails(DateTime? createdFromUtc, DateTime? createdToUtc);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of deleted emails
+        /// </returns>
+        Task<int> DeleteAlreadySentEmailsAsync(DateTime? createdFromUtc, DateTime? createdToUtc);
 
         /// <summary>
         /// Delete all queued emails
         /// </summary>
-        void DeleteAllEmails();
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteAllEmailsAsync();
     }
 }

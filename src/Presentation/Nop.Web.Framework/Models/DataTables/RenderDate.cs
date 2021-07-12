@@ -10,7 +10,8 @@
         /// <summary>
         /// Default date format
         /// </summary>
-        private string DEFAULT_DATE_FORMAT = "MM/DD/YYYY HH:mm:ss";
+        /// <remarks>For example english culture: [MM/DD/YYYY h:mm:ss PM/AM] [09/04/1986 8:30:25 PM]</remarks>
+        private string DEFAULT_DATE_FORMAT = "L LTS";
 
         #endregion
 

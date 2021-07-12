@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public partial class LogoModel : BaseNopModel
+    public partial record LogoModel : BaseNopModel
     {
         public string StoreName { get; set; }
 

@@ -1,7 +1,7 @@
 @model TaxSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeIsTaxable_OverrideForStore" asp-input="PaymentMethodAdditionalFeeIsTaxable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="PaymentMethodAdditionalFeeIsTaxable" />
@@ -12,7 +12,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="PaymentMethodAdditionalFeeIsTaxable">
-        <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
+        <div class="form-group row" id="pnlPaymentMethodAdditionalFeeIncludesTax">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeIncludesTax_OverrideForStore" asp-input="PaymentMethodAdditionalFeeIncludesTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="PaymentMethodAdditionalFeeIncludesTax" />
@@ -22,7 +22,7 @@
                 <span asp-validation-for="PaymentMethodAdditionalFeeIncludesTax"></span>
             </div>
         </div>
-        <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
+        <div class="form-group row" id="pnlPaymentMethodAdditionalFeeTaxClass">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeTaxClassId_OverrideForStore" asp-input="PaymentMethodAdditionalFeeTaxClassId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="PaymentMethodAdditionalFeeTaxClassId" />
@@ -44,11 +44,11 @@
 
     function togglePayment() {
         if ($('#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
-            $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
-            $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').showElement();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').showElement();
         } else {
-            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
-            $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hideElement();
+            $('#pnlPaymentMethodAdditionalFeeTaxClass').hideElement();
         }
     }
 </script>

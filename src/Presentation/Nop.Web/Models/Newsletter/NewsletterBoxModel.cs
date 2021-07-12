@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Newsletter
 {
-    public partial class NewsletterBoxModel : BaseNopModel
+    public partial record NewsletterBoxModel : BaseNopModel
     {
         [DataType(DataType.EmailAddress)]
         public string NewsletterEmail { get; set; }

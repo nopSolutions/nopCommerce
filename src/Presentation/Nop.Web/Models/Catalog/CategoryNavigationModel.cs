@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CategoryNavigationModel : BaseNopModel
+    public partial record CategoryNavigationModel : BaseNopModel
     {
         public CategoryNavigationModel()
         {
@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public class CategoryLineModel : BaseNopModel
+        public record CategoryLineModel : BaseNopModel
         {
             public int CurrentCategoryId { get; set; }
             public CategorySimpleModel Category { get; set; }

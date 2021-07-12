@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
-    public partial class SystemInfoModel : BaseNopModel
+    public partial record SystemInfoModel : BaseNopModel
     {
         public SystemInfoModel()
         {
@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public string AspNetInfo { get; set; }
 
         [NopResourceDisplayName("Admin.System.SystemInfo.IsFullTrust")]
-        public string IsFullTrust { get; set; }
+        public bool IsFullTrust { get; set; }
 
         [NopResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
         public string NopVersion { get; set; }
@@ -49,28 +49,16 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.RedisEnabled")]
-        public bool RedisEnabled { get; set; }
-
-        [NopResourceDisplayName("Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys")]
-        public bool UseRedisToStoreDataProtectionKeys { get; set; }
-
-        [NopResourceDisplayName("Admin.System.SystemInfo.UseRedisForCaching")]
-        public bool UseRedisForCaching { get; set; }
-
-        [NopResourceDisplayName("Admin.System.SystemInfo.UseRedisToStorePluginsInfo")]
-        public bool UseRedisToStorePluginsInfo { get; set; }
-
         [NopResourceDisplayName("Admin.System.SystemInfo.AzureBlobStorageEnabled")]
         public bool AzureBlobStorageEnabled { get; set; }
 
-        public partial class HeaderModel : BaseNopModel
+        public partial record HeaderModel : BaseNopModel
         {
             public string Name { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class LoadedAssembly : BaseNopModel
+        public partial record LoadedAssembly : BaseNopModel
         {
             public string FullName { get; set; }
             public string Location { get; set; }

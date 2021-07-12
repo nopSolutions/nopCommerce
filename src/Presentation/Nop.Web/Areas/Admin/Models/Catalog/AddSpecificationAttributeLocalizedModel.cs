@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents an add specification attribute localized model
     /// </summary>
-    public partial class AddSpecificationAttributeLocalizedModel : ILocalizedLocaleModel
+    public partial record AddSpecificationAttributeLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

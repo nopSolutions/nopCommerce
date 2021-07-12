@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Seo;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Seo.Caching
 {
@@ -12,18 +13,11 @@ namespace Nop.Services.Seo.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(UrlRecord entity)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task ClearCacheAsync(UrlRecord entity)
         {
-            Remove(NopSeoDefaults.UrlRecordAllCacheKey);
-
-            var cacheKey = _cacheKeyService.PrepareKey(NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey,
-                entity.EntityId, entity.EntityName, entity.LanguageId);
-            Remove(cacheKey);
-
-            RemoveByPrefix(NopSeoDefaults.UrlRecordByIdsPrefixCacheKey);
-
-            cacheKey = _cacheKeyService.PrepareKey(NopSeoDefaults.UrlRecordBySlugCacheKey, entity.Slug);
-            Remove(cacheKey);
+            await RemoveAsync(NopSeoDefaults.UrlRecordCacheKey, entity.EntityId, entity.EntityName, entity.LanguageId);
+            await RemoveAsync(NopSeoDefaults.UrlRecordBySlugCacheKey, entity.Slug);
         }
     }
 }

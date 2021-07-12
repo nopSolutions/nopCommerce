@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents an upload license model
     /// </summary>
-    public partial class UploadLicenseModel : BaseNopModel
+    public partial record UploadLicenseModel : BaseNopModel
     {
         #region Properties
 

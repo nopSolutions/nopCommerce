@@ -5,7 +5,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class OrderDetailsModel : BaseNopEntityModel
+    public partial record OrderDetailsModel : BaseNopEntityModel
     {
         public OrderDetailsModel()
         {
@@ -82,11 +82,12 @@ namespace Nop.Web.Models.Order
 
         #region Nested Classes
 
-        public partial class OrderItemModel : BaseNopEntityModel
+        public partial record OrderItemModel : BaseNopEntityModel
         {
             public Guid OrderItemGuid { get; set; }
             public string Sku { get; set; }
             public int ProductId { get; set; }
+            public string ProductPictureUrl { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public string UnitPrice { get; set; }
@@ -96,32 +97,33 @@ namespace Nop.Web.Models.Order
             public string RentalInfo { get; set; }
 
             public string VendorName { get; set; }
+            public string VendorLogoPictureUrl { get; set; }
 
             //downloadable product properties
             public int DownloadId { get; set; }
             public int LicenseId { get; set; }
         }
 
-        public partial class TaxRate : BaseNopModel
+        public partial record TaxRate : BaseNopModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseNopModel
+        public partial record GiftCard : BaseNopModel
         {
             public string CouponCode { get; set; }
             public string Amount { get; set; }
         }
 
-        public partial class OrderNote : BaseNopEntityModel
+        public partial record OrderNote : BaseNopEntityModel
         {
             public bool HasDownload { get; set; }
             public string Note { get; set; }
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class ShipmentBriefModel : BaseNopEntityModel
+        public partial record ShipmentBriefModel : BaseNopEntityModel
         {
             public string TrackingNumber { get; set; }
             public DateTime? ShippedDate { get; set; }

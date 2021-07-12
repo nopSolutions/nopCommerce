@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class PopularProductTagsModel : BaseNopModel
+    public partial record PopularProductTagsModel : BaseNopModel
     {
         public PopularProductTagsModel()
         {

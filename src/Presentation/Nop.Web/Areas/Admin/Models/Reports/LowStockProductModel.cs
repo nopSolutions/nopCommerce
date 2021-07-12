@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
     /// <summary>
     /// Represents a low stock product model
     /// </summary>
-    public partial class LowStockProductModel : BaseNopEntityModel
+    public partial record LowStockProductModel : BaseNopEntityModel
     {
         #region Properties
 

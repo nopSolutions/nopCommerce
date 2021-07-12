@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product review and review type mapping model
     /// </summary>
-    public class ProductReviewReviewTypeMappingModel : BaseNopEntityModel
+    public record ProductReviewReviewTypeMappingModel : BaseNopEntityModel
     {
         #region Properties
 

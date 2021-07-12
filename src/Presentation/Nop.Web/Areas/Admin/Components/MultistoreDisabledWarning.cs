@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Stores;
@@ -21,7 +22,8 @@ namespace Nop.Web.Areas.Admin.Components
             _storeService = storeService;
         }
 
-        public IViewComponentResult Invoke()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync()
         {
 
             //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
@@ -31,10 +33,10 @@ namespace Nop.Web.Areas.Admin.Components
             if (!enabled)
             {
                 //overridden settings
-                var stores = _storeService.GetAllStores();
+                var stores = await _storeService.GetAllStoresAsync();
                 foreach (var store in stores)
                 {
-                    var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                    var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(store.Id);
                     enabled = catalogSettings.IgnoreStoreLimitations;
 
                     if (enabled)

@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a customer settings model
     /// </summary>
-    public partial class CustomerSettingsModel : BaseNopModel, ISettingsModel
+    public partial record CustomerSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Properties
 
@@ -119,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool StoreIpAddresses { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice")]
-        public bool EnteringEmailTwice { get; set; }
+        public bool EnteringEmailTwice { get; set; }        
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
         public bool GenderEnabled { get; set; }
@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool FaxRequired { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled")]
-        public bool AcceptPrivacyPolicyEnabled { get; set; }        
+        public bool AcceptPrivacyPolicyEnabled { get; set; }
 
         #endregion
     }

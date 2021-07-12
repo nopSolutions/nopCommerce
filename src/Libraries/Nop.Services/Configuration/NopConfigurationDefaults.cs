@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Configuration;
 
 namespace Nop.Services.Configuration
 {
@@ -12,18 +13,13 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static CacheKey SettingsAllAsDictionaryCacheKey => new CacheKey("Nop.setting.all.as.dictionary", SettingsPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey SettingsAllCacheKey => new CacheKey("Nop.setting.all", SettingsPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string SettingsPrefixCacheKey => "Nop.setting.";
+        public static CacheKey SettingsAllAsDictionaryCacheKey => new CacheKey("Nop.setting.all.dictionary.", NopEntityCacheDefaults<Setting>.Prefix);
 
         #endregion
+
+        /// <summary>
+        /// Gets the path to file that contains app settings
+        /// </summary>
+        public static string AppSettingsFilePath => "App_Data/appsettings.json";
     }
 }

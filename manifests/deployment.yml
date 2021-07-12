@@ -1,0 +1,35 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: mysnacks-nopcommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysnacks-nopcommerce
+  template:
+    metadata:
+      labels:
+        app: mysnacks-nopcommerce
+    spec:
+      containers:
+        - name: nopcommerce
+          image: eisajanyan/nopcommerce:staging
+          ports:
+          - containerPort: 5000
+          env:
+          - name: ASPNETCORE_URLS
+            value: http://*:5000
+          volumeMounts:
+            - mountPath: /app/App_Data/dataSettings.json
+              name: datasettings-config
+              subPath: dataSettings.json
+            - mountPath: /app/persistent/
+              name: nopcommerce-persistent
+      volumes:
+      - name: datasettings-config
+        configMap:
+          name: mysnacks-datasettings-config
+      - name: nopcommerce-persistent
+        persistentVolumeClaim:
+          claimName: nopcommerce-pv-claim

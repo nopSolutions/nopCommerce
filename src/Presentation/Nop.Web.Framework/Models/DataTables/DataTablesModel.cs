@@ -5,7 +5,7 @@ namespace Nop.Web.Framework.Models.DataTables
     /// <summary>
     /// Represents base DataTables model
     /// </summary>
-    public partial class DataTablesModel : BaseNopModel
+    public partial record DataTablesModel : BaseNopModel
     {
         #region Const
 
@@ -90,6 +90,11 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Enable or disable information ("1 to n of n entries")
         /// </summary>
         public bool Info { get; set; }
+
+        /// <summary>
+        /// If set, populate the row id based on the specified field
+        /// </summary>
+        public string RowIdBasedOnField { get; set; }
 
         /// <summary>
         /// Enable or disable refresh button

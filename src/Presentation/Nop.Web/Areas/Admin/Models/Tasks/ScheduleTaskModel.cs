@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Tasks
     /// <summary>
     /// Represents a schedule task model
     /// </summary>
-    public partial class ScheduleTaskModel : BaseNopEntityModel
+    public partial record ScheduleTaskModel : BaseNopEntityModel
     {
         #region Properties
 

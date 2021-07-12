@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Shipping;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -31,16 +32,17 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure.Cache
         /// Handle shipping method deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityDeletedEvent<ShippingMethod> eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<ShippingMethod> eventMessage)
         {
             var shippingMethod = eventMessage?.Entity;
             if (shippingMethod == null)
                 return;
 
             //delete saved fixed rate if exists
-            var setting = _settingService.GetSetting(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id));
+            var setting = await _settingService.GetSettingAsync(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id));
             if (setting != null)
-                _settingService.DeleteSetting(setting);
+                await _settingService.DeleteSettingAsync(setting);
         }
 
         #endregion

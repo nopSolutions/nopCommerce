@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -30,10 +31,10 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that validates IP address
         /// </summary>
-        private class ValidateIpAddressFilter : IActionFilter
+        private class ValidateIpAddressFilter : IAsyncActionFilter
         {
             #region Fields
-            
+
             private readonly IWebHelper _webHelper;
             private readonly SecuritySettings _securitySettings;
 
@@ -50,13 +51,14 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that represents the asynchronous operation</returns>
+            private async Task ValidateIpAddress(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -64,7 +66,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //get action and controller names
@@ -75,6 +77,13 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
 
+                //don't validate on the 'Access denied' page
+                if (controllerName.Equals("Security", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("AccessDenied", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return;
+                }
+
                 //get allowed IP addresses
                 var ipAddresses = _securitySettings.AdminAreaAllowedIpAddresses;
 
@@ -84,25 +93,29 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //whether current IP is allowed
                 var currentIp = _webHelper.GetCurrentIpAddress();
+
                 if (ipAddresses.Any(ip => ip.Equals(currentIp, StringComparison.InvariantCultureIgnoreCase)))
                     return;
 
-                //ensure that it's not 'Access denied' page
-                if (!(controllerName.Equals("Security", StringComparison.InvariantCultureIgnoreCase) &&
-                    actionName.Equals("AccessDenied", StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    //redirect to 'Access denied' page
-                    context.Result = new RedirectToActionResult("AccessDenied", "Security", context.RouteData.Values);
-                }
+                //redirect to 'Access denied' page
+                context.Result = new RedirectToActionResult("AccessDenied", "Security", context.RouteData.Values);
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that represents the asynchronous operation</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await ValidateIpAddress(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion

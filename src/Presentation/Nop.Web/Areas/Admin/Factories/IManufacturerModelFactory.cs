@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -12,15 +13,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare manufacturer search model
         /// </summary>
         /// <param name="searchModel">Manufacturer search model</param>
-        /// <returns>Manufacturer search model</returns>
-        ManufacturerSearchModel PrepareManufacturerSearchModel(ManufacturerSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer search model
+        /// </returns>
+        Task<ManufacturerSearchModel> PrepareManufacturerSearchModelAsync(ManufacturerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged manufacturer list model
         /// </summary>
         /// <param name="searchModel">Manufacturer search model</param>
-        /// <returns>Manufacturer list model</returns>
-        ManufacturerListModel PrepareManufacturerListModel(ManufacturerSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer list model
+        /// </returns>
+        Task<ManufacturerListModel> PrepareManufacturerListModelAsync(ManufacturerSearchModel searchModel);
 
         /// <summary>
         /// Prepare manufacturer model
@@ -28,8 +35,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Manufacturer model</param>
         /// <param name="manufacturer">Manufacturer</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Manufacturer model</returns>
-        ManufacturerModel PrepareManufacturerModel(ManufacturerModel model,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer model
+        /// </returns>
+        Task<ManufacturerModel> PrepareManufacturerModelAsync(ManufacturerModel model,
             Manufacturer manufacturer, bool excludeProperties = false);
 
         /// <summary>
@@ -37,22 +47,31 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Manufacturer product search model</param>
         /// <param name="manufacturer">Manufacturer</param>
-        /// <returns>Manufacturer product list model</returns>
-        ManufacturerProductListModel PrepareManufacturerProductListModel(ManufacturerProductSearchModel searchModel,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer product list model
+        /// </returns>
+        Task<ManufacturerProductListModel> PrepareManufacturerProductListModelAsync(ManufacturerProductSearchModel searchModel,
             Manufacturer manufacturer);
 
         /// <summary>
         /// Prepare product search model to add to the manufacturer
         /// </summary>
         /// <param name="searchModel">Product search model to add to the manufacturer</param>
-        /// <returns>Product search model to add to the manufacturer</returns>
-        AddProductToManufacturerSearchModel PrepareAddProductToManufacturerSearchModel(AddProductToManufacturerSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product search model to add to the manufacturer
+        /// </returns>
+        Task<AddProductToManufacturerSearchModel> PrepareAddProductToManufacturerSearchModelAsync(AddProductToManufacturerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product list model to add to the manufacturer
         /// </summary>
         /// <param name="searchModel">Product search model to add to the manufacturer</param>
-        /// <returns>Product list model to add to the manufacturer</returns>
-        AddProductToManufacturerListModel PrepareAddProductToManufacturerListModel(AddProductToManufacturerSearchModel searchModel);
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product list model to add to the manufacturer
+        /// </returns>
+        Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModelAsync(AddProductToManufacturerSearchModel searchModel);
     }
 }

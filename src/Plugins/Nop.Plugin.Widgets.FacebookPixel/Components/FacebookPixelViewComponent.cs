@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Plugin.Widgets.FacebookPixel.Services;
@@ -35,12 +36,15 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Components
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var script = widgetZone != PublicWidgetZones.HeadHtmlTag
-                ? _facebookPixelService.PrepareCustomEventsScript(widgetZone)
-                : _facebookPixelService.PrepareScript();
+                ? await _facebookPixelService.PrepareCustomEventsScriptAsync(widgetZone)
+                : await _facebookPixelService.PrepareScriptAsync();
 
             return new HtmlContentViewComponentResult(new HtmlString(script ?? string.Empty));
         }

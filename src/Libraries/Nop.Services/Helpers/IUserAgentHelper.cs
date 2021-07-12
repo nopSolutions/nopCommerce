@@ -1,4 +1,4 @@
-namespace Nop.Services.Helpers
+﻿namespace Nop.Services.Helpers
 {
     /// <summary>
     /// User agent helper interface
@@ -16,11 +16,5 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <returns></returns>
         bool IsMobileDevice();
-
-        /// <summary>
-        /// Get a value indicating whether the request is made by IE8 browser
-        /// </summary>
-        /// <returns></returns>
-        bool IsIe8();
     }
 }

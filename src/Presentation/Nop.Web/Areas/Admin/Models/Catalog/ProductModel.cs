@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product model
     /// </summary>
-    public partial class ProductModel : BaseNopEntityModel, 
+    public partial record ProductModel : BaseNopEntityModel, 
         IAclSupportedModel, IDiscountSupportedModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -108,6 +108,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomepage")]
         public bool ShowOnHomepage { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RibbonEnable")]
+        public bool RibbonEnable { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RibbonText")]
+        public string RibbonText { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
@@ -471,7 +477,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class ProductLocalizedModel : ILocalizedLocaleModel
+    public partial record ProductLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

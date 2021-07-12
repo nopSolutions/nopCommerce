@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Messages
 {
@@ -41,6 +42,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="exception">Exception</param>
         /// <param name="logException">A value indicating whether exception should be logged</param>
-        void ErrorNotification(Exception exception, bool logException = true);
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task ErrorNotificationAsync(Exception exception, bool logException = true);
     }
 }

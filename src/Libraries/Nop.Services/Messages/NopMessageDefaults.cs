@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
@@ -20,12 +21,7 @@ namespace Nop.Services.Messages
         /// <remarks>
         /// {0} : store ID
         /// </remarks>
-        public static CacheKey MessageTemplatesAllCacheKey => new CacheKey("Nop.messagetemplate.all-{0}", MessageTemplatesAllPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string MessageTemplatesAllPrefixCacheKey => "Nop.messagetemplate.all";
+        public static CacheKey MessageTemplatesAllCacheKey => new CacheKey("Nop.messagetemplate.all.{0}", NopEntityCacheDefaults<MessageTemplate>.AllPrefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -34,23 +30,15 @@ namespace Nop.Services.Messages
         /// {0} : template name
         /// {1} : store ID
         /// </remarks>
-        public static CacheKey MessageTemplatesByNameCacheKey => new CacheKey("Nop.messagetemplate.name-{0}-{1}", MessageTemplatesByNamePrefixCacheKey);
+        public static CacheKey MessageTemplatesByNameCacheKey => new CacheKey("Nop.messagetemplate.byname.{0}-{1}", MessageTemplatesByNamePrefix);
 
         /// <summary>
-        /// Gets a key for caching
+        /// Gets a key pattern to clear cache
         /// </summary>
         /// <remarks>
         /// {0} : template name
         /// </remarks>
-        public static string MessageTemplatesByNamePrefixCacheKey => "Nop.messagetemplate.name-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        public static CacheKey EmailAccountsAllCacheKey => new CacheKey("Nop.emailaccounts.all");
+        public static string MessageTemplatesByNamePrefix => "Nop.messagetemplate.byname.{0}";
 
         #endregion
     }

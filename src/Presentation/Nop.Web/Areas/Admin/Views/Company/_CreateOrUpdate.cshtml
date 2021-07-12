@@ -1,0 +1,30 @@
+﻿@using Nop.Web.Areas.Admin.Models.Companies
+@model CompanyModel
+
+@{
+    const string hideInfoBlockAttributeName = "CompanyPage.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+
+    const string hideAddressesBlockAttributeName = "CompanyPage.HideAddressesBlock";
+    var hideAddressesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAddressesBlockAttributeName, defaultValue: true);
+
+    const string hideProductsBlockAttributeName = "CompanyPage.HideProductsBlock";
+    var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductsBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            
+            <nop-cards id="company-cards">
+                <nop-card asp-name="company-info" asp-icon="fas fa-info" asp-title="@T("Admin.Company.Companies.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-card>
+                <nop-card asp-name="company-products" asp-icon="fas fa-th-list" asp-title="@T("Admin.Company.Companies.Customers")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-card>
+                <nop-card asp-name="customer-address" asp-icon="far fa-address-book" asp-title="@T("Admin.Customers.Customers.Addresses")" asp-hide-block-attribute-name="@hideAddressesBlockAttributeName" asp-hide="@hideAddressesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Addresses", Model)</nop-card>
+
+            </nop-cards>
+        </div>
+    </div>
+</section>

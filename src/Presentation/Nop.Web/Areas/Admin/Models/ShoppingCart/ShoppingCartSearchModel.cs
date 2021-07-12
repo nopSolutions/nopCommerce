@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
     /// <summary>
     /// Represents a shopping cart search model
     /// </summary>
-    public partial class ShoppingCartSearchModel : BaseSearchModel
+    public partial record ShoppingCartSearchModel : BaseSearchModel
     {
         #region Ctor
 

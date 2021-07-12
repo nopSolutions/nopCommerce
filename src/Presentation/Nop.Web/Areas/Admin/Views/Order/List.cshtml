@@ -12,68 +12,66 @@
 
 @{
     const string hideSearchBlockAttributeName = "OrdersPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+  var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Order" asp-action="List" method="post">
     <div class="content-header clearfix">
-        <h1 class="pull-left">
+        <h1 class="float-left">
             @T("Admin.Orders")
         </h1>
-        <div class="pull-right">
+        <div class="float-right">
             <div class="btn-group">
                 <button type="button" class="btn btn-success">
-                    <i class="fa fa-download"></i>
+                    <i class="fas fa-download"></i>
                     @T("Admin.Common.Export")
                 </button>
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret"></span>
+                <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                     <span class="sr-only">&nbsp;</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <button asp-action="ExportXml" type="submit" name="exportxml-all">
-                            <i class="fa fa-file-code-o"></i>
+                            <i class="far fa-file-code"></i>
                             @T("Admin.Common.ExportToXml.All")
                         </button>
                     </li>
-                    <li>
+                    <li class="dropdown-item">
                         <button type="button" id="exportxml-selected">
-                            <i class="fa fa-file-code-o"></i>
+                            <i class="far fa-file-code"></i>
                             @T("Admin.Common.ExportToXml.Selected")
                         </button>
                     </li>
-                    <li class="divider"></li>
-                    <li>
+                    <li class="dropdown-divider"></li>
+                    <li class="dropdown-item">
                         <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
-                            <i class="fa fa-file-excel-o"></i>
+                            <i class="far fa-file-excel"></i>
                             @T("Admin.Common.ExportToExcel.All")
                         </button>
                     </li>
-                    <li>
+                    <li class="dropdown-item">
                         <button type="button" id="exportexcel-selected">
-                            <i class="fa fa-file-excel-o"></i>
+                            <i class="far fa-file-excel"></i>
                             @T("Admin.Common.ExportToExcel.Selected")
                         </button>
                     </li>
                 </ul>
             </div>
             <div class="btn-group">
-                <button type="button" class="btn bg-purple">
-                    <i class="fa fa-file-pdf-o"></i>
+                <button type="button" class="btn btn-info">
+                    <i class="far fa-file-pdf"></i>
                     @T("Admin.Orders.PdfInvoices")
                 </button>
-                <button type="button" class="btn bg-purple dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret"></span>
+                <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
                     <span class="sr-only">&nbsp;</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li>
+                    <li class="dropdown-item">
                         <button asp-action="PdfInvoice" type="submit" name="pdf-invoice-all">
                             @T("Admin.Orders.PdfInvoices.All")
                         </button>
                     </li>
-                    <li>
+                    <li class="dropdown-item">
                         <button type="button" id="pdf-invoice-selected">
                             @T("Admin.Orders.PdfInvoices.Selected")
                         </button>
@@ -83,21 +81,22 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderListButtons })
         </div>
     </div>
-    <div class="content">
+    <section class="content">
+        <div class="container-fluid">
         <div class="form-horizontal">
-            <div class="panel-group">
-                <div class="panel panel-default panel-search">
-                    <div class="panel-body">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                                <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
                                 <div class="col-md-5">
-                                    <div class="form-group">
+                                        <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="StartDate" />
                                         </div>
@@ -105,7 +104,7 @@
                                             <nop-editor asp-for="StartDate" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                        <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="EndDate" />
                                         </div>
@@ -113,7 +112,7 @@
                                             <nop-editor asp-for="EndDate" />
                                         </div>
                                     </div>
-                                    <div class="form-group" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="form-group row" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="WarehouseId" />
                                         </div>
@@ -121,7 +120,7 @@
                                             <nop-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                        <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="ProductId" />
                                         </div>
@@ -156,7 +155,7 @@
                                             </script>
                                         </div>
                                     </div>
-                                    <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="OrderStatusIds" />
                                         </div>
@@ -164,7 +163,7 @@
                                             <nop-select asp-for="OrderStatusIds" asp-items="Model.AvailableOrderStatuses" asp-multiple="true" />
                                         </div>
                                     </div>
-                                    <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="ShippingStatusIds" />
                                         </div>
@@ -174,7 +173,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-7">
-                                    <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="form-group row" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="StoreId" />
                                         </div>
@@ -182,7 +181,7 @@
                                             <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                         </div>
                                     </div>
-                                    <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        <div class="form-group row" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="VendorId" />
                                         </div>
@@ -192,7 +191,7 @@
                                     </div>
                                     @if (Model.BillingPhoneEnabled)
                                     {
-                                        <div class="form-group">
+                                            <div class="form-group row">
                                             <div class="col-md-4">
                                                 <nop-label asp-for="BillingPhone" />
                                             </div>
@@ -201,7 +200,7 @@
                                             </div>
                                         </div>
                                     }
-                                    <div class="form-group">
+                                        <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="BillingEmail" />
                                         </div>
@@ -209,7 +208,7 @@
                                             <nop-editor asp-for="BillingEmail" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                        <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="BillingLastName" />
                                         </div>
@@ -217,7 +216,7 @@
                                             <nop-editor asp-for="BillingLastName" />
                                         </div>
                                     </div>
-                                    <div class="form-group" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="form-group row" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="BillingCountryId" />
                                         </div>
@@ -225,7 +224,7 @@
                                             <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                         </div>
                                     </div>
-                                    <div class="form-group" @(Model.AvailablePaymentMethods.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        <div class="form-group row" @(Model.AvailablePaymentMethods.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                         <div class="col-md-4">
                                             <nop-label asp-for="PaymentMethodSystemName" />
                                         </div>
@@ -233,7 +232,7 @@
                                             <nop-select asp-for="PaymentMethodSystemName" asp-items="Model.AvailablePaymentMethods" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                        <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="OrderNotes" />
                                         </div>
@@ -241,14 +240,14 @@
                                             <nop-editor asp-for="OrderNotes" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                        <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="GoDirectlyToCustomOrderNumber" />
                                         </div>
                                         <div class="col-md-8">
                                             <div class="input-group input-group-short">
                                                 <nop-editor asp-for="GoDirectlyToCustomOrderNumber" />
-                                                <span class="input-group-btn">
+                                                    <span class="input-group-append">
                                                     <button type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat">
                                                         @T("Admin.Common.Go")
                                                     </button>
@@ -259,9 +258,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-7 col-md-offset-5">
+                                    <div class="text-center col-12">
                                     <button type="button" id="search-orders" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
+                                            <i class="fas fa-search"></i>
                                         @T("Admin.Common.Search")
                                     </button>
                                 </div>
@@ -270,8 +269,10 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Orders", Docs.Orders + Utm.OnAdmin)" />
+
                         @{
                           var gridModel = new DataTablesModel
                           {
@@ -334,6 +335,12 @@
                               Width = "150"
                             });
                           }
+                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
+                              {
+                                Title = T("Admin.Orders.Fields.Customer").Text,
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                              });
+
                           gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
                           {
                             Title = T("Admin.Orders.Fields.Customer").Text,
@@ -343,7 +350,7 @@
                           {
                             Title = T("Admin.Orders.Fields.Store").Text,
                             Width = "100",
-                            Visible = storeService.GetAllStores().Count > 1
+                                Visible = storeService.GetAllStoresAsync().Result.Count > 1
                           });
                           gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
                           {
@@ -362,6 +369,21 @@
                           {
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
                             {
+                                  Title = T("Admin.Orders.Fields.Store").Text,
+                                  Width = "100",
+                                  Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                                });
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                                {
+                                  Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                                  Width = "120",
+                                  Render = new RenderDate()
+                                });
+                                //a vendor does not have access to this functionality
+                                if (!Model.IsLoggedInAsVendor)
+                                {
+                                  gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                                  {
                               Title = T("Admin.Orders.Fields.OrderTotal").Text,
                               Width = "100",
                             });
@@ -373,8 +395,8 @@
                             ClassName = NopColumnClassDefaults.Button,
                             Render = new RenderButtonView(new DataUrl("Edit"))
                           });
-                          var orderSummaryColumnNumber = 8;
                         }
+                            }
 
                         @await Html.PartialAsync("Table", gridModel)
 
@@ -440,24 +462,26 @@
                                     success: function (data, textStatus, jqXHR) {
                                         if (data) {
                                             for (var key in data) {
-                                                var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Profit") <span>' + data['aggregatorprofit'] +'</span></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Shipping") <span>' + data['aggregatorshipping'] + '</span></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Tax") <span>' +  data['aggregatortax'] + '</span></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Total") <span>' + data['aggregatortotal'] + '</span></div>'
-                                                var orderTotalsColumn = $('#orders-grid').DataTable().column(@(orderSummaryColumnNumber));
+                                                var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary").Text</strong></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Profit").Text <span>' + data['aggregatorprofit'] +'</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Shipping").Text <span>' + data['aggregatorshipping'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Tax").Text <span>' +  data['aggregatortax'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Total").Text <span>' + data['aggregatortotal'] + '</span></div>'
+                                                var orderTotalsColumn = $('#orders-grid').DataTable().column(/*orderSummaryColumnNumber*/8);
                                                 $(orderTotalsColumn.footer()).html(reportSummary);
                                             }
                                         }
                                     }
                                 });
                             }
+
                         </script>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </section>
 </form>
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@

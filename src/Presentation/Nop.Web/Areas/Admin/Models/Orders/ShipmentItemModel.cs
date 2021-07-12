@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a shipment item model
     /// </summary>
-    public partial class ShipmentItemModel : BaseNopEntityModel
+    public partial record ShipmentItemModel : BaseNopEntityModel
     {
         #region Ctor
 
@@ -63,7 +63,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Nested Classes
 
-        public class WarehouseInfo : BaseNopModel
+        public record WarehouseInfo : BaseNopModel
         {
             public int WarehouseId { get; set; }
             public string WarehouseName { get; set; }

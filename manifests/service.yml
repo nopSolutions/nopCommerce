@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: "mysnacks-nopcommerce"
+spec:
+    type: ClusterIP
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 5000
+    selector:
+        app: "mysnacks-nopcommerce"

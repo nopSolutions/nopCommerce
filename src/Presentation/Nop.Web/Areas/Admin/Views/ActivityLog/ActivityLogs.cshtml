@@ -9,17 +9,17 @@
 
 @{
     const string hideSearchBlockAttributeName = "ActivityLogPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Customers.ActivityLog")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         <form asp-controller="ActivityLog" asp-action="ClearAll" method="post">
             <button type="submit" id="clearall" name="clearall" class="btn bg-red">
-                <i class="fa fa-trash-o"></i>
+                <i class="far fa-trash-alt"></i>
                 @T("Admin.Customers.ActivityLog.Clear")
             </button>
             <nop-action-confirmation asp-button-id="clearall" />
@@ -29,22 +29,23 @@
 
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default card-search">
+                <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
-                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
 
                         <div class="row">
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnFrom" />
                                     </div>
@@ -52,7 +53,7 @@
                                         <nop-editor asp-for="CreatedOnFrom" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnTo" />
                                     </div>
@@ -62,7 +63,7 @@
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="ActivityLogTypeId" />
                                     </div>
@@ -70,7 +71,7 @@
                                         <nop-select asp-for="ActivityLogTypeId" asp-items="Model.ActivityLogType" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="IpAddress" />
                                     </div>
@@ -81,9 +82,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-7 col-md-offset-5">
+                            <div class="text-center col-12">
                                 <button type="button" id="search-log" class="btn btn-primary btn-search">
-                                    <i class="fa fa-search"></i>
+                                    <i class="fas fa-search"></i>
                                     @T("Admin.Common.Search")
                                 </button>
                             </div>
@@ -92,8 +93,10 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.ActivityLog", Docs.ActivityLog + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "activityLog-grid",
@@ -151,3 +154,4 @@
         </div>
     </div>
 </div>
+</section>

@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
-    public partial class AddressAttributeModel : BaseNopEntityModel
+    public partial record AddressAttributeModel : BaseNopEntityModel
     {
         public AddressAttributeModel()
         {
@@ -25,7 +25,7 @@ namespace Nop.Web.Models.Common
         public IList<AddressAttributeValueModel> Values { get; set; }
     }
 
-    public partial class AddressAttributeValueModel : BaseNopEntityModel
+    public partial record AddressAttributeValueModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

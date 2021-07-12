@@ -5,7 +5,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class SubmitReturnRequestModel : BaseNopModel
+    public partial record SubmitReturnRequestModel : BaseNopModel
     {
         public SubmitReturnRequestModel()
         {
@@ -38,7 +38,7 @@ namespace Nop.Web.Models.Order
         
         #region Nested classes
 
-        public partial class OrderItemModel : BaseNopEntityModel
+        public partial record OrderItemModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
 
@@ -53,12 +53,12 @@ namespace Nop.Web.Models.Order
             public int Quantity { get; set; }
         }
 
-        public partial class ReturnRequestReasonModel : BaseNopEntityModel
+        public partial record ReturnRequestReasonModel : BaseNopEntityModel
         {
             public string Name { get; set; }
         }
 
-        public partial class ReturnRequestActionModel : BaseNopEntityModel
+        public partial record ReturnRequestActionModel : BaseNopEntityModel
         {
             public string Name { get; set; }
         }
