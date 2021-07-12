@@ -132,6 +132,9 @@ namespace Nop.Core.Configuration
         /// By default the cookie-based TempData provider is used to store TempData in cookies.
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
+
+        public bool TelegramBotEnabled { get; set; }
+        public string TelegramBotSecret { get; set; }
         
         /// <summary>
         /// Gets a value indicating whether we should use Azure blob storage

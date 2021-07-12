@@ -15,7 +15,10 @@
                 ? url.ToString()
                 : webHelper.GetRawUrl(Context.Request);
 
-            <li><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>
+            @if (Model.IsRegistrationEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>
+            }
             <li><a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login">@T("Account.Login")</a></li>
         }
         @if (Model.AllowPrivateMessages)

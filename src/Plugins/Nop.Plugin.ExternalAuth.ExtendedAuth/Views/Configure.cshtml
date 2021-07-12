@@ -1,0 +1,238 @@
+﻿@model Nop.Plugin.ExternalAuth.ExtendedAuthentication.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+@inject Nop.Core.IWebHelper webHelper
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<form asp-controller="Authentication" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default" id="group-prices">
+            <div class="panel-heading">
+                <p style="color:red;font-weight:bold;">
+                    We can help you in NopCommerce Configuration, Customization, Plugin Development, Performance Optimization, Bug fixing, Database scrapping.
+                    Contact us on  <a href="mailto:sangeetshah143@gmail.com?Subject=ExternalAuthontication">email (sangeetshah143@gmail.com)</a>  or call me on +917698924143 <br />
+                </p>                
+            </div>           
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Facebook
+            </div>
+            <div class="panel-body">
+                <p>
+                    To configure authentication with Facebook follow these steps:<br />
+                    <br />
+                    1. Navigate to the <a href="https://developers.facebook.com/apps" target="_blank">Facebook for Developers</a> page and sign in. If you don't already have a Facebook account, use the <b>Sign up for Facebook</b> link on the login page to create one.<br />
+                    2. Tap the <b>+ Add a New App button</b> in the upper right corner to create a new App ID. (If this is your first app with Facebook, the text of the button will be <b>Create a New App</b>.)<br />
+                    3. Fill out the form and tap the <b>Create App ID button</b>.<br />
+                    4. The <b>Product Setup</b> page is displayed, letting you select the features for your new app. Click <b>Get Started</b> on <b>Facebook Login</b>.<br />
+                    5. Click the <b>Settings</b> link in the menu at the left, you are presented with the <b>Client OAuth Settings</b> page with some defaults already set.<br />
+                    6. Enter "@($"{webHelper.GetStoreLocation()}signin-facebook")" into the <b>Valid OAuth Redirect URIs</b> field.<br />
+                    7. Click <b>Save Changes</b>.<br />
+                    8. Click the <b>Dashboard</b> link in the left navigation.<br />
+                    9. Copy your App ID and App secret below.<br />
+                    10.Configure <a href="@(AuthenticationDefaults.PluginPath)/Content/Images/doc/facebook.png" target="_blank"> Page Snapshot </a>
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="FacebookBtnIsDisplay_OverrideForStore" asp-input="FacebookBtnIsDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="FacebookBtnIsDisplay" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FacebookBtnIsDisplay" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="FacebookClientId_OverrideForStore" asp-input="FacebookClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="FacebookClientId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FacebookClientId" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="FacebookClientSecret_OverrideForStore" asp-input="FacebookClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="FacebookClientSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="FacebookClientSecret" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" id="group-prices">
+            <div class="panel-heading">
+                Twitter
+            </div>
+            <div class="panel-body">
+                <p>
+                    To configure authentication with Twitter
+                    Navigate to the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins?tabs=aspnetcore2x" target="_blank">Twitter for Developers</a> page and follow as per instruction.
+                    <br/>
+                    Configure <a href="@(AuthenticationDefaults.PluginPath)/Content/Images/doc/Twitter.png" target="_blank"> Page Snapshot </a>
+                </p>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="TwitterBtnIsDisplay_OverrideForStore" asp-input="TwitterBtnIsDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="TwitterBtnIsDisplay" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TwitterBtnIsDisplay" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="TwitterClientId_OverrideForStore" asp-input="TwitterClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="TwitterClientId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TwitterClientId" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="TwitterClientSecret_OverrideForStore" asp-input="TwitterClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="TwitterClientSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="TwitterClientSecret" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" id="group-prices">
+            <div class="panel-heading">
+                Google
+            </div>
+            <div class="panel-body">
+                <p>
+                    To configure authentication with Google
+                    Navigate to the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?tabs=aspnetcore2x" target="_blank">Google for Developers</a> page and follow as per instruction.
+                    <br/>
+                    Configure <a href="@(AuthenticationDefaults.PluginPath)/Content/Images/doc/Google.png" target="_blank"> Page Snapshot </a>
+                </p>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GmailBtnIsDisplay_OverrideForStore" asp-input="GmailBtnIsDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GmailBtnIsDisplay" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GmailBtnIsDisplay" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GoogleClientId_OverrideForStore" asp-input="GoogleClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GoogleClientId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GoogleClientId" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="GoogleClientSecret_OverrideForStore" asp-input="GoogleClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GoogleClientSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="GoogleClientSecret" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" id="group-prices">
+            <div class="panel-heading">
+                Microsoft Account
+            </div>
+            <div class="panel-body">
+                <p>
+                    To configure authentication with Microsoft
+                    Navigate to the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins?tabs=aspnetcore2x" target="_blank">Microsoft for Developers</a> page and follow as per instruction.
+                    <br/>
+                    Configure <a href="@(AuthenticationDefaults.PluginPath)/Content/Images/doc/microsoft.png" target="_blank"> Page Snapshot </a>
+                </p>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MicrosoftBtnIsDisplay_OverrideForStore" asp-input="MicrosoftBtnIsDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MicrosoftBtnIsDisplay" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MicrosoftBtnIsDisplay" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MicrosoftClientId_OverrideForStore" asp-input="MicrosoftClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MicrosoftClientId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MicrosoftClientId" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="MicrosoftClientSecret_OverrideForStore" asp-input="MicrosoftClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="MicrosoftClientSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MicrosoftClientSecret" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default" id="group-prices">
+            <div class="panel-heading">
+                Linked-In
+            </div>
+            <div class="panel-body">
+                <p>
+                    To configure authentication with LinkedIn and Create App
+                    Navigate to the <a href="https://www.linkedin.com/developer/apps" target="_blank">LinkedIn for Developers</a> page.
+                    <br/>
+                    Configure <a href="@(AuthenticationDefaults.PluginPath)/Content/Images/doc/LinkedIn.png" target="_blank"> Page Snapshot </a>
+                </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="LinkedInBtnIsDisplay_OverrideForStore" asp-input="LinkedInBtnIsDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="LinkedInBtnIsDisplay" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="LinkedInBtnIsDisplay" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="LinkedInClientId_OverrideForStore" asp-input="LinkedInClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="LinkedInClientId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="LinkedInClientId" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="LinkedInClientSecret_OverrideForStore" asp-input="LinkedInClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="LinkedInClientSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="LinkedInClientSecret" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

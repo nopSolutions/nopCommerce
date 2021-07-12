@@ -640,6 +640,9 @@ namespace Nop.Web.Factories
                 case UserRegistrationType.EmailValidation:
                     resultText = _localizationService.GetResource("Account.Register.Result.EmailValidation");
                     break;
+                case UserRegistrationType.OnlyExternalAuthentication:
+                    resultText = _localizationService.GetResource("Account.Register.Result.OnlyExternalAuthentication");
+                    break;
                 default:
                     break;
             }

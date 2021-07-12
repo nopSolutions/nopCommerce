@@ -354,9 +354,12 @@ namespace Nop.Web.Factories
                 }
             }
 
+            var registrationDisabledCases = new UserRegistrationType[] { UserRegistrationType.Disabled, 
+                UserRegistrationType.OnlyExternalAuthentication };
             var model = new HeaderLinksModel
             {
                 IsAuthenticated = _customerService.IsRegistered(customer),
+                IsRegistrationEnabled = !registrationDisabledCases.Contains(_customerSettings.UserRegistrationType),
                 CustomerName = _customerService.IsRegistered(customer) ? _customerService.FormatUsername(customer) : string.Empty,
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),

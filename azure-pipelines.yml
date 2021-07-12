@@ -1,0 +1,46 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- staging
+- old-4.30
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildNumber)'
+  servicePort: 5000
+  imageRepository: 'eisajanyan/nopcommerce'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'eisajanyan dockerhub'
+        repository: '$(imageRepository)'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: $(tag)
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          $deployment = Get-Content -Path manifests/deployment.yml
+          Write-Host "Content before replace: $deployment"
+          $deployment = $deployment -replace 'image:\s*\S+', 'image: $(imageRepository):$(tag)'
+          Write-Host "Content after replace: $deployment"
+          Set-Content -Path manifests/deployment.yml -Value $deployment
+        pwsh: true
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'manifests'
+        path: 'manifests'

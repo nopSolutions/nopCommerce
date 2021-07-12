@@ -282,7 +282,9 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-
+            
+            searchModel.Start = 0;
+            searchModel.Length = int.MaxValue;
             var bestsellers = GetBestsellersReport(searchModel);
 
             var totalAmount = _priceFormatter.FormatPrice(bestsellers.Sum(bestseller => bestseller.TotalAmount), true, false);

@@ -251,6 +251,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
+            
+
             //register and configure external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();

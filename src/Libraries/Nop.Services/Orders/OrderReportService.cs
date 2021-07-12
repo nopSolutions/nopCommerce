@@ -365,14 +365,7 @@ namespace Nop.Services.Orders
                          join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
                          join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                         join pc in _productCategoryRepository.Table on p.Id 
-                             equals pc.ProductId 
-                             into p_pc
-                from pc in p_pc.DefaultIfEmpty()
-                         join pm in _productManufacturerRepository.Table on p.Id 
-                             equals pm.ProductId 
-                             into p_pm
-                from pm in p_pm.DefaultIfEmpty()
+
                          where (storeId == 0 || storeId == o.StoreId) &&
                                (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
@@ -382,14 +375,16 @@ namespace Nop.Services.Orders
                                !o.Deleted &&
                                !p.Deleted &&
                                (vendorId == 0 || p.VendorId == vendorId) &&
-                               (categoryId == 0 || pc.CategoryId == categoryId) &&
-                               (manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
+                               (categoryId == 0 || _productCategoryRepository.Table.Any(pc => p.Id == pc.ProductId && pc.CategoryId == categoryId)) &&
+                               (manufacturerId == 0 || _productManufacturerRepository.Table.Any(pm => p.Id == pm.ProductId && pm.ManufacturerId == manufacturerId)) &&
                                /*(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
                                (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
                                 0) &&*/
                                (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
                                (showHidden || p.Published)
                          select orderItem;
+
+            
 
             var query2 =
                 //group by products

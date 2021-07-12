@@ -34,6 +34,7 @@ using Nop.Web.Framework.Events;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+using Nop.Services.Configuration;
 
 namespace Nop.Web.Factories
 {
@@ -73,6 +74,7 @@ namespace Nop.Web.Factories
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly ISettingService _settingService;
 
         #endregion
 
@@ -109,7 +111,8 @@ namespace Nop.Web.Factories
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            ISettingService settingService)
         {
             _blogSettings = blogSettings;
             _catalogSettings = catalogSettings;
@@ -143,6 +146,7 @@ namespace Nop.Web.Factories
             _workContext = workContext;
             _mediaSettings = mediaSettings;
             _vendorSettings = vendorSettings;
+            _settingService = settingService;
         }
 
         #endregion
@@ -423,6 +427,10 @@ namespace Nop.Web.Factories
 
                         return subCatModel;
                     }).ToList();
+
+            var displaySubcategoriesInCatalogPage = _settingService.GetSetting("catalogsettings.displaysubcategoriesincatalogpage", _storeContext.CurrentStore.Id, true);
+            model.DisplaySubcategoriesInCatalogPage = displaySubcategoriesInCatalogPage != null && 
+                displaySubcategoriesInCatalogPage.Value == "False" ? false : true;
 
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)

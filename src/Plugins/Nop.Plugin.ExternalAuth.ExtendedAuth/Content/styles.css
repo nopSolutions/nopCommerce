@@ -1,0 +1,57 @@
+﻿.facebook-btn {
+    background-image: url('Images/facebook-account-logo.png');
+    background-repeat: no-repeat;
+}
+
+.google-btn {
+    background-image: url('Images/google-account-logo.png');
+    background-repeat: no-repeat;
+}
+
+.twitter-btn {
+    background-image: url('Images/twitter-account-logo.png');
+    background-repeat: no-repeat;
+}
+
+.microsoft-btn {
+    background-image: url('Images/microsoft-account-logo.png');
+    background-repeat: no-repeat;
+}
+
+.linkedin-btn {
+    background-image: url('Images/linkedin-account-logo.png');
+    background-repeat: no-repeat;
+}
+
+@media (min-width: 1001px) .footer-block {
+    float: left; width: 220px; margin: 0;
+}
+
+.ExtendedAuthentication .social ul {
+    /*margin: 0 0 30px;*/
+    border-bottom: 1px solid #ddd;
+    /*padding: 0 0 30px;*/
+    font-size: 0;
+    text-align: center;
+}
+
+.ExtendedAuthentication .social li {
+    margin: auto;
+    width: 50%;
+}
+
+.ExtendedAuthentication .social li {
+    display: inline-block;
+    /*margin: 0 5px;*/
+}
+
+.ExtendedAuthentication .social .facebook a {
+    background-position: 0 0;
+}
+
+.ExtendedAuthentication .social a {
+    display: block;
+    width: 220px;
+    height: 38px;
+    font-size: 0;
+}

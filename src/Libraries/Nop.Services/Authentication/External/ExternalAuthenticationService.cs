@@ -146,7 +146,8 @@ namespace Nop.Services.Authentication.External
             }
 
             //registration is approved if validation isn't required
-            var registrationIsApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard ||
+            var registrationIsApproved = parameters.IsApproved ?? 
+                _customerSettings.UserRegistrationType == UserRegistrationType.Standard ||
                 (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation && !_externalAuthenticationSettings.RequireEmailValidation);
 
             //create registration request
@@ -198,7 +199,7 @@ namespace Nop.Services.Authentication.External
             if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
 
-            return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
+            return ErrorAuthentication(new[] { "Error on registration. Probably your registration isn't approved, please contact support" }, returnUrl);
         }
 
         /// <summary>
