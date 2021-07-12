@@ -41,6 +41,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Bestseller list model</returns>
         BestsellerListModel PrepareBestsellerListModel(BestsellerSearchModel searchModel);
 
+        /// <summary>
+        /// Get bestsellers total amount
+        /// </summary>
+        /// <param name="searchModel">Bestseller search model</param>
+        /// <returns>Bestseller total amount</returns>
+        string GetBestsellerTotalAmount(BestsellerSearchModel searchModel);
+
         #endregion
 
         #region NeverSold

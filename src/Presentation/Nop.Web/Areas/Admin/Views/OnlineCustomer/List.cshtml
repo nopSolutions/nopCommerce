@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.OnlineCustomers").Text;
+    ViewBag.PageTitle = T("Admin.Customers.OnlineCustomers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Online customers");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Customers.OnlineCustomers")

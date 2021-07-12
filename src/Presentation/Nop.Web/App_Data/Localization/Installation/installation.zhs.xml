@@ -1,4 +1,5 @@
-﻿<Language Name="简体中文" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="简体中文" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>管理员邮箱</Value>
   </LocaleResource>
@@ -12,10 +13,10 @@
     <Value>请输入管理员密码</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureDirectoryPermissions">
-    <Value>账户 '{0}' 没有修改文件夹'{1}'的权限. 请配置.</Value>
+    <Value>账户 '{0}' 没有修改文件夹 '{1}' 的权限，请配置。</Value>
   </LocaleResource>
   <LocaleResource Name="ConfigureFilePermissions">
-    <Value>账户'{0}' 没有修改文件'{1}'的权限. 请配置.</Value>
+    <Value>账户 '{0}' 没有修改文件 '{1}' 的权限，请配置。</Value>
   </LocaleResource>
   <LocaleResource Name="ConfirmPassword">
     <Value>确认密码</Value>
@@ -36,19 +37,19 @@
     <Value>连接字符串的格式错误</Value>
   </LocaleResource>
   <LocaleResource Name="CreateDatabaseIfDoesNotExist">
-    <Value>如果不存在，创建数据库</Value>
+    <Value>如果不存在，则创建数据库</Value>
   </LocaleResource>
   <LocaleResource Name="CreateSampleData">
-    <Value>导入测试数据</Value>
+    <Value>创建样例数据</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>指定自定义的Sql Server排序规则</Value>
-  </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>创建数据库: {0}的时候发生错误</Value>
+    <Value>指定自定义排序规则</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>数据库</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>创建数据库 {0} 的时候发生错误</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>数据库信息</Value>
@@ -72,13 +73,19 @@
     <Value>nopCommerce.com上的文档部分</Value>
   </LocaleResource>
   <LocaleResource Name="Example">
-    <Value>例子</Value>
+    <Value>样例</Value>
   </LocaleResource>
   <LocaleResource Name="Install">
     <Value>安装</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
     <Value>正在安装nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>使用集成Windows身份认证</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>密码不匹配</Value>
@@ -95,35 +102,35 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>点击以重新启动安装过程(清除所有缓存值)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>服务器</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>请输入服务器</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>安装失败: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
-    <Value>使用SQL Server 账户</Value>
+    <Value>使用 SQL Server 账户</Value>
   </LocaleResource>
   <LocaleResource Name="SqlCompact">
-    <Value>使用内置的数据存储(SQL Server Compact)</Value>
+    <Value>使用嵌入式数据存储(SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Server 实例名</Value>
+  <LocaleResource Name="SqlPassword">
+    <Value>数据库密码</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>请输入SQL Server 实例名</Value>
+  <LocaleResource Name="SqlPasswordRequired">
+    <Value>请输入数据库密码</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
-    <Value>SQL Server密码</Value>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
-    <Value>请输入SQL Server密码 </Value>
+  <LocaleResource Name="SqlUsername">
+    <Value>数据库用户名</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
-    <Value>SQL Server用户名</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
-    <Value>请输入SQL Server用户名</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>使用SQL Server(或SQL Express)数据库</Value>
+  <LocaleResource Name="SqlUsernameRequired">
+    <Value>请输入数据库用户名</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>商店信息</Value>
@@ -132,12 +139,9 @@
     <Value>nopCommerce 安装</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip1">
-    <Value>nopCommerce是最优秀的Asp.net 在线电子商务解决方案。这个向导将引导你完成配置过程。</Value>
+    <Value>nopCommerce 是最优秀的 Asp.net 在线电子商务解决方案，这个向导将引导你完成配置过程。</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>完成这个向导，你必须知道如何连接数据库("即连接字符串").如有必要，请联系你的服务提供商。如果在本机或服务器上安装，你可能还需要一些管理员的信息 .</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>使用集成windows身份认证</Value>
+    <Value>要完成这个向导，你必须知道如何连接数据库(即"连接字符串")。如有必要，请联系你的服务提供商。如果在本机或服务器上安装，你可能还需要一些管理员的信息。</Value>
   </LocaleResource>
 </Language>

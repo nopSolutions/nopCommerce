@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && productReview.Product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
             //prepare model
@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && productReview.Product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -149,14 +149,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText)
                     && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
                 {
-                    var customerLanguageId = _genericAttributeService.GetAttribute<int>(productReview.Customer,
+                    var customerLanguageId = _genericAttributeService.GetAttribute<Customer, int>(productReview.CustomerId,
                         NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
+
                     var queuedEmailIds = _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview, customerLanguageId);
                     if (queuedEmailIds.Any())
                         productReview.CustomerNotifiedOfReply = true;
                 }
 
-                _productService.UpdateProduct(productReview.Product);
+                _productService.UpdateProductReview(productReview);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditProductReview",
@@ -165,8 +166,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //vendor can edit "Reply text" only
                 if (!isLoggedInAsVendor)
                 {
+                    var product = _productService.GetProductById(productReview.ProductId);
                     //update product totals
-                    _productService.UpdateProductReviewTotals(productReview.Product);
+                    _productService.UpdateProductReviewTotals(product);
 
                     //raise event (only if it wasn't approved before and is approved now)
                     if (!previousIsApproved && productReview.IsApproved)
@@ -200,12 +202,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("List");
 
-            var product = productReview.Product;
             _productService.DeleteProductReview(productReview);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteProductReview",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id), productReview);
+
+            var product = _productService.GetProductById(productReview.ProductId);
 
             //update product totals
             _productService.UpdateProductReviewTotals(product);
@@ -233,10 +236,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = true;
-                _productService.UpdateProduct(productReview.Product);
+                _productService.UpdateProductReview(productReview);
+
+                var product = _productService.GetProductById(productReview.ProductId);
 
                 //update product totals
-                _productService.UpdateProductReviewTotals(productReview.Product);
+                _productService.UpdateProductReviewTotals(product);
 
                 //raise event 
                 _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
@@ -263,10 +268,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = false;
-                _productService.UpdateProduct(productReview.Product);
+                _productService.UpdateProductReview(productReview);
+
+                var product = _productService.GetProductById(productReview.ProductId);
 
                 //update product totals
-                _productService.UpdateProductReviewTotals(productReview.Product);
+                _productService.UpdateProductReviewTotals(product);
             }
 
             return Json(new { Result = true });
@@ -297,40 +304,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             return Json(new { Result = true });
-        }
-
-        public virtual IActionResult ProductSearchAutoComplete(string term)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return Content(string.Empty);
-
-            const int searchTermMinimumLength = 3;
-            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
-                return Content(string.Empty);
-
-            //a vendor should have access only to his products
-            var vendorId = 0;
-            if (_workContext.CurrentVendor != null)
-            {
-                vendorId = _workContext.CurrentVendor.Id;
-            }
-
-            //products
-            const int productNumber = 15;
-            var products = _productService.SearchProducts(
-                keywords: term,
-                vendorId: vendorId,
-                pageSize: productNumber,
-                showHidden: true);
-
-            var result = (from p in products
-                          select new
-                          {
-                              label = p.Name,
-                              productid = p.Id
-                          })
-                .ToList();
-            return Json(result);
         }
 
         [HttpPost]

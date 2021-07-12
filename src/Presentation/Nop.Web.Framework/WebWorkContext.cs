@@ -9,6 +9,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
+using Nop.Core.Security;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -28,6 +29,7 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
+        private readonly CookieSettings _cookieSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAuthenticationService _authenticationService;
         private readonly ICurrencyService _currencyService;
@@ -39,6 +41,7 @@ namespace Nop.Web.Framework
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUserAgentHelper _userAgentHelper;
         private readonly IVendorService _vendorService;
+        private readonly IWebHelper _webHelper;
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -53,7 +56,8 @@ namespace Nop.Web.Framework
 
         #region Ctor
 
-        public WebWorkContext(CurrencySettings currencySettings,
+        public WebWorkContext(CookieSettings cookieSettings,
+            CurrencySettings currencySettings,
             IAuthenticationService authenticationService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -64,9 +68,11 @@ namespace Nop.Web.Framework
             IStoreMappingService storeMappingService,
             IUserAgentHelper userAgentHelper,
             IVendorService vendorService,
+            IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings)
         {
+            _cookieSettings = cookieSettings;
             _currencySettings = currencySettings;
             _authenticationService = authenticationService;
             _currencyService = currencyService;
@@ -78,6 +84,7 @@ namespace Nop.Web.Framework
             _storeMappingService = storeMappingService;
             _userAgentHelper = userAgentHelper;
             _vendorService = vendorService;
+            _webHelper = webHelper;
             _localizationSettings = localizationSettings;
             _taxSettings = taxSettings;
         }
@@ -110,7 +117,7 @@ namespace Nop.Web.Framework
             _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookieName);
 
             //get date of cookie expiration
-            var cookieExpires = 24 * 365; //TODO make configurable
+            var cookieExpires = _cookieSettings.CustomerCookieExpires;
             var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
 
             //if passed guid is empty set cookie as expired
@@ -121,7 +128,8 @@ namespace Nop.Web.Framework
             var options = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = cookieExpiresDate
+                Expires = cookieExpiresDate,
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
             _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, customerGuid.ToString(), options);
         }
@@ -137,7 +145,7 @@ namespace Nop.Web.Framework
 
             //whether the requsted URL is localized
             var path = _httpContextAccessor.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false, out Language language))
+            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false, out var language))
                 return null;
 
             //check language availability
@@ -194,14 +202,14 @@ namespace Nop.Web.Framework
                     _httpContextAccessor.HttpContext.Request.Path.Equals(new PathString($"/{NopTaskDefaults.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase))
                 {
                     //in this case return built-in customer record for background task
-                    customer = _customerService.GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
+                    customer = _customerService.GetOrCreateBackgroundTaskUser();
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
                 {
                     //check whether request is made by a search engine, in this case return built-in customer record for search engines
                     if (_userAgentHelper.IsSearchEngine())
-                        customer = _customerService.GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
+                        customer = _customerService.GetOrCreateSearchEngineUser();
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
@@ -233,11 +241,11 @@ namespace Nop.Web.Framework
                     var customerCookie = GetCustomerCookie();
                     if (!string.IsNullOrEmpty(customerCookie))
                     {
-                        if (Guid.TryParse(customerCookie, out Guid customerGuid))
+                        if (Guid.TryParse(customerCookie, out var customerGuid))
                         {
                             //get customer from cookie (should not be registered)
                             var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                            if (customerByCookie != null && !customerByCookie.IsRegistered())
+                            if (customerByCookie != null && !_customerService.IsRegistered(customerByCookie))
                                 customer = customerByCookie;
                         }
                     }
@@ -270,10 +278,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
         /// </summary>
-        public virtual Customer OriginalCustomerIfImpersonated
-        {
-            get { return _originalCustomerIfImpersonated; }
-        }
+        public virtual Customer OriginalCustomerIfImpersonated => _originalCustomerIfImpersonated;
 
         /// <summary>
         /// Gets the current vendor (logged-in manager)

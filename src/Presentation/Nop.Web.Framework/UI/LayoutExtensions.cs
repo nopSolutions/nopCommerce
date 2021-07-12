@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core.Infrastructure;
-using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Framework.UI
 {

@@ -2,19 +2,16 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Reports.Customers.RegisteredCustomers").Text;
+    ViewBag.PageTitle = T("Admin.Reports.Customers.RegisteredCustomers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Registered customers");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Reports.Customers.RegisteredCustomers")
     </h1>
 </div>
-
-
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">

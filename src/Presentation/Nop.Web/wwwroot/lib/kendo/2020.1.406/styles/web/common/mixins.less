@@ -1,0 +1,215 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.flexbox() {
+    display: flex;
+}
+
+.flexbox(@type) {
+    display: ~"@{type}-flex";
+}
+
+.animation(...) {
+    animation: @arguments;
+}
+
+.animation-delay(...) {
+    animation-delay: @arguments;
+}
+
+.flex-direction(@direction) {
+    flex-direction: @direction;
+}
+
+.flex-wrap(@wrap) {
+    flex-wrap: @wrap;
+}
+
+.flex(@amount) {
+    flex: @amount;
+}
+
+.flex-align(@alignment) {
+    flex-align: @alignment;
+}
+
+.flex-align-items(@alignment) {
+    align-items: @alignment;
+}
+
+.flex-align-content(@alignment) {
+    align-content: @alignment;
+}
+
+.flex-pack(@pack) {
+    flex-pack: @pack;
+}
+
+.text-size-adjust(...) {
+    text-size-adjust: @arguments;
+}
+
+.prohibit-selection() {
+    user-select: none;
+}
+
+.disable-high-contrast() {
+    -ms-high-contrast-adjust: none;
+}
+
+.box-sizing(@sizing) {
+    box-sizing: @sizing;
+}
+
+.button-inner-size( @multiplier: 1 ) {
+    @button-inner-size: ~"calc( (2 * @{button-padding-y} + @{line-height}) * @{multiplier} )";
+}
+
+.button-size( @multiplier: 1, @button-border-width: 1px ) {
+    @button-size: ~"calc( (2 * @{button-border-width} + 2 * @{button-padding-y} + @{line-height}) * @{multiplier} )";
+}
+
+.transform(...) {
+    transform: @arguments;
+}
+
+.transform-origin(...) {
+    transform-origin: @arguments;
+}
+
+.transform-style(...) {
+    transform-style: @arguments;
+}
+
+.guarded-border-radius(@value) when (@value < 0) {
+    border-radius: 0;
+}
+
+.guarded-border-radius(@value) when (@value >= 0) {
+    border-radius: @value;
+}
+
+.box-shadow(@shadow; @rest...) when not (@shadow = false) {
+    box-shadow: @arguments;
+}
+
+.window-shadow(@shadow-color) when not (@shadow-color = transparent) {
+    border-color: @shadow-color;
+    .box-shadow(@window-shadow-style lighten(@shadow-color, 50%));
+
+    &.k-state-focused {
+        border-color: @shadow-color;
+        .box-shadow(@window-shadow-style @shadow-color);
+    }
+}
+
+.window-shadow(@shadow-color) when (@shadow-color = transparent) and (lightness(@widget-background-color) < 50%) {
+    border-color: @widget-border-color;
+
+    &.k-state-focused {
+        border-color: lighten(@widget-border-color, 20%);
+    }
+}
+
+.window-shadow(@shadow-color) when (@shadow-color = transparent) and (lightness(@widget-background-color) >= 50%) {
+    border-color: @widget-border-color;
+
+    &.k-state-focused {
+        border-color: darken(@widget-border-color, 10%);
+    }
+}
+
+.background-clip(@type) {
+    background-clip: @type;
+}
+
+.composite-background(@gradient) when (@gradient = none) {
+    background-image: @texture;
+}
+
+
+.composite-background(@gradient) when not (@gradient = none) and not (@gradient = false) {
+    background-image: @fallback-texture;
+    background-image: @texture, ~"linear-gradient(to bottom, @{gradient})";
+}
+
+.selection(@color) {
+    ::selection {
+        background-color: @color;
+        text-shadow: none;
+        color: #fff;
+    }
+
+    ::-moz-selection {
+        background-color: @color;
+        text-shadow: none;
+        color: #fff;
+    }
+}
+
+.use-font-icon() {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    vertical-align: middle;
+    background-image: none;
+    font: 16px/1 'WebComponentsIcons';
+    speak: none;
+    font-variant: normal;
+    text-transform: none;
+    text-indent: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+.border-radius( @border-radius ) {
+    border-radius: @border-radius;
+}
+.border-top-radius( @border-radius ) {
+    border-top-left-radius: @border-radius;
+    border-top-right-radius: @border-radius;
+}
+.border-right-radius( @border-radius ) {
+    border-top-right-radius: @border-radius;
+    border-bottom-right-radius: @border-radius;
+}
+.border-bottom-radius( @border-radius ) {
+    border-bottom-right-radius: @border-radius;
+    border-bottom-left-radius: @border-radius;
+}
+.border-left-radius( @border-radius ) {
+    border-bottom-left-radius: @border-radius;
+    border-top-left-radius: @border-radius;
+}
+
+
+.color(@text) when not (@text = null) {
+    color: @text;
+}
+.background-color(@bg) when not (@bg = null) {
+    background-color: @bg;
+}
+.border-color(@border) when not (@border = null) {
+    border-color: @border;
+}
+.fill(@text: null, @bg: null, @border: null) {
+    .border-color(@border);
+    .color(@text);
+    .background-color(@bg);
+}

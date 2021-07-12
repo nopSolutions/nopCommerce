@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 
 namespace Nop.Web.Framework.Events
 {
     /// <summary>
-    /// Page rendering event
+    /// Represents a page rendering event
     /// </summary>
     public class PageRenderingEvent
     {
+        #region Ctor
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -21,27 +22,41 @@ namespace Nop.Web.Framework.Events
             OverriddenRouteName = overriddenRouteName;
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// HTML helper
+        /// Gets HTML helper
         /// </summary>
         public IHtmlHelper Helper { get; private set; }
 
         /// <summary>
-        /// Overridden route name
+        /// Gets overridden route name
         /// </summary>
         public string OverriddenRouteName { get; private set; }
 
-        public IEnumerable<string> GetRouteNames()
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the route name associated with the request rendering this page
+        /// </summary>
+        /// <returns>Route name</returns>
+        public string GetRouteName()
         {
             //if an overridden route name is specified, then use it
             //we use it to specify a custom route name when some custom page uses a custom route. But we still need this event to be invoked
             if (!string.IsNullOrEmpty(OverriddenRouteName))
-            {
-                return new List<string>() { OverriddenRouteName };
-            }
+                return OverriddenRouteName;
 
-            var matchedRoutes = Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();
-            return matchedRoutes.Select(r => r.Name);
+            //or try to get a registered endpoint route name
+            var endpointFeature = Helper.ViewContext.HttpContext.Features.Get<IEndpointFeature>();
+            var routeNameMetadata = endpointFeature.Endpoint.Metadata.GetMetadata<RouteNameMetadata>();
+            return routeNameMetadata.RouteName;
         }
+
+        #endregion
     }
 }

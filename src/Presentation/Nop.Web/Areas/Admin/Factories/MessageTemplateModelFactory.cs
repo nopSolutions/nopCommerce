@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
@@ -53,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (messageTemplate != null)
             {
                 //fill in model values from the entity
-                model = model ?? messageTemplate.ToModel<MessageTemplateModel>();
+                model ??= messageTemplate.ToModel<MessageTemplateModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -148,6 +149,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     //prepare available email accounts
                     _baseAdminModelFactory.PrepareEmailAccounts(locale.AvailableEmailAccounts,
                         defaultItemText: _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"));
+
+                    //PrepareEmailAccounts only gets available accounts, we need to set the item as selected manually
+                    if (locale.AvailableEmailAccounts?.FirstOrDefault(x => x.Value == locale.EmailAccountId.ToString()) is SelectListItem emailAccountListItem)
+                    {
+                        emailAccountListItem.Selected = true;
+                    }
+
                 };
             }
 

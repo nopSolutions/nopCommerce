@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Configuration;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
+using System.Linq;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder
 {
@@ -24,6 +26,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWebHelper _webHelper;
+        private readonly IOrderService _orderService;
+        private readonly IDateTimeHelper _dateTime;
 
         #endregion
 
@@ -34,7 +38,9 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             IPaymentService paymentService,
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IOrderService orderService,
+            IDateTimeHelper dateTime)
         {
             _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
             _localizationService = localizationService;
@@ -42,6 +48,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService = settingService;
             _shoppingCartService = shoppingCartService;
             _webHelper = webHelper;
+            _orderService = orderService;
+            _dateTime = dateTime;
         }
 
         #endregion
@@ -55,7 +63,29 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            return new ProcessPaymentResult();
+            var result = new ProcessPaymentResult();
+
+            var storeDateTime = _dateTime.ConvertToUserTime(DateTime.Now);
+            var todayStart = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 0, 0, 1);
+            var todayEnd = new DateTime(storeDateTime.Year, storeDateTime.Month, storeDateTime.Day, 23, 59, 59);
+
+            var customerTodayOrders = 
+                _orderService.SearchOrders(processPaymentRequest.StoreId, 
+                customerId: processPaymentRequest.CustomerId,
+                createdFromUtc: _dateTime.ConvertToUtcTime(todayStart),
+                createdToUtc: _dateTime.ConvertToUtcTime(todayEnd));
+            var customersOrdersTotal = customerTodayOrders.Sum(x => x.OrderTotal);
+
+            if(processPaymentRequest.OrderTotal > 4000)
+            {
+                result.AddError($"Your current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
+            }
+            else if (customersOrdersTotal + processPaymentRequest.OrderTotal > 4000)
+            {
+                result.AddError($"Your today's existing orders ({customersOrdersTotal} AMD) + current order ({processPaymentRequest.OrderTotal} AMD) exceeds daily limit of 4000 AMD");
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -209,15 +239,18 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService.SaveSetting(settings);
 
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee", "Additional fee");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint", "The additional fee.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText", "Description");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription", "Pay by cheque or money order");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired", "Shippable product required");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Plugins.Payment.CheckMoneyOrder.AdditionalFee"] = "Additional fee",
+                ["Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint"] = "The additional fee.",
+                ["Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage"] = "Additional fee. Use percentage",
+                ["Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint"] = "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.",
+                ["Plugins.Payment.CheckMoneyOrder.DescriptionText"] = "Description",
+                ["Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint"] = "Enter info that will be shown to customers during checkout",
+                ["Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription"] = "Pay by cheque or money order",
+                ["Plugins.Payment.CheckMoneyOrder.ShippableProductRequired"] = "Shippable product required",
+                ["Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint"] = "An option indicating whether shippable products are required in order to display this payment method during checkout."
+            });
 
             base.Install();
         }
@@ -231,15 +264,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService.DeleteSetting<CheckMoneyOrderPaymentSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint");
+            _localizationService.DeletePluginLocaleResources("Plugins.Payment.CheckMoneyOrder");
 
             base.Uninstall();
         }
@@ -251,68 +276,46 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
-        {
-            get { return false; }
-        }
+        public bool SupportCapture => false;
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
-        {
-            get { return false; }
-        }
+        public bool SupportPartiallyRefund => false;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
-        {
-            get { return false; }
-        }
+        public bool SupportRefund => false;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
-        {
-            get { return false; }
-        }
+        public bool SupportVoid => false;
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        public RecurringPaymentType RecurringPaymentType
-        {
-            get { return RecurringPaymentType.NotSupported; }
-        }
+        public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.NotSupported;
 
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType
-        {
-            get { return PaymentMethodType.Standard; }
-        }
+        public PaymentMethodType PaymentMethodType => PaymentMethodType.Standard;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
-        {
-            get { return false; }
-        }
+        public bool SkipPaymentInfo => true;
 
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
-        public string PaymentMethodDescription
-        {
-            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-            get { return _localizationService.GetResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription"); }
-        }
+        /// <remarks>
+        /// return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+        /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+        /// </remarks>
+        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
 
         #endregion
 

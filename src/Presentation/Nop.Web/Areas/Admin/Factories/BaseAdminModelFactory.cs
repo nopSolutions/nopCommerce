@@ -12,6 +12,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -26,7 +27,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Helpers;
+using Nop.Web.Areas.Admin.Infrastructure.Cache;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -37,6 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICountryService _countryService;
@@ -54,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductTemplateService _productTemplateService;
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITopicTemplateService _topicTemplateService;
@@ -64,7 +66,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public BaseAdminModelFactory(ICategoryService categoryService,
+        public BaseAdminModelFactory(ICacheKeyService cacheKeyService,
+            ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICountryService countryService,
             ICurrencyService currencyService,
@@ -81,12 +84,13 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductTemplateService productTemplateService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             ITopicTemplateService topicTemplateService,
             IVendorService vendorService)
         {
+            _cacheKeyService = cacheKeyService;
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
             _countryService = countryService;
@@ -104,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _productTemplateService = productTemplateService;
             _shippingService = shippingService;
             _stateProvinceService = stateProvinceService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeService = storeService;
             _taxCategoryService = taxCategoryService;
             _topicTemplateService = topicTemplateService;
@@ -134,10 +138,106 @@ namespace Nop.Web.Areas.Admin.Factories
             const string value = "0";
 
             //prepare item text
-            defaultItemText = defaultItemText ?? _localizationService.GetResource("Admin.Common.All");
+            defaultItemText ??= _localizationService.GetResource("Admin.Common.All");
 
             //insert this default item at first
             items.Insert(0, new SelectListItem { Text = defaultItemText, Value = value });
+        }
+
+        /// <summary>
+        /// Get category list
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Category list</returns>
+        protected virtual List<SelectListItem> GetCategoryList(bool showHidden = true)
+        {
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoriesListKey, showHidden);
+            var listItems = _staticCacheManager.Get(cacheKey, () =>
+            {
+                var categories = _categoryService.GetAllCategories(showHidden: showHidden);
+                return categories.Select(c => new SelectListItem
+                {
+                    Text = _categoryService.GetFormattedBreadCrumb(c, categories),
+                    Value = c.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get manufacturer list
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturer list</returns>
+        protected virtual List<SelectListItem> GetManufacturerList(bool showHidden = true)
+        {
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturersListKey, showHidden);
+            var listItems = _staticCacheManager.Get(cacheKey, () =>
+            {
+                var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: showHidden);
+                return manufacturers.Select(m => new SelectListItem
+                {
+                    Text = m.Name,
+                    Value = m.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get vendor list
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Vendor list</returns>
+        protected virtual List<SelectListItem> GetVendorList(bool showHidden = true)
+        {
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorsListKey, showHidden);
+            var listItems = _staticCacheManager.Get(cacheKey, () =>
+            {
+                var vendors = _vendorService.GetAllVendors(showHidden: showHidden);
+                return vendors.Select(v => new SelectListItem
+                {
+                    Text = v.Name,
+                    Value = v.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
         }
 
         #endregion
@@ -283,7 +383,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //insert special item for the default value
             if (!items.Any())
-                PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.OtherNonUS"));
+                PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.Other"));
         }
 
         /// <summary>
@@ -409,7 +509,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available categories
-            var availableCategoryItems = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var availableCategoryItems = GetCategoryList();
             foreach (var categoryItem in availableCategoryItems)
             {
                 items.Add(categoryItem);
@@ -431,7 +531,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available manufacturers
-            var availableManufacturerItems = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            var availableManufacturerItems = GetManufacturerList();
             foreach (var manufacturerItem in availableManufacturerItems)
             {
                 items.Add(manufacturerItem);
@@ -453,7 +553,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available vendors
-            var availableVendorItems = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            var availableVendorItems = GetVendorList();
             foreach (var vendorItem in availableVendorItems)
             {
                 items.Add(vendorItem);

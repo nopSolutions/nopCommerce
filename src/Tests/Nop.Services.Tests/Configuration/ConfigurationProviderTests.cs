@@ -1,6 +1,6 @@
-﻿using Nop.Core.Configuration;
+﻿using FluentAssertions;
+using Nop.Core.Configuration;
 using Nop.Services.Configuration;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Configuration
@@ -21,11 +21,11 @@ namespace Nop.Services.Tests.Configuration
         {
             // requires settings to be set in app.config in format TestSettings.[PropertyName]
             var settings = _settingService.LoadSetting<TestSettings>();
-            settings.ServerName.ShouldEqual("Ruby");
-            settings.Ip.ShouldEqual("192.168.0.1");
-            settings.PortNumber.ShouldEqual(21);
-            settings.Username.ShouldEqual("admin");
-            settings.Password.ShouldEqual("password");
+            settings.ServerName.Should().Be("Ruby");
+            settings.Ip.Should().Be("192.168.0.1");
+            settings.PortNumber.Should().Be(21);
+            settings.Username.Should().Be("admin");
+            settings.Password.Should().Be("password");
         }
     }
 

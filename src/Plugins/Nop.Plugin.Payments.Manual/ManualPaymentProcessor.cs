@@ -269,14 +269,17 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.SaveSetting(settings);
 
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Instructions", "This payment method stores credit card information in database (it's not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode", "After checkout mark payment as");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint", "Specify transaction mode.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription", "Pay by credit / debit card");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Plugins.Payments.Manual.Instructions"] = "This payment method stores credit card information in database (it's not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.",
+                ["Plugins.Payments.Manual.Fields.AdditionalFee"] = "Additional fee",
+                ["Plugins.Payments.Manual.Fields.AdditionalFee.Hint"] = "Enter additional fee to charge your customers.",
+                ["Plugins.Payments.Manual.Fields.AdditionalFeePercentage"] = "Additional fee. Use percentage",
+                ["Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint"] = "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.",
+                ["Plugins.Payments.Manual.Fields.TransactMode"] = "After checkout mark payment as",
+                ["Plugins.Payments.Manual.Fields.TransactMode.Hint"] = "Specify transaction mode.",
+                ["Plugins.Payments.Manual.PaymentMethodDescription"] = "Pay by credit / debit card"
+            });
 
             base.Install();
         }
@@ -290,14 +293,7 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.DeleteSetting<ManualPaymentSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Instructions");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Manual.PaymentMethodDescription");
+            _localizationService.DeletePluginLocaleResources("Plugins.Payments.Manual");
 
             base.Uninstall();
         }
@@ -309,68 +305,46 @@ namespace Nop.Plugin.Payments.Manual
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
-        {
-            get { return false; }
-        }
+        public bool SupportCapture => false;
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
-        {
-            get { return false; }
-        }
+        public bool SupportPartiallyRefund => false;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
-        {
-            get { return false; }
-        }
+        public bool SupportRefund => false;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
-        {
-            get { return false; }
-        }
+        public bool SupportVoid => false;
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        public RecurringPaymentType RecurringPaymentType
-        {
-            get { return RecurringPaymentType.Manual; }
-        }
+        public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.Manual;
 
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType
-        {
-            get { return PaymentMethodType.Standard; }
-        }
+        public PaymentMethodType PaymentMethodType => PaymentMethodType.Standard;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
-        {
-            get { return false; }
-        }
+        public bool SkipPaymentInfo => false;
 
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
-        public string PaymentMethodDescription
-        {
-            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-            get { return _localizationService.GetResource("Plugins.Payments.Manual.PaymentMethodDescription"); }
-        }
+        /// <remarks>
+        /// return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+        /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+        /// </remarks>
+        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.Manual.PaymentMethodDescription");
 
         #endregion
 

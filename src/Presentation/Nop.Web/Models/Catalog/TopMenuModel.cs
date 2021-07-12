@@ -29,11 +29,7 @@ namespace Nop.Web.Models.Catalog
 
         public bool UseAjaxMenu { get; set; }
 
-        public bool HasOnlyCategories
-        {
-            get
-            {
-                return Categories.Any()
+        public bool HasOnlyCategories => Categories.Any()
                        && !Topics.Any()
                        && !DisplayHomepageMenuItem
                        && !(DisplayNewProductsMenuItem && NewProductsEnabled)
@@ -42,11 +38,9 @@ namespace Nop.Web.Models.Catalog
                        && !(DisplayBlogMenuItem && BlogEnabled)
                        && !(DisplayForumsMenuItem && ForumEnabled)
                        && !DisplayContactUsMenuItem;
-            }
-        }
 
         #region Nested classes
-        
+
         public class TopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }

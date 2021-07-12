@@ -6,7 +6,6 @@ using System.Net.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
@@ -16,6 +15,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
@@ -23,7 +23,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
@@ -42,7 +41,7 @@ namespace Nop.Services.ExportImport
         #region Constants
 
         //it's quite fast hash (to cheaply distinguish between objects)
-        private const string IMAGE_HASH_ALGORITHM = "SHA1";
+        private const string IMAGE_HASH_ALGORITHM = "SHA512";
 
         private const string UPLOADS_TEMP_PATH = "~/App_Data/TempUploads";
 
@@ -54,9 +53,8 @@ namespace Nop.Services.ExportImport
         private readonly ICategoryService _categoryService;
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
-        private readonly IEncryptionService _encryptionService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
@@ -91,9 +89,8 @@ namespace Nop.Services.ExportImport
             ICategoryService categoryService,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
-            IEncryptionService encryptionService,
             IHttpClientFactory httpClientFactory,
             ILocalizationService localizationService,
             ILogger logger,
@@ -126,7 +123,6 @@ namespace Nop.Services.ExportImport
             _customerActivityService = customerActivityService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
-            _encryptionService = encryptionService;
             _httpClientFactory = httpClientFactory;
             _fileProvider = fileProvider;
             _localizationService = localizationService;
@@ -197,32 +193,28 @@ namespace Nop.Services.ExportImport
 
         private static void CopyDataToNewFile(ImportProductMetadata metadata, ExcelWorksheet worksheet, string filePath, int startRow, int endRow, int endCell)
         {
-            using (var stream = new FileStream(filePath, FileMode.OpenOrCreate))
+            using var stream = new FileStream(filePath, FileMode.OpenOrCreate);
+            // ok, we can run the real code of the sample now
+            using var xlPackage = new ExcelPackage(stream);
+            // uncomment this line if you want the XML written out to the outputDir
+            //xlPackage.DebugMode = true; 
+
+            // get handles to the worksheets
+            var outWorksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
+            metadata.Manager.WriteCaption(outWorksheet);
+            var outRow = 2;
+            for (var row = startRow; row <= endRow; row++)
             {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
+                outWorksheet.Row(outRow).OutlineLevel = worksheet.Row(row).OutlineLevel;
+                for (var cell = 1; cell <= endCell; cell++)
                 {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
-
-                    // get handles to the worksheets
-                    var outWorksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                    metadata.Manager.WriteCaption(outWorksheet);
-                    var outRow = 2;
-                    for (var row = startRow; row <= endRow; row++)
-                    {
-                        outWorksheet.Row(outRow).OutlineLevel = worksheet.Row(row).OutlineLevel;
-                        for (var cell = 1; cell <= endCell; cell++)
-                        {
-                            outWorksheet.Cells[outRow, cell].Value = worksheet.Cells[row, cell].Value;
-                        }
-
-                        outRow += 1;
-                    }
-
-                    xlPackage.Save();
+                    outWorksheet.Cells[outRow, cell].Value = worksheet.Cells[row, cell].Value;
                 }
+
+                outRow += 1;
             }
+
+            xlPackage.Save();
         }
 
         protected virtual int GetColumnIndex(string[] properties, string columnName)
@@ -332,13 +324,14 @@ namespace Nop.Services.ExportImport
                     try
                     {
                         var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
-                        product.ProductItem.ProductPictures.Add(new ProductPicture
+                        _productService.InsertProductPicture(new ProductPicture
                         {
                             //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
                             //pictures are duplicated
                             //maybe because entity size is too large
                             PictureId = newPicture.Id,
-                            DisplayOrder = 1
+                            DisplayOrder = 1,
+                            ProductId = product.ProductItem.Id
                         });
                         _productService.UpdateProduct(product.ProductItem);
                     }
@@ -354,7 +347,7 @@ namespace Nop.Services.ExportImport
         {
             //performance optimization, load all pictures hashes
             //it will only be used if the images are stored in the SQL Server database (not compact)
-            var takeCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
+            var trimByteCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
             var productsImagesIds = _productService.GetProductsImagesIds(allProductsBySku.Select(p => p.Id).ToArray());
             var allPicturesHashes = _pictureService.GetPicturesHash(productsImagesIds.SelectMany(p => p.Value).ToArray());
 
@@ -371,32 +364,42 @@ namespace Nop.Services.ExportImport
                         var pictureAlreadyExists = false;
                         if (!product.IsNew)
                         {
-                            var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray(),
-                                IMAGE_HASH_ALGORITHM);
-                            var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType)
-                                .Take(takeCount)
-                                .ToArray(), IMAGE_HASH_ALGORITHM);
+                            var newImageHash = HashHelper.CreateHash(
+                                newPictureBinary,
+                                IMAGE_HASH_ALGORITHM,
+                                trimByteCount);
+
+                            var newValidatedImageHash = HashHelper.CreateHash(
+                                _pictureService.ValidatePicture(newPictureBinary, mimeType), 
+                                IMAGE_HASH_ALGORITHM,
+                                trimByteCount);
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                                 ? productsImagesIds[product.ProductItem.Id]
-                                : new int[0];
+                                : Array.Empty<int>();
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
-                                .Select(p => p.Value).Any(p => p == newImageHash || p == newValidatedImageHash);
+                                .Select(p => p.Value)
+                                .Any(p => 
+                                    p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) || 
+                                    p.Equals(newValidatedImageHash, StringComparison.OrdinalIgnoreCase));
                         }
 
                         if (pictureAlreadyExists)
                             continue;
 
                         var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
-                        product.ProductItem.ProductPictures.Add(new ProductPicture
+
+                        _productService.InsertProductPicture(new ProductPicture
                         {
                             //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
                             //pictures are duplicated
                             //maybe because entity size is too large
                             PictureId = newPicture.Id,
-                            DisplayOrder = 1
+                            DisplayOrder = 1,
+                            ProductId = product.ProductItem.Id
                         });
+
                         _productService.UpdateProduct(product.ProductItem);
                     }
                     catch (Exception ex)
@@ -533,7 +536,7 @@ namespace Nop.Services.ExportImport
 
             isNew = category == null;
 
-            category = category ?? new Category();
+            category ??= new Category();
 
             curentCategoryBreadCrumb = string.Empty;
 
@@ -617,9 +620,8 @@ namespace Nop.Services.ExportImport
             var isRequired = productAttributeManager.GetProperty("AttributeIsRequired").BooleanValue;
             var attributeDisplayOrder = productAttributeManager.GetProperty("AttributeDisplayOrder").IntValue;
 
-            var productAttributeMapping =
-                lastLoadedProduct.ProductAttributeMappings.FirstOrDefault(
-                    pam => pam.ProductAttributeId == productAttributeId);
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(lastLoadedProduct.Id)
+                .FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
 
             if (productAttributeMapping == null)
             {
@@ -1082,10 +1084,8 @@ namespace Nop.Services.ExportImport
                     // Resolve
                     var importManager = scope.ServiceProvider.GetRequiredService<IImportManager>();
 
-                    using (var sr = new StreamReader(path))
-                    {
-                        importManager.ImportProductsFromXlsx(sr.BaseStream);
-                    }
+                    using var sr = new StreamReader(path);
+                    importManager.ImportProductsFromXlsx(sr.BaseStream);
                 }
 
                 try
@@ -1172,610 +1172,615 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportProductsFromXlsx(Stream stream)
         {
-            using (var xlPackage = new ExcelPackage(stream))
+            using var xlPackage = new ExcelPackage(stream);
+            // get the first worksheet in the workbook
+            var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+            if (worksheet == null)
+                throw new NopException("No worksheet found");
+
+            var downloadedFiles = new List<string>();
+
+            var metadata = PrepareImportProductData(worksheet);
+
+            if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > _catalogSettings.ExportImportProductsCountInOneFile)
             {
-                // get the first worksheet in the workbook
-                var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet == null)
-                    throw new NopException("No worksheet found");
+                ImportProductsFromSplitedXlsx(worksheet, metadata);
+                return;
+            }
 
-                var downloadedFiles = new List<string>();
+            //performance optimization, load all products by SKU in one SQL request
+            var allProductsBySku = _productService.GetProductsBySku(metadata.AllSku.ToArray(), _workContext.CurrentVendor?.Id ?? 0);
 
-                var metadata = PrepareImportProductData(worksheet);
+            //validate maximum number of products per vendor
+            if (_vendorSettings.MaximumProductNumber > 0 &&
+                _workContext.CurrentVendor != null)
+            {
+                var newProductsCount = metadata.CountProductsInFile - allProductsBySku.Count;
+                if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
+                    throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
+            }
 
-                if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > _catalogSettings.ExportImportProductsCountInOneFile)
+            //performance optimization, load all categories IDs for products in one SQL request
+            var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
+
+            //performance optimization, load all categories in one SQL request
+            Dictionary<CategoryKey, Category> allCategories;
+            try
+            {
+                var allCategoryList = _categoryService.GetAllCategories(showHidden: true);
+
+                allCategories = allCategoryList
+                    .ToDictionary(c => new CategoryKey(c, _categoryService, allCategoryList, _storeMappingService), c => c);
+            }
+            catch (ArgumentException)
+            {
+                //categories with the same name are not supported in the same category level
+                throw new ArgumentException(_localizationService.GetResource("Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported"));
+            }
+
+            //performance optimization, load all manufacturers IDs for products in one SQL request
+            var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
+
+            //performance optimization, load all manufacturers in one SQL request
+            var allManufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
+
+            //performance optimization, load all stores in one SQL request
+            var allStores = _storeService.GetAllStores();
+
+            //product to import images
+            var productPictureMetadata = new List<ProductPictureMetadata>();
+
+            Product lastLoadedProduct = null;
+            var typeOfExportedAttribute = ExportedAttributeType.NotSpecified;
+
+            for (var iRow = 2; iRow < metadata.EndRow; iRow++)
+            {
+                //imports product attributes
+                if (worksheet.Row(iRow).OutlineLevel != 0)
                 {
-                    ImportProductsFromSplitedXlsx(worksheet, metadata);
-                    return;
-                }
+                    if (lastLoadedProduct == null)
+                        continue;
 
-                //performance optimization, load all products by SKU in one SQL request
-                var allProductsBySku = _productService.GetProductsBySku(metadata.AllSku.ToArray(), _workContext.CurrentVendor?.Id ?? 0);
+                    var newTypeOfExportedAttribute = GetTypeOfExportedAttribute(worksheet, metadata.ProductAttributeManager, metadata.SpecificationAttributeManager, iRow);
 
-                //validate maximum number of products per vendor
-                if (_vendorSettings.MaximumProductNumber > 0 &&
-                    _workContext.CurrentVendor != null)
-                {
-                    var newProductsCount = metadata.CountProductsInFile - allProductsBySku.Count;
-                    if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
-                        throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
-                }
-
-                //performance optimization, load all categories IDs for products in one SQL request
-                var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
-
-                //performance optimization, load all categories in one SQL request
-                Dictionary<CategoryKey, Category> allCategories;
-                try
-                {
-                    var allCategoryList = _categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false);
-
-                    allCategories = allCategoryList
-                        .ToDictionary(c => new CategoryKey(c, _categoryService, allCategoryList, _storeMappingService), c => c);
-                }
-                catch (ArgumentException)
-                {
-                    //categories with the same name are not supported in the same category level
-                    throw new ArgumentException(_localizationService.GetResource("Admin.Catalog.Products.Import.CategoriesWithSameNameNotSupported"));
-                }
-
-                //performance optimization, load all manufacturers IDs for products in one SQL request
-                var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
-
-                //performance optimization, load all manufacturers in one SQL request
-                var allManufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
-
-                //performance optimization, load all stores in one SQL request
-                var allStores = _storeService.GetAllStores();
-
-                //product to import images
-                var productPictureMetadata = new List<ProductPictureMetadata>();
-
-                Product lastLoadedProduct = null;
-                var typeOfExportedAttribute = ExportedAttributeType.NotSpecified;
-
-                for (var iRow = 2; iRow < metadata.EndRow; iRow++)
-                {
-                    //imports product attributes
-                    if (worksheet.Row(iRow).OutlineLevel != 0)
+                    //skip caption row
+                    if (newTypeOfExportedAttribute != ExportedAttributeType.NotSpecified &&
+                        newTypeOfExportedAttribute != typeOfExportedAttribute)
                     {
-                        if (lastLoadedProduct == null)
-                            continue;
-
-                        var newTypeOfExportedAttribute = GetTypeOfExportedAttribute(worksheet, metadata.ProductAttributeManager, metadata.SpecificationAttributeManager, iRow);
-
-                        //skip caption row
-                        if (newTypeOfExportedAttribute != ExportedAttributeType.NotSpecified &&
-                            newTypeOfExportedAttribute != typeOfExportedAttribute)
-                        {
-                            typeOfExportedAttribute = newTypeOfExportedAttribute;
-                            continue;
-                        }
-
-                        switch (typeOfExportedAttribute)
-                        {
-                            case ExportedAttributeType.ProductAttribute:
-                                ImportProductAttribute(metadata.ProductAttributeManager, lastLoadedProduct);
-                                break;
-                            case ExportedAttributeType.SpecificationAttribute:
-                                ImportSpecificationAttribute(metadata.SpecificationAttributeManager, lastLoadedProduct);
-                                break;
-                            case ExportedAttributeType.NotSpecified:
-                            default:
-                                continue;
-                        }
-
+                        typeOfExportedAttribute = newTypeOfExportedAttribute;
                         continue;
                     }
 
-                    metadata.Manager.ReadFromXlsx(worksheet, iRow);
-
-                    var product = metadata.SkuCellNum > 0 ? allProductsBySku.FirstOrDefault(p => p.Sku == metadata.Manager.GetProperty("SKU").StringValue) : null;
-
-                    var isNew = product == null;
-
-                    product = product ?? new Product();
-
-                    //some of previous values
-                    var previousStockQuantity = product.StockQuantity;
-                    var previousWarehouseId = product.WarehouseId;
-
-                    if (isNew)
-                        product.CreatedOnUtc = DateTime.UtcNow;
-
-                    foreach (var property in metadata.Manager.GetProperties)
+                    switch (typeOfExportedAttribute)
                     {
-                        switch (property.PropertyName)
+                        case ExportedAttributeType.ProductAttribute:
+                            ImportProductAttribute(metadata.ProductAttributeManager, lastLoadedProduct);
+                            break;
+                        case ExportedAttributeType.SpecificationAttribute:
+                            ImportSpecificationAttribute(metadata.SpecificationAttributeManager, lastLoadedProduct);
+                            break;
+                        case ExportedAttributeType.NotSpecified:
+                        default:
+                            continue;
+                    }
+
+                    continue;
+                }
+
+                metadata.Manager.ReadFromXlsx(worksheet, iRow);
+
+                var product = metadata.SkuCellNum > 0 ? allProductsBySku.FirstOrDefault(p => p.Sku == metadata.Manager.GetProperty("SKU").StringValue) : null;
+
+                var isNew = product == null;
+
+                product ??= new Product();
+
+                //some of previous values
+                var previousStockQuantity = product.StockQuantity;
+                var previousWarehouseId = product.WarehouseId;
+
+                if (isNew)
+                    product.CreatedOnUtc = DateTime.UtcNow;
+
+                foreach (var property in metadata.Manager.GetProperties)
+                {
+                    switch (property.PropertyName)
+                    {
+                        case "ProductType":
+                            product.ProductTypeId = property.IntValue;
+                            break;
+                        case "ParentGroupedProductId":
+                            product.ParentGroupedProductId = property.IntValue;
+                            break;
+                        case "VisibleIndividually":
+                            product.VisibleIndividually = property.BooleanValue;
+                            break;
+                        case "Name":
+                            product.Name = property.StringValue;
+                            break;
+                        case "ShortDescription":
+                            product.ShortDescription = property.StringValue;
+                            break;
+                        case "FullDescription":
+                            product.FullDescription = property.StringValue;
+                            break;
+                        case "Vendor":
+                            //vendor can't change this field
+                            if (_workContext.CurrentVendor == null)
+                                product.VendorId = property.IntValue;
+                            break;
+                        case "ProductTemplate":
+                            product.ProductTemplateId = property.IntValue;
+                            break;
+                        case "ShowOnHomepage":
+                            //vendor can't change this field
+                            if (_workContext.CurrentVendor == null)
+                                product.ShowOnHomepage = property.BooleanValue;
+                            break;
+                        case "DisplayOrder":
+                            //vendor can't change this field
+                            if (_workContext.CurrentVendor == null)
+                                product.DisplayOrder = property.IntValue;
+                            break;
+                        case "MetaKeywords":
+                            product.MetaKeywords = property.StringValue;
+                            break;
+                        case "MetaDescription":
+                            product.MetaDescription = property.StringValue;
+                            break;
+                        case "MetaTitle":
+                            product.MetaTitle = property.StringValue;
+                            break;
+                        case "AllowCustomerReviews":
+                            product.AllowCustomerReviews = property.BooleanValue;
+                            break;
+                        case "Published":
+                            product.Published = property.BooleanValue;
+                            break;
+                        case "SKU":
+                            product.Sku = property.StringValue;
+                            break;
+                        case "ManufacturerPartNumber":
+                            product.ManufacturerPartNumber = property.StringValue;
+                            break;
+                        case "Gtin":
+                            product.Gtin = property.StringValue;
+                            break;
+                        case "IsGiftCard":
+                            product.IsGiftCard = property.BooleanValue;
+                            break;
+                        case "GiftCardType":
+                            product.GiftCardTypeId = property.IntValue;
+                            break;
+                        case "OverriddenGiftCardAmount":
+                            product.OverriddenGiftCardAmount = property.DecimalValue;
+                            break;
+                        case "RequireOtherProducts":
+                            product.RequireOtherProducts = property.BooleanValue;
+                            break;
+                        case "RequiredProductIds":
+                            product.RequiredProductIds = property.StringValue;
+                            break;
+                        case "AutomaticallyAddRequiredProducts":
+                            product.AutomaticallyAddRequiredProducts = property.BooleanValue;
+                            break;
+                        case "IsDownload":
+                            product.IsDownload = property.BooleanValue;
+                            break;
+                        case "DownloadId":
+                            product.DownloadId = property.IntValue;
+                            break;
+                        case "UnlimitedDownloads":
+                            product.UnlimitedDownloads = property.BooleanValue;
+                            break;
+                        case "MaxNumberOfDownloads":
+                            product.MaxNumberOfDownloads = property.IntValue;
+                            break;
+                        case "DownloadActivationType":
+                            product.DownloadActivationTypeId = property.IntValue;
+                            break;
+                        case "HasSampleDownload":
+                            product.HasSampleDownload = property.BooleanValue;
+                            break;
+                        case "SampleDownloadId":
+                            product.SampleDownloadId = property.IntValue;
+                            break;
+                        case "HasUserAgreement":
+                            product.HasUserAgreement = property.BooleanValue;
+                            break;
+                        case "UserAgreementText":
+                            product.UserAgreementText = property.StringValue;
+                            break;
+                        case "IsRecurring":
+                            product.IsRecurring = property.BooleanValue;
+                            break;
+                        case "RecurringCycleLength":
+                            product.RecurringCycleLength = property.IntValue;
+                            break;
+                        case "RecurringCyclePeriod":
+                            product.RecurringCyclePeriodId = property.IntValue;
+                            break;
+                        case "RecurringTotalCycles":
+                            product.RecurringTotalCycles = property.IntValue;
+                            break;
+                        case "IsRental":
+                            product.IsRental = property.BooleanValue;
+                            break;
+                        case "RentalPriceLength":
+                            product.RentalPriceLength = property.IntValue;
+                            break;
+                        case "RentalPricePeriod":
+                            product.RentalPricePeriodId = property.IntValue;
+                            break;
+                        case "IsShipEnabled":
+                            product.IsShipEnabled = property.BooleanValue;
+                            break;
+                        case "IsFreeShipping":
+                            product.IsFreeShipping = property.BooleanValue;
+                            break;
+                        case "ShipSeparately":
+                            product.ShipSeparately = property.BooleanValue;
+                            break;
+                        case "AdditionalShippingCharge":
+                            product.AdditionalShippingCharge = property.DecimalValue;
+                            break;
+                        case "DeliveryDate":
+                            product.DeliveryDateId = property.IntValue;
+                            break;
+                        case "IsTaxExempt":
+                            product.IsTaxExempt = property.BooleanValue;
+                            break;
+                        case "TaxCategory":
+                            product.TaxCategoryId = property.IntValue;
+                            break;
+                        case "IsTelecommunicationsOrBroadcastingOrElectronicServices":
+                            product.IsTelecommunicationsOrBroadcastingOrElectronicServices = property.BooleanValue;
+                            break;
+                        case "ManageInventoryMethod":
+                            product.ManageInventoryMethodId = property.IntValue;
+                            break;
+                        case "ProductAvailabilityRange":
+                            product.ProductAvailabilityRangeId = property.IntValue;
+                            break;
+                        case "UseMultipleWarehouses":
+                            product.UseMultipleWarehouses = property.BooleanValue;
+                            break;
+                        case "WarehouseId":
+                            product.WarehouseId = property.IntValue;
+                            break;
+                        case "StockQuantity":
+                            product.StockQuantity = property.IntValue;
+                            break;
+                        case "DisplayStockAvailability":
+                            product.DisplayStockAvailability = property.BooleanValue;
+                            break;
+                        case "DisplayStockQuantity":
+                            product.DisplayStockQuantity = property.BooleanValue;
+                            break;
+                        case "MinStockQuantity":
+                            product.MinStockQuantity = property.IntValue;
+                            break;
+                        case "LowStockActivity":
+                            product.LowStockActivityId = property.IntValue;
+                            break;
+                        case "NotifyAdminForQuantityBelow":
+                            product.NotifyAdminForQuantityBelow = property.IntValue;
+                            break;
+                        case "BackorderMode":
+                            product.BackorderModeId = property.IntValue;
+                            break;
+                        case "AllowBackInStockSubscriptions":
+                            product.AllowBackInStockSubscriptions = property.BooleanValue;
+                            break;
+                        case "OrderMinimumQuantity":
+                            product.OrderMinimumQuantity = property.IntValue;
+                            break;
+                        case "OrderMaximumQuantity":
+                            product.OrderMaximumQuantity = property.IntValue;
+                            break;
+                        case "AllowedQuantities":
+                            product.AllowedQuantities = property.StringValue;
+                            break;
+                        case "AllowAddingOnlyExistingAttributeCombinations":
+                            product.AllowAddingOnlyExistingAttributeCombinations = property.BooleanValue;
+                            break;
+                        case "NotReturnable":
+                            product.NotReturnable = property.BooleanValue;
+                            break;
+                        case "DisableBuyButton":
+                            product.DisableBuyButton = property.BooleanValue;
+                            break;
+                        case "DisableWishlistButton":
+                            product.DisableWishlistButton = property.BooleanValue;
+                            break;
+                        case "AvailableForPreOrder":
+                            product.AvailableForPreOrder = property.BooleanValue;
+                            break;
+                        case "PreOrderAvailabilityStartDateTimeUtc":
+                            product.PreOrderAvailabilityStartDateTimeUtc = property.DateTimeNullable;
+                            break;
+                        case "CallForPrice":
+                            product.CallForPrice = property.BooleanValue;
+                            break;
+                        case "Price":
+                            product.Price = property.DecimalValue;
+                            break;
+                        case "OldPrice":
+                            product.OldPrice = property.DecimalValue;
+                            break;
+                        case "ProductCost":
+                            product.ProductCost = property.DecimalValue;
+                            break;
+                        case "CustomerEntersPrice":
+                            product.CustomerEntersPrice = property.BooleanValue;
+                            break;
+                        case "MinimumCustomerEnteredPrice":
+                            product.MinimumCustomerEnteredPrice = property.DecimalValue;
+                            break;
+                        case "MaximumCustomerEnteredPrice":
+                            product.MaximumCustomerEnteredPrice = property.DecimalValue;
+                            break;
+                        case "BasepriceEnabled":
+                            product.BasepriceEnabled = property.BooleanValue;
+                            break;
+                        case "BasepriceAmount":
+                            product.BasepriceAmount = property.DecimalValue;
+                            break;
+                        case "BasepriceUnit":
+                            product.BasepriceUnitId = property.IntValue;
+                            break;
+                        case "BasepriceBaseAmount":
+                            product.BasepriceBaseAmount = property.DecimalValue;
+                            break;
+                        case "BasepriceBaseUnit":
+                            product.BasepriceBaseUnitId = property.IntValue;
+                            break;
+                        case "MarkAsNew":
+                            product.MarkAsNew = property.BooleanValue;
+                            break;
+                        case "MarkAsNewStartDateTimeUtc":
+                            product.MarkAsNewStartDateTimeUtc = property.DateTimeNullable;
+                            break;
+                        case "MarkAsNewEndDateTimeUtc":
+                            product.MarkAsNewEndDateTimeUtc = property.DateTimeNullable;
+                            break;
+                        case "Weight":
+                            product.Weight = property.DecimalValue;
+                            break;
+                        case "Length":
+                            product.Length = property.DecimalValue;
+                            break;
+                        case "Width":
+                            product.Width = property.DecimalValue;
+                            break;
+                        case "Height":
+                            product.Height = property.DecimalValue;
+                            break;
+                        case "IsLimitedToStores":
+                            product.LimitedToStores = property.BooleanValue;
+                            break;
+                    }
+                }
+
+                //set some default values if not specified
+                if (isNew && metadata.Properties.All(p => p.PropertyName != "ProductType"))
+                    product.ProductType = ProductType.SimpleProduct;
+                if (isNew && metadata.Properties.All(p => p.PropertyName != "VisibleIndividually"))
+                    product.VisibleIndividually = true;
+                if (isNew && metadata.Properties.All(p => p.PropertyName != "Published"))
+                    product.Published = true;
+
+                //sets the current vendor for the new product
+                if (isNew && _workContext.CurrentVendor != null)
+                    product.VendorId = _workContext.CurrentVendor.Id;
+
+                product.UpdatedOnUtc = DateTime.UtcNow;
+
+                if (isNew)
+                {
+                    _productService.InsertProduct(product);
+                }
+                else
+                {
+                    _productService.UpdateProduct(product);
+                }
+
+                //quantity change history
+                if (isNew || previousWarehouseId == product.WarehouseId)
+                {
+                    _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
+                        product.WarehouseId, _localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.Edit"));
+                }
+                //warehouse is changed 
+                else
+                {
+                    //compose a message
+                    var oldWarehouseMessage = string.Empty;
+                    if (previousWarehouseId > 0)
+                    {
+                        var oldWarehouse = _shippingService.GetWarehouseById(previousWarehouseId);
+                        if (oldWarehouse != null)
+                            oldWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
+                    }
+
+                    var newWarehouseMessage = string.Empty;
+                    if (product.WarehouseId > 0)
+                    {
+                        var newWarehouse = _shippingService.GetWarehouseById(product.WarehouseId);
+                        if (newWarehouse != null)
+                            newWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
+                    }
+
+                    var message = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.EditWarehouse"), oldWarehouseMessage, newWarehouseMessage);
+
+                    //record history
+                    _productService.AddStockQuantityHistoryEntry(product, -previousStockQuantity, 0, previousWarehouseId, message);
+                    _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
+                }
+
+                var tempProperty = metadata.Manager.GetProperty("SeName");
+
+                //search engine name
+                var seName = tempProperty?.StringValue ?? (isNew ? string.Empty : _urlRecordService.GetSeName(product, 0));
+                _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
+
+                tempProperty = metadata.Manager.GetProperty("Categories");
+
+                if (tempProperty != null)
+                {
+                    var categoryList = tempProperty.StringValue;
+
+                    //category mappings
+                    var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsCategoryIds[product.Id];
+
+                    var importedCategories = categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(categoryName => new CategoryKey(categoryName))
+                        .Select(categoryKey =>
                         {
-                            case "ProductType":
-                                product.ProductTypeId = property.IntValue;
-                                break;
-                            case "ParentGroupedProductId":
-                                product.ParentGroupedProductId = property.IntValue;
-                                break;
-                            case "VisibleIndividually":
-                                product.VisibleIndividually = property.BooleanValue;
-                                break;
-                            case "Name":
-                                product.Name = property.StringValue;
-                                break;
-                            case "ShortDescription":
-                                product.ShortDescription = property.StringValue;
-                                break;
-                            case "FullDescription":
-                                product.FullDescription = property.StringValue;
-                                break;
-                            case "Vendor":
-                                //vendor can't change this field
-                                if (_workContext.CurrentVendor == null)
-                                    product.VendorId = property.IntValue;
-                                break;
-                            case "ProductTemplate":
-                                product.ProductTemplateId = property.IntValue;
-                                break;
-                            case "ShowOnHomepage":
-                                //vendor can't change this field
-                                if (_workContext.CurrentVendor == null)
-                                    product.ShowOnHomepage = property.BooleanValue;
-                                break;
-                            case "MetaKeywords":
-                                product.MetaKeywords = property.StringValue;
-                                break;
-                            case "MetaDescription":
-                                product.MetaDescription = property.StringValue;
-                                break;
-                            case "MetaTitle":
-                                product.MetaTitle = property.StringValue;
-                                break;
-                            case "AllowCustomerReviews":
-                                product.AllowCustomerReviews = property.BooleanValue;
-                                break;
-                            case "Published":
-                                product.Published = property.BooleanValue;
-                                break;
-                            case "SKU":
-                                product.Sku = property.StringValue;
-                                break;
-                            case "ManufacturerPartNumber":
-                                product.ManufacturerPartNumber = property.StringValue;
-                                break;
-                            case "Gtin":
-                                product.Gtin = property.StringValue;
-                                break;
-                            case "IsGiftCard":
-                                product.IsGiftCard = property.BooleanValue;
-                                break;
-                            case "GiftCardType":
-                                product.GiftCardTypeId = property.IntValue;
-                                break;
-                            case "OverriddenGiftCardAmount":
-                                product.OverriddenGiftCardAmount = property.DecimalValue;
-                                break;
-                            case "RequireOtherProducts":
-                                product.RequireOtherProducts = property.BooleanValue;
-                                break;
-                            case "RequiredProductIds":
-                                product.RequiredProductIds = property.StringValue;
-                                break;
-                            case "AutomaticallyAddRequiredProducts":
-                                product.AutomaticallyAddRequiredProducts = property.BooleanValue;
-                                break;
-                            case "IsDownload":
-                                product.IsDownload = property.BooleanValue;
-                                break;
-                            case "DownloadId":
-                                product.DownloadId = property.IntValue;
-                                break;
-                            case "UnlimitedDownloads":
-                                product.UnlimitedDownloads = property.BooleanValue;
-                                break;
-                            case "MaxNumberOfDownloads":
-                                product.MaxNumberOfDownloads = property.IntValue;
-                                break;
-                            case "DownloadActivationType":
-                                product.DownloadActivationTypeId = property.IntValue;
-                                break;
-                            case "HasSampleDownload":
-                                product.HasSampleDownload = property.BooleanValue;
-                                break;
-                            case "SampleDownloadId":
-                                product.SampleDownloadId = property.IntValue;
-                                break;
-                            case "HasUserAgreement":
-                                product.HasUserAgreement = property.BooleanValue;
-                                break;
-                            case "UserAgreementText":
-                                product.UserAgreementText = property.StringValue;
-                                break;
-                            case "IsRecurring":
-                                product.IsRecurring = property.BooleanValue;
-                                break;
-                            case "RecurringCycleLength":
-                                product.RecurringCycleLength = property.IntValue;
-                                break;
-                            case "RecurringCyclePeriod":
-                                product.RecurringCyclePeriodId = property.IntValue;
-                                break;
-                            case "RecurringTotalCycles":
-                                product.RecurringTotalCycles = property.IntValue;
-                                break;
-                            case "IsRental":
-                                product.IsRental = property.BooleanValue;
-                                break;
-                            case "RentalPriceLength":
-                                product.RentalPriceLength = property.IntValue;
-                                break;
-                            case "RentalPricePeriod":
-                                product.RentalPricePeriodId = property.IntValue;
-                                break;
-                            case "IsShipEnabled":
-                                product.IsShipEnabled = property.BooleanValue;
-                                break;
-                            case "IsFreeShipping":
-                                product.IsFreeShipping = property.BooleanValue;
-                                break;
-                            case "ShipSeparately":
-                                product.ShipSeparately = property.BooleanValue;
-                                break;
-                            case "AdditionalShippingCharge":
-                                product.AdditionalShippingCharge = property.DecimalValue;
-                                break;
-                            case "DeliveryDate":
-                                product.DeliveryDateId = property.IntValue;
-                                break;
-                            case "IsTaxExempt":
-                                product.IsTaxExempt = property.BooleanValue;
-                                break;
-                            case "TaxCategory":
-                                product.TaxCategoryId = property.IntValue;
-                                break;
-                            case "IsTelecommunicationsOrBroadcastingOrElectronicServices":
-                                product.IsTelecommunicationsOrBroadcastingOrElectronicServices = property.BooleanValue;
-                                break;
-                            case "ManageInventoryMethod":
-                                product.ManageInventoryMethodId = property.IntValue;
-                                break;
-                            case "ProductAvailabilityRange":
-                                product.ProductAvailabilityRangeId = property.IntValue;
-                                break;
-                            case "UseMultipleWarehouses":
-                                product.UseMultipleWarehouses = property.BooleanValue;
-                                break;
-                            case "WarehouseId":
-                                product.WarehouseId = property.IntValue;
-                                break;
-                            case "StockQuantity":
-                                product.StockQuantity = property.IntValue;
-                                break;
-                            case "DisplayStockAvailability":
-                                product.DisplayStockAvailability = property.BooleanValue;
-                                break;
-                            case "DisplayStockQuantity":
-                                product.DisplayStockQuantity = property.BooleanValue;
-                                break;
-                            case "MinStockQuantity":
-                                product.MinStockQuantity = property.IntValue;
-                                break;
-                            case "LowStockActivity":
-                                product.LowStockActivityId = property.IntValue;
-                                break;
-                            case "NotifyAdminForQuantityBelow":
-                                product.NotifyAdminForQuantityBelow = property.IntValue;
-                                break;
-                            case "BackorderMode":
-                                product.BackorderModeId = property.IntValue;
-                                break;
-                            case "AllowBackInStockSubscriptions":
-                                product.AllowBackInStockSubscriptions = property.BooleanValue;
-                                break;
-                            case "OrderMinimumQuantity":
-                                product.OrderMinimumQuantity = property.IntValue;
-                                break;
-                            case "OrderMaximumQuantity":
-                                product.OrderMaximumQuantity = property.IntValue;
-                                break;
-                            case "AllowedQuantities":
-                                product.AllowedQuantities = property.StringValue;
-                                break;
-                            case "AllowAddingOnlyExistingAttributeCombinations":
-                                product.AllowAddingOnlyExistingAttributeCombinations = property.BooleanValue;
-                                break;
-                            case "NotReturnable":
-                                product.NotReturnable = property.BooleanValue;
-                                break;
-                            case "DisableBuyButton":
-                                product.DisableBuyButton = property.BooleanValue;
-                                break;
-                            case "DisableWishlistButton":
-                                product.DisableWishlistButton = property.BooleanValue;
-                                break;
-                            case "AvailableForPreOrder":
-                                product.AvailableForPreOrder = property.BooleanValue;
-                                break;
-                            case "PreOrderAvailabilityStartDateTimeUtc":
-                                product.PreOrderAvailabilityStartDateTimeUtc = property.DateTimeNullable;
-                                break;
-                            case "CallForPrice":
-                                product.CallForPrice = property.BooleanValue;
-                                break;
-                            case "Price":
-                                product.Price = property.DecimalValue;
-                                break;
-                            case "OldPrice":
-                                product.OldPrice = property.DecimalValue;
-                                break;
-                            case "ProductCost":
-                                product.ProductCost = property.DecimalValue;
-                                break;
-                            case "CustomerEntersPrice":
-                                product.CustomerEntersPrice = property.BooleanValue;
-                                break;
-                            case "MinimumCustomerEnteredPrice":
-                                product.MinimumCustomerEnteredPrice = property.DecimalValue;
-                                break;
-                            case "MaximumCustomerEnteredPrice":
-                                product.MaximumCustomerEnteredPrice = property.DecimalValue;
-                                break;
-                            case "BasepriceEnabled":
-                                product.BasepriceEnabled = property.BooleanValue;
-                                break;
-                            case "BasepriceAmount":
-                                product.BasepriceAmount = property.DecimalValue;
-                                break;
-                            case "BasepriceUnit":
-                                product.BasepriceUnitId = property.IntValue;
-                                break;
-                            case "BasepriceBaseAmount":
-                                product.BasepriceBaseAmount = property.DecimalValue;
-                                break;
-                            case "BasepriceBaseUnit":
-                                product.BasepriceBaseUnitId = property.IntValue;
-                                break;
-                            case "MarkAsNew":
-                                product.MarkAsNew = property.BooleanValue;
-                                break;
-                            case "MarkAsNewStartDateTimeUtc":
-                                product.MarkAsNewStartDateTimeUtc = property.DateTimeNullable;
-                                break;
-                            case "MarkAsNewEndDateTimeUtc":
-                                product.MarkAsNewEndDateTimeUtc = property.DateTimeNullable;
-                                break;
-                            case "Weight":
-                                product.Weight = property.DecimalValue;
-                                break;
-                            case "Length":
-                                product.Length = property.DecimalValue;
-                                break;
-                            case "Width":
-                                product.Width = property.DecimalValue;
-                                break;
-                            case "Height":
-                                product.Height = property.DecimalValue;
-                                break;
-                            case "IsLimitedToStores":
-                                product.LimitedToStores = property.BooleanValue;
-                                break;
-                        }
-                    }
+                            var rez = allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id;
 
-                    //set some default values if not specified
-                    if (isNew && metadata.Properties.All(p => p.PropertyName != "ProductType"))
-                        product.ProductType = ProductType.SimpleProduct;
-                    if (isNew && metadata.Properties.All(p => p.PropertyName != "VisibleIndividually"))
-                        product.VisibleIndividually = true;
-                    if (isNew && metadata.Properties.All(p => p.PropertyName != "Published"))
-                        product.Published = true;
-
-                    //sets the current vendor for the new product
-                    if (isNew && _workContext.CurrentVendor != null)
-                        product.VendorId = _workContext.CurrentVendor.Id;
-
-                    product.UpdatedOnUtc = DateTime.UtcNow;
-
-                    if (isNew)
-                    {
-                        _productService.InsertProduct(product);
-                    }
-                    else
-                    {
-                        _productService.UpdateProduct(product);
-                    }
-
-                    //quantity change history
-                    if (isNew || previousWarehouseId == product.WarehouseId)
-                    {
-                        _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
-                            product.WarehouseId, _localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.Edit"));
-                    }
-                    //warehouse is changed 
-                    else
-                    {
-                        //compose a message
-                        var oldWarehouseMessage = string.Empty;
-                        if (previousWarehouseId > 0)
-                        {
-                            var oldWarehouse = _shippingService.GetWarehouseById(previousWarehouseId);
-                            if (oldWarehouse != null)
-                                oldWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
-                        }
-
-                        var newWarehouseMessage = string.Empty;
-                        if (product.WarehouseId > 0)
-                        {
-                            var newWarehouse = _shippingService.GetWarehouseById(product.WarehouseId);
-                            if (newWarehouse != null)
-                                newWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
-                        }
-
-                        var message = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.EditWarehouse"), oldWarehouseMessage, newWarehouseMessage);
-
-                        //record history
-                        _productService.AddStockQuantityHistoryEntry(product, -previousStockQuantity, 0, previousWarehouseId, message);
-                        _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
-                    }
-
-                    var tempProperty = metadata.Manager.GetProperty("SeName");
-
-                    //search engine name
-                    var seName = tempProperty?.StringValue ?? (isNew ? string.Empty : _urlRecordService.GetSeName(product, 0));
-                    _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
-                    
-                    tempProperty = metadata.Manager.GetProperty("Categories");
-
-                    if (tempProperty != null)
-                    {
-                        var categoryList = tempProperty.StringValue;
-
-                        //category mappings
-                        var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
-
-                        var importedCategories = categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(categoryName => new CategoryKey(categoryName))
-                            .Select(categoryKey =>
+                            if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id))
                             {
-                                var rez = allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id;
+                                rez = id;
+                            }
 
-                                if (!rez.HasValue && int.TryParse(categoryKey.Key, out var id))
-                                {
-                                    rez = id;
-                                }
-
-                                if (!rez.HasValue)
-                                {
+                            if (!rez.HasValue)
+                            {
                                     //database doesn't contain the imported category
                                     throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
-                                }
+                            }
 
-                                return rez.Value;
-                            }).ToList();
+                            return rez.Value;
+                        }).ToList();
 
-                        foreach (var categoryId in importedCategories)
+                    foreach (var categoryId in importedCategories)
+                    {
+                        if (categories.Any(c => c == categoryId))
+                            continue;
+
+                        var productCategory = new ProductCategory
                         {
-                            if (categories.Any(c => c == categoryId))
-                                continue;
-
-                            var productCategory = new ProductCategory
-                            {
-                                ProductId = product.Id,
-                                CategoryId = categoryId,
-                                IsFeaturedProduct = false,
-                                DisplayOrder = 1
-                            };
-                            _categoryService.InsertProductCategory(productCategory);
-                        }
-
-                        //delete product categories
-                        var deletedProductCategories = categories.Where(categoryId => !importedCategories.Contains(categoryId))
-                            .Select(categoryId => product.ProductCategories.First(pc => pc.CategoryId == categoryId));
-                        foreach (var deletedProductCategory in deletedProductCategories)
-                        {
-                            _categoryService.DeleteProductCategory(deletedProductCategory);
-                        }
+                            ProductId = product.Id,
+                            CategoryId = categoryId,
+                            IsFeaturedProduct = false,
+                            DisplayOrder = 1
+                        };
+                        _categoryService.InsertProductCategory(productCategory);
                     }
 
-                    tempProperty = metadata.Manager.GetProperty("Manufacturers");
-                    if (tempProperty != null)
+                    //delete product categories
+                    var deletedProductCategories = categories.Where(categoryId => !importedCategories.Contains(categoryId))
+                        .Select(categoryId => _categoryService.GetProductCategoriesByProductId(product.Id).First(pc => pc.CategoryId == categoryId));
+
+                    foreach (var deletedProductCategory in deletedProductCategories)
                     {
-                        var manufacturerList = tempProperty.StringValue;
-
-                        //manufacturer mappings
-                        var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? new int[0] : allProductsManufacturerIds[product.Id];
-                        var importedManufacturers = manufacturerList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(x => allManufacturers.FirstOrDefault(m => m.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList();
-                        foreach (var manufacturerId in importedManufacturers)
-                        {
-                            if (manufacturers.Any(c => c == manufacturerId))
-                                continue;
-
-                            var productManufacturer = new ProductManufacturer
-                            {
-                                ProductId = product.Id,
-                                ManufacturerId = manufacturerId,
-                                IsFeaturedProduct = false,
-                                DisplayOrder = 1
-                            };
-                            _manufacturerService.InsertProductManufacturer(productManufacturer);
-                        }
-
-                        //delete product manufacturers
-                        var deletedProductsManufacturers = manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
-                            .Select(manufacturerId => product.ProductManufacturers.First(pc => pc.ManufacturerId == manufacturerId));
-                        foreach (var deletedProductManufacturer in deletedProductsManufacturers)
-                        {
-                            _manufacturerService.DeleteProductManufacturer(deletedProductManufacturer);
-                        }
+                        _categoryService.DeleteProductCategory(deletedProductCategory);
                     }
-
-                    tempProperty = metadata.Manager.GetProperty("ProductTags");
-                    if (tempProperty != null)
-                    {
-                        var productTags = tempProperty.StringValue.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
-
-                        //searching existing product tags by their id
-                        var productTagIds = productTags.Where(pt => int.TryParse(pt, out var _)).Select(int.Parse);
-                        var pruductTagsByIds = product.ProductProductTagMappings
-                            .Select(mapping => mapping.ProductTag).Where(pt => productTagIds.Contains(pt.Id)).ToList();
-                        productTags.AddRange(pruductTagsByIds.Select(pt => pt.Name));
-                        var filter = pruductTagsByIds.Select(pt => pt.Id.ToString()).ToList();
-
-                        //product tag mappings
-                        _productTagService.UpdateProductTags(product, productTags.Where(pt => !filter.Contains(pt)).ToArray());
-                    }
-
-                    tempProperty = metadata.Manager.GetProperty("LimitedToStores");
-                    if (tempProperty != null)
-                    {
-                        var limitedToStoresList = tempProperty.StringValue;
-
-                        var importedStores = product.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
-
-                        _productService.UpdateProductStoreMappings(product, importedStores);
-                    }
-
-                    var picture1 = DownloadFile(metadata.Manager.GetProperty("Picture1")?.StringValue, downloadedFiles);
-                    var picture2 = DownloadFile(metadata.Manager.GetProperty("Picture2")?.StringValue, downloadedFiles);
-                    var picture3 = DownloadFile(metadata.Manager.GetProperty("Picture3")?.StringValue, downloadedFiles);
-
-                    productPictureMetadata.Add(new ProductPictureMetadata
-                    {
-                        ProductItem = product,
-                        Picture1Path = picture1,
-                        Picture2Path = picture2,
-                        Picture3Path = picture3,
-                        IsNew = isNew
-                    });
-
-                    lastLoadedProduct = product;
-
-                    //update "HasTierPrices" and "HasDiscountsApplied" properties
-                    //_productService.UpdateHasTierPricesProperty(product);
-                    //_productService.UpdateHasDiscountsApplied(product);
                 }
 
-                if (_mediaSettings.ImportProductImagesUsingHash && _pictureService.StoreInDb && _dataProvider.SupportedLengthOfBinaryHash > 0)
-                    ImportProductImagesUsingHash(productPictureMetadata, allProductsBySku);
-                else
-                    ImportProductImagesUsingServices(productPictureMetadata);
-
-                foreach (var downloadedFile in downloadedFiles)
+                tempProperty = metadata.Manager.GetProperty("Manufacturers");
+                if (tempProperty != null)
                 {
-                    if (!_fileProvider.FileExists(downloadedFile))
-                        continue;
+                    var manufacturerList = tempProperty.StringValue;
 
-                    try
+                    //manufacturer mappings
+                    var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsManufacturerIds[product.Id];
+                    var importedManufacturers = manufacturerList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => allManufacturers.FirstOrDefault(m => m.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList();
+                    foreach (var manufacturerId in importedManufacturers)
                     {
-                        _fileProvider.DeleteFile(downloadedFile);
+                        if (manufacturers.Any(c => c == manufacturerId))
+                            continue;
+
+                        var productManufacturer = new ProductManufacturer
+                        {
+                            ProductId = product.Id,
+                            ManufacturerId = manufacturerId,
+                            IsFeaturedProduct = false,
+                            DisplayOrder = 1
+                        };
+                        _manufacturerService.InsertProductManufacturer(productManufacturer);
                     }
-                    catch
+
+                    //delete product manufacturers
+                    var deletedProductsManufacturers = manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
+                        .Select(manufacturerId => _manufacturerService.GetProductManufacturersByProductId(product.Id).First(pc => pc.ManufacturerId == manufacturerId));
+                    foreach (var deletedProductManufacturer in deletedProductsManufacturers)
                     {
-                        // ignored
+                        _manufacturerService.DeleteProductManufacturer(deletedProductManufacturer);
                     }
                 }
 
-                //activity log
-                _customerActivityService.InsertActivity("ImportProducts", string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
+                tempProperty = metadata.Manager.GetProperty("ProductTags");
+                if (tempProperty != null)
+                {
+                    var productTags = tempProperty.StringValue.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+
+                    //searching existing product tags by their id
+                    var productTagIds = productTags.Where(pt => int.TryParse(pt, out var _)).Select(int.Parse);
+
+                    var pruductTagsByIds = _productTagService.GetAllProductTagsByProductId(product.Id).Where(pt => productTagIds.Contains(pt.Id)).ToList();
+
+                    productTags.AddRange(pruductTagsByIds.Select(pt => pt.Name));
+                    var filter = pruductTagsByIds.Select(pt => pt.Id.ToString()).ToList();
+
+                    //product tag mappings
+                    _productTagService.UpdateProductTags(product, productTags.Where(pt => !filter.Contains(pt)).ToArray());
+                }
+
+                tempProperty = metadata.Manager.GetProperty("LimitedToStores");
+                if (tempProperty != null)
+                {
+                    var limitedToStoresList = tempProperty.StringValue;
+
+                    var importedStores = product.LimitedToStores ? limitedToStoresList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => allStores.FirstOrDefault(store => store.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList() : new List<int>();
+
+                    _productService.UpdateProductStoreMappings(product, importedStores);
+                }
+
+                var picture1 = DownloadFile(metadata.Manager.GetProperty("Picture1")?.StringValue, downloadedFiles);
+                var picture2 = DownloadFile(metadata.Manager.GetProperty("Picture2")?.StringValue, downloadedFiles);
+                var picture3 = DownloadFile(metadata.Manager.GetProperty("Picture3")?.StringValue, downloadedFiles);
+
+                productPictureMetadata.Add(new ProductPictureMetadata
+                {
+                    ProductItem = product,
+                    Picture1Path = picture1,
+                    Picture2Path = picture2,
+                    Picture3Path = picture3,
+                    IsNew = isNew
+                });
+
+                lastLoadedProduct = product;
+
+                //update "HasTierPrices" and "HasDiscountsApplied" properties
+                //_productService.UpdateHasTierPricesProperty(product);
+                //_productService.UpdateHasDiscountsApplied(product);
             }
+
+            if (_mediaSettings.ImportProductImagesUsingHash && _pictureService.StoreInDb)
+                ImportProductImagesUsingHash(productPictureMetadata, allProductsBySku);
+            else
+                ImportProductImagesUsingServices(productPictureMetadata);
+
+            foreach (var downloadedFile in downloadedFiles)
+            {
+                if (!_fileProvider.FileExists(downloadedFile))
+                    continue;
+
+                try
+                {
+                    _fileProvider.DeleteFile(downloadedFile);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            //activity log
+            _customerActivityService.InsertActivity("ImportProducts", string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
         }
 
         /// <summary>
@@ -1923,122 +1928,120 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportManufacturersFromXlsx(Stream stream)
         {
-            using (var xlPackage = new ExcelPackage(stream))
+            using var xlPackage = new ExcelPackage(stream);
+            // get the first worksheet in the workbook
+            var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+            if (worksheet == null)
+                throw new NopException("No worksheet found");
+
+            //the columns
+            var properties = GetPropertiesByExcelCells<Manufacturer>(worksheet);
+
+            var manager = new PropertyManager<Manufacturer>(properties, _catalogSettings);
+
+            var iRow = 2;
+            var setSeName = properties.Any(p => p.PropertyName == "SeName");
+
+            while (true)
             {
-                // get the first worksheet in the workbook
-                var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet == null)
-                    throw new NopException("No worksheet found");
+                var allColumnsAreEmpty = manager.GetProperties
+                    .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                    .All(cell => cell?.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
 
-                //the columns
-                var properties = GetPropertiesByExcelCells<Manufacturer>(worksheet);
+                if (allColumnsAreEmpty)
+                    break;
 
-                var manager = new PropertyManager<Manufacturer>(properties, _catalogSettings);
+                manager.ReadFromXlsx(worksheet, iRow);
 
-                var iRow = 2;
-                var setSeName = properties.Any(p => p.PropertyName == "SeName");
+                var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").IntValue);
 
-                while (true)
+                var isNew = manufacturer == null;
+
+                manufacturer ??= new Manufacturer();
+
+                if (isNew)
                 {
-                    var allColumnsAreEmpty = manager.GetProperties
-                        .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
-                        .All(cell => cell?.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
+                    manufacturer.CreatedOnUtc = DateTime.UtcNow;
 
-                    if (allColumnsAreEmpty)
-                        break;
-
-                    manager.ReadFromXlsx(worksheet, iRow);
-
-                    var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").IntValue);
-
-                    var isNew = manufacturer == null;
-
-                    manufacturer = manufacturer ?? new Manufacturer();
-
-                    if (isNew)
-                    {
-                        manufacturer.CreatedOnUtc = DateTime.UtcNow;
-
-                        //default values
-                        manufacturer.PageSize = _catalogSettings.DefaultManufacturerPageSize;
-                        manufacturer.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
-                        manufacturer.Published = true;
-                        manufacturer.AllowCustomersToSelectPageSize = true;
-                    }
-
-                    var seName = string.Empty;
-
-                    foreach (var property in manager.GetProperties)
-                    {
-                        switch (property.PropertyName)
-                        {
-                            case "Name":
-                                manufacturer.Name = property.StringValue;
-                                break;
-                            case "Description":
-                                manufacturer.Description = property.StringValue;
-                                break;
-                            case "ManufacturerTemplateId":
-                                manufacturer.ManufacturerTemplateId = property.IntValue;
-                                break;
-                            case "MetaKeywords":
-                                manufacturer.MetaKeywords = property.StringValue;
-                                break;
-                            case "MetaDescription":
-                                manufacturer.MetaDescription = property.StringValue;
-                                break;
-                            case "MetaTitle":
-                                manufacturer.MetaTitle = property.StringValue;
-                                break;
-                            case "Picture":
-                                var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name, isNew ? null : (int?)manufacturer.PictureId);
-
-                                if (picture != null)
-                                    manufacturer.PictureId = picture.Id;
-
-                                break;
-                            case "PageSize":
-                                manufacturer.PageSize = property.IntValue;
-                                break;
-                            case "AllowCustomersToSelectPageSize":
-                                manufacturer.AllowCustomersToSelectPageSize = property.BooleanValue;
-                                break;
-                            case "PageSizeOptions":
-                                manufacturer.PageSizeOptions = property.StringValue;
-                                break;
-                            case "PriceRanges":
-                                manufacturer.PriceRanges = property.StringValue;
-                                break;
-                            case "Published":
-                                manufacturer.Published = property.BooleanValue;
-                                break;
-                            case "DisplayOrder":
-                                manufacturer.DisplayOrder = property.IntValue;
-                                break;
-                            case "SeName":
-                                seName = property.StringValue;
-                                break;
-                        }
-                    }
-
-                    manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-
-                    if (isNew)
-                        _manufacturerService.InsertManufacturer(manufacturer);
-                    else
-                        _manufacturerService.UpdateManufacturer(manufacturer);
-
-                    //search engine name
-                    if (setSeName)
-                        _urlRecordService.SaveSlug(manufacturer, _urlRecordService.ValidateSeName(manufacturer, seName, manufacturer.Name, true), 0);
-
-                    iRow++;
+                    //default values
+                    manufacturer.PageSize = _catalogSettings.DefaultManufacturerPageSize;
+                    manufacturer.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
+                    manufacturer.Published = true;
+                    manufacturer.AllowCustomersToSelectPageSize = true;
                 }
 
-                //activity log
-                _customerActivityService.InsertActivity("ImportManufacturers",
-                    string.Format(_localizationService.GetResource("ActivityLog.ImportManufacturers"), iRow - 2));
+                var seName = string.Empty;
+
+                foreach (var property in manager.GetProperties)
+                {
+                    switch (property.PropertyName)
+                    {
+                        case "Name":
+                            manufacturer.Name = property.StringValue;
+                            break;
+                        case "Description":
+                            manufacturer.Description = property.StringValue;
+                            break;
+                        case "ManufacturerTemplateId":
+                            manufacturer.ManufacturerTemplateId = property.IntValue;
+                            break;
+                        case "MetaKeywords":
+                            manufacturer.MetaKeywords = property.StringValue;
+                            break;
+                        case "MetaDescription":
+                            manufacturer.MetaDescription = property.StringValue;
+                            break;
+                        case "MetaTitle":
+                            manufacturer.MetaTitle = property.StringValue;
+                            break;
+                        case "Picture":
+                            var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name, isNew ? null : (int?)manufacturer.PictureId);
+
+                            if (picture != null)
+                                manufacturer.PictureId = picture.Id;
+
+                            break;
+                        case "PageSize":
+                            manufacturer.PageSize = property.IntValue;
+                            break;
+                        case "AllowCustomersToSelectPageSize":
+                            manufacturer.AllowCustomersToSelectPageSize = property.BooleanValue;
+                            break;
+                        case "PageSizeOptions":
+                            manufacturer.PageSizeOptions = property.StringValue;
+                            break;
+                        case "PriceRanges":
+                            manufacturer.PriceRanges = property.StringValue;
+                            break;
+                        case "Published":
+                            manufacturer.Published = property.BooleanValue;
+                            break;
+                        case "DisplayOrder":
+                            manufacturer.DisplayOrder = property.IntValue;
+                            break;
+                        case "SeName":
+                            seName = property.StringValue;
+                            break;
+                    }
+                }
+
+                manufacturer.UpdatedOnUtc = DateTime.UtcNow;
+
+                if (isNew)
+                    _manufacturerService.InsertManufacturer(manufacturer);
+                else
+                    _manufacturerService.UpdateManufacturer(manufacturer);
+
+                //search engine name
+                if (setSeName)
+                    _urlRecordService.SaveSlug(manufacturer, _urlRecordService.ValidateSeName(manufacturer, seName, manufacturer.Name, true), 0);
+
+                iRow++;
             }
+
+            //activity log
+            _customerActivityService.InsertActivity("ImportManufacturers",
+                string.Format(_localizationService.GetResource("ActivityLog.ImportManufacturers"), iRow - 2));
         }
 
         /// <summary>
@@ -2047,102 +2050,100 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportCategoriesFromXlsx(Stream stream)
         {
-            using (var xlPackage = new ExcelPackage(stream))
+            using var xlPackage = new ExcelPackage(stream);
+            // get the first worksheet in the workbook
+            var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+            if (worksheet == null)
+                throw new NopException("No worksheet found");
+
+            //the columns
+            var properties = GetPropertiesByExcelCells<Category>(worksheet);
+
+            var manager = new PropertyManager<Category>(properties, _catalogSettings);
+
+            var iRow = 2;
+            var setSeName = properties.Any(p => p.PropertyName == "SeName");
+
+            //performance optimization, load all categories in one SQL request
+            var allCategories = _categoryService
+                .GetAllCategories(showHidden: true)
+                .GroupBy(c => _categoryService.GetFormattedBreadCrumb(c))
+                .ToDictionary(c => c.Key, c => c.First());
+
+            var saveNextTime = new List<int>();
+
+            while (true)
             {
-                // get the first worksheet in the workbook
-                var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
-                if (worksheet == null)
-                    throw new NopException("No worksheet found");
+                var allColumnsAreEmpty = manager.GetProperties
+                    .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                    .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
 
-                //the columns
-                var properties = GetPropertiesByExcelCells<Category>(worksheet);
+                if (allColumnsAreEmpty)
+                    break;
 
-                var manager = new PropertyManager<Category>(properties, _catalogSettings);
+                //get category by data in xlsx file if it possible, or create new category
+                var category = GetCategoryFromXlsx(manager, worksheet, iRow, allCategories, out var isNew, out var curentCategoryBreadCrumb);
 
-                var iRow = 2;
-                var setSeName = properties.Any(p => p.PropertyName == "SeName");
+                //update category by data in xlsx file
+                var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out var isParentCategoryExists);
 
-                //performance optimization, load all categories in one SQL request
-                var allCategories = _categoryService
-                    .GetAllCategories(showHidden: true, loadCacheableCopy: false)
-                    .GroupBy(c => _categoryService.GetFormattedBreadCrumb(c))
-                    .ToDictionary(c => c.Key, c => c.First());
-
-                var saveNextTime = new List<int>();
-
-                while (true)
+                if (isParentCategoryExists)
                 {
-                    var allColumnsAreEmpty = manager.GetProperties
-                        .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
-                        .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
+                    //if parent category exists in database then save category into database
+                    SaveCategory(isNew, category, allCategories, curentCategoryBreadCrumb, setSeName, seName);
+                }
+                else
+                {
+                    //if parent category doesn't exists in database then try save category into database next time
+                    saveNextTime.Add(iRow);
+                }
 
-                    if (allColumnsAreEmpty)
-                        break;
+                iRow++;
+            }
 
+            var needSave = saveNextTime.Any();
+
+            while (needSave)
+            {
+                var remove = new List<int>();
+
+                //try to save unsaved categories
+                foreach (var rowId in saveNextTime)
+                {
                     //get category by data in xlsx file if it possible, or create new category
-                    var category = GetCategoryFromXlsx(manager, worksheet, iRow, allCategories, out var isNew, out var curentCategoryBreadCrumb);
-
+                    var category = GetCategoryFromXlsx(manager, worksheet, rowId, allCategories, out var isNew, out var curentCategoryBreadCrumb);
                     //update category by data in xlsx file
                     var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out var isParentCategoryExists);
 
-                    if (isParentCategoryExists)
-                    {
-                        //if parent category exists in database then save category into database
-                        SaveCategory(isNew, category, allCategories, curentCategoryBreadCrumb, setSeName, seName);
-                    }
-                    else
-                    {
-                        //if parent category doesn't exists in database then try save category into database next time
-                        saveNextTime.Add(iRow);
-                    }
+                    if (!isParentCategoryExists)
+                        continue;
 
-                    iRow++;
+                    //if parent category exists in database then save category into database
+                    SaveCategory(isNew, category, allCategories, curentCategoryBreadCrumb, setSeName, seName);
+                    remove.Add(rowId);
                 }
 
-                var needSave = saveNextTime.Any();
+                saveNextTime.RemoveAll(item => remove.Contains(item));
 
-                while (needSave)
-                {
-                    var remove = new List<int>();
-
-                    //try to save unsaved categories
-                    foreach (var rowId in saveNextTime)
-                    {
-                        //get category by data in xlsx file if it possible, or create new category
-                        var category = GetCategoryFromXlsx(manager, worksheet, rowId, allCategories, out var isNew, out var curentCategoryBreadCrumb);
-                        //update category by data in xlsx file
-                        var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out var isParentCategoryExists);
-
-                        if (!isParentCategoryExists)
-                            continue;
-
-                        //if parent category exists in database then save category into database
-                        SaveCategory(isNew, category, allCategories, curentCategoryBreadCrumb, setSeName, seName);
-                        remove.Add(rowId);
-                    }
-
-                    saveNextTime.RemoveAll(item => remove.Contains(item));
-
-                    needSave = remove.Any() && saveNextTime.Any();
-                }
-
-                //activity log
-                _customerActivityService.InsertActivity("ImportCategories",
-                    string.Format(_localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count));
-
-                if (!saveNextTime.Any())
-                    return;
-
-                var caregoriesName = new List<string>();
-
-                foreach (var rowId in saveNextTime)
-                {
-                    manager.ReadFromXlsx(worksheet, rowId);
-                    caregoriesName.Add(manager.GetProperty("Name").StringValue);
-                }
-
-                throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Categories.Import.CategoriesArentImported"), string.Join(", ", caregoriesName)));
+                needSave = remove.Any() && saveNextTime.Any();
             }
+
+            //activity log
+            _customerActivityService.InsertActivity("ImportCategories",
+                string.Format(_localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count));
+
+            if (!saveNextTime.Any())
+                return;
+
+            var caregoriesName = new List<string>();
+
+            foreach (var rowId in saveNextTime)
+            {
+                manager.ReadFromXlsx(worksheet, rowId);
+                caregoriesName.Add(manager.GetProperty("Name").StringValue);
+            }
+
+            throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Categories.Import.CategoriesArentImported"), string.Join(", ", caregoriesName)));
         }
 
         #endregion

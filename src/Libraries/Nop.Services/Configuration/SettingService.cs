@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,8 +7,9 @@ using System.Reflection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Configuration
@@ -22,7 +23,7 @@ namespace Nop.Services.Configuration
 
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Setting> _settingRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -30,30 +31,11 @@ namespace Nop.Services.Configuration
 
         public SettingService(IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager staticCacheManager)
         {
             _eventPublisher = eventPublisher;
             _settingRepository = settingRepository;
-            _cacheManager = cacheManager;
-        }
-
-        #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// Setting (for caching)
-        /// </summary>
-        [Serializable]
-        public class SettingForCaching
-        {
-            public int Id { get; set; }
-
-            public string Name { get; set; }
-
-            public string Value { get; set; }
-
-            public int StoreId { get; set; }
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -64,22 +46,19 @@ namespace Nop.Services.Configuration
         /// Gets all settings
         /// </summary>
         /// <returns>Settings</returns>
-        protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
+        protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
         {
-            //cache
-            return _cacheManager.Get(NopConfigurationDefaults.SettingsAllCacheKey, () =>
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
+            return _staticCacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
             {
-                //we use no tracking here for performance optimization
-                //anyway records are loaded only for read-only operations
-                var query = from s in _settingRepository.TableNoTracking
-                            orderby s.Name, s.StoreId
-                            select s;
-                var settings = query.ToList();
-                var dictionary = new Dictionary<string, IList<SettingForCaching>>();
+                var settings = GetAllSettings();
+
+                var dictionary = new Dictionary<string, IList<Setting>>();
                 foreach (var s in settings)
                 {
                     var resourceName = s.Name.ToLowerInvariant();
-                    var settingForCaching = new SettingForCaching
+                    var settingForCaching = new Setting
                     {
                         Id = s.Id,
                         Name = s.Name,
@@ -89,7 +68,7 @@ namespace Nop.Services.Configuration
                     if (!dictionary.ContainsKey(resourceName))
                     {
                         //first setting
-                        dictionary.Add(resourceName, new List<SettingForCaching>
+                        dictionary.Add(resourceName, new List<Setting>
                         {
                             settingForCaching
                         });
@@ -121,7 +100,7 @@ namespace Nop.Services.Configuration
             key = key.Trim().ToLowerInvariant();
             var valueStr = TypeDescriptor.GetConverter(type).ConvertToInvariantString(value);
 
-            var allSettings = GetAllSettingsCached();
+            var allSettings = GetAllSettingsDictionary();
             var settingForCaching = allSettings.ContainsKey(key) ?
                 allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching != null)
@@ -162,7 +141,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+                ClearCache();
 
             //event notification
             _eventPublisher.EntityInserted(setting);
@@ -182,7 +161,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+                ClearCache();
 
             //event notification
             _eventPublisher.EntityUpdated(setting);
@@ -200,7 +179,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(setting);
 
             //cache
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            ClearCache();
 
             //event notification
             _eventPublisher.EntityDeleted(setting);
@@ -218,7 +197,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(settings);
 
             //cache
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            ClearCache();
 
             //event notification
             foreach (var setting in settings)
@@ -237,7 +216,7 @@ namespace Nop.Services.Configuration
             if (settingId == 0)
                 return null;
 
-            return _settingRepository.GetById(settingId);
+            return _settingRepository.ToCachedGetById(settingId);
         }
 
         /// <summary>
@@ -252,7 +231,7 @@ namespace Nop.Services.Configuration
             if (string.IsNullOrEmpty(key))
                 return null;
 
-            var settings = GetAllSettingsCached();
+            var settings = GetAllSettingsDictionary();
             key = key.Trim().ToLowerInvariant();
             if (!settings.ContainsKey(key)) 
                 return null;
@@ -276,13 +255,13 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
-        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T),
+        public virtual T GetSettingByKey<T>(string key, T defaultValue = default,
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
             if (string.IsNullOrEmpty(key))
                 return defaultValue;
 
-            var settings = GetAllSettingsCached();
+            var settings = GetAllSettingsDictionary();
             key = key.Trim().ToLowerInvariant();
             if (!settings.ContainsKey(key)) 
                 return defaultValue;
@@ -319,7 +298,11 @@ namespace Nop.Services.Configuration
             var query = from s in _settingRepository.Table
                         orderby s.Name, s.StoreId
                         select s;
-            var settings = query.ToList();
+
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
+            var settings = query.ToCachedList(NopConfigurationDefaults.SettingsAllCacheKey);
+
             return settings;
         }
 
@@ -435,17 +418,13 @@ namespace Nop.Services.Configuration
         {
             if (!(keySelector.Body is MemberExpression member))
             {
-                throw new ArgumentException(string.Format(
-                    "Expression '{0}' refers to a method, not a property.",
-                    keySelector));
+                throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
             }
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
             {
-                throw new ArgumentException(string.Format(
-                       "Expression '{0}' refers to a field, not a property.",
-                       keySelector));
+                throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
             }
 
             var key = GetSettingKey(settings, keySelector);
@@ -507,7 +486,7 @@ namespace Nop.Services.Configuration
             var key = GetSettingKey(settings, keySelector);
             key = key.Trim().ToLowerInvariant();
 
-            var allSettings = GetAllSettingsCached();
+            var allSettings = GetAllSettingsDictionary();
             var settingForCaching = allSettings.ContainsKey(key) ?
                 allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching == null) 
@@ -523,7 +502,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
         }
 
         /// <summary>

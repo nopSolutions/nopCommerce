@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
+    ViewBag.PageTitle = T("Admin.Customers.CustomerRoles").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customer roles");
 }
 
-<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Customers.CustomerRoles")

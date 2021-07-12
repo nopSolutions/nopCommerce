@@ -106,10 +106,10 @@
             <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")
             </button>
-            <nop-action-confirmation asp-button-id="btnGenerateAllCombinations" />
             <button type="submit" id="btnGenerateSeveralCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationGeneratePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn bg-aqua">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveral")
             </button>
+            <nop-action-confirmation asp-button-id="btnGenerateAllCombinations" />
             <input type="submit" id="btnRefreshCombinations" style="display: none" />
             <script type="text/javascript">
             $(document).ready(function() {

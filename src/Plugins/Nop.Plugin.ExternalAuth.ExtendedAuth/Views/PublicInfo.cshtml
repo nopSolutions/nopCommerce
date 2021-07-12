@@ -1,0 +1,42 @@
+﻿@model ExternalAuthSettings
+@{
+    Layout = "";
+    Html.AddCssFileParts("~/Plugins/ExternalAuth.ExtendedAuth/Content/styles.css");
+}
+<div class="ExtendedAuthentication">
+    <div class="social">
+        <ul class="networks">
+            @if (Model.FacebookEnable && !string.IsNullOrEmpty(Model.FacebookClientId) && !string.IsNullOrEmpty(Model.FacebookClientSecret))
+            {
+                <li>
+                    <a asp-controller="authentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" asp-route-authentication="@ExternalAuthEnum.Facebook.ToString()" class="exoauth_btn @ExternalAuthEnum.Facebook.ToString().ToLower()-btn"></a>
+                </li>
+            }
+            @if (Model.TwitterEnable && !string.IsNullOrEmpty(Model.TwitterClientId) && !string.IsNullOrEmpty(Model.TwitterClientSecret))
+            {
+                <li>
+                    <a asp-controller="authentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" asp-route-authentication="@ExternalAuthEnum.Twitter.ToString()" class="exoauth_btn @ExternalAuthEnum.Twitter.ToString().ToLower()-btn"></a>
+                </li>
+            }
+            @if (Model.GoogleEnable && !string.IsNullOrEmpty(Model.GoogleClientId) && !string.IsNullOrEmpty(Model.GoogleClientSecret))
+            {
+                <li>
+                    <a asp-controller="authentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" asp-route-authentication="@ExternalAuthEnum.Google.ToString()" class="exoauth_btn @ExternalAuthEnum.Google.ToString().ToLower()-btn"></a>
+                </li>
+            }
+            @if (Model.MicrosoftEnable && !string.IsNullOrEmpty(Model.MicrosoftClientId) && !string.IsNullOrEmpty(Model.MicrosoftClientSecret))
+            {
+                <li>
+                    <a asp-controller="authentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" asp-route-authentication="@ExternalAuthEnum.Microsoft.ToString()" class="exoauth_btn @ExternalAuthEnum.Microsoft.ToString().ToLower()-btn"></a>
+                </li>
+            }
+            @if (Model.LinkedInEnable && !string.IsNullOrEmpty(Model.LinkedInClientId) && !string.IsNullOrEmpty(Model.LinkedInClientSecret))
+            {
+                <li>
+                    <a asp-controller="authentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" asp-route-authentication="@ExternalAuthEnum.LinkedIn.ToString()" class="exoauth_btn @ExternalAuthEnum.LinkedIn.ToString().ToLower()-btn"></a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+

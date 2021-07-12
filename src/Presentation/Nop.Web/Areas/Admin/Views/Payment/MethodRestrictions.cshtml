@@ -2,12 +2,10 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Payment.MethodRestrictions").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Payment.MethodRestrictions").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Payment restrictions");
 }
-
-<nop-antiforgery-token />
 
 <form asp-controller="Payment" asp-action="MethodRestrictions" method="post">
     <div class="content-header clearfix">

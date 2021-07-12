@@ -15,7 +15,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -49,9 +48,7 @@ namespace Nop.Services.Seo
         private readonly IWebHelper _webHelper;
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
-        private readonly SecuritySettings _securitySettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
-
 
         #endregion
 
@@ -74,7 +71,6 @@ namespace Nop.Services.Seo
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SecuritySettings securitySettings,
             SitemapXmlSettings sitemapSettings)
         {
             _blogSettings = blogSettings;
@@ -94,7 +90,6 @@ namespace Nop.Services.Seo
             _webHelper = webHelper;
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
-            _securitySettings = securitySettings;
             _sitemapXmlSettings = sitemapSettings;
         }
 
@@ -175,7 +170,7 @@ namespace Nop.Services.Seo
         /// <returns>Protocol name as string</returns>
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+            return _storeContext.CurrentStore.SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
 
         /// <summary>
@@ -400,30 +395,30 @@ namespace Nop.Services.Seo
         {
             var urlHelper = GetUrlHelper();
 
-            using (var writer = new XmlTextWriter(stream, Encoding.UTF8))
+            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartDocument();
-                writer.WriteStartElement("sitemapindex");
-                writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-                writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
-                writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+                Formatting = Formatting.Indented
+            };
+            writer.WriteStartDocument();
+            writer.WriteStartElement("sitemapindex");
+            writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+            writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
+            writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
-                //write URLs of all available sitemaps
-                for (var id = 1; id <= sitemapNumber; id++)
-                {
-                    var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, GetHttpProtocol());
-                    var location = XmlHelper.XmlEncode(url);
+            //write URLs of all available sitemaps
+            for (var id = 1; id <= sitemapNumber; id++)
+            {
+                var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, GetHttpProtocol());
+                var location = XmlHelper.XmlEncode(url);
 
-                    writer.WriteStartElement("sitemap");
-                    writer.WriteElementString("loc", location);
-                    writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(NopSeoDefaults.SitemapDateFormat));
-                    writer.WriteEndElement();
-                }
-
+                writer.WriteStartElement("sitemap");
+                writer.WriteElementString("loc", location);
+                writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(NopSeoDefaults.SitemapDateFormat));
                 writer.WriteEndElement();
             }
+
+            writer.WriteEndElement();
         }
 
         /// <summary>
@@ -433,32 +428,32 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual void WriteSitemap(Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.UTF8))
+            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartDocument();
-                writer.WriteStartElement("urlset");
-                writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-                writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
-                writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+                Formatting = Formatting.Indented
+            };
+            writer.WriteStartDocument();
+            writer.WriteStartElement("urlset");
+            writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+            writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
+            writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
-                //write URLs from list to the sitemap
-                foreach (var sitemapUrl in sitemapUrls)
+            //write URLs from list to the sitemap
+            foreach (var sitemapUrl in sitemapUrls)
+            {
+                //write base url
+                WriteSitemapUrl(writer, sitemapUrl);
+
+                //write all alternate url if exists
+                foreach (var alternate in sitemapUrl.AlternateLocations
+                    .Where(p => !p.Equals(sitemapUrl.Location, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    //write base url
-                    WriteSitemapUrl(writer, sitemapUrl);
-
-                    //write all alternate url if exists
-                    foreach (var alternate in sitemapUrl.AlternateLocations
-                        .Where(p => !p.Equals(sitemapUrl.Location, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        WriteSitemapUrl(writer, new SitemapUrl(alternate, sitemapUrl));
-                    }
+                    WriteSitemapUrl(writer, new SitemapUrl(alternate, sitemapUrl));
                 }
-
-                writer.WriteEndElement();
             }
+
+            writer.WriteEndElement();
         }
 
         /// <summary>
@@ -514,11 +509,9 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap.xml as string</returns>
         public virtual string Generate(int? id)
         {
-            using (var stream = new MemoryStream())
-            {
-                Generate(stream, id);
-                return Encoding.UTF8.GetString(stream.ToArray());
-            }
+            using var stream = new MemoryStream();
+            Generate(stream, id);
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
 
         /// <summary>

@@ -68,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(NewsItem newsItem, NewsItemModel model)
         {
             newsItem.LimitedToStores = model.SelectedStoreIds.Any();
+            _newsService.UpdateNews(newsItem);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(newsItem);
             var allStores = _storeService.GetAllStores();
@@ -161,7 +162,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("NewsItems");
-                
+
                 return RedirectToAction("NewsItemEdit", new { id = newsItem.Id });
             }
 
@@ -298,7 +299,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //fill entity from model
             comment = model.ToEntity(comment);
-            _newsService.UpdateNews(comment.NewsItem);
+
+            _newsService.UpdateNewsComment(comment);
 
             //activity log
             _customerActivityService.InsertActivity("EditNewsComment",
@@ -368,7 +370,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var newsComment in newsComments)
             {
                 newsComment.IsApproved = true;
-                _newsService.UpdateNews(newsComment.NewsItem);
+
+                _newsService.UpdateNewsComment(newsComment);
 
                 //raise event 
                 _eventPublisher.Publish(new NewsCommentApprovedEvent(newsComment));
@@ -396,7 +399,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var newsComment in newsComments)
             {
                 newsComment.IsApproved = false;
-                _newsService.UpdateNews(newsComment.NewsItem);
+
+                _newsService.UpdateNewsComment(newsComment);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditNewsComment",

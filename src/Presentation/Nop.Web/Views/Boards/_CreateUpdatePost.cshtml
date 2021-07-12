@@ -34,7 +34,7 @@
                 <div class="inputs">
                     @if (Model.ForumEditor == EditorType.BBCodeEditor)
                     {
-                        <nop-bb-code-editor asp-for="Text"/>
+                        <nop-bb-code-editor asp-for="Text" />
                     }
                     <textarea asp-for="Text" class="forum-post-text"></textarea>
                     <span asp-validation-for="Text"></span>
@@ -45,6 +45,10 @@
                         <input asp-for="Subscribed" />
                         <label asp-for="Subscribed">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
                     </div>
+                }
+                @if (Model.DisplayCaptcha)
+                {
+                    <nop-captcha />
                 }
             </div>
         </div>

@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -12,10 +10,8 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a category
     /// </summary>
-    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported
+    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountCategoryMapping>
     {
-        private ICollection<DiscountCategoryMapping> _discountCategoryMappings;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -120,19 +116,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of applied discounts
-        /// </summary>
-        public virtual IList<Discount> AppliedDiscounts => DiscountCategoryMappings.Select(mapping => mapping.Discount).ToList();
-
-        /// <summary>
-        /// Gets or sets the discount-category mappings
-        /// </summary>
-        public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
-        {
-            get => _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>());
-            set => _discountCategoryMappings = value;
-        }
     }
 }

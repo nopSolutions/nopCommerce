@@ -4,12 +4,15 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -32,6 +35,7 @@ namespace Nop.Web.Factories
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -53,6 +57,7 @@ namespace Nop.Web.Factories
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -64,6 +69,7 @@ namespace Nop.Web.Factories
             IAddressService addressService,
             ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
@@ -84,7 +90,8 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            IDateTimeHelper dateTimeHelper)
         {
             _addressSettings = addressSettings;
             _commonSettings = commonSettings;
@@ -92,6 +99,7 @@ namespace Nop.Web.Factories
             _addressService = addressService;
             _countryService = countryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _orderProcessingService = orderProcessingService;
@@ -113,6 +121,96 @@ namespace Nop.Web.Factories
             _paymentSettings = paymentSettings;
             _rewardPointsSettings = rewardPointsSettings;
             _shippingSettings = shippingSettings;
+            _dateTimeHelper = dateTimeHelper;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepares the checkout pickup points model
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>The checkout pickup points model</returns>
+        protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel(IList<ShoppingCartItem> cart)
+        {
+            var model = new CheckoutPickupPointsModel()
+            {
+                AllowPickupInStore = _shippingSettings.AllowPickupInStore
+            };
+            if (model.AllowPickupInStore)
+            {
+                model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
+                model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
+                var pickupPointProviders = _pickupPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                if (pickupPointProviders.Any())
+                {
+                    var languageId = _workContext.WorkingLanguage.Id;
+                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddressId ?? 0,
+                        _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
+                    if (pickupPointsResponse.Success)
+                        model.PickupPoints = pickupPointsResponse.PickupPoints.Select(point =>
+                        {
+                            var country = _countryService.GetCountryByTwoLetterIsoCode(point.CountryCode);
+                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(point.StateAbbreviation, country?.Id);
+
+                            var pickupPointModel = new CheckoutPickupPointModel
+                            {
+                                Id = point.Id,
+                                Name = point.Name,
+                                Description = point.Description,
+                                ProviderSystemName = point.ProviderSystemName,
+                                Address = point.Address,
+                                City = point.City,
+                                County = point.County,
+                                StateName = state != null ? _localizationService.GetLocalized(state, x => x.Name, languageId) : string.Empty,
+                                CountryName = country != null ? _localizationService.GetLocalized(country, x => x.Name, languageId) : string.Empty,
+                                ZipPostalCode = point.ZipPostalCode,
+                                Latitude = point.Latitude,
+                                Longitude = point.Longitude,
+                                OpeningHours = point.OpeningHours
+                            };
+
+                            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+                            var amount = _orderTotalCalculationService.IsFreeShipping(cart) ? 0 : point.PickupFee;
+
+                            if (amount > 0)
+                            {
+                                amount = _taxService.GetShippingPrice(amount, _workContext.CurrentCustomer);
+                                amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
+                                pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
+                            }
+
+                            //adjust rate
+                            var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(point.PickupFee, cart, out var _, true);
+                            var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                            var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                            pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(rate, true);
+
+                            return pickupPointModel;
+                        }).ToList();
+                    else
+                        foreach (var error in pickupPointsResponse.Errors)
+                            model.Warnings.Add(error);
+                }
+
+                //only available pickup points
+                var shippingProviders = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                if (!shippingProviders.Any())
+                {
+                    if (!pickupPointProviders.Any())
+                    {
+                        model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
+                        model.Warnings.Add(_localizationService.GetResource("Checkout.PickupPoints.NotAvailable"));
+                    }
+                    model.PickupInStoreOnly = true;
+                    model.PickupInStore = true;
+                    return model;
+                }
+            }
+
+            return model;
         }
 
         #endregion
@@ -140,14 +238,14 @@ namespace Nop.Web.Factories
             };
 
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null ||
+            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
+                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
-                    a.Country.Published &&
+                    country.Published &&
                     //allow billing
-                    a.Country.AllowsBilling &&
+                    country.AllowsBilling &&
                     //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
+                    _storeMappingService.Authorize(country)))
                 .ToList();
             foreach (var address in addresses)
             {
@@ -183,89 +281,31 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare shipping address model
         /// </summary>
+        /// <param name="cart">Cart</param>
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
         /// <returns>Shipping address model</returns>
-        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
-            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
+        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(IList<ShoppingCartItem> cart, 
+            int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
-            var model = new CheckoutShippingAddressModel
+            var model = new CheckoutShippingAddressModel()
             {
-
-                //allow pickup in store?
-                AllowPickupInStore = _shippingSettings.AllowPickupInStore
+                DisplayPickupInStore = !_orderSettings.DisplayPickupInStoreOnShippingMethodPage
             };
-            if (model.AllowPickupInStore)
-            {
-                model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
-                model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
-                var pickupPointProviders = _pickupPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                if (pickupPointProviders.Any())
-                {
-                    var languageId = _workContext.WorkingLanguage.Id;
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
-                        _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
-                    if (pickupPointsResponse.Success)
-                        model.PickupPoints = pickupPointsResponse.PickupPoints.Select(point =>
-                        {
-                            var country = _countryService.GetCountryByTwoLetterIsoCode(point.CountryCode);
-                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(point.StateAbbreviation, country?.Id);
 
-                            var pickupPointModel = new CheckoutPickupPointModel
-                            {
-                                Id = point.Id,
-                                Name = point.Name,
-                                Description = point.Description,
-                                ProviderSystemName = point.ProviderSystemName,
-                                Address = point.Address,
-                                City = point.City,
-                                County = point.County,
-                                StateName = state != null ? _localizationService.GetLocalized(state, x => x.Name, languageId) : string.Empty,
-                                CountryName = country != null ? _localizationService.GetLocalized(country, x => x.Name, languageId) : string.Empty,
-                                ZipPostalCode = point.ZipPostalCode,
-                                Latitude = point.Latitude,
-                                Longitude = point.Longitude,
-                                OpeningHours = point.OpeningHours
-                            };
-                            if (point.PickupFee > 0)
-                            {
-                                var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
-                                amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
-                                pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
-                            }
-
-                            return pickupPointModel;
-                        }).ToList();
-                    else
-                        foreach (var error in pickupPointsResponse.Errors)
-                            model.Warnings.Add(error);
-                }
-
-                //only available pickup points
-                var shippingProviders = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                if (!shippingProviders.Any())
-                {
-                    if (!pickupPointProviders.Any())
-                    {
-                        model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
-                        model.Warnings.Add(_localizationService.GetResource("Checkout.PickupPoints.NotAvailable"));
-                    }
-                    model.PickupInStoreOnly = true;
-                    model.PickupInStore = true;
-                    return model;
-                }
-            }
+            if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
 
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null ||
+            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
+                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
-                    a.Country.Published &&
+                    country.Published &&
                     //allow shipping
-                    a.Country.AllowsShipping &&
+                    country.AllowsShipping &&
                     //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
+                    _storeMappingService.Authorize(country)))
                 .ToList();
             foreach (var address in addresses)
             {
@@ -307,7 +347,13 @@ namespace Nop.Web.Factories
         /// <returns>Shipping method model</returns>
         public virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart, Address shippingAddress)
         {
-            var model = new CheckoutShippingMethodModel();
+            var model = new CheckoutShippingMethodModel()
+            {
+                DisplayPickupInStore = _orderSettings.DisplayPickupInStoreOnShippingMethodPage
+            };
+
+            if (_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
 
             var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
@@ -330,7 +376,7 @@ namespace Nop.Web.Factories
                     };
 
                     //adjust rate
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _);
+                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _, shippingOption.IsPickupInStore);
 
                     var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
@@ -506,11 +552,32 @@ namespace Nop.Web.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
+            var now = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+
+            string message;
+            if(now < new DateTime(now.Year, now.Month, now.Day, 12, 00, 00))
+            {
+                message = "Your lunch will be delivered at 1 PM.";
+            }
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 13, 30, 00))
+            {
+                message = "Your lunch will be delivered at 2 PM.";
+            }
+            else if(now < new DateTime(now.Year, now.Month, now.Day, 15, 30, 00))
+            {
+                message = "Your lunch will be delivered at 4 PM.";
+            }
+            else
+            {
+                message = "Your lunch will be delivered TOMORROW at 1 PM.";
+            }
+
             var model = new CheckoutCompletedModel
             {
                 OrderId = order.Id,
                 OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled,
-                CustomOrderNumber = order.CustomOrderNumber
+                CustomOrderNumber = order.CustomOrderNumber,
+                DeliveryTimeWindowMessage = message
             };
 
             return model;
@@ -540,7 +607,7 @@ namespace Nop.Web.Factories
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = _shoppingCartService.ShoppingCartRequiresShipping(cart),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && _workContext.CurrentCustomer.Addresses.Any(),
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id).Any(),
                 BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return model;

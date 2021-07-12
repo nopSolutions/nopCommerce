@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -22,25 +22,24 @@ namespace Nop.Services.Tests.Discounts
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-        private Mock<IRepository<Discount>> _discountRepo;
-        private Mock<IRepository<DiscountRequirement>> _discountRequirementRepo;
-        private Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo;
-        private Mock<IEventPublisher> _eventPublisher;
-        private Mock<ILocalizationService> _localizationService;
-        private Mock<ICategoryService> _categoryService;
+        private readonly Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
+        private readonly Mock<ILocalizationService> _localizationService = new Mock<ILocalizationService>();
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
-        private Mock<IStoreContext> _storeContext;
-        private Mock<ICustomerService> _customerService;
-        private Mock<IRepository<Category>> _categoryRepo;
-        private Mock<IRepository<Manufacturer>> _manufacturerRepo;
-        private Mock<IRepository<Product>> _productRepo;
-        private CatalogSettings _catalogSettings;
+        private readonly Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
+        private readonly Mock<ICustomerService> _customerService = new Mock<ICustomerService>();
+        private readonly Mock<IProductService> _productService = new Mock<IProductService>();
+        private readonly Mock<IRepository<Category>> _categoryRepo = new Mock<IRepository<Category>>();
+        private readonly Mock<IRepository<Discount>> _discountRepo = new Mock<IRepository<Discount>>();
+        private readonly Mock<IRepository<DiscountRequirement>> _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
+        private readonly Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
+        private readonly Mock<IRepository<Manufacturer>> _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
+        private readonly Mock<IRepository<Order>> _orderRepo = new Mock<IRepository<Order>>();
+        private readonly Mock<IRepository<Product>> _productRepo = new Mock<IRepository<Product>>();
 
         [SetUp]
         public new void SetUp()
         {
-            _discountRepo = new Mock<IRepository<Discount>>();
             var discount1 = new Discount
             {
                 Id = 1,
@@ -68,71 +67,62 @@ namespace Nop.Services.Tests.Discounts
 
             _discountRepo.Setup(x => x.Table).Returns(new List<Discount> { discount1, discount2 }.AsQueryable());
 
-            _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            _storeContext = new Mock<IStoreContext>();
-            _customerService = new Mock<ICustomerService>();
-
-            _categoryRepo = new Mock<IRepository<Category>>();
             _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
-            _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
             _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
-            _productRepo = new Mock<IRepository<Product>>();
             _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
 
-            var cacheManager = new TestCacheManager();
-            _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
+            var staticCacheManager = new TestCacheManager();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 
-            _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
+            var pluginService = new FakePluginService();
 
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-
-            _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
-
-            _localizationService = new Mock<ILocalizationService>();
-            _categoryService = new Mock<ICategoryService>();
-
-            _discountPluginManager = new DiscountPluginManager(pluginService);
-            _discountService = new DiscountService(_categoryService.Object,
+            _discountPluginManager = new DiscountPluginManager(new Mock<ICustomerService>().Object, pluginService);
+            _discountService = new DiscountService(
+                new FakeCacheKeyService(),
                 _customerService.Object,
                 _discountPluginManager,
                 _eventPublisher.Object,
                 _localizationService.Object,
-                _categoryRepo.Object,
+                _productService.Object,
                 _discountRepo.Object,
                 _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object,
-                _manufacturerRepo.Object,
-                _productRepo.Object,
-                cacheManager,
+                _orderRepo.Object,
+                staticCacheManager,
                 _storeContext.Object);
         }
 
         [Test]
         public void Can_get_all_discount()
         {
-            var discounts = _discountService.GetAllDiscounts();
-            discounts.ShouldNotBeNull();
-            discounts.Any().ShouldBeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var discounts = _discountService.GetAllDiscounts();
+                discounts.Should().NotBeNull();
+                discounts.Any().Should().BeTrue();
+            });
         }
 
         [Test]
         public void Can_load_discountRequirementRules()
         {
-            var rules = _discountPluginManager.LoadAllPlugins();
-            rules.ShouldNotBeNull();
-            rules.Any().ShouldBeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var rules = _discountPluginManager.LoadAllPlugins();
+                rules.Should().NotBeNull();
+                rules.Any().Should().BeTrue();
+            });
         }
 
         [Test]
         public void Can_load_discountRequirementRuleBySystemKeyword()
         {
-            var rule = _discountPluginManager.LoadPluginBySystemName("TestDiscountRequirementRule");
-            rule.ShouldNotBeNull();
+            RunWithTestServiceProvider(() =>
+            {
+                var rule = _discountPluginManager.LoadPluginBySystemName("TestDiscountRequirementRule");
+                rule.Should().NotBeNull();
+            });
         }
 
         [Test]
@@ -160,14 +150,7 @@ namespace Nop.Services.Tests.Discounts
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
 
-
-            //UNDONE: little workaround here
-            //we have to register "nop_cache_static" cache manager (null manager) from DependencyRegistrar.cs
-            //because DiscountService right now dynamically Resolve<ICacheManager>("nop_cache_static")
-            //we cannot inject it because DiscountService already has "per-request" cache manager injected 
-            //EngineContext.Initialize(false);
-
-            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.Should().BeTrue();
         }
 
 
@@ -195,7 +178,7 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 2" }).IsValid.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 2" }).IsValid.Should().BeFalse();
         }
 
         [Test]
@@ -223,10 +206,10 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-            _discountService.ValidateDiscount(discount, customer, null).IsValid.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().BeTrue();
 
             discount.StartDateUtc = DateTime.UtcNow.AddDays(1);
-            _discountService.ValidateDiscount(discount, customer, null).IsValid.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().BeFalse();
         }
 
         [Test]
@@ -238,10 +221,10 @@ namespace Nop.Services.Tests.Discounts
                 DiscountPercentage = 30
             };
 
-            discount.GetDiscountAmount(100).ShouldEqual(30);
+            discount.GetDiscountAmount(100).Should().Be(30);
 
             discount.DiscountPercentage = 60;
-            discount.GetDiscountAmount(200).ShouldEqual(120);
+            discount.GetDiscountAmount(200).Should().Be(120);
         }
 
         [Test]
@@ -253,10 +236,10 @@ namespace Nop.Services.Tests.Discounts
                 DiscountAmount = 10
             };
 
-            discount.GetDiscountAmount(100).ShouldEqual(10);
+            discount.GetDiscountAmount(100).Should().Be(10);
 
             discount.DiscountAmount = 20;
-            discount.GetDiscountAmount(200).ShouldEqual(20);
+            discount.GetDiscountAmount(200).Should().Be(20);
         }
 
         [Test]
@@ -269,14 +252,14 @@ namespace Nop.Services.Tests.Discounts
                 MaximumDiscountAmount = 3.4M
             };
 
-            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+            discount.GetDiscountAmount(100).Should().Be(3.4M);
 
             discount.DiscountPercentage = 60;
-            discount.GetDiscountAmount(200).ShouldEqual(3.4M);
-            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+            discount.GetDiscountAmount(200).Should().Be(3.4M);
+            discount.GetDiscountAmount(100).Should().Be(3.4M);
 
             discount.DiscountPercentage = 1;
-            discount.GetDiscountAmount(200).ShouldEqual(2);
+            discount.GetDiscountAmount(200).Should().Be(2);
         }
     }
 
@@ -286,8 +269,8 @@ namespace Nop.Services.Tests.Discounts
 
         static DiscountExtensions()
         {
-            _discountService = new DiscountService(null, null, null, null,
-                null, null, null, null, null, null, null, null, null);
+            _discountService = new DiscountService(new FakeCacheKeyService(), null, null, null,
+                null, null, null, null, null, null, null, null);
         }
 
         public static decimal GetDiscountAmount(this Discount discount, decimal amount)
@@ -295,7 +278,7 @@ namespace Nop.Services.Tests.Discounts
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            return _discountService.GetDiscountAmount(_discountService.MapDiscount(discount), amount);
+            return _discountService.GetDiscountAmount(discount, amount);
         }
     }
 }

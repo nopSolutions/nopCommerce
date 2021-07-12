@@ -602,7 +602,7 @@
             @if (Model.CanAddNewShipments)
             {
                 <div class="panel-footer">
-                    <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="btn btn-primary">
+                    <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { id = Model.Id }))'); return false;" class="btn btn-primary">
                         @T("Admin.Orders.Shipments.AddNew")
                     </button>
                 </div>

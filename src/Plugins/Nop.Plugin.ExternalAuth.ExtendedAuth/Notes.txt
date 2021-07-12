@@ -1,0 +1,7 @@
+
+Notes for Twitter Login
+Send mail to sdk-feedback@twitter.com with some details about your App like Consumer key, App Store link of an App, Link to privacy policy, Metadata, Instructions on how to log into our App. Mention in mail that you want to access user email address inside your App.
+They will review your App and reply to you within 2-3 business days.
+Once they say that your App is whitelisted, update your App's settings in Twitter Developer portal. Sign in to apps.twitter.com and:
+On the 'Settings' tab, add a terms of service and privacy policy URL
+On the 'Permissions' tab, change your token's scope to request email. This option will only been seen, once your App gets whitelisted.

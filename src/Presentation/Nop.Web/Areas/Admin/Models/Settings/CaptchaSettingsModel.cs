@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -56,13 +57,26 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowOnForgotPasswordPage { get; set; }
         public bool ShowOnForgotPasswordPage_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum")]
+        public bool ShowOnForum { get; set; }
+        public bool ShowOnForum_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
         public string ReCaptchaPublicKey { get; set; }
         public bool ReCaptchaPublicKey_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
         public string ReCaptchaPrivateKey { get; set; }
-        public bool ReCaptchaPrivateKey_OverrideForStore { get; set; }        
+        public bool ReCaptchaPrivateKey_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaType")]
+        public int CaptchaType { get; set; }
+        public bool CaptchaType_OverrideForStore { get; set; }
+        public SelectList CaptchaTypeValues { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold")]
+        public decimal ReCaptchaV3ScoreThreshold { get; set; }
+        public bool ReCaptchaV3ScoreThreshold_OverrideForStore { get; set; }
 
         #endregion
     }

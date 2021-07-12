@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// Represents filter attribute that publish ModelReceived event before the action executes, after model binding is complete
     /// and publish ModelPrepared event after the action executes, before the action result
     /// </summary>
-    public class PublishModelEventsAttribute : TypeFilterAttribute
+    public sealed class PublishModelEventsAttribute : TypeFilterAttribute
     {
         #region Fields
 

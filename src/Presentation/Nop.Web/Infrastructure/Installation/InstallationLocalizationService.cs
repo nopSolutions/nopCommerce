@@ -8,6 +8,7 @@ using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 
 namespace Nop.Web.Infrastructure.Installation
 {
@@ -20,7 +21,8 @@ namespace Nop.Web.Infrastructure.Installation
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
-        
+        private readonly IWebHelper _webHelper;
+
         private IList<InstallationLanguage> _availableLanguages;
 
         #endregion
@@ -28,14 +30,16 @@ namespace Nop.Web.Infrastructure.Installation
         #region Ctor
 
         public InstallationLocalizationService(IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IWebHelper webHelper)
         {
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
+            _webHelper = webHelper;
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -114,7 +118,8 @@ namespace Nop.Web.Infrastructure.Installation
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(24),
-                HttpOnly = true
+                HttpOnly = true,
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
             httpContext.Response.Cookies.Delete(cookieName);
@@ -203,6 +208,22 @@ namespace Nop.Web.Infrastructure.Installation
 
             }
             return _availableLanguages;
+        }
+
+        /// <summary>
+        /// Get a dictionary of available data provider types
+        /// </summary>
+        /// <param name="valuesToExclude">Values to exclude</param>
+        /// <param name="useLocalization">Localize</param>
+        /// <returns>Key-value pairs of available data providers types</returns>
+        public Dictionary<int, string> GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true)
+        {
+            return Enum.GetValues(typeof(DataProviderType))
+                .Cast<DataProviderType>()
+                .Where(enumValue => enumValue != DataProviderType.Unknown && (valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))))
+                .ToDictionary(
+                    enumValue => Convert.ToInt32(enumValue),
+                    enumValue => useLocalization ? GetResource(enumValue.ToString()) : CommonHelper.ConvertEnum(enumValue.ToString()));
         }
 
         #endregion

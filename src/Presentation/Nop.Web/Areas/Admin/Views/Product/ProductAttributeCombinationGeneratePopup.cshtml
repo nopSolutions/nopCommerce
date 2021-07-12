@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveralTitle").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveralTitle").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -52,7 +52,7 @@
                 <div class="panel-group">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            @attribute.Name
+                            @(attribute.Name)
                             @if (attribute.IsRequired)
                             {
                                 <span>*</span>

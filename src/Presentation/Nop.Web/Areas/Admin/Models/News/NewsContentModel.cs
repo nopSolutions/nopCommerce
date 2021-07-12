@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.News
 {
@@ -13,11 +14,15 @@ namespace Nop.Web.Areas.Admin.Models.News
         {
             NewsItems = new NewsItemSearchModel();
             NewsComments = new NewsCommentSearchModel();
+            SearchTitle = new NewsItemSearchModel().SearchTitle;
         }
 
         #endregion
 
         #region Properties
+
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.List.SearchTitle")]
+        public string SearchTitle { get; set; }
 
         public NewsItemSearchModel NewsItems { get; set; }
 

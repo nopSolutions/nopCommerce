@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Forums
 {
@@ -32,10 +31,5 @@ namespace Nop.Core.Domain.Forums
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
     }
 }

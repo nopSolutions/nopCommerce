@@ -1,0 +1,254 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// File Manager
+.k-filemanager {
+    display: flex;
+    flex-direction: column;
+}
+
+// Toolbar
+.k-filemanager-toolbar {
+    border-width: @filemanager-toolbar-border-width;
+    border-style: @filemanager-toolbar-border-style;
+}
+
+.k-filemanager-details-toggle,
+.k-filemanager-details-toggle .k-switch,
+.k-filemanager-search-tool {
+    margin-left: @filemanager-toolbar-spacing;
+    flex: 0 0 auto;
+}
+
+.k-filemanager-search-tool {
+    margin-right: @filemanager-toolbar-search-tool-spacing;
+}
+
+.k-filemanager-toolbar .k-button,
+.k-filemanager-toolbar .k-slit-button,
+.k-filemanager-toolbar .k-filemanager-details-toggle {
+    font-weight: @filemanager-toolbar-font-weight;
+}
+
+// Content Wrapper
+.k-filemanager-content-container {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+// Navigation
+.k-filemanager-navigation {
+    box-sizing: border-box;
+    width: @filemanager-navigation-width;
+    overflow-x: auto;
+    border-width: @filemanager-navigation-border-width;
+    border-style: @filemanager-navigation-border-style;
+}
+
+.k-filemanager-navigation-container {
+    box-sizing: border-box;
+    padding: @filemanager-navigation-container-padding-y @filemanager-navigation-container-padding-x;
+}
+
+.k-filemanager-treeview {
+    margin: @filemanager-treeivew-spacing-y @filemanager-treeivew-spacing-x;
+    display: inline-block;
+}
+
+// Content
+.k-filemanager-content {
+    flex: 1;
+    overflow: hidden;
+}
+
+// Breadcrumb
+.k-filemanager-breadcrumb {
+    border-width: @filemanager-breadcrumb-border-width;
+    border-style: @filemanager-breadcrumb-border-style;
+    padding: @filemanager-breadcrumb-padding-y @filemanager-breadcrumb-padding-x;
+}
+
+// ListView View
+.k-filemanager-view-list {
+    overflow-y: auto;
+}
+
+.k-filemanager-listview {
+    border-width: @filemanager-listview-border-width;
+    position: initial;
+    display: flex;
+    flex-flow: row wrap;
+
+    .k-item {
+        padding: @filemanager-listview-item-padding-y @filemanager-listview-item-padding-x;
+        width: @filemanager-listview-item-width;
+        height: @filemanager-listview-item-height;
+    }
+
+    .file-group-icon {
+        padding: @filemanager-listview-item-icon-padding-y @filemanager-listview-item-icon-padding-x;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .file-name {
+        display: block;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .k-icon {
+        font-size: @filemanager-listview-item-icon-size;
+    }
+
+    .file-edit-input input {
+        width: 100%;
+    }
+}
+
+// View Wrapper
+.k-filemanager-view {
+    position: relative;
+}
+
+// Grid View
+.k-filemanager-grid {
+    border-width: 1px 0 0 0;
+    position: initial;
+
+    thead tr {
+        height: @filemanager-grid-header-height;
+    }
+
+    tbody tr {
+        height: @filemanager-grid-row-height;
+    }
+
+    .k-header {
+        vertical-align: middle;
+    }
+
+    .file-group-icon,
+    .file-name {
+        display: inline-flex;
+        flex-direction: row;
+        vertical-align: middle;
+    }
+
+    .file-group-icon {
+        margin-right: @filemanager-grid-icon-spacing;
+    }
+}
+
+// Preview
+.k-filemanager-preview {
+    border-width: @filemanager-preview-border-width;
+    border-style: @filemanager-preview-border-style;
+    width: @filemanager-preview-width;
+    overflow-x: auto;
+}
+
+.k-filemanager-preview-container {
+    box-sizing: border-box;
+    padding: @filemanager-preview-container-padding;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+
+    .k-file-info {
+        margin: @filemanager-preview-file-spacing-y @filemanager-preview-file-spacing-x;
+        display: inline-block;
+    }
+
+    .k-file-preview-wrapper,
+    .k-file-title-wrapper {
+        text-align: center;
+    }
+
+    .k-file-preview-wrapper .k-icon {
+        font-size: @filemanager-preview-icon-size;
+    }
+
+    .k-file-title-wrapper {
+        padding: @filemanager-preview-title-padding-y @filemanager-preview-title-padding-x;
+    }
+
+    .k-file-title {
+        font-weight: bold;
+    }
+
+    .k-file-meta-wrapper {
+        box-sizing: border-box;
+        margin: 0;
+        display: flex;
+        flex-flow: row wrap;
+    }
+
+    .k-file-meta-label {
+        display: inline-block;
+    }
+
+    .k-file-meta-value {
+        margin: 0;
+    }
+
+    .k-file-size {
+        line-height: normal;
+        font-size: inherit;
+    }
+
+    .k-file-type {
+        text-transform: capitalize;
+    }
+
+    .line-break {
+        margin-top: @filemanager-preview-line-break-spacing;
+        width: 100%;
+        flex: 1 1 100%;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+}
+
+// Resizing Handle
+.k-filemanager .k-splitbar {
+    display: inline-flex;
+    position: relative;
+    cursor: e-resize;
+    width: 5px;
+    border-width: 0 1px;
+}
+
+// Upload Dialog
+.k-filemanager-upload-dialog .k-upload-files {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+// Drag Hint
+.k-filemanager-drag-hint {
+    padding: @filemanager-drag-hint-padding-y @filemanager-drag-hint-padding-x;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.k-filemanager-drag-hint .k-icon {
+    margin-right: @filemanager-drag-hint-icon-spacing;
+}

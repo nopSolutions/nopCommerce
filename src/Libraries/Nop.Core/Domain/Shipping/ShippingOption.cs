@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Shipping
+﻿namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
     /// Represents a shipping option
@@ -24,5 +24,15 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a shipping option description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets a transit days
+        /// </summary>
+        public int? TransitDays { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating if it's pickup in store shipping option
+        /// </summary>
+        public bool IsPickupInStore { get; set; }
     }
 }

@@ -6,19 +6,22 @@ using Nop.Web.Framework.Mvc.Routing;
 namespace Nop.Plugin.Tax.Avalara.Infrastructure
 {
     /// <summary>
-    /// Represents route provider of Avalara tax provider
+    /// Represents plugin route provider
     /// </summary>
     public class RouteProvider : IRouteProvider
     {
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRouteBuilder">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
+            endpointRouteBuilder.MapControllerRoute(AvalaraTaxDefaults.ConfigurationRouteName, "Plugins/Avalara/Configure",
+                new { controller = "Avalara", action = "Configure", area = AreaNames.Admin });
+
             //override some of default routes in Admin area
-            routeBuilder.MapRoute("Plugin.Tax.Avalara.Tax.Categories", "Admin/Tax/Categories",
-                new { controller = "OverriddenTax", action = "Categories", area = AreaNames.Admin });
+            endpointRouteBuilder.MapControllerRoute("Plugin.Tax.Avalara.Tax.Categories", "Admin/Tax/Categories",
+                new { controller = "AvalaraTax", action = "Categories", area = AreaNames.Admin });
         }
 
         /// <summary>

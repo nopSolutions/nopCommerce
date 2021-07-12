@@ -1,3 +1,5 @@
+﻿using System;
+
 namespace Nop.Core.Domain.Common
 {
     /// <summary>
@@ -29,5 +31,10 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the store identifier
         /// </summary>
         public int StoreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the created or updated date
+        /// </summary>
+        public DateTime? CreatedOrUpdatedDateUTC { get; set; }
     }
 }

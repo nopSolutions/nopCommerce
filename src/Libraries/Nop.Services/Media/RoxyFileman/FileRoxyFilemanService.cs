@@ -6,10 +6,13 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Media.RoxyFileman
@@ -19,12 +22,22 @@ namespace Nop.Services.Media.RoxyFileman
     /// </summary>
     public class FileRoxyFilemanService : BaseRoxyFilemanService, IRoxyFilemanService
     {
+        #region Fields
+
+        protected string _fileRootPath;
+
+        #endregion
+
         #region Ctor
 
-        public FileRoxyFilemanService(IHostingEnvironment hostingEnvironment,
+        public FileRoxyFilemanService(IWebHostEnvironment webHostEnvironment,
             IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider) : base(hostingEnvironment, httpContextAccessor, fileProvider)
+            INopFileProvider fileProvider,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            MediaSettings mediaSettings) : base(webHostEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
+            _fileRootPath = null;
         }
 
         #endregion
@@ -66,6 +79,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>List of paths to the files</returns>
         protected virtual List<string> GetFiles(string directoryPath, string type)
         {
+            if (!IsPathAllowed(directoryPath))
+                return new List<string>();
+
             if (type == "#")
                 type = string.Empty;
 
@@ -87,15 +103,12 @@ namespace Nop.Services.Media.RoxyFileman
         protected virtual ImageFormat GetImageFormat(string path)
         {
             var fileExtension = _fileProvider.GetFileExtension(path).ToLower();
-            switch (fileExtension)
+            return fileExtension switch
             {
-                case ".png":
-                    return ImageFormat.Png;
-                case ".gif":
-                    return ImageFormat.Gif;
-                default:
-                    return ImageFormat.Jpeg;
-            }
+                ".png" => ImageFormat.Png,
+                ".gif" => ImageFormat.Gif,
+                _ => ImageFormat.Jpeg,
+            };
         }
 
         /// <summary>
@@ -123,38 +136,45 @@ namespace Nop.Services.Media.RoxyFileman
             if (!_fileProvider.FileExists(sourcePath))
                 return;
 
-            using (var stream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
+            using var stream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read);
+            using var image = Image.FromStream(stream);
+            var ratio = image.Width / (float)image.Height;
+            if (image.Width <= width && image.Height <= height)
+                return;
+
+            if (width == 0 && height == 0)
+                return;
+
+            var newWidth = width;
+            int newHeight = Convert.ToInt16(Math.Floor(newWidth / ratio));
+            if ((height > 0 && newHeight > height) || width == 0)
             {
-                using (var image = Image.FromStream(stream))
-                {
-                    var ratio = image.Width / (float)image.Height;
-                    if (image.Width <= width && image.Height <= height)
-                        return;
-
-                    if (width == 0 && height == 0)
-                        return;
-
-                    var newWidth = width;
-                    int newHeight = Convert.ToInt16(Math.Floor(newWidth / ratio));
-                    if ((height > 0 && newHeight > height) || width == 0)
-                    {
-                        newHeight = height;
-                        newWidth = Convert.ToInt16(Math.Floor(newHeight * ratio));
-                    }
-
-                    using (var newImage = new Bitmap(newWidth, newHeight))
-                    {
-                        using (var graphics = Graphics.FromImage(newImage))
-                        {
-                            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-                            //close the stream to prevent access error if sourcePath and destinstionPath match
-                            stream.Close();
-                            newImage.Save(destinstionPath, GetImageFormat(destinstionPath));
-                        }
-                    }
-                }
+                newHeight = height;
+                newWidth = Convert.ToInt16(Math.Floor(newHeight * ratio));
             }
+
+            using var newImage = new Bitmap(newWidth, newHeight);
+            using var graphics = Graphics.FromImage(newImage);
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+            //close the stream to prevent access error if sourcePath and destinstionPath match
+            stream.Close();
+            newImage.Save(destinstionPath, GetImageFormat(destinstionPath));
+        }
+
+        /// <summary>
+        /// Checks if the path is allowed to work on
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns></returns>
+        protected virtual bool IsPathAllowed(string path)
+        {
+            var absp = _fileProvider.GetAbsolutePath(path);
+
+            if (string.IsNullOrEmpty(_fileRootPath))
+                Configure();
+
+            return new DirectoryInfo(absp).FullName.StartsWith(_fileRootPath);
         }
 
         #endregion
@@ -168,7 +188,11 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         public virtual void Configure()
         {
-            //do nothing
+            CreateConfiguration();
+
+            var existingText = _fileProvider.ReadAllText(GetConfigurationFilePath(), Encoding.UTF8);
+            var config = JsonConvert.DeserializeObject<Dictionary<string, string>>(existingText);
+            _fileRootPath = _fileProvider.GetAbsolutePath(config["FILES_ROOT"]);
         }
 
         #endregion
@@ -193,6 +217,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.DirectoryExists(newDirectoryPath))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
+            if (!IsPathAllowed(directoryPath) || !IsPathAllowed(newDirectoryPath))
+                throw new Exception(GetLanguageResource("E_CopyDirInvalidPath"));
+
             CopyDirectory(directoryPath, newDirectoryPath);
 
             await GetHttpContext().Response.WriteAsync(GetSuccessResponse());
@@ -208,6 +235,9 @@ namespace Nop.Services.Media.RoxyFileman
         {
             parentDirectoryPath = GetFullPath(GetVirtualPath(parentDirectoryPath));
             if (!_fileProvider.DirectoryExists(parentDirectoryPath))
+                throw new Exception(GetLanguageResource("E_CreateDirInvalidPath"));
+
+            if (!IsPathAllowed(parentDirectoryPath))
                 throw new Exception(GetLanguageResource("E_CreateDirInvalidPath"));
 
             try
@@ -241,6 +271,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.GetDirectories(path).Length > 0 || _fileProvider.GetFiles(path).Length > 0)
                 throw new Exception(GetLanguageResource("E_DeleteNonEmpty"));
 
+            if (!IsPathAllowed(path))
+                throw new Exception(GetLanguageResource("E_DeleteDirInvalidPath"));
+
             try
             {
                 _fileProvider.DeleteDirectory(path);
@@ -262,6 +295,9 @@ namespace Nop.Services.Media.RoxyFileman
             path = GetVirtualPath(path).TrimEnd('/');
             var fullPath = GetFullPath(path);
             if (!_fileProvider.DirectoryExists(fullPath))
+                throw new Exception(GetLanguageResource("E_CreateArchive"));
+
+            if (!IsPathAllowed(fullPath))
                 throw new Exception(GetLanguageResource("E_CreateArchive"));
 
             var zipName = _fileProvider.GetFileName(fullPath) + ".zip";
@@ -332,6 +368,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.DirectoryExists(destinationPath))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
+            if (!IsPathAllowed(fullSourcePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_MoveDirInvalisPath"));
+
             try
             {
                 _fileProvider.DirectoryMove(fullSourcePath, destinationPath);
@@ -353,6 +392,9 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
 
+            if (!IsPathAllowed(fullSourcePath))
+                throw new Exception(GetLanguageResource("E_RenameDirInvalidPath"));
+
             var destinationDirectory = _fileProvider.Combine(_fileProvider.GetParentDirectory(fullSourcePath), newName);
 
             if (GetVirtualPath(sourcePath) == GetRootDirectory())
@@ -363,6 +405,9 @@ namespace Nop.Services.Media.RoxyFileman
 
             if (_fileProvider.DirectoryExists(destinationDirectory))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
+
+            if (!IsPathAllowed(destinationDirectory))
+                throw new Exception(GetLanguageResource("E_RenameDirInvalidPath"));
 
             try
             {
@@ -393,6 +438,10 @@ namespace Nop.Services.Media.RoxyFileman
                 throw new Exception(GetLanguageResource("E_CopyFileInvalisPath"));
 
             destinationPath = GetFullPath(GetVirtualPath(destinationPath));
+
+            if (!IsPathAllowed(filePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_CopyFileInvalisPath"));
+
             var newFileName = GetUniqueFileName(destinationPath, _fileProvider.GetFileName(filePath));
             try
             {
@@ -416,6 +465,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (!_fileProvider.FileExists(path))
                 throw new Exception(GetLanguageResource("E_DeleteFileInvalidPath"));
 
+            if (!IsPathAllowed(path))
+                throw new Exception(GetLanguageResource("E_DeleteFileInvalidPath"));
+
             try
             {
                 _fileProvider.DeleteFile(path);
@@ -435,6 +487,10 @@ namespace Nop.Services.Media.RoxyFileman
         public virtual async Task DownloadFileAsync(string path)
         {
             var filePath = GetFullPath(GetVirtualPath(path));
+
+            if (!IsPathAllowed(path))
+                throw new Exception(GetLanguageResource("E_ActionDisabled"));
+
             if (_fileProvider.FileExists(filePath))
             {
                 GetHttpContext().Response.Clear();
@@ -464,14 +520,10 @@ namespace Nop.Services.Media.RoxyFileman
 
                 if (GetFileType(_fileProvider.GetFileExtension(files[i])) == "image")
                 {
-                    using (var stream = new FileStream(physicalPath, FileMode.Open))
-                    {
-                        using (var image = Image.FromStream(stream))
-                        {
-                            width = image.Width;
-                            height = image.Height;
-                        }
-                    }
+                    using var stream = new FileStream(physicalPath, FileMode.Open);
+                    using var image = Image.FromStream(stream);
+                    width = image.Width;
+                    height = image.Height;
                 }
 
                 await GetHttpContext().Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{_fileProvider.GetFileName(physicalPath)}\",\"t\":\"{Math.Ceiling(GetTimestamp(_fileProvider.GetLastWriteTime(physicalPath)))}\",\"s\":\"{_fileProvider.FileLength(physicalPath)}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
@@ -504,6 +556,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (!CanHandleFile(_fileProvider.GetFileName(destinationPath)))
                 throw new Exception(GetLanguageResource("E_FileExtensionForbidden"));
 
+            if (!IsPathAllowed(fullSourcePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_MoveFileInvalisPath"));
+
             try
             {
                 _fileProvider.FileMove(fullSourcePath, destinationPath);
@@ -530,9 +585,13 @@ namespace Nop.Services.Media.RoxyFileman
             if (!CanHandleFile(newName))
                 throw new Exception(GetLanguageResource("E_FileExtensionForbidden"));
 
+            var destinationPath = _fileProvider.Combine(_fileProvider.GetDirectoryName(fullSourcePath), newName);
+
+            if (!IsPathAllowed(fullSourcePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_RenameFileInvalidPath"));
+
             try
             {
-                var destinationPath = _fileProvider.Combine(_fileProvider.GetDirectoryName(fullSourcePath), newName);
                 _fileProvider.FileMove(fullSourcePath, destinationPath);
 
                 await GetHttpContext().Response.WriteAsync(GetSuccessResponse());
@@ -552,9 +611,14 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var result = GetSuccessResponse();
             var hasErrors = false;
+
+            directoryPath = GetFullPath(GetVirtualPath(directoryPath));
+
+            if (!IsPathAllowed(directoryPath))
+                throw new Exception(GetLanguageResource("E_UploadNotAll"));
+
             try
             {
-                directoryPath = GetFullPath(GetVirtualPath(directoryPath));
                 foreach (var formFile in GetHttpContext().Request.Form.Files)
                 {
                     var fileName = formFile.FileName;
@@ -562,6 +626,9 @@ namespace Nop.Services.Media.RoxyFileman
                     {
                         var uniqueFileName = GetUniqueFileName(directoryPath, _fileProvider.GetFileName(fileName));
                         var destinationFile = _fileProvider.Combine(directoryPath, uniqueFileName);
+
+                        //A warning (SCS0018 - Path Traversal) from the "Security Code Scan" analyzer may appear at this point. 
+                        //In this case, it is not relevant. The input is not supplied by user.
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
                             formFile.CopyTo(stream);
@@ -611,52 +678,50 @@ namespace Nop.Services.Media.RoxyFileman
             int.TryParse(GetHttpContext().Request.Query["width"].ToString().Replace("px", string.Empty), out var width);
             int.TryParse(GetHttpContext().Request.Query["height"].ToString().Replace("px", string.Empty), out var height);
 
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            using var image = new Bitmap(Image.FromStream(stream));
+            var cropX = 0;
+            var cropY = 0;
+
+            var imgRatio = image.Width / (double)image.Height;
+
+            if (height == 0)
+                height = Convert.ToInt32(Math.Floor(width / imgRatio));
+
+            if (width > image.Width)
+                width = image.Width;
+            if (height > image.Height)
+                height = image.Height;
+
+            var cropRatio = width / (double)height;
+            var cropWidth = Convert.ToInt32(Math.Floor(image.Height * cropRatio));
+            var cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
+
+            if (cropWidth > image.Width)
             {
-                using (var image = new Bitmap(Image.FromStream(stream)))
-                {
-                    var cropX = 0;
-                    var cropY = 0;
-
-                    var imgRatio = image.Width / (double)image.Height;
-
-                    if (height == 0)
-                        height = Convert.ToInt32(Math.Floor(width / imgRatio));
-
-                    if (width > image.Width)
-                        width = image.Width;
-                    if (height > image.Height)
-                        height = image.Height;
-
-                    var cropRatio = width / (double)height;
-                    var cropWidth = Convert.ToInt32(Math.Floor(image.Height * cropRatio));
-                    var cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
-
-                    if (cropWidth > image.Width)
-                    {
-                        cropWidth = image.Width;
-                        cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
-                    }
-
-                    if (cropHeight > image.Height)
-                    {
-                        cropHeight = image.Height;
-                        cropWidth = Convert.ToInt32(Math.Floor(cropHeight * cropRatio));
-                    }
-
-                    if (cropWidth < image.Width)
-                        cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
-                    if (cropHeight < image.Height)
-                        cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
-
-                    using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
-                    {
-                        GetHttpContext().Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
-                        cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(GetHttpContext().Response.Body, ImageFormat.Png);
-                        GetHttpContext().Response.Body.Close();
-                    }
-                }
+                cropWidth = image.Width;
+                cropHeight = Convert.ToInt32(Math.Floor(cropWidth / cropRatio));
             }
+
+            if (cropHeight > image.Height)
+            {
+                cropHeight = image.Height;
+                cropWidth = Convert.ToInt32(Math.Floor(cropHeight * cropRatio));
+            }
+
+            if (cropWidth < image.Width)
+                cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
+            if (cropHeight < image.Height)
+                cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
+
+            using var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare);
+            GetHttpContext().Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
+
+            using var thumbnailImageStream = new MemoryStream();
+            cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(thumbnailImageStream, ImageFormat.Png);
+            var thumbnailImageBinary = thumbnailImageStream.ToArray();
+            GetHttpContext().Response.Body.WriteAsync(thumbnailImageBinary);
+            GetHttpContext().Response.Body.Close();
         }
 
         /// <summary>

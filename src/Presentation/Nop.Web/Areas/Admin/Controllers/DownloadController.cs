@@ -6,7 +6,6 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -44,10 +43,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (download == null)
                 return Content("No download record found with the specified id");
 
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //use stored data
+                //use stored data
             if (download.DownloadBinary == null)
                 return Content($"Download data is not available any more. Download GD={download.Id}");
 
@@ -63,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult SaveDownloadUrl(string downloadUrl)
         {
             //don't allow to save empty download object
@@ -91,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AsyncUpload()
         {
             var httpPostedFile = Request.Form.Files.FirstOrDefault();

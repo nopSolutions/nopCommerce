@@ -38,6 +38,21 @@ namespace Nop.Core.Domain.Customers
         public string UsernameValidationRule { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether phone number will be validated (when registering or changing on the 'My Account' page)
+        /// </summary>
+        public bool PhoneNumberValidationEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether phone number will be validated using regex (when registering or changing on the 'My Account' page)
+        /// </summary>
+        public bool PhoneNumberValidationUseRegex { get; set; }
+
+        /// <summary>
+        /// Gets or sets a phone number validation rule
+        /// </summary>
+        public string PhoneNumberValidationRule { get; set; }
+
+        /// <summary>
         /// Default password format for customers
         /// </summary>
         public PasswordFormat DefaultPasswordFormat { get; set; }
@@ -193,6 +208,11 @@ namespace Nop.Core.Domain.Customers
         public bool StoreIpAddresses { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating the number of minutes for 'last activity' module
+        /// </summary>
+        public int LastActivityMinutes { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>
         public bool SuffixDeletedCustomers { get; set; }
@@ -218,6 +238,26 @@ namespace Nop.Core.Domain.Customers
         public int DeleteGuestTaskOlderThanMinutes { get; set; }
 
         #region Form fields
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'First Name' is enabled
+        /// </summary>
+        public bool FirstNameEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'First Name' is required
+        /// </summary>
+        public bool FirstNameRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Last Name' is enabled
+        /// </summary>
+        public bool LastNameEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Last Name' is required
+        /// </summary>
+        public bool LastNameRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Gender' is enabled

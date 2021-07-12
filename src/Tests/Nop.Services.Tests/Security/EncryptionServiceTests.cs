@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Security;
+﻿using FluentAssertions;
+using Nop.Core.Domain.Security;
 using Nop.Services.Security;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Security
@@ -27,7 +27,7 @@ namespace Nop.Services.Tests.Security
             var password = "MyLittleSecret";
             var saltKey = "salt1";
             var hashedPassword = _encryptionService.CreatePasswordHash(password, saltKey, "SHA1");
-            hashedPassword.ShouldEqual("A07A9638CCE93E48E3F26B37EF7BDF979B8124D6");
+            hashedPassword.Should().Be("A07A9638CCE93E48E3F26B37EF7BDF979B8124D6");
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Nop.Services.Tests.Security
             var password = "MyLittleSecret";
             var saltKey = "salt1";
             var hashedPassword = _encryptionService.CreatePasswordHash(password, saltKey, "SHA512");
-            hashedPassword.ShouldEqual("4506D65FDB6F3A8CF97278AB7C5C62DEC35EADD474BE1E6243776691D56E1B27F71C1D9085B26BD7513BED89822204D6B8FCBD6E665D46558C48F56D21B2A293");
+            hashedPassword.Should().Be("4506D65FDB6F3A8CF97278AB7C5C62DEC35EADD474BE1E6243776691D56E1B27F71C1D9085B26BD7513BED89822204D6B8FCBD6E665D46558C48F56D21B2A293");
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Nop.Services.Tests.Security
             var password = "MyLittleSecret";
             var encryptedPassword = _encryptionService.EncryptText(password);
             var decryptedPassword = _encryptionService.DecryptText(encryptedPassword);
-            decryptedPassword.ShouldEqual(password);
+            decryptedPassword.Should().Be(password);
         }
     }
 }

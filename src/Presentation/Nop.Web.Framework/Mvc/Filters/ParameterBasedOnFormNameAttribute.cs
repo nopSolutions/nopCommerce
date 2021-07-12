@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that check existence of passed form key and return result as an action parameter 
     /// </summary>
-    public class ParameterBasedOnFormNameAttribute : TypeFilterAttribute
+    public sealed class ParameterBasedOnFormNameAttribute : TypeFilterAttribute
     {
         #region Ctor
 

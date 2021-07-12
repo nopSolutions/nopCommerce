@@ -1,5 +1,5 @@
-﻿using Nop.Core.Domain.Configuration;
-using Nop.Tests;
+﻿using FluentAssertions;
+using Nop.Core.Domain.Configuration;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Configuration
@@ -11,8 +11,8 @@ namespace Nop.Core.Tests.Domain.Configuration
         public void Can_create_setting()
         {
             var setting = new Setting("Setting1", "Value1");
-            setting.Name.ShouldEqual("Setting1");
-            setting.Value.ShouldEqual("Value1");
+            setting.Name.Should().Be("Setting1");
+            setting.Value.Should().Be("Value1");
         }
     }
 }

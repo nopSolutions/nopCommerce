@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -16,11 +16,12 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">A value indicating whether to show reward points that did not yet activated</param>
+        /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
         IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
-            bool showNotActivated = false, int pageIndex = 0, int pageSize = int.MaxValue);
+            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets reduced reward points balance per order

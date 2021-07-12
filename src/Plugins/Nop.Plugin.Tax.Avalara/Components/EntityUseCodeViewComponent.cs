@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Plugin.Tax.Avalara.Models.EntityUseCode;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -32,13 +33,14 @@ namespace Nop.Plugin.Tax.Avalara.Components
         #region Fields
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
@@ -46,23 +48,25 @@ namespace Nop.Plugin.Tax.Avalara.Components
         #region Ctor
 
         public EntityUseCodeViewComponent(AvalaraTaxManager avalaraTaxManager,
+            ICacheKeyService cacheKeyService,
             ICheckoutAttributeService checkoutAttributeService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IProductService productService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxPluginManager taxPluginManager)
         {
             _avalaraTaxManager = avalaraTaxManager;
+            _cacheKeyService = cacheKeyService;
             _checkoutAttributeService = checkoutAttributeService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _permissionService = permissionService;
             _productService = productService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxPluginManager = taxPluginManager;
         }
 
@@ -82,11 +86,11 @@ namespace Nop.Plugin.Tax.Avalara.Components
             if (!(additionalData is BaseNopEntityModel entityModel))
                 return Content(string.Empty);
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content(string.Empty);
-
             //ensure that Avalara tax provider is active
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return Content(string.Empty);
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content(string.Empty);
 
             //ensure that it's a proper widget zone
@@ -99,11 +103,12 @@ namespace Nop.Plugin.Tax.Avalara.Components
             }
 
             //get Avalara pre-defined entity use codes
-            var cachedEntityUseCodes = _cacheManager.Get(AvalaraTaxDefaults.EntityUseCodesCacheKey, () => _avalaraTaxManager.GetEntityUseCodes());
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.EntityUseCodesCacheKey);
+            var cachedEntityUseCodes = _staticCacheManager.Get(cacheKey, () => _avalaraTaxManager.GetEntityUseCodes());
             var entityUseCodes = cachedEntityUseCodes?.Select(useCode => new SelectListItem
             {
                 Value = useCode.code,
-                Text = $"{useCode.name} ({useCode.validCountries.Aggregate(string.Empty, (list, country) => $"{list}{country},").TrimEnd(',')})"
+                Text = $"{useCode.name} ({string.Join(", ", useCode.validCountries)})"
             }).ToList() ?? new List<SelectListItem>();
 
             //add the special item for 'undefined' with empty guid value

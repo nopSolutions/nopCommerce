@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Plugins

@@ -13,13 +13,19 @@ namespace Nop.Web.Validators.Customer
     public partial class CustomerInfoValidator : BaseNopValidator<CustomerInfoModel>
     {
         public CustomerInfoValidator(ILocalizationService localizationService,
-            IStateProvinceService stateProvinceService, 
+            IStateProvinceService stateProvinceService,
             CustomerSettings customerSettings)
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));
-            RuleFor(x => x.FirstName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.FirstName.Required"));
-            RuleFor(x => x.LastName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.LastName.Required"));
+            if (customerSettings.FirstNameEnabled && customerSettings.FirstNameRequired)
+            {
+                RuleFor(x => x.FirstName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.FirstName.Required"));
+            }
+            if (customerSettings.LastNameEnabled && customerSettings.LastNameRequired)
+            {
+                RuleFor(x => x.LastName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.LastName.Required"));
+            }
 
             if (customerSettings.UsernamesEnabled && customerSettings.AllowUsersToChangeUsernames)
             {
@@ -34,7 +40,7 @@ namespace Nop.Web.Validators.Customer
                     .NotEqual(0)
                     .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"));
             }
-            if (customerSettings.CountryEnabled && 
+            if (customerSettings.CountryEnabled &&
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {
@@ -103,6 +109,10 @@ namespace Nop.Web.Validators.Customer
             if (customerSettings.PhoneRequired && customerSettings.PhoneEnabled)
             {
                 RuleFor(x => x.Phone).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required"));
+            }
+            if (customerSettings.PhoneEnabled)
+            {
+                RuleFor(x => x.Phone).IsPhoneNumber(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Phone.NotValid"));
             }
             if (customerSettings.FaxRequired && customerSettings.FaxEnabled)
             {

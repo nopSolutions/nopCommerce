@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -14,7 +15,6 @@ namespace Nop.Web.Framework
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebHelper _webHelper;
-        private readonly NameValueCollection _inputValues;
 
         /// <summary>
         /// Gets or sets a remote URL
@@ -44,13 +44,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Parames
         /// </summary>
-        public NameValueCollection Params
-        {
-            get
-            {
-                return _inputValues;
-            }
-        }
+        public NameValueCollection Params { get; }
 
         /// <summary>
         /// Creates a new instance of the RemotePost class
@@ -67,7 +61,7 @@ namespace Nop.Web.Framework
         /// <param name="webHelper">Web helper</param>
         public RemotePost(IHttpContextAccessor httpContextAccessor, IWebHelper webHelper)
         {
-            _inputValues = new NameValueCollection();
+            Params = new NameValueCollection();
             Url = "http://www.someurl.com";
             Method = "post";
             FormName = "formName";
@@ -83,7 +77,7 @@ namespace Nop.Web.Framework
         /// <param name="value">The value of the element to add.</param>
         public void Add(string name, string value)
         {
-            _inputValues.Add(name, value);
+            Params.Add(name, value);
         }
         
         /// <summary>
@@ -108,9 +102,9 @@ namespace Nop.Web.Framework
             }
             if (NewInputForEachValue)
             {
-                foreach (string key in _inputValues.Keys)
+                foreach (string key in Params.Keys)
                 {
-                    var values = _inputValues.GetValues(key);
+                    var values = Params.GetValues(key);
                     if (values != null)
                     {
                         foreach (var value in values)
@@ -123,23 +117,32 @@ namespace Nop.Web.Framework
             }
             else
             {
-                for (var i = 0; i < _inputValues.Keys.Count; i++)
+                for (var i = 0; i < Params.Keys.Count; i++)
                     sb.Append(
-                        $"<input name=\"{WebUtility.HtmlEncode(_inputValues.Keys[i])}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])}\">");
+                        $"<input name=\"{WebUtility.HtmlEncode(Params.Keys[i])}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(Params[Params.Keys[i]])}\">");
             }
             sb.Append("</form>");
             sb.Append("</body></html>");
 
+            var data = Encoding.UTF8.GetBytes(sb.ToString());
 
-            //post
+            //modify the response
             var httpContext = _httpContextAccessor.HttpContext;
             var response = httpContext.Response;
-            response.Clear();
-            var data = Encoding.UTF8.GetBytes(sb.ToString());
-            response.ContentType = "text/html; charset=utf-8";
-            response.ContentLength = data.Length;
 
-            response.Body.Write(data, 0, data.Length);
+            //change headers before the content is written to body
+            response.OnStarting(() =>
+            {
+                response.ContentType = "text/html; charset=utf-8";
+                response.ContentLength = data.Length;
+
+                return Task.CompletedTask;
+            });
+
+            response.Clear();
+            response.Body
+                .WriteAsync(data, 0, data.Length)
+                .Wait();
 
             //store a value indicating whether POST has been done
             _webHelper.IsPostBeingDone = true;

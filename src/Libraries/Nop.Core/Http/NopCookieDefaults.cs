@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Http
+﻿namespace Nop.Core.Http
 {
     /// <summary>
     /// Represents default values related to cookies
@@ -60,6 +59,5 @@ namespace Nop.Core.Http
         /// Gets a cookie name of the Eu Cookie Law Warning
         /// </summary>
         public static string IgnoreEuCookieLawWarning => ".IgnoreEuCookieLawWarning";
-
     }
 }
