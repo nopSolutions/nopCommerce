@@ -995,6 +995,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
                     var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
                     var customerFullName = await _customerService.GetCustomerFullNameAsync(customer);
+                    var shippingAddress = (await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value)).ToModel<AddressModel>();
                     //fill in model values from the entity
                     var orderModel = new OrderModel
                     {

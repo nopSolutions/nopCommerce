@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
@@ -32,36 +33,36 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
             return email.EndsWith("@servicetitan.com", StringComparison.InvariantCultureIgnoreCase);
         }
 
-        private void AddAddress(Customer customer, Address address, bool isDefault)
+        private async Task AddAddress(Customer customer, Address address, bool isDefault)
         {
-            if (_addressService.IsAddressValid(address))
+            if (await _addressService.IsAddressValidAsync(address))
             {
-                _addressService.InsertAddress(address);
+                await _addressService.InsertAddressAsync(address);
 
-                _customerService.InsertCustomerAddress(customer, address);
+                await _customerService.InsertCustomerAddressAsync(customer, address);
 
                 if (isDefault)
                 {
                     customer.BillingAddressId = address.Id;
                     customer.ShippingAddressId = address.Id;
 
-                    _customerService.UpdateCustomer(customer);
+                    await _customerService.UpdateCustomerAsync(customer);
                 }
             }
         }
 
-        public void HandleEvent(CustomerRegisteredEvent eventMessage)
+        public async Task HandleEventAsync(CustomerRegisteredEvent eventMessage)
         {
             var customer = eventMessage.Customer;
             if(IsServiceTitanEmail(customer.Email))
             {
-                AddAddress(customer, new Address
+                await AddAddress(customer, new Address
                 {
                     FirstName = "Melik Adamyan 2/2",
                     LastName = "3rd floor",
                     Email = customer.Email,
-                    Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
-                    CountryId = _countryService.GetCountryByTwoLetterIsoCode("AM").Id,
+                    Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute),
+                    CountryId = (await _countryService.GetCountryByTwoLetterIsoCodeAsync("AM")).Id,
                     StateProvinceId = null,
                     County = "",
                     City = "Yerevan",
@@ -73,13 +74,13 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Service
                     CreatedOnUtc = customer.CreatedOnUtc
                 }, true);
 
-                AddAddress(customer, new Address
+                await AddAddress(customer, new Address
                 {
                     FirstName = "Leo 1",
                     LastName = "2nd floor",
                     Email = customer.Email,
-                    Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
-                    CountryId = _countryService.GetCountryByTwoLetterIsoCode("AM").Id,
+                    Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute),
+                    CountryId = (await _countryService.GetCountryByTwoLetterIsoCodeAsync("AM")).Id,
                     StateProvinceId = null,
                     County = "",
                     City = "Yerevan",
