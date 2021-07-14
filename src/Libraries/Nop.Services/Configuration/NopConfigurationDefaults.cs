@@ -20,6 +20,6 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Gets the path to file that contains app settings
         /// </summary>
-        public static string AppSettingsFilePath => "App_Data/appsettings.json";
+        public static string AppSettingsFilePath => "persistent/appsettings.json";
     }
 }
