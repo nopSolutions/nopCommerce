@@ -13,6 +13,15 @@
                     <span asp-validation-for="@Model.Locales[item].Name"></span>
                 </div>
             </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].Email" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].Email" />
+                    <span asp-validation-for="@Model.Locales[item].Email"></span>
+                </div>
+            </div>
             <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
         </div>
         ,
@@ -24,6 +33,15 @@
                 <div class="col-md-9">
                     <nop-editor asp-for="Name" asp-required="true" />
                     <span asp-validation-for="Name"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="Email" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Email" asp-required="true" />
+                    <span asp-validation-for="Email"></span>
                 </div>
             </div>
         </div>))

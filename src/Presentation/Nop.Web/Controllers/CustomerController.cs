@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Companies;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
@@ -25,6 +26,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Companies;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
@@ -95,6 +97,7 @@ namespace Nop.Web.Controllers
         private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly ICompanyService _companyService;
 
         #endregion
 
@@ -143,7 +146,8 @@ namespace Nop.Web.Controllers
             MediaSettings mediaSettings,
             MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
             StoreInformationSettings storeInformationSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            ICompanyService companyService)
         {
             _addressSettings = addressSettings;
             _captchaSettings = captchaSettings;
@@ -189,6 +193,7 @@ namespace Nop.Web.Controllers
             _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             _storeInformationSettings = storeInformationSettings;
             _taxSettings = taxSettings;
+            _companyService = companyService;
         }
 
         #endregion
@@ -990,6 +995,12 @@ namespace Nop.Web.Controllers
                         await _customerService.UpdateCustomerAsync(customer);
                     }
 
+                    //custom working to map the customer to the company which have the matching domain
+                    var email = customer.Email.Split("@");
+                    var companies = await _companyService.GetAllCompaniesAsync(email: email[1]);
+                    if (companies.Any())
+                        await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companies.FirstOrDefault().Id, CustomerId = customer.Id });
+                    
                     //notifications
                     if (_customerSettings.NotifyNewCustomerRegistration)
                         await _workflowMessageService.SendCustomerRegisteredNotificationMessageAsync(customer,
