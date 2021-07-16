@@ -665,6 +665,10 @@ namespace Nop.Web.Factories
             var model = from xe in doc.Descendants("CategorySimpleModel")
                         where xe.XPathSelectElement("Id").Value == id.ToString()
                         select xe;
+            if (model is null)
+            {
+                throw new NullReferenceException("Unable to obtain category details. Invalid category id.");
+            }
 
             var models = from xe in model.First().XPathSelectElements("SubCategories/CategorySimpleModel")
                          select GetCategorySimpleModel(xe);
