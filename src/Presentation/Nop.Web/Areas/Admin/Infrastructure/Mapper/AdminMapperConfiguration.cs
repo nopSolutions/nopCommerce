@@ -330,6 +330,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.NumberOfProductTags_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.PageShareCode_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ProductReviewsEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductReviewsMustBeApproved_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.OneReviewPerProductFromCustomer_OverrideForStore, options => options.Ignore())

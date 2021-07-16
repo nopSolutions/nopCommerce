@@ -38,7 +38,7 @@
                 @Model.Sku
             </div>
         }
-        @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+        @if (catalogSettings.ProductReviewsEnabled && Model.ReviewOverviewModel.AllowCustomerReviews)
         {
             var ratingPercent = 0;
             if (Model.ReviewOverviewModel.TotalReviews != 0)

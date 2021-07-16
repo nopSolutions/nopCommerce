@@ -1,4 +1,6 @@
 ﻿@model ProductReviewOverviewModel
+@using Nop.Core.Domain.Catalog
+@inject CatalogSettings catalogSettings
 @{
     var ratingPercent = 0;
     if (Model.TotalReviews != 0)
@@ -6,7 +8,7 @@
         ratingPercent = ((Model.RatingSum * 100) / Model.TotalReviews) / 5;
     }
 }
-@if (Model.AllowCustomerReviews)
+@if (catalogSettings.ProductReviewsEnabled && Model.AllowCustomerReviews)
 {
     <div class="product-reviews-overview">
         <div class="product-review-box">

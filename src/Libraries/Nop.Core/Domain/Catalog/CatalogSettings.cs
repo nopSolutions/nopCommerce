@@ -101,6 +101,11 @@ namespace Nop.Core.Domain.Catalog
         public string PageShareCode { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating if product reviews are enabled
+        /// </summary>
+        public bool ProductReviewsEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating product reviews must be approved
         /// </summary>
         public bool ProductReviewsMustBeApproved { get; set; }

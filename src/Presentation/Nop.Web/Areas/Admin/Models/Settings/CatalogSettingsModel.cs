@@ -91,6 +91,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string PageShareCode { get; set; }
         public bool PageShareCode_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsEnabled")]
+        public bool ProductReviewsEnabled { get; set; }
+        public bool ProductReviewsEnabled_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved")]
         public bool ProductReviewsMustBeApproved { get; set; }
         public bool ProductReviewsMustBeApproved_OverrideForStore { get; set; }
