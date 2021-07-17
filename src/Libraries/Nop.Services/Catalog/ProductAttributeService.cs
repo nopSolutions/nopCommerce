@@ -22,6 +22,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
@@ -33,6 +34,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAttributeValue> productAttributeValueRepository,
+            IRepository<Product> productRepository,
             IStaticCacheManager staticCacheManager)
         {
             _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
@@ -40,6 +42,7 @@ namespace Nop.Services.Catalog
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAttributeValueRepository = productAttributeValueRepository;
+            _productRepository = productRepository;
             _staticCacheManager = staticCacheManager;
         }
 
@@ -435,10 +438,8 @@ namespace Nop.Services.Catalog
 
             sku = sku.Trim();
 
-            // todo: inject IRepository<Product> via ctor in 4.50
-            var productRepository = EngineContext.Current.Resolve<IRepository<Product>>();
             var query = from pac in _productAttributeCombinationRepository.Table
-                        join p in productRepository.Table on pac.ProductId equals p.Id
+                        join p in _productRepository.Table on pac.ProductId equals p.Id
                         orderby pac.Id
                         where !p.Deleted && pac.Sku == sku
                         select pac;
