@@ -5,7 +5,7 @@
   "Version": "1.66",
   "SupportedVersions": [ "4.40" ],
   "Author": "nopCommerce team",
-  "DisplayOrder": 1,
+  "DisplayOrder": 0,
   "FileName": "Nop.Plugin.Payments.PayPalStandard.dll",
   "Description": "This plugin allows paying with PayPal Standard"
 }

@@ -321,7 +321,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteElementStringAsync("Address2", address.Address2);
             await writer.WriteElementStringAsync("City", address.City);
             await writer.WriteElementStringAsync("State", (await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Name ?? string.Empty);
-            await writer.WriteElementStringAsync("PostalCode ", address.ZipPostalCode);
+            await writer.WriteElementStringAsync("PostalCode", address.ZipPostalCode);
             await writer.WriteElementStringAsync("Country", (await _countryService.GetCountryByAddressAsync(address)).TwoLetterIsoCode);
         }
 
@@ -405,7 +405,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteElementStringAsync("OrderID", order.Id.ToString());
             await writer.WriteElementStringAsync("OrderNumber", order.OrderGuid.ToString());
             await writer.WriteElementStringAsync("OrderDate", order.CreatedOnUtc.ToString(DATE_FORMAT));
-            await writer.WriteElementStringAsync("OrderStatus ", GetOrderStatus(order));
+            await writer.WriteElementStringAsync("OrderStatus", GetOrderStatus(order));
             await writer.WriteElementStringAsync("LastModified", DateTime.Now.ToString(DATE_FORMAT));
             await writer.WriteElementStringAsync("OrderTotal", order.OrderTotal.ToString(CultureInfo.InvariantCulture));
             await writer.WriteElementStringAsync("ShippingAmount", (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax).ToString(CultureInfo.InvariantCulture));
@@ -569,6 +569,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             }
 
             await writer.WriteEndElementAsync();
+            await writer.WriteEndDocumentAsync();
+            await writer.FlushAsync();
 
             xml = Encoding.UTF8.GetString(stream.ToArray());
 
