@@ -308,6 +308,10 @@ namespace Nop.Web.Factories
                                           !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
                                           !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
 
+            var isAnyProductCombinationAvailable = await _productService.IsAnyProductCombinationAvailableAsync(product);
+
+            priceModel.DisableBuyButton |= !isAnyProductCombinationAvailable;
+
             //add to wishlist button
             priceModel.DisableWishlistButton = product.DisableWishlistButton ||
                                                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableWishlist) ||
@@ -429,6 +433,10 @@ namespace Nop.Web.Factories
             priceModel.DisableBuyButton =
                 !await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart) ||
                 !await _permissionService.AuthorizeAsync(StandardPermissionProvider.DisplayPrices);
+
+            var isAnyProductCombinationAvailable =  await _productService.IsAnyProductCombinationAvailableAsync(product);
+
+            priceModel.DisableBuyButton |= !isAnyProductCombinationAvailable;
 
             //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
             priceModel.DisableWishlistButton =
@@ -656,8 +664,8 @@ namespace Nop.Web.Factories
                     else
                     {
                         var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
-                        var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false)).finalPrice);
-                        var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync())).finalPrice);
+                        var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false)).Item1);
+                        var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync())).Item1);
 
                         var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, await _workContext.GetWorkingCurrencyAsync());
                         var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, await _workContext.GetWorkingCurrencyAsync());
@@ -1528,8 +1536,6 @@ namespace Nop.Web.Factories
                 model.ProductEstimateShipping.CountryId = estimateShippingModel.CountryId;
                 model.ProductEstimateShipping.StateProvinceId = estimateShippingModel.StateProvinceId;
                 model.ProductEstimateShipping.ZipPostalCode = estimateShippingModel.ZipPostalCode;
-                model.ProductEstimateShipping.UseCity = estimateShippingModel.UseCity;
-                model.ProductEstimateShipping.City = estimateShippingModel.City;
                 model.ProductEstimateShipping.AvailableCountries = estimateShippingModel.AvailableCountries;
                 model.ProductEstimateShipping.AvailableStates = estimateShippingModel.AvailableStates;
             }

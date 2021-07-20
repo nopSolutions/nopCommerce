@@ -861,6 +861,11 @@ namespace Nop.Services.Catalog
         /// <returns>A task that represents the asynchronous operation</returns>
         Task UpdateProductWarehouseInventoryAsync(ProductWarehouseInventory pwi);
 
+        /// <summary>
+        /// Returns false when all combinations of product are not available
+        /// </summary>
+        Task<bool> IsAnyProductCombinationAvailableAsync(Product product);
+
         #endregion
 
         #region Stock quantity history
