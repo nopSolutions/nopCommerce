@@ -876,7 +876,7 @@ namespace Nop.Services.Orders
             var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                 (await _pdfService.PrintOrderToPdfAsync(order)) : null;
             var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                "order.pdf" : null;
+                (await _localizationService.GetResourceAsync("PDFInvoice.FileName") + ".pdf") : null;
             var orderPlacedCustomerNotificationQueuedEmailIds = await _workflowMessageService
                 .SendOrderPlacedCustomerNotificationAsync(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
             if (orderPlacedCustomerNotificationQueuedEmailIds.Any())
@@ -1086,7 +1086,7 @@ namespace Nop.Services.Orders
                 var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     await _pdfService.PrintOrderToPdfAsync(order) : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    "order.pdf" : null;
+                    (await _localizationService.GetResourceAsync("PDFInvoice.FileName") + ".pdf") : null;
                 var orderCompletedCustomerNotificationQueuedEmailIds = await _workflowMessageService
                     .SendOrderCompletedCustomerNotificationAsync(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
                     orderCompletedAttachmentFileName);
@@ -1142,7 +1142,7 @@ namespace Nop.Services.Orders
                 var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     await _pdfService.PrintOrderToPdfAsync(order) : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    "order.pdf" : null;
+                    (await _localizationService.GetResourceAsync("PDFInvoice.FileName") + ".pdf") : null;
                 var orderPaidCustomerNotificationQueuedEmailIds = await _workflowMessageService.SendOrderPaidCustomerNotificationAsync(order, order.CustomerLanguageId,
                     orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
 
