@@ -1316,7 +1316,9 @@ namespace Nop.Web.Factories
                 var pickupPointsNumber = 0;
                 if (_shippingSettings.AllowPickupInStore)
                 {
-                    var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(address.Id, await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(cart, address,
+                        await _workContext.GetCurrentCustomerAsync(),
+                        storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
                     if (pickupPointsResponse.Success)
                     {
                         if (pickupPointsResponse.PickupPoints.Any())

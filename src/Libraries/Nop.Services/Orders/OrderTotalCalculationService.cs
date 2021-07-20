@@ -416,8 +416,10 @@ namespace Nop.Services.Orders
                             //customer chose pickup in store method, try to get chosen pickup point
                             if (_shippingSettings.AllowPickupInStore)
                             {
-                                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(updatedOrder.BillingAddressId, customer,
-                                    updatedOrder.ShippingRateComputationMethodSystemName, (await _storeContext.GetCurrentStoreAsync()).Id);
+                                var address = await _addressService.GetAddressByIdAsync(updatedOrder.BillingAddressId);
+                                var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(restoredCart, address,
+                                    customer, updatedOrder.ShippingRateComputationMethodSystemName,
+                                    (await _storeContext.GetCurrentStoreAsync()).Id);
                                 if (pickupPointsResponse.Success)
                                 {
                                     var selectedPickupPoint =
@@ -460,7 +462,10 @@ namespace Nop.Services.Orders
                         if (_shippingSettings.AllowPickupInStore)
                         {
                             //try to get the cheapest pickup point
-                            var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(updatedOrder.BillingAddressId, await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                            var address = await _addressService.GetAddressByIdAsync(updatedOrder.BillingAddressId);
+                            var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(restoredCart, address,
+                                await _workContext.GetCurrentCustomerAsync(),
+                                storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
                             if (pickupPointsResponse.Success)
                             {
                                 updateOrderParameters.PickupPoint = pickupPointsResponse.PickupPoints
