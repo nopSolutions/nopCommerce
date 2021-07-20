@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Ganss.XSS;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -279,6 +280,23 @@ namespace Nop.Web.Framework.Extensions
             await using var writer = new StringWriter();
             htmlContent.WriteTo(writer, HtmlEncoder.Default);
             return writer.ToString();
+        }
+
+        /// <summary>
+        /// Sanitize HTML fragment before writing it Raw (XSS protection)
+        /// </summary>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="html">HTML fragment</param>
+        /// <returns>
+        /// Sanitized Html content
+        /// </returns>
+        public static IHtmlContent SanitizedRaw<TModel>(this IHtmlHelper<TModel> helper, string html)
+        {
+            //get Sanitizer
+            var htmlSanitizer = EngineContext.Current.Resolve<IHtmlSanitizer>();
+            var sanitized = htmlSanitizer.Sanitize(html);
+            return helper.Raw(sanitized);
         }
 
         #endregion
