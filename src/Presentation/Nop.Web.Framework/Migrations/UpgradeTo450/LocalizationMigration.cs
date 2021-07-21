@@ -46,6 +46,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.Configuration.AppSettings.Hosting.UseProxy.Hint"] = "Enable this setting to apply forwarded headers to their matching fields on the current HTTP-request.",
                 ["Admin.Configuration.AppSettings.Hosting.KnownProxies"] = "Addresses of known proxies",
                 ["Admin.Configuration.AppSettings.Hosting.KnownProxies.Hint"] = "Specify a list of IP addresses (comma separated) to accept forwarded headers.",
+
+                //#5618
+                ["Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint"] = "Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).",
+                ["Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint"] = "Enable to combine (bundle) multiple JavaScript files into a single file. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).",
             }).Wait();
 
             // rename locales
