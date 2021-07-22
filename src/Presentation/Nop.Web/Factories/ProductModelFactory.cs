@@ -228,14 +228,15 @@ namespace Nop.Web.Factories
         protected virtual async Task<ProductReviewOverviewModel> PrepareProductReviewOverviewModelAsync(Product product)
         {
             ProductReviewOverviewModel productReview;
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             if (_catalogSettings.ShowProductReviewsPerStore)
             {
-                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductReviewsModelKey, product, await _storeContext.GetCurrentStoreAsync());
+                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductReviewsModelKey, product, currentStore);
 
                 productReview = await _staticCacheManager.GetAsync(cacheKey, async () =>
                 {
-                    var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: currentStore.Id);
                     
                     return new ProductReviewOverviewModel
                     {
@@ -257,7 +258,7 @@ namespace Nop.Web.Factories
             {
                 productReview.ProductId = product.Id;
                 productReview.AllowCustomerReviews = product.AllowCustomerReviews;
-                productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+                productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
             }
 
             return productReview;
@@ -1570,14 +1571,12 @@ namespace Nop.Web.Factories
             model.ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             model.ProductSeName = await _urlRecordService.GetSeNameAsync(product);
 
-            var productReviews = (await _productService.GetAllProductReviewsAsync(
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
+            var productReviews = await _productService.GetAllProductReviewsAsync(
                 approved: true, 
                 productId: product.Id,
-                storeId: _catalogSettings.ShowProductReviewsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0)).AsEnumerable();
-
-            productReviews = _catalogSettings.ProductReviewsSortByCreatedDateAscending
-                ? productReviews.OrderBy(pr => pr.CreatedOnUtc)
-                : productReviews.OrderByDescending(pr => pr.CreatedOnUtc);
+                storeId: _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 
             //get all review types
             foreach (var reviewType in await _reviewTypeService.GetAllReviewTypesAsync())
@@ -1677,7 +1676,7 @@ namespace Nop.Web.Factories
 
             model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync());
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
-            model.AddProductReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+            model.AddProductReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 
             return model;
         }
@@ -1700,9 +1699,10 @@ namespace Nop.Web.Factories
                 pageIndex = page.Value - 1;
             }
 
-            var list = await _productService.GetAllProductReviewsAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
+            var list = await _productService.GetAllProductReviewsAsync(
+                customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
                 approved: null,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                storeId: _catalogSettings.ShowProductReviewsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0,
                 pageIndex: pageIndex,
                 pageSize: pageSize);
 

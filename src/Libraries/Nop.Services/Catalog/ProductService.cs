@@ -2254,7 +2254,7 @@ namespace Nop.Services.Catalog
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
-        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">The store identifier, where a review has been created; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>
         /// <param name="vendorId">The vendor identifier (limit to products of this vendor); pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
@@ -2295,7 +2295,7 @@ namespace Nop.Services.Catalog
                     query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
                 if (!string.IsNullOrEmpty(message))
                     query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
-                if (storeId > 0 && (showHidden || _catalogSettings.ShowProductReviewsPerStore))
+                if (storeId > 0)
                     query = query.Where(pr => pr.StoreId == storeId);
                 if (productId > 0)
                     query = query.Where(pr => pr.ProductId == productId);
