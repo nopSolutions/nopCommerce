@@ -412,9 +412,10 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = await _productService.GetProductByIdAsync(productId);
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
-                !await _productService.CanAddReviewAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id))
+                !await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0))
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
@@ -444,7 +445,7 @@ namespace Nop.Web.Controllers
                     HelpfulNoTotal = 0,
                     IsApproved = isApproved,
                     CreatedOnUtc = DateTime.UtcNow,
-                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                    StoreId = currentStore.Id,
                 };
 
                 await _productService.InsertProductReviewAsync(productReview);
