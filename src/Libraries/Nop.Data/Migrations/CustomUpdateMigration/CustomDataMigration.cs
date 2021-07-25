@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Companies;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tasks;
@@ -8,7 +9,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.CustomUpdateMigration
 {
-    [NopMigration("2020-06-10 09:30:17:6453545", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6453325", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class CustomDataMigration : Migration
     {
@@ -28,6 +29,7 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             var productTableName = NameCompatibilityManager.GetTableName(typeof(Product));
             var orderTableName = NameCompatibilityManager.GetTableName(typeof(Order));
             var customerTableName = NameCompatibilityManager.GetTableName(typeof(Customer));
+            var companyTableName = NameCompatibilityManager.GetTableName(typeof(Company));
             var scheduleTaskTable = _dataProvider.GetTable<ScheduleTask>();
 
             if (!scheduleTaskTable.Any(alt => string.Compare(alt.Name, "Remind Me Notification Task", true) == 0))
@@ -68,6 +70,13 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
                     _dataProvider.DeleteEntityAsync(deleteScheduleTask);
                 }
             }
+            var companyEmailColumnName = "Email";
+            if (!Schema.Table(companyTableName).Column(companyEmailColumnName).Exists())
+            {
+                Alter.Table(companyTableName)
+                    .AddColumn(companyEmailColumnName).AsString().NotNullable().SetExistingRowsTo(null);
+            }
+            
             var ribbonEnableColumnName = "RibbonEnable";
             if (!Schema.Table(productTableName).Column(ribbonEnableColumnName).Exists())
             {

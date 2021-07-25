@@ -220,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Factories
                  email: searchModel.SearchCustomerEmail, customerRoleIds: customerRoleIds,
                  pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-            IPagedList<Customer> filteredCustomers = new PagedList<Customer>(new List<Customer>(), 0, 1);
+            IPagedList<Customer> filteredCustomers = new PagedList<Customer>(new List<Customer>(), searchModel.Page - 1, searchModel.PageSize, customers.TotalCount);
             foreach (var customer in customers)
             {
                 var companyCustomerMapping = await _companyService.GetCompanyCustomersByCustomerIdAsync(customer.Id);

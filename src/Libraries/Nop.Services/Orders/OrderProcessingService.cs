@@ -1598,8 +1598,36 @@ namespace Nop.Services.Orders
                         if (orders.Any())
                         {
                             //Checks if the schedule date has any previous orders, if yes then checks limit according to that!
-                            var scheduleDate = Convert.ToDateTime(processPaymentRequest.ScheduleDate);
-                            var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Date).ToList();
+                            var scheduleDate = !string.IsNullOrWhiteSpace(processPaymentRequest.ScheduleDate) ? Convert.ToDateTime(processPaymentRequest.ScheduleDate) : (DateTime?)null;
+                            var currentDate = DateTime.UtcNow;
+
+                            var dates = _orderSettings.ScheduleDate.Split(',');
+                            var nextdayTime = TimeSpan.Parse(dates[0].Split('-')[0].Split(':')[0]);
+                            var firstTime = TimeSpan.Parse(dates[0].Split('-')[1].Split(':')[0]);
+                            var secondTime = TimeSpan.Parse(dates[1].Split('-')[1].Split(':')[0]);
+                            var thirdTime = TimeSpan.Parse(dates[2].Split('-')[1].Split(':')[0]);
+                            var nextDayDate = currentDate.AddDays(+1);
+                            if (currentDate.Ticks < firstTime.Ticks)
+                            {
+                                currentDate.AddTicks(firstTime.Ticks);
+                                scheduleDate = currentDate;
+                            }
+                            else if (currentDate.Ticks == secondTime.Ticks)
+                            {
+                                currentDate.AddTicks(secondTime.Ticks);
+                                scheduleDate = currentDate;
+                            }
+                            else if (currentDate.Ticks == thirdTime.Ticks)
+                            {
+                                currentDate.AddTicks(thirdTime.Ticks);
+                                scheduleDate = currentDate;
+                            }
+                            else if (currentDate.Ticks > nextdayTime.Ticks)
+                            {
+                                nextDayDate.AddTicks(nextdayTime.Ticks);
+                                scheduleDate = nextDayDate;
+                            }
+                            var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Value.Date).ToList();
                             var todayOrderTotal = ordersAccordingToScheduleDate.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
                             if (todayOrderTotal > company.AmountLimit)
                                 result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), todayOrderTotal));

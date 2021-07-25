@@ -2,7 +2,16 @@
   "InstalledPluginNames": [
     "Obsolete field, using only for compatibility"
   ],
-  "InstalledPlugins": [],
+  "InstalledPlugins": [
+    {
+      "SystemName": "Shipping.FixedByWeightByTotal",
+      "Version": "2.28"
+    },
+    {
+      "SystemName": "Payments.CheckMoneyOrder",
+      "Version": "1.46"
+    }
+  ],
   "PluginNamesToUninstall": [],
   "PluginNamesToDelete": [],
   "PluginNamesToInstall": []

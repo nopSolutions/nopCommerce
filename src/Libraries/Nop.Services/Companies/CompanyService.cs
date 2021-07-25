@@ -43,13 +43,16 @@ namespace Nop.Services.Companies
 
         #region Companies
 
-        public virtual async Task<IPagedList<Company>> GetAllCompaniesAsync(string name = null,
+        public virtual async Task<IPagedList<Company>> GetAllCompaniesAsync(string name = null, string email = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var companies = await _companyRepository.GetAllPagedAsync(query =>
             {
                 if (!string.IsNullOrWhiteSpace(name))
                     query = query.Where(c => c.Name.Contains(name));
+                
+                if (!string.IsNullOrWhiteSpace(email))
+                    query = query.Where(c => c.Email.Contains(email));
 
                 query = query.OrderByDescending(c => c.Id);
 
