@@ -74,7 +74,7 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             if (!Schema.Table(companyTableName).Column(companyEmailColumnName).Exists())
             {
                 Alter.Table(companyTableName)
-                    .AddColumn(companyEmailColumnName).AsString().NotNullable().SetExistingRowsTo(null);
+                    .AddColumn(companyEmailColumnName).AsString().Nullable().SetExistingRowsTo(null);
             }
             
             var ribbonEnableColumnName = "RibbonEnable";
