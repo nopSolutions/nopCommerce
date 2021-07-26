@@ -9,7 +9,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.CustomUpdateMigration
 {
-    [NopMigration("2020-06-10 09:30:17:6453325", "4.40.0", UpdateMigrationType.Data)]
+    [NopMigration("2020-06-10 09:30:17:6453225", "4.40.0", UpdateMigrationType.Data)]
     [SkipMigrationOnInstall]
     public class CustomDataMigration : Migration
     {
@@ -74,7 +74,7 @@ namespace Nop.Data.Migrations.CustomUpdateMigration
             if (!Schema.Table(companyTableName).Column(companyEmailColumnName).Exists())
             {
                 Alter.Table(companyTableName)
-                    .AddColumn(companyEmailColumnName).AsString().NotNullable().SetExistingRowsTo(null);
+                    .AddColumn(companyEmailColumnName).AsString().Nullable().SetExistingRowsTo(null);
             }
             
             var ribbonEnableColumnName = "RibbonEnable";
