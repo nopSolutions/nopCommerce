@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var totalAmount = _reportModelFactory.GetBestsellerTotalAmount(searchModel);
 
-            return Json(new { aggregatortotal = totalAmount });
+            return Json(new {aggregatortotal = totalAmount});
         }
 
         #endregion

@@ -506,13 +506,9 @@ namespace Nop.Core.Caching
                         return;
 
                     using (new ReaderWriteLockDisposable(_locker))
-                    {
                         //remove matching values
                         foreach (var key in matchesKeys)
-                        {
                             items.Remove(key);
-                        }
-                    }
                 }
             }
 

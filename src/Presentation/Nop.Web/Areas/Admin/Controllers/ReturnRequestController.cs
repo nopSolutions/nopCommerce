@@ -61,23 +61,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void UpdateLocales(ReturnRequestReason rrr, ReturnRequestReasonModel model)
         {
             foreach (var localized in model.Locales)
-            {
                 _localizedEntityService.SaveLocalizedValue(rrr,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
-            }
         }
 
         protected virtual void UpdateLocales(ReturnRequestAction rra, ReturnRequestActionModel model)
         {
             foreach (var localized in model.Locales)
-            {
                 _localizedEntityService.SaveLocalizedValue(rra,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
-            }
         }
 
         #endregion
@@ -128,7 +124,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [HttpPost]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         public virtual IActionResult Edit(ReturnRequestModel model, bool continueEditing)
         {
@@ -149,11 +146,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditReturnRequest",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id), returnRequest);
+                    string.Format(_localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id),
+                    returnRequest);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.ReturnRequests.Updated"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id }) : RedirectToAction("List");
+                return continueEditing
+                    ? RedirectToAction("Edit", new {id = returnRequest.Id})
+                    : RedirectToAction("List");
             }
 
             //prepare model
@@ -163,7 +164,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
+        [ActionName("Edit")]
         [FormValueRequired("notify-customer")]
         public virtual IActionResult NotifyCustomer(ReturnRequestModel model)
         {
@@ -178,17 +180,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
             if (orderItem is null)
             {
-                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
-                return RedirectToAction("Edit", new { id = returnRequest.Id });
+                _notificationService.ErrorNotification(
+                    _localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
+                return RedirectToAction("Edit", new {id = returnRequest.Id});
             }
 
             var order = _orderService.GetOrderById(orderItem.OrderId);
 
-            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, order);
+            var queuedEmailIds =
+                _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem,
+                    order);
             if (queuedEmailIds.Any())
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.ReturnRequests.Notified"));
 
-            return RedirectToAction("Edit", new { id = returnRequest.Id });
+            return RedirectToAction("Edit", new {id = returnRequest.Id});
         }
 
         [HttpPost]
@@ -206,7 +212,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("DeleteReturnRequest",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id), returnRequest);
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id),
+                returnRequest);
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
 
@@ -245,12 +252,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(new ReturnRequestReasonModel(), null);
+            var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(new ReturnRequestReasonModel(),
+                null);
 
             return View(model);
         }
 
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [HttpPost]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -264,10 +273,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(returnRequestReason, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
 
                 return continueEditing
-                    ? RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id })
+                    ? RedirectToAction("ReturnRequestReasonEdit", new {id = returnRequestReason.Id})
                     : RedirectToAction("ReturnRequestReasonList");
             }
 
@@ -294,7 +304,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [HttpPost]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -313,12 +324,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(returnRequestReason, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource(
+                        "Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestReasonList");
 
-                return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
+                return RedirectToAction("ReturnRequestReasonEdit", new {id = returnRequestReason.Id});
             }
 
             //prepare model
@@ -336,11 +349,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a return request reason with the specified id
             var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(id)
-                ?? throw new ArgumentException("No return request reason found with the specified id", nameof(id));
+                                      ?? throw new ArgumentException(
+                                          "No return request reason found with the specified id", nameof(id));
 
             _returnRequestService.DeleteReturnRequestReason(returnRequestReason);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Deleted"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Deleted"));
 
             return RedirectToAction("ReturnRequestReasonList");
         }
@@ -379,12 +394,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _returnRequestModelFactory.PrepareReturnRequestActionModel(new ReturnRequestActionModel(), null);
+            var model = _returnRequestModelFactory.PrepareReturnRequestActionModel(new ReturnRequestActionModel(),
+                null);
 
             return View(model);
         }
 
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [HttpPost]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -398,10 +415,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(returnRequestAction, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
 
                 return continueEditing
-                    ? RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id })
+                    ? RedirectToAction("ReturnRequestActionEdit", new {id = returnRequestAction.Id})
                     : RedirectToAction("ReturnRequestActionList");
             }
 
@@ -428,7 +446,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [HttpPost]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -447,12 +466,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(returnRequestAction, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource(
+                        "Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestActionList");
 
-                return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
+                return RedirectToAction("ReturnRequestActionEdit", new {id = returnRequestAction.Id});
             }
 
             //prepare model
@@ -470,11 +491,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a return request action with the specified id
             var returnRequestAction = _returnRequestService.GetReturnRequestActionById(id)
-                ?? throw new ArgumentException("No return request action found with the specified id", nameof(id));
+                                      ?? throw new ArgumentException(
+                                          "No return request action found with the specified id", nameof(id));
 
             _returnRequestService.DeleteReturnRequestAction(returnRequestAction);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted"));
 
             return RedirectToAction("ReturnRequestActionList");
         }

@@ -20,7 +20,9 @@ namespace Nop.Core.Caching
 
         private readonly IMemoryCache _memoryCache;
 
-        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
+        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes =
+            new ConcurrentDictionary<string, CancellationTokenSource>();
+
         private static CancellationTokenSource _clearToken = new CancellationTokenSource();
 
         #endregion
@@ -112,11 +114,11 @@ namespace Nop.Core.Caching
                 return await acquire();
 
             var result = await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
-             {
-                 entry.SetOptions(PrepareEntryOptions(key));
+            {
+                entry.SetOptions(PrepareEntryOptions(key));
 
-                 return await acquire();
-             });
+                return await acquire();
+            });
 
             //do not cache null value
             if (result == null)
@@ -229,10 +231,7 @@ namespace Nop.Core.Caching
             if (_disposed)
                 return;
 
-            if (disposing)
-            {
-                _memoryCache.Dispose();
-            }
+            if (disposing) _memoryCache.Dispose();
 
             _disposed = true;
         }

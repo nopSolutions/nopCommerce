@@ -106,7 +106,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null &&
+                _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
             //prepare model
@@ -115,7 +116,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [HttpPost]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult Edit(ProductReviewModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
@@ -127,7 +129,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null &&
+                _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -147,12 +150,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //notify customer about reply
                 if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText)
-                    && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
+                                             && _catalogSettings.NotifyCustomerAboutProductReviewReply &&
+                                             !productReview.CustomerNotifiedOfReply)
                 {
-                    var customerLanguageId = _genericAttributeService.GetAttribute<Customer, int>(productReview.CustomerId,
+                    var customerLanguageId = _genericAttributeService.GetAttribute<Customer, int>(
+                        productReview.CustomerId,
                         NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
 
-                    var queuedEmailIds = _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview, customerLanguageId);
+                    var queuedEmailIds =
+                        _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview,
+                            customerLanguageId);
                     if (queuedEmailIds.Any())
                         productReview.CustomerNotifiedOfReply = true;
                 }
@@ -161,7 +168,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditProductReview",
-                   string.Format(_localizationService.GetResource("ActivityLog.EditProductReview"), productReview.Id), productReview);
+                    string.Format(_localizationService.GetResource("ActivityLog.EditProductReview"), productReview.Id),
+                    productReview);
 
                 //vendor can edit "Reply text" only
                 if (!isLoggedInAsVendor)
@@ -175,9 +183,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                         _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
                 }
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = productReview.Id }) : RedirectToAction("List");
+                return continueEditing
+                    ? RedirectToAction("Edit", new {id = productReview.Id})
+                    : RedirectToAction("List");
             }
 
             //prepare model
@@ -206,14 +217,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("DeleteProductReview",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id), productReview);
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id),
+                productReview);
 
             var product = _productService.GetProductById(productReview.ProductId);
 
             //update product totals
             _productService.UpdateProductReviewTotals(product);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Deleted"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.Catalog.ProductReviews.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -229,10 +242,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             if (selectedIds == null)
-                return Json(new { Result = true });
+                return Json(new {Result = true});
 
             //filter not approved reviews
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => !review.IsApproved);
+            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray())
+                .Where(review => !review.IsApproved);
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = true;
@@ -247,7 +261,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
             }
 
-            return Json(new { Result = true });
+            return Json(new {Result = true});
         }
 
         [HttpPost]
@@ -261,10 +275,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             if (selectedIds == null)
-                return Json(new { Result = true });
+                return Json(new {Result = true});
 
             //filter approved reviews
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => review.IsApproved);
+            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray())
+                .Where(review => review.IsApproved);
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = false;
@@ -276,7 +291,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productService.UpdateProductReviewTotals(product);
             }
 
-            return Json(new { Result = true });
+            return Json(new {Result = true});
         }
 
         [HttpPost]
@@ -290,32 +305,32 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             if (selectedIds == null)
-                return Json(new { Result = true });
+                return Json(new {Result = true});
 
             var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
-            var products = _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
+            var products =
+                _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
 
             _productService.DeleteProductReviews(productReviews);
 
             //update product totals
-            foreach (var product in products)
-            {
-                _productService.UpdateProductReviewTotals(product);
-            }
+            foreach (var product in products) _productService.UpdateProductReviewTotals(product);
 
-            return Json(new { Result = true });
+            return Json(new {Result = true});
         }
 
         [HttpPost]
-        public virtual IActionResult ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
+        public virtual IActionResult ProductReviewReviewTypeMappingList(
+            ProductReviewReviewTypeMappingSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedDataTablesJson();
             var productReview = _productService.GetProductReviewById(searchModel.ProductReviewId)
-                ?? throw new ArgumentException("No product review found with the specified id");
+                                ?? throw new ArgumentException("No product review found with the specified id");
 
             //prepare model
-            var model = _productReviewModelFactory.PrepareProductReviewReviewTypeMappingListModel(searchModel, productReview);
+            var model = _productReviewModelFactory.PrepareProductReviewReviewTypeMappingListModel(searchModel,
+                productReview);
 
             return Json(model);
         }

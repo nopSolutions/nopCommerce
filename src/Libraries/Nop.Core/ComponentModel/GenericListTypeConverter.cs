@@ -31,7 +31,9 @@ namespace Nop.Core.ComponentModel
         /// <returns>Array</returns>
         protected virtual string[] GetStringArray(string input)
         {
-            return string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(',').Select(x => x.Trim()).ToArray();
+            return string.IsNullOrEmpty(input)
+                ? Array.Empty<string>()
+                : input.Split(',').Select(x => x.Trim()).ToArray();
         }
 
         /// <summary>
@@ -68,10 +70,7 @@ namespace Nop.Core.ComponentModel
             Array.ForEach(items, s =>
             {
                 var item = typeConverter.ConvertFromInvariantString(s);
-                if (item != null)
-                {
-                    result.Add((T)item);
-                }
+                if (item != null) result.Add((T)item);
             });
 
             return result;
@@ -85,7 +84,8 @@ namespace Nop.Core.ComponentModel
         /// <param name="value">Value</param>
         /// <param name="destinationType">Destination type</param>
         /// <returns>Result</returns>
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
         {
             if (destinationType != typeof(string))
                 return base.ConvertTo(context, culture, value, destinationType);

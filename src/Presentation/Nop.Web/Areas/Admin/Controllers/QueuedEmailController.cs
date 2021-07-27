@@ -77,7 +77,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost]
+        [ActionName("List")]
         [FormValueRequired("go-to-email-by-number")]
         public virtual IActionResult GoToEmailByNumber(QueuedEmailSearchModel model)
         {
@@ -86,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (queuedEmail == null)
                 return List();
 
-            return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
+            return RedirectToAction("Edit", "QueuedEmail", new {id = queuedEmail.Id});
         }
 
         public virtual IActionResult Edit(int id)
@@ -105,7 +106,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
+        [ActionName("Edit")]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         public virtual IActionResult Edit(QueuedEmailModel model, bool continueEditing)
@@ -121,13 +123,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 email = model.ToEntity(email);
-                email.DontSendBeforeDateUtc = model.SendImmediately || !model.DontSendBeforeDate.HasValue ?
-                    null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
+                email.DontSendBeforeDateUtc = model.SendImmediately || !model.DontSendBeforeDate.HasValue
+                    ? null
+                    : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
                 _queuedEmailService.UpdateQueuedEmail(email);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Updated"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.System.QueuedEmails.Updated"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = email.Id }) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("Edit", new {id = email.Id}) : RedirectToAction("List");
             }
 
             //prepare model
@@ -137,7 +141,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
+        [HttpPost]
+        [ActionName("Edit")]
+        [FormValueRequired("requeue")]
         public virtual IActionResult Requeue(QueuedEmailModel queuedEmailModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
@@ -166,14 +172,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 AttachedDownloadId = queuedEmail.AttachedDownloadId,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = queuedEmail.EmailAccountId,
-                DontSendBeforeDateUtc = queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue ?
-                    null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(queuedEmailModel.DontSendBeforeDate.Value)
+                DontSendBeforeDateUtc =
+                    queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue
+                        ? null
+                        : (DateTime?)_dateTimeHelper.ConvertToUtcTime(queuedEmailModel.DontSendBeforeDate.Value)
             };
             _queuedEmailService.InsertQueuedEmail(requeuedEmail);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
 
-            return RedirectToAction("Edit", new { id = requeuedEmail.Id });
+            return RedirectToAction("Edit", new {id = requeuedEmail.Id});
         }
 
         [HttpPost]
@@ -189,7 +198,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _queuedEmailService.DeleteQueuedEmail(email);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Deleted"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.System.QueuedEmails.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -203,10 +213,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
                 _queuedEmailService.DeleteQueuedEmails(_queuedEmailService.GetQueuedEmailsByIds(selectedIds.ToArray()));
 
-            return Json(new { Result = true });
+            return Json(new {Result = true});
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost]
+        [ActionName("List")]
         [FormValueRequired("delete-all")]
         public virtual IActionResult DeleteAll()
         {
@@ -215,7 +226,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _queuedEmailService.DeleteAllEmails();
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.DeletedAll"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.System.QueuedEmails.DeletedAll"));
 
             return RedirectToAction("List");
         }

@@ -62,12 +62,16 @@ namespace Nop.Core.ComponentModel
                 return base.ConvertFrom(context, culture, value);
 
             var input = (string)value;
-            var items = string.IsNullOrEmpty(input) ? Array.Empty<string>() : input.Split(';').Select(x => x.Trim()).ToArray();
+            var items = string.IsNullOrEmpty(input)
+                ? Array.Empty<string>()
+                : input.Split(';').Select(x => x.Trim()).ToArray();
 
             var result = new Dictionary<K, V>();
             Array.ForEach(items, s =>
             {
-                var keyValueStr = string.IsNullOrEmpty(s) ? Array.Empty<string>() : s.Split(',').Select(x => x.Trim()).ToArray();
+                var keyValueStr = string.IsNullOrEmpty(s)
+                    ? Array.Empty<string>()
+                    : s.Split(',').Select(x => x.Trim()).ToArray();
                 if (keyValueStr.Length != 2)
                     return;
 
@@ -91,7 +95,8 @@ namespace Nop.Core.ComponentModel
         /// <param name="value">Value</param>
         /// <param name="destinationType">Destination type</param>
         /// <returns>Result</returns>
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
         {
             if (destinationType != typeof(string))
                 return base.ConvertTo(context, culture, value, destinationType);
@@ -105,7 +110,8 @@ namespace Nop.Core.ComponentModel
             var dictionary = (IDictionary<K, V>)value;
             foreach (var keyValue in dictionary)
             {
-                result += $"{Convert.ToString(keyValue.Key, CultureInfo.InvariantCulture)}, {Convert.ToString(keyValue.Value, CultureInfo.InvariantCulture)}";
+                result +=
+                    $"{Convert.ToString(keyValue.Key, CultureInfo.InvariantCulture)}, {Convert.ToString(keyValue.Value, CultureInfo.InvariantCulture)}";
                 //don't add ; after the last element
                 if (counter != dictionary.Count - 1)
                     result += ";";

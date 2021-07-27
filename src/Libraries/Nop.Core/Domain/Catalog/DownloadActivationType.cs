@@ -13,6 +13,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Manually
         /// </summary>
-        Manually = 10,
+        Manually = 10
     }
 }

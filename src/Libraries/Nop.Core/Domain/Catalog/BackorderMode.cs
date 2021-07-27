@@ -18,6 +18,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Allow qty below 0 and notify customer
         /// </summary>
-        AllowQtyBelow0AndNotifyCustomer = 2,
+        AllowQtyBelow0AndNotifyCustomer = 2
     }
 }

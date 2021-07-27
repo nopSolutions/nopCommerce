@@ -58,7 +58,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _recurringPaymentModelFactory.PrepareRecurringPaymentSearchModel(new RecurringPaymentSearchModel());
+            var model =
+                _recurringPaymentModelFactory.PrepareRecurringPaymentSearchModel(new RecurringPaymentSearchModel());
 
             return View(model);
         }
@@ -91,7 +92,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [HttpPost]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         public virtual IActionResult Edit(RecurringPaymentModel model, bool continueEditing)
         {
@@ -108,12 +110,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 payment = model.ToEntity(payment);
                 _orderService.UpdateRecurringPayment(payment);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Updated"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.RecurringPayments.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
 
-                return RedirectToAction("Edit", new { id = payment.Id });
+                return RedirectToAction("Edit", new {id = payment.Id});
             }
 
             //prepare model
@@ -136,7 +139,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _orderService.DeleteRecurringPayment(payment);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Deleted"));
+            _notificationService.SuccessNotification(
+                _localizationService.GetResource("Admin.RecurringPayments.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -149,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a recurring payment with the specified id
             var payment = _orderService.GetRecurringPaymentById(searchModel.RecurringPaymentId)
-                ?? throw new ArgumentException("No recurring payment found with the specified id");
+                          ?? throw new ArgumentException("No recurring payment found with the specified id");
 
             //prepare model
             var model = _recurringPaymentModelFactory.PrepareRecurringPaymentHistoryListModel(searchModel, payment);
@@ -157,7 +161,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
+        [ActionName("Edit")]
         [FormValueRequired("processnextpayment")]
         public virtual IActionResult ProcessNextPayment(int id)
         {
@@ -175,13 +180,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (errors.Any())
                     errors.ForEach(error => _notificationService.ErrorNotification(error));
                 else
-                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"));
+                    _notificationService.SuccessNotification(
+                        _localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"));
 
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
                 //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedPanelName("recurringpayment-history", false);
 
                 return View(model);
             }
@@ -193,13 +199,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
                 //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedPanelName("recurringpayment-history", false);
 
                 return View(model);
             }
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
+        [ActionName("Edit")]
         [FormValueRequired("cancelpayment")]
         public virtual IActionResult CancelRecurringPayment(int id)
         {
@@ -215,18 +222,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
                 if (errors.Any())
-                {
                     foreach (var error in errors)
                         _notificationService.ErrorNotification(error);
-                }
                 else
-                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Cancelled"));
+                    _notificationService.SuccessNotification(
+                        _localizationService.GetResource("Admin.RecurringPayments.Cancelled"));
 
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
                 //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedPanelName("recurringpayment-history", false);
 
                 return View(model);
             }
@@ -238,7 +244,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
                 //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                SaveSelectedPanelName("recurringpayment-history", false);
 
                 return View(model);
             }

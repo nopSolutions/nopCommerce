@@ -33,6 +33,6 @@
         /// <summary>
         /// Product creation date
         /// </summary>
-        CreatedOn = 15,
+        CreatedOn = 15
     }
 }

@@ -10,7 +10,8 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a product
     /// </summary>
-    public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountProductMapping>
+    public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported,
+        IDiscountSupported<DiscountProductMapping>
     {
         /// <summary>
         /// Gets or sets the product type identifier

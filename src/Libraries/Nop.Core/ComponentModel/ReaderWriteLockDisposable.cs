@@ -20,7 +20,8 @@ namespace Nop.Core.ComponentModel
         /// </summary>
         /// <param name="rwLock">The readers–writer lock</param>
         /// <param name="readerWriteLockType">Lock type</param>
-        public ReaderWriteLockDisposable(ReaderWriterLockSlim rwLock, ReaderWriteLockType readerWriteLockType = ReaderWriteLockType.Write)
+        public ReaderWriteLockDisposable(ReaderWriterLockSlim rwLock,
+            ReaderWriteLockType readerWriteLockType = ReaderWriteLockType.Write)
         {
             _rwLock = rwLock;
             _readerWriteLockType = readerWriteLockType;
@@ -53,7 +54,6 @@ namespace Nop.Core.ComponentModel
                 return;
 
             if (disposing)
-            {
                 switch (_readerWriteLockType)
                 {
                     case ReaderWriteLockType.Read:
@@ -66,7 +66,7 @@ namespace Nop.Core.ComponentModel
                         _rwLock.ExitUpgradeableReadLock();
                         break;
                 }
-            }
+
             _disposed = true;
         }
     }

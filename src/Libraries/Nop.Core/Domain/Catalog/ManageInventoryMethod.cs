@@ -18,6 +18,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Track inventory for product by product attributes
         /// </summary>
-        ManageStockByAttributes = 2,
+        ManageStockByAttributes = 2
     }
 }

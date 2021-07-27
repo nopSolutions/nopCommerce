@@ -10,7 +10,8 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a category
     /// </summary>
-    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountCategoryMapping>
+    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported,
+        IDiscountSupported<DiscountCategoryMapping>
     {
         /// <summary>
         /// Gets or sets the name
