@@ -122,7 +122,7 @@ namespace Nop.Services.Configuration
                 InsertSetting(setting, clearCache);
             }
         }
-       
+
         #endregion
 
         #region Methods
@@ -233,7 +233,7 @@ namespace Nop.Services.Configuration
 
             var settings = GetAllSettingsDictionary();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key)) 
+            if (!settings.ContainsKey(key))
                 return null;
 
             var settingsByKey = settings[key];
@@ -263,7 +263,7 @@ namespace Nop.Services.Configuration
 
             var settings = GetAllSettingsDictionary();
             key = key.Trim().ToLowerInvariant();
-            if (!settings.ContainsKey(key)) 
+            if (!settings.ContainsKey(key))
                 return defaultValue;
 
             var settingsByKey = settings[key];
@@ -489,7 +489,7 @@ namespace Nop.Services.Configuration
             var allSettings = GetAllSettingsDictionary();
             var settingForCaching = allSettings.ContainsKey(key) ?
                 allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
-            if (settingForCaching == null) 
+            if (settingForCaching == null)
                 return;
 
             //update
@@ -523,7 +523,7 @@ namespace Nop.Services.Configuration
                 throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
 
             var key = $"{typeof(TSettings).Name}.{propInfo.Name}";
-            
+
             return key;
         }
         #endregion

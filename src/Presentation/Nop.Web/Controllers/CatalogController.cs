@@ -49,20 +49,20 @@ namespace Nop.Web.Controllers
         public CatalogController(CatalogSettings catalogSettings,
             IAclService aclService,
             ICatalogModelFactory catalogModelFactory,
-            ICategoryService categoryService, 
+            ICategoryService categoryService,
             ICustomerActivityService customerActivityService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             IProductModelFactory productModelFactory,
-            IProductService productService, 
+            IProductService productService,
             IProductTagService productTagService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IVendorService vendorService,
             IWebHelper webHelper,
-            IWorkContext workContext, 
+            IWorkContext workContext,
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
@@ -88,9 +88,9 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Categories
-        
+
         public virtual IActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
@@ -111,8 +111,8 @@ namespace Nop.Web.Controllers
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
 
@@ -174,11 +174,11 @@ namespace Nop.Web.Controllers
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                NopCustomerDefaults.LastContinueShoppingPageAttribute, 
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
-            
+
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.Admin }));
@@ -189,7 +189,7 @@ namespace Nop.Web.Controllers
 
             //model
             var model = _catalogModelFactory.PrepareManufacturerModel(manufacturer, command);
-            
+
             //template
             var templateViewPath = _catalogModelFactory.PrepareManufacturerTemplateViewPath(manufacturer.ManufacturerTemplateId);
             return View(templateViewPath, model);
@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
             var model = _catalogModelFactory.PrepareManufacturerAllModels();
             return View(model);
         }
-        
+
         #endregion
 
         #region Vendors
@@ -216,7 +216,7 @@ namespace Nop.Web.Controllers
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
-            
+
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.Admin }));
@@ -240,7 +240,7 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Product tags
-        
+
         public virtual IActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
@@ -283,7 +283,7 @@ namespace Nop.Web.Controllers
 
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
-                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;            
+                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
 
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
@@ -294,19 +294,19 @@ namespace Nop.Web.Controllers
 
             var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
 
-            var models =  _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
+            var models = _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
             var result = (from p in models
-                    select new
-                    {
-                        label = p.Name,
-                        producturl = Url.RouteUrl("Product", new {SeName = p.SeName}),
-                        productpictureurl = p.DefaultPictureModel.ImageUrl,
-                        showlinktoresultsearch = showLinkToResultSearch
-                    })
+                          select new
+                          {
+                              label = p.Name,
+                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
+                              productpictureurl = p.DefaultPictureModel.ImageUrl,
+                              showlinktoresultsearch = showLinkToResultSearch
+                          })
                 .ToList();
             return Json(result);
         }
-        
+
         #endregion
     }
 }

@@ -54,7 +54,7 @@ namespace Nop.Services.Common
 
                 foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/AddressAttribute"))
                 {
-                    if (node.Attributes?["ID"] == null) 
+                    if (node.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node.Attributes["ID"].InnerText.Trim();
@@ -120,7 +120,7 @@ namespace Nop.Services.Common
                 var valuesStr = ParseValues(attributesXml, attribute.Id);
                 foreach (var valueStr in valuesStr)
                 {
-                    if (string.IsNullOrEmpty(valueStr)) 
+                    if (string.IsNullOrEmpty(valueStr))
                         continue;
 
                     if (!int.TryParse(valueStr, out var id))
@@ -155,14 +155,14 @@ namespace Nop.Services.Common
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/AddressAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != addressAttributeId) 
+                    if (id != addressAttributeId)
                         continue;
 
                     var nodeList2 = node1.SelectNodes(@"AddressAttributeValue/Value");
@@ -211,14 +211,14 @@ namespace Nop.Services.Common
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/AddressAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != attribute.Id) 
+                    if (id != attribute.Id)
                         continue;
 
                     attributeElement = (XmlElement)node1;
@@ -266,22 +266,22 @@ namespace Nop.Services.Common
             var attributes2 = _addressAttributeService.GetAllAddressAttributes();
             foreach (var a2 in attributes2)
             {
-                if (!a2.IsRequired) 
+                if (!a2.IsRequired)
                     continue;
 
                 var found = false;
                 //selected address attributes
                 foreach (var a1 in attributes1)
                 {
-                    if (a1.Id != a2.Id) 
+                    if (a1.Id != a2.Id)
                         continue;
 
                     var valuesStr = ParseValues(attributesXml, a1.Id);
 
                     found = valuesStr.Any(str1 => !string.IsNullOrEmpty(str1.Trim()));
                 }
-                
-                if (found) 
+
+                if (found)
                     continue;
 
                 //if not found

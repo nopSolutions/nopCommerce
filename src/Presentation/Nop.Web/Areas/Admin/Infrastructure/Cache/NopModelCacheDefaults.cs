@@ -2,13 +2,13 @@
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Cache
 {
-    public static partial class NopModelCacheDefaults
+    public static class NopModelCacheDefaults
     {
         /// <summary>
         /// Key for nopCommerce.com news cache
         /// </summary>
         public static CacheKey OfficialNewsModelKey => new CacheKey("Nop.pres.admin.official.news");
-        
+
         /// <summary>
         /// Key for categories caching
         /// </summary>

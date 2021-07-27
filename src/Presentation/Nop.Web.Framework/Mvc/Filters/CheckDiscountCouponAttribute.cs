@@ -110,7 +110,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 {
                     if (!_discountService.ValidateDiscount(discount, currentCustomer, couponCodes.ToArray()).IsValid)
                         continue;
-                    
+
                     //apply discount coupon codes to customer
                     _customerService.ApplyDiscountCouponCode(currentCustomer, discount.CouponCode);
                     validCouponCodes.Add(discount.CouponCode);

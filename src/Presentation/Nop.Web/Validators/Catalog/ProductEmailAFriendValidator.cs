@@ -14,5 +14,6 @@ namespace Nop.Web.Validators.Catalog
 
             RuleFor(x => x.YourEmailAddress).NotEmpty().WithMessage(localizationService.GetResource("Products.EmailAFriend.YourEmailAddress.Required"));
             RuleFor(x => x.YourEmailAddress).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));
-        }}
+        }
+    }
 }

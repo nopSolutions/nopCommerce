@@ -318,13 +318,13 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
             return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/AddRateByWeightByTotalPopup.cshtml", model);
         }
-        
+
         [HttpPost]
         public IActionResult AddRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
-            
+
             _shippingByWeightService.InsertShippingByWeightRecord(new ShippingByWeightByTotalRecord
             {
                 StoreId = model.StoreId,
@@ -348,7 +348,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
             return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/AddRateByWeightByTotalPopup.cshtml", model);
         }
-        
+
         public IActionResult EditRateByWeightByTotalPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

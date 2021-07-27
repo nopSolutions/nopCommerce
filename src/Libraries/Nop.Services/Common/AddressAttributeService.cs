@@ -62,8 +62,8 @@ namespace Nop.Services.Common
         public virtual IList<AddressAttribute> GetAllAddressAttributes()
         {
             var query = from aa in _addressAttributeRepository.Table
-                orderby aa.DisplayOrder, aa.Id
-                select aa;
+                        orderby aa.DisplayOrder, aa.Id
+                        select aa;
 
             return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributesAllCacheKey));
         }
@@ -91,7 +91,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(addressAttribute));
 
             _addressAttributeRepository.Insert(addressAttribute);
-            
+
             //event notification
             _eventPublisher.EntityInserted(addressAttribute);
         }
@@ -106,7 +106,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(addressAttribute));
 
             _addressAttributeRepository.Update(addressAttribute);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(addressAttribute);
         }
@@ -121,7 +121,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(addressAttributeValue));
 
             _addressAttributeValueRepository.Delete(addressAttributeValue);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(addressAttributeValue);
         }
@@ -136,9 +136,9 @@ namespace Nop.Services.Common
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributeValuesAllCacheKey, addressAttributeId);
 
             var query = from aav in _addressAttributeValueRepository.Table
-                orderby aav.DisplayOrder, aav.Id
-                where aav.AddressAttributeId == addressAttributeId
-                select aav;
+                        orderby aav.DisplayOrder, aav.Id
+                        where aav.AddressAttributeId == addressAttributeId
+                        select aav;
             var addressAttributeValues = query.ToCachedList(key);
 
             return addressAttributeValues;
@@ -167,7 +167,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(addressAttributeValue));
 
             _addressAttributeValueRepository.Insert(addressAttributeValue);
-            
+
             //event notification
             _eventPublisher.EntityInserted(addressAttributeValue);
         }
@@ -182,7 +182,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(addressAttributeValue));
 
             _addressAttributeValueRepository.Update(addressAttributeValue);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(addressAttributeValue);
         }

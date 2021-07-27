@@ -36,7 +36,7 @@ namespace Nop.Web.Models.Catalog
         //price
         public ProductReviewOverviewModel ReviewOverviewModel { get; set; }
 
-		#region Nested Classes
+        #region Nested Classes
 
         public partial class ProductPriceModel : BaseNopModel
         {
@@ -65,6 +65,6 @@ namespace Nop.Web.Models.Catalog
             public bool DisplayTaxShippingInfo { get; set; }
         }
 
-		#endregion
+        #endregion
     }
 }

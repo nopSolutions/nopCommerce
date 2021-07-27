@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the order identifier
         /// </summary>
         public int OrderId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>

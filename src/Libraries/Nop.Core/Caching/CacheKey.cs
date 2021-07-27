@@ -18,7 +18,7 @@ namespace Nop.Core.Caching
         {
             Init(cacheKey.Key, cacheKey.CacheTime, cacheKey.Prefixes.ToArray());
 
-            if(!keyObjects.Any())
+            if (!keyObjects.Any())
                 return;
 
             Key = string.Format(_keyFormat, keyObjects.Select(createCacheKeyParameters).ToArray());
@@ -56,7 +56,7 @@ namespace Nop.Core.Caching
             if (cacheTime.HasValue)
                 CacheTime = cacheTime.Value;
 
-            Prefixes.AddRange(prefixes.Where(prefix=> !string.IsNullOrEmpty(prefix)));
+            Prefixes.AddRange(prefixes.Where(prefix => !string.IsNullOrEmpty(prefix)));
         }
 
         #endregion

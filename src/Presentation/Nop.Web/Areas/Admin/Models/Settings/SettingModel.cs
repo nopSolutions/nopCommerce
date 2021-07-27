@@ -1,14 +1,14 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
     /// <summary>
-    /// Represents a setting model
+    ///     Represents a setting model
     /// </summary>
-    public partial class SettingModel : BaseNopEntityModel
+    public class SettingModel : BaseNopEntityModel
     {
         #region Ctor
 
@@ -32,6 +32,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.Store")]
         public int StoreId { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
 
         #endregion

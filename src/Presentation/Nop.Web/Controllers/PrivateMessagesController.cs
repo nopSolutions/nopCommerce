@@ -53,7 +53,7 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult Index(int? pageNumber, string tab)
@@ -71,7 +71,7 @@ namespace Nop.Web.Controllers
             var model = _privateMessagesModelFactory.PreparePrivateMessageIndexModel(pageNumber, tab);
             return View(model);
         }
-        
+
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         [AutoValidateAntiforgeryToken]
         public virtual IActionResult DeleteInboxPM(IFormCollection formCollection)
@@ -154,7 +154,7 @@ namespace Nop.Web.Controllers
                     }
                 }
             }
-            return RedirectToRoute("PrivateMessages", new {tab = "sent"});
+            return RedirectToRoute("PrivateMessages", new { tab = "sent" });
         }
 
         public virtual IActionResult SendPM(int toCustomerId, int? replyToMessageId)

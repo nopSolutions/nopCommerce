@@ -282,7 +282,7 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
         /// <returns>Shipping address model</returns>
-        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(IList<ShoppingCartItem> cart, 
+        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel()

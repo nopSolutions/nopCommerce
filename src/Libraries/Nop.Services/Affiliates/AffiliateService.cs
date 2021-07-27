@@ -130,15 +130,15 @@ namespace Nop.Services.Affiliates
 
             if (!string.IsNullOrWhiteSpace(firstName))
                 query = from aff in query
-                         join addr in _addressRepository.Table on aff.AddressId equals addr.Id
-                         where addr.FirstName.Contains(firstName)
-                         select aff;
+                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                        where addr.FirstName.Contains(firstName)
+                        select aff;
 
             if (!string.IsNullOrWhiteSpace(lastName))
                 query = from aff in query
-                         join addr in _addressRepository.Table on aff.AddressId equals addr.Id
-                         where addr.LastName.Contains(lastName)
-                         select aff;
+                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                        where addr.LastName.Contains(lastName)
+                        select aff;
 
             if (!showHidden)
                 query = query.Where(a => a.Active);

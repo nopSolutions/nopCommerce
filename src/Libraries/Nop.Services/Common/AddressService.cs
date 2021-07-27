@@ -63,7 +63,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(address));
 
             _addressRepository.Delete(address);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(address);
         }
@@ -111,7 +111,7 @@ namespace Nop.Services.Common
         {
             if (addressId == 0)
                 return null;
-            
+
             return _addressRepository.ToCachedGetById(addressId, _cachingSettings.ShortTermCacheTime);
         }
 
@@ -133,7 +133,7 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Insert(address);
-            
+
             //event notification
             _eventPublisher.EntityInserted(address);
         }
@@ -154,7 +154,7 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(address);
         }

@@ -182,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PaymentType = _localizationService.GetLocalizedEnum(_paymentService
                 .GetRecurringPaymentType(order.PaymentMethodSystemName));
             model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
-            
+
             //prepare nested search model
             PrepareRecurringPaymentHistorySearchModel(model.RecurringPaymentHistorySearchModel, recurringPayment);
 

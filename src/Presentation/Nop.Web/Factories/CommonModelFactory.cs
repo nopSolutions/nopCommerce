@@ -531,7 +531,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
                 _workContext.WorkingLanguage,
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
                 _storeContext.CurrentStore);

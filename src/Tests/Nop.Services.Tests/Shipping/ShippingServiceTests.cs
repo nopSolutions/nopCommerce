@@ -3,11 +3,11 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -93,7 +93,7 @@ namespace Nop.Services.Tests.Shipping
         public new void SetUp()
         {
 
-        } 
+        }
 
         #endregion
 

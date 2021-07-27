@@ -7,19 +7,16 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
     /// <summary>
-    /// Represents a manufacturer model
+    ///     Represents a manufacturer model
     /// </summary>
-    public partial class ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
+    public class ManufacturerModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
         ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
 
         public ManufacturerModel()
         {
-            if (PageSize < 1)
-            {
-                PageSize = 5;
-            }
+            if (PageSize < 1) PageSize = 5;
             Locales = new List<ManufacturerLocalizedModel>();
             AvailableManufacturerTemplates = new List<SelectListItem>();
 
@@ -86,30 +83,35 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-        
-        public IList<ManufacturerLocalizedModel> Locales { get; set; }
+
+        List<ManufacturerLocalizedModel> Locales { get; set; }
 
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
-        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
         
-        //store mapping
+public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+    
+
+        
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
-        public IList<SelectListItem> AvailableStores { get; set; }
+        public I
+List<SelectListItem> AvailableStores { get; set; }
 
         //discounts
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Discounts")]
         public IList<int> SelectedDiscountIds { get; set; }
-        public IList<SelectListItem> AvailableDiscounts { get; set; }
+        public I
+List<SelectListItem> AvailableDiscounts { get; set; }
 
         public ManufacturerProductSearchModel ManufacturerProductSearchModel { get; set; }
 
         #endregion
     }
 
-    public partial class ManufacturerLocalizedModel : ILocalizedLocaleModel
+    public partial class M erLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 
@@ -117,9 +119,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Description")]
-        public string Description {get;set;}
+        public string Description { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.MetaKeywords")]
+           [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.MetaDescription")]

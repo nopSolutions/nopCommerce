@@ -140,10 +140,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = customerAttribute.Id });
             }
-            
+
             //prepare model
             model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(model, null, true);
 
@@ -197,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
                 return RedirectToAction("List");
-            
+
             return RedirectToAction("Edit", new { id = customerAttribute.Id });
         }
 

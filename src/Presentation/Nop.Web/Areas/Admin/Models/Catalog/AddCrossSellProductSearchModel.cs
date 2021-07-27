@@ -6,7 +6,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
     /// <summary>
-    /// Represents a cross-sell product search model to add to the product
+    ///     Represents a cross-sell product search model to add to the product
     /// </summary>
     public partial class AddCrossSellProductSearchModel : BaseSearchModel
     {
@@ -52,9 +52,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableVendors { get; set; }
 
         public IList<SelectListItem> AvailableProductTypes { get; set; }
-        
-        public bool IsLoggedInAsVendor { get; set; }
-        
-        #endregion
-    }
+
+        ool IsLoggedInAsVendor { get; set; }
+
+    
+
+        }
 }

@@ -123,7 +123,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 IHtmlContent selectList;
                 if (multiple)
                 {
-                    selectList = _htmlHelper.Editor(tagName, "MultiSelect", new {htmlAttributes, SelectList = Items});
+                    selectList = _htmlHelper.Editor(tagName, "MultiSelect", new { htmlAttributes, SelectList = Items });
                 }
                 else
                 {

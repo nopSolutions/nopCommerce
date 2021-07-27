@@ -98,8 +98,8 @@ namespace Nop.Services.Directory
         public virtual IList<MeasureDimension> GetAllMeasureDimensions()
         {
             var query = from md in _measureDimensionRepository.Table
-                orderby md.DisplayOrder, md.Id
-                select md;
+                        orderby md.DisplayOrder, md.Id
+                        select md;
             var measureDimensions = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureDimensionsAllCacheKey));
 
             return measureDimensions;
@@ -179,7 +179,7 @@ namespace Nop.Services.Directory
 
             var result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
-            if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id) 
+            if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id)
                 return result;
 
             var exchangeRatio = sourceMeasureDimension.Ratio;
@@ -204,7 +204,7 @@ namespace Nop.Services.Directory
 
             var result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
-            if (result == decimal.Zero || targetMeasureDimension.Id == baseDimensionIn.Id) 
+            if (result == decimal.Zero || targetMeasureDimension.Id == baseDimensionIn.Id)
                 return result;
 
             var exchangeRatio = targetMeasureDimension.Ratio;
@@ -271,8 +271,8 @@ namespace Nop.Services.Directory
         public virtual IList<MeasureWeight> GetAllMeasureWeights()
         {
             var query = from mw in _measureWeightRepository.Table
-                orderby mw.DisplayOrder, mw.Id
-                select mw;
+                        orderby mw.DisplayOrder, mw.Id
+                        select mw;
             var measureWeights = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureWeightsAllCacheKey));
 
             return measureWeights;
@@ -376,7 +376,7 @@ namespace Nop.Services.Directory
 
             var result = value;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
-            if (result == decimal.Zero || targetMeasureWeight.Id == baseWeightIn.Id) 
+            if (result == decimal.Zero || targetMeasureWeight.Id == baseWeightIn.Id)
                 return result;
 
             var exchangeRatio = targetMeasureWeight.Ratio;

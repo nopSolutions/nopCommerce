@@ -340,9 +340,9 @@ namespace Nop.Web.Areas.Admin.Factories
                                         _productAttributeParser.ParseProductAttributeValues(productAttributeMapping
                                             .ConditionAttributeXml);
                                     foreach (var attributeValue in selectedValues)
-                                    foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
                                 }
 
                                 break;
@@ -918,7 +918,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 productTagsSb.Append("'");
                 productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
                 productTagsSb.Append("'");
-                if (i != productTags.Count - 1) 
+                if (i != productTags.Count - 1)
                     productTagsSb.Append(",");
             }
             productTagsSb.Append("]");
@@ -1552,7 +1552,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product tags
-            var productTags = _productTagService.GetAllProductTags(tagName : searchModel.SearchTagName)
+            var productTags = _productTagService.GetAllProductTags(tagName: searchModel.SearchTagName)
                 .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true)).ToList()
                 .ToPagedList(searchModel);
 
@@ -1935,7 +1935,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var productAttributeValueModel = value.ToModel<ProductAttributeValueModel>();
-                    
+
                     //fill in additional values (not existing in the entity)
                     productAttributeValueModel.AttributeValueTypeName = _localizationService.GetLocalizedEnum(value.AttributeValueType);
                     productAttributeValueModel.Name = productAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares
@@ -2152,7 +2152,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = _pictureService.GetDefaultPictureUrl(targetSize: 1);
-                        
+
                     productAttributeCombinationModel.PictureThumbnailUrl = pictureThumbnailUrl;
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                         ShoppingCartType.ShoppingCart, product,

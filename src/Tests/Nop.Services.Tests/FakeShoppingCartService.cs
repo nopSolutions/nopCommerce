@@ -28,7 +28,7 @@ namespace Nop.Services.Tests
     {
         public FakeShoppingCartService(CatalogSettings catalogSettings = null,
             IAclService aclService = null,
-            IActionContextAccessor actionContextAccessor = null,  
+            IActionContextAccessor actionContextAccessor = null,
             ICacheKeyService cacheKeyService = null,
             ICheckoutAttributeParser checkoutAttributeParser = null,
             ICheckoutAttributeService checkoutAttributeService = null,
@@ -57,7 +57,7 @@ namespace Nop.Services.Tests
             ShoppingCartSettings shoppingCartSettings = null) : base(
             catalogSettings ?? new CatalogSettings(),
                 aclService ?? new Mock<IAclService>().Object,
-                actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,    
+                actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,
                 cacheKeyService ?? new FakeCacheKeyService(),
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 checkoutAttributeService ?? new Mock<ICheckoutAttributeService>().Object,

@@ -46,7 +46,8 @@ namespace Nop.Services.Messages
                 ?? throw new NopException("Email account could not be loaded");
             }
 
-            var client = new SmtpClient {
+            var client = new SmtpClient
+            {
                 ServerCertificateValidationCallback = ValidateServerCertificate
             };
 
@@ -60,7 +61,7 @@ namespace Nop.Services.Messages
                 if (emailAccount.UseDefaultCredentials)
                 {
                     client.Authenticate(CredentialCache.DefaultNetworkCredentials);
-                } 
+                }
                 else if (!string.IsNullOrWhiteSpace(emailAccount.Username))
                 {
                     client.Authenticate(new NetworkCredential(emailAccount.Username, emailAccount.Password));

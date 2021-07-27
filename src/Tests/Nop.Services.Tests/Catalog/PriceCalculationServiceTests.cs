@@ -43,7 +43,7 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IRepository<TierPrice>> _tierPriceRepository;
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
-        private CatalogSettings _catalogSettings;        
+        private CatalogSettings _catalogSettings;
         private IStaticCacheManager _staticCacheManager;
         private Mock<IWorkContext> _workContext;
         private Store _store;
@@ -76,7 +76,7 @@ namespace Nop.Services.Tests.Catalog
                 .Callback(
                     (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(new CachingSettings(), null, new FakeCacheKeyService(),  null, null, null, null,
+            _customerService = new CustomerService(new CachingSettings(), null, new FakeCacheKeyService(), null, null, null, null,
                 null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null,
                 new TestCacheManager(), _storeContext.Object, null);
 
@@ -97,7 +97,7 @@ namespace Nop.Services.Tests.Catalog
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new FakeCacheKeyService(),  _customerService,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new FakeCacheKeyService(), _customerService,
                 null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
@@ -324,7 +324,7 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer { Id = 1 };
 
             var customerRole = GetMockCustomerRoles().FirstOrDefault(cr => cr.Id == 1);
-            
+
             customerRole.Should().NotBeNull();
 
             _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = customerRole?.Id ?? 0, CustomerId = customer.Id });
@@ -362,7 +362,7 @@ namespace Nop.Services.Tests.Catalog
             // ------------------- ------------------ --------------product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
-           
+
             _priceCalcService.GetFinalPrice(product, customer).Should().Be(9.34M);
         }
 

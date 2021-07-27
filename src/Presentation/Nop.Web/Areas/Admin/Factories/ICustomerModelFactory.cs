@@ -65,8 +65,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Customer order search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer order list model</returns>
-        CustomerOrderListModel PrepareCustomerOrderListModel(CustomerOrderSearchModel searchModel, Customer customer);        
-        
+        CustomerOrderListModel PrepareCustomerOrderListModel(CustomerOrderSearchModel searchModel, Customer customer);
+
         /// <summary>
         /// Prepare paged customer shopping cart list model
         /// </summary>
@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customer">Customer</param>
         /// <returns>Customer activity log list model</returns>
         CustomerActivityLogListModel PrepareCustomerActivityLogListModel(CustomerActivityLogSearchModel searchModel, Customer customer);
-        
+
         /// <summary>
         /// Prepare paged customer back in stock subscriptions list model
         /// </summary>

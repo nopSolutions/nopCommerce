@@ -3,19 +3,19 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
-using NUnit.Framework;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Services.Tests.Catalog
 {
@@ -185,7 +185,7 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _productAttributeService = new ProductAttributeService(new FakeCacheKeyService(), 
+            _productAttributeService = new ProductAttributeService(new FakeCacheKeyService(),
                 _eventPublisher.Object,
                 _predefinedProductAttributeValueRepo.Object,
                 _productAttributeRepo.Object,
@@ -200,7 +200,7 @@ namespace Nop.Services.Tests.Catalog
             _workContext.Setup(x => x.WorkingLanguage).Returns(workingLanguage);
             _currencyService = new Mock<ICurrencyService>();
             _localizationService = TestLocalizationService.Init();
-            
+
             _taxService = new Mock<ITaxService>();
             _priceFormatter = new Mock<IPriceFormatter>();
             _downloadService = new Mock<IDownloadService>();

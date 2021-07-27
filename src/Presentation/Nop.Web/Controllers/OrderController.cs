@@ -35,15 +35,15 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Ctor
+        #region Ctor
 
         public OrderController(ICustomerService customerService,
             IOrderModelFactory orderModelFactory,
-            IOrderProcessingService orderProcessingService, 
-            IOrderService orderService, 
-            IPaymentService paymentService, 
+            IOrderProcessingService orderProcessingService,
+            IOrderService orderService,
+            IPaymentService paymentService,
             IPdfService pdfService,
-            IShipmentService shipmentService, 
+            IShipmentService shipmentService,
             IWebHelper webHelper,
             IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings)
@@ -248,14 +248,14 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             var order = _orderService.GetOrderById(shipment.OrderId);
-            
+
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
             var model = _orderModelFactory.PrepareShipmentDetailsModel(shipment);
             return View(model);
         }
-        
+
         #endregion
     }
 }

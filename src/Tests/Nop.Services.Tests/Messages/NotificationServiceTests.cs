@@ -47,7 +47,7 @@ namespace Nop.Services.Tests.Messages
                 workContext: _workContext.Object);
         }
 
-        private IList<NotifyData> DeserializedDataDictionary => 
+        private IList<NotifyData> DeserializedDataDictionary =>
             JsonConvert.DeserializeObject<IList<NotifyData>>(_dataDictionary[NopMessageDefaults.NotificationListKey].ToString());
 
         [Test]

@@ -162,7 +162,7 @@ namespace Nop.Web.Framework.Models.DataTables
         /// Gets or set column collection 
         /// </summary>
         public IList<ColumnProperty> ColumnCollection { get; set; }
-        
+
         #endregion
     }
 }

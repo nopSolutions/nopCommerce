@@ -105,7 +105,7 @@ namespace Nop.Services.Stores
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
-            
+
             _storeRepository.Update(store);
 
             //event notification

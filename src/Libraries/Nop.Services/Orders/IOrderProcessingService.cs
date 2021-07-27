@@ -73,7 +73,7 @@ namespace Nop.Services.Orders
         /// <param name="shipment">Shipment</param>
         /// <param name="notifyCustomer">True to notify customer</param>
         void Ship(Shipment shipment, bool notifyCustomer);
-        
+
         /// <summary>
         /// Marks a shipment as delivered
         /// </summary>
@@ -225,7 +225,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">The order</param>
         void ReOrder(Order order);
-        
+
         /// <summary>
         /// Check whether return request is allowed
         /// </summary>

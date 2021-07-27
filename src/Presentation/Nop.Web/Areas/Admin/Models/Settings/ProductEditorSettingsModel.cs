@@ -1,10 +1,10 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
     /// <summary>
-    /// Represents a product editor settings model
+    ///     Represents a product editor settings model
     /// </summary>
     public partial class ProductEditorSettingsModel : BaseNopModel, ISettingsModel
     {
@@ -105,7 +105,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DeliveryDate")]
         public bool DeliveryDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices")]
+        [NopResourceDisplayName(
+            "Admin.Configuration.Settings.ProductEditor.TelecommunicationsBroadcastingElectronicServices")]
         public bool TelecommunicationsBroadcastingElectronicServices { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAvailabilityRange")]
@@ -144,7 +145,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.AllowedQuantities")]
         public bool AllowedQuantities { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations")]
+        [NopResourceDisplayName(
+            "Admin.Configuration.Settings.ProductEditor.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.NotReturnable")]
@@ -167,8 +169,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Published")]
         public bool Published { get; set; }
-        
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.RelatedProducts")]
+
+        urceDisplayName("Admin.Configuration.Settings.ProductEditor.RelatedProducts")]
         public bool RelatedProducts { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.CrossSellsProducts")]
@@ -179,8 +181,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.PurchasedWithOrders")]
         public bool PurchasedWithOrders { get; set; }
-       
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ProductAttributes")]
+
+    
+
+        playName("Admin.Configuration.Settings.ProductEditor.ProductAttributes")]
         public bool ProductAttributes { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.SpecificationAttributes")]

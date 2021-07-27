@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")]
-        public int DisplayOrder {get;set;}
+        public int DisplayOrder { get; set; }
 
         public IList<SpecificationAttributeLocalizedModel> Locales { get; set; }
 

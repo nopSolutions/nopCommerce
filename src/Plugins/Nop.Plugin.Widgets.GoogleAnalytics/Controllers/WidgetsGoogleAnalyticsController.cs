@@ -45,7 +45,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         #endregion
 
         #region Methods
-        
+
         public IActionResult Configure()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))

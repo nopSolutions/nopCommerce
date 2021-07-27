@@ -158,7 +158,7 @@ namespace Nop.Services.Tests.ExportImport
             _measureService.Setup(m => m.GetAllMeasureWeights()).Returns(new List<MeasureWeight> { new MeasureWeight() });
             _categoryService.Setup(c => c.GetProductCategoriesByProductId(1, true)).Returns(new List<ProductCategory>());
             _manufacturerService.Setup(m => m.GetProductManufacturersByProductId(1, true)).Returns(new List<ProductManufacturer>());
-            _countryService.Setup(c => c.GetCountryByAddress(It.Is<Address>(a=>a.Id == TestBillingAddress.Id))).Returns(TestBillingCountry);
+            _countryService.Setup(c => c.GetCountryByAddress(It.Is<Address>(a => a.Id == TestBillingAddress.Id))).Returns(TestBillingCountry);
             _countryService.Setup(c => c.GetCountryByAddress(It.Is<Address>(a => a.Id == TestShippingAddress.Id))).Returns(TestShippingCountry);
 
             var serviceProvider = new TestServiceProvider();

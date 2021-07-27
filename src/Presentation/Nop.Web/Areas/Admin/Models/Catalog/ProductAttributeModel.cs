@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
-        public string Description {get;set;}
+        public string Description { get; set; }
 
         public IList<ProductAttributeLocalizedModel> Locales { get; set; }
 
@@ -45,6 +45,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
-        public string Description {get;set;}
+        public string Description { get; set; }
     }
 }

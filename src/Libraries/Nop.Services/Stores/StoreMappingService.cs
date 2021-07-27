@@ -158,9 +158,9 @@ namespace Nop.Services.Stores
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsByEntityIdNameCacheKey, entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
-                where sm.EntityId == entityId &&
-                      sm.EntityName == entityName
-                select sm.StoreId;
+                        where sm.EntityId == entityId &&
+                              sm.EntityName == entityName
+                        select sm.StoreId;
 
             return query.ToCachedArray(key);
         }

@@ -39,12 +39,12 @@ namespace Nop.Core.Domain.Shipping
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (!(value is string)) 
+            if (!(value is string))
                 return base.ConvertFrom(context, culture, value);
-            
+
             var valueStr = value as string;
 
-            if (string.IsNullOrEmpty(valueStr)) 
+            if (string.IsNullOrEmpty(valueStr))
                 return null;
 
             ShippingOption shippingOption = null;
@@ -73,10 +73,10 @@ namespace Nop.Core.Domain.Shipping
         /// <returns>Result</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType != typeof(string)) 
+            if (destinationType != typeof(string))
                 return base.ConvertTo(context, culture, value, destinationType);
 
-            if (!(value is ShippingOption)) 
+            if (!(value is ShippingOption))
                 return string.Empty;
 
             var sb = new StringBuilder();

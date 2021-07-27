@@ -12,7 +12,7 @@ namespace Nop.Services.Common
     public partial class MaintenanceService : IMaintenanceService
     {
         #region Fields
-       
+
         private readonly INopFileProvider _fileProvider;
 
         #endregion
@@ -61,7 +61,7 @@ namespace Nop.Services.Common
             return _fileProvider.GetFiles(path, $"*.{NopCommonDefaults.DbBackupFileExtension}")
                 .OrderByDescending(p => _fileProvider.GetLastWriteTime(p)).ToList();
         }
-        
+
         /// <summary>
         /// Returns the path to the backup file
         /// </summary>

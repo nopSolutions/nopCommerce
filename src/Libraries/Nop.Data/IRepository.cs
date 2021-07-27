@@ -95,7 +95,7 @@ namespace Nop.Data
         /// Gets a table
         /// </summary>
         IQueryable<TEntity> Table { get; }
-        
+
         #endregion
     }
 }

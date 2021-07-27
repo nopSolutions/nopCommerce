@@ -202,9 +202,9 @@ namespace Nop.Services.Orders
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, checkoutAttributeId);
 
             var query = from cav in _checkoutAttributeValueRepository.Table
-                orderby cav.DisplayOrder, cav.Id
-                where cav.CheckoutAttributeId == checkoutAttributeId
-                select cav;
+                        orderby cav.DisplayOrder, cav.Id
+                        where cav.CheckoutAttributeId == checkoutAttributeId
+                        select cav;
             var checkoutAttributeValues = query.ToCachedList(key);
 
             return checkoutAttributeValues;

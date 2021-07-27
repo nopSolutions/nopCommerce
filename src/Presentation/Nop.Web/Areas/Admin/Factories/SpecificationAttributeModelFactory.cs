@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare search model of products that use the specification attribute
         /// </summary>

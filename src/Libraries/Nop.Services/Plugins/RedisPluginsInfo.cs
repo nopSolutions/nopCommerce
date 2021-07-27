@@ -49,7 +49,7 @@ namespace Nop.Services.Plugins
 
             var loaded = false;
 
-            if (serializedItem.HasValue) 
+            if (serializedItem.HasValue)
                 loaded = DeserializePluginInfo(serializedItem);
 
             if (loaded)
@@ -64,7 +64,7 @@ namespace Nop.Services.Plugins
             //delete the plugins info file
             var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
             _fileProvider.DeleteFile(filePath);
-            
+
             return loaded;
         }
 

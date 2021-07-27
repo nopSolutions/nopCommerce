@@ -52,7 +52,7 @@ namespace Nop.Services.Orders
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null);
-        
+
         /// <summary>
         /// Get order average report
         /// </summary>
@@ -80,7 +80,7 @@ namespace Nop.Services.Orders
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
         IPagedList<BestsellersReportLine> BestSellersReport(
-            int categoryId = 0, int manufacturerId = 0, 
+            int categoryId = 0, int manufacturerId = 0,
             int storeId = 0, int vendorId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,

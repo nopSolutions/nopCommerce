@@ -52,7 +52,7 @@ namespace Nop.Services.ExportImport.Help
         {
             if (_properties.ContainsKey(property.PropertyName))
                 return;
-            
+
             _properties.Add(property.PropertyName, property);
         }
 
@@ -140,7 +140,7 @@ namespace Nop.Services.ExportImport.Help
         {
             if (CurrentObject == null)
                 return;
-            
+
             foreach (var prop in _properties.Values)
             {
                 var cell = worksheet.Cells[row, prop.PropertyOrderPosition + cellOffset];
@@ -159,7 +159,7 @@ namespace Nop.Services.ExportImport.Help
                         continue;
 
                     var validator = cell.DataValidation.AddListDataValidation();
-                    
+
                     validator.AllowBlank = prop.AllowBlank;
 
                     if (fWorksheet == null)
@@ -172,7 +172,7 @@ namespace Nop.Services.ExportImport.Help
 
                         if (fCell.Value != null && fCell.Value.ToString() == dropDownElement)
                             break;
-                        
+
                         fCell.Value = dropDownElement;
                     }
 
@@ -184,7 +184,7 @@ namespace Nop.Services.ExportImport.Help
                 }
             }
         }
-        
+
         /// <summary>
         /// Read object data from XLSX worksheet
         /// </summary>

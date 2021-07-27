@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.News
 {
@@ -22,7 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.News
         #endregion
 
         #region Properties
-        
+
         public int? NewsItemId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.List.CreatedOnFrom")]

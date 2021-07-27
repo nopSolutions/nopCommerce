@@ -194,7 +194,7 @@ namespace Nop.Services.Plugins
         }
 
         #endregion
-                 
+
         #region Methods
 
         /// <summary>
@@ -623,7 +623,7 @@ namespace Nop.Services.Plugins
 
                 if (installedPlugin.Version == newVersion.Version)
                     continue;
-                
+
                 //run new migrations from the plugin if there are exists
                 InsertPluginData(newVersion.PluginType, true);
 

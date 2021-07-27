@@ -107,7 +107,7 @@ namespace Nop.Services.Shipping
         {
             var query = _shipmentRepository.Table;
 
-            if(orderId > 0)
+            if (orderId > 0)
                 query = query.Where(o => o.OrderId == orderId);
 
             if (!string.IsNullOrEmpty(trackingNumber))
@@ -115,35 +115,35 @@ namespace Nop.Services.Shipping
 
             if (shippingCountryId > 0)
                 query = from s in query
-                    join o in _orderRepository.Table on s.OrderId equals o.Id
-                    where _addressRepository.Table.Any(a =>
-                        a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
-                        a.CountryId == shippingCountryId)
-                    select s;
+                        join o in _orderRepository.Table on s.OrderId equals o.Id
+                        where _addressRepository.Table.Any(a =>
+                            a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
+                            a.CountryId == shippingCountryId)
+                        select s;
 
             if (shippingStateId > 0)
                 query = from s in query
-                    join o in _orderRepository.Table on s.OrderId equals o.Id
-                    where _addressRepository.Table.Any(a =>
-                        a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
-                        a.StateProvinceId == shippingStateId)
-                    select s;
+                        join o in _orderRepository.Table on s.OrderId equals o.Id
+                        where _addressRepository.Table.Any(a =>
+                            a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
+                            a.StateProvinceId == shippingStateId)
+                        select s;
 
             if (!string.IsNullOrWhiteSpace(shippingCounty))
                 query = from s in query
-                    join o in _orderRepository.Table on s.OrderId equals o.Id
-                    where _addressRepository.Table.Any(a =>
-                        a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
-                        a.County.Contains(shippingCounty))
-                    select s;
+                        join o in _orderRepository.Table on s.OrderId equals o.Id
+                        where _addressRepository.Table.Any(a =>
+                            a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
+                            a.County.Contains(shippingCounty))
+                        select s;
 
             if (!string.IsNullOrWhiteSpace(shippingCity))
                 query = from s in query
-                    join o in _orderRepository.Table on s.OrderId equals o.Id
-                    where _addressRepository.Table.Any(a =>
-                        a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
-                        a.City.Contains(shippingCity))
-                    select s;
+                        join o in _orderRepository.Table on s.OrderId equals o.Id
+                        where _addressRepository.Table.Any(a =>
+                            a.Id == (o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) &&
+                            a.City.Contains(shippingCity))
+                        select s;
 
             if (loadNotShipped)
                 query = query.Where(s => !s.ShippedDateUtc.HasValue);
@@ -158,23 +158,23 @@ namespace Nop.Services.Shipping
                 query = query.Where(s => createdToUtc.Value >= s.CreatedOnUtc);
 
             query = from s in query
-                join o in _orderRepository.Table on s.OrderId equals o.Id
-                where !o.Deleted
-                select s;
+                    join o in _orderRepository.Table on s.OrderId equals o.Id
+                    where !o.Deleted
+                    select s;
 
             query = query.Distinct();
 
             if (vendorId > 0)
             {
                 var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
-                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                    where p.VendorId == vendorId
-                    select orderItem.Id;
+                                            join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                                            where p.VendorId == vendorId
+                                            select orderItem.Id;
 
                 query = from s in query
-                    join si in _siRepository.Table on s.Id equals si.ShipmentId
-                    where queryVendorOrderItems.Contains(si.OrderItemId)
-                    select s;
+                        join si in _siRepository.Table on s.Id equals si.ShipmentId
+                        where queryVendorOrderItems.Contains(si.OrderItemId)
+                        select s;
 
                 query = query.Distinct();
             }
@@ -182,9 +182,9 @@ namespace Nop.Services.Shipping
             if (warehouseId > 0)
             {
                 query = from s in query
-                    join si in _siRepository.Table on s.Id equals si.ShipmentId
-                    where si.WarehouseId == warehouseId
-                    select s;
+                        join si in _siRepository.Table on s.Id equals si.ShipmentId
+                        where si.WarehouseId == warehouseId
+                        select s;
 
                 query = query.Distinct();
             }
@@ -382,9 +382,9 @@ namespace Nop.Services.Shipping
             var query = _siRepository.Table;
 
             query = from si in query
-                join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
-                join o in _orderRepository.Table on s.OrderId equals o.Id
-                where !o.Deleted && o.OrderStatusId != cancelledOrderStatusId
+                    join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
+                    join o in _orderRepository.Table on s.OrderId equals o.Id
+                    where !o.Deleted && o.OrderStatusId != cancelledOrderStatusId
                     select si;
 
             query = query.Distinct();
@@ -394,17 +394,17 @@ namespace Nop.Services.Shipping
             if (ignoreShipped)
             {
                 query = from si in query
-                    join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
-                    where !s.ShippedDateUtc.HasValue
-                    select si;
+                        join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
+                        where !s.ShippedDateUtc.HasValue
+                        select si;
             }
 
             if (ignoreDelivered)
             {
                 query = from si in query
-                    join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
-                    where !s.DeliveryDateUtc.HasValue
-                    select si;
+                        join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
+                        where !s.DeliveryDateUtc.HasValue
+                        select si;
             }
 
             var queryProductOrderItems = from orderItem in _orderItemRepository.Table

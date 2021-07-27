@@ -26,7 +26,7 @@ namespace Nop.Web.Factories
         /// <param name="showDefaultPicture">Whether to show the default picture</param>
         /// <param name="productName">Product name</param>
         /// <returns>Picture model</returns>
-        PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize,bool showDefaultPicture, string productName);
+        PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName);
 
         /// <summary>
         /// Prepare the shopping cart model

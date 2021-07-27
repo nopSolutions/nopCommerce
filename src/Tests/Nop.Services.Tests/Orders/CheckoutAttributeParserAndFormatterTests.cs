@@ -3,11 +3,11 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -193,7 +193,7 @@ namespace Nop.Services.Tests.Orders
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
             //custom text
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
-            
+
             var customer = new Customer();
 
             RunWithTestServiceProvider(() =>

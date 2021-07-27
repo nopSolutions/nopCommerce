@@ -273,8 +273,8 @@ namespace Nop.Services.Forums
         public virtual IList<ForumGroup> GetAllForumGroups()
         {
             var query = from fg in _forumGroupRepository.Table
-                orderby fg.DisplayOrder, fg.Id
-                select fg;
+                        orderby fg.DisplayOrder, fg.Id
+                        select fg;
 
             return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopForumDefaults.ForumGroupAllCacheKey));
         }
@@ -291,7 +291,7 @@ namespace Nop.Services.Forums
             }
 
             _forumGroupRepository.Insert(forumGroup);
-            
+
             //event notification
             _eventPublisher.EntityInserted(forumGroup);
         }
@@ -351,7 +351,7 @@ namespace Nop.Services.Forums
 
             //delete forum
             _forumRepository.Delete(forum);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(forum);
         }
@@ -379,9 +379,9 @@ namespace Nop.Services.Forums
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopForumDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId);
 
             var query = from f in _forumRepository.Table
-                orderby f.DisplayOrder, f.Id
-                where f.ForumGroupId == forumGroupId
-                select f;
+                        orderby f.DisplayOrder, f.Id
+                        where f.ForumGroupId == forumGroupId
+                        select f;
 
             var forums = query.ToCachedList(key);
 
@@ -484,7 +484,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 return null;
 
-            if (!increaseViews) 
+            if (!increaseViews)
                 return forumTopic;
 
             forumTopic.Views = ++forumTopic.Views;
@@ -583,8 +583,8 @@ namespace Nop.Services.Forums
 
             //event notification
             _eventPublisher.EntityInserted(forumTopic);
-            
-            if (!sendNotifications) 
+
+            if (!sendNotifications)
                 return;
 
             //send notifications
@@ -800,7 +800,7 @@ namespace Nop.Services.Forums
             _eventPublisher.EntityInserted(forumPost);
 
             //notifications
-            if (!sendNotifications) 
+            if (!sendNotifications)
                 return;
 
             var forum = GetForumById(forumTopic.ForumId);
@@ -1021,8 +1021,8 @@ namespace Nop.Services.Forums
                           where
                           (customerId == 0 || fs.CustomerId == customerId) &&
                           (forumId == 0 || fs.ForumId == forumId) &&
-                          (topicId == 0 || fs.TopicId == topicId) && 
-                          c.Active && 
+                          (topicId == 0 || fs.TopicId == topicId) &&
+                          c.Active &&
                           !c.Deleted
                           select fs.SubscriptionGuid;
 
@@ -1124,7 +1124,7 @@ namespace Nop.Services.Forums
                 return true;
             }
 
-            if (!_forumSettings.AllowCustomersToEditPosts) 
+            if (!_forumSettings.AllowCustomersToEditPosts)
                 return false;
 
             var ownTopic = customer.Id == topic.CustomerId;
@@ -1186,7 +1186,7 @@ namespace Nop.Services.Forums
                 return true;
             }
 
-            if (!_forumSettings.AllowCustomersToDeletePosts) 
+            if (!_forumSettings.AllowCustomersToDeletePosts)
                 return false;
 
             var ownTopic = customer.Id == topic.CustomerId;
@@ -1248,7 +1248,7 @@ namespace Nop.Services.Forums
                 return true;
             }
 
-            if (!_forumSettings.AllowCustomersToEditPosts) 
+            if (!_forumSettings.AllowCustomersToEditPosts)
                 return false;
 
             var ownPost = customer.Id == post.CustomerId;
@@ -1345,7 +1345,7 @@ namespace Nop.Services.Forums
 
             for (var i = 0; i < forumPosts.TotalCount; i++)
             {
-                if (forumPosts[i].Id != postId) 
+                if (forumPosts[i].Id != postId)
                     continue;
 
                 if (pageSize > 0)
@@ -1494,8 +1494,8 @@ namespace Nop.Services.Forums
                 return subject;
 
             var index = subject.IndexOf(" ", strippedTopicMaxLength, StringComparison.Ordinal);
-            
-            if (index <= 0) 
+
+            if (index <= 0)
                 return subject;
 
             subject = subject.Substring(0, index);

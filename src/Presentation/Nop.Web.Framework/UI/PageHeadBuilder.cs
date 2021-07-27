@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.UI
         #endregion
 
         #region Ctor
-        
+
         public PageHeadBuilder(CachingSettings cachingSettings,
             CommonSettings commonSettings,
             IActionContextAccessor actionContextAccessor,
@@ -66,7 +66,7 @@ namespace Nop.Web.Framework.UI
             IStaticCacheManager staticCacheManager,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
-            SeoSettings seoSettings         
+            SeoSettings seoSettings
             )
         {
             _processor = new BundleFileProcessor();
@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.UI
             _cacheKeyService = cacheKeyService;
             _webHostEnvironment = webHostEnvironment;
             _fileProvider = fileProvider;
-            _staticCacheManager = staticCacheManager;            
+            _staticCacheManager = staticCacheManager;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _seoSettings = seoSettings;
@@ -400,7 +400,7 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
                         _staticCacheManager.Set(cacheKey, false);
@@ -629,7 +629,7 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
                         _staticCacheManager.Set(cacheKey, false);

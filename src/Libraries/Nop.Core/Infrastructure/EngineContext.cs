@@ -28,7 +28,7 @@ namespace Nop.Core.Infrastructure
         {
             Singleton<IEngine>.Instance = engine;
         }
-        
+
         #endregion
 
         #region Properties

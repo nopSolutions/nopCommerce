@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         private class ValidateIpAddressFilter : IActionFilter
         {
             #region Fields
-            
+
             private readonly IWebHelper _webHelper;
             private readonly SecuritySettings _securitySettings;
 

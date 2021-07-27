@@ -166,7 +166,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = product.Published
             }));
 
-            lowStockProductModels.AddRange(combinations.Select(combination => {
+            lowStockProductModels.AddRange(combinations.Select(combination =>
+            {
 
                 var product = _productService.GetProductById(combination.ProductId);
 
@@ -552,16 +553,16 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return reportItems.Select(item =>
                {
-                    //fill in model values from the entity
-                    var bestCustomersReportModel = new BestCustomersReportModel
+                   //fill in model values from the entity
+                   var bestCustomersReportModel = new BestCustomersReportModel
                    {
                        CustomerId = item.CustomerId,
                        OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false),
                        OrderCount = item.OrderCount
                    };
 
-                    //fill in additional values (not existing in the entity)
-                    var customer = _customerService.GetCustomerById(item.CustomerId);
+                   //fill in additional values (not existing in the entity)
+                   var customer = _customerService.GetCustomerById(item.CustomerId);
                    if (customer != null)
                    {
                        bestCustomersReportModel.CustomerName = _customerService.IsRegistered(customer) ? customer.Email :
@@ -574,7 +575,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-                
+
         /// <summary>
         /// Prepare paged registered customers report list model
         /// </summary>

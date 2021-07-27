@@ -210,11 +210,12 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return Json(new { 
+                return Json(new
+                {
                     success = false,
                     errors = errors
                 });
-            
+
             var product = _productService.GetProductById(model.ProductId);
             if (product == null || product.Deleted)
             {
@@ -250,7 +251,7 @@ namespace Nop.Web.Controllers
             wrappedProduct.RentalStartDateUtc = rentalStartDate;
             wrappedProduct.RentalEndDateUtc = rentalEndDate;
 
-            var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode, false);
+            var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new[] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode, false);
 
             return Json(new
             {
@@ -376,7 +377,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("ProductReviews")]        
+        [HttpPost, ActionName("ProductReviews")]
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
         public virtual IActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)

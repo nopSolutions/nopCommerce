@@ -1,8 +1,8 @@
 ﻿using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Data;
 using Nop.Services.Caching;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -14,7 +14,7 @@ namespace Nop.Services.Tests
 {
     public class TestLocalizationService : LocalizationService
     {
-        public TestLocalizationService(ICacheKeyService cacheKeyService, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IRepository<LocaleStringResource> lsrRepository, ISettingService settingService, IStaticCacheManager staticCacheManager, IWorkContext workContext, LocalizationSettings localizationSettings) 
+        public TestLocalizationService(ICacheKeyService cacheKeyService, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IRepository<LocaleStringResource> lsrRepository, ISettingService settingService, IStaticCacheManager staticCacheManager, IWorkContext workContext, LocalizationSettings localizationSettings)
             : base(cacheKeyService, eventPublisher, languageService, localizedEntityService, logger, lsrRepository, settingService, staticCacheManager, workContext, localizationSettings)
         {
         }
@@ -23,14 +23,14 @@ namespace Nop.Services.Tests
         {
             return new TestLocalizationService(
                 new FakeCacheKeyService(),
-                new  Mock<IEventPublisher>().Object,
-                new  Mock<ILanguageService>().Object,
-                new  Mock<ILocalizedEntityService>().Object,
-                new  Mock<ILogger>().Object,
-                new  Mock<IRepository<LocaleStringResource>>().Object,
-                new  Mock<ISettingService>().Object,
-                new  Mock<IStaticCacheManager>().Object,
-                new  Mock<IWorkContext>().Object,
+                new Mock<IEventPublisher>().Object,
+                new Mock<ILanguageService>().Object,
+                new Mock<ILocalizedEntityService>().Object,
+                new Mock<ILogger>().Object,
+                new Mock<IRepository<LocaleStringResource>>().Object,
+                new Mock<ISettingService>().Object,
+                new Mock<IStaticCacheManager>().Object,
+                new Mock<IWorkContext>().Object,
                 new LocalizationSettings());
         }
 
@@ -40,9 +40,9 @@ namespace Nop.Services.Tests
 
             switch (resourceKey)
             {
-                    case "GiftCardAttribute.For.Virtual":
-                        rez = "For: {0} <{1}>";
-                        break;
+                case "GiftCardAttribute.For.Virtual":
+                    rez = "For: {0} <{1}>";
+                    break;
                 case "GiftCardAttribute.From.Virtual":
                     rez = "From: {0} <{1}>";
                     break;

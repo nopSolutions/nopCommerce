@@ -97,9 +97,9 @@ namespace Nop.Services.Localization
         protected virtual IList<LocaleStringResource> GetAllResources(int languageId)
         {
             var query = from l in _lsrRepository.Table
-                orderby l.ResourceName
-                where l.LanguageId == languageId
-                select l;
+                        orderby l.ResourceName
+                        where l.LanguageId == languageId
+                        select l;
 
             var locales = query.ToList();
 
@@ -357,9 +357,9 @@ namespace Nop.Services.Localization
                     , languageId, resourceKey);
 
                 var query = from l in _lsrRepository.Table
-                    where l.ResourceName == resourceKey
-                          && l.LanguageId == languageId
-                    select l.ResourceValue;
+                            where l.ResourceName == resourceKey
+                                  && l.LanguageId == languageId
+                            select l.ResourceValue;
 
                 var lsr = query.ToCachedFirstOrDefault(key);
 
@@ -432,7 +432,7 @@ namespace Nop.Services.Localization
 
             if (xmlStreamReader.EndOfStream)
                 return;
-            
+
             var lsNamesList = new Dictionary<string, LocaleStringResource>();
 
             foreach (var localeStringResource in _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id)
@@ -446,7 +446,7 @@ namespace Nop.Services.Localization
             {
                 if (lsNamesList.ContainsKey(name))
                 {
-                    if (!updateExistingResources) 
+                    if (!updateExistingResources)
                         continue;
 
                     var lsr = lsNamesList[name];

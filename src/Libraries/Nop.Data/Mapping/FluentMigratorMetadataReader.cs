@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using LinqToDB.Mapping;
 using System.Linq;
 using System.Reflection;
 using FluentMigrator.Expressions;
+using LinqToDB.Mapping;
 using LinqToDB.Metadata;
-using Nop.Data.Migrations;
-using Nop.Core.Infrastructure;
 using LinqToDB.SqlQuery;
 using Nop.Core;
+using Nop.Core.Infrastructure;
+using Nop.Data.Migrations;
 
 namespace Nop.Data.Mapping
 {

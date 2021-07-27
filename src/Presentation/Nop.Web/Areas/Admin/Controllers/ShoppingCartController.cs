@@ -33,9 +33,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
-        
+
         public virtual IActionResult CurrentCarts()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
@@ -74,13 +74,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(model);
         }
-        
+
         [HttpPost]
         public virtual IActionResult DeleteItem(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedDataTablesJson();
-            
+
             _shoppingCartService.DeleteShoppingCartItem(id);
 
             return new NullJsonResult();

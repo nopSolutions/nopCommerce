@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         {
             if (bindingContext == null)
                 throw new ArgumentNullException(nameof(bindingContext));
-            
+
             //create base model
             var model = base.CreateModel(bindingContext);
 
@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         /// <param name="modelName">The model name</param>
         /// <param name="propertyMetadata">The model metadata for the property to set</param>
         /// <param name="bindingResult">The binding result for the property's new value</param>
-        protected override void SetProperty(ModelBindingContext bindingContext, string modelName, 
+        protected override void SetProperty(ModelBindingContext bindingContext, string modelName,
             ModelMetadata propertyMetadata, ModelBindingResult bindingResult)
         {
             if (bindingContext == null)

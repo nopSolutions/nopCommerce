@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Data;
 using Nop.Core.Domain.Configuration;
+using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 
@@ -51,7 +51,7 @@ namespace Nop.Services.Tests.Configuration
         {
             throw new InvalidOperationException("Deleting settings is not supported");
         }
-        
+
         public override void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
         {
             throw new NotImplementedException();

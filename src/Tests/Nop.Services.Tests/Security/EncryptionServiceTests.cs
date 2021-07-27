@@ -12,7 +12,7 @@ namespace Nop.Services.Tests.Security
         private SecuritySettings _securitySettings;
 
         [SetUp]
-        public new void SetUp() 
+        public new void SetUp()
         {
             _securitySettings = new SecuritySettings
             {
@@ -31,7 +31,7 @@ namespace Nop.Services.Tests.Security
         }
 
         [Test]
-        public void Can_hash_sha512() 
+        public void Can_hash_sha512()
         {
             var password = "MyLittleSecret";
             var saltKey = "salt1";
@@ -40,7 +40,7 @@ namespace Nop.Services.Tests.Security
         }
 
         [Test]
-        public void Can_encrypt_and_decrypt() 
+        public void Can_encrypt_and_decrypt()
         {
             var password = "MyLittleSecret";
             var encryptedPassword = _encryptionService.EncryptText(password);

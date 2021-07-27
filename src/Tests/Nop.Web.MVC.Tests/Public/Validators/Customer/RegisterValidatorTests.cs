@@ -212,6 +212,6 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 ConfirmPassword = "some password"
             };
             _validator.ShouldNotHaveValidationErrorFor(x => x.Password, model);
-        }        
+        }
     }
 }

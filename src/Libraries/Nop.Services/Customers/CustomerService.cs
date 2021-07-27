@@ -317,14 +317,14 @@ namespace Nop.Services.Customers
             //filter customers by billing country
             if (countryId > 0)
                 customers = from c in customers
-                    join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
-                    where a.CountryId == countryId
-                    select c;
+                            join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
+                            where a.CountryId == countryId
+                            select c;
 
             var customersWithCarts = from c in customers
-                join item in items on c.Id equals item.CustomerId
-                orderby c.Id
-                select c;
+                                     join item in items on c.Id equals item.CustomerId
+                                     orderby c.Id
+                                     select c;
 
             return new PagedList<Customer>(customersWithCarts.Distinct(), pageIndex, pageSize);
         }
@@ -471,7 +471,7 @@ namespace Nop.Services.Customers
         {
             var backgroundTaskUser = GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
 
-            if(backgroundTaskUser is null)
+            if (backgroundTaskUser is null)
             {
                 //If for any reason the system user isn't in the database, then we add it
                 backgroundTaskUser = new Customer
@@ -486,12 +486,12 @@ namespace Nop.Services.Customers
                     LastActivityDateUtc = DateTime.UtcNow,
                     RegisteredInStoreId = _storeContext.CurrentStore.Id
                 };
-                
+
                 InsertCustomer(backgroundTaskUser);
 
                 var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
-                if(guestRole is null)
+                if (guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
                 AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id });
@@ -508,7 +508,7 @@ namespace Nop.Services.Customers
         {
             var searchEngineUser = GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
 
-            if(searchEngineUser is null)
+            if (searchEngineUser is null)
             {
                 //If for any reason the system user isn't in the database, then we add it
                 searchEngineUser = new Customer
@@ -523,12 +523,12 @@ namespace Nop.Services.Customers
                     LastActivityDateUtc = DateTime.UtcNow,
                     RegisteredInStoreId = _storeContext.CurrentStore.Id
                 };
-                
+
                 InsertCustomer(searchEngineUser);
 
                 var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
-                if(guestRole is null)
+                if (guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
                 AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id });
@@ -1120,9 +1120,9 @@ namespace Nop.Services.Customers
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
 
             var query = from cr in _customerRoleRepository.Table
-                orderby cr.Id
-                where cr.SystemName == systemName
-                select cr;
+                        orderby cr.Id
+                        where cr.SystemName == systemName
+                        select cr;
             var customerRole = query.ToCachedFirstOrDefault(key);
 
             return customerRole;
@@ -1141,7 +1141,7 @@ namespace Nop.Services.Customers
 
             var query = from cr in _customerRoleRepository.Table
                         join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                        where crm.CustomerId == customer.Id && 
+                        where crm.CustomerId == customer.Id &&
                         (showHidden || cr.Active)
                         select cr.Id;
 
@@ -1163,7 +1163,7 @@ namespace Nop.Services.Customers
 
             var query = from cr in _customerRoleRepository.Table
                         join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                        where crm.CustomerId == customer.Id && 
+                        where crm.CustomerId == customer.Id &&
                         (showHidden || cr.Active)
                         select cr;
 
@@ -1182,9 +1182,9 @@ namespace Nop.Services.Customers
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesAllCacheKey, showHidden);
 
             var query = from cr in _customerRoleRepository.Table
-                orderby cr.Name
-                where showHidden || cr.Active
-                select cr;
+                        orderby cr.Name
+                        where showHidden || cr.Active
+                        select cr;
 
             var customerRoles = query.ToCachedList(key);
 
@@ -1440,7 +1440,7 @@ namespace Nop.Services.Customers
                 return false;
 
             var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, customer);
-            
+
             //get current password usage time
             var currentLifetime = _staticCacheManager.Get(cacheKey, () =>
             {
@@ -1519,9 +1519,9 @@ namespace Nop.Services.Customers
         public virtual IList<Address> GetAddressesByCustomerId(int customerId)
         {
             var query = from address in _customerAddressRepository.Table
-                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                where cam.CustomerId == customerId
-                select address;
+                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                        where cam.CustomerId == customerId
+                        select address;
 
             var key = _cacheKeyService.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesByCustomerIdCacheKey, customerId);
 
@@ -1540,9 +1540,9 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from address in _customerAddressRepository.Table
-                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                where cam.CustomerId == customerId && address.Id == addressId
-                select address;
+                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                        where cam.CustomerId == customerId && address.Id == addressId
+                        select address;
 
             var key = _cacheKeyService.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKeyCacheKey, customerId, addressId);
 

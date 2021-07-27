@@ -12,7 +12,7 @@ namespace Nop.Core.Configuration
         /// It's ignored (always enabled) in development environment
         /// </summary>
         public bool DisplayFullErrorStack { get; set; }
-        
+
         /// <summary>
         /// Gets or sets connection string for Azure BLOB storage
         /// </summary>
@@ -96,7 +96,7 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether a store owner can install sample data during installation
         /// </summary>
         public bool DisableSampleDataDuringInstallation { get; set; }
-       
+
         /// <summary>
         /// Gets or sets a list of plugins ignored during nopCommerce installation
         /// </summary>
@@ -127,7 +127,7 @@ namespace Nop.Core.Configuration
         /// By default the cookie-based TempData provider is used to store TempData in cookies.
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
-        
+
         /// <summary>
         /// Gets a value indicating whether we should use Azure blob storage
         /// </summary>

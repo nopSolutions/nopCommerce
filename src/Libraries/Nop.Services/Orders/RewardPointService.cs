@@ -226,7 +226,7 @@ namespace Nop.Services.Orders
             InsertRewardPointsHistoryEntry(newHistoryEntry);
 
             //reduce valid points of previous entries
-            if (points >= 0) 
+            if (points >= 0)
                 return newHistoryEntry.Id;
 
             var withValidPoints = GetRewardPointsQuery(customer.Id, storeId)

@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the stock quantity adjustment
         /// </summary>
         public int QuantityAdjustment { get; set; }
-        
+
         /// <summary>
         /// Gets or sets current stock quantity
         /// </summary>

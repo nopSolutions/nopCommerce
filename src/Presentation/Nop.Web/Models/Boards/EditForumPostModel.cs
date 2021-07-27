@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class EditForumPostModel : BaseNopModel
+    public class EditForumPostModel : BaseNopModel
     {
         #region Properties
 
@@ -27,8 +27,8 @@ namespace Nop.Web.Models.Boards
 
         public bool Subscribed { get; set; }
 
-        public bool DisplayCaptcha { get; set; } 
+        public bool DisplayCaptcha { get; set; }
 
-        #endregion
-    }
+        endregion
+    
 }

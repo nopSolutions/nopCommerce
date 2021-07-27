@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class TopicMoveModel : BaseNopEntityModel
+    public class TopicMoveModel : BaseNopEntityModel
     {
         public TopicMoveModel()
         {
@@ -13,7 +13,7 @@ namespace Nop.Web.Models.Boards
 
         public int ForumSelected { get; set; }
         public string TopicSeName { get; set; }
-        
-        public IEnumerable<SelectListItem> ForumList { get; set; }
+
+        Enumerable<SelectListItem> ForumList { get; set; }
     }
 }

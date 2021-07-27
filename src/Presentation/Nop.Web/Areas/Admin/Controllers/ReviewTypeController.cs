@@ -6,8 +6,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -58,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(reviewType,
-                    x => x.Name,                    
+                    x => x.Name,
                     localized.Name,
                     localized.LanguageId);
 
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var reviewType = model.ToEntity<ReviewType>();
-                _reviewTypeService.InsertReviewType(reviewType);                
+                _reviewTypeService.InsertReviewType(reviewType);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewReviewType",
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Added"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");                
+                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
             }
 
             //prepare model
@@ -185,7 +185,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Settings.ReviewType.Updated"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");                
+                return continueEditing ? RedirectToAction("Edit", new { id = reviewType.Id }) : RedirectToAction("List");
             }
 
             //prepare model
@@ -223,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = reviewType.Id });
-            }            
+            }
         }
 
         #endregion

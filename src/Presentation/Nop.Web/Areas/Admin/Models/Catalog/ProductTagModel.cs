@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         {
             Locales = new List<ProductTagLocalizedModel>();
         }
-        
+
         #endregion
 
         #region Properties

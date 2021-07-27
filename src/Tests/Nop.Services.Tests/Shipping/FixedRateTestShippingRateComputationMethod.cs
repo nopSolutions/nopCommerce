@@ -26,17 +26,17 @@ namespace Nop.Services.Tests.Shipping
 
             var response = new GetShippingOptionResponse();
             response.ShippingOptions.Add(new ShippingOption
-                {
-                    Name = "Shipping option 1",
-                    Description = "",
-                    Rate = GetRate()
-                }); 
+            {
+                Name = "Shipping option 1",
+                Description = "",
+                Rate = GetRate()
+            });
             response.ShippingOptions.Add(new ShippingOption
-                {
-                    Name = "Shipping option 2",
-                    Description = "",
-                    Rate = GetRate()
-                });
+            {
+                Name = "Shipping option 2",
+                Description = "",
+                Rate = GetRate()
+            });
 
             return response;
         }

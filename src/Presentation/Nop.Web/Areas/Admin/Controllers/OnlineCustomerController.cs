@@ -24,7 +24,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         public virtual IActionResult List()

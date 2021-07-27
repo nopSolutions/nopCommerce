@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
     {
         private PasswordRecoveryConfirmValidator _validator;
         private CustomerSettings _customerSettings;
-        
+
         [SetUp]
         public new void Setup()
         {
@@ -91,6 +91,6 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 ConfirmNewPassword = "some password"
             };
             _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
-        }                
+        }
     }
 }

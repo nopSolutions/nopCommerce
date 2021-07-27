@@ -94,7 +94,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             return View("~/Plugins/DiscountRules.CustomerRoles/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]        
+        [HttpPost]
         public IActionResult Configure(RequirementModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))

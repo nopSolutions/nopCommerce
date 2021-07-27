@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Factories
     public partial class StoreMappingSupportedModelFactory : IStoreMappingSupportedModelFactory
     {
         #region Fields
-        
+
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
 
@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.Factories
 
             PrepareModelStores(model);
         }
-        
+
         #endregion
     }
 }

@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
-            
+
             return RedirectToAction("MethodRestrictions");
         }
 

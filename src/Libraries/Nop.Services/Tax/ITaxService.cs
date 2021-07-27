@@ -14,7 +14,7 @@ namespace Nop.Services.Tax
     public partial interface ITaxService
     {
         #region Product price
-        
+
         /// <summary>
         /// Gets price
         /// </summary>
@@ -197,7 +197,7 @@ namespace Nop.Services.Tax
         /// <param name="vatNumber">VAT number</param>
         /// <returns>VAT Number status</returns>
         VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber);
-        
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>
@@ -206,7 +206,7 @@ namespace Nop.Services.Tax
         /// <param name="name">Name (if received)</param>
         /// <param name="address">Address (if received)</param>
         /// <returns>VAT Number status</returns>
-        VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber, 
+        VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber,
             out string name, out string address);
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace Nop.Services.Tax
         /// <param name="address">Address</param>
         /// <param name="exception">Exception</param>
         /// <returns>VAT number status</returns>
-        VatNumberStatus DoVatCheck(string twoLetterIsoCode, string vatNumber, 
+        VatNumberStatus DoVatCheck(string twoLetterIsoCode, string vatNumber,
             out string name, out string address, out Exception exception);
 
         #endregion

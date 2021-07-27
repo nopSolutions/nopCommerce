@@ -63,7 +63,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     if (!model.Allowed.ContainsKey(permissionRecord.SystemName))
                         model.Allowed[permissionRecord.SystemName] = new Dictionary<int, bool>();
-                    model.Allowed[permissionRecord.SystemName][role.Id] = 
+                    model.Allowed[permissionRecord.SystemName][role.Id] =
                         _permissionService.GetMappingByPermissionRecordId(permissionRecord.Id).Any(mapping => mapping.CustomerRoleId == role.Id);
                 }
             }

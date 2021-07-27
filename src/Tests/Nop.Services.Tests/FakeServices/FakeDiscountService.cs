@@ -1,9 +1,9 @@
 ﻿using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Data;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
 using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;

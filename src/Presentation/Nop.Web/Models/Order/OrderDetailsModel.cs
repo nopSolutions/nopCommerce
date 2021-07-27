@@ -5,7 +5,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Order
 {
-    public partial class OrderDetailsModel : BaseNopEntityModel
+    public class OrderDetailsModel : BaseNopEntityModel
     {
         public OrderDetailsModel()
         {
@@ -34,7 +34,7 @@ namespace Nop.Web.Models.Order
         public bool IsReOrderAllowed { get; set; }
 
         public bool IsReturnRequestAllowed { get; set; }
-        
+
         public bool IsShippable { get; set; }
         public bool PickupInStore { get; set; }
         public AddressModel PickupAddress { get; set; }
@@ -69,20 +69,20 @@ namespace Nop.Web.Models.Order
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }
         public string OrderTotal { get; set; }
-        
+
         public IList<GiftCard> GiftCards { get; set; }
 
         public bool ShowSku { get; set; }
         public IList<OrderItemModel> Items { get; set; }
-        
+
         public IList<OrderNote> OrderNotes { get; set; }
 
         public bool ShowVendorName { get; set; }
-        
+
 
         #region Nested Classes
 
-        public partial class OrderItemModel : BaseNopEntityModel
+        public partial class OrderItemModel :  tityModel
         {
             public Guid OrderItemGuid { get; set; }
             public string Sku { get; set; }
@@ -102,32 +102,30 @@ namespace Nop.Web.Models.Order
             public int LicenseId { get; set; }
         }
 
-        public partial class TaxRate : BaseNopModel
-        {
+        public partial class TaxRate : BaseNop       {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseNopModel
-        {
+        public partial class GiftCard : BaseNo        {
             public string CouponCode { get; set; }
             public string Amount { get; set; }
         }
 
-        public partial class OrderNote : BaseNopEntityModel
+        public partial class OrderNote : BaseN odel
         {
             public bool HasDownload { get; set; }
             public string Note { get; set; }
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class ShipmentBriefModel : BaseNopEntityModel
+        public partial class ShipmentBriefMode opEntityModel
         {
             public string TrackingNumber { get; set; }
             public DateTime? ShippedDate { get; set; }
             public DateTime? DeliveryDate { get; set; }
         }
 
-		#endregion
+        #endregion
     }
 }

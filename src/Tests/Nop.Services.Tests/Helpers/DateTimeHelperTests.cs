@@ -24,12 +24,12 @@ namespace Nop.Services.Tests.Helpers
         private DateTimeSettings _dateTimeSettings;
         private IDateTimeHelper _dateTimeHelper;
         private Store _store;
-        
+
         /// <summary>
         /// (GMT+02:00) Minsk
         /// </summary>
         private string _gmtPlus2MinskTimeZoneId;
-       
+
         /// <summary>
         /// (GMT+03:00) Moscow, St. Petersburg, Volgograd
         /// </summary>
@@ -65,7 +65,7 @@ namespace Nop.Services.Tests.Helpers
             _gmtPlus3MoscowTimeZoneId = "Russian Standard Time"; //(GMT+03:00) Moscow, St. Petersburg, Volgograd
             _gmtPlus7KrasnoyarskTimeZoneId = "North Asia Standard Time"; //(GMT+07:00) Krasnoyarsk;
 
-            if (Environment.OSVersion.Platform != PlatformID.Unix) 
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
                 return;
 
             _gmtPlus2MinskTimeZoneId = "Europe/Minsk";  //(GMT+02:00) Minsk;

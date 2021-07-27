@@ -1,12 +1,12 @@
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
     /// <summary>
-    /// Represents a popular search term model
+    ///     Represents a popular search term model
     /// </summary>
-    public partial class PopularSearchTermModel : BaseNopModel
+    public class PopularSearchTermModel : BaseNopModel
     {
         #region Properties
 

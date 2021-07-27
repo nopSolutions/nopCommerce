@@ -279,75 +279,75 @@ namespace Nop.Web.Factories
                     case AttributeControlType.Checkboxes:
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
-                    {
-                        if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                         {
-                            //clear default selection
-                            foreach (var item in attributeModel.Values)
-                                item.IsPreSelected = false;
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
+                            {
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                            //select new values
-                            var selectedValues =
-                                _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
-                            foreach (var attributeValue in selectedValues.SelectMany(x => x.values))
-                            foreach (var item in attributeModel.Values)
-                                if (attributeValue.Id == item.Id)
-                                    item.IsPreSelected = true;
+                                //select new values
+                                var selectedValues =
+                                    _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
+                                foreach (var attributeValue in selectedValues.SelectMany(x => x.values))
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
                         }
-                    }
 
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
-                    {
-                        //do nothing
-                        //values are already pre-set
-                    }
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
 
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
-                    {
-                        if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                         {
-                            var enteredText =
-                                _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                            if (enteredText.Any())
-                                attributeModel.DefaultValue = enteredText[0];
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
+                            {
+                                var enteredText =
+                                    _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
                         }
-                    }
 
                         break;
                     case AttributeControlType.Datepicker:
-                    {
-                        //keep in mind my that the code below works only in the current culture
-                        var selectedDateStr =
-                            _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                        if (selectedDateStr.Any())
                         {
-                            if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
-                                DateTimeStyles.None, out var selectedDate))
+                            //keep in mind my that the code below works only in the current culture
+                            var selectedDateStr =
+                                _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                            if (selectedDateStr.Any())
                             {
-                                //successfully parsed
-                                attributeModel.SelectedDay = selectedDate.Day;
-                                attributeModel.SelectedMonth = selectedDate.Month;
-                                attributeModel.SelectedYear = selectedDate.Year;
+                                if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
+                                    DateTimeStyles.None, out var selectedDate))
+                                {
+                                    //successfully parsed
+                                    attributeModel.SelectedDay = selectedDate.Day;
+                                    attributeModel.SelectedMonth = selectedDate.Month;
+                                    attributeModel.SelectedYear = selectedDate.Year;
+                                }
                             }
                         }
-                    }
 
                         break;
                     case AttributeControlType.FileUpload:
-                    {
-                        if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                         {
-                            var downloadGuidStr = _checkoutAttributeParser
-                                .ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
-                            Guid.TryParse(downloadGuidStr, out var downloadGuid);
-                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
-                            if (download != null)
-                                attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
+                            {
+                                var downloadGuidStr = _checkoutAttributeParser
+                                    .ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
+                                Guid.TryParse(downloadGuidStr, out var downloadGuid);
+                                var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                                if (download != null)
+                                    attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            }
                         }
-                    }
 
                         break;
                     default:
@@ -735,7 +735,8 @@ namespace Nop.Web.Factories
             if (model.Enabled)
             {
                 var shippingAddress = _customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer);
-                if (shippingAddress == null) {
+                if (shippingAddress == null)
+                {
                     shippingAddress = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
                     //enabled for the current store
                     .FirstOrDefault(a => a.CountryId == null || _storeMappingService.Authorize(_countryService.GetCountryByAddress(a)));
@@ -806,7 +807,7 @@ namespace Nop.Web.Factories
         {
             var pictureCacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
                 , sci, pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
-            
+
             var model = _staticCacheManager.Get(pictureCacheKey, () =>
             {
                 var product = _productService.GetProductById(sci.ProductId);

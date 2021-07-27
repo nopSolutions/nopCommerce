@@ -12,22 +12,10 @@ using Nop.Web.Models.Topics;
 namespace Nop.Web.Factories
 {
     /// <summary>
-    /// Represents the topic model factory
+    ///     Represents the topic model factory
     /// </summary>
-    public partial class TopicModelFactory : ITopicModelFactory
+    public class TopicModelFactory : ITopicModelFactory
     {
-        #region Fields
-
-        private readonly IAclService _aclService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly ITopicService _topicService;
-        private readonly ITopicTemplateService _topicTemplateService;
-        private readonly IUrlRecordService _urlRecordService;
-
-        #endregion
-
         #region Ctor
 
         public TopicModelFactory(IAclService aclService,
@@ -52,7 +40,7 @@ namespace Nop.Web.Factories
         #region Utilities
 
         /// <summary>
-        /// Prepare the topic model
+        ///     Prepare the topic model
         /// </summary>
         /// <param name="topic">Topic</param>
         /// <returns>Topic model</returns>
@@ -67,8 +55,14 @@ namespace Nop.Web.Factories
                 SystemName = topic.SystemName,
                 IncludeInSitemap = topic.IncludeInSitemap,
                 IsPasswordProtected = topic.IsPasswordProtected,
-                Title = topic.IsPasswordProtected ? string.Empty : _localizationService.GetLocalized(topic, x => x.Title),
-                Body = topic.IsPasswordProtected ? string.Empty : _localizationService.GetLocalized(topic, x => x.Body),
+                Title =
+                    topic.IsPasswordProtected
+                        ? string.Empty
+                        : _localizationService.GetLocalized(topic, x => x.Title),
+                Body =
+                    topic.IsPasswordProtected
+                        ? string.Empty
+                        : _localizationService.GetLocalized(topic, x => x.Body),
                 MetaKeywords = _localizationService.GetLocalized(topic, x => x.MetaKeywords),
                 MetaDescription = _localizationService.GetLocalized(topic, x => x.MetaDescription),
                 MetaTitle = _localizationService.GetLocalized(topic, x => x.MetaTitle),
@@ -81,10 +75,22 @@ namespace Nop.Web.Factories
 
         #endregion
 
+        #region Fields
+
+        private readonly IAclService _aclService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly ITopicService _topicService;
+        private readonly ITopicTemplateService _topicTemplateService;
+        private readonly IUrlRecordService _urlRecordService;
+
+        #endregion
+
         #region Methods
 
         /// <summary>
-        /// Get the topic model by topic identifier
+        ///     Get the topic model by topic identifier
         /// </summary>
         /// <param name="topicId">Topic identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
@@ -111,7 +117,7 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
-        /// Get the topic model by topic system name
+        ///     Get the topic model by topic system name
         /// </summary>
         /// <param name="systemName">Topic system name</param>
         /// <returns>Topic model</returns>
@@ -126,7 +132,7 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
-        /// Get topic template view path
+        ///     Get topic template view path
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>View path</returns>

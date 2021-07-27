@@ -301,7 +301,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             model = _addressAttributeModelFactory.PrepareAddressAttributeValueModel(model, addressAttribute, null, true);
-            
+
             //if we got this far, something failed, redisplay form
             return View(model);
         }

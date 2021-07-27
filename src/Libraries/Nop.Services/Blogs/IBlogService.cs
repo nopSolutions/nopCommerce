@@ -38,7 +38,7 @@ namespace Nop.Services.Blogs
         /// <param name="title">Filter by blog post title</param>
         /// <returns>Blog posts</returns>
         IPagedList<BlogPost> GetAllBlogPosts(int storeId = 0, int languageId = 0,
-            DateTime? dateFrom = null, DateTime? dateTo = null, 
+            DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null);
 
         /// <summary>

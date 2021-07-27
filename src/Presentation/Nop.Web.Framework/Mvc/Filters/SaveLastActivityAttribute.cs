@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public SaveLastActivityAttribute() : base(typeof(SaveLastActivityFilter))
         {
         }
-        
+
         #endregion
 
         #region Nested filter

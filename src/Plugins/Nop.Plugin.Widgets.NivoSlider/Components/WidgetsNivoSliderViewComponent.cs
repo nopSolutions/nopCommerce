@@ -22,9 +22,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
         private readonly IWebHelper _webHelper;
 
         public WidgetsNivoSliderViewComponent(ICacheKeyService cacheKeyService,
-            IStoreContext storeContext, 
-            IStaticCacheManager staticCacheManager, 
-            ISettingService settingService, 
+            IStoreContext storeContext,
+            IStaticCacheManager staticCacheManager,
+            ISettingService settingService,
             IPictureService pictureService,
             IWebHelper webHelper)
         {
@@ -79,7 +79,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 
         protected string GetPictureUrl(int pictureId)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY,
                 pictureId, _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
 
             return _staticCacheManager.Get(cacheKey, () =>

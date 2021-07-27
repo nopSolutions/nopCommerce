@@ -85,9 +85,9 @@ namespace Nop.Services.Catalog
 
             //product
             query = from q in query
-                join p in _productRepository.Table on q.ProductId equals p.Id
-                where !p.Deleted
-                select q;
+                    join p in _productRepository.Table on q.ProductId equals p.Id
+                    where !p.Deleted
+                    select q;
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
@@ -113,9 +113,9 @@ namespace Nop.Services.Catalog
                 query = query.Where(biss => biss.StoreId == storeId);
             //customer
             query = from biss in query
-                join c in _customerRepository.Table on biss.CustomerId equals c.Id
-                where c.Active && !c.Deleted
-                select biss;
+                    join c in _customerRepository.Table on biss.CustomerId equals c.Id
+                    where c.Active && !c.Deleted
+                    select biss;
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
             return new PagedList<BackInStockSubscription>(query, pageIndex, pageSize);

@@ -103,7 +103,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendOrderPaidCustomerNotification(Order order, int languageId, 
+        IList<int> SendOrderPaidCustomerNotification(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendOrderPlacedCustomerNotification(Order order, int languageId, 
+        IList<int> SendOrderPlacedCustomerNotification(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendOrderCompletedCustomerNotification(Order order, int languageId, 
+        IList<int> SendOrderCompletedCustomerNotification(Order order, int languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace Nop.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendProductEmailAFriendMessage(Customer customer, int languageId, 
+        IList<int> SendProductEmailAFriendMessage(Customer customer, int languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage);
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace Nop.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendWishlistEmailAFriendMessage(Customer customer, int languageId, 
+        IList<int> SendWishlistEmailAFriendMessage(Customer customer, int languageId,
             string customerEmail, string friendsEmail, string personalMessage);
 
         #endregion
@@ -324,7 +324,7 @@ namespace Nop.Services.Messages
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendNewForumPostMessage(Customer customer, ForumPost forumPost, 
+        IList<int> SendNewForumPostMessage(Customer customer, ForumPost forumPost,
             ForumTopic forumTopic, Forum forum, int friendlyForumTopicPageIndex, int languageId);
 
         /// <summary>
@@ -480,11 +480,11 @@ namespace Nop.Services.Messages
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
-        int SendNotification(MessageTemplate messageTemplate, 
-            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens, 
-            string toEmailAddress, string toName, 
-            string attachmentFilePath = null, string attachmentFileName = null, 
-            string replyToEmailAddress = null, string replyToName = null, 
+        int SendNotification(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
+            string toEmailAddress, string toName,
+            string attachmentFilePath = null, string attachmentFileName = null,
+            string replyToEmailAddress = null, string replyToName = null,
             string fromEmail = null, string fromName = null, string subject = null);
 
         #endregion

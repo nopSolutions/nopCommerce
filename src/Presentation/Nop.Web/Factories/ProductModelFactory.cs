@@ -180,7 +180,7 @@ namespace Nop.Web.Factories
                 productReview = _staticCacheManager.Get(cacheKey, () =>
                 {
                     var productReviews = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id);
-                    
+
                     return new ProductReviewOverviewModel
                     {
                         RatingSum = productReviews.Sum(pr => pr.Rating),
@@ -451,7 +451,7 @@ namespace Nop.Web.Factories
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
 
             //prepare picture model
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDefaultPictureModelKey, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDefaultPictureModelKey,
                 product, pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(),
                 _storeContext.CurrentStore);
 
@@ -939,14 +939,14 @@ namespace Nop.Web.Factories
                         _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
                         tierPrice.Quantity), out var _);
 
-                       var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+                    var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
 
-                       return new ProductDetailsModel.TierPriceModel
-                       {
-                           Quantity = tierPrice.Quantity,
-                           Price = _priceFormatter.FormatPrice(price, false, false)
-                       };
-                   }).ToList();
+                    return new ProductDetailsModel.TierPriceModel
+                    {
+                        Quantity = tierPrice.Quantity,
+                        Price = _priceFormatter.FormatPrice(price, false, false)
+                    };
+                }).ToList();
 
             return model;
         }
@@ -997,7 +997,7 @@ namespace Nop.Web.Factories
 
             //prepare picture models
             var productPicturesCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDetailsPicturesModelKey
-                , product, defaultPictureSize, isAssociatedProduct, 
+                , product, defaultPictureSize, isAssociatedProduct,
                 _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
             var cachedPictures = _staticCacheManager.Get(productPicturesCacheKey, () =>
             {
@@ -1021,7 +1021,7 @@ namespace Nop.Web.Factories
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
-                for (var i = 0; i < pictures.Count(); i++ )
+                for (var i = 0; i < pictures.Count(); i++)
                 {
                     var picture = pictures[i];
                     var pictureModel = new PictureModel
@@ -1385,7 +1385,7 @@ namespace Nop.Web.Factories
             model.ProductSeName = _urlRecordService.GetSeName(product);
 
             var productReviews = _productService.GetAllProductReviews(
-                approved: true, 
+                approved: true,
                 productId: product.Id,
                 storeId: _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : 0).AsEnumerable();
 

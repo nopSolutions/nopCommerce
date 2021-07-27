@@ -16,6 +16,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
 
             //return the total seconds (which is a UNIX timestamp)
             return (int)span.TotalSeconds;
-        } 
+        }
     }
 }

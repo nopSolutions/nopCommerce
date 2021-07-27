@@ -352,7 +352,7 @@ namespace Nop.Web.Models.Common
     /// Class that has only page for route value. Used for (My Account) Forum Subscriptions pagination
     /// </summary>
     public partial class ForumSubscriptionsRouteValues : IRouteValues
-    {        
+    {
         public int pageNumber { get; set; }
     }
 

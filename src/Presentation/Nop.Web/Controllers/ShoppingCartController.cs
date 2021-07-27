@@ -415,7 +415,7 @@ namespace Nop.Web.Controllers
         #region Shopping cart
 
         [HttpPost]
-        public virtual IActionResult SelectShippingOption([FromQuery]string name, [FromQuery]EstimateShippingModel model, IFormCollection form)
+        public virtual IActionResult SelectShippingOption([FromQuery] string name, [FromQuery] EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
                 model = new EstimateShippingModel();
@@ -428,9 +428,10 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return Json(new { 
+                return Json(new
+                {
                     success = false,
-                    errors = errors 
+                    errors = errors
                 });
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
@@ -473,7 +474,8 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound"));
 
             if (errors.Count > 0)
-                return Json(new { 
+                return Json(new
+                {
                     success = false,
                     errors = errors
                 });
@@ -885,7 +887,7 @@ namespace Nop.Web.Controllers
 
                 if (pictureId > 0)
                 {
-                    var productAttributePictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributePictureModelKey, 
+                    var productAttributePictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributePictureModelKey,
                         pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
                     var pictureModel = _staticCacheManager.Get(productAttributePictureCacheKey, () =>
                     {
@@ -1181,7 +1183,7 @@ namespace Nop.Web.Controllers
                     (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && _shoppingCartService
                          .GetProductsRequiringProduct(cart, cartItem.Product).Any()))
                 .ToList();
-            
+
             //try to update cart items with new quantities and get warnings
             var warnings = orderedCart.Select(cartItem => new
             {
@@ -1246,7 +1248,7 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed 
+            var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed
                                      && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled;
 
             if (anonymousPermissed || !_customerService.IsGuest(_workContext.CurrentCustomer))
@@ -1390,7 +1392,8 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return Json(new { 
+                return Json(new
+                {
                     success = false,
                     errors = errors
                 });

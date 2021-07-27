@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.Extensions
                 var tabStrip = new StringBuilder();
                 var cssClassWithSpace = !string.IsNullOrEmpty(cssClass) ? " " + cssClass : null;
                 tabStrip.AppendLine($"<div id=\"{name}\" class=\"nav-tabs-custom nav-tabs-localized-fields{cssClassWithSpace}\">");
-                
+
                 //render input contains selected tab name
                 var tabNameToSelect = GetSelectedTabName(helper, name);
                 var selectedTabInput = new TagBuilder("input");
@@ -93,7 +93,7 @@ namespace Nop.Web.Framework.Extensions
                     tabStrip.AppendLine("</li>");
                 }
                 tabStrip.AppendLine("</ul>");
-                    
+
                 //default tab
                 tabStrip.AppendLine("<div class=\"tab-content\">");
                 tabStrip.AppendLine(string.Format("<div class=\"tab-pane{0}\" id=\"{1}\">", standardTabSelected ? " active" : null, standardTabName));

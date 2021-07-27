@@ -63,7 +63,7 @@ namespace Nop.Core.Infrastructure
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Combines an array of strings into a path
         /// </summary>
@@ -258,7 +258,7 @@ namespace Nop.Core.Infrastructure
         {
             var allPaths = new List<string>();
 
-            if(paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+            if (paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
                 allPaths.Add(WebRootPath);
 
             allPaths.AddRange(paths);

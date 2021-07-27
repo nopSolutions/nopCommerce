@@ -84,7 +84,7 @@ namespace Nop.Core
         /// Restart application domain
         /// </summary>
         void RestartAppDomain();
-        
+
         /// <summary>
         /// Gets a value that indicates whether the client is being redirected to a new location
         /// </summary>

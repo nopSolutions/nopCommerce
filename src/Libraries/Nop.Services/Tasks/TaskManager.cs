@@ -39,12 +39,12 @@ namespace Nop.Services.Tasks
             _taskThreads.Clear();
 
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-            
+
             var scheduleTasks = taskService
                 .GetAllTasks()
                 .OrderBy(x => x.Seconds)
                 .ToList();
-            
+
             foreach (var scheduleTask in scheduleTasks)
             {
                 var taskThread = new TaskThread
@@ -59,11 +59,11 @@ namespace Nop.Services.Tasks
                 {
                     //seconds left since the last start
                     var secondsLeft = (DateTime.UtcNow - scheduleTask.LastStartUtc).Value.TotalSeconds;
-                    
+
                     if (secondsLeft >= scheduleTask.Seconds)
                         //run now (immediately)
                         taskThread.InitSeconds = 0;
-                    else 
+                    else
                         //calculate start time
                         //and round it (so "ensureRunOncePerPeriod" parameter was fine)
                         taskThread.InitSeconds = (int)(scheduleTask.Seconds - secondsLeft) + 1;

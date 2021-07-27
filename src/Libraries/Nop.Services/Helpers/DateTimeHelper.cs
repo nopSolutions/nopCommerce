@@ -160,7 +160,7 @@ namespace Nop.Services.Helpers
         /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
         public virtual TimeZoneInfo GetCustomerTimeZone(Customer customer)
         {
-            if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
+            if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
                 return DefaultStoreTimeZone;
 
             TimeZoneInfo timeZoneInfo = null;

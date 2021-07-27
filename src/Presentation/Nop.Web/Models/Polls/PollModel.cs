@@ -16,7 +16,7 @@ namespace Nop.Web.Models.Polls
         public bool AlreadyVoted { get; set; }
 
         public int TotalVotes { get; set; }
-        
+
         public IList<PollAnswerModel> Answers { get; set; }
 
         public object Clone()

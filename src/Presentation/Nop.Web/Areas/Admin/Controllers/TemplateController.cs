@@ -58,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        #region Category templates        
+        #region Category templates
 
         [HttpPost]
         public virtual IActionResult CategoryTemplates(CategoryTemplateSearchModel searchModel)
@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a category template with the specified id
             var template = _categoryTemplateService.GetCategoryTemplateById(model.Id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                           ?? throw new ArgumentException("No template found with the specified id");
 
             template = model.ToEntity(template);
             _categoryTemplateService.UpdateCategoryTemplate(template);
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             template = model.ToEntity(template);
             _categoryTemplateService.InsertCategoryTemplate(template);
 
-            return Json(new { Result = true });
+            return Json(new {Result = true});
         }
 
         [HttpPost]
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a category template with the specified id
             var template = _categoryTemplateService.GetCategoryTemplateById(id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                           ?? throw new ArgumentException("No template found with the specified id");
 
             _categoryTemplateService.DeleteCategoryTemplate(template);
 
@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Manufacturer templates        
+        #region Manufacturer templates
 
         [HttpPost]
         public virtual IActionResult ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a manufacturer template with the specified id
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                           ?? throw new ArgumentException("No template found with the specified id");
 
             template = model.ToEntity(template);
             _manufacturerTemplateService.UpdateManufacturerTemplate(template);
@@ -170,7 +170,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             template = model.ToEntity(template);
             _manufacturerTemplateService.InsertManufacturerTemplate(template);
 
-            return Json(new { Result = true });
+            return Json(new {Result = true});
         }
 
         [HttpPost]
@@ -181,7 +181,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a manufacturer template with the specified id
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                           ?? throw new ArgumentException("No template found with the specified id");
 
             _manufacturerTemplateService.DeleteManufacturerTemplate(template);
 
@@ -191,9 +191,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Product templates
-                
-        [HttpPost]
-        public virtual IActionResult ProductTemplates(ProductTemplateSearchModel searchModel)
+
+            public virtual IActionResult ProductTemplates(ProductTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedDataTablesJson();
@@ -215,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a product template with the specified id
             var template = _productTemplateService.GetProductTemplateById(model.Id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                                           umentException("No template found with the specified id");
 
             template = model.ToEntity(template);
             _productTemplateService.UpdateProductTemplate(template);
@@ -236,9 +235,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             template = model.ToEntity(template);
             _productTemplateService.InsertProductTemplate(template);
 
-            return Json(new { Result = true });
-        }
-
+            return Json(new { Result = true };
+        }
         [HttpPost]
         public virtual IActionResult ProductTemplateDelete(int id)
         {
@@ -247,7 +245,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a product template with the specified id
             var template = _productTemplateService.GetProductTemplateById(id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                                           umentException("No template found with the specified id");
 
             _productTemplateService.DeleteProductTemplate(template);
 
@@ -257,9 +255,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
 
         #region Topic templates
-        
-        [HttpPost]
-        public virtual IActionResult TopicTemplates(TopicTemplateSearchModel searchModel)
+
+        [Htt
+
+        ic virtual IActionResult TopicTemplates(TopicTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedDataTablesJson();
@@ -281,7 +280,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a topic template with the specified id
             var template = _topicTemplateService.GetTopicTemplateById(model.Id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                ?? throw                           eption("No template found with the specified id");
 
             template = model.ToEntity(template);
             _topicTemplateService.UpdateTopicTemplate(template);
@@ -303,9 +302,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             _topicTemplateService.InsertTopicTemplate(template);
 
             return Json(new { Result = true });
-        }
+       }
 
-        [HttpPost]
+       [HttpPost]
         public virtual IActionResult TopicTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -313,7 +312,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a topic template with the specified id
             var template = _topicTemplateService.GetTopicTemplateById(id)
-                ?? throw new ArgumentException("No template found with the specified id");
+                ?? throw                           eption("No template found with the specified id");
 
             _topicTemplateService.DeleteTopicTemplate(template);
 

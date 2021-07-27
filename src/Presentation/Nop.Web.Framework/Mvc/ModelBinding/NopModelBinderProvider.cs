@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
                 //create binders for all model properties
                 var propertyBinders = context.Metadata.Properties
                     .ToDictionary(modelProperty => modelProperty, modelProperty => context.CreateBinder(modelProperty));
-                
+
                 return new NopModelBinder(propertyBinders, EngineContext.Current.Resolve<ILoggerFactory>());
             }
 

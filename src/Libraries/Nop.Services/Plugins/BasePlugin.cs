@@ -21,14 +21,14 @@
         /// <summary>
         /// Install plugin
         /// </summary>
-        public virtual void Install() 
+        public virtual void Install()
         {
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public virtual void Uninstall() 
+        public virtual void Uninstall()
         {
         }
 

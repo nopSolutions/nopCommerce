@@ -2,8 +2,8 @@
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Nop.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Data;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Tests;
@@ -22,7 +22,7 @@ namespace Nop.Services.Tests.Directory
 
         private MeasureDimension measureDimension1, measureDimension2, measureDimension3, measureDimension4;
         private MeasureWeight measureWeight1, measureWeight2, measureWeight3, measureWeight4;
-        
+
         [SetUp]
         public new void SetUp()
         {
@@ -58,7 +58,7 @@ namespace Nop.Services.Tests.Directory
                 Ratio = 25.4M,
                 DisplayOrder = 4
             };
-            
+
             measureWeight1 = new MeasureWeight
             {
                 Id = 1,

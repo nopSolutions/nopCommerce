@@ -150,7 +150,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         #endregion
-        
+
         #region Setting
 
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
@@ -560,7 +560,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         #endregion
-        
+
         #region Shopping cart items
 
         public void HandleEvent(EntityUpdatedEvent<ShoppingCartItem> eventMessage)

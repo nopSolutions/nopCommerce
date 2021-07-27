@@ -1839,7 +1839,7 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]
-            { 
+            {
                 new PropertyByName<OrderItem>("SKU", oi => _productService.GetProductById(oi.ProductId).Sku),
                 new PropertyByName<OrderItem>("Name", oi => _localizationService.GetLocalized(_productService.GetProductById(oi.ProductId), p => p.Name)),
                 new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, _orderService.GetOrderById(oi.OrderId).CurrencyRate), true, _orderService.GetOrderById(oi.OrderId).CustomerCurrencyCode, false, _workContext.WorkingLanguage.Id)),

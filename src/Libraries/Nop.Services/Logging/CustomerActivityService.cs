@@ -45,7 +45,7 @@ namespace Nop.Services.Logging
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>

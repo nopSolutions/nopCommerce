@@ -40,7 +40,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         #region Nested classes
 
-        public partial class TaxRate: BaseNopModel
+        public partial class TaxRate : BaseNopModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }

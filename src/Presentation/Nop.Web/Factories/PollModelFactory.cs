@@ -63,7 +63,7 @@ namespace Nop.Web.Factories
                 Name = poll.Name
             };
             var answers = _pollService.GetPollAnswerByPoll(poll.Id);
-            
+
             foreach (var answer in answers)
                 model.TotalVotes += answer.NumberOfVotes;
             foreach (var pa in answers)
@@ -74,7 +74,7 @@ namespace Nop.Web.Factories
                     Name = pa.Name,
                     NumberOfVotes = pa.NumberOfVotes,
                     PercentOfTotalVotes = model.TotalVotes > 0 ? ((Convert.ToDouble(pa.NumberOfVotes) / Convert.ToDouble(model.TotalVotes)) * Convert.ToDouble(100)) : 0,
-                });
+               });
             }
 
             return model;
@@ -90,7 +90,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey,
                 systemKeyword, _workContext.WorkingLanguage, _storeContext.CurrentStore);
 
             var cachedModel = _staticCacheManager.Get(cacheKey, () =>
@@ -123,7 +123,7 @@ namespace Nop.Web.Factories
         /// <returns>List of the poll model</returns>
         public virtual List<PollModel> PrepareHomepagePollModels()
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepagePollsModelKey, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepagePollsModelKey,
                 _workContext.WorkingLanguage, _storeContext.CurrentStore);
 
             var cachedPolls = _staticCacheManager.Get(cacheKey, () =>
@@ -139,7 +139,7 @@ namespace Nop.Web.Factories
                 pollModel.AlreadyVoted = _pollService.AlreadyVoted(pollModel.Id, _workContext.CurrentCustomer.Id);
                 model.Add(pollModel);
             }
-            
+
             return model;
         }
 

@@ -23,7 +23,7 @@ namespace Nop.Services.Tests
         [SetUp]
         public virtual void SetUp()
         {
-           
+
         }
 
         public void RunWithTestServiceProvider(Action action)
@@ -34,7 +34,7 @@ namespace Nop.Services.Tests
 
             EngineContext.Replace(null);
         }
-        
+
         protected ServiceTest()
         {
             //init plugins
@@ -90,7 +90,7 @@ namespace Nop.Services.Tests
                 }
             };
         }
-        
+
         public class FakeNopEngine : NopEngine
         {
             public FakeNopEngine(IServiceProvider serviceProvider = null)

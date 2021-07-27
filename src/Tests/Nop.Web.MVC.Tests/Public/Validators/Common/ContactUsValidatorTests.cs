@@ -11,14 +11,14 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
     {
         private ContactUsValidator _validator;
         private CommonSettings _commonSettings;
-        
+
         [SetUp]
         public new void Setup()
         {
             _commonSettings = new CommonSettings();
             _validator = new ContactUsValidator(_localizationService, _commonSettings);
         }
-        
+
         [Test]
         public void Should_have_error_when_email_is_null_or_empty()
         {

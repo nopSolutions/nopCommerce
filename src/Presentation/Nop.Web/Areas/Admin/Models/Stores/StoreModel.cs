@@ -6,9 +6,9 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Web.Areas.Admin.Models.Stores
 {
     /// <summary>
-    /// Represents a store model
+    ///     Represents a store model
     /// </summary>
-    public partial class StoreModel : BaseNopEntityModel, ILocalizedModel<StoreLocalizedModel>
+    public class StoreModel : BaseNopEntityModel, ILocalizedModel<StoreLocalizedModel>
     {
         #region Ctor
 
@@ -54,13 +54,13 @@ namespace Nop.Web.Areas.Admin.Models.Stores
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyVat")]
         public string CompanyVat { get; set; }
-        
-        public IList<StoreLocalizedModel> Locales { get; set; }
+
+        List<StoreLocalizedModel> Locales { get; set; }
 
         #endregion
     }
 
-    public partial class StoreLocalizedModel : ILocalizedLocaleModel
+    public partial oreLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

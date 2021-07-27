@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer list model</returns>
-        AffiliatedCustomerListModel PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel, 
+        AffiliatedCustomerListModel PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate);
     }
 }

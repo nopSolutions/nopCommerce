@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Reports
 {
@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
 
         [NopResourceDisplayName("Admin.Reports.Customers.BestBy.Fields.OrderCount")]
         public decimal OrderCount { get; set; }
-        
+
         #endregion
     }
 }

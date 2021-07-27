@@ -47,25 +47,25 @@ namespace Nop.Web.Infrastructure
                 new { controller = "Common", action = "GenericUrl" });
 
             //define this routes to use in UI views (in case if you want to customize some of them later)
-            endpointRouteBuilder.MapControllerRoute("Product", pattern, 
+            endpointRouteBuilder.MapControllerRoute("Product", pattern,
                 new { controller = "Product", action = "ProductDetails" });
 
-            endpointRouteBuilder.MapControllerRoute("Category", pattern, 
+            endpointRouteBuilder.MapControllerRoute("Category", pattern,
                 new { controller = "Catalog", action = "Category" });
 
-            endpointRouteBuilder.MapControllerRoute("Manufacturer", pattern, 
+            endpointRouteBuilder.MapControllerRoute("Manufacturer", pattern,
                 new { controller = "Catalog", action = "Manufacturer" });
 
-            endpointRouteBuilder.MapControllerRoute("Vendor", pattern, 
+            endpointRouteBuilder.MapControllerRoute("Vendor", pattern,
                 new { controller = "Catalog", action = "Vendor" });
-            
-            endpointRouteBuilder.MapControllerRoute("NewsItem", pattern, 
+
+            endpointRouteBuilder.MapControllerRoute("NewsItem", pattern,
                 new { controller = "News", action = "NewsItem" });
 
-            endpointRouteBuilder.MapControllerRoute("BlogPost", pattern, 
+            endpointRouteBuilder.MapControllerRoute("BlogPost", pattern,
                 new { controller = "Blog", action = "BlogPost" });
 
-            endpointRouteBuilder.MapControllerRoute("Topic", pattern, 
+            endpointRouteBuilder.MapControllerRoute("Topic", pattern,
                 new { controller = "Topic", action = "TopicDetails" });
 
             //product tags

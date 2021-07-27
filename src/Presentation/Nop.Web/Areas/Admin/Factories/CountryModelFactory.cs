@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -181,7 +181,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new StateProvinceListModel().PrepareToGrid(searchModel, states, ()=>
+            var model = new StateProvinceListModel().PrepareToGrid(searchModel, states, () =>
             {
                 //fill in model values from the entity
                 return states.Select(state => state.ToModel<StateProvinceModel>());

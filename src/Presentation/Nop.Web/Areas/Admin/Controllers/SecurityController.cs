@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                     else
                     {
-                        _permissionService.DeletePermissionRecordCustomerRoleMapping(pr.Id, cr.Id);                        
+                        _permissionService.DeletePermissionRecordCustomerRoleMapping(pr.Id, cr.Id);
                     }
 
                     _permissionService.UpdatePermissionRecord(pr);

@@ -11,7 +11,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure.Cache
     public partial class FixedByWeightByTotalEventConsumer : IConsumer<EntityDeletedEvent<ShippingMethod>>
     {
         #region Fields
-        
+
         private readonly ISettingService _settingService;
 
         #endregion

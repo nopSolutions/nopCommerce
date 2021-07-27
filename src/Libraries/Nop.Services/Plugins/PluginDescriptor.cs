@@ -131,7 +131,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonProperty(PropertyName = "FriendlyName")]
         public virtual string FriendlyName { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the supported versions of nopCommerce
         /// </summary>
@@ -173,7 +173,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonProperty(PropertyName = "LimitedToCustomerRoles")]
         public virtual IList<int> LimitedToCustomerRoles { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the list of plugins' system name that this plugin depends on
         /// </summary>

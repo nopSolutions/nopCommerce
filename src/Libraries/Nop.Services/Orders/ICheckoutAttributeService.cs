@@ -72,7 +72,7 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
         /// <returns>Checkout attribute values</returns>
         IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId);
-        
+
         /// <summary>
         /// Gets a checkout attribute value
         /// </summary>
@@ -91,7 +91,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
         void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue);
-        
+
         #endregion
     }
 }

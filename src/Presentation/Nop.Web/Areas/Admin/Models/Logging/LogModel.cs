@@ -1,13 +1,13 @@
 ﻿using System;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Logging
 {
     /// <summary>
-    /// Represents a log model
+    ///     Represents a log model
     /// </summary>
-    public partial class LogModel : BaseNopEntityModel
+    public class LogModel : BaseNopEntityModel
     {
         #region Properties
 

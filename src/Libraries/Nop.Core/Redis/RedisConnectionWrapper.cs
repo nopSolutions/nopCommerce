@@ -53,11 +53,13 @@ namespace Nop.Core.Redis
         /// <returns></returns>
         protected ConnectionMultiplexer GetConnection()
         {
-            if (_connection != null && _connection.IsConnected) return _connection;
+            if (_connection != null && _connection.IsConnected)
+                return _connection;
 
             lock (_lock)
             {
-                if (_connection != null && _connection.IsConnected) return _connection;
+                if (_connection != null && _connection.IsConnected)
+                    return _connection;
 
                 //Connection disconnected. Disposing connection...
                 _connection?.Dispose();

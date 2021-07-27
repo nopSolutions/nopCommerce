@@ -52,7 +52,7 @@ namespace Nop.Services.Messages
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
         private void PublishSubscriptionEvent(NewsLetterSubscription subscription, bool isSubscribe, bool publishSubscriptionEvents)
         {
-            if (!publishSubscriptionEvents) 
+            if (!publishSubscriptionEvents)
                 return;
 
             if (isSubscribe)
@@ -150,7 +150,8 @@ namespace Nop.Services.Messages
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
         public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null) throw new ArgumentNullException(nameof(newsLetterSubscription));
+            if (newsLetterSubscription == null)
+                throw new ArgumentNullException(nameof(newsLetterSubscription));
 
             _subscriptionRepository.Delete(newsLetterSubscription);
 
@@ -168,7 +169,8 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
         {
-            if (newsLetterSubscriptionId == 0) return null;
+            if (newsLetterSubscriptionId == 0)
+                return null;
 
             return _subscriptionRepository.ToCachedGetById(newsLetterSubscriptionId);
         }
@@ -180,7 +182,8 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
         {
-            if (newsLetterSubscriptionGuid == Guid.Empty) return null;
+            if (newsLetterSubscriptionGuid == Guid.Empty)
+                return null;
 
             var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
                                           where nls.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid

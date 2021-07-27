@@ -102,21 +102,21 @@ namespace Nop.Services.Polls
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
                 query = from poll in query
-                    join storeMapping in _storeMappingRepository.Table
-                        on new
-                        {
-                            poll.Id,
-                            Name = nameof(Poll)
-                        }
-                        equals new
-                        {
-                            Id = storeMapping.EntityId,
-                            Name = storeMapping.EntityName
-                        } 
-                        into storeMappingsWithNulls
-                    from storeMapping in storeMappingsWithNulls.DefaultIfEmpty()
-                    where !poll.LimitedToStores || storeMapping.StoreId == storeId
-                    select poll;
+                        join storeMapping in _storeMappingRepository.Table
+                            on new
+                            {
+                                poll.Id,
+                                Name = nameof(Poll)
+                            }
+                            equals new
+                            {
+                                Id = storeMapping.EntityId,
+                                Name = storeMapping.EntityName
+                            }
+                            into storeMappingsWithNulls
+                        from storeMapping in storeMappingsWithNulls.DefaultIfEmpty()
+                        where !poll.LimitedToStores || storeMapping.StoreId == storeId
+                        select poll;
             }
 
             //order records by display order

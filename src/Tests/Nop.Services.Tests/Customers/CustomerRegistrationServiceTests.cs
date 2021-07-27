@@ -2,10 +2,10 @@
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -72,7 +72,7 @@ namespace Nop.Services.Tests.Customers
                 Email = "registered@test.com",
                 Active = true
             };
-            
+
             #endregion
 
             #region passwords

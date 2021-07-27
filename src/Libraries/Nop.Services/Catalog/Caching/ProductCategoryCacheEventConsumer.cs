@@ -18,7 +18,7 @@ namespace Nop.Services.Catalog.Caching
             RemoveByPrefix(prefix);
 
             RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
-            
+
             prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey, entity.ProductId);
             RemoveByPrefix(prefix);
         }

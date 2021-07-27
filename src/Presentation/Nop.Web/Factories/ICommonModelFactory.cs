@@ -86,7 +86,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
         /// <returns>Sitemap as string in XML format</returns>
-        string PrepareSitemapXml( int? id);
+        string PrepareSitemapXml(int? id);
 
         /// <summary>
         /// Prepare the store theme selector model

@@ -7,9 +7,9 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
     /// <summary>
-    /// Represents a product model to add to the order
+    ///     Represents a product model to add to the order
     /// </summary>
-    public partial class AddProductToOrderModel : BaseNopModel
+    public class AddProductToOrderModel : BaseNopModel
     {
         #region Ctor
 
@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Orders.Products.AddNew.UnitPriceInclTax")]
         public decimal UnitPriceInclTax { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Products.AddNew.UnitPriceExclTax")]
         public decimal UnitPriceExclTax { get; set; }
 
@@ -42,20 +43,23 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalInclTax")]
         public decimal SubTotalInclTax { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalExclTax")]
         public decimal SubTotalExclTax { get; set; }
 
         //product attributes
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
+
         //gift card info
         public GiftCardModel GiftCard { get; set; }
+
         //rental
         public bool IsRental { get; set; }
 
         public List<string> Warnings { get; set; }
 
         /// <summary>
-        /// A value indicating whether this attribute depends on some other attribute
+        ///     A value indicating whether this attribute depends on some other attribute
         /// </summary>
         public bool HasCondition { get; set; }
 
@@ -64,8 +68,8 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         #endregion
 
         #region Nested classes
-        
-        public partial class ProductAttributeModel : BaseNopEntityModel
+
+        artial oductAttributeModel : BaseNopEntityModel
         {
             public ProductAttributeModel()
             {
@@ -82,17 +86,16 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
             public bool HasCondition { get; set; }
 
-            /// <summary>
-            /// Allowed file extensions for customer uploaded files
-            /// </summary>
-            public IList<string> AllowedFileExtensions { get; set; }
+            /// <sum/// <summary>
+            ///     Allowed file extensions for customer uploaded files
+            /// </summary>      public IList<string> AllowedFileExtensions { get; set; }
 
             public AttributeControlType AttributeControlType { get; set; }
 
             public IList<ProductAttributeValueModel> Values { get; set; }
         }
 
-        public partial class ProductAttributeValueModel : BaseNopEntityModel
+        public partial oductAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 
@@ -107,21 +110,27 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             public int Quantity { get; set; }
         }
 
-        public partial class GiftCardModel : BaseNopModel
+        public partial ftCardModel : BaseNopModel
         {
             public bool IsGiftCard { get; set; }
 
             [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientName")]
             public string RecipientName { get; set; }
-            [DataType(DataType.EmailAddress)]
-            [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
+        
+    [DataType(DataType.EmailAddress)]
+      
+            urceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
             public string RecipientEmail { get; set; }
-            [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
+        
+    [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
             public string SenderName { get; set; }
-            [DataType(DataType.EmailAddress)]
-            [NopResourceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
+        
+    [DataType(DataType.EmailAddress)]
+      
+            urceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
             public string SenderEmail { get; set; }
-            [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]
+        
+    [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]
             public string Message { get; set; }
 
             public GiftCardType GiftCardType { get; set; }

@@ -38,7 +38,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             _storeContext = storeContext;
             _webHelper = webHelper;
         }
-        
+
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         public ActionResult Configure()
@@ -110,8 +110,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
-			_notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
-            
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+
             return Configure();
         }
 
@@ -155,7 +155,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
 
             var startDate = string.IsNullOrEmpty(startDateParam) ? (DateTime?)null : DateTime.ParseExact(startDateParam, _shipStationService.DateFormat, CultureInfo.InvariantCulture);
             var endDate = string.IsNullOrEmpty(endDateParam) ? (DateTime?)null : DateTime.ParseExact(endDateParam, _shipStationService.DateFormat, CultureInfo.InvariantCulture);
-            
+
             return Content(_shipStationService.GetXmlOrders(startDate, endDate, pageIndex, 200), "text/xml");
         }
     }

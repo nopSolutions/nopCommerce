@@ -39,7 +39,7 @@ namespace Nop.Services.Messages
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Campaigns</returns>
         IList<Campaign> GetAllCampaigns(int storeId = 0);
-        
+
         /// <summary>
         /// Sends a campaign to specified emails
         /// </summary>

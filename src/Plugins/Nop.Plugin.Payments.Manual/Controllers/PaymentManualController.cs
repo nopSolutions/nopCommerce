@@ -19,7 +19,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
     public class PaymentManualController : BasePaymentController
     {
         #region Fields
-        
+
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -99,7 +99,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             _settingService.SaveSettingOverridablePerStore(manualPaymentSettings, x => x.TransactMode, model.TransactModeId_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(manualPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(manualPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
 

@@ -76,13 +76,13 @@ namespace Nop.Services.Localization
         protected virtual IList<LocalizedProperty> GetAllLocalizedProperties()
         {
             var query = from lp in _localizedPropertyRepository.Table
-                select lp;
+                        select lp;
 
             return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyAllCacheKey));
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -135,11 +135,11 @@ namespace Nop.Services.Localization
                     : _localizedPropertyRepository.Table;
 
                 var query = from lp in source
-                    where lp.LanguageId == languageId &&
-                          lp.EntityId == entityId &&
-                          lp.LocaleKeyGroup == localeKeyGroup &&
-                          lp.LocaleKey == localeKey
-                    select lp.LocaleValue;
+                            where lp.LanguageId == languageId &&
+                                  lp.EntityId == entityId &&
+                                  lp.LocaleKeyGroup == localeKeyGroup &&
+                                  lp.LocaleKey == localeKey
+                            select lp.LocaleValue;
 
                 //little hack here. nulls aren't cacheable so set it to ""
                 var localeValue = query.FirstOrDefault() ?? string.Empty;

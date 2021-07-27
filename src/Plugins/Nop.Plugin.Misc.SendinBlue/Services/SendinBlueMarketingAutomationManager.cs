@@ -17,7 +17,6 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
-using Nop.Services.Shipping;
 using SendinBlueMarketingAutomation.Api;
 using SendinBlueMarketingAutomation.Client;
 using SendinBlueMarketingAutomation.Model;

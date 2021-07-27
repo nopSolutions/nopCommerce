@@ -142,7 +142,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             using var stream = new MemoryStream();
@@ -356,7 +356,7 @@ namespace Nop.Services.Media.RoxyFileman
                 };
 
                 _pictureService.InsertPicture(
-                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
+                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = _fileProvider.ReadAllBytes(filePath) }, _fileProvider.GetFileExtension(filePath)),
                     string.Empty, _fileProvider.GetVirtualPath(filePath));
             }
         }

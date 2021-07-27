@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
     /// <summary>
-    /// Represents a product search model
+    ///     Represents a product search model
     /// </summary>
-    public partial class ProductSearchModel : BaseSearchModel
+    public class ProductSearchModel : BaseSearchModel
     {
         #region Ctor
 

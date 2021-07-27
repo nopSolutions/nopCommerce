@@ -74,7 +74,7 @@ namespace Nop.Services.Directory
         {
             if (currencyId == 0)
                 return null;
-            
+
             return _currencyRepository.ToCachedGetById(currencyId);
         }
 
@@ -198,7 +198,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
             var result = amount;
-            
+
             if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
 

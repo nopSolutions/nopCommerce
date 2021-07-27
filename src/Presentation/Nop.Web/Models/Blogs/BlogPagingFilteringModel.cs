@@ -12,7 +12,7 @@ namespace Nop.Web.Models.Blogs
             DateTime? result = null;
             if (!string.IsNullOrEmpty(Month))
             {
-                var tempDate = Month.Split(new [] { '-' });
+                var tempDate = Month.Split(new[] { '-' });
                 if (tempDate.Length == 2)
                 {
                     result = new DateTime(Convert.ToInt32(tempDate[0]), Convert.ToInt32(tempDate[1]), 1);
@@ -41,7 +41,7 @@ namespace Nop.Web.Models.Blogs
         public string Month { get; set; }
 
         public string Tag { get; set; }
-        
+
         #endregion
     }
 }

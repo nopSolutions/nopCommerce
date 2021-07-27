@@ -7,6 +7,6 @@ namespace Nop.Services.Orders.Caching
     /// Represents a recurring payment cache event consumer
     /// </summary>
     public partial class RecurringPaymentCacheEventConsumer : CacheEventConsumer<RecurringPayment>
-    { 
+    {
     }
 }

@@ -12,7 +12,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="shippingOptionRequest"></param>
         /// <returns></returns>
         IList<ShipStationServiceRate> GetAllRates(GetShippingOptionRequest shippingOptionRequest);
-        
+
         /// <summary>
         /// Create or upadete shipping
         /// </summary>

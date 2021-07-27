@@ -6,7 +6,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
 {
-    public partial class WishlistModel : BaseNopModel
+    public class WishlistModel : BaseNopModel
     {
         public WishlistModel()
         {
@@ -32,10 +32,10 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<ShoppingCartItemModel> Items { get; set; }
 
         public IList<string> Warnings { get; set; }
-        
-		#region Nested Classes
 
-        public partial class ShoppingCartItemModel : BaseNopEntityModel
+        egion Nested Classes
+
+        public p ass ShoppingCartItemModel : BaseNopEntityModel
         {
             public ShoppingCartItemModel()
             {
@@ -46,7 +46,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public string Sku { get; set; }
 
-            public PictureModel Picture {get;set;}
+            public PictureModel Picture { g et;  set;  }
 
             public int ProductId { get; set; }
 
@@ -72,9 +72,9 @@ namespace Nop.Web.Models.ShoppingCart
 
             public bool AllowItemEditing { get; set; }
 
-            public IList<string> Warnings { get; set; }
-        }
-
-		#endregion
+            public IList<string> Warnings { get; set; 
+         }
+               #en
+    n
     }
 }

@@ -19,7 +19,7 @@ namespace Nop.Data.Extensions
         /// <param name="onDelete">Behavior for DELETEs</param>
         /// <typeparam name="TPrimary"></typeparam>
         /// <returns>Set column options or create a new column or set a foreign key cascade rule</returns>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax ForeignKey<TPrimary>(this ICreateTableColumnOptionOrWithColumnSyntax column, string primaryTableName = null, string primaryColumnName = null, Rule onDelete=Rule.Cascade) where TPrimary : BaseEntity
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax ForeignKey<TPrimary>(this ICreateTableColumnOptionOrWithColumnSyntax column, string primaryTableName = null, string primaryColumnName = null, Rule onDelete = Rule.Cascade) where TPrimary : BaseEntity
         {
             if (string.IsNullOrEmpty(primaryTableName))
                 primaryTableName = NameCompatibilityManager.GetTableName(typeof(TPrimary));

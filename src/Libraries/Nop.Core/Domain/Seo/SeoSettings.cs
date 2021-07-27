@@ -62,7 +62,7 @@ namespace Nop.Core.Domain.Seo
         /// WWW requires (with or without WWW)
         /// </summary>
         public WwwRequirement WwwRequirement { get; set; }
-        
+
         /// <summary>
         /// A value indicating whether Twitter META tags should be generated
         /// </summary>

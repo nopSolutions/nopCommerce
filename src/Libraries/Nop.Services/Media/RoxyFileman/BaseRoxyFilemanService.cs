@@ -133,7 +133,7 @@ namespace Nop.Services.Media.RoxyFileman
              *     || fileExtension == ".mid" || fileExtension == ".mp2") // audio
              *     fileType = "media"; */
 
-             return fileType;
+            return fileType;
         }
 
         /// <summary>

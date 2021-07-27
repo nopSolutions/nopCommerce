@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool UsernameValidationUseRegex { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernameValidationRule")]
-        public string UsernameValidationRule { get; set; }       
+        public string UsernameValidationRule { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
         public int UserRegistrationType { get; set; }
@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool FaxRequired { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled")]
-        public bool AcceptPrivacyPolicyEnabled { get; set; }        
+        public bool AcceptPrivacyPolicyEnabled { get; set; }
 
         #endregion
     }

@@ -32,14 +32,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Address attribute model</returns>
         AddressAttributeModel PrepareAddressAttributeModel(AddressAttributeModel model,
             AddressAttribute addressAttribute, bool excludeProperties = false);
-       
+
         /// <summary>
         /// Prepare paged address attribute value list model
         /// </summary>
         /// <param name="searchModel">Address attribute value search model</param>
         /// <param name="addressAttribute">Address attribute</param>
         /// <returns>Address attribute value list model</returns>
-        AddressAttributeValueListModel PrepareAddressAttributeValueListModel(AddressAttributeValueSearchModel searchModel, 
+        AddressAttributeValueListModel PrepareAddressAttributeValueListModel(AddressAttributeValueSearchModel searchModel,
             AddressAttribute addressAttribute);
 
         /// <summary>

@@ -84,7 +84,7 @@ namespace Nop.Services.Catalog
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
                 HttpOnly = true,
-                Secure =  _webHelper.IsCurrentConnectionSecured()
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie

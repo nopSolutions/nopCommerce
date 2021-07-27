@@ -8,6 +8,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Html;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -183,8 +184,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("ContactUs")]        
-        [ValidateCaptcha]
+        [HttpPost, ActionName("ContactUs")]
+        eCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
@@ -200,7 +201,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = Core.HtmHtmlHelperext(model.Enquiry, false, true, false, false, false, false);
 
                 _workflowMessageService.SendContactUsMessage(_workContext.WorkingLanguage.Id,
                     model.Email.Trim(), model.FullName, subject, body);
@@ -234,8 +235,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("ContactVendor")]        
-        [ValidateCaptcha]
+        [HttpPost, ActionName("ContactVendor")]
+      
+        ]
         public virtual IActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
@@ -256,7 +258,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = Core.Html.HtmlHeHtmlHelperl.Enquiry, false, true, false, false, false, false);
 
                 _workflowMessageService.SendContactVendorMessage(vendor, _workContext.WorkingLanguage.Id,
                     model.Email.Trim(), model.FullName, subject, body);
@@ -287,6 +289,7 @@ namespace Nop.Web.Controllers
         {
             var siteMap = _sitemapXmlSettings.SitemapXmlEnabled
                 ? _commonModelFactory.PrepareSitemapXml(id) : string.Empty;
+                
 
             return Content(siteMap, "text/xml");
         }
@@ -316,13 +319,13 @@ namespace Nop.Web.Controllers
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
-                return Json(new { stored = false });
+                return Json(new { stored = false );
 
-            //save setting
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.EuCookieLawAcceptedAttribute, true, _storeContext.CurrentStore.Id);
-            return Json(new { stored = true });
-        }
-
+           //save setting
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefa
+                lts.EuCookieLawAcceptedAttribute, true, _storeContext.CurrentStore.Id);
+            return Json(new { stored = true };
+        }
         //robots.txt file
         //available even when a store is closed
         [CheckAccessClosedStore(true)]

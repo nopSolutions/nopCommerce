@@ -25,7 +25,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
         public WidgetsNivoSliderController(ILocalizationService localizationService,
             INotificationService notificationService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             IPictureService pictureService,
             ISettingService settingService,
             IStoreContext storeContext)
@@ -109,7 +109,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(storeScope);
 
             //get previous picture identifiers
-            var previousPictureIds = new[] 
+            var previousPictureIds = new[]
             {
                 nivoSliderSettings.Picture1Id,
                 nivoSliderSettings.Picture2Id,
@@ -165,7 +165,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
-            
+
             //get current picture identifiers
             var currentPictureIds = new[]
             {
@@ -178,7 +178,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
             //delete an old picture (if deleted or updated)
             foreach (var pictureId in previousPictureIds.Except(currentPictureIds))
-            { 
+            {
                 var previousPicture = _pictureService.GetPictureById(pictureId);
                 if (previousPicture != null)
                     _pictureService.DeletePicture(previousPicture);

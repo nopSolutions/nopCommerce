@@ -35,7 +35,7 @@ namespace Nop.Services.Tests.Payments
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-            
+
             _shoppingCartSettings = new ShoppingCartSettings();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
             var settingService = new Mock<ISettingService>();

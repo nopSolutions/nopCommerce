@@ -160,7 +160,7 @@ namespace Nop.Services.Directory
         {
             if (countryId == 0)
                 return null;
-            
+
             return _countryRepository.ToCachedGetById(countryId);
         }
 
@@ -203,8 +203,8 @@ namespace Nop.Services.Directory
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
 
             var query = from c in _countryRepository.Table
-                where c.TwoLetterIsoCode == twoLetterIsoCode
-                select c;
+                        where c.TwoLetterIsoCode == twoLetterIsoCode
+                        select c;
 
             return query.ToCachedFirstOrDefault(key);
         }
@@ -222,8 +222,8 @@ namespace Nop.Services.Directory
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
 
             var query = from c in _countryRepository.Table
-                where c.ThreeLetterIsoCode == threeLetterIsoCode
-                select c;
+                        where c.ThreeLetterIsoCode == threeLetterIsoCode
+                        select c;
 
             return query.ToCachedFirstOrDefault(key);
         }

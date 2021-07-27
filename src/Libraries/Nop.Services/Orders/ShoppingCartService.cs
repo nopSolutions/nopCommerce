@@ -181,13 +181,13 @@ namespace Nop.Services.Orders
                 if (!customerEnteredPricesEqual)
                     return false;
             }
-            
-            if (!product.IsRental) 
+
+            if (!product.IsRental)
                 return true;
 
             //rental products
             var rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
-            
+
             return rentalInfoEqual;
         }
 
@@ -388,7 +388,7 @@ namespace Nop.Services.Orders
             foreach (var requiredProduct in requiredProducts)
             {
                 var productsRequiringRequiredProduct = GetProductsRequiringProduct(cart, requiredProduct);
-                
+
                 //get the required quantity of the required product
                 var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
 
@@ -437,7 +437,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product, 
+        public virtual IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product,
             string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId)
         {
             if (customer == null)
@@ -1544,7 +1544,7 @@ namespace Nop.Services.Orders
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
 
                 _sciRepository.Update(shoppingCartItem);
-                
+
                 //event notification
                 _eventPublisher.EntityUpdated(shoppingCartItem);
             }

@@ -27,7 +27,7 @@ namespace Nop.Services.Blogs
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
-        
+
         #endregion
 
         #region Ctor
@@ -261,7 +261,7 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Tags</returns>
-        public virtual IList<string> ParseTags(BlogPost blogPost) 
+        public virtual IList<string> ParseTags(BlogPost blogPost)
         {
             if (blogPost == null)
                 throw new ArgumentNullException(nameof(blogPost));
@@ -399,7 +399,7 @@ namespace Nop.Services.Blogs
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
-            
+
             return _staticCacheManager.Get(cacheKey, () => query.Count());
         }
 

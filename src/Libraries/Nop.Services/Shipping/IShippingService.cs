@@ -112,7 +112,7 @@ namespace Nop.Services.Shipping
         void UpdateWarehouse(Warehouse warehouse);
 
         #endregion
-        
+
         #region Workflow
 
         /// <summary>

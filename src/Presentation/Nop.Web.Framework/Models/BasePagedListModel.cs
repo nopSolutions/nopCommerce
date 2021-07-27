@@ -25,6 +25,6 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Gets or sets a number of total data records
         /// </summary>
-        public int RecordsTotal { get; set; }        
+        public int RecordsTotal { get; set; }
     }
 }

@@ -217,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _reportModelFactory.PrepareRegisteredCustomersReportListModel(searchModel);
 
             return Json(model);
-        }        
+        }
 
         #endregion
 

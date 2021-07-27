@@ -11,7 +11,7 @@ namespace Nop.Services.Tests.Payments
     public class TestPaymentMethod : BasePlugin, IPaymentMethod
     {
         #region Methods
-        
+
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -117,7 +117,7 @@ namespace Nop.Services.Tests.Payments
             result.AddError("Cancelling recurring orders not supported");
             return result;
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
         /// </summary>

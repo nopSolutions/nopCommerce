@@ -11,7 +11,7 @@ namespace Nop.Services.Customers
         /// Gets a password salt key size
         /// </summary>
         public static int PasswordSaltKeySize => 5;
-        
+
         /// <summary>
         /// Gets a max username length
         /// </summary>

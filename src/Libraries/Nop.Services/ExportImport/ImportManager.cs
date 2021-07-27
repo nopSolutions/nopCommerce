@@ -370,7 +370,7 @@ namespace Nop.Services.ExportImport
                                 trimByteCount);
 
                             var newValidatedImageHash = HashHelper.CreateHash(
-                                _pictureService.ValidatePicture(newPictureBinary, mimeType), 
+                                _pictureService.ValidatePicture(newPictureBinary, mimeType),
                                 IMAGE_HASH_ALGORITHM,
                                 trimByteCount);
 
@@ -380,8 +380,8 @@ namespace Nop.Services.ExportImport
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
                                 .Select(p => p.Value)
-                                .Any(p => 
-                                    p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) || 
+                                .Any(p =>
+                                    p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) ||
                                     p.Equals(newValidatedImageHash, StringComparison.OrdinalIgnoreCase));
                         }
 
@@ -1646,8 +1646,8 @@ namespace Nop.Services.ExportImport
 
                             if (!rez.HasValue)
                             {
-                                    //database doesn't contain the imported category
-                                    throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
+                                //database doesn't contain the imported category
+                                throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
                             }
 
                             return rez.Value;

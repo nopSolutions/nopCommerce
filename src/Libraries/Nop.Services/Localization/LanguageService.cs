@@ -61,13 +61,13 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-            
+
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
             {
                 foreach (var activeLanguage in GetAllLanguages())
                 {
-                    if (activeLanguage.Id == language.Id) 
+                    if (activeLanguage.Id == language.Id)
                         continue;
 
                     _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
@@ -77,7 +77,7 @@ namespace Nop.Services.Localization
             }
 
             _languageRepository.Delete(language);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(language);
         }
@@ -91,12 +91,13 @@ namespace Nop.Services.Localization
         public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
         {
             var query = _languageRepository.Table;
-            if (!showHidden) query = query.Where(l => l.Published);
+            if (!showHidden)
+                query = query.Where(l => l.Published);
             query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
 
             //cacheable copy
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
-            
+
             var languages = _staticCacheManager.Get(key, () =>
             {
                 var allLanguages = query.ToList();

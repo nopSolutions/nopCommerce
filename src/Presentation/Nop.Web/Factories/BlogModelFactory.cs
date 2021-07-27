@@ -141,13 +141,13 @@ namespace Nop.Web.Factories
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            
+
             model.NumberOfComments = _blogService.GetBlogCommentsCount(blogPost, storeId, true);
 
             if (prepareComments)
-            {                
+            {
                 var blogComments = _blogService.GetAllComments(
-                    blogPostId: blogPost.Id, 
+                    blogPostId: blogPost.Id,
                     approved: true,
                     storeId: storeId);
 
@@ -179,8 +179,10 @@ namespace Nop.Web.Factories
                 WorkingLanguageId = _workContext.WorkingLanguage.Id
             };
 
-            if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (command.PageSize <= 0)
+                command.PageSize = _blogSettings.PostsPageSize;
+            if (command.PageNumber <= 0)
+                command.PageNumber = 1;
 
             var dateFrom = command.GetFromMonth();
             var dateTo = command.GetToMonth();

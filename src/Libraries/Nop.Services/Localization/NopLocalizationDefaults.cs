@@ -8,7 +8,7 @@ namespace Nop.Services.Localization
     public static partial class NopLocalizationDefaults
     {
         #region Locales
-        
+
         /// <summary>
         /// Gets a prefix of locale resources for the admin area
         /// </summary>

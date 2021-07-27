@@ -24,7 +24,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginsInfo">Plugins info</param>
         void CopyFrom(IPluginsInfo pluginsInfo);
-        
+
         /// <summary>
         /// Gets or sets the list of all installed plugin
         /// </summary>

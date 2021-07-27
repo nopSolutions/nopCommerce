@@ -11,14 +11,14 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
     {
         private ChangePasswordValidator _validator;
         private CustomerSettings _customerSettings;
-        
+
         [SetUp]
         public new void Setup()
         {
             _customerSettings = new CustomerSettings();
             _validator = new ChangePasswordValidator(_localizationService, _customerSettings);
         }
-        
+
         [Test]
         public void Should_have_error_when_oldPassword_is_null_or_empty()
         {

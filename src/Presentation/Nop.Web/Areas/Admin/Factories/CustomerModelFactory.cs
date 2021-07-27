@@ -265,39 +265,39 @@ namespace Nop.Web.Areas.Admin.Factories
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
-                        {
-                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                //clear default selection
-                                foreach (var item in attributeModel.Values)
-                                    item.IsPreSelected = false;
-
-                                //select new values
-                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                foreach (var attributeValue in selectedValues)
+                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    //clear default selection
                                     foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                    foreach (var attributeValue in selectedValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                }
                             }
-                        }
-                        break;
+                            break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
-                        break;
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
+                            break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                if (enteredText.Any())
-                                    attributeModel.DefaultValue = enteredText[0];
+                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                    if (enteredText.Any())
+                                        attributeModel.DefaultValue = enteredText[0];
+                                }
                             }
-                        }
-                        break;
+                            break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
@@ -569,7 +569,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -729,7 +729,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
                     model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
                         _storeService.GetAllStores().Select(x => x.Id).Count() > 1;
-                   
+
                     //prepare model affiliate
                     var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)
@@ -1071,7 +1071,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare list model
             var model = new CustomerActivityLogListModel().PrepareToGrid(searchModel, pageList, () => pageList);
-            
+
             return model;
         }
 

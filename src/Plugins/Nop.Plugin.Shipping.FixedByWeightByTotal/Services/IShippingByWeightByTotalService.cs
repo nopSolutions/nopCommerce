@@ -28,7 +28,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
         /// <returns>Shipping by weight record</returns>
-        ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId,  
+        ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal);
 
         /// <summary>

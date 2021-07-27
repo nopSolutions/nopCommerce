@@ -50,7 +50,7 @@ namespace Nop.Services.Vendors
 
                 foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/VendorAttribute"))
                 {
-                    if (node.Attributes?["ID"] == null) 
+                    if (node.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node.Attributes["ID"].InnerText.Trim();
@@ -116,10 +116,10 @@ namespace Nop.Services.Vendors
                 var valuesStr = ParseValues(attributesXml, attribute.Id);
                 foreach (var valueStr in valuesStr)
                 {
-                    if (string.IsNullOrEmpty(valueStr)) 
+                    if (string.IsNullOrEmpty(valueStr))
                         continue;
 
-                    if (!int.TryParse(valueStr, out var id)) 
+                    if (!int.TryParse(valueStr, out var id))
                         continue;
 
                     var value = _vendorAttributeService.GetVendorAttributeValueById(id);
@@ -151,14 +151,14 @@ namespace Nop.Services.Vendors
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/VendorAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != vendorAttributeId) 
+                    if (id != vendorAttributeId)
                         continue;
 
                     var nodeList2 = node1.SelectNodes(@"VendorAttributeValue/Value");
@@ -207,14 +207,14 @@ namespace Nop.Services.Vendors
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/VendorAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != vendorAttribute.Id) 
+                    if (id != vendorAttribute.Id)
                         continue;
 
                     attributeElement = (XmlElement)node1;
@@ -262,28 +262,28 @@ namespace Nop.Services.Vendors
             var attributes2 = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var a2 in attributes2)
             {
-                if (!a2.IsRequired) 
+                if (!a2.IsRequired)
                     continue;
 
                 var found = false;
                 //selected vendor attributes
                 foreach (var a1 in attributes1)
                 {
-                    if (a1.Id != a2.Id) 
+                    if (a1.Id != a2.Id)
                         continue;
 
                     var valuesStr = ParseValues(attributesXml, a1.Id);
                     foreach (var str1 in valuesStr)
                     {
-                        if (string.IsNullOrEmpty(str1.Trim())) 
+                        if (string.IsNullOrEmpty(str1.Trim()))
                             continue;
 
                         found = true;
                         break;
                     }
                 }
-                
-                if (found) 
+
+                if (found)
                     continue;
 
                 //if not found

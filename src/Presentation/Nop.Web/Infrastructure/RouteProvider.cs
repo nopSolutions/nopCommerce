@@ -422,7 +422,7 @@ namespace Nop.Web.Infrastructure
             //prepare top menu (AJAX link)
             endpointRouteBuilder.MapControllerRoute("GetCatalogRoot", $"{pattern}catalog/getcatalogroot",
                 new { controller = "Catalog", action = "GetCatalogRoot" });
-            
+
             endpointRouteBuilder.MapControllerRoute("GetCatalogSubCategories", $"{pattern}catalog/getcatalogsubcategories",
                 new { controller = "Catalog", action = "GetCatalogSubCategories" });
 
@@ -565,7 +565,7 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml",
                 pattern + "sitemap-{Id:min(0)}.xml",
                 new { controller = "Common", action = "SitemapXml" });
-            
+
             //store closed
             endpointRouteBuilder.MapControllerRoute("StoreClosed", $"{pattern}storeclosed",
                 new { controller = "Common", action = "StoreClosed" });

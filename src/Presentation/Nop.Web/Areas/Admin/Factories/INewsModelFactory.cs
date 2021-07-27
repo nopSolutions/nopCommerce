@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="filterByNewsItemId">Filter by news item ID</param>
         /// <returns>News content model</returns>
         NewsContentModel PrepareNewsContentModel(NewsContentModel newsContentModel, int? filterByNewsItemId);
-        
+
         /// <summary>
         /// Prepare news item search model
         /// </summary>

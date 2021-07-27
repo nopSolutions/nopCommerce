@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Customer
         {
             Address = new AddressModel();
         }
-        
+
         public AddressModel Address { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")]
         public int NumberOfAssociatedProducts { get; set; }
-        
+
         public IList<SpecificationAttributeOptionLocalizedModel> Locales { get; set; }
 
         #endregion
@@ -48,5 +48,5 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")]
         public string Name { get; set; }
-    }    
+    }
 }

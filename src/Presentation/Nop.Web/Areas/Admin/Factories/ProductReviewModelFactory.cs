@@ -18,7 +18,7 @@ using Nop.Web.Framework.Models.Extensions;
 namespace Nop.Web.Areas.Admin.Factories
 {
     /// <summary>
-    /// Represents the product review model factory implementation
+    ///     Represents the product review model factory implementation
     /// </summary>
     public partial class ProductReviewModelFactory : IProductReviewModelFactory
     {
@@ -64,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare product review search model
+        ///     Prepare product review search model
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review search model</returns>
@@ -86,16 +86,19 @@ namespace Nop.Web.Areas.Admin.Factories
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"),
+                Text = _localizationService.GetResource(
+                    "Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
+                Text = _localizationService.GetResource(
+                    "Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
-            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations ||
+                                         searchModel.AvailableStores.SelectionIsNotPossible();
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -104,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare paged product review list model
+        ///     Prepare paged product review list model
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review list model</returns>
@@ -114,11 +117,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter reviews
-            var createdOnFromValue = !searchModel.CreatedOnFrom.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
-            var createdToFromValue = !searchModel.CreatedOnTo.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-            var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
+            var createdOnFromValue = !searchModel.CreatedOnFrom.HasValue
+                ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value,
+                    _dateTimeHelper.CurrentTimeZone);
+            var createdToFromValue = !searchModel.CreatedOnTo.HasValue
+                ? null
+                : (DateTime?)_dateTimeHelper
+                    .ConvertToUtcTime(searchModel.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+            var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null :
+                searchModel.SearchApprovedId == 1 ? true : (bool?)false;
             var vendorId = _workContext.CurrentVendor?.Id ?? 0;
 
             //get product reviews
@@ -142,15 +150,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productReviewModel = productReview.ToModel<ProductReviewModel>();
 
                     //convert dates to the user time
-                    productReviewModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
+                    productReviewModel.CreatedOn =
+                        _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     productReviewModel.StoreName = _storeService.GetStoreById(productReview.StoreId)?.Name;
                     productReviewModel.ProductName = _productService.GetProductById(productReview.ProductId)?.Name;
-                    productReviewModel.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
-                    productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                    productReviewModel.CustomerInfo =
+                        _customerService.GetCustomerById(productReview.CustomerId) is Customer customer &&
+                        _customerService.IsRegistered(customer)
+                            ? customer.Email
+                            : _localizationService.GetResource("Admin.Customers.Guest");
+                    productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false,
+                        false, false, false);
+                    productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false,
+                        false, false, false);
 
                     return productReviewModel;
                 });
@@ -160,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare product review model
+        ///     Prepare product review model
         /// </summary>
         /// <param name="model">Product review model</param>
         /// <param name="productReview">Product review</param>
@@ -182,8 +196,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     Rating = productReview.Rating
                 };
 
-                model.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
-                    ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                model.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer &&
+                                     _customerService.IsRegistered(customer)
+                    ? customer.Email
+                    : _localizationService.GetResource("Admin.Customers.Guest");
 
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -196,7 +212,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 //prepare nested search model
-                PrepareProductReviewReviewTypeMappingSearchModel(model.ProductReviewReviewTypeMappingSearchModel, productReview);
+                PrepareProductReviewReviewTypeMappingSearchModel(model.ProductReviewReviewTypeMappingSearchModel,
+                    productReview);
             }
 
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -205,12 +222,13 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare product review mapping search model
+        ///     Prepare product review mapping search model
         /// </summary>
         /// <param name="searchModel">Product review mapping search model</param>
         /// <param name="productReview">Product</param>
         /// <returns>Product review mapping search model</returns>
-        public virtual ProductReviewReviewTypeMappingSearchModel PrepareProductReviewReviewTypeMappingSearchModel(ProductReviewReviewTypeMappingSearchModel searchModel,
+        public virtual ProductReviewReviewTypeMappingSearchModel PrepareProductReviewReviewTypeMappingSearchModel(
+            ProductReviewReviewTypeMappingSearchModel searchModel,
             ProductReview productReview)
         {
             if (searchModel == null)
@@ -221,21 +239,22 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.ProductReviewId = productReview.Id;
 
-            searchModel.IsAnyReviewTypes = _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).Any();
+            searchModel.IsAnyReviewTypes = _reviewTypeService
+                .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).Any();
 
             //prepare page parameters
-            searchModel.SetGridPageSize();            
+            searchModel.SetGridPageSize();
 
-            return searchModel;
+            hModel;
         }
 
-        /// <summary>
-        /// Prepare paged product reviews mapping list model
+        /// <summary/// <summary>
+        ///     Prepare paged product reviews mapping list model
         /// </summary>
         /// <param name="searchModel">Product review and review type mapping search model</param>
         /// <param name="productReview">Product review</param>
-        /// <returns>Product review and review type mapping list model</returns>
-        public virtual ProductReviewReviewTypeMappingListModel PrepareProductReviewReviewTypeMappingListModel(ProductReviewReviewTypeMappingSearchModel searchModel, ProductReview productReview)
+        /// <returns>Product review and review type mapping list model</returns>blic virtual ProductReviewReviewTypeMappingListModel PrepareProductReviewReviewTypeMappingListModel(ProductRevie
+            wReviewTypeMappingSearchModel searchModel, ProductReview productReview)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -248,30 +267,26 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductReviewReviewTypeMappingListModel().PrepareToGrid(searchModel, productReviewReviewTypeMappings, () =>
-            {
-                return productReviewReviewTypeMappings.Select(productReviewReviewTypeMapping =>
-                {
-                    //fill in model values from the entity
-                    var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping
-                        .ToModel<ProductReviewReviewTypeMappingModel>();
+            var model = new ProductReviewReviewTypeMappingListModel().PrepareToGrid(searchModel, productRevi
+                wReviewTypeMappings, () =>
+                                                   ctReviewReviewTypeMappings.Select(productReviewReviewTypeMapping =>
+                                                           del values from the entity
+                                    eviewReviewTypeMappingModel = productReviewReviewTypeMapping
+                                        ductReviewReviewTypeMappingModel>();
 
-                    //fill in additional values (not existing in the entity)
-                    var reviewType =
-                        _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
+                                    ditional values (not existing in the entity)
+                                    pe =
+                                        ervice.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
 
-                    productReviewReviewTypeMappingModel.Name =
-                        _localizationService.GetLocalized(reviewType, entity => entity.Name);
-                    productReviewReviewTypeMappingModel.Description =
-                        _localizationService.GetLocalized(reviewType, entity => entity.Description);
-                    productReviewReviewTypeMappingModel.VisibleToAllCustomers =
-                        reviewType.VisibleToAllCustomers;
+                                    wReviewTypeMappingModel.Name =
+                                        nService.GetLocalized(reviewType, entity => entity.Name);
+                                    wReviewTypeMappingModel.Description =
+                                        nService.GetLocalized(reviewType, entity => entity.Description);
+                                    wReviewTypeMappingModel.VisibleToAllCustomers =
+                                        isibleToAllCustomers;
 
-                    return productReviewReviewTypeMappingModel;
-                });
-            });
-
-            return model;
+                                    ctReviewReviewTypeMappingModel;
+                                                            return model;
         }
 
         #endregion

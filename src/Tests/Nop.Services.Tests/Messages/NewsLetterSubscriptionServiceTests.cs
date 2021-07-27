@@ -1,14 +1,14 @@
 ﻿using Moq;
-using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
+using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using NUnit.Framework;
 
-namespace Nop.Services.Tests.Messages 
+namespace Nop.Services.Tests.Messages
 {
     [TestFixture]
     public class NewsLetterSubscriptionServiceTests : ServiceTest
@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Messages
         [SetUp]
         public new void SetUp()
         {
-            _dataProvider=new Mock<INopDataProvider>();
+            _dataProvider = new Mock<INopDataProvider>();
             _eventPublisher = new Mock<IEventPublisher>();
             _newsLetterSubscriptionRepository = new Mock<IRepository<NewsLetterSubscription>>();
             _customerRepository = new Mock<IRepository<Customer>>();
@@ -60,7 +60,7 @@ namespace Nop.Services.Tests.Messages
 
             _eventPublisher.Verify(x => x.Publish(new EmailUnsubscribedEvent(subscription)));
         }
-        
+
         /// <summary>
         /// Verifies the insert event is fired.
         /// </summary>
@@ -70,7 +70,7 @@ namespace Nop.Services.Tests.Messages
             var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
                 _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
 
-            var subscription = new NewsLetterSubscription {Email = "test@test.com"};
+            var subscription = new NewsLetterSubscription { Email = "test@test.com" };
 
             service.InsertNewsLetterSubscription(subscription);
 

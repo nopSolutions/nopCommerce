@@ -28,6 +28,6 @@ namespace Nop.Web.Framework.Factories
         /// <param name="ignoreAppliedDiscounts">Whether to ignore existing applied discounts</param>
         void PrepareModelDiscounts<TModel, TMapping>(TModel model, IDiscountSupported<TMapping> entity,
             IList<Discount> availableDiscounts, bool ignoreAppliedDiscounts)
-            where TModel : IDiscountSupportedModel where TMapping : DiscountMapping; 
+            where TModel : IDiscountSupportedModel where TMapping : DiscountMapping;
     }
 }

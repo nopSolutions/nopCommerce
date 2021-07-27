@@ -213,7 +213,7 @@ namespace Nop.Services.Catalog
             price = priceCalculationService.RoundPrice(price, targetCurrency);
 
             var currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
-            if (!showTax) 
+            if (!showTax)
                 return currencyString;
 
             //show tax suffix

@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="formKeyName">The name of the form key</param>
         /// <param name="formValue">The value of the form parameter with specified key name</param>
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
-        public ParameterBasedOnFormNameAndValueAttribute(string formKeyName, string formValue, string actionParameterName) 
+        public ParameterBasedOnFormNameAndValueAttribute(string formKeyName, string formValue, string actionParameterName)
             : base(typeof(ParameterBasedOnFormNameAndValueFilter))
         {
             Arguments = new object[] { formKeyName, formValue, actionParameterName };

@@ -25,8 +25,8 @@ namespace Nop.Services.Orders
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperlink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
         string FormatAttributes(string attributesXml,
-            Customer customer, 
-            string separator = "<br />", 
+            Customer customer,
+            string separator = "<br />",
             bool htmlEncode = true,
             bool renderPrices = true,
             bool allowHyperlinks = true);

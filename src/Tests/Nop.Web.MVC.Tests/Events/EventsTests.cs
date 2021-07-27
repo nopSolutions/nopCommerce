@@ -4,7 +4,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
-using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using Nop.Tests;

@@ -28,10 +28,10 @@ namespace Nop.Data.Migrations
             {
                 indexConvention
             };
-            
+
             ColumnsConventions = innerConventionSet.ColumnsConventions;
             ConstraintConventions = innerConventionSet.ConstraintConventions;
-            
+
             SequenceConventions = innerConventionSet.SequenceConventions;
             AutoNameConventions = innerConventionSet.AutoNameConventions;
             SchemaConvention = innerConventionSet.SchemaConvention;
@@ -39,7 +39,7 @@ namespace Nop.Data.Migrations
         }
 
         #endregion
-        
+
         #region Properties
 
         /// <summary>

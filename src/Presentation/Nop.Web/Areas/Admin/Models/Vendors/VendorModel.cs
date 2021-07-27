@@ -8,9 +8,9 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
     /// <summary>
-    /// Represents a vendor model
+    ///     Represents a vendor model
     /// </summary>
-    public partial class VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>
+    public class VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>
     {
         #region Ctor
 
@@ -53,9 +53,9 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.DisplayOrder")]
-        public int DisplayOrder { get; set; }        
+        public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
+        urceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.MetaDescription")]
@@ -92,8 +92,10 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         #endregion
 
         #region Nested classes
-        
-        public partial class VendorAttributeModel : BaseNopEntityModel
+
+    
+
+        lass V ibuteModel : BaseNopEntityModel
         {
             public VendorAttributeModel()
             {
@@ -105,16 +107,16 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
             public bool IsRequired { get; set; }
 
             /// <summary>
-            /// Default value for textboxes
-            /// </summary>
-            public string DefaultValue { get; set; }
+ /// <summary>
+            ///     Default value for textboxes
+            /// </summary>blic string DefaultValue { get; set; }
 
             public AttributeControlType AttributeControlType { get; set; }
 
             public IList<VendorAttributeValueModel> Values { get; set; }
         }
 
-        public partial class VendorAttributeValueModel : BaseNopEntityModel
+        public partial class V ibuteValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 
@@ -124,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         #endregion
     }
 
-    public partial class VendorLocalizedModel : ILocalizedLocaleModel
+    public partial class V lizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

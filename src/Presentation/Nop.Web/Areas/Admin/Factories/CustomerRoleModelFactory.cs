@@ -46,7 +46,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #endregion
 
-   
+
         #region Methods
 
         /// <summary>

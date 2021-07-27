@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial class LanguageModelFactory : ILanguageModelFactory
     {
         #region Fields
-        
+
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -63,7 +63,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available currencies
-            _baseAdminModelFactory.PrepareCurrencies(model.AvailableCurrencies, 
+            _baseAdminModelFactory.PrepareCurrencies(model.AvailableCurrencies,
                 defaultItemText: _localizationService.GetResource("Admin.Common.EmptyItemText"));
 
             //prepare available stores

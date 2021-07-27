@@ -13,7 +13,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="subscription">Subscription</param>
         void DeleteSubscription(BackInStockSubscription subscription);
-        
+
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
@@ -24,7 +24,7 @@ namespace Nop.Services.Catalog
         /// <returns>Subscriptions</returns>
         IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
-        
+
         /// <summary>
         /// Gets all subscriptions
         /// </summary>

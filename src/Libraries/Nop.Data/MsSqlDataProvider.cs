@@ -17,14 +17,14 @@ using Nop.Data.Migrations;
 namespace Nop.Data
 {
     /// <summary>
-    /// Represents the MS SQL Server data provider
+    ///     Represents the MS SQL Server data provider
     /// </summary>
-    public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
+    public class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         #region Utils
 
         /// <summary>
-        /// Get SQL commands from the script
+        ///     Get SQL commands from the script
         /// </summary>
         /// <param name="sql">SQL script</param>
         /// <returns>List of commands</returns>
@@ -34,11 +34,13 @@ namespace Nop.Data
 
             //origin from the Microsoft.EntityFrameworkCore.Migrations.SqlServerMigrationsSqlGenerator.Generate method
             sql = Regex.Replace(sql, @"\\\r?\n", string.Empty);
-            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)",
+                RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
             for (var i = 0; i < batches.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(batches[i]) || batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(batches[i]) ||
+                    batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 var count = 1;
@@ -75,23 +77,26 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
-        /// Gets a connection to the database for a current data provider
+        ///     Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
         protected override IDbConnection GetInternalDbConnection(string connectionString)
         {
-            if(string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
 
             return new SqlConnection(connectionString);
         }
 
         /// <summary>
-        /// Create the database
+        ///     Create the database
         /// </summary>
         /// <param name="collation">Collation</param>
-        /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
+        /// <param name="triesToConnect">
+        ///     Count of tries to connect to the database after creating; set 0 if no need to connect
+        ///     after creating
+        /// </param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
             if (DatabaseExists())
@@ -138,7 +143,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Checks if the specified database exists, returns true if database exists
+        ///     Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
         public bool DatabaseExists()
@@ -146,10 +151,8 @@ namespace Nop.Data
             try
             {
                 using (var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString))
-                {
                     //just try to connect
                     connection.Open();
-                }
 
                 return true;
             }
@@ -160,7 +163,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Execute commands from a file with SQL script against the context database
+        ///     Execute commands from a file with SQL script against the context database
         /// </summary>
         /// <param name="fileProvider">File provider</param>
         /// <param name="filePath">Path to the file</param>
@@ -174,7 +177,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Execute commands from the SQL script
+        ///     Execute commands from the SQL script
         /// </summary>
         /// <param name="sql">SQL script</param>
         public void ExecuteSqlScript(string sql)
@@ -187,7 +190,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Initialize database
+        ///     Initialize database
         /// </summary>
         public void InitializeDatabase()
         {
@@ -200,7 +203,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Get the current identity value
+        ///     Get the current identity value
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
@@ -216,7 +219,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Set table identity (is supported)
+        ///     Set table identity (is supported)
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <param name="ident">Identity value</param>
@@ -233,17 +236,18 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Creates a backup of the database
+        ///     Creates a backup of the database
         /// </summary>
         public virtual void BackupDatabase(string fileName)
         {
             using var currentConnection = CreateDataConnection();
-            var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
+            var commandText =
+                $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
             currentConnection.Execute(commandText);
         }
 
         /// <summary>
-        /// Restores the database from a backup
+        ///     Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
         public virtual void RestoreDatabase(string backupFileName)
@@ -270,7 +274,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Re-index database tables
+        ///     Re-index database tables
         /// </summary>
         public virtual void ReIndexTables()
         {
@@ -295,7 +299,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Build the connection string
+        ///     Build the connection string
         /// </summary>
         /// <param name="nopConnectionString">Connection string info</param>
         /// <returns>Connection string</returns>
@@ -322,20 +326,21 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Gets the name of a foreign key
+        ///     Gets the name of a foreign key
         /// </summary>
         /// <param name="foreignTable">Foreign key table</param>
         /// <param name="foreignColumn">Foreign key column name</param>
         /// <param name="primaryTable">Primary table</param>
         /// <param name="primaryColumn">Primary key column name</param>
         /// <returns>Name of a foreign key</returns>
-        public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn)
+        public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable,
+            string primaryColumn)
         {
             return $"FK_{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}";
         }
 
         /// <summary>
-        /// Gets the name of an index
+        ///     Gets the name of an index
         /// </summary>
         /// <param name="targetTable">Target table name</param>
         /// <param name="targetColumn">Target column name</param>
@@ -350,17 +355,18 @@ namespace Nop.Data
         #region Properties
 
         /// <summary>
-        /// Sql server data provider
+        ///     Sql server data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2008);
+        protected override IDataProvider LinqToDbDataProvider =>
+            new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2008);
 
         /// <summary>
-        /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
+        ///     Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
         /// </summary>
         public int SupportedLengthOfBinaryHash { get; } = 8000;
 
         /// <summary>
-        /// Gets a value indicating whether this data provider supports backup
+        ///     Gets a value indicating whether this data provider supports backup
         /// </summary>
         public virtual bool BackupSupported => true;
 

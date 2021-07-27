@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get blog posts
             var blogPosts = _blogService.GetAllBlogPosts(storeId: searchModel.SearchStoreId, showHidden: true,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, title : searchModel.SearchTitle);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, title: searchModel.SearchTitle);
 
             //prepare list model
             var model = new BlogPostListModel().PrepareToGrid(searchModel, blogPosts, () =>
@@ -192,7 +192,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 blogTagsSb.Append("'");
                 blogTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
                 blogTagsSb.Append("'");
-                if (i != blogTags.Count - 1) 
+                if (i != blogTags.Count - 1)
                     blogTagsSb.Append(",");
             }
             blogTagsSb.Append("]");
@@ -271,7 +271,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare list model
             var model = new BlogCommentListModel().PrepareToGrid(searchModel, comments, () =>
-            {                
+            {
                 //prepare store names (to avoid loading for each comment)
                 var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
@@ -279,7 +279,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
-                    
+
                     //set title from linked blog post
                     commentModel.BlogPostTitle = _blogService.GetBlogPostById(blogComment.BlogPostId)?.Title;
 

@@ -41,7 +41,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public Guid OrderGuid { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomOrderNumber")]
         public string CustomOrderNumber { get; set; }
-        
+
         //store
         [NopResourceDisplayName("Admin.Orders.Fields.Store")]
         public string StoreName { get; set; }
@@ -195,7 +195,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public AddressModel BillingAddress { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.VatNumber")]
         public string VatNumber { get; set; }
-        
+
         //gift cards
         public IList<GiftCard> GiftCards { get; set; }
 
@@ -256,9 +256,9 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             [NopResourceDisplayName("Admin.Orders.Fields.GiftCardInfo")]
             public string CouponCode { get; set; }
             public string Amount { get; set; }
-        }               
-        
-        public partial class UsedDiscountModel:BaseNopModel
+        }
+
+        public partial class UsedDiscountModel : BaseNopModel
         {
             public int DiscountId { get; set; }
             public string DiscountName { get; set; }

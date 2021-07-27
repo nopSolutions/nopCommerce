@@ -24,11 +24,11 @@ namespace Nop.Services.Catalog.Caching
             RemoveByPrefix(prefix);
             prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity.ParentCategoryId);
             RemoveByPrefix(prefix);
-            
+
             RemoveByPrefix(NopCatalogDefaults.CategoriesDisplayedOnHomepagePrefixCacheKey);
             RemoveByPrefix(NopCatalogDefaults.CategoriesAllPrefixCacheKey);
             RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefixCacheKey);
-            
+
             RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
 
             RemoveByPrefix(NopDiscountDefaults.DiscountCategoryIdsPrefixCacheKey);

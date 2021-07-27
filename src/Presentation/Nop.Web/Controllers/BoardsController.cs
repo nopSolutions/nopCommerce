@@ -308,7 +308,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]        
+        [HttpPost]
         public virtual IActionResult TopicMove(TopicMoveModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -634,7 +634,7 @@ namespace Nop.Web.Controllers
             var forumPost = _forumService.GetPostById(id);
 
             if (forumPost == null)
-                return Json(new {redirect = Url.RouteUrl("Boards")});
+                return Json(new { redirect = Url.RouteUrl("Boards") });
 
             if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
                 return Challenge();

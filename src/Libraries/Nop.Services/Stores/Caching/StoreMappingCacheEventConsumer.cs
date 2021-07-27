@@ -22,7 +22,7 @@ namespace Nop.Services.Stores.Caching
             Remove(key);
 
             key = _cacheKeyService.PrepareKey(NopStoreDefaults.StoreMappingIdsByEntityIdNameCacheKey, entityId, entityName);
-            
+
             Remove(key);
         }
     }

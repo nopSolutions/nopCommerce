@@ -192,7 +192,7 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey,
                 discount,
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
@@ -231,9 +231,9 @@ namespace Nop.Services.Catalog
 
             if (discountId.HasValue)
                 manufacturers = from manufacturer in manufacturers
-                    join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.EntityId
-                    where dmm.DiscountId == discountId.Value
-                    select manufacturer;
+                                join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.EntityId
+                                where dmm.DiscountId == discountId.Value
+                                select manufacturer;
 
             if (!showHidden)
                 manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);
@@ -270,7 +270,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Insert(manufacturer);
-            
+
             //event notification
             _eventPublisher.EntityInserted(manufacturer);
         }
@@ -285,7 +285,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Update(manufacturer);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(manufacturer);
         }
@@ -300,7 +300,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Delete(productManufacturer);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(productManufacturer);
         }
@@ -320,12 +320,12 @@ namespace Nop.Services.Catalog
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
             var query = from pm in _productManufacturerRepository.Table
-                join p in _productRepository.Table on pm.ProductId equals p.Id
-                where pm.ManufacturerId == manufacturerId &&
-                      !p.Deleted &&
-                      (showHidden || p.Published)
-                orderby pm.DisplayOrder, pm.Id
-                select pm;
+                        join p in _productRepository.Table on pm.ProductId equals p.Id
+                        where pm.ManufacturerId == manufacturerId &&
+                              !p.Deleted &&
+                              (showHidden || p.Published)
+                        orderby pm.DisplayOrder, pm.Id
+                        select pm;
 
             if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
             {
@@ -334,22 +334,22 @@ namespace Nop.Services.Catalog
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                     query = from pm in query
-                        join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                        join acl in _aclRepository.Table
-                            on new
-                            {
-                                c1 = m.Id,
-                                c2 = nameof(Manufacturer)
-                            } 
-                            equals new
-                            {
-                                c1 = acl.EntityId,
-                                c2 = acl.EntityName
-                            } 
-                            into m_acl
-                        from acl in m_acl.DefaultIfEmpty()
-                        where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                        select pm;
+                            join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                            join acl in _aclRepository.Table
+                                on new
+                                {
+                                    c1 = m.Id,
+                                    c2 = nameof(Manufacturer)
+                                }
+                                equals new
+                                {
+                                    c1 = acl.EntityId,
+                                    c2 = acl.EntityName
+                                }
+                                into m_acl
+                            from acl in m_acl.DefaultIfEmpty()
+                            where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                            select pm;
                 }
 
                 if (!_catalogSettings.IgnoreStoreLimitations)
@@ -357,22 +357,22 @@ namespace Nop.Services.Catalog
                     //store mapping
                     var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from pm in query
-                        join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                        join sm in _storeMappingRepository.Table
-                            on new
-                            {
-                                c1 = m.Id,
-                                c2 = nameof(Manufacturer)
-                            } 
-                            equals new
-                            {
-                                c1 = sm.EntityId,
-                                c2 = sm.EntityName
-                            } 
-                            into m_sm
-                        from sm in m_sm.DefaultIfEmpty()
-                        where !m.LimitedToStores || currentStoreId == sm.StoreId
-                        select pm;
+                            join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                            join sm in _storeMappingRepository.Table
+                                on new
+                                {
+                                    c1 = m.Id,
+                                    c2 = nameof(Manufacturer)
+                                }
+                                equals new
+                                {
+                                    c1 = sm.EntityId,
+                                    c2 = sm.EntityName
+                                }
+                                into m_sm
+                            from sm in m_sm.DefaultIfEmpty()
+                            where !m.LimitedToStores || currentStoreId == sm.StoreId
+                            select pm;
                 }
 
                 query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
@@ -399,12 +399,12 @@ namespace Nop.Services.Catalog
                 showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = from pm in _productManufacturerRepository.Table
-                join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                where pm.ProductId == productId &&
-                      !m.Deleted &&
-                      (showHidden || m.Published)
-                orderby pm.DisplayOrder, pm.Id
-                select pm;
+                        join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                        where pm.ProductId == productId &&
+                              !m.Deleted &&
+                              (showHidden || m.Published)
+                        orderby pm.DisplayOrder, pm.Id
+                        select pm;
 
             if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
             {
@@ -413,22 +413,22 @@ namespace Nop.Services.Catalog
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                     query = from pm in query
-                        join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                        join acl in _aclRepository.Table
-                            on new
-                            {
-                                c1 = m.Id,
-                                c2 = nameof(Manufacturer)
-                            } 
-                            equals new
-                            {
-                                c1 = acl.EntityId,
-                                c2 = acl.EntityName
-                            } 
-                            into m_acl
-                        from acl in m_acl.DefaultIfEmpty()
-                        where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                        select pm;
+                            join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                            join acl in _aclRepository.Table
+                                on new
+                                {
+                                    c1 = m.Id,
+                                    c2 = nameof(Manufacturer)
+                                }
+                                equals new
+                                {
+                                    c1 = acl.EntityId,
+                                    c2 = acl.EntityName
+                                }
+                                into m_acl
+                            from acl in m_acl.DefaultIfEmpty()
+                            where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                            select pm;
                 }
 
                 if (!_catalogSettings.IgnoreStoreLimitations)
@@ -436,22 +436,22 @@ namespace Nop.Services.Catalog
                     //store mapping
                     var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from pm in query
-                        join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                        join sm in _storeMappingRepository.Table
-                            on new
-                            {
-                                c1 = m.Id,
-                                c2 = nameof(Manufacturer)
-                            } 
-                            equals new
-                            {
-                                c1 = sm.EntityId,
-                                c2 = sm.EntityName
-                            } 
-                            into m_sm
-                        from sm in m_sm.DefaultIfEmpty()
-                        where !m.LimitedToStores || currentStoreId == sm.StoreId
-                        select pm;
+                            join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                            join sm in _storeMappingRepository.Table
+                                on new
+                                {
+                                    c1 = m.Id,
+                                    c2 = nameof(Manufacturer)
+                                }
+                                equals new
+                                {
+                                    c1 = sm.EntityId,
+                                    c2 = sm.EntityName
+                                }
+                                into m_sm
+                            from sm in m_sm.DefaultIfEmpty()
+                            where !m.LimitedToStores || currentStoreId == sm.StoreId
+                            select pm;
                 }
 
                 query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
@@ -485,7 +485,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Insert(productManufacturer);
-            
+
             //event notification
             _eventPublisher.EntityInserted(productManufacturer);
         }
@@ -500,7 +500,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Update(productManufacturer);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(productManufacturer);
         }

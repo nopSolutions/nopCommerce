@@ -1,12 +1,12 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
     /// <summary>
-    /// Represents a shipping provider model
+    ///     Represents a shipping provider model
     /// </summary>
-    public partial class ShippingProviderModel : BaseNopModel, IPluginModel
+    public class ShippingProviderModel : BaseNopModel, IPluginModel
     {
         #region Properties
 
@@ -21,8 +21,8 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.IsActive")]
         public bool IsActive { get; set; }
-        
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.Logo")]
+
+        urceDisplayName("Admin.Configuration.Shipping.Providers.Fields.Logo")]
         public string LogoUrl { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Configure")]

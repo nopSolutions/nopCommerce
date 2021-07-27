@@ -46,7 +46,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Delete(attribute);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(attribute);
         }
@@ -61,7 +61,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attributes));
 
             _genericAttributeRepository.Delete(attributes);
-            
+
             //event notification
             foreach (var attribute in attributes)
             {
@@ -93,7 +93,7 @@ namespace Nop.Services.Common
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Insert(attribute);
-            
+
             //event notification
             _eventPublisher.EntityInserted(attribute);
         }
@@ -109,7 +109,7 @@ namespace Nop.Services.Common
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Update(attribute);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(attribute);
         }
@@ -126,11 +126,11 @@ namespace Nop.Services.Common
             //that's why we resolve it here this way
             var key = EngineContext.Current.Resolve<ICacheKeyService>()
                 .PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
-            
+
             var query = from ga in _genericAttributeRepository.Table
-                where ga.EntityId == entityId &&
-                      ga.KeyGroup == keyGroup
-                select ga;
+                        where ga.EntityId == entityId &&
+                              ga.KeyGroup == keyGroup
+                        select ga;
             var attributes = query.ToCachedList(key);
 
             return attributes;
@@ -178,7 +178,7 @@ namespace Nop.Services.Common
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(valueStr)) 
+                if (string.IsNullOrWhiteSpace(valueStr))
                     return;
 
                 //insert

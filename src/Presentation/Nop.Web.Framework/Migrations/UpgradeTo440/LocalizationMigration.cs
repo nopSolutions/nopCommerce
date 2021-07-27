@@ -10,11 +10,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
     [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Localization)]
     [SkipMigrationOnInstall]
     public class LocalizationMigration : MigrationBase
-    { 
+    {
         /// <summary>Collect the UP migration expressions</summary>
         public override void Up()
         {
-            if(!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             //do not use DI, because it produces exception on the installation process

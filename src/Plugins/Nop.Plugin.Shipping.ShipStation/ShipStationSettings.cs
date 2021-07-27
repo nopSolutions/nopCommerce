@@ -23,7 +23,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// Packing type
         /// </summary>
         public PackingType PackingType { get; set; }
-        
+
         /// <summary>
         /// Package volume
         /// </summary>

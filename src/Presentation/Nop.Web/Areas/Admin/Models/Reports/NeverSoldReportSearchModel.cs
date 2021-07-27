@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Reports
 {
@@ -48,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
         public int SearchStoreId { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Reports.Sales.NeverSold.SearchVendor")]
         public int SearchVendorId { get; set; }
 

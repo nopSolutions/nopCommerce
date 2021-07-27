@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product model
     /// </summary>
-    public partial class ProductModel : BaseNopEntityModel, 
+    public partial class ProductModel : BaseNopEntityModel,
         IAclSupportedModel, IDiscountSupportedModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         #endregion
 
         #region Properties
-        
+
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }

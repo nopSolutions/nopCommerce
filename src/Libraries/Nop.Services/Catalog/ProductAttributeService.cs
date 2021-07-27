@@ -62,7 +62,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttribute));
 
             _productAttributeRepository.Delete(productAttribute);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(productAttribute);
         }
@@ -92,8 +92,8 @@ namespace Nop.Services.Catalog
             int pageSize = int.MaxValue)
         {
             var query = from pa in _productAttributeRepository.Table
-                orderby pa.Name
-                select pa;
+                        orderby pa.Name
+                        select pa;
 
             var productAttributes = new PagedList<ProductAttribute>(query, pageIndex, pageSize);
 
@@ -140,7 +140,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttribute));
 
             _productAttributeRepository.Insert(productAttribute);
-           
+
             //event notification
             _eventPublisher.EntityInserted(productAttribute);
         }
@@ -190,7 +190,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
             _productAttributeMappingRepository.Delete(productAttributeMapping);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(productAttributeMapping);
         }
@@ -205,9 +205,9 @@ namespace Nop.Services.Catalog
             var allCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeMappingsAllCacheKey, productId);
 
             var query = from pam in _productAttributeMappingRepository.Table
-                orderby pam.DisplayOrder, pam.Id
-                where pam.ProductId == productId
-                select pam;
+                        orderby pam.DisplayOrder, pam.Id
+                        where pam.ProductId == productId
+                        select pam;
 
             var attributes = query.ToCachedList(allCacheKey) ?? new List<ProductAttributeMapping>();
 
@@ -237,7 +237,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
             _productAttributeMappingRepository.Insert(productAttributeMapping);
-            
+
             //event notification
             _eventPublisher.EntityInserted(productAttributeMapping);
         }
@@ -252,7 +252,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
             _productAttributeMappingRepository.Update(productAttributeMapping);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(productAttributeMapping);
         }
@@ -271,7 +271,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttributeValue));
 
             _productAttributeValueRepository.Delete(productAttributeValue);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(productAttributeValue);
         }
@@ -286,9 +286,9 @@ namespace Nop.Services.Catalog
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeValuesAllCacheKey, productAttributeMappingId);
 
             var query = from pav in _productAttributeValueRepository.Table
-                orderby pav.DisplayOrder, pav.Id
-                where pav.ProductAttributeMappingId == productAttributeMappingId
-                select pav;
+                        orderby pav.DisplayOrder, pav.Id
+                        where pav.ProductAttributeMappingId == productAttributeMappingId
+                        select pav;
             var productAttributeValues = query.ToCachedList(key);
 
             return productAttributeValues;
@@ -317,7 +317,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttributeValue));
 
             _productAttributeValueRepository.Insert(productAttributeValue);
-            
+
             //event notification
             _eventPublisher.EntityInserted(productAttributeValue);
         }
@@ -332,7 +332,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productAttributeValue));
 
             _productAttributeValueRepository.Update(productAttributeValue);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(productAttributeValue);
         }
@@ -351,7 +351,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(ppav));
 
             _predefinedProductAttributeValueRepository.Delete(ppav);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(ppav);
         }
@@ -398,7 +398,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(ppav));
 
             _predefinedProductAttributeValueRepository.Insert(ppav);
-            
+
             //event notification
             _eventPublisher.EntityInserted(ppav);
         }
@@ -413,7 +413,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(ppav));
 
             _predefinedProductAttributeValueRepository.Update(ppav);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(ppav);
         }
@@ -432,7 +432,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(combination));
 
             _productAttributeCombinationRepository.Delete(combination);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(combination);
         }
@@ -448,11 +448,11 @@ namespace Nop.Services.Catalog
                 return new List<ProductAttributeCombination>();
 
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationsAllCacheKey, productId);
-            
+
             var query = from c in _productAttributeCombinationRepository.Table
-                orderby c.Id
-                where c.ProductId == productId
-                select c;
+                        orderby c.Id
+                        where c.ProductId == productId
+                        select c;
             var combinations = query.ToCachedList(key);
 
             return combinations;
@@ -501,7 +501,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(combination));
 
             _productAttributeCombinationRepository.Insert(combination);
-            
+
             //event notification
             _eventPublisher.EntityInserted(combination);
         }

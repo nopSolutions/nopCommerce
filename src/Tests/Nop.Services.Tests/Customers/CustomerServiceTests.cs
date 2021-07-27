@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using Nop.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Tests;
 using NUnit.Framework;
@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Nop.Services.Tests.Customers
 {
     [TestFixture]
-    public class CustomerServiceTests: ServiceTest
+    public class CustomerServiceTests : ServiceTest
     {
         private readonly ICustomerService _customerService;
         private readonly IRepository<Customer> _customerRepo;
@@ -78,7 +78,7 @@ namespace Nop.Services.Tests.Customers
                 {
                     new Customer { Id = 1 }
                 });
-            
+
             var customerAddressMappingRepo = _fakeDataStore.RegRepository<CustomerAddressMapping>();
 
             var genericAttributeRepo = _fakeDataStore.RegRepository<GenericAttribute>();
@@ -113,7 +113,7 @@ namespace Nop.Services.Tests.Customers
         {
             RunWithTestServiceProvider(() =>
             {
-                var customer = new Customer() {Id = 1};
+                var customer = new Customer() { Id = 1 };
 
                 var rm = new List<CustomerCustomerRoleMapping>
                 {
@@ -147,21 +147,22 @@ namespace Nop.Services.Tests.Customers
         [Test]
         public void Can_check_whether_customer_is_admin()
         {
-            RunWithTestServiceProvider(() => {
-            var customer = new Customer { Id = 1 };
+            RunWithTestServiceProvider(() =>
+            {
+                var customer = new Customer { Id = 1 };
 
-            var rm = new List<CustomerCustomerRoleMapping>
+                var rm = new List<CustomerCustomerRoleMapping>
             {
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleAdmin.Id, CustomerId = customer.Id }
             };
 
-            _customerCustomerRoleMapping.Insert(rm);
+                _customerCustomerRoleMapping.Insert(rm);
 
-            _customerService.IsAdmin(customer).Should().BeTrue();
+                _customerService.IsAdmin(customer).Should().BeTrue();
 
-            _customerCustomerRoleMapping.Delete(rm);
+                _customerCustomerRoleMapping.Delete(rm);
             });
         }
 
@@ -170,7 +171,7 @@ namespace Nop.Services.Tests.Customers
         {
             RunWithTestServiceProvider(() =>
             {
-                var customer = new Customer {Id = 1};
+                var customer = new Customer { Id = 1 };
 
                 var rm = new List<CustomerCustomerRoleMapping>
                 {
@@ -210,7 +211,7 @@ namespace Nop.Services.Tests.Customers
         {
             RunWithTestServiceProvider(() =>
             {
-                var customer = new Customer {Id = 1};
+                var customer = new Customer { Id = 1 };
 
                 var rm = new List<CustomerCustomerRoleMapping>
                 {

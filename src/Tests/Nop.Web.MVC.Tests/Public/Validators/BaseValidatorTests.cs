@@ -15,7 +15,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
         protected ILocalizationService _localizationService;
         private Mock<INopDataProvider> _dataProvider;
         protected Mock<IWorkContext> _workContext;
-        
+
         [SetUp]
         public void Setup()
         {

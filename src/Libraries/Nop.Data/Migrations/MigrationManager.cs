@@ -89,7 +89,7 @@ namespace Nop.Data.Migrations
 
             if (!_typeMapping.ContainsKey(propType))
                 return;
-            
+
             if (type == typeof(string) || propType.FindInterfaces((t, o) => t.FullName?.Equals(o.ToString(), StringComparison.InvariantCultureIgnoreCase) ?? false, "System.Collections.IEnumerable").Any())
                 canBeNullable = true;
 
@@ -188,7 +188,7 @@ namespace Nop.Data.Migrations
             }
 
             foreach (var migrationInfo in migrations.Where(needToExecute))
-                    _migrationRunner.MigrateUp(migrationInfo.Version);
+                _migrationRunner.MigrateUp(migrationInfo.Version);
         }
 
         /// <summary>

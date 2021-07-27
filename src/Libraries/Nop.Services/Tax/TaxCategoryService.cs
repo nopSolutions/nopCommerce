@@ -59,8 +59,8 @@ namespace Nop.Services.Tax
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
             var query = from tc in _taxCategoryRepository.Table
-                orderby tc.DisplayOrder, tc.Id
-                select tc;
+                        orderby tc.DisplayOrder, tc.Id
+                        select tc;
 
             var taxCategories = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopTaxDefaults.TaxCategoriesAllCacheKey));
 

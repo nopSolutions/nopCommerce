@@ -69,7 +69,7 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nop.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            if (!product.HasDiscountsApplied) 
+            if (!product.HasDiscountsApplied)
                 return allowedDiscounts;
 
             //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
@@ -128,7 +128,7 @@ namespace Nop.Services.Catalog
 
                 foreach (var categoryId in productCategoryIds)
                 {
-                    if (!discountCategoryIds.Contains(categoryId)) 
+                    if (!discountCategoryIds.Contains(categoryId))
                         continue;
 
                     if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
@@ -161,7 +161,7 @@ namespace Nop.Services.Catalog
                 var productManufacturerIds = new List<int>();
                 if (discountManufacturerIds.Any())
                 {
-                    productManufacturerIds = 
+                    productManufacturerIds =
                         _manufacturerService
                         .GetProductManufacturersByProductId(product.Id)
                         .Select(x => x.ManufacturerId)
@@ -170,7 +170,7 @@ namespace Nop.Services.Catalog
 
                 foreach (var manufacturerId in productManufacturerIds)
                 {
-                    if (!discountManufacturerIds.Contains(manufacturerId)) 
+                    if (!discountManufacturerIds.Contains(manufacturerId))
                         continue;
 
                     if (!_discountService.ContainsDiscount(allowedDiscounts, discount) &&
@@ -352,7 +352,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey,
                 product,
                 overriddenProductPrice,
                 additionalCharge,

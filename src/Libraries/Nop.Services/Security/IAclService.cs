@@ -22,7 +22,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
         AclRecord GetAclRecordById(int aclRecordId);
-        
+
         /// <summary>
         /// Gets ACL records
         /// </summary>
@@ -36,7 +36,7 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
         void InsertAclRecord(AclRecord aclRecord);
-        
+
         /// <summary>
         /// Inserts an ACL record
         /// </summary>

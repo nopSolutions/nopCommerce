@@ -266,7 +266,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Published' field is shown
         /// </summary>
         public bool Published { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Related products' block is shown
         /// </summary>
@@ -286,7 +286,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Purchased with orders' tab is shown
         /// </summary>
         public bool PurchasedWithOrders { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Product attributes' tab is shown
         /// </summary>

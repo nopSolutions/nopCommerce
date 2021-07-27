@@ -7,7 +7,7 @@ using System.Globalization;
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
 {
     public class Transaction
-    {        
+    {
         private readonly string _utmt = "tran";
 
         private string _orderId;       //(utmtid)
@@ -45,7 +45,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
             _utmttx = tax.ToString("0.00", usCulture);
             _utmtto = orderTotal.ToString("0.00", usCulture);
         }
-        
+
         public string CreateParameterString()
         {
             return string.Format("utmt={0}&utmtci={1}&utmtco={2}&utmtrg={3}&utmtid={4}&utmtst={5}&utmtsp={6}&utmtto={7}&utmttx={8}",
@@ -57,7 +57,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                                  _utmtst,
                                  _utmtsp,
                                  _utmtto,
-                                 _utmttx);       
+                                 _utmttx);
         }
 
         public List<TransactionItem> Items { get; set; }

@@ -189,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //get shopping cart items
             var items = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
                 searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).ToPagedList(searchModel);
-            
+
             var isSearchProduct = searchModel.ProductId > 0;
 
             Product product = null;

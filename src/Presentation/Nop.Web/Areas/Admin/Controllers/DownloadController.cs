@@ -48,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-                //use stored data
+            //use stored data
             if (download.DownloadBinary == null)
                 return Content($"Download data is not available any more. Download GD={download.Id}");
 

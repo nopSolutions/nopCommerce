@@ -10,15 +10,15 @@ namespace Nop.Web.MVC.Tests.Public.Validators
     public class CreditCardValidatorTests
     {
         TestValidator _validator;
-        
+
         [SetUp]
         public void Setup()
         {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
             _validator = new TestValidator {
-				v => v.RuleFor(x => x.CreditCard).IsCreditCard()
-			};
+                v => v.RuleFor(x => x.CreditCard).IsCreditCard()
+            };
         }
 
         [Test]

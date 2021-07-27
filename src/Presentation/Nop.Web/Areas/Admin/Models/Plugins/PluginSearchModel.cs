@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Plugins
 {
     /// <summary>
-    /// Represents a plugin search model
+    ///     Represents a plugin search model
     /// </summary>
-    public partial class PluginSearchModel : BaseSearchModel
+    public class PluginSearchModel : BaseSearchModel
     {
         #region Ctor
 

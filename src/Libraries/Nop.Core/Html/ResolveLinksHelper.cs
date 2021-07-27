@@ -18,7 +18,7 @@ namespace Nop.Core.Html
         /// The regular expression used to parse links.
         /// </summary>
         private static readonly Regex _regex = new Regex("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        
+
         #endregion
 
         #region Utilities
@@ -71,7 +71,7 @@ namespace Nop.Core.Html
             firstIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
             lastIndex = url.LastIndexOf(".", StringComparison.InvariantCultureIgnoreCase);
 
-            if (lastIndex - firstIndex <= 10) 
+            if (lastIndex - firstIndex <= 10)
                 return url;
 
             var page = url.Substring(firstIndex, lastIndex - firstIndex);

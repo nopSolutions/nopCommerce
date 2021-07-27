@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.Models.Extensions
         /// <param name="dataFillFunction">Function to populate model data</param>
         /// <returns>List model</returns>
         public static TListModel PrepareToGrid<TListModel, TModel, TObject>(this TListModel listModel,
-            BaseSearchModel searchModel, IPagedList<TObject> objectList, Func<IEnumerable<TModel>> dataFillFunction) 
+            BaseSearchModel searchModel, IPagedList<TObject> objectList, Func<IEnumerable<TModel>> dataFillFunction)
             where TListModel : BasePagedListModel<TModel>
             where TModel : BaseNopModel
         {

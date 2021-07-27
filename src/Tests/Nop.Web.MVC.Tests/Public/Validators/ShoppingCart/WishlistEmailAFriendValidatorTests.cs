@@ -9,13 +9,13 @@ namespace Nop.Web.MVC.Tests.Public.Validators.ShoppingCart
     public class WishlistEmailAFriendValidatorTests : BaseValidatorTests
     {
         private WishlistEmailAFriendValidator _validator;
-        
+
         [SetUp]
         public new void Setup()
         {
             _validator = new WishlistEmailAFriendValidator(_localizationService);
         }
-        
+
         [Test]
         public void Should_have_error_when_friendEmail_is_null_or_empty()
         {

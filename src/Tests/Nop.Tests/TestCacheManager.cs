@@ -34,7 +34,7 @@ namespace Nop.Tests
             var rez = await acquire();
             return rez;
         }
-        
+
         /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>

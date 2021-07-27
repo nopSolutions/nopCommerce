@@ -131,7 +131,7 @@ namespace Nop.Tests
                     ActivePaymentMethodSystemNames = new List<string>()
                 };
                 paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
-                
+
                 return paymentSettings;
             }
 
@@ -143,7 +143,7 @@ namespace Nop.Tests
                 var shippingSettings = new ShippingSettings
                 {
                     ActiveShippingRateComputationMethodSystemNames =
-                        new List<string> {"FixedRateTestShippingRateComputationMethod"}
+                        new List<string> { "FixedRateTestShippingRateComputationMethod" }
                 };
 
                 return shippingSettings;

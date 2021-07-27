@@ -6,13 +6,14 @@ using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -40,7 +41,6 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -612,11 +612,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Level = SystemWarningLevel.Warning,
                     DontEncode = true,
-                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names=notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
+                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
                 });
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -679,7 +679,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
-            
+
             model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
 
             model.RedisEnabled = _nopConfig.RedisEnabled;
@@ -812,7 +812,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, ()=>
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, () =>
             {
                 return backupFiles.Select(file => new BackupFileModel
                 {

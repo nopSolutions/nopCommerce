@@ -18,7 +18,7 @@ namespace Nop.Data.Migrations
         {
             return GetVersion(dateTime) + (int)migrationType;
         }
-        
+
         private static string GetDescription(string nopVersion, UpdateMigrationType migrationType)
         {
             return string.Format(NopMigrationDefaults.UpdateMigrationDescription, nopVersion, migrationType.ToString());

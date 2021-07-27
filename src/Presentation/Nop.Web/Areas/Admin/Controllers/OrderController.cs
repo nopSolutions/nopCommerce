@@ -152,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return hasVendorProducts;
         }
-        
+
         protected virtual bool HasAccessToProduct(OrderItem orderItem)
         {
             if (orderItem == null || orderItem.ProductId == 0)
@@ -166,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return _productService.GetProductById(orderItem.ProductId)?.VendorId == vendorId;
         }
-        
+
         protected virtual bool HasAccessToShipment(Shipment shipment)
         {
             if (shipment == null)
@@ -1714,7 +1714,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     RentalEndDateUtc = rentalEndDate
                 };
 
-                _orderService.InsertOrderItem(orderItem);                
+                _orderService.InsertOrderItem(orderItem);
 
                 //adjust inventory
                 _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml,
@@ -2083,14 +2083,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-                if(model.CanShip)
+                if (model.CanShip)
                     _orderProcessingService.Ship(shipment, true);
 
-                if(model.CanShip && model.CanDeliver)
+                if (model.CanShip && model.CanDeliver)
                     _orderProcessingService.Deliver(shipment, true);
 
                 LogEditOrder(order.Id);
-                
+
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
                         ? RedirectToAction("ShipmentDetails", new { id = shipment.Id })
@@ -2136,7 +2136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
-            
+
             foreach (var shipmentItem in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
             {
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);

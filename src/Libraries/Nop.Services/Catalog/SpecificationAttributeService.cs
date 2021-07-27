@@ -117,7 +117,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             _specificationAttributeRepository.Delete(specificationAttribute);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(specificationAttribute);
         }
@@ -147,7 +147,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             _specificationAttributeRepository.Insert(specificationAttribute);
-            
+
             //event notification
             _eventPublisher.EntityInserted(specificationAttribute);
         }
@@ -162,7 +162,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             _specificationAttributeRepository.Update(specificationAttribute);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(specificationAttribute);
         }
@@ -252,7 +252,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(specificationAttributeOption));
 
             _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
-            
+
             //event notification
             _eventPublisher.EntityInserted(specificationAttributeOption);
         }
@@ -267,7 +267,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(specificationAttributeOption));
 
             _specificationAttributeOptionRepository.Update(specificationAttributeOption);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(specificationAttributeOption);
         }
@@ -302,7 +302,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productSpecificationAttribute));
 
             _productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(productSpecificationAttribute);
         }
@@ -321,7 +321,7 @@ namespace Nop.Services.Catalog
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdCacheKey, 
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdCacheKey,
                 productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
 
             var query = _productSpecificationAttributeRepository.Table;
@@ -363,7 +363,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productSpecificationAttribute));
 
             _productSpecificationAttributeRepository.Insert(productSpecificationAttribute);
-            
+
             //event notification
             _eventPublisher.EntityInserted(productSpecificationAttribute);
         }
@@ -378,7 +378,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productSpecificationAttribute));
 
             _productSpecificationAttributeRepository.Update(productSpecificationAttribute);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(productSpecificationAttribute);
         }
@@ -410,11 +410,11 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Product> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize)
         {
             var query = from product in _productRepository.Table
-                join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
-                join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id 
-                where spao.SpecificationAttributeId == specificationAttributeId
-                orderby product.Name
-                select product;
+                        join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
+                        join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id
+                        where spao.SpecificationAttributeId == specificationAttributeId
+                        orderby product.Name
+                        select product;
 
             return new PagedList<Product>(query, pageIndex, pageSize);
         }

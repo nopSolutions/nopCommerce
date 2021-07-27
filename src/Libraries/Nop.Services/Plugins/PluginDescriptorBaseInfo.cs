@@ -6,7 +6,7 @@ namespace Nop.Services.Plugins
     /// <summary>
     /// Represents base info of plugin descriptor
     /// </summary>
-    public partial class PluginDescriptorBaseInfo: IComparable<PluginDescriptorBaseInfo>
+    public partial class PluginDescriptorBaseInfo : IComparable<PluginDescriptorBaseInfo>
     {
         /// <summary>
         /// Gets or sets the plugin system name
@@ -54,6 +54,6 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonIgnore]
         public virtual PluginDescriptorBaseInfo GetBaseInfoCopy =>
-            new PluginDescriptorBaseInfo {SystemName = SystemName, Version = Version};
+            new PluginDescriptorBaseInfo { SystemName = SystemName, Version = Version };
     }
 }

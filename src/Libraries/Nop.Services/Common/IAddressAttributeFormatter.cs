@@ -13,7 +13,7 @@ namespace Nop.Services.Common
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
         string FormatAttributes(string attributesXml,
-            string separator = "<br />", 
+            string separator = "<br />",
             bool htmlEncode = true);
     }
 }

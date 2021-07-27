@@ -96,16 +96,16 @@ namespace Nop.Services.Orders
             if (purchasedWithOrderId.HasValue)
             {
                 query = from gc in query
-                    join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
-                    where oi.OrderId == purchasedWithOrderId.Value
-                    select gc;
+                        join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
+                        where oi.OrderId == purchasedWithOrderId.Value
+                        select gc;
             }
 
             if (usedWithOrderId.HasValue)
                 query = from gc in query
-                    join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
-                    where gcuh.UsedWithOrderId == usedWithOrderId
-                    select gc;
+                        join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
+                        where gcuh.UsedWithOrderId == usedWithOrderId
+                        select gc;
 
             if (createdFromUtc.HasValue)
                 query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);

@@ -67,11 +67,11 @@ namespace Nop.Services.Security
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionsAllByCustomerRoleIdCacheKey, customerRoleId);
 
             var query = from pr in _permissionRecordRepository.Table
-                join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
-                    .PermissionRecordId
-                where prcrm.CustomerRoleId == customerRoleId
-                orderby pr.Id
-                select pr;
+                        join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
+                            .PermissionRecordId
+                        where prcrm.CustomerRoleId == customerRoleId
+                        orderby pr.Id
+                        select pr;
 
             return query.ToCachedList(key);
         }
@@ -214,7 +214,7 @@ namespace Nop.Services.Security
                     }
 
                     var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
-                                        
+
                     if (!defaultMappingProvided)
                         continue;
 

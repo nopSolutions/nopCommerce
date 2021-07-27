@@ -100,7 +100,7 @@ namespace Nop.Services.Vendors
                         }
                     }
 
-                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                    if (string.IsNullOrEmpty(formattedAttribute))
                         continue;
 
                     if (i != 0 || j != 0)

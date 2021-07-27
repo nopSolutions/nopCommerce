@@ -11,10 +11,32 @@ using Nop.Services.Events;
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
 {
     /// <summary>
-    /// Tax rate service
+    ///     Tax rate service
     /// </summary>
-    public partial class CountryStateZipService : ICountryStateZipService
+    public class CountryStateZipService : ICountryStateZipService
     {
+        #region Ctor
+
+        /// <summary>
+        ///     Ctor
+        /// </summary>
+        /// <param name="cacheKeyService">Cache key service</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="staticCacheManager">Cache manager</param>
+        /// <param name="taxRateRepository">Tax rate repository</param>
+        public CountryStateZipService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
+            IRepository<TaxRate> taxRateRepository,
+            IStaticCacheManager staticCacheManager)
+        {
+            _cacheKeyService = cacheKeyService;
+            _eventPublisher = eventPublisher;
+            _taxRateRepository = taxRateRepository;
+            _staticCacheManager = staticCacheManager;
+        }
+
+        #endregion
+
         #region Fields
 
         private readonly ICacheKeyService _cacheKeyService;
@@ -24,32 +46,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
 
         #endregion
 
-        #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheKeyService">Cache key service</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="staticCacheManager">Cache manager</param>
-        /// <param name="taxRateRepository">Tax rate repository</param>
-        public CountryStateZipService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,            
-            IRepository<TaxRate> taxRateRepository,
-            IStaticCacheManager staticCacheManager)
-        {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;            
-            _taxRateRepository = taxRateRepository;
-            _staticCacheManager = staticCacheManager;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
-        /// Deletes a tax rate
+        ///     Deletes a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
         public virtual void DeleteTaxRate(TaxRate taxRate)
@@ -64,7 +64,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         }
 
         /// <summary>
-        /// Gets all tax rates
+        ///     Gets all tax rates
         /// </summary>
         /// <returns>Tax rates</returns>
         public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
@@ -73,8 +73,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
             var rez = _staticCacheManager.Get(key, () =>
             {
                 var query = from tr in _taxRateRepository.Table
-                            orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
-                            select tr;
+                    orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
+                    select tr;
 
                 return query.ToList();
             });
@@ -85,7 +85,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         }
 
         /// <summary>
-        /// Gets a tax rate
+        ///     Gets a tax rate
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
@@ -98,7 +98,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         }
 
         /// <summary>
-        /// Inserts a tax rate
+        ///     Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
         public virtual void InsertTaxRate(TaxRate taxRate)
@@ -113,7 +113,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         }
 
         /// <summary>
-        /// Updates the tax rate
+        ///     Updates the tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
         public virtual void UpdateTaxRate(TaxRate taxRate)

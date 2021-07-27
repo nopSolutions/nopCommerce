@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class ProductsByTagModel : BaseNopEntityModel
+    public class ProductsByTagModel : BaseNopEntityModel
     {
         public ProductsByTagModel()
         {
@@ -13,8 +13,8 @@ namespace Nop.Web.Models.Catalog
 
         public string TagName { get; set; }
         public string TagSeName { get; set; }
-        
-        public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
+
+        atalogPagingFilteringModel PagingFilteringContext { get; set; }
 
         public IList<ProductOverviewModel> Products { get; set; }
     }

@@ -36,11 +36,11 @@
     <EmbeddedResource Remove="Plugins\**;Themes\**" />
     <None Remove="Plugins\**;Themes\**" />
 
-    <Content Include="Plugins\bin\placeholder.txt" CopyToPublishDirectory="PreserveNewest"/>
-    <None Include="Plugins\**"  CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Plugins\bin\placeholder.txt" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" />
 
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml;Themes\**\*.json" />
-    <None Include="Themes\**"  CopyToPublishDirectory="PreserveNewest" />
+    <None Include="Themes\**" CopyToPublishDirectory="PreserveNewest" />
 
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
@@ -117,6 +117,7 @@
       
       More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <StartupObject>Nop.Web.Program</StartupObject>
   </PropertyGroup>
 
 </Project>

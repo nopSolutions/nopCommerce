@@ -1193,7 +1193,7 @@ namespace Nop.Services.Orders
                 return;
 
             var customer = _customerService.GetCustomerById(order.CustomerId);
-            
+
             foreach (var customerRole in customerRoles)
             {
                 if (!_customerService.IsInCustomerRole(customer, customerRole.SystemName))
@@ -2130,7 +2130,7 @@ namespace Nop.Services.Orders
                 return false;
 
             var orderCustomer = _customerService.GetCustomerById(order.CustomerId);
-            
+
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
@@ -2359,8 +2359,8 @@ namespace Nop.Services.Orders
 
             //check order status
             CheckOrderStatus(order);
-        
-            _eventPublisher.Publish(new OrderAuthorizedEvent(order)); 
+
+            _eventPublisher.Publish(new OrderAuthorizedEvent(order));
         }
 
         /// <summary>

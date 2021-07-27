@@ -32,7 +32,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
                     };
                 });
             });
-           
+
             return model;
         }
 

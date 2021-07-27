@@ -51,7 +51,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public CheckAffiliateFilter(IAffiliateService affiliateService, 
+            public CheckAffiliateFilter(IAffiliateService affiliateService,
                 ICustomerService customerService,
                 IWorkContext workContext)
             {

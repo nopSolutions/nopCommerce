@@ -1,12 +1,12 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Templates
 {
     /// <summary>
-    /// Represents a product template model
+    ///     Represents a product template model
     /// </summary>
-    public partial class ProductTemplateModel : BaseNopEntityModel
+    public class ProductTemplateModel : BaseNopEntityModel
     {
         #region Properties
 

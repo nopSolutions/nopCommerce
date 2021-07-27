@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class ForumPageModel : BaseNopModel
+    public class ForumPageModel : BaseNopModel
     {
         public ForumPageModel()
         {
@@ -23,8 +23,8 @@ namespace Nop.Web.Models.Boards
         public int TopicPageIndex { get; set; }
 
         public bool IsCustomerAllowedToSubscribe { get; set; }
-        
-        public bool ForumFeedsEnabled { get; set; }
+
+        ool ForumFeedsEnabled { get; set; }
 
         public int PostsPageSize { get; set; }
 

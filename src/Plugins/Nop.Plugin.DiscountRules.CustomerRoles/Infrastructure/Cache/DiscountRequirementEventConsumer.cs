@@ -11,7 +11,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Infrastructure.Cache
     public partial class DiscountRequirementEventConsumer : IConsumer<EntityDeletedEvent<DiscountRequirement>>
     {
         #region Fields
-        
+
         private readonly ISettingService _settingService;
 
         #endregion

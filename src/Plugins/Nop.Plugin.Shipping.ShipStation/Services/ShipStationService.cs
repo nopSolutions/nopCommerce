@@ -54,7 +54,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;        
+        private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
@@ -108,7 +108,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
             using (var rs = resp.GetResponseStream())
             {
-                if (rs == null) return string.Empty;
+                if (rs == null)
+                    return string.Empty;
                 using (var sr = new StreamReader(rs))
                 {
                     return sr.ReadToEnd();
@@ -267,7 +268,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 return TryGetError(data) ? new List<ShipStationServiceRate>() : JsonConvert.DeserializeObject<List<ShipStationServiceRate>>(data);
             }
         }
-        
+
         protected virtual IList<Carrier> GetCarriers()
         {
             var rez = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForShortTermCache(_carriersCacheKey), () =>
@@ -281,7 +282,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
             return rez;
         }
-        
+
         protected virtual IList<Service> GetServices()
         {
             var services = GetCarriers().SelectMany(carrier =>
@@ -289,12 +290,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
 
                 var data = _staticCacheManager.Get(cacheKey, () => SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code)));
-                
+
                 if (!data.Any())
                     _staticCacheManager.Remove(cacheKey);
 
                 var serviceList = JsonConvert.DeserializeObject<List<Service>>(data);
-                
+
                 return serviceList;
             });
 
@@ -420,7 +421,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return carriers.SelectMany(carrier =>
                 GetRates(shippingOptionRequest, carrier.Code).Where(r => serviceFilter.Contains(r.ServiceCode))).ToList();
         }
-        
+
         /// <summary>
         /// Create or upadete shipping
         /// </summary>
@@ -454,7 +455,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                     foreach (var orderItem in _orderService.GetOrderItems(order.Id))
                     {
                         var product = _productService.GetProductById(orderItem.ProductId);
-                        
+
                         //is shippable
                         if (!product.IsShipEnabled)
                             continue;

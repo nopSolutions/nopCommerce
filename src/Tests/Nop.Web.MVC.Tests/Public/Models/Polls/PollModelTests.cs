@@ -9,7 +9,7 @@ namespace Nop.Web.MVC.Tests.Public.Models.Polls
     {
         [Test]
         public void Can_clone()
-        {	    
+        {
             //create
             var model1 = new PollModel
             {
@@ -19,12 +19,12 @@ namespace Nop.Web.MVC.Tests.Public.Models.Polls
                 TotalVotes = 2,
             };
             model1.Answers.Add(new PollAnswerModel
-                               {
-                                   Id = 3, 
-                                   Name = "answer 1", 
-                                   NumberOfVotes = 4, 
-                                   PercentOfTotalVotes = 5
-                               });
+            {
+                Id = 3,
+                Name = "answer 1",
+                NumberOfVotes = 4,
+                PercentOfTotalVotes = 5
+            });
 
             //clone
             var model2 = (PollModel)model1.Clone();

@@ -180,7 +180,7 @@ namespace Nop.Services.ExportImport.Help
 
             return Convert.ToInt32(DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.ToString().Trim())?.Value ?? id.ToString());
         }
-        
+
         /// <summary>
         /// Elements for a drop-down cell
         /// </summary>

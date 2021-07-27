@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a checkout attribute model
     /// </summary>
-    public partial class CheckoutAttributeModel : BaseNopEntityModel, 
+    public partial class CheckoutAttributeModel : BaseNopEntityModel,
         ILocalizedModel<CheckoutAttributeLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor

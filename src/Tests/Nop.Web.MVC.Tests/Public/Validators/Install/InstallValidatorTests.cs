@@ -22,7 +22,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Install
 
             _validator = new InstallValidator(_ilService.Object);
         }
-        
+
         [Test]
         public void Should_have_error_when_adminEmail_is_null_or_empty()
         {

@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = new ManufacturerTemplateListModel().PrepareToGrid(searchModel, manufacturerTemplates,
                 () => manufacturerTemplates.Select(template => template.ToModel<ManufacturerTemplateModel>()));
-            
+
             return model;
         }
 

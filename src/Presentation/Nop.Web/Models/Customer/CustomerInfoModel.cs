@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Customer
 {
@@ -18,7 +18,7 @@ namespace Nop.Web.Models.Customer
             CustomerAttributes = new List<CustomerAttributeModel>();
             GdprConsents = new List<GdprConsentModel>();
         }
-        
+
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }
@@ -163,7 +163,7 @@ namespace Nop.Web.Models.Customer
 
             public string AuthMethodName { get; set; }
         }
-        
+
         #endregion
     }
 }

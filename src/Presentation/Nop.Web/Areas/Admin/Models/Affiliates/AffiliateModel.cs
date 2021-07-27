@@ -14,7 +14,7 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
         public AffiliateModel()
         {
             Address = new AddressModel();
-            AffiliatedOrderSearchModel= new AffiliatedOrderSearchModel();
+            AffiliatedOrderSearchModel = new AffiliatedOrderSearchModel();
             AffiliatedCustomerSearchModel = new AffiliatedCustomerSearchModel();
         }
 
@@ -24,13 +24,13 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
 
         [NopResourceDisplayName("Admin.Affiliates.Fields.URL")]
         public string Url { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Affiliates.Fields.AdminComment")]
         public string AdminComment { get; set; }
 
         [NopResourceDisplayName("Admin.Affiliates.Fields.FriendlyUrlName")]
         public string FriendlyUrlName { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Affiliates.Fields.Active")]
         public bool Active { get; set; }
 

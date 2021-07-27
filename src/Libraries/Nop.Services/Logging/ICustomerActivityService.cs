@@ -22,19 +22,19 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
         void UpdateActivityType(ActivityLogType activityLogType);
-                
+
         /// <summary>
         /// Deletes an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type</param>
         void DeleteActivityType(ActivityLogType activityLogType);
-        
+
         /// <summary>
         /// Gets all activity log type items
         /// </summary>
         /// <returns>Activity log type items</returns>
         IList<ActivityLogType> GetAllActivityTypes();
-        
+
         /// <summary>
         /// Gets an activity log type item
         /// </summary>

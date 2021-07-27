@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public CheckLanguageSeoCodeAttribute() : base(typeof(CheckLanguageSeoCodeFilter))
         {
         }
-        
+
         #endregion
 
         #region Nested filter
@@ -82,7 +82,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
                 if (context.RouteData.Values["language"] == null)
                     return;
-                
+
                 //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out var _))

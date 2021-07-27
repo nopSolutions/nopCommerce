@@ -1,8 +1,8 @@
-﻿﻿using FluentAssertions;
-using Nop.Core.Domain.Orders;
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
+using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Orders;
@@ -63,82 +63,84 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Can_validate_giftCard()
         {
-            RunWithTestServiceProvider(()=>{
-            var gc = _giftCardService.GetGiftCardById(1);
+            RunWithTestServiceProvider(() =>
+            {
+                var gc = _giftCardService.GetGiftCardById(1);
 
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 30
-                });
+                _giftCardService.InsertGiftCardUsageHistory(
+                    new GiftCardUsageHistory
+                    {
+                        GiftCardId = gc.Id,
+                        UsedValue = 30
+                    });
 
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 20
-                });
+                _giftCardService.InsertGiftCardUsageHistory(
+                    new GiftCardUsageHistory
+                    {
+                        GiftCardId = gc.Id,
+                        UsedValue = 20
+                    });
 
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 5
-                });
+                _giftCardService.InsertGiftCardUsageHistory(
+                    new GiftCardUsageHistory
+                    {
+                        GiftCardId = gc.Id,
+                        UsedValue = 5
+                    });
 
 
-            //valid
-            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
+                //valid
+                _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
 
-            //mark as not active
-            gc.IsGiftCardActivated = false;
-            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
+                //mark as not active
+                gc.IsGiftCardActivated = false;
+                _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
 
-            //again active
-            gc.IsGiftCardActivated = true;
-            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
+                //again active
+                gc.IsGiftCardActivated = true;
+                _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
 
-            //add usage history record
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 1000
-                });
+                //add usage history record
+                _giftCardService.InsertGiftCardUsageHistory(
+                    new GiftCardUsageHistory
+                    {
+                        GiftCardId = gc.Id,
+                        UsedValue = 1000
+                    });
 
-            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
+                _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
             });
         }
 
         [Test]
         public void Can_calculate_giftCard_remainingAmount()
         {
-            RunWithTestServiceProvider(()=>{
-            var gc = _giftCardService.GetGiftCardById(2);
+            RunWithTestServiceProvider(() =>
+            {
+                var gc = _giftCardService.GetGiftCardById(2);
 
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 30
-                });
+                _giftCardService.InsertGiftCardUsageHistory(
+                    new GiftCardUsageHistory
+                    {
+                        GiftCardId = gc.Id,
+                        UsedValue = 30
+                    });
 
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 20
-                });
+                _giftCardService.InsertGiftCardUsageHistory(
+                    new GiftCardUsageHistory
+                    {
+                        GiftCardId = gc.Id,
+                        UsedValue = 20
+                    });
 
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 5
-                });
+                _giftCardService.InsertGiftCardUsageHistory(
+                    new GiftCardUsageHistory
+                    {
+                        GiftCardId = gc.Id,
+                        UsedValue = 5
+                    });
 
-            _giftCardService.GetGiftCardRemainingAmount(gc).Should().Be(45);
+                _giftCardService.GetGiftCardRemainingAmount(gc).Should().Be(45);
             });
         }
     }

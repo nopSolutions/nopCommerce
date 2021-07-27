@@ -28,7 +28,7 @@ namespace Nop.Services.Customers
         IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364);
-        
+
         /// <summary>
         /// Gets a report of customers registered in the last days
         /// </summary>

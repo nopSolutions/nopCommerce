@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public bool IsPreSelected { get; set; }
 
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")]
-        public int DisplayOrder {get;set;}
+        public int DisplayOrder { get; set; }
 
         public IList<AddressAttributeValueLocalizedModel> Locales { get; set; }
 

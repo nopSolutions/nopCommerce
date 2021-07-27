@@ -260,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
 
@@ -318,10 +318,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
-            
+
             //prepare model
             model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeModel(model, checkoutAttribute, true);
 

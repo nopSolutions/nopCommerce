@@ -17,7 +17,7 @@
  *      be misrepresented as being the original software.
  * 
  *   3. This notice may not be removed or altered from any source distribution.
- */ 
+ */
 #endregion
 
 using System.IO;
@@ -38,7 +38,7 @@ namespace Nop.Core.Html.CodeFormatter
         /// <remarks>
         /// Keywords must be separated with spaces.
         /// </remarks>
-        protected abstract string Keywords 
+        protected abstract string Keywords
         {
             get;
         }
@@ -105,8 +105,8 @@ namespace Nop.Core.Html.CodeFormatter
             regAll.Append(StringRegex);
             //if (regPreproc.Length > 0)
             //{
-                regAll.Append(")|(");
-                regAll.Append(regPreproc);
+            regAll.Append(")|(");
+            regAll.Append(regPreproc);
             //}
             regAll.Append(")|(");
             regAll.Append(regKeyword);

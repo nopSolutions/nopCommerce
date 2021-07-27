@@ -132,11 +132,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewGiftCard",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode), giftCard);
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewGiftCard"),
+                        giftCard.GiftCardCouponCode), giftCard);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
 
-                return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("Edit", new {id = giftCard.Id}) : RedirectToAction("List");
             }
 
             //prepare model
@@ -177,10 +178,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
 
             model.PurchasedWithOrderId = order?.Id;
-            model.RemainingAmountStr = _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
+            model.RemainingAmountStr =
+                _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)
+                .CurrencyCode;
             model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 
             if (ModelState.IsValid)
@@ -190,14 +193,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditGiftCard",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode), giftCard);
+                    string.Format(_localizationService.GetResource("ActivityLog.EditGiftCard"),
+                        giftCard.GiftCardCouponCode), giftCard);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
 
-                return RedirectToAction("Edit", new { id = giftCard.Id });
+                return RedirectToAction("Edit", new {id = giftCard.Id});
             }
 
             //prepare model
@@ -210,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual IActionResult GenerateCouponCode()
         {
-            return Json(new { CouponCode = _giftCardService.GenerateGiftCardCode() });
+            return Json(new {CouponCode = _giftCardService.GenerateGiftCardCode()});
         }
 
         [HttpPost, ActionName("Edit")]
@@ -235,8 +239,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var languageId = 0;
                 var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
-                
-                if (order != null)
+
+                l)
                 {
                     var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
                     if (customerLang == null)
@@ -283,7 +287,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("DeleteGiftCard",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode), giftCard);
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCa
+                    dCouponCode), giftCard);
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
 
@@ -298,7 +303,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a gift card with the specified id
             var giftCard = _giftCardService.GetGiftCardById(searchModel.GiftCardId)
-                ?? throw new ArgumentException("No gift card found with the specified id");
+                                           umentException("No gift card found with the specified id");
 
             //prepare model
             var model = _giftCardModelFactory.PrepareGiftCardUsageHistoryListModel(searchModel, giftCard);

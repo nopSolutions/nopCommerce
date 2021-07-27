@@ -105,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount product search model
         /// </summary>
@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount category search model
         /// </summary>
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods

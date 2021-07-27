@@ -62,8 +62,8 @@ namespace Nop.Services.Customers
         public virtual IList<CustomerAttribute> GetAllCustomerAttributes()
         {
             var query = from ca in _customerAttributeRepository.Table
-                orderby ca.DisplayOrder, ca.Id
-                select ca;
+                        orderby ca.DisplayOrder, ca.Id
+                        select ca;
 
             return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey));
         }
@@ -91,7 +91,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customerAttribute));
 
             _customerAttributeRepository.Insert(customerAttribute);
-            
+
             //event notification
             _eventPublisher.EntityInserted(customerAttribute);
         }
@@ -136,9 +136,9 @@ namespace Nop.Services.Customers
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
-                orderby cav.DisplayOrder, cav.Id
-                where cav.CustomerAttributeId == customerAttributeId
-                select cav;
+                        orderby cav.DisplayOrder, cav.Id
+                        where cav.CustomerAttributeId == customerAttributeId
+                        select cav;
             var customerAttributeValues = query.ToCachedList(key);
 
             return customerAttributeValues;

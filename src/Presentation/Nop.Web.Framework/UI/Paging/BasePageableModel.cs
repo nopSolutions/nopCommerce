@@ -43,7 +43,7 @@ namespace Nop.Web.Framework.UI.Paging
             {
                 if (PageNumber > 0)
                     return PageNumber - 1;
-                
+
                 return 0;
             }
         }

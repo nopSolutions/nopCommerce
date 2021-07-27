@@ -161,7 +161,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
             if (queuedEmail.DontSendBeforeDateUtc.HasValue)
                 model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
-            else model.SendImmediately = true;
+            else
+                model.SendImmediately = true;
 
             return model;
         }

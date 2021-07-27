@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Plugins.Marketplace
 {
     /// <summary>
-    /// Represents a search model of plugins of the official feed
+    ///     Represents a search model of plugins of the official feed
     /// </summary>
-    public partial class OfficialFeedPluginSearchModel : BaseSearchModel
+    public class OfficialFeedPluginSearchModel : BaseSearchModel
     {
         #region Ctor
 

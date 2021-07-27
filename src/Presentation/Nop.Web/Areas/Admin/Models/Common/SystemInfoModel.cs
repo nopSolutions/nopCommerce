@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
-    public partial class SystemInfoModel : BaseNopModel
+    public class SystemInfoModel : BaseNopModel
     {
         public SystemInfoModel()
         {
@@ -64,13 +64,13 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.AzureBlobStorageEnabled")]
         public bool AzureBlobStorageEnabled { get; set; }
 
-        public partial class HeaderModel : BaseNopModel
+        public class HeaderModel : BaseNopModel
         {
             public string Name { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class LoadedAssembly : BaseNopModel
+        public class LoadedAssembly : BaseNopModel
         {
             public string FullName { get; set; }
             public string Location { get; set; }

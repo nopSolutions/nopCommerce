@@ -59,7 +59,7 @@ namespace Nop.Services.Seo
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Stores Unicode characters and their "normalized"
         /// values to a hash table. Character codes are referenced
@@ -1126,7 +1126,7 @@ namespace Nop.Services.Seo
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -1154,9 +1154,9 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(urlRecords));
 
             _urlRecordRepository.Delete(urlRecords);
-            
+
             //event notification
-            foreach (var urlRecord in urlRecords) 
+            foreach (var urlRecord in urlRecords)
                 _eventPublisher.EntityDeleted(urlRecord);
         }
 
@@ -1226,7 +1226,7 @@ namespace Nop.Services.Seo
         {
             if (string.IsNullOrEmpty(slug))
                 return null;
-            
+
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
@@ -1236,10 +1236,10 @@ namespace Nop.Services.Seo
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecords();
                     var urlRecords = from ur in source
-                        where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
-                        //first, try to find an active record
-                        orderby ur.IsActive descending, ur.Id
-                        select ur;
+                                     where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
+                                     //first, try to find an active record
+                                     orderby ur.IsActive descending, ur.Id
+                                     select ur;
                     var urlRecordForCaching = urlRecords.FirstOrDefault();
 
                     return urlRecordForCaching;
@@ -1248,10 +1248,10 @@ namespace Nop.Services.Seo
 
             //gradual loading
             var query = from ur in _urlRecordRepository.Table
-                where ur.Slug == slug
-                //first, try to find an active record
-                orderby ur.IsActive descending, ur.Id
-                select ur;
+                        where ur.Slug == slug
+                        //first, try to find an active record
+                        orderby ur.IsActive descending, ur.Id
+                        select ur;
 
             var urlRecord = query.ToCachedFirstOrDefault(key);
 
@@ -1310,12 +1310,12 @@ namespace Nop.Services.Seo
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecords();
                     var urlRecords = from ur in source
-                        where ur.EntityId == entityId &&
-                              ur.EntityName == entityName &&
-                              ur.LanguageId == languageId &&
-                              ur.IsActive
-                        orderby ur.Id descending
-                        select ur.Slug;
+                                     where ur.EntityId == entityId &&
+                                           ur.EntityName == entityName &&
+                                           ur.LanguageId == languageId &&
+                                           ur.IsActive
+                                     orderby ur.Id descending
+                                     select ur.Slug;
 
                     //little hack here. nulls aren't cacheable so set it to ""
                     var slug = urlRecords.FirstOrDefault() ?? string.Empty;
@@ -1325,12 +1325,12 @@ namespace Nop.Services.Seo
             }
 
             var query = from ur in _urlRecordRepository.Table
-                where ur.EntityId == entityId &&
-                      ur.EntityName == entityName &&
-                      ur.LanguageId == languageId &&
-                      ur.IsActive
-                orderby ur.Id descending
-                select ur.Slug;
+                        where ur.EntityId == entityId &&
+                              ur.EntityName == entityName &&
+                              ur.LanguageId == languageId &&
+                              ur.IsActive
+                        orderby ur.Id descending
+                        select ur.Slug;
 
             var rezSlug = query.ToCachedFirstOrDefault(key) ?? string.Empty;
 
@@ -1471,7 +1471,7 @@ namespace Nop.Services.Seo
         {
             languageId ??= _workContext.WorkingLanguage.Id;
             var result = string.Empty;
-            
+
             if (languageId > 0)
             {
                 //ensure that we have at least two published languages

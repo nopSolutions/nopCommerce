@@ -57,11 +57,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 showHidden: true);
 
             var result = (from p in products
-                            select new
-                            {
-                                label = p.Name,
-                                productid = p.Id
-                            }).ToList();
+                          select new
+                          {
+                              label = p.Name,
+                              productid = p.Id
+                          }).ToList();
 
             return Json(result);
         }

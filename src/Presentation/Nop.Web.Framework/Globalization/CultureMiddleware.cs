@@ -52,7 +52,7 @@ namespace Nop.Web.Framework.Globalization
                 //set work context to admin mode
                 workContext.IsAdmin = true;
             }
-            
+
             //set working language culture
             var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
             CultureInfo.CurrentCulture = culture;
@@ -78,7 +78,7 @@ namespace Nop.Web.Framework.Globalization
             //call the next middleware in the request pipeline
             return _next(context);
         }
-        
+
         #endregion
     }
 }

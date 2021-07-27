@@ -169,7 +169,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("BlogPost")]        
+        [HttpPost, ActionName("BlogPost")]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual IActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)

@@ -65,7 +65,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
-        
+
         /// <summary>
         /// Updates the reward point history entry
         /// </summary>

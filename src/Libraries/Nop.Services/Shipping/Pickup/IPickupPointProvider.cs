@@ -26,7 +26,7 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="address">Address</param>
         /// <returns>Represents a response of getting pickup points</returns>
         GetPickupPointsResponse GetPickupPoints(Address address);
-        
+
         #endregion
     }
 }

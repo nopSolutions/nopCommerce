@@ -470,7 +470,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
-                return RedirectToRoute("CheckoutShippingMethod");        
+                return RedirectToRoute("CheckoutShippingMethod");
 
             //model
             var model = _checkoutModelFactory.PrepareShippingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
@@ -521,7 +521,7 @@ namespace Nop.Web.Controllers
 
             if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
                 return RedirectToRoute("CheckoutShippingMethod");
-            
+
             //pickup point
             if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
             {
@@ -530,7 +530,7 @@ namespace Nop.Web.Controllers
                 {
                     var pickupOption = ParsePickupOption(form);
                     SavePickupOption(pickupOption);
-                    
+
                     return RedirectToRoute("CheckoutPaymentMethod");
                 }
 

@@ -345,7 +345,7 @@ namespace Nop.Services.Gdpr
             {
                 _productService.UpdateProductReviewTotals(product);
             }
-            
+
             //external authentication record
             foreach (var ear in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
                 _externalAuthenticationService.DeleteExternalAuthenticationRecord(ear);

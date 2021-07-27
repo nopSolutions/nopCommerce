@@ -260,39 +260,39 @@ namespace Nop.Web.Areas.Admin.Factories
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
-                    {
-                        if (!string.IsNullOrEmpty(selectedAddressAttributes))
                         {
-                            //clear default selection
-                            foreach (var item in attributeModel.Values)
-                                item.IsPreSelected = false;
-
-                            //select new values
-                            var selectedValues = _addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
-                            foreach (var attributeValue in selectedValues)
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                //clear default selection
                                 foreach (var item in attributeModel.Values)
-                                    if (attributeValue.Id == item.Id)
-                                        item.IsPreSelected = true;
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedValues = _addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
                         }
-                    }
-                    break;
+                        break;
                     case AttributeControlType.ReadonlyCheckboxes:
-                    {
-                        //do nothing
-                        //values are already pre-set
-                    }
-                    break;
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
-                    {
-                        if (!string.IsNullOrEmpty(selectedAddressAttributes))
                         {
-                            var enteredText = _addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
-                            if (enteredText.Any())
-                                attributeModel.DefaultValue = enteredText[0];
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                var enteredText = _addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
                         }
-                    }
-                    break;
+                        break;
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
                     case AttributeControlType.Datepicker:

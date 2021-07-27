@@ -9,28 +9,10 @@ using Nop.Services.Caching;
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 {
     /// <summary>
-    /// Represents service shipping by weight service implementation
+    ///     Represents service shipping by weight service implementation
     /// </summary>
-    public partial class ShippingByWeightByTotalService : IShippingByWeightByTotalService
+    public class ShippingByWeightByTotalService : IShippingByWeightByTotalService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching all records
-        /// </summary>
-        private readonly CacheKey _shippingByWeightByTotalAllKey = new CacheKey("Nop.shippingbyweightbytotal.all", SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
-        private const string SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY = "Nop.shippingbyweightbytotal.";
-
-        #endregion
-
-        #region Fields
-
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IRepository<ShippingByWeightByTotalRecord> _sbwtRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
-
-        #endregion
-
         #region Ctor
 
         public ShippingByWeightByTotalService(ICacheKeyService cacheKeyService,
@@ -44,10 +26,30 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 
         #endregion
 
+        #region Constants
+
+        /// <summary>
+        ///     Key for caching all records
+        /// </summary>
+        private readonly CacheKey _shippingByWeightByTotalAllKey =
+            new CacheKey("Nop.shippingbyweightbytotal.all", SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+
+        private const string SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY = "Nop.shippingbyweightbytotal.";
+
+        #endregion
+
+        #region Fields
+
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly IRepository<ShippingByWeightByTotalRecord> _sbwtRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
+
+        #endregion
+
         #region Methods
 
         /// <summary>
-        /// Get all shipping by weight records
+        ///     Get all shipping by weight records
         /// </summary>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
@@ -58,8 +60,9 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
             var rez = _staticCacheManager.Get(key, () =>
             {
                 var query = from sbw in _sbwtRepository.Table
-                            orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.WeightFrom, sbw.OrderSubtotalFrom
-                            select sbw;
+                    orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId,
+                        sbw.WeightFrom, sbw.OrderSubtotalFrom
+                    select sbw;
 
                 return query.ToList();
             });
@@ -70,7 +73,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         }
 
         /// <summary>
-        /// Filter Shipping Weight Records
+        ///     Filter Shipping Weight Records
         /// </summary>
         /// <param name="shippingMethodId">Shipping method identifier</param>
         /// <param name="storeId">Store identifier</param>
@@ -83,19 +86,25 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of the shipping by weight record</returns>
-        public virtual IPagedList<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId, int warehouseId,
-            int countryId, int stateProvinceId, string zip, decimal? weight, decimal? orderSubtotal, int pageIndex, int pageSize)
+        public virtual IPagedList<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId,
+            int warehouseId,
+            int countryId, int stateProvinceId, string zip, decimal? weight, decimal? orderSubtotal, int pageIndex,
+            int pageSize)
         {
             zip = zip?.Trim() ?? string.Empty;
 
             //filter by weight and shipping method
             var existingRates = GetAll()
-                .Where(sbw => sbw.ShippingMethodId == shippingMethodId && (!weight.HasValue || weight >= sbw.WeightFrom && weight <= sbw.WeightTo))
+                .Where(sbw =>
+                    sbw.ShippingMethodId == shippingMethodId &&
+                    (!weight.HasValue || (weight >= sbw.WeightFrom && weight <= sbw.WeightTo)))
                 .ToList();
 
             //filter by order subtotal
-            var matchedBySubtotal = !orderSubtotal.HasValue ? existingRates :
-                existingRates.Where(sbw => orderSubtotal >= sbw.OrderSubtotalFrom && orderSubtotal <= sbw.OrderSubtotalTo);
+            var matchedBySubtotal = !orderSubtotal.HasValue
+                ? existingRates
+                : existingRates.Where(sbw =>
+                    orderSubtotal >= sbw.OrderSubtotalFrom && orderSubtotal <= sbw.OrderSubtotalTo);
 
             //filter by store
             var matchedByStore = storeId == 0
@@ -120,7 +129,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
             //filter by zip
             var matchedByZip = string.IsNullOrEmpty(zip)
                 ? matchedByStateProvince
-                : matchedByStateProvince.Where(r => string.IsNullOrEmpty(r.Zip) || r.Zip.Equals(zip, StringComparison.InvariantCultureIgnoreCase));
+                : matchedByStateProvince.Where(r =>
+                    string.IsNullOrEmpty(r.Zip) || r.Zip.Equals(zip, StringComparison.InvariantCultureIgnoreCase));
 
             //sort from particular to general, more particular cases will be the first
             var foundRecords = matchedByZip.OrderBy(r => r.StoreId == 0).ThenBy(r => r.WarehouseId == 0)
@@ -128,12 +138,12 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
                 .ThenBy(r => string.IsNullOrEmpty(r.Zip));
 
             var records = new PagedList<ShippingByWeightByTotalRecord>(foundRecords.AsQueryable(), pageIndex, pageSize);
-            
+
             return records;
         }
 
         /// <summary>
-        /// Get a shipping by weight record by passed parameters
+        ///     Get a shipping by weight record by passed parameters
         /// </summary>
         /// <param name="shippingMethodId">Shipping method identifier</param>
         /// <param name="storeId">Store identifier</param>
@@ -144,16 +154,17 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
         /// <returns>Shipping by weight record</returns>
-        public virtual ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId, 
+        public virtual ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal)
         {
-            var foundRecords = FindRecords(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip, weight, orderSubtotal, 0, int.MaxValue);
+            var foundRecords = FindRecords(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip,
+                weight, orderSubtotal, 0, int.MaxValue);
 
             return foundRecords.FirstOrDefault();
         }
 
         /// <summary>
-        /// Get a shipping by weight record by identifier
+        ///     Get a shipping by weight record by identifier
         /// </summary>
         /// <param name="shippingByWeightRecordId">Record identifier</param>
         /// <returns>Shipping by weight record</returns>
@@ -166,7 +177,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         }
 
         /// <summary>
-        /// Insert the shipping by weight record
+        ///     Insert the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
         public virtual void InsertShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord)
@@ -180,7 +191,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         }
 
         /// <summary>
-        /// Update the shipping by weight record
+        ///     Update the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
         public virtual void UpdateShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord)
@@ -194,7 +205,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         }
 
         /// <summary>
-        /// Delete the shipping by weight record
+        ///     Delete the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
         public virtual void DeleteShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord)

@@ -40,7 +40,7 @@ namespace Nop.Data
 
             AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
         }
-        
+
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(CurrentConnectionString);
@@ -112,7 +112,7 @@ namespace Nop.Data
         /// <returns>Connection to a database</returns>
         protected override IDbConnection GetInternalDbConnection(string connectionString)
         {
-            if(string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
 
             return new MySqlConnection(connectionString);

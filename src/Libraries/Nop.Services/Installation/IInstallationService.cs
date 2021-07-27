@@ -11,7 +11,7 @@
         /// <param name="defaultUserEmail">Default user email</param>
         /// <param name="defaultUserPassword">Default user password</param>
         void InstallRequiredData(string defaultUserEmail, string defaultUserPassword);
-        
+
         /// <summary>
         /// Install sample data
         /// </summary>

@@ -174,9 +174,9 @@ namespace Nop.Services.Security
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordByEntityIdNameCacheKey, entityId, entityName);
 
             var query = from ur in _aclRecordRepository.Table
-                where ur.EntityId == entityId &&
-                      ur.EntityName == entityName
-                select ur.CustomerRoleId;
+                        where ur.EntityId == entityId &&
+                              ur.EntityName == entityName
+                        select ur.CustomerRoleId;
 
             return query.ToCachedArray(key);
         }

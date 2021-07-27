@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var newsItems = _newsService.GetAllNews(showHidden: true,
                 storeId: searchModel.SearchStoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
-                title : searchModel.SearchTitle);
+                title: searchModel.SearchTitle);
 
             //prepare list model
             var model = new NewsItemListModel().PrepareToGrid(searchModel, newsItems, () =>

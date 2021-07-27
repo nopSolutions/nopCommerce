@@ -24,7 +24,7 @@ namespace Nop.Services.Common
         #region Ctor
 
         public AddressAttributeFormatter(IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,            
+            IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService,
             IWorkContext workContext)
         {
@@ -102,7 +102,7 @@ namespace Nop.Services.Common
                         }
                     }
 
-                    if (string.IsNullOrEmpty(formattedAttribute)) 
+                    if (string.IsNullOrEmpty(formattedAttribute))
                         continue;
 
                     if (i != 0 || j != 0)

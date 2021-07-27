@@ -53,7 +53,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public static CacheKey CategoryHasFeaturedProductsKey => new CacheKey("Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}", CategoryHasFeaturedProductsPrefixCacheKeyById);
         public static string CategoryHasFeaturedProductsPrefixCacheKeyById => "Nop.pres.category.hasfeaturedproducts-{0}-";
-        
+
         /// <summary>
         /// Key for caching of categories displayed on home page
         /// </summary>
@@ -257,7 +257,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public static CacheKey BlogMonthsModelKey => new CacheKey("Nop.pres.blog.months-{0}-{1}", BlogPrefixCacheKey);
         public static string BlogPrefixCacheKey => "Nop.pres.blog";
-        
+
         /// <summary>
         /// Key for home page news
         /// </summary>

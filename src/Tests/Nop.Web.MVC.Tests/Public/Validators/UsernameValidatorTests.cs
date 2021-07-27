@@ -10,7 +10,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
     {
         private TestValidator _validator;
         private CustomerSettings _customerSettings;
-        
+
         [SetUp]
         public void Setup()
         {

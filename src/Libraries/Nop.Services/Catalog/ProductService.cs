@@ -792,12 +792,12 @@ namespace Nop.Services.Catalog
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _productRepository.Table
-                join pam in _productAttributeMappingRepository.Table on p.Id equals pam.ProductId
-                where
-                    pam.ProductAttributeId == productAttributeId &&
-                    !p.Deleted
-                orderby p.Name
-                select p;
+                        join pam in _productAttributeMappingRepository.Table on p.Id equals pam.ProductId
+                        where
+                            pam.ProductAttributeId == productAttributeId &&
+                            !p.Deleted
+                        orderby p.Name
+                        select p;
 
             return new PagedList<Product>(query, pageIndex, pageSize);
         }
@@ -940,22 +940,22 @@ namespace Nop.Services.Catalog
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var combinations = from pac in _productAttributeCombinationRepository.Table
-                join p in _productRepository.Table on pac.ProductId equals p.Id
-                where
-                    //filter by combinations with stock quantity less than the minimum
-                    pac.StockQuantity < pac.NotifyAdminForQuantityBelow &&
-                    //filter by products with tracking inventory by attributes
-                    p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                    //ignore deleted products
-                    !p.Deleted &&
-                    //ignore grouped products
-                    p.ProductTypeId != (int)ProductType.GroupedProduct &&
-                    //filter by vendor
-                    (vendorId ?? 0) == 0 || p.VendorId == vendorId &&
-                    //whether to load published products only
-                    loadPublishedOnly == null || p.Published == loadPublishedOnly
-                orderby pac.ProductId, pac.Id
-                select pac;
+                               join p in _productRepository.Table on pac.ProductId equals p.Id
+                               where
+                                   //filter by combinations with stock quantity less than the minimum
+                                   pac.StockQuantity < pac.NotifyAdminForQuantityBelow &&
+                                   //filter by products with tracking inventory by attributes
+                                   p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
+                                   //ignore deleted products
+                                   !p.Deleted &&
+                                   //ignore grouped products
+                                   p.ProductTypeId != (int)ProductType.GroupedProduct &&
+                                   //filter by vendor
+                                   (vendorId ?? 0) == 0 || p.VendorId == vendorId &&
+                                   //whether to load published products only
+                                   loadPublishedOnly == null || p.Published == loadPublishedOnly
+                               orderby pac.ProductId, pac.Id
+                               select pac;
 
             return new PagedList<ProductAttributeCombination>(combinations, pageIndex, pageSize, getOnlyTotalCount);
         }
@@ -2146,9 +2146,9 @@ namespace Nop.Services.Catalog
 
             if (discountId.HasValue)
                 products = from product in products
-                    join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.EntityId
+                           join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.EntityId
                            where dpm.DiscountId == discountId.Value
-                    select product;
+                           select product;
 
             if (!showHidden)
                 products = products.Where(product => !product.Deleted);
@@ -2200,12 +2200,12 @@ namespace Nop.Services.Catalog
                 query = query.Where(pr => pr.ProductId == productId);
 
             query = from productReview in query
-                join product in _productRepository.Table on productReview.ProductId equals product.Id
-                where
-                    (vendorId == 0 || product.VendorId == vendorId) &&
-                    //ignore deleted products
-                    !product.Deleted
-                select productReview;
+                    join product in _productRepository.Table on productReview.ProductId equals product.Id
+                    where
+                        (vendorId == 0 || product.VendorId == vendorId) &&
+                        //ignore deleted products
+                        !product.Deleted
+                    select productReview;
 
             //filter by limited to store products
             if (storeId > 0 && !showHidden && !_catalogSettings.IgnoreStoreLimitations)

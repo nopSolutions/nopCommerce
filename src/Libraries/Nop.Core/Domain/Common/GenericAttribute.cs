@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the entity identifier
         /// </summary>
         public int EntityId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the key group
         /// </summary>

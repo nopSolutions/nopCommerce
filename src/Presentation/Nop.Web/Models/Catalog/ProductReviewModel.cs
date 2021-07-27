@@ -37,7 +37,7 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ReviewTypeModel> ReviewTypeList { get; set; }
 
-        public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }        
+        public IList<AddProductReviewReviewTypeMappingModel> AddAdditionalProductReviewList { get; set; }
     }
 
     public partial class ReviewTypeModel : BaseNopEntityModel
@@ -69,7 +69,7 @@ namespace Nop.Web.Models.Catalog
         public string CustomerName { get; set; }
 
         public bool AllowViewingProfiles { get; set; }
-        
+
         public string Title { get; set; }
 
         public string ReviewText { get; set; }
@@ -98,7 +98,7 @@ namespace Nop.Web.Models.Catalog
     {
         [NopResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }
-        
+
         [NopResourceDisplayName("Reviews.Fields.ReviewText")]
         public string ReviewText { get; set; }
 
@@ -121,7 +121,7 @@ namespace Nop.Web.Models.Catalog
         public int ReviewTypeId { get; set; }
 
         public int Rating { get; set; }
-        
+
         public string Name { get; set; }
 
         public string Description { get; set; }

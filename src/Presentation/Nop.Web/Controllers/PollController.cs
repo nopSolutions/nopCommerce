@@ -25,8 +25,8 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public PollController(ICustomerService customerService, 
-            ILocalizationService localizationService, 
+        public PollController(ICustomerService customerService,
+            ILocalizationService localizationService,
             IPollModelFactory pollModelFactory,
             IPollService pollService,
             IStoreMappingService storeMappingService,

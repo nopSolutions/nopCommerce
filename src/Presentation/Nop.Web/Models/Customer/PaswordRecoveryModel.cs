@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class PasswordRecoveryModel : BaseNopModel
+    public class PasswordRecoveryModel : BaseNopModel
     {
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.PasswordRecovery.Email")]

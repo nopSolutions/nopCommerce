@@ -62,7 +62,7 @@ namespace Nop.Services.Catalog
         {
             if (reviewTypeId == 0)
                 return null;
-            
+
             return _reviewTypeRepository.ToCachedGetById(reviewTypeId);
         }
 
@@ -126,9 +126,9 @@ namespace Nop.Services.Catalog
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewReviewTypeMappingAllCacheKey, productReviewId);
 
             var query = from pam in _productReviewReviewTypeMappingRepository.Table
-                orderby pam.Id
-                where pam.ProductReviewId == productReviewId
-                select pam;
+                        orderby pam.Id
+                        where pam.ProductReviewId == productReviewId
+                        select pam;
             var productReviewReviewTypeMappings = query.ToCachedList(key);
 
             return productReviewReviewTypeMappings;

@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.Mvc.Routing
 
         #region Ctor
 
-        public NopRedirectResultExecutor(ILoggerFactory loggerFactory, 
+        public NopRedirectResultExecutor(ILoggerFactory loggerFactory,
             IUrlHelperFactory urlHelperFactory,
             SecuritySettings securitySettings) : base(loggerFactory, urlHelperFactory)
         {

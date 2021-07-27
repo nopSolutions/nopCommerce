@@ -37,7 +37,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods

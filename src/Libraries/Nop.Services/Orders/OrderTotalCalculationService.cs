@@ -973,7 +973,7 @@ namespace Nop.Services.Orders
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <param name="applyToPickupInStore">Adjust shipping rate to pickup in store shipping option rate</param>
         /// <returns>Adjusted shipping rate</returns>
-        public virtual decimal AdjustShippingRate(decimal shippingRate, IList<ShoppingCartItem> cart, 
+        public virtual decimal AdjustShippingRate(decimal shippingRate, IList<ShoppingCartItem> cart,
             out List<Discount> appliedDiscounts, bool applyToPickupInStore = false)
         {
             appliedDiscounts = new List<Discount>();

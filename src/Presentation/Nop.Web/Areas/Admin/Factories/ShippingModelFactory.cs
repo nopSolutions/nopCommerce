@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -451,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get warehouses
             var warehouses = _shippingService.GetAllWarehouses(
-                name : searchModel.SearchName)
+                name: searchModel.SearchName)
                 .ToPagedList(searchModel);
 
             //prepare list model

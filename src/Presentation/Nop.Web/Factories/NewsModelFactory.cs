@@ -141,7 +141,7 @@ namespace Nop.Web.Factories
 
             //number of news comments
             var storeId = _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            
+
             model.NumberOfComments = _newsService.GetNewsCommentsCount(newsItem, storeId, true);
 
             if (prepareComments)

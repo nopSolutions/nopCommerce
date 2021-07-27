@@ -5,7 +5,7 @@ using Nop.Web.Framework.Components;
 namespace Nop.Web.Areas.Admin.Components
 {
     /// <summary>
-    /// Represents a view component that displays the store scope configuration
+    ///     Represents a view component that displays the store scope configuration
     /// </summary>
     public class StoreScopeConfigurationViewComponent : NopViewComponent
     {
@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Components
         #region Methods
 
         /// <summary>
-        /// Invoke view component
+        ///     Invoke view component
         /// </summary>
         /// <returns>View component result</returns>
         public IViewComponentResult Invoke()
@@ -37,8 +37,8 @@ namespace Nop.Web.Areas.Admin.Components
 
             if (model.Stores.Count < 2)
                 return Content(string.Empty);
-            
-            return View(model);
+
+            model);
         }
 
         #endregion

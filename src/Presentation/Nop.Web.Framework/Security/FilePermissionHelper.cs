@@ -207,7 +207,7 @@ namespace Nop.Web.Framework.Security
 
                 var filePermission =
                     isOwner ? filePermissions[0] : (isInGroup ? filePermissions[1] : filePermissions[2]);
-                
+
                 return CheckUserFilePermissions(filePermission, checkRead, checkWrite, checkModify, checkDelete);
             }
             catch
@@ -245,7 +245,7 @@ namespace Nop.Web.Framework.Security
 
             return result;
         }
-        
+
         /// <summary>
         /// Gets a list of directories (physical paths) which require write permission
         /// </summary>

@@ -41,7 +41,7 @@ namespace Nop.Services.Tasks
         private void ExecuteTask()
         {
             var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-            
+
             if (!Enabled)
                 return;
 
@@ -183,7 +183,7 @@ namespace Nop.Services.Tasks
                 if (!_enabled.HasValue)
                     _enabled = ScheduleTask?.Enabled;
 
-                    return _enabled.HasValue && _enabled.Value;
+                return _enabled.HasValue && _enabled.Value;
             }
 
             set => _enabled = value;

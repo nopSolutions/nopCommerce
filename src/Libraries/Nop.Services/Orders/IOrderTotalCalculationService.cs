@@ -49,7 +49,7 @@ namespace Nop.Services.Orders
         /// <param name="applyToPickupInStore">Adjust shipping rate to pickup point rate</param>
         /// <returns>Adjusted shipping rate</returns>
         decimal AdjustShippingRate(decimal shippingRate, IList<ShoppingCartItem> cart, out List<Discount> appliedDiscounts, bool applyToPickupInStore = false);
-        
+
         /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>

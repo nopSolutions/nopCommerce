@@ -146,7 +146,7 @@ namespace Nop.Core.Html.CodeFormatter
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            if (!text.Contains("[/code]")) 
+            if (!text.Contains("[/code]"))
                 return text;
 
             text = _regexCode.Replace(text, CodeEvaluatorSimple);

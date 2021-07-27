@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Cms
 {
     /// <summary>
-    /// Represents a widget model
+    ///     Represents a widget model
     /// </summary>
-    public partial class WidgetModel : BaseNopModel, IPluginModel
+    public class WidgetModel : BaseNopModel, IPluginModel
     {
         #region Properties
 

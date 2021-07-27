@@ -14,8 +14,8 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     /// <summary>
     /// nop-date-picker tag helper
     /// </summary>
-    [HtmlTargetElement("nop-date-picker", 
-        Attributes = DayNameAttributeName + "," + MonthNameAttributeName + "," + YearNameAttributeName, 
+    [HtmlTargetElement("nop-date-picker",
+        Attributes = DayNameAttributeName + "," + MonthNameAttributeName + "," + YearNameAttributeName,
         TagStructure = TagStructure.WithoutEndTag)]
     public class NopDatePickerTagHelper : TagHelper
     {
@@ -177,7 +177,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
             days.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Day"));
             for (var i = 1; i <= 31; i++)
-                days.AppendFormat("<option value='{0}'{1}>{0}</option>", i, 
+                days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDay.HasValue && SelectedDay.Value == i) ? " selected=\"selected\"" : null);
 
             months.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Month"));
@@ -188,7 +188,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                     (SelectedMonth.HasValue && SelectedMonth.Value == i) ? " selected=\"selected\"" : null,
                     CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
             }
-            
+
             years.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Year"));
 
             if (BeginYear == null)
@@ -212,7 +212,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             daysList.InnerHtml.AppendHtml(days.ToString());
             monthsList.InnerHtml.AppendHtml(months.ToString());
             yearsList.InnerHtml.AppendHtml(years.ToString());
-            
+
             if (bool.TryParse(WrapTags, out bool wrapTags) && wrapTags)
             {
                 var wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderHtmlContent() + "</span>";

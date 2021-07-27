@@ -604,7 +604,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage;
-            
+
             return model;
         }
 

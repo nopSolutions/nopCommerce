@@ -387,7 +387,7 @@ namespace Nop.Services.Media
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             using var stream = new MemoryStream();

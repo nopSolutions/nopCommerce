@@ -99,7 +99,7 @@ namespace Nop.Services.Helpers
 
             root.Save(sw);
         }
-        
+
         /// <summary>
         /// Determines whether a user agent is a crawler
         /// </summary>

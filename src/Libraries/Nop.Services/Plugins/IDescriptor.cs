@@ -13,6 +13,6 @@
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
-         string FriendlyName { get; set; }
+        string FriendlyName { get; set; }
     }
 }

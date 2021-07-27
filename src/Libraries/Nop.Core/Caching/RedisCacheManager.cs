@@ -49,9 +49,9 @@ namespace Nop.Core.Caching
 
             _perRequestCache = new PerRequestCache(httpContextAccessor);
         }
-        
+
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Nop.Core.Caching
 
             return keys;
         }
-        
+
         /// <summary>
         /// Gets the value associated with the specified key.
         /// </summary>
@@ -105,7 +105,7 @@ namespace Nop.Core.Caching
 
             return item;
         }
-        
+
         /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>
@@ -340,7 +340,7 @@ namespace Nop.Core.Caching
 
                 //we can't use _perRequestCache.Clear(),
                 //because HttpContext stores some server data that we should not delete
-                foreach (var redisKey in keys) 
+                foreach (var redisKey in keys)
                     _perRequestCache.Remove(redisKey.ToString());
 
                 TryPerformAction(() => _db.KeyDelete(keys.ToArray()));
@@ -403,7 +403,7 @@ namespace Nop.Core.Caching
             }
 
             #endregion
-            
+
             #region Methods
 
             /// <summary>
@@ -432,7 +432,7 @@ namespace Nop.Core.Caching
                 var result = acquire();
 
                 //and set in cache (if cache time is defined)
-                using (new ReaderWriteLockDisposable(_locker)) 
+                using (new ReaderWriteLockDisposable(_locker))
                     items[key] = result;
 
                 return result;
@@ -527,7 +527,7 @@ namespace Nop.Core.Caching
                     items?.Clear();
                 }
             }
-            
+
             #endregion
         }
 

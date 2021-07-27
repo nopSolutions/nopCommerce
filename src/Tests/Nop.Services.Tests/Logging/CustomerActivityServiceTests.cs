@@ -3,13 +3,13 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
+using Nop.Data;
+using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Tests;
 using NUnit.Framework;
-using Nop.Services.Events;
 
 namespace Nop.Services.Tests.Logging
 {
@@ -50,13 +50,13 @@ namespace Nop.Services.Tests.Logging
                 Username = "TestUser1",
                 Deleted = false
             };
-           _customer2 = new Customer
-           {
-               Id = 2,
-               Email = "test2@teststore2.com",
-               Username = "TestUser2",
-               Deleted = false
-           };
+            _customer2 = new Customer
+            {
+                Id = 2,
+                Email = "test2@teststore2.com",
+                Username = "TestUser2",
+                Deleted = false
+            };
             _activity1 = new ActivityLog
             {
                 Id = 1,

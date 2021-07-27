@@ -128,7 +128,7 @@ namespace Nop.Services.Tasks
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);            
+            GC.SuppressFinalize(this);
         }
 
         // Protected implementation of Dispose pattern.

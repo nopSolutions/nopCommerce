@@ -157,7 +157,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                 {
                     //remove role
-                    var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
+                    var aclRecordToDelete =
+                        existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
                 }
@@ -257,13 +258,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(manufacturer, model);
 
                 //discounts
-                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+                var allDiscounts =
+                    _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                         //manufacturer.AppliedDiscounts.Add(discount);
-                        _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
-
+                        _manufacturerService.InsertDiscountManufacturerMapping(
+                            new DiscountManufacturerMapping {EntityId = manufacturer.Id, DiscountId = discount.Id});
                 }
 
                 _manufacturerService.UpdateManufacturer(manufacturer);
@@ -279,15 +281,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewManufacturer",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name), manufacturer);
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewManufacturer"),
+                        manufacturer.Name), manufacturer);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
+                _notificationService.SuccessNotification(
+                    _localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
-                return RedirectToAction("Edit", new { id = manufacturer.Id });
-            }
+
+                oAction("Edit", new { id = manufacturr.Id });
+           }
 
             //prepare model
             model = _manufacturerModelFactory.PrepareManufacturerModel(model, null, true);
@@ -338,19 +342,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(manufacturer, model);
 
                 //discounts
-                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+                var allDiscounts = _discountServic
+                    .GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
                         if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
-                            _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
-                    }
+                            _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManu
+                                facturerMapping { EntityId = manuacturer.Id, DiscountId = discount.Id });
+                   }
                     else
                     {
                         //remove discount
-                        if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
+                        if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is DiscountManufac
+                            urerMapping discountManufacturerMapping)
                             _manufacturerService.DeleteDiscountManufacturerMapping(discountManufacturerMapping);
                     }
                 }
@@ -376,17 +383,20 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditManufacturer",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
-
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
+                    string.Format(_localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
+                    
+                _notificationService.SuccessNotification(_localizationSer
+                    vice.GetResource("Admin.Catalog.Manufacturers.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
-                return RedirectToAction("Edit", new { id = manufacturer.Id });
-            }
 
-            //prepare model
+            
+
+                new { id = manufacturer.Id });
+           }
+
+           //prepare model
             model = _manufacturerModelFactory.PrepareManufacturerModel(model, manufacturer, true);
 
             //if we got this far, something failed, redisplay form
@@ -410,7 +420,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteManufacturer",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
+            _
+                otificationService.SuccessNotification(_localizationService.GetResource
+                ("Admin.Catalog.Manufacturers.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -426,18 +438,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var manufacturers = _manufacturerService.GetManufacturersByIds(selectedIds.ToArray());
                 _manufacturerService.DeleteManufacturers(manufacturers);
 
-                manufacturers.ForEach(manufacturer => 
+                manufacturers.ForEach(manufacturer =>
                 {
-                    //activity log
+           
+                 log
                     _customerActivityService.InsertActivity("DeleteManufacturer",
-                        string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer
+                            ;
                 });
             }
 
             return Json(new { Result = true });
         }
 
-        #endregion
+       #endreion
 
         #region Export / Import
 
@@ -466,7 +480,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p => !p.Deleted));
+                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: 
+                    true).Where(p => !p.Deleted));
 
                 return File(bytes, MimeTypes.TextXlsx, "manufacturers.xlsx");
             }
@@ -499,7 +514,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
                 }
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
+                _notificationService.SuccessNotification(_localizationService.GetResource(
+                    "Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)
@@ -521,7 +537,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a manufacturer with the specified id
             var manufacturer = _manufacturerService.GetManufacturerById(searchModel.ManufacturerId)
-                ?? throw new ArgumentException("No manufacturer found with the specified id");
+                ?? throw new Argu                               o manufacturer found with the specified id");
 
             //prepare model
             var model = _manufacturerModelFactory.PrepareManufacturerProductListModel(searchModel, manufacturer);
@@ -537,7 +553,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a product manufacturer with the specified id
             var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id)
-                ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
+                ?? throw new Argu                                      o product manufacturer mapping 
+                                          found with the specified id");
 
             //fill entity from model
             productManufacturer = model.ToEntity(productManufacturer);
@@ -554,7 +571,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get a product manufacturer with the specified id
             var productManufacturer = _manufacturerService.GetProductManufacturerById(id)
-                ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
+                ?? throw new Argu                                      o product manufacturer mapping 
+                                          found with the specified id");
 
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
 
@@ -567,7 +585,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _manufacturerModelFactory.PrepareAddProductToManufacturerSearchModel(new AddProductToManufacturerSearchModel());
+            var model = _manufacturerModelFactory.Prepar
+                AddProductToManufacturerSearchModel(new AddProductToManufacturerSearc
+                    hModel());
 
             return View(model);
         }
@@ -601,18 +621,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //whether product manufacturer with such parameters already exists
                     if (_manufacturerService.FindProductManufacturer(existingProductmanufacturers, product.Id, model.ManufacturerId) != null)
-                        continue;
+
+                                               continue;
 
                     //insert the new product manufacturer mapping
                     _manufacturerService.InsertProductManufacturer(new ProductManufacturer
                     {
-                        ManufacturerId = model.ManufacturerId,
-                        ProductId = product.Id,
-                        IsFeaturedProduct = false,
-                        DisplayOrder = 1
-                    });
-                }
-            }
+        
+                    c
+                        erId,
+                        Product
+                                        IsFeatu
+                                           Display
+                             });
+      
+                       }
 
             ViewBag.RefreshPage = true;
 

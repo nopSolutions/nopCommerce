@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare predefined product attribute value search model
         /// </summary>
@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 //fill in model values from the entity
                 return productAttributes.Select(attribute => attribute.ToModel<ProductAttributeModel>());
-                
+
             });
 
             return model;
@@ -225,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttributeValue != null)
             {
                 //fill in model values from the entity
-                if (model == null) 
+                if (model == null)
                 {
                     model = productAttributeValue.ToModel<PredefinedProductAttributeValueModel>();
                 }

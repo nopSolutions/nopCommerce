@@ -228,13 +228,13 @@ namespace Nop.Services.Tests.Tax
             var serviceProvider = new FakeServiceProvider(_genericAttributeService.Object, _taxService, _taxSettings);
             var nopEngine = new FakeNopEngine(serviceProvider);
             EngineContext.Replace(nopEngine);
-            
+
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out _).Should().Be(1000);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out _).Should().Be(1100);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out _).Should()
                 .Be(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out _).Should().Be(1000);
-            
+
             EngineContext.Replace(null);
         }
 

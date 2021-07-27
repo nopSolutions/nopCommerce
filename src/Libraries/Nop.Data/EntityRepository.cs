@@ -121,7 +121,7 @@ namespace Nop.Data
 
             _dataProvider.DeleteEntity(entity);
         }
-        
+
 
         /// <summary>
         /// Delete entities

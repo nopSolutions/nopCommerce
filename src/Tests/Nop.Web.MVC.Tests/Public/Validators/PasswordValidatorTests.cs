@@ -64,13 +64,13 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
-                PasswordRequireUppercase = true                
+                PasswordRequireUppercase = true
             };
 
             _validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
 
             //ShouldHaveValidationError
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");           
+            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
 
             //ShouldNotHaveValidationError
             _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop");
@@ -104,7 +104,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             };
 
             _validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
-            
+
             //ShouldHaveValidationError
             _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
 
@@ -131,12 +131,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123~");
 
             //ShouldNotHaveValidationError
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123$");            
+            _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123$");
         }
-        
+
         [Test]
         public void Should_validate_on_ChangePasswordModel_is_all_rule()
-        {            
+        {
             _changePasswordValidator = new ChangePasswordValidator(_localizationService, _customerSettings);
 
             var model = new ChangePasswordModel
@@ -154,7 +154,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
 
         [Test]
         public void Should_validate_on_PasswordRecoveryConfirmModel_is_all_rule()
-        {            
+        {
             _passwordRecoveryConfirmValidator = new PasswordRecoveryConfirmValidator(_localizationService, _customerSettings);
 
             var model = new PasswordRecoveryConfirmModel
@@ -172,7 +172,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
 
         [Test]
         public void Should_validate_on_RegisterModel_is_all_rule()
-        {            
+        {
             _registerValidator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
 
             var model = new RegisterModel
@@ -186,6 +186,6 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.Password;
             _registerValidator.ShouldNotHaveValidationErrorFor(x => x.Password, model);
-        }        
+        }
     }
 }

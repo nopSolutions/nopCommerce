@@ -274,7 +274,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Discounts (caching)
-        
+
         /// <summary>
         /// Gets the discount amount for the specified value
         /// </summary>
@@ -480,7 +480,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Validation
-        
+
         /// <summary>
         /// Validate discount
         /// </summary>
@@ -540,7 +540,7 @@ namespace Nop.Services.Discounts
                     ShoppingCartType.ShoppingCart, storeId: _storeContext.CurrentStore.Id);
 
                 var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
-                
+
                 if (_productService.HasAnyGiftCardProduct(cartProductIds))
                 {
                     result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards") };
@@ -663,9 +663,9 @@ namespace Nop.Services.Discounts
             //filter by customer
             if (customerId.HasValue && customerId.Value > 0)
                 discountUsageHistory = from duh in discountUsageHistory
-                    join order in _orderRepository.Table on duh.OrderId equals order.Id
-                    where order.CustomerId == customerId
-                    select duh;
+                                       join order in _orderRepository.Table on duh.OrderId equals order.Id
+                                       where order.CustomerId == customerId
+                                       select duh;
 
             //filter by order
             if (orderId.HasValue && orderId.Value > 0)
@@ -673,9 +673,9 @@ namespace Nop.Services.Discounts
 
             //ignore deleted orders
             discountUsageHistory = from duh in discountUsageHistory
-                join order in _orderRepository.Table on duh.OrderId equals order.Id
-                where !order.Deleted
-                select duh;
+                                   join order in _orderRepository.Table on duh.OrderId equals order.Id
+                                   where !order.Deleted
+                                   select duh;
 
             //order
             discountUsageHistory = discountUsageHistory.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc).ThenBy(historyRecord => historyRecord.Id);

@@ -35,7 +35,7 @@ namespace Nop.Services.Tests.Common
 
             _genericAttributeService.InsertAttribute(attribute);
 
-            Assert.That(attribute.CreatedOrUpdatedDateUTC, 
+            Assert.That(attribute.CreatedOrUpdatedDateUTC,
                 Is.EqualTo(DateTime.UtcNow).Within(1).Minutes);
         }
 

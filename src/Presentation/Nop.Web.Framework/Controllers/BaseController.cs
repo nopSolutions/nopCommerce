@@ -78,8 +78,8 @@ namespace Nop.Web.Framework.Controllers
             var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
             (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
-            var result = viewComponentResult.ViewComponentType == null ? 
-                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
+            var result = viewComponentResult.ViewComponentType == null ?
+                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments) :
                 viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
 
             result.Result.WriteTo(writer, HtmlEncoder.Default);
@@ -203,7 +203,7 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
             AddLocales(languageService, locales, null);
@@ -216,7 +216,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService,
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
             foreach (var language in languageService.GetAllLanguages(true))

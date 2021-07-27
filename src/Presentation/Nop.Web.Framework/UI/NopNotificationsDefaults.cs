@@ -1,6 +1,6 @@
 ﻿namespace Nop.Web.Framework.UI
 {
-    public static partial class  NopNotificationsDefaults
+    public static partial class NopNotificationsDefaults
     {
         /// <summary>
         /// Gets the notification prefix

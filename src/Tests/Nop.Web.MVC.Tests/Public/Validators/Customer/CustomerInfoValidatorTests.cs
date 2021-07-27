@@ -31,7 +31,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_email_is_wrong_format()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings());
 
             var model = new CustomerInfoModel
@@ -167,7 +167,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_company_is_specified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     CompanyEnabled = true
@@ -257,7 +257,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_streetaddress2_is_specified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     StreetAddress2Enabled = true
@@ -303,7 +303,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_zippostalcode_is_specified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     StreetAddress2Enabled = true
@@ -349,7 +349,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_city_is_specified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     CityEnabled = true
@@ -394,7 +394,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_phone_is_specified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     PhoneEnabled = true

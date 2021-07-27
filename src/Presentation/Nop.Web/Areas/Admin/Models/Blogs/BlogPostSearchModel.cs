@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Blogs
 {
     /// <summary>
-    /// Represents a blog post search model
+    ///     Represents a blog post search model
     /// </summary>
-    public partial class BlogPostSearchModel : BaseSearchModel
+    public class BlogPostSearchModel : BaseSearchModel
     {
         #region Ctor
 
@@ -23,6 +23,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.List.SearchStore")]
         public int SearchStoreId { get; set; }
+
         public IList<SelectListItem> AvailableStores { get; set; }
 
         public string SearchTitle { get; set; }

@@ -47,6 +47,6 @@ namespace Nop.Services.Common
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-         void UpdateSearchTerm(SearchTerm searchTerm);
+        void UpdateSearchTerm(SearchTerm searchTerm);
     }
 }

@@ -320,7 +320,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            foreach (var name in names) 
+            foreach (var name in names)
                 _pluginService.PreparePluginToUninstall(name);
 
             _pluginService.UninstallPlugins();

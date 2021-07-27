@@ -138,12 +138,12 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
-            
+
             _settingService.SetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, model.TaxCategoryId), model.Rate);
 
             return new NullJsonResult();
         }
-        
+
         #endregion
 
         #region Tax by country/state/zip
@@ -155,7 +155,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
                 return AccessDeniedDataTablesJson();
 
             var records = _taxRateService.GetAllTaxRates(searchModel.Page - 1, searchModel.PageSize);
-            
+
             var gridModel = new CountryStateZipListModel().PrepareToGrid(searchModel, records, () =>
             {
                 return records.Select(record => new CountryStateZipModel
@@ -182,7 +182,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
-            
+
             _taxRateService.InsertTaxRate(new TaxRate
             {
                 StoreId = model.AddStoreId,

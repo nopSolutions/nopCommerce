@@ -48,7 +48,7 @@ namespace Nop.Services.Orders
 
                 foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute"))
                 {
-                    if (node.Attributes?["ID"] == null) 
+                    if (node.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node.Attributes["ID"].InnerText.Trim();
@@ -153,14 +153,14 @@ namespace Nop.Services.Orders
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != checkoutAttributeId) 
+                    if (id != checkoutAttributeId)
                         continue;
 
                     var nodeList2 = node1.SelectNodes(@"CheckoutAttributeValue/Value");
@@ -209,15 +209,15 @@ namespace Nop.Services.Orders
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
 
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != ca.Id) 
+                    if (id != ca.Id)
                         continue;
 
                     attributeElement = (XmlElement)node1;
@@ -283,12 +283,12 @@ namespace Nop.Services.Orders
                 var nodesToRemove = new List<XmlNode>();
                 foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute"))
                 {
-                    if (node.Attributes?["ID"] == null) 
+                    if (node.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node.Attributes["ID"].InnerText.Trim();
 
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
                     if (checkoutAttributeIdsToRemove.Contains(id))
@@ -388,12 +388,12 @@ namespace Nop.Services.Orders
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
 
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
                     if (id != attribute.Id)

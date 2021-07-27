@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Topics
 {
     /// <summary>
-    /// Represents a topic search model
+    ///     Represents a topic search model
     /// </summary>
-    public partial class TopicSearchModel : BaseSearchModel
+    public class TopicSearchModel : BaseSearchModel
     {
         #region Ctor
 

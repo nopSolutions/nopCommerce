@@ -19,6 +19,6 @@ namespace Nop.Plugin.Payments.Manual
         /// <summary>
         /// Authorize and capture
         /// </summary>
-        AuthorizeAndCapture= 2
+        AuthorizeAndCapture = 2
     }
 }
