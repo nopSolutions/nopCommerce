@@ -1864,7 +1864,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = new OrderScheduleModel();
 
             var scheduleDateSetting = await _settingService.SettingExistsAsync(orderSettings, x => x.ScheduleDate, storeId);
-            if (scheduleDateSetting)
+            if (scheduleDateSetting && !string.IsNullOrWhiteSpace(orderSettings.ScheduleDate))
             {
                 var value = orderSettings.ScheduleDate.Split(',');//orderscheduleDate1.ResourceValue.Split(',');
                 model.ScheduleDate1 = value[0];

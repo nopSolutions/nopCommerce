@@ -420,15 +420,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (companyCustomers.Any())
                 {
                     var addressId = 0;
-                    foreach (var companyCustomer in companyCustomers)
-                    {
-                        var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomer.CustomerId);
+                    //foreach (var companyCustomer in companyCustomers)
+                    //{
+                        var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomers.FirstOrDefault().CustomerId);
                         foreach (var address in addresses)
                         {
                             await _customerService.InsertCustomerAddressAsync(customer, address);
                             addressId = address.Id;
                         }
-                    }
+                    //}
                     await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = model.CompanyId, CustomerId = customer.Id });
                     customer.ShippingAddressId = addressId;
                     customer.BillingAddressId = addressId;
