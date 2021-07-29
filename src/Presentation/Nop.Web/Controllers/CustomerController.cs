@@ -450,14 +450,6 @@ namespace Nop.Web.Controllers
                 var userNameOrEmail = _customerSettings.UsernamesEnabled ? customerUserName : customerEmail;
 
                 var loginResult = await _customerRegistrationService.ValidateCustomerAsync(userNameOrEmail, model.Password);
-
-                //checking if customer comes from goolge
-                if (model.IsFromGoogle)
-                {
-                    var customer = await _customerService.GetCustomerByEmailAsync(customerEmail);
-                    if (customer != null)
-                        loginResult = CustomerLoginResults.Successful;
-                }
                 switch (loginResult)
                 {
                     case CustomerLoginResults.Successful:

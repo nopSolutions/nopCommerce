@@ -98,6 +98,7 @@ namespace Nop.Web.Controllers.Api.Security
             public string Email { get; set; }
             public string Password { get; set; }
             public string PushToken { get; set; }
+            public bool IsFromGoogle { get; set; }
         }
 
         [AllowAnonymous]
@@ -108,6 +109,14 @@ namespace Nop.Web.Controllers.Api.Security
                 return Ok(new { success = false, message = GetModelErrors(ModelState) });
 
             var loginResult = await _customerRegistrationService.ValidateCustomerAsync(model.Email, model.Password);
+
+            //checking if customer comes from goolge
+            if (model.IsFromGoogle)
+            {
+                var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
+                if (customer != null)
+                    loginResult = CustomerLoginResults.Successful;
+            }
             switch (loginResult)
             {
                 case CustomerLoginResults.Successful:
