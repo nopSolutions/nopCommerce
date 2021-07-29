@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Companies;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Services.Authentication;
@@ -98,7 +101,29 @@ namespace Nop.Web.Controllers.Api.Security
             public string Email { get; set; }
             public string Password { get; set; }
             public string PushToken { get; set; }
-            public bool IsFromGoogle { get; set; }
+            public string GoogleToken { get; set; }
+        }
+
+        //to serialize json into class
+        public class GoogleTokenClass
+        {
+            public string iss { get; set; }
+            public string azp { get; set; }
+            public string aud { get; set; }
+            public string sub { get; set; }
+            public string email { get; set; }
+            public string email_verified { get; set; }
+            public string at_hash { get; set; }
+            public string name { get; set; }
+            public string picture { get; set; }
+            public string given_name { get; set; }
+            public string family_name { get; set; }
+            public string locale { get; set; }
+            public string iat { get; set; }
+            public string exp { get; set; }
+            public string alg { get; set; }
+            public string kid { get; set; }
+            public string typ { get; set; }
         }
 
         [AllowAnonymous]
@@ -111,11 +136,86 @@ namespace Nop.Web.Controllers.Api.Security
             var loginResult = await _customerRegistrationService.ValidateCustomerAsync(model.Email, model.Password);
 
             //checking if customer comes from goolge
-            if (model.IsFromGoogle)
+            if (!string.IsNullOrWhiteSpace(model.GoogleToken))
             {
-                var customer = await _customerService.GetCustomerByEmailAsync(model.Email);
-                if (customer != null)
-                    loginResult = CustomerLoginResults.Successful;
+                //get json from the token url
+                var json = new WebClient().DownloadString(model.GoogleToken);
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    GoogleTokenClass deserializedGoogleToken = new GoogleTokenClass();
+                    try
+                    {
+                        //deserialized json into Google Token class
+                        deserializedGoogleToken = JsonConvert.DeserializeObject<GoogleTokenClass>(json);
+                    }
+                    catch (Exception)
+                    {
+                        return Ok(new
+                        {
+                            success = false,
+                            message = _localizationService.GetResourceAsync("Google.Token.IsNotValid")
+                        });
+                    }
+                    var customer = await _customerService.GetCustomerByEmailAsync(deserializedGoogleToken.email);
+                    if (customer != null)
+                    {
+                        loginResult = CustomerLoginResults.Successful;
+                        model.Email = deserializedGoogleToken.email;
+                    }
+                    else
+                    {
+                        bool isApproved = false;
+                        var newCustomer = await _workContext.GetCurrentCustomerAsync();
+
+                        //checking if the email matches to any company email
+                        var companies = await _companyService.GetAllCompaniesAsync(email: deserializedGoogleToken.email.Split('@')[1]);
+                        if (companies.Any())
+                        {
+                            var companyId = companies.FirstOrDefault().Id;
+                            isApproved = true;
+                            await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = newCustomer.Id });
+
+                            //adding 
+                            var addressId = 0;
+                            var existingCompanyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(companyId, showHidden: true);
+                            if (existingCompanyCustomers.Any())
+                            {
+                                var addresses = await _customerService.GetAddressesByCustomerIdAsync(existingCompanyCustomers.FirstOrDefault().CustomerId);
+                                foreach (var address in addresses)
+                                {
+                                    await _customerService.InsertCustomerAddressAsync(newCustomer, address);
+                                    addressId = address.Id;
+                                }
+
+                            }
+                            if (addressId > 0)
+                            {
+                                newCustomer.ShippingAddressId = addressId;
+                                newCustomer.BillingAddressId = addressId;
+                                await _customerService.UpdateCustomerAsync(newCustomer);
+                            }
+                        }
+
+                        //registering new customer 
+                        var registrationRequest = new CustomerRegistrationRequest(newCustomer,
+                       deserializedGoogleToken.email, deserializedGoogleToken.email,
+                       CommonHelper.GenerateRandomDigitCode(12),
+                       _customerSettings.DefaultPasswordFormat,
+                       (await _storeContext.GetCurrentStoreAsync()).Id,
+                       isApproved);
+                        var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
+                        if (registrationResult.Success)
+                        {
+                            if (_customerSettings.FirstNameEnabled)
+                                await _genericAttributeService.SaveAttributeAsync(newCustomer, NopCustomerDefaults.FirstNameAttribute, deserializedGoogleToken.given_name);
+                            if (_customerSettings.LastNameEnabled)
+                                await _genericAttributeService.SaveAttributeAsync(newCustomer, NopCustomerDefaults.LastNameAttribute, deserializedGoogleToken.family_name);
+                            loginResult = CustomerLoginResults.Successful;
+                            model.Email = deserializedGoogleToken.email;
+                        }
+                    }
+                }
+
             }
             switch (loginResult)
             {
