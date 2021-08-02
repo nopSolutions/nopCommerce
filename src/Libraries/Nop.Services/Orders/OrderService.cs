@@ -326,10 +326,14 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.CustomerId == customerId);
 
             if (productId > 0)
+            {
                 query = from o in query
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.ProductId == productId
                     select o;
+
+                query = query.Distinct();
+            }
 
             if (warehouseId > 0)
             {
@@ -348,6 +352,8 @@ namespace Nop.Services.Orders
                         //we use standard "warehouse" property
                         ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
                     select o;
+
+                query = query.Distinct();
             }
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
