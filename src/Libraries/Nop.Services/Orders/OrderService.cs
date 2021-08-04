@@ -10,10 +10,12 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Html;
 using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Services.Catalog;
+using Nop.Services.Orders.CustomExceptions;
 using Nop.Services.Shipping;
 
 namespace Nop.Services.Orders
@@ -897,6 +899,27 @@ namespace Nop.Services.Orders
             await _orderNoteRepository.InsertAsync(orderNote);
         }
 
+        #endregion
+
+
+        #region ShippingStatus
+        public async Task SetOrderShippingStatus(ShippingStatus status, List<Order> orders)
+        {
+            foreach (var order in orders)
+            {
+                if (!CanUpdateOrderShippingStatus(order.ShippingStatus, status))
+                    throw new InvalidOrderShippingStatusException();
+
+                order.ShippingStatus = status;
+            }
+
+            await _orderRepository.UpdateAsync(orders);
+        }
+
+        private static bool CanUpdateOrderShippingStatus(ShippingStatus currentStatus, ShippingStatus newStatus)
+        {
+            return !(currentStatus == ShippingStatus.Delivered && newStatus != ShippingStatus.Delivered);
+        }
         #endregion
 
         #region Recurring payments
