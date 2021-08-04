@@ -4422,6 +4422,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.ScheduleTaskRunTimeout.Hint">
     <Value>The length of time, in milliseconds, a running schedule task timeouts. Set null to use a default value.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes">
+    <Value>Serve unknown types of static files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes.Hint">
+    <Value>Enable this setting to serve files that are in the .well-known directory without a recognized content-type</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.StaticFilesCacheControl">
     <Value>Static files cache control</Value>
   </LocaleResource>

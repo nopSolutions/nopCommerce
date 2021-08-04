@@ -298,6 +298,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     OnPrepareResponse = staticFileResponse
                 });
             }
+
+            if (appSettings.CommonConfig.ServeUnknownFileTypes)
+            {
+                application.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath(".well-known")),
+                    RequestPath = new PathString("/.well-known"),
+                    ServeUnknownFileTypes = true,
+                });
+            }
         }
 
         /// <summary>
