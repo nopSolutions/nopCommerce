@@ -49,5 +49,11 @@
         /// Get or set the blacklist of static file extension for plugin directories
         /// </summary>
         public string PluginStaticFileExtensionsBlacklist { get; set; } = "";
+
+        /// <summary>
+        /// Get or set a value indicating whether to serve files that don't have a recognized content-type
+        /// </summary>
+        /// <value></value>
+        public bool ServeUnknownFileTypes { get; set; } = false;
     }
 }
