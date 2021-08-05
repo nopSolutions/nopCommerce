@@ -82,6 +82,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Admin.NopCommerceNews.HideAdv",
                 "Admin.NopCommerceNews.ShowAdv",
                 "Admin.Orders.OrderNotes.Alert.Add",
+                "Admin.Orders.ShippingInfoTitle",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories.Hint",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords",
@@ -705,6 +706,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Orders.ShippingInfoTitle"] = "Shipping",           
             }).Wait();
 
             // rename locales

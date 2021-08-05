@@ -514,16 +514,16 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+            //var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
-            //prepare billing address
-            model.BillingAddress = billingAddress.ToModel(model.BillingAddress);
+            ////prepare billing address
+            //model.BillingAddress = billingAddress.ToModel(model.BillingAddress);
 
-            model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
-            model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
+            //model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
+            //model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
 
-            await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
-            SetAddressFieldsAsRequired(model.BillingAddress);
+            //await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            //SetAddressFieldsAsRequired(model.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
             {
