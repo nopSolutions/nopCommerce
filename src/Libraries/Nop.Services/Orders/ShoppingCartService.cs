@@ -176,13 +176,13 @@ namespace Nop.Services.Orders
                 if (!customerEnteredPricesEqual)
                     return false;
             }
-            
-            if (!product.IsRental) 
+
+            if (!product.IsRental)
                 return true;
 
             //rental products
             var rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
-            
+
             return rentalInfoEqual;
         }
 
@@ -580,7 +580,7 @@ namespace Nop.Services.Orders
             var storeId = shoppingCartItem.StoreId;
 
             //reset checkout data
-            if (resetCheckoutData) 
+            if (resetCheckoutData)
                 await _customerService.ResetCheckoutDataAsync(customer, shoppingCartItem.StoreId);
 
             //delete item
@@ -661,7 +661,7 @@ namespace Nop.Services.Orders
                         select sci;
 
             var cartItems = await query.ToListAsync();
-            
+
             foreach (var cartItem in cartItems)
                 await DeleteShoppingCartItemAsync(cartItem);
 
@@ -1257,13 +1257,13 @@ namespace Nop.Services.Orders
 
             return warnings;
         }
-        
+
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-       /// <returns>Shopping cart item sub total. Applied discount amount. Applied discounts. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</returns>
+        /// <returns>Shopping cart item sub total. Applied discount amount. Applied discounts. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</returns>
         public virtual async Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts)
         {
@@ -1384,7 +1384,7 @@ namespace Nop.Services.Orders
             var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
             if (combination?.OverriddenPrice.HasValue ?? false)
             {
-                (_, finalPrice, discountAmount, appliedDiscounts) =  await _priceCalculationService.GetFinalPriceAsync(product,
+                (_, finalPrice, discountAmount, appliedDiscounts) = await _priceCalculationService.GetFinalPriceAsync(product,
                         customer,
                         combination.OverriddenPrice.Value,
                         decimal.Zero,
@@ -1742,7 +1742,7 @@ namespace Nop.Services.Orders
 
                 //gift card
                 foreach (var code in await _customerService.ParseAppliedGiftCardCouponCodesAsync(fromCustomer))
-                   await _customerService.ApplyGiftCardCouponCodeAsync(toCustomer, code);
+                    await _customerService.ApplyGiftCardCouponCodeAsync(toCustomer, code);
 
                 //save customer
                 await _customerService.UpdateCustomerAsync(toCustomer);

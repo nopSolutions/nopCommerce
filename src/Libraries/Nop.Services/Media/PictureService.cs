@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -24,7 +23,6 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
         private readonly IDownloadService _downloadService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
@@ -41,8 +39,7 @@ namespace Nop.Services.Media
 
         #region Ctor
 
-        public PictureService(INopDataProvider dataProvider,
-            IDownloadService downloadService,
+        public PictureService(IDownloadService downloadService,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
@@ -54,7 +51,6 @@ namespace Nop.Services.Media
             IWebHelper webHelper,
             MediaSettings mediaSettings)
         {
-            _dataProvider = dataProvider;
             _downloadService = downloadService;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
@@ -71,22 +67,6 @@ namespace Nop.Services.Media
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Gets a data hash from database side
-        /// </summary>
-        /// <param name="binaryData">Array for a hashing function</param>
-        /// <param name="limit">Allowed limit input value</param>
-        /// <returns>Data hash</returns>
-        /// <remarks>
-        /// For SQL Server 2014 (12.x) and earlier, allowed input values are limited to 8000 bytes. 
-        /// https://docs.microsoft.com/en-us/sql/t-sql/functions/hashbytes-transact-sql
-        /// </remarks>
-        [Sql.Expression("CONVERT(VARCHAR(128), HASHBYTES('SHA2_512', SUBSTRING({0}, 0, {1})), 2)", ServerSideOnly = true, Configuration = ProviderName.SqlServer)]
-        [Sql.Expression("SHA2({0}, 512)", ServerSideOnly = true, Configuration = ProviderName.MySql)]
-        [Sql.Expression("encode(digest({0}, 'sha512'), 'hex')", ServerSideOnly = true, Configuration = ProviderName.PostgreSQL)]
-        public static string Hash(byte[] binaryData, int limit)
-            => throw new InvalidOperationException("This function should be used only in database code");
 
         /// <summary>
         /// Loads a picture from file
@@ -1055,30 +1035,6 @@ namespace Nop.Services.Media
             {
                 return Task.FromResult(pictureBinary);
             }
-        }
-
-        /// <summary>
-        /// Get pictures hashes
-        /// </summary>
-        /// <param name="picturesIds">Pictures Ids</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the 
-        /// </returns>
-        public async Task<IDictionary<int, string>> GetPicturesHashAsync(int[] picturesIds)
-        {
-            if (!picturesIds.Any())
-                return new Dictionary<int, string>();
-
-            var hashes = (await _dataProvider.GetTableAsync<PictureBinary>())
-                    .Where(p => picturesIds.Contains(p.PictureId))
-                    .Select(x => new
-                    {
-                        x.PictureId,
-                        Hash = Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
-                    });
-
-            return await AsyncIQueryableExtensions.ToDictionaryAsync(hashes, p => p.PictureId, p => p.Hash);
         }
 
         /// <summary>

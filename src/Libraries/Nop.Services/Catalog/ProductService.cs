@@ -695,7 +695,8 @@ namespace Nop.Services.Catalog
 
                 query = from p in query
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
-                        LinqToDB.Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
+                            DateTime.UtcNow >= (p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue) &&
+                            DateTime.UtcNow <= (p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
                         orderby p.CreatedOnUtc descending
                         select p;
 
@@ -837,7 +838,10 @@ namespace Nop.Services.Catalog
                         )
                     ) &&
                     (productType == null || p.ProductTypeId == (int)productType) &&
-                    (showHidden || LinqToDB.Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
+                    (showHidden ||
+                            DateTime.UtcNow >= (p.AvailableStartDateTimeUtc ?? DateTime.MinValue) &&
+                            DateTime.UtcNow <= (p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)
+                    ) &&
                     (priceMin == null || p.Price >= priceMin) &&
                     (priceMax == null || p.Price <= priceMax)
                 select p;
@@ -912,7 +916,7 @@ namespace Nop.Services.Catalog
 
                 productsQuery =
                     from p in productsQuery
-                    from pbk in LinqToDB.LinqExtensions.InnerJoin(productsByKeywords, pbk => pbk == p.Id)
+                    join pbk in productsByKeywords on p.Id equals pbk
                     select p;
             }
 

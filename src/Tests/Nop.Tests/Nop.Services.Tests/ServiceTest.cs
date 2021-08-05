@@ -22,7 +22,7 @@ namespace Nop.Tests.Nop.Services.Tests
             InitPlugins();
         }
 
-        private void InitPlugins()
+        private static void InitPlugins()
         {
             var webHostEnvironment = new Mock<IWebHostEnvironment>();
             webHostEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);

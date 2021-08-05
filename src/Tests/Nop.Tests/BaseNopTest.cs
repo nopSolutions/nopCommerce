@@ -34,6 +34,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
@@ -94,7 +95,7 @@ namespace Nop.Tests
         {
             var objectProperties = typeof(T).GetProperties();
             var modelProperties = typeof(Tm).GetProperties();
-            
+
             foreach (var objectProperty in objectProperties)
             {
                 var name = objectProperty.Name;
@@ -102,14 +103,14 @@ namespace Nop.Tests
                 if (filter.Contains(name))
                     continue;
 
-                var modelProperty = modelProperties.FirstOrDefault(p => p.Name == name);
+                var modelProperty = Array.Find(modelProperties, p => p.Name == name);
 
                 if (modelProperty == null)
                     continue;
 
                 var objectPropertyValue = objectProperty.GetValue(entity);
                 var modelPropertyValue = modelProperty.GetValue(model);
-                
+
                 objectPropertyValue.Should().Be(modelPropertyValue, $"The property \"{typeof(T).Name}.{objectProperty.Name}\" of these objects is not equal");
             }
 
@@ -150,7 +151,7 @@ namespace Nop.Tests
 
             var rootPath =
                 new DirectoryInfo(
-                        $@"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}")
+                        $"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}")
                     .FullName;
 
             //Presentation\Nop.Web\wwwroot
@@ -160,10 +161,10 @@ namespace Nop.Tests
             webHostEnvironment.Setup(p => p.EnvironmentName).Returns("test");
             webHostEnvironment.Setup(p => p.ApplicationName).Returns("nopCommerce");
             services.AddSingleton(webHostEnvironment.Object);
-            
+
             var httpContext = new DefaultHttpContext
             {
-                Request = {Headers = {{HeaderNames.Host, NopTestsDefaults.HostIpAddress}}}
+                Request = { Headers = { { HeaderNames.Host, NopTestsDefaults.HostIpAddress } } }
             };
 
             var httpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -183,7 +184,7 @@ namespace Nop.Tests
             urlHelperFactory.Setup(x => x.GetUrlHelper(It.IsAny<ActionContext>()))
                 .Returns(urlHelper);
 
-            services.AddTransient(provider => actionContextAccessor.Object);
+            services.AddTransient(_ => actionContextAccessor.Object);
 
             services.AddSingleton(urlHelperFactory.Object);
 
@@ -207,6 +208,7 @@ namespace Nop.Tests
             //data layer
             services.AddTransient<IDataProviderManager, TestDataProviderManager>();
             services.AddTransient<INopDataProvider, SqLiteNopDataProvider>();
+            services.AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<INopDataProvider>());
 
             //repositories
             services.AddTransient(typeof(IRepository<>), typeof(EntityRepository<>));
@@ -342,18 +344,20 @@ namespace Nop.Tests
             //register all settings
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
             foreach (var setting in settings)
+            {
                 services.AddTransient(setting,
                     context => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result);
+            }
 
             //event consumers
-            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
-            foreach (var consumer in consumers)
-            foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
+            foreach (var consumer in typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList())
             {
-                var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                return isMatch;
-            }, typeof(IConsumer<>)))
-                services.AddTransient(findInterface, consumer);
+                var interfaces = consumer.FindInterfaces((type, criteria) => type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition()), typeof(IConsumer<>));
+                foreach (var findInterface in interfaces)
+                {
+                    services.AddTransient(findInterface, consumer);
+                }
+            }
 
             services.AddSingleton<IInstallationService, InstallationService>();
 
@@ -362,7 +366,7 @@ namespace Nop.Tests
                 .AddFluentMigratorCore()
                 .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
                 // set accessor for the connection string
-                .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
+                .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
                 .AddScoped<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, NopTestConventionSet>()
                 .ConfigureRunner(rb =>
@@ -480,7 +484,7 @@ namespace Nop.Tests
             EngineContext.Current.Resolve<IPermissionService>().InstallPermissionsAsync(provider).Wait();
         }
 
-        public T GetService<T>()
+        public static T GetService<T>()
         {
             try
             {
@@ -550,13 +554,13 @@ namespace Nop.Tests
 
         protected class TestPictureService : PictureService
         {
-            public TestPictureService(INopDataProvider dataProvider, IDownloadService downloadService,
+            public TestPictureService(IDownloadService downloadService,
                 IHttpContextAccessor httpContextAccessor, INopFileProvider fileProvider,
                 IProductAttributeParser productAttributeParser, IRepository<Picture> pictureRepository,
                 IRepository<PictureBinary> pictureBinaryRepository,
                 IRepository<ProductPicture> productPictureRepository, ISettingService settingService,
                 IUrlRecordService urlRecordService, IWebHelper webHelper, MediaSettings mediaSettings) : base(
-                dataProvider, downloadService, httpContextAccessor, fileProvider, productAttributeParser,
+                downloadService, httpContextAccessor, fileProvider, productAttributeParser,
                 pictureRepository, pictureBinaryRepository, productPictureRepository, settingService, urlRecordService,
                 webHelper, mediaSettings)
             {
@@ -570,9 +574,11 @@ namespace Nop.Tests
                 PictureType defaultPictureType = PictureType.Entity)
             {
                 if (picture == null)
+                {
                     return showDefaultPicture
                         ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), null)
                         : (string.Empty, (Picture)null);
+                }
 
                 byte[] pictureBinary = null;
                 if (picture.IsNew)
@@ -581,9 +587,11 @@ namespace Nop.Tests
                     pictureBinary = await LoadPictureBinaryAsync(picture);
 
                     if ((pictureBinary?.Length ?? 0) == 0)
+                    {
                         return showDefaultPicture
                             ? (await GetDefaultPictureUrlAsync(targetSize, defaultPictureType, storeLocation), picture)
                             : (string.Empty, picture);
+                    }
 
                     //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
                     picture = await UpdatePictureAsync(picture.Id,
