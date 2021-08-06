@@ -1,6 +1,0 @@
-﻿{
-  "DataConnectionString": "Data Source=VARDAN;Initial Catalog=NopCommerceDBTestDB;Integrated Security=True;Persist Security Info=False",
-  "DataProvider": "sqlserver",
-  "SQLCommandTimeout": null,
-  "RawDataSettings": {}
-}

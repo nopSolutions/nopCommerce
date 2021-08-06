@@ -310,10 +310,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
-                //billingPhone: model.BillingPhone,
-                //billingEmail: model.BillingEmail,
-                //billingLastName: model.BillingLastName,
-                //billingCountryId: model.BillingCountryId,
+                billingPhone: model.BillingPhone,
+                billingEmail: model.BillingEmail,
+                billingLastName: model.BillingLastName,
+                billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
 
             //ensure that we at least one order selected
@@ -409,10 +409,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
-                //billingPhone: model.BillingPhone,
-                //billingEmail: model.BillingEmail,
-                //billingLastName: model.BillingLastName,
-                //billingCountryId: model.BillingCountryId,
+                billingPhone: model.BillingPhone,
+                billingEmail: model.BillingEmail,
+                billingLastName: model.BillingLastName,
+                billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
 
             //ensure that we at least one order selected
@@ -1031,10 +1031,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
-                //billingPhone: model.BillingPhone,
-                //billingEmail: model.BillingEmail,
-                //billingLastName: model.BillingLastName,
-                //billingCountryId: model.BillingCountryId,
+                billingPhone: model.BillingPhone,
+                billingEmail: model.BillingEmail,
+                billingLastName: model.BillingLastName,
+                billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
 
             //ensure that we at least one order selected
