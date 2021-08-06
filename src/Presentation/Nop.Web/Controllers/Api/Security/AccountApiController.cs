@@ -139,7 +139,7 @@ namespace Nop.Web.Controllers.Api.Security
             if (!string.IsNullOrWhiteSpace(model.GoogleToken))
             {
                 //get json from the token url
-                var json = new WebClient().DownloadString(model.GoogleToken);
+                var json = new WebClient().DownloadString("https://oauth2.googleapis.com/tokeninfo?id_token=" + model.GoogleToken);
                 if (!string.IsNullOrWhiteSpace(json))
                 {
                     GoogleTokenClass deserializedGoogleToken = new GoogleTokenClass();
