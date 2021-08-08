@@ -6,7 +6,7 @@
     const string prefix = "order-statistics";
     const string hideCardAttributeName = "Reports.HideOrderStatisticsCard";
     var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCardAttributeName);
-    
+
 }
 
 <div class="card card-primary card-outline @if (hideCard){<text>collapsed-card</text>}" id="@(prefix)-card">
@@ -45,7 +45,7 @@
         $('#@(prefix)-card').on('click', 'button[data-card-widget="collapse"]', function () {
             var collapsed = !$('#@(prefix)-card').hasClass('collapsed-card');
             saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideCardAttributeName', collapsed);
-            
+
             if (!collapsed) {
                 $('#@(prefix)-card button[data-chart-role="toggle-chart"]').removeAttr('disabled');
                 if (!osCurrentPeriod) {
@@ -122,9 +122,29 @@
             }
         };
 
+        function AddDatasets(vendorName) {
+            let rgb = random_rgba();
+
+            let obj = {
+                label: vendorName,
+                backgroundColor: rgb,
+                borderColor: rgb,
+                borderWidth: 1,
+                data: []
+            };
+
+            osConfig.data.datasets.push(obj);
+        }
+
+        function random_rgba() {
+            var o = Math.round, r = Math.random, s = 255;
+            return 'rgba(' + o(r() * s) + ',' + o(r() * s) + ',' + o(r() * s) + ',' + r().toFixed(1) + ')';
+        }
+
         function changeOsPeriod(period) {
             var osLabels = [];
             var osData = [];
+            var vendorsData = {};
 
             $.ajax({
                 cache: false,
@@ -134,19 +154,43 @@
                     period: period
                 },
                 success: function (data, textStatus, jqXHR) {
-                    for (var i = 0; i < data.length; i++) {
-                        osLabels.push(data[i].date);
-                        osData.push(data[i].value);
+                    let names = data.vendorsNames;
+                    for (var i = 0; i < names.length; i++) {
+                        AddDatasets(names[i]);
+                        vendorsData[names[i]] = [];
+                    }
+
+                    let metrics = data.metrics;
+                    for (var i = 0; i < metrics.length; i++) {
+                        osLabels.push(metrics[i].date);
+                        osData.push(metrics[i].totoalOrders);
+
+                        for (var prop in names) {
+                            var value = metrics[i].vendorsShare.hasOwnProperty(names[prop]) ? metrics[i].vendorsShare[names[prop]] : 0;
+                            vendorsData[names[prop]].push(value);
+                        }
                     }
 
                     if (!window.orderStatistics) {
                         osConfig.data.labels = osLabels;
                         osConfig.data.datasets[0].data = osData;
+
+                        for (let i = 0; i < names.length; i++) {
+                            let data = vendorsData[names[i]];
+                            osConfig.data.datasets[i + 1].data = [...data];
+                        }
+
                         osConfig.data.scales =
                         window.orderStatistics = new Chart(document.getElementById("@prefix-chart").getContext("2d"), osConfig);
                     } else {
                         window.orderStatistics.config.data.labels = osLabels;
                         window.orderStatistics.config.data.datasets[0].data = osData;
+
+                        for (let i = 0; i < names.length; i++) {
+                            let data = vendorsData[names[i]];
+                            window.orderStatistics.config.data.datasets[i + 1].data = data;
+                        }
+
                         window.orderStatistics.update();
                     }
                 },
@@ -166,7 +210,7 @@
 
         @if (!hideCard)
         {
-            
+
             <text>
                 $('#@(prefix)-card button[data-chart-role="toggle-chart"][data-chart-period="week"]').trigger('click');
             </text>

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Data;
 using Nop.Data.Extensions;
@@ -35,6 +36,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
+        public readonly IRepository<Vendor> _vendorRepository;
         private readonly IShipmentService _shipmentService;
 
         #endregion
@@ -51,6 +53,7 @@ namespace Nop.Services.Orders
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
+            IRepository<Vendor> vendorRepositopry,
             IShipmentService shipmentService)
         {
             _productService = productService;
@@ -63,6 +66,7 @@ namespace Nop.Services.Orders
             _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
             _recurringPaymentRepository = recurringPaymentRepository;
             _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
+            _vendorRepository = vendorRepositopry;
             _shipmentService = shipmentService;
         }
 
@@ -391,6 +395,22 @@ namespace Nop.Services.Orders
 
             //database layer paging
             return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
+        }
+
+        public virtual async Task<List<int>> GetOrdersIdsAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null)
+        {
+            var query = _orderRepository.Table;
+
+            if (createdFromUtc.HasValue)
+                query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
+
+            if (createdToUtc.HasValue)
+                query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+
+            query = query.Where(o => !o.Deleted);
+            query = query.OrderByDescending(o => o.CreatedOnUtc);
+
+            return query.Select(order => order.Id).ToList();
         }
 
         /// <summary>
