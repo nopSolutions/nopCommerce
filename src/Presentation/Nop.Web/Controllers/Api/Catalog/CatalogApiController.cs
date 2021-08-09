@@ -719,7 +719,7 @@ namespace Nop.Web.Controllers.Api.Security
                 async () =>
                 {
                     var scheduleDate = await _settingService.GetSettingAsync("ordersettings.scheduledate", (await _storeContext.GetCurrentStoreAsync()).Id, true);
-                    return scheduleDate.Value.Split(',');
+                    return !string.IsNullOrWhiteSpace(scheduleDate.Value) ? scheduleDate.Value.Split(',') : null;
                 }));
 
                 return Ok(new { success = true, dates = dates });

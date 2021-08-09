@@ -162,10 +162,17 @@ namespace Nop.Web.Controllers.Api.Security
                     {
                         loginResult = CustomerLoginResults.Successful;
                         model.Email = deserializedGoogleToken.email;
+
+                        if (!customer.Active)
+                            loginResult = CustomerLoginResults.NotActive;
                     }
                     else
                     {
                         bool isApproved = false;
+
+                        //Save a new record
+                        await _workContext.SetCurrentCustomerAsync(await _customerService.InsertGuestCustomerAsync());
+
                         var newCustomer = await _workContext.GetCurrentCustomerAsync();
 
                         //checking if the email matches to any company email

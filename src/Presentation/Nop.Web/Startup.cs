@@ -124,8 +124,8 @@ namespace Nop.Web
 				.AllowAnyHeader());
 
             // custom jwt auth middleware
-            application.ConfigureRequestPipeline();
             application.UseMiddleware<JwtMiddleware>();
+            application.ConfigureRequestPipeline();
 			application.StartEngine();
 		}
 	}
