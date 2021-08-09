@@ -28,6 +28,7 @@ using Nop.Services.Orders.CustomExceptions;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -73,6 +74,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
+        private readonly IVendorService _vendorService;
 
         #endregion
 
@@ -107,7 +109,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             OrderSettings orderSettings,
             IStoreContext storeContext,
-            ISettingService settingService)
+            ISettingService settingService,
+            IVendorService vendorService)
         {
             _addressAttributeParser = addressAttributeParser;
             _addressService = addressService;
@@ -139,6 +142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _orderSettings = orderSettings;
             _storeContext = storeContext;
             _settingService = settingService;
+            _vendorService = vendorService;
         }
 
         #endregion
@@ -199,6 +203,60 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             await _customerActivityService.InsertActivityAsync("EditOrder",
                 string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditOrder"), order.CustomOrderNumber), order);
+        }
+
+        private async Task<OrderMetric> GetMetrics(CultureInfo culture, DateTime searchYearDateUser, DateTime createdFromUtc, DateTime createdToUtc, string dateFormat)
+        {
+            var ordersids = await _orderService.GetOrdersIdsAsync(
+                                           createdFromUtc: createdFromUtc,
+                                           createdToUtc: createdToUtc);
+
+            var vendorsShare = new Dictionary<string, double>();
+            if (ordersids.Count > 0)
+            {
+                vendorsShare = await GetVendorsShare(ordersids);
+            }
+
+            return new OrderMetric
+            {
+                Date = searchYearDateUser.Date.ToString(dateFormat, culture),
+                TotalOrders = ordersids.Sum().ToString(),
+                VendorsShare = vendorsShare,
+            };
+        }
+
+        private async Task<Dictionary<string, double>> GetVendorsShare(IList<int> ordersIds)
+        {
+            var nameAndCount = new Dictionary<string, double>();
+            foreach (var id in ordersIds)
+            {
+                var orderItems = await _orderService.GetOrderItemsAsync(id);
+                foreach (var orderItem in orderItems)
+                {
+                    var vendor = await _vendorService.GetVendorByProductIdAsync(orderItem.ProductId);
+                    if (vendor == null)
+                        break;
+
+                    if (nameAndCount.ContainsKey(vendor.Name))
+                    {
+                        nameAndCount[vendor.Name]++;
+                    }
+                    else
+                    {
+                        nameAndCount.Add(vendor.Name, 1);
+                    }
+                }
+            }
+
+            var total = nameAndCount.Values.Sum();
+
+            var vendorShare = new Dictionary<string, double>();
+            foreach (var item in nameAndCount)
+            {
+                vendorShare.Add(item.Key, item.Value / total);
+            }
+
+            return vendorShare;
         }
 
         #endregion
@@ -2919,7 +2977,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return Content(string.Empty);
 
-            var result = new List<object>();
+            var ordersStatisticsResult = new OrderStatisticsModel();
+            ordersStatisticsResult.VendorsNames = (await _vendorService.GetAllVendorsAsync()).Select(vendor => vendor.Name).ToList();
 
             var nowDt = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
             var timeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
@@ -2934,16 +2993,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var searchYearDateUser = new DateTime(yearAgoDt.Year, yearAgoDt.Month, 1);
                     for (var i = 0; i <= 12; i++)
                     {
-                        result.Add(new
-                        {
-                            date = searchYearDateUser.Date.ToString("Y", culture),
-                            value = (await _orderService.SearchOrdersAsync(
-                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone),
-                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone),
-                                pageIndex: 0,
-                                pageSize: 1, getOnlyTotalCount: true)).TotalCount.ToString()
-                        });
+                        var createdFromUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser, timeZone);
+                        var createdToUtc = _dateTimeHelper.ConvertToUtcTime(searchYearDateUser.AddMonths(1), timeZone);
+                        string dateFormat = "Y";
 
+                        var metrics = await GetMetrics(culture, searchYearDateUser, createdFromUtc, createdToUtc, dateFormat);
+                        ordersStatisticsResult.Metrics.Add(metrics);
                         searchYearDateUser = searchYearDateUser.AddMonths(1);
                     }
 
@@ -2954,16 +3009,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var searchMonthDateUser = new DateTime(monthAgoDt.Year, monthAgoDt.Month, monthAgoDt.Day);
                     for (var i = 0; i <= 30; i++)
                     {
-                        result.Add(new
-                        {
-                            date = searchMonthDateUser.Date.ToString("M", culture),
-                            value = (await _orderService.SearchOrdersAsync(
-                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone),
-                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone),
-                                pageIndex: 0,
-                                pageSize: 1, getOnlyTotalCount: true)).TotalCount.ToString()
-                        });
-
+                        var createdFromUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
+                        var createdToUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone);
+                        var dateFormat = "M";
+                        
+                        var metrics = await GetMetrics(culture, searchMonthDateUser, createdFromUtc, createdToUtc, dateFormat);
+                        ordersStatisticsResult.Metrics.Add(metrics);
                         searchMonthDateUser = searchMonthDateUser.AddDays(1);
                     }
 
@@ -2973,26 +3024,27 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //week statistics
                     var weekAgoDt = nowDt.AddDays(-7);
                     var searchWeekDateUser = new DateTime(weekAgoDt.Year, weekAgoDt.Month, weekAgoDt.Day);
+
+
                     for (var i = 0; i <= 7; i++)
                     {
-                        result.Add(new
-                        {
-                            date = searchWeekDateUser.Date.ToString("d dddd", culture),
-                            value = (await _orderService.SearchOrdersAsync(
-                                createdFromUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone),
-                                createdToUtc: _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone),
-                                pageIndex: 0,
-                                pageSize: 1, getOnlyTotalCount: true)).TotalCount.ToString()
-                        });
-
+                        var createdFromUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
+                        var createdToUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone);
+                        var dateFormat = "d dddd";
+                        
+                        var metrics = await GetMetrics(culture, searchWeekDateUser, createdFromUtc, createdToUtc, dateFormat);
+                        ordersStatisticsResult.Metrics.Add(metrics);
                         searchWeekDateUser = searchWeekDateUser.AddDays(1);
                     }
-
                     break;
             }
 
-            return Json(result);
+
+
+            return Json(ordersStatisticsResult);
         }
+
+
 
         #endregion
     }

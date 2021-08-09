@@ -15,6 +15,9 @@ namespace Nop.Services.Orders
     {
         #region Orders
 
+        Task<List<int>> GetOrdersIdsAsync(DateTime? createdFromUtc = null, DateTime? createdToUtc = null);
+
+
         /// <summary>
         /// Gets an order
         /// </summary>
