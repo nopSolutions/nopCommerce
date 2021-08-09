@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -48,6 +48,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Admin.Common.List",
                 "Admin.Common.LoseUnsavedChanges",
                 "Admin.Common.SaveChanges",
+                "Admin.Common.MarkAsShipped",
+                "Admin.Common.MarkAsDelivered",
+                "Admin.Common.ShippingStatus",
                 "Admin.Configuration.Currencies.Localization",
                 "Admin.Configuration.Currencies.Select",
                 "Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo.Button",
@@ -82,6 +85,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Admin.NopCommerceNews.HideAdv",
                 "Admin.NopCommerceNews.ShowAdv",
                 "Admin.Orders.OrderNotes.Alert.Add",
+                "Admin.Orders.InvalidAttemptToChangeShippingStatus",
                 "Admin.Orders.ShippingInfoTitle",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories.Hint",
@@ -706,6 +710,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Catalog.SearchPageManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Search' page (based on prices of available products). Set price range manually if you have complex discount rules.",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange"] = "'Products by tag' page. Enter price range manually",
                 ["Admin.Configuration.Settings.Catalog.ProductsByTagManuallyPriceRange.Hint"] = "Check to enter price range manually, otherwise the automatic calculation of price range is enabled on the 'Products by tag' page (based on prices of available products). Set price range manually if you have complex discount rules.",
+                ["Admin.Orders.InvalidAttemptToChangeShippingStatus"] = "Invalid attempt to change order's shipping status.",
+                ["Admin.Common.MarkAsDelivered"] = "Mark As Delivered (selected)",
+                ["Admin.Common.MarkAsShipped"] = "Mark As Shipped (selected)",
+                ["Admin.Common.ShippingStatus"] = "Shipping status",
                 ["Admin.Orders.ShippingInfoTitle"] = "Shipping",           
             }).Wait();
 
