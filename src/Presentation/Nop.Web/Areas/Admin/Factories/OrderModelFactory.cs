@@ -514,16 +514,16 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
+            //var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
-            //prepare billing address
-            model.BillingAddress = billingAddress.ToModel(model.BillingAddress);
+            ////prepare billing address
+            //model.BillingAddress = billingAddress.ToModel(model.BillingAddress);
 
-            model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
-            model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
+            //model.BillingAddress.CountryName = (await _countryService.GetCountryByAddressAsync(billingAddress))?.Name;
+            //model.BillingAddress.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress))?.Name;
 
-            await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
-            SetAddressFieldsAsRequired(model.BillingAddress);
+            //await _addressModelFactory.PrepareAddressModelAsync(model.BillingAddress, billingAddress);
+            //SetAddressFieldsAsRequired(model.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -872,7 +872,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
-            searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
+            //searchModel.BillingPhoneEnabled = _addressSettings.PhoneEnabled;
 
             //prepare available order, payment and shipping statuses
             await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
@@ -979,10 +979,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
-                billingPhone: searchModel.BillingPhone,
-                billingEmail: searchModel.BillingEmail,
-                billingLastName: searchModel.BillingLastName,
-                billingCountryId: searchModel.BillingCountryId,
+                //billingPhone: searchModel.BillingPhone,
+                //billingEmail: searchModel.BillingEmail,
+                //billingLastName: searchModel.BillingLastName,
+                //billingCountryId: searchModel.BillingCountryId,
                 orderNotes: searchModel.OrderNotes,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -1065,10 +1065,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue,
-                billingPhone: searchModel.BillingPhone,
-                billingEmail: searchModel.BillingEmail,
-                billingLastName: searchModel.BillingLastName,
-                billingCountryId: searchModel.BillingCountryId,
+                //billingPhone: searchModel.BillingPhone,
+                //billingEmail: searchModel.BillingEmail,
+                //billingLastName: searchModel.BillingLastName,
+                //billingCountryId: searchModel.BillingCountryId,
                 orderNotes: searchModel.OrderNotes);
 
             var profit = await _orderReportService.ProfitReportAsync(storeId: searchModel.StoreId,
@@ -1081,10 +1081,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue,
-                billingPhone: searchModel.BillingPhone,
-                billingEmail: searchModel.BillingEmail,
-                billingLastName: searchModel.BillingLastName,
-                billingCountryId: searchModel.BillingCountryId,
+                //billingPhone: searchModel.BillingPhone,
+                //billingEmail: searchModel.BillingEmail,
+                //billingLastName: searchModel.BillingLastName,
+                //billingCountryId: searchModel.BillingCountryId,
                 orderNotes: searchModel.OrderNotes);
 
             var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
