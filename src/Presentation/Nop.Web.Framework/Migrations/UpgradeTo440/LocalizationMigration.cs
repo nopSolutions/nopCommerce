@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -86,6 +86,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Admin.NopCommerceNews.ShowAdv",
                 "Admin.Orders.OrderNotes.Alert.Add",
                 "Admin.Orders.InvalidAttemptToChangeShippingStatus",
+                "Admin.Orders.ShippingInfoTitle",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories.Hint",
                 "Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords",
@@ -713,6 +714,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Common.MarkAsDelivered"] = "Mark As Delivered (selected)",
                 ["Admin.Common.MarkAsShipped"] = "Mark As Shipped (selected)",
                 ["Admin.Common.ShippingStatus"] = "Shipping status",
+                ["Admin.Orders.ShippingInfoTitle"] = "Shipping",           
             }).Wait();
 
             // rename locales
