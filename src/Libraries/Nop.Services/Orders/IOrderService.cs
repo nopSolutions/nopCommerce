@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Orders
 {
@@ -326,6 +327,10 @@ namespace Nop.Services.Orders
         /// <returns>A task that represents the asynchronous operation</returns>
         Task InsertOrderNoteAsync(OrderNote orderNote);
 
+        #endregion
+
+        #region Shipping status
+        Task SetOrderShippingStatus(ShippingStatus status, List<Order> orders);
         #endregion
 
         #region Recurring payments

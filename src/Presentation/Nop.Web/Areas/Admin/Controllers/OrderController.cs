@@ -24,6 +24,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Orders.CustomExceptions;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
@@ -520,6 +521,37 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
+        #endregion
+
+        #region Shipping status
+        [HttpPost, ActionName("UpdateShippingStatus")]
+        public virtual async Task<IActionResult> UpdateShippingStatus(string selectedIds, ShippingStatus shippingStatus)
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var orders = new List<Order>();
+                var ids = selectedIds
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids)).WhereAwait(HasAccessToOrderAsync).ToListAsync());
+
+                try
+                {
+                    await _orderService.SetOrderShippingStatus(shippingStatus, orders);
+                }
+                catch (InvalidOrderShippingStatusException)
+                {
+                    _notificationService.Notification(NotifyType.Error, await _localizationService.GetResourceAsync("Admin.Orders.InvalidAttemptToChangeShippingStatus"));
+                }
+
+            }
+
+            return RedirectToAction("List");
+        }
         #endregion
 
         #region Order details
