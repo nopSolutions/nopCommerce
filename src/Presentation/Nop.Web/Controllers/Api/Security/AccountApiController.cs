@@ -156,6 +156,7 @@ namespace Nop.Web.Controllers.Api.Security
                             message = _localizationService.GetResourceAsync("Google.Token.IsNotValid")
                         });
                     }
+                    //get customer
                     var customer = await _customerService.GetCustomerByEmailAsync(deserializedGoogleToken.email);
                     if (customer != null)
                     {

@@ -199,3 +199,4 @@ src/Presentation/Nop.Web/wwwroot/lib_npm/cldr-data/main/*
 src/packages/*
 /src/Presentation/Nop.Web/persistent/appsettings.json
 *.old
+/src/Presentation/Nop.Web/persistent/dataSettings.json
