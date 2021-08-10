@@ -54,6 +54,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 //#4880
                 ["Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes"] = "Serve unknown types of static files",
                 ["Admin.Configuration.AppSettings.Common.ServeUnknownFileTypes.Hint"] = "Enable this setting to serve files that are in the .well-known directory without a recognized content-type",
+
+                //#5532
+                ["Admin.Configuration.Languages.CLDR.Warning"] = "Please make sure the appropriate CLDR package is installed for this culture. You can set CLDR for the specified culture on the <a href=\"{0}\" target=\"_blank\">General Settings page, Localization tab</a>.",
             }).Wait();
 
             // rename locales
