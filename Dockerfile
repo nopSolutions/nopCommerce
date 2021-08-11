@@ -71,7 +71,13 @@ RUN chmod 755 /entrypoint.sh
 
 WORKDIR /app        
 RUN mkdir bin
-RUN mkdir logs  
+RUN mkdir logs 
+
+# create empty App_Data/datasettings.json to allow using datasettings environment variables
+RUN mkdir App_Data
+WORKDIR /app/App_Data
+RUN echo "" > dataSettings.json
+WORKDIR /app 
                                                             
 COPY --from=build /app/published .
                             
