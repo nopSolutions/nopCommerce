@@ -622,7 +622,15 @@ namespace Nop.Web.Areas.Admin.Factories
                         ? customer.Email
                         : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                     customerModel.FullName = await _customerService.GetCustomerFullNameAsync(customer);
-                    customerModel.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
+
+                    var companyCustomers = await _companyService.GetCompanyCustomersByCustomerIdAsync(customer.Id);
+                    if (companyCustomers.Any())
+                    {
+                        var company = await _companyService.GetCompanyByIdAsync(companyCustomers.FirstOrDefault().CompanyId);
+                        if (company != null)
+                            customerModel.Company = company.Name;
+                    }
+
                     customerModel.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
                     customerModel.ZipPostalCode = await _genericAttributeService
                         .GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);

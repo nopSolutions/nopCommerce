@@ -44,25 +44,25 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerModelFactory _customerModelFactory;
         private readonly ICustomerService _customerService;
         private readonly IPermissionService _permissionService;
-        private readonly IWorkContext _workContext;
+        private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
 
         #endregion
 
         #region Ctor
 
         public PushNotificationController(
-            ICustomerModelFactory customerModelFactory,
             ICustomerService customerService,
             IPermissionService permissionService,
-            IWorkContext workContext)
+            ILocalizationService localizationService,
+            INotificationService notificationService)
         {
-            _customerModelFactory = customerModelFactory;
             _customerService = customerService;
             _permissionService = permissionService;
-            _workContext = workContext;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
         }
 
         #endregion
@@ -86,24 +86,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            IPagedList<Customer> notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(sendToAll: true);
-            foreach (var customer in notificationCustomers)
+            try
             {
-                if (!string.IsNullOrEmpty(customer.PushToken))
+                IPagedList<Customer> notificationCustomers = await _customerService.GetAllPushNotificationCustomersAsync(sendToAll: true);
+                foreach (var customer in notificationCustomers)
                 {
-                    var expoSDKClient = new PushApiClient();
-                    var pushTicketReq = new PushTicketRequest()
+                    if (!string.IsNullOrEmpty(customer.PushToken))
                     {
-                        PushTo = new List<string>() { customer.PushToken },
-                        PushTitle = model.MessageTitle,
-                        PushBody = model.MessageBody
-                    };
-                    var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+                        var expoSDKClient = new PushApiClient();
+                        var pushTicketReq = new PushTicketRequest()
+                        {
+                            PushTo = new List<string>() { customer.PushToken },
+                            PushTitle = model.MessageTitle,
+                            PushBody = model.MessageBody
+                        };
+                        var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _notificationService.SuccessNotification(ex.Message);
             }
             //prepare model
             model = new PushNotificationModel();
 
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.PushNotification.Send.Successfully"));
             //if we got this far, something failed, redisplay form
             return View(model);
         }

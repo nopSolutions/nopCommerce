@@ -1970,23 +1970,19 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            if (string.IsNullOrWhiteSpace(model.ScheduleDate1))
+                return View(model);
+
             var combineValue = "";
 
-            if (!String.IsNullOrWhiteSpace(model.ScheduleDate1))
-            {
-                model.ScheduleDate1 = model.ScheduleDate1.Trim();
-                combineValue += model.ScheduleDate1 + ",";
-            }
-            if (!String.IsNullOrWhiteSpace(model.ScheduleDate2))
-            {
-                model.ScheduleDate2 = model.ScheduleDate2.Trim();
-                combineValue += model.ScheduleDate2 + ",";
-            }
-            if (!String.IsNullOrWhiteSpace(model.ScheduleDate3))
-            {
-                model.ScheduleDate3 = model.ScheduleDate3.Trim();
-                combineValue += model.ScheduleDate3;
-            }
+            model.ScheduleDate1 = model.ScheduleDate1.Trim();
+            combineValue += model.ScheduleDate1 + ",";
+
+            model.ScheduleDate2 = model.ScheduleDate2.Trim();
+            combineValue += model.ScheduleDate2 + ",";
+
+            model.ScheduleDate3 = model.ScheduleDate3.Trim();
+            combineValue += model.ScheduleDate3;
 
             var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
             var orderSettings = await _settingService.LoadSettingAsync<OrderSettings>(storeId);
@@ -3012,7 +3008,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var createdFromUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser, timeZone);
                         var createdToUtc = _dateTimeHelper.ConvertToUtcTime(searchMonthDateUser.AddDays(1), timeZone);
                         var dateFormat = "M";
-                        
+
                         var metrics = await GetMetrics(culture, searchMonthDateUser, createdFromUtc, createdToUtc, dateFormat);
                         ordersStatisticsResult.Metrics.Add(metrics);
                         searchMonthDateUser = searchMonthDateUser.AddDays(1);
@@ -3031,7 +3027,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var createdFromUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser, timeZone);
                         var createdToUtc = _dateTimeHelper.ConvertToUtcTime(searchWeekDateUser.AddDays(1), timeZone);
                         var dateFormat = "d dddd";
-                        
+
                         var metrics = await GetMetrics(culture, searchWeekDateUser, createdFromUtc, createdToUtc, dateFormat);
                         ordersStatisticsResult.Metrics.Add(metrics);
                         searchWeekDateUser = searchWeekDateUser.AddDays(1);
