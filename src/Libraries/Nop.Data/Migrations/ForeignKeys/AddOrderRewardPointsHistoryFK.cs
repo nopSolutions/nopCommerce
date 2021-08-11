@@ -3,7 +3,7 @@ using FluentMigrator;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 
-namespace Nop.Data.Migrations.Indexes
+namespace Nop.Data.Migrations.ForeignKeys
 {
     [NopMigration("2020/03/17 11:26:08:9037680")]
     public class AddOrderRewardPointsHistoryFK : AutoReversingMigration
