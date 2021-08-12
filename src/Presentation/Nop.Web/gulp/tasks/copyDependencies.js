@@ -35,6 +35,11 @@ function copyMomentJS(cb) {
   cb();
 }
 
+function copyTinyMceLangs(cb) {
+  gulp.src(nodeModules + "tinymce-langs/langs/*").pipe(gulp.dest(targetPath + "/tinymce/langs"));
+  cb();
+}
+
 exports.jquery_DevTools = jquery_DevTools;
 
-exports.Execute = gulp.parallel(copyDependencies, jquery_DevTools, copyMomentJS);
+exports.Execute = gulp.parallel(copyDependencies, jquery_DevTools, copyMomentJS, copyTinyMceLangs);
