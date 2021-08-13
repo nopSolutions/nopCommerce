@@ -82,16 +82,6 @@ namespace Nop.Core.Domain.Common
         public bool EnableHtmlMinification { get; set; }
 
         /// <summary>
-        /// A value indicating whether JS file bundling and minification is enabled
-        /// </summary>
-        public bool EnableJsBundling { get; set; }
-
-        /// <summary>
-        /// A value indicating whether CSS file bundling and minification is enabled
-        /// </summary>
-        public bool EnableCssBundling { get; set; }
-
-        /// <summary>
         /// Gets or sets the timeout (in milliseconds) before restarting the application; set null to use default value
         /// </summary>
         public int? RestartTimeout { get; set; }

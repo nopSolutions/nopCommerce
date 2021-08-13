@@ -3,10 +3,8 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Services
 
-@{
-    Html.AddScriptParts("~/lib_npm/farbstastic/farbtastic.min.js");
-    Html.AddCssFileParts("~/lib_npm/farbstastic/farbtastic.css");
-}
+<link rel="stylesheet" href="~/lib_npm/farbstastic/farbtastic.css" />
+<script src="~/lib_npm/farbstastic/farbtastic.min.js" asp-location="Head"></script>
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />

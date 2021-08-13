@@ -4596,6 +4596,45 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly.Hint">
     <Value>Enable this setting to load an assembly into the load-from context, bypassing some security checks.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer">
+    <Value>Bundling &amp; minimization</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory">
+    <Value>Cache directory</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CacheDirectory.Hint">
+    <Value>Path of the directory where assets will be stored if disk cache is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix">
+    <Value>Suffix of style bundle files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.CssBundleSuffix.Hint">
+    <Value>Enter the key that will be put to the end of the bundle name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling">
+    <Value>CSS bundling and minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableCssBundling.Hint">
+    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache">
+    <Value>Enable disk cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableDiskCache.Hint">
+    <Value>Check to store assets on disk.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling">
+    <Value>JavaScript bundling and minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.EnableJavaScriptBundling.Hint">
+    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix">
+    <Value>Suffix of javascript bundle files</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.WebOptimizer.JavaScriptBundleSuffix.Hint">
+    <Value>Enter the key that will be put to the end of the bundle name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Authentication">
     <Value>Authentication</Value>
   </LocaleResource>
@@ -7347,26 +7386,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning.Hint">
     <Value>Make the site EU cookie law compliant. When enabled, new customers will see an appropriate warning box.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling">
-    <Value>CSS bundling and minification</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
-    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning">
-    <Value>CSS bundling is not allowed in virtual directories</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
     <Value>HTML minification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
     <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling">
-    <Value>JavaScript bundling and minification</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
-    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey">
     <Value>Encryption private key</Value>

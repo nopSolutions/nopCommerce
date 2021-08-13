@@ -8,14 +8,14 @@
 
 @{
     var stores = await storeService.GetAllStoresAsync();
-
-    //resources for product tags input
-    Html.AppendCssFileParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.css");
-    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js");
-    Html.AppendScriptParts("~/lib_npm/jquery-tageditor/jquery.caret.min.js");
 }
+    @* resources for product tags input *@
+    <script src="~/lib_npm/jquery-tageditor/jquery.caret.min.js"></script>
+    <script src="~/lib_npm/jquery-tageditor/jquery.tag-editor.min.js"></script>
+    <link rel="stylesheet" href="~/lib_npm/jquery-tageditor/jquery.tag-editor.css">
 
-    <script>
+
+    <script asp-location="Footer">
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {

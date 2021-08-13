@@ -57,9 +57,6 @@ namespace Nop.Web.Framework.Infrastructure
             //use response compression
             application.UseNopResponseCompression();
 
-            //use static files feature
-            application.UseNopStaticFiles();
-
             //check whether requested page is keep alive page
             application.UseKeepAlive();
 

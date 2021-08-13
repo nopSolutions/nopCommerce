@@ -1,6 +1,9 @@
 ﻿@model CheckoutPickupPointsModel
 
 @using System.Text
+@{
+    var scriptLocation = ViewData["scriptLocation"] as ResourceLocation? ?? ResourceLocation.Footer;
+}
 
 @if (!Model.PickupInStoreOnly && Model.PickupPoints.Any())
 {
@@ -12,7 +15,7 @@
         <div class="description">
             @T("Checkout.PickupPoints.Description")
         </div>
-        <script asp-location="Footer">
+        <script asp-location="@scriptLocation">
             $(document).ready(function () {
                 togglePickupInStore($("#@Html.IdFor(model => model.PickupInStore)"));
             });

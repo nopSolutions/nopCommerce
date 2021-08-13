@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core.Infrastructure;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.UI
 {
@@ -101,6 +104,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaKeywordParts(part);
         }
+
         /// <summary>
         /// Generate all keyword parts
         /// </summary>
@@ -120,12 +124,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public static void AddScriptParts(this IHtmlHelper html, string src, string debugSrc = "",
-            bool excludeFromBundle = false, bool isAsync = false)
+        public static void AddScriptParts(this IHtmlHelper html, string src, string debugSrc = "", bool isAsync = false)
         {
-            AddScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync);
+            AddScriptParts(html, ResourceLocation.Head, src, debugSrc, isAsync);
         }
 
         /// <summary>
@@ -135,13 +137,12 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public static void AddScriptParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
+            string src, string debugSrc = "", bool isAsync = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
+            pageHeadBuilder.AddScriptParts(location, src, debugSrc, isAsync);
         }
 
         /// <summary>
@@ -150,12 +151,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
-        public static void AppendScriptParts(this IHtmlHelper html, string src, string debugSrc = "",
-            bool excludeFromBundle = false, bool isAsync = false)
+        public static void AppendScriptParts(this IHtmlHelper html, string src, string debugSrc = "", bool isAsync = false)
         {
-            AppendScriptParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle, isAsync);
+            AppendScriptParts(html, ResourceLocation.Head, src, debugSrc, isAsync);
         }
 
         /// <summary>
@@ -165,13 +164,12 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public static void AppendScriptParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false, bool isAsync = false)
+            string src, string debugSrc = "", bool isAsync = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendScriptParts(location, src, debugSrc, excludeFromBundle, isAsync);
+            pageHeadBuilder.AppendScriptParts(location, src, debugSrc, isAsync);
         }
 
         /// <summary>
@@ -179,12 +177,11 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="location">A location of the script element</param>
-        /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopScripts(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
+        public static IHtmlContent NopScripts(this IHtmlHelper html, ResourceLocation location)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateScripts(location, bundleFiles));
+            return new HtmlString(pageHeadBuilder.GenerateScripts(location));
         }
 
         /// <summary>
@@ -229,10 +226,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AddCssFileParts(this IHtmlHelper html, string src, string debugSrc = "", bool excludeFromBundle = false)
+        public static void AddCssFileParts(this IHtmlHelper html, string src, string debugSrc = "")
         {
-            AddCssFileParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle);
+            AddCssFileParts(html, ResourceLocation.Head, src, debugSrc);
         }
 
         /// <summary>
@@ -242,12 +238,11 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         public static void AddCssFileParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false)
+            string src, string debugSrc = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddCssFileParts(location, src, debugSrc, excludeFromBundle);
+            pageHeadBuilder.AddCssFileParts(location, src, debugSrc);
         }
 
         /// <summary>
@@ -256,10 +251,9 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
-        public static void AppendCssFileParts(this IHtmlHelper html, string src, string debugSrc = "", bool excludeFromBundle = false)
+        public static void AppendCssFileParts(this IHtmlHelper html, string src, string debugSrc = "")
         {
-            AppendCssFileParts(html, ResourceLocation.Head, src, debugSrc, excludeFromBundle);
+            AppendCssFileParts(html, ResourceLocation.Head, src, debugSrc);
         }
 
         /// <summary>
@@ -269,12 +263,11 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="src">Script path (minified version)</param>
         /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
-        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         public static void AppendCssFileParts(this IHtmlHelper html, ResourceLocation location,
-            string src, string debugSrc = "", bool excludeFromBundle = false)
+            string src, string debugSrc = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendCssFileParts(location, src, debugSrc, excludeFromBundle);
+            pageHeadBuilder.AppendCssFileParts(location, src, debugSrc);
         }
 
         /// <summary>
@@ -282,12 +275,11 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="location">A location of the script element</param>
-        /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopCssFiles(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
+        public static IHtmlContent NopCssFiles(this IHtmlHelper html, ResourceLocation location)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateCssFiles(location, bundleFiles));
+            return new HtmlString(pageHeadBuilder.GenerateCssFiles(location));
         }
 
         /// <summary>

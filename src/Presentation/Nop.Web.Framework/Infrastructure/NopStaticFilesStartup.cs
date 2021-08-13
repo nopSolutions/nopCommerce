@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -7,9 +7,9 @@ using Nop.Web.Framework.Infrastructure.Extensions;
 namespace Nop.Web.Framework.Infrastructure
 {
     /// <summary>
-    /// Represents object for the configuring MVC on application startup
+    /// Represents class for the configuring routing on application startup
     /// </summary>
-    public class NopMvcStartup : INopStartup
+    public class NopStaticFilesStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -18,14 +18,7 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //add WebMarkupMin services to the services container
-            services.AddNopWebMarkupMin();
-
-            //add and configure MVC feature
-            services.AddNopMvc();
-
-            //add custom redirect result executor
-            services.AddNopRedirectResultExecutor();
+            services.AddNopWebOptimizer();
         }
 
         /// <summary>
@@ -34,13 +27,16 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //use WebMarkupMin
-            application.UseNopWebMarkupMin();
+            //WebOptimizer should be placed before configuring static files
+            application.UseNopWebOptimizer();
+
+            //use static files feature
+            application.UseNopStaticFiles();
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order => 1000; //MVC should be loaded last
+        public int Order => 99; //Static files should be registered before routing & custom middlewares
     }
 }

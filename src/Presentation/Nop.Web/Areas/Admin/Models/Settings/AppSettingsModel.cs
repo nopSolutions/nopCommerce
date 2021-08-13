@@ -20,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             InstallationConfigModel = new InstallationConfigModel();
             PluginConfigModel = new PluginConfigModel();
             CommonConfigModel = new CommonConfigModel();
+            WebOptimizerConfigModel = new WebOptimizerConfigModel();
             EnvironmentVariables = new List<string>();
         }
 
@@ -42,6 +43,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public PluginConfigModel PluginConfigModel { get; set; }
 
         public CommonConfigModel CommonConfigModel { get; set; }
+
+        public WebOptimizerConfigModel WebOptimizerConfigModel { get; set; }
 
         public List<string> EnvironmentVariables { get; set; }
 

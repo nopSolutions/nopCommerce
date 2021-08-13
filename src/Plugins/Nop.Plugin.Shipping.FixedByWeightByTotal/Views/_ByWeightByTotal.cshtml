@@ -15,7 +15,7 @@
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
-<script type="text/javascript">
+<script asp-location="Footer">
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.SearchCountryId)").change(function () {
             var selectedItem = $(this).val();
@@ -224,7 +224,7 @@
                         </div>
                         <div class="col-md-9">
                             <button type="button" id="savegeneralsettings" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
-                            <script>
+                            <script asp-location="Footer">
 
                                 function renderColumnEdit(data, type, row, meta) {
                                     return '<button onclick=\"javascript:OpenWindow(\'@Url.Action("EditRateByWeightByTotalPopup", "FixedByWeightByTotal")?id=' + data + '&btnId=btnRefresh&formId=shipping-byweight-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fas fa-pencil-alt"></i>@T("Admin.Common.Edit").Text</button>';
@@ -259,7 +259,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <script asp-location="Footer">
         $(document)
             .ready(function () {
                 $('#btnRefresh')

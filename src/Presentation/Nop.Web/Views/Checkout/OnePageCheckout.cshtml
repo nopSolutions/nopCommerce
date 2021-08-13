@@ -7,10 +7,6 @@
 @{
     Layout = "_ColumnsOne";
 
-    //scripts
-    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.accordion.js");
-    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.onepagecheckout.js");
-
     var storeLocation = webHelper.GetStoreLocation();
 
     //title
@@ -41,6 +37,10 @@
         confirmOrderStepNumber--;
     }
 }
+
+<script src="~/js/public.accordion.js" asp-location="Footer"></script>
+<script src="~/js/public.onepagecheckout.js" asp-location="Footer"></script>
+
 <div class="page checkout-page">
     <div class="page-title">
         <h1>@T("Checkout")</h1>
