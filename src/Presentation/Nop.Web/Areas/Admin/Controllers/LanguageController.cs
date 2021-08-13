@@ -291,6 +291,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(availableFlagFileNames);
         }
 
+        //action displaying notification (warning) to a store owner that changed culture
+        public virtual async Task<IActionResult> LanguageCultureWarning(string currentCulture, string changedCulture)
+        {
+            if (currentCulture != changedCulture)
+            {
+                return Json(new
+                {
+                    Result = string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.CLDR.Warning"), 
+                        Url.Action("GeneralCommon", "Setting"))
+                });
+            }
+
+            return Json(new { Result = string.Empty });
+        }
+
         #endregion
 
         #region Resources
