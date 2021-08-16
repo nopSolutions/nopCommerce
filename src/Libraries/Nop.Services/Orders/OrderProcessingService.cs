@@ -1682,7 +1682,11 @@ namespace Nop.Services.Orders
                         string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
 
                     //check order status
-                    await CheckOrderStatusAsync(order); order.ScheduleDate = orderScheduleDate.Value; await _orderService.UpdateOrderAsync(order);
+                    await CheckOrderStatusAsync(order); 
+                    
+                    //update schedule date
+                    order.ScheduleDate = orderScheduleDate.Value; 
+                    await _orderService.UpdateOrderAsync(order);
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
