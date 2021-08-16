@@ -1587,6 +1587,7 @@ namespace Nop.Services.Orders
                 if (processPaymentResult == null)
                     throw new NopException("processPaymentResult is not available");
 
+                DateTime? orderScheduleDate = null;
                 if (processPaymentResult.Success)
                 {
                     //Check Customer today orders total amount is greater than company limited amount
@@ -1639,6 +1640,7 @@ namespace Nop.Services.Orders
                                 scheduleDate = nextDayDate;
                             }
 
+                            orderScheduleDate = scheduleDate.Value;
                             var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Value.Date).ToList();
                             var todayOrderTotal = ordersAccordingToScheduleDate.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
                             if (todayOrderTotal > company.AmountLimit)
@@ -1680,7 +1682,11 @@ namespace Nop.Services.Orders
                         string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
 
                     //check order status
-                    await CheckOrderStatusAsync(order);
+                    await CheckOrderStatusAsync(order); 
+                    
+                    //update schedule date
+                    order.ScheduleDate = orderScheduleDate.Value; 
+                    await _orderService.UpdateOrderAsync(order);
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
