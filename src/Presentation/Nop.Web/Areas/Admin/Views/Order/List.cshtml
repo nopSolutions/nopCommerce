@@ -359,11 +359,6 @@
                               Width = "150"
                             });
                           }
-                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
-                          {
-                            Title = T("Admin.Orders.Fields.Customer").Text,
-                            Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
-                          });
 
                           gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
                           {

@@ -37,10 +37,13 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.Cache
             new VendorToChatMap{ VendorId = 4, ChatGroupId = -1001490513385 },  // 33 Pizzas
             new VendorToChatMap{ VendorId = 6, ChatGroupId = -1001378455507 },  // Kaufmann
             new VendorToChatMap{ VendorId = 7, ChatGroupId = -575045194     },  // Barbq
+            new VendorToChatMap{ VendorId = 8, ChatGroupId = -521639273     },  // Artvill
+            new VendorToChatMap{ VendorId = 9, ChatGroupId = -561705966     },  // Aries
+            new VendorToChatMap{ VendorId = 10, ChatGroupId = -590367683     }, // Aries DA
         };
 
         public OrderPlacedEventConsumer(Lazy<ITelegramBotClient> telegramBotClient,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             IExternalAuthenticationService externalAuthenticationService,
             AppSettings config,
             IOrderService orderService)
@@ -71,10 +74,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure.Cache
                 externalRecord?.ExternalDisplayIdentifier ??
                 await _customerService.GetCustomerFullNameAsync(customer);
 
-            if(string.IsNullOrEmpty(externalDisplayIdentifier))
+            if (string.IsNullOrEmpty(externalDisplayIdentifier))
                 externalDisplayIdentifier = "Unknown";
 
-            foreach(var chatGroupId in chatGroupsToNotify) {
+            foreach (var chatGroupId in chatGroupsToNotify)
+            {
                 var chat = await _telegramBotClient.Value.GetChatAsync(chatGroupId);
                 await _telegramBotClient.Value.SendTextMessageAsync(chat, $"New order from {externalDisplayIdentifier}");
             }
