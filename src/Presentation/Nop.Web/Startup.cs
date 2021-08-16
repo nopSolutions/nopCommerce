@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -125,6 +127,13 @@ namespace Nop.Web
 
             // custom jwt auth middleware
             application.UseMiddleware<JwtMiddleware>();
+            application.UseStatusCodePages(context => {
+                var response = context.HttpContext.Response;
+                if (response.StatusCode == (int)HttpStatusCode.Unauthorized ||
+                    response.StatusCode == (int)HttpStatusCode.Forbidden)
+                    response.Redirect("/Login");
+                return Task.CompletedTask;
+            });
             application.ConfigureRequestPipeline();
 			application.StartEngine();
 		}
