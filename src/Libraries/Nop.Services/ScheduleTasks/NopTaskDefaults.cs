@@ -1,4 +1,4 @@
-﻿namespace Nop.Services.Tasks
+﻿namespace Nop.Services.ScheduleTasks
 {
     /// <summary>
     /// Represents default values related to task services

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Plugins;
 using Nop.Tests.Nop.Services.Tests.Directory;
 using Nop.Tests.Nop.Services.Tests.Discounts;
@@ -28,6 +31,12 @@ namespace Nop.Tests.Nop.Services.Tests
             webHostEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
             webHostEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
             CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
+            
+            var dataSettingsFilePath = CommonHelper.DefaultFileProvider.MapPath(NopDataSettingsDefaults.FilePath);
+            CommonHelper.DefaultFileProvider.WriteAllText(dataSettingsFilePath,"{}", Encoding.UTF8);
+
+            Environment.SetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableDataConnectionString,
+                Singleton<DataSettings>.Instance.ConnectionString);
 
             Singleton<IPluginsInfo>.Instance = new PluginsInfo(CommonHelper.DefaultFileProvider)
             {
