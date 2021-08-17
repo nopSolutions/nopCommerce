@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
                 if (string.IsNullOrEmpty(connectionString))
                     throw new Exception(_locService.GetResource("ConnectionStringWrongFormat"));
 
-                await DataSettingsManager.SaveSettingsAsync(new DataSettings
+                await DataSettingsManager.SaveSettingsAsync(new DataConfig
                 {
                     DataProvider = model.DataProvider,
                     ConnectionString = connectionString
@@ -293,7 +293,7 @@ namespace Nop.Web.Controllers
                 await staticCacheManager.ClearAsync();
 
                 //clear provider settings if something got wrong
-                await DataSettingsManager.SaveSettingsAsync(new DataSettings(), _fileProvider);
+                await DataSettingsManager.SaveSettingsAsync(new DataConfig(), _fileProvider);
 
                 ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
             }

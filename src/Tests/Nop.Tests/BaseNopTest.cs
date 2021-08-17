@@ -134,7 +134,7 @@ namespace Nop.Tests
             var typeFinder = new AppDomainTypeFinder();
             Singleton<ITypeFinder>.Instance = typeFinder;
 
-            Singleton<DataSettings>.Instance = new DataSettings
+            Singleton<DataConfig>.Instance = new DataConfig
             {
                 ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared"
             };
@@ -372,12 +372,11 @@ namespace Nop.Tests
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
                 .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
-                // set accessor for the connection string
-                .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
                 .AddScoped<IMigrationManager, TestMigrationManager>()
                 .AddSingleton<IConventionSet, NopTestConventionSet>()
-                .ConfigureRunner(rb =>
-                    rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
+                .ConfigureRunner(rb => rb
+                    .WithGlobalConnectionString(DataSettingsManager.LoadSettings().ConnectionString)
+                    .WithVersionTable(new MigrationVersionInfo()).AddSQLite()
                         // define the assembly containing the migrations
                         .ScanIn(mAssemblies).For.Migrations());
 

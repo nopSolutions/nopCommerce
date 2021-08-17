@@ -785,15 +785,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 AzureBlobConfigModel = _appSettings.Get<AzureBlobConfig>().ToConfigModel<AzureBlobConfigModel>(),
                 InstallationConfigModel = _appSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
                 PluginConfigModel = _appSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
-                CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>()
+                CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>(),
+                DataConfigModel = _appSettings.Get<DataConfig>().ToConfigModel<DataConfigModel>()
             };
 
             model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.Get<DistributedCacheConfig>().DistributedCacheType.ToSelectListAsync();
 
+            model.DataConfigModel.DataProviderTypeValues = await _appSettings.Get<DataConfig>().DataProvider.ToSelectListAsync();
+
+            //Since we decided to use the naming of the DB connections section as in the .net core - "ConnectionStrings",
+            //we are forced to adjust our internal model naming to this convention in this check.
             model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
                                                 where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
                                                 from pp in property.PropertyType.GetProperties()
-                                                where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "")}__{pp.Name}")
+                                                where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "").Replace("DataConfig", "ConnectionStrings")}__{pp.Name}")
                                                 select $"{property.Name}_{pp.Name}");
             return model;
         }

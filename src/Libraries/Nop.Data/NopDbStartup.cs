@@ -35,13 +35,12 @@ namespace Nop.Data
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
                 .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
-                // set accessor for the connection string
-                .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
                 .AddSingleton<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, NopConventionSet>()
                 .AddTransient<IMappingEntityAccessor>(x => x.GetRequiredService<IDataProviderManager>().DataProvider)
-                .ConfigureRunner(rb =>
-                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
+                .ConfigureRunner(rb => rb
+                    .WithGlobalConnectionString(DataSettingsManager.LoadSettings().ConnectionString)
+                    .WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
                         // define the assembly containing the migrations
                         .ScanIn(mAssemblies).For.Migrations());
         }

@@ -212,7 +212,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.AzureBlobConfigModel.ToConfig(_appSettings.Get<AzureBlobConfig>()),
                     model.InstallationConfigModel.ToConfig(_appSettings.Get<InstallationConfig>()),
                     model.PluginConfigModel.ToConfig(_appSettings.Get<PluginConfig>()),
-                    model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>())
+                    model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>()),
+                    model.DataConfigModel.ToConfig(appSettings.Get<DataConfig>())
                 };
 
                 await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));

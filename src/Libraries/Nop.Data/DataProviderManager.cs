@@ -38,7 +38,7 @@ namespace Nop.Data
         {
             get
             {
-                var dataProviderType = Singleton<DataSettings>.Instance.DataProvider;
+                var dataProviderType = Singleton<DataConfig>.Instance.DataProvider;
 
                 return GetDataProvider(dataProviderType);
             }
