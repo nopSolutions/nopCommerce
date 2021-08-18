@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
+using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 
@@ -29,6 +32,7 @@ namespace Nop.Services.Authentication.External
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
         private readonly IStoreContext _storeContext;
@@ -47,6 +51,7 @@ namespace Nop.Services.Authentication.External
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
+            IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
             IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
             IStoreContext storeContext,
@@ -61,6 +66,7 @@ namespace Nop.Services.Authentication.External
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
+            _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
             _externalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
             _storeContext = storeContext;
@@ -213,8 +219,16 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result of an authentication</returns>
         protected virtual IActionResult ErrorAuthentication(IEnumerable<string> errors, string returnUrl)
         {
-            foreach (var error in errors)
-                ExternalAuthorizerHelper.AddErrorsToDisplay(error);
+            var session = _httpContextAccessor.HttpContext?.Session;
+
+            if (session != null)
+            {
+                var existsErrors = session.Get<IList<string>>(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey)?.ToList() ?? new List<string>();
+
+                existsErrors.AddRange(errors);
+
+                session.Set(NopAuthenticationDefaults.ExternalAuthenticationErrorsSessionKey, existsErrors);
+            }
 
             return new RedirectToActionResult("Login", "Customer", !string.IsNullOrEmpty(returnUrl) ? new { ReturnUrl = returnUrl } : null);
         }

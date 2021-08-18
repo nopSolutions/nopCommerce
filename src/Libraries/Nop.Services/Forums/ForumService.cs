@@ -7,11 +7,10 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
-using Nop.Core.Html;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
 
@@ -27,6 +26,7 @@ namespace Nop.Services.Forums
         private readonly ForumSettings _forumSettings;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly INopHtmlHelper _htmlHelper;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Forum> _forumRepository;
         private readonly IRepository<ForumGroup> _forumGroupRepository;
@@ -48,6 +48,7 @@ namespace Nop.Services.Forums
         public ForumService(ForumSettings forumSettings,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
+            INopHtmlHelper htmlHelper,
             IRepository<Customer> customerRepository,
             IRepository<Forum> forumRepository,
             IRepository<ForumGroup> forumGroupRepository,
@@ -65,6 +66,7 @@ namespace Nop.Services.Forums
             _forumSettings = forumSettings;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
+            _htmlHelper = htmlHelper;
             _customerRepository = customerRepository;
             _forumRepository = forumRepository;
             _forumGroupRepository = forumGroupRepository;
@@ -1281,13 +1283,13 @@ namespace Nop.Services.Forums
             {
                 case EditorType.SimpleTextBox:
                     {
-                        text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+                        text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
                     }
 
                     break;
                 case EditorType.BBCodeEditor:
                     {
-                        text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
+                        text = _htmlHelper.FormatText(text, false, true, false, true, false, false);
                     }
 
                     break;
@@ -1336,7 +1338,7 @@ namespace Nop.Services.Forums
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = _htmlHelper.FormatText(text, false, true, false, false, false, false);
             return text;
         }
 
@@ -1352,7 +1354,7 @@ namespace Nop.Services.Forums
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
+            text = _htmlHelper.FormatText(text, false, true, false, true, false, false);
 
             return text;
         }

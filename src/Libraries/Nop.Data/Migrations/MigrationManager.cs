@@ -7,7 +7,6 @@ using FluentMigrator.Infrastructure;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Data.Migrations
 {
@@ -30,9 +29,10 @@ namespace Nop.Data.Migrations
         public MigrationManager(
             IFilteringMigrationSource filteringMigrationSource,
             IMigrationRunner migrationRunner,
-            IMigrationRunnerConventions migrationRunnerConventions)
+            IMigrationRunnerConventions migrationRunnerConventions,
+            Lazy<IVersionLoader> versionLoader)
         {
-            _versionLoader = new Lazy<IVersionLoader>(() => EngineContext.Current.Resolve<IVersionLoader>());
+            _versionLoader = versionLoader;
 
             _filteringMigrationSource = filteringMigrationSource;
             _migrationRunner = migrationRunner;

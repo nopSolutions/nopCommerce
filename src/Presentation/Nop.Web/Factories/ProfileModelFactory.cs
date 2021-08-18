@@ -254,7 +254,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            var pagerModel = new PagerModel
+            var pagerModel = new PagerModel(_localizationService)
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

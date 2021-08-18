@@ -14,13 +14,13 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -57,6 +57,7 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly INopFileProvider _fileProvider;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
@@ -96,6 +97,7 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             INopFileProvider fileProvider,
             INotificationService notificationService,
             IPermissionService permissionService,
@@ -131,6 +133,7 @@ namespace Nop.Web.Controllers
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _fileProvider = fileProvider;
             _notificationService = notificationService;
             _permissionService = permissionService;
@@ -1697,7 +1700,7 @@ namespace Nop.Web.Controllers
                 //email
                 await _workflowMessageService.SendWishlistEmailAFriendMessageAsync(customer,
                         (await _workContext.GetWorkingLanguageAsync()).Id, model.YourEmailAddress,
-                        model.FriendEmail, HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                        model.FriendEmail, _nopHtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
                 model.SuccessfullySent = true;
                 model.Result = await _localizationService.GetResourceAsync("Wishlist.EmailAFriend.SuccessfullySent");

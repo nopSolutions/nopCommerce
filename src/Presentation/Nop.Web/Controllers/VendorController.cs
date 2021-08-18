@@ -12,6 +12,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Html;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
@@ -33,6 +34,7 @@ namespace Nop.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly INopHtmlHelper _nopHtmlHelper;
         private readonly IPictureService _pictureService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorAttributeParser _vendorAttributeParser;
@@ -53,6 +55,7 @@ namespace Nop.Web.Controllers
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            INopHtmlHelper nopHtmlHelper,
             IPictureService pictureService,
             IUrlRecordService urlRecordService,
             IVendorAttributeParser vendorAttributeParser,
@@ -69,6 +72,7 @@ namespace Nop.Web.Controllers
             _downloadService = downloadService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
+            _nopHtmlHelper = nopHtmlHelper;
             _pictureService = pictureService;
             _urlRecordService = urlRecordService;
             _vendorAttributeParser = vendorAttributeParser;
@@ -236,7 +240,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = _nopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 //disabled by default
                 var vendor = new Vendor
                 {
@@ -330,7 +334,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var description = _nopHtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
 
                 vendor.Name = model.Name;
                 vendor.Email = model.Email;

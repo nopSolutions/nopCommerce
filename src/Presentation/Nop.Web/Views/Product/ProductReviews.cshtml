@@ -1,6 +1,6 @@
 ﻿@model ProductReviewsModel
 
-@using Nop.Core
+@inject Nop.Services.Html.INopHtmlHelper htmlHelper
 
 @{
     Layout = "_ColumnsOne";
@@ -152,7 +152,7 @@
                                     </div>
                                 }
                                 <div class="text-body">
-                                    @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                                    @Html.Raw(htmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
                                 </div>
                             </div>
                             @foreach (var reviewType in review.AdditionalProductReviewList.Where(x => x.Rating > 0 && x.VisibleToAllCustomers))
@@ -197,7 +197,7 @@
                                         @T("Reviews.Reply")
                                     </div>
                                     <div class="reply-text">
-                                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                                        @Html.Raw(htmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
                                     </div>
                                 </div>
                             }

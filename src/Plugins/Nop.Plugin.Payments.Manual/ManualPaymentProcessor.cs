@@ -10,6 +10,7 @@ using Nop.Plugin.Payments.Manual.Models;
 using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 
@@ -23,7 +24,7 @@ namespace Nop.Plugin.Payments.Manual
         #region Fields
 
         private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly ManualPaymentSettings _manualPaymentSettings;
@@ -33,13 +34,13 @@ namespace Nop.Plugin.Payments.Manual
         #region Ctor
 
         public ManualPaymentProcessor(ILocalizationService localizationService,
-            IPaymentService paymentService,
+            IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService,
             IWebHelper webHelper,
             ManualPaymentSettings manualPaymentSettings)
         {
             _localizationService = localizationService;
-            _paymentService = paymentService;
+            _orderTotalCalculationService = orderTotalCalculationService;
             _settingService = settingService;
             _webHelper = webHelper;
             _manualPaymentSettings = manualPaymentSettings;
@@ -118,7 +119,7 @@ namespace Nop.Plugin.Payments.Manual
         /// </returns>
         public async Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
         {
-            return await _paymentService.CalculateAdditionalFeeAsync(cart,
+            return await _orderTotalCalculationService.CalculatePaymentAdditionalFeeAsync(cart,
                 _manualPaymentSettings.AdditionalFee, _manualPaymentSettings.AdditionalFeePercentage);
         }
 

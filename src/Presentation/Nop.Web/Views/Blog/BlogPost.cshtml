@@ -1,4 +1,5 @@
-﻿@model BlogPostModel
+﻿@inject Nop.Services.Html.INopHtmlHelper htmlHelper
+@model BlogPostModel
 @{
     Layout = "_ColumnsTwo";
 
@@ -64,7 +65,7 @@
                         <div class="result">@result</div>
                     }
                 </div>
-                
+
                 <form asp-route="BlogPost" asp-route-sename="@Model.SeName" method="post">
                     <div class="form-fields">
                         <div class="inputs">
@@ -77,17 +78,17 @@
                             <nop-captcha />
                         }
                     </div>
-                @if (!Model.PreventNotRegisteredUsersToLeaveComments)
-                {
-                    <div class="buttons">
-                        <button type="submit" name="add-comment" class="button-1 blog-post-add-comment-button">@T("Blog.Comments.SubmitButton")</button>
-                    </div>
-                }
-                else
-                {
-                    <div class="message-error">@T("Blog.Comments.OnlyRegisteredUsersLeaveComments")</div>
-                }
-                    </form>
+                    @if (!Model.PreventNotRegisteredUsersToLeaveComments)
+                    {
+                        <div class="buttons">
+                            <button type="submit" name="add-comment" class="button-1 blog-post-add-comment-button">@T("Blog.Comments.SubmitButton")</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="message-error">@T("Blog.Comments.OnlyRegisteredUsersLeaveComments")</div>
+                    }
+                </form>
             </div>
             if (Model.Comments.Count > 0)
             {
@@ -116,12 +117,12 @@
                                                 @if (comment.AllowViewingProfiles)
                                                 {
                                                     <a href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
-                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar"/>
+                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
                                                     </a>
                                                 }
                                                 else
                                                 {
-                                                    <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar"/>
+                                                    <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
                                                 }
                                             </div>
                                         }
@@ -133,7 +134,7 @@
                                         <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                                     </div>
                                     <div class="comment-body">
-                                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
+                                        @Html.Raw(htmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                                     </div>
                                 </div>
                                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogPostPageInsideComment, additionalData = comment })
