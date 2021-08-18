@@ -207,9 +207,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             //prepare model
             var model = await _orderModelFactory.PrepareOrderSearchModelAsync(new OrderSearchModel
             {
-                OrderStatusIds = orderStatuses,
-                PaymentStatusIds = paymentStatuses,
-                ShippingStatusIds = shippingStatuses
+                OrderStatusIds = orderStatuses ?? new List<int>(),
+                PaymentStatusIds = paymentStatuses ?? new List<int>(),
+                ShippingStatusIds = shippingStatuses ?? new List<int>()
             });
 
             return View(model);
