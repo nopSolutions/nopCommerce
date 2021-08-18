@@ -1815,6 +1815,7 @@ VN, Hậu Giang, HG, TRUE, 6
 VN, Sóc Trăng, ST, TRUE, 6
 VN, Bạc Liêu, BL, TRUE, 6
 VN, Cà Mau, CM, TRUE, 6
+ZA,Eastern Cape,EC,True,0
 ZA,Free State,FS,True,0
 ZA,Gauteng,GP,True,0
 ZA,KwaZulu-Natal,KZN,True,0
