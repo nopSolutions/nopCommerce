@@ -167,7 +167,11 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //generate editor
             var pattern = $"{nameof(ILocalizedModel<object>.Locales)}" + @"(?=\[\w+\]\.)";
             if (!_htmlHelper.ViewData.ContainsKey(For.Name) && Regex.IsMatch(For.Name, pattern))
-                _htmlHelper.ViewData.Add(For.Name, For.Model);
+            {
+                var prefix = _htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
+                var key = string.IsNullOrEmpty(prefix) ? For.Name : $"{prefix}.{For.Name}";
+                _htmlHelper.ViewData.Add(key, For.Model);
+            }
 
             var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
             output.Content.SetHtmlContent(htmlOutput);
