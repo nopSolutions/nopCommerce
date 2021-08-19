@@ -18,15 +18,11 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         #region Constants
 
         private const string FOR_ATTRIBUTE_NAME = "asp-for";
-        private const string DISABLED_ATTRIBUTE_NAME = "asp-disabled";
+        private const string CUSTOM_HTML_ATTRIBUTES = "html-attributes";
         private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
         private const string RENDER_FORM_CONTROL_CLASS_ATTRIBUTE_NAME = "asp-render-form-control-class";
         private const string TEMPLATE_ATTRIBUTE_NAME = "asp-template";
         private const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
-        private const string VALUE_ATTRIBUTE_NAME = "asp-value";
-        private const string PLACEHOLDER_ATTRIBUTE_NAME = "placeholder";
-        private const string AUTOCOMPLETE_ATTRIBUTE_NAME = "autocomplete";
-
 
         #endregion
 
@@ -39,28 +35,16 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public ModelExpression For { get; set; }
 
         /// <summary>
-        /// Indicates whether the field is disabled
+        /// Custom html attributes
         /// </summary>
-        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
-        public string IsDisabled { set; get; }
+        [HtmlAttributeName(CUSTOM_HTML_ATTRIBUTES)]
+        public object CustomHtmlAttributes { set; get; }
 
         /// <summary>
         /// Indicates whether the field is required
         /// </summary>
         [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
         public string IsRequired { set; get; }
-
-        /// <summary>
-        /// Placeholder for the field
-        /// </summary>
-        [HtmlAttributeName(PLACEHOLDER_ATTRIBUTE_NAME)]
-        public string Placeholder { set; get; }
-
-        /// <summary>
-        /// Autocomplete mode for the field
-        /// </summary>
-        [HtmlAttributeName(AUTOCOMPLETE_ATTRIBUTE_NAME)]
-        public string Autocomplete { set; get; }
 
         /// <summary>
         /// Indicates whether the "form-control" class shold be added to the input
@@ -79,12 +63,6 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
         public string Postfix { set; get; }
-
-        /// <summary>
-        /// The value of the element
-        /// </summary>
-        [HtmlAttributeName(VALUE_ATTRIBUTE_NAME)]
-        public string Value { set; get; }
 
         /// <summary>
         /// ViewContext
@@ -132,21 +110,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //container for additional attributes
             var htmlAttributes = new Dictionary<string, object>();
 
-            //set placeholder if exists
-            if (!string.IsNullOrEmpty(Placeholder))
-                htmlAttributes.Add("placeholder", Placeholder);
-
-            //set autocomplete if exists
-            if (!string.IsNullOrEmpty(Autocomplete))
-                htmlAttributes.Add("autocomplete", Autocomplete);
-
-            //set value if exists
-            if (!string.IsNullOrEmpty(Value))
-                htmlAttributes.Add("value", Value);
-
-            //disabled attribute
-            if (bool.TryParse(IsDisabled, out var disabled) && disabled)
-                htmlAttributes.Add("disabled", "disabled");
+            //set custom html attributes
+            var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(CustomHtmlAttributes);
+            if (htmlAttributesDictionary?.Count > 0)
+            {
+                foreach (var (key, value) in htmlAttributesDictionary)
+                {
+                    htmlAttributes.Add(key, value);
+                }
+            }
 
             //required asterisk
             if (bool.TryParse(IsRequired, out var required) && required)

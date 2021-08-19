@@ -23,7 +23,7 @@
             <nop-label asp-for="LicenseKey" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="LicenseKey" asp-required="true" asp-value="@Model.LicenseKey" />
+            <nop-editor asp-for="LicenseKey" asp-required="true" html-attributes="@(new { value = Model.LicenseKey })" />
             <span asp-validation-for="LicenseKey"></span>
         </div>
     </div>

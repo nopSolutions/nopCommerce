@@ -69,7 +69,7 @@
                     <nop-label asp-for="@Model.AddRewardPoints.Message" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="@Model.AddRewardPoints.Message" placeholder="@T("Admin.Customers.Customers.SomeComment")"/>
+                    <nop-editor asp-for="@Model.AddRewardPoints.Message" html-attributes="@(new { placeholder = T("Admin.Customers.Customers.SomeComment") })"/>
                     <span asp-validation-for="@Model.AddRewardPoints.Message"></span>
                 </div>
             </div>
