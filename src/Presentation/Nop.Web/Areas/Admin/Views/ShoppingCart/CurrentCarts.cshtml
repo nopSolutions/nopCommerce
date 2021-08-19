@@ -23,7 +23,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrentShoppingCartListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrentShoppingCartListButtons, additionalData = Model })
     </div>
 </div>
 

@@ -3,7 +3,7 @@
     @if (Model.ShowSearchBox)
     {
         <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton, additionalData = Model })
         <button type="submit" class="button-1 search-box-button">@T("Search.Button")</button>
         @if (Model.SearchTermMinimumLength > 0)
         {
@@ -56,6 +56,6 @@
                 });
             </script>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox, additionalData = Model })
     }
 </form>

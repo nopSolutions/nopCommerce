@@ -22,7 +22,7 @@
             @T("Admin.System.SeNames.DeleteSelected")
         </button>
         <nop-action-confirmation asp-button-id="delete-selected" />
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesButtons, additionalData = Model })
     </div>
 </div>
 
@@ -30,7 +30,7 @@
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesTop })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesTop, additionalData = Model })
             <div class="card card-default card-search">
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
@@ -146,7 +146,7 @@
                     })
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesBottom })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SenamesBottom, additionalData = Model })
         </div>
     </div>
 </div>

@@ -94,7 +94,7 @@
                 </select>
             }
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPickUpPointsAfter })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutPickUpPointsAfter, additionalData = Model })
         if (Model.DisplayPickupPointsOnMap)
         {
             var src = $"https://maps.googleapis.com/maps/api/js{(string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : $"?key={Model.GoogleMapsApiKey}")}";
