@@ -383,7 +383,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditManufacturer",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
+                    string.Format(_localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
+
                     
                 _notificationService.SuccessNotification(_localizationSer
                     vice.GetResource("Admin.Catalog.Manufacturers.Updated"));

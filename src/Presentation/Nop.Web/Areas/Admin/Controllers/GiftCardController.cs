@@ -240,7 +240,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var languageId = 0;
                 var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
 
-                l)
                 {
                     var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
                     if (customerLang == null)
