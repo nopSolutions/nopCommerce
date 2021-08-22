@@ -288,41 +288,45 @@ namespace Nop.Web.Controllers.Api.Security
             var models = new List<ProductOverviewApiModel>();
             foreach (var product in products)
             {
-                var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
-                var categoryName = "";
-                var categories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
-                if (categories.Any())
+                var specifications = await PrepareProductSpecificationAttributeModelAsync(product);
+                if (specifications != null)
                 {
-                    foreach (var category in categories)
+                    var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
+                    var categoryName = "";
+                    var categories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
+                    if (categories.Any())
                     {
-                        var cat = await _categoryService.GetCategoryByIdAsync(category.CategoryId);
-                        categoryName += cat.Name + ",";
+                        foreach (var category in categories)
+                        {
+                            var cat = await _categoryService.GetCategoryByIdAsync(category.CategoryId);
+                            categoryName += cat.Name + ",";
+                        }
                     }
-                }
-                var popularity = await _orderReportService.BestSellersReportAsync(showHidden: true, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0, orderBy: OrderByEnum.OrderByQuantity);
-                var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: _storeContext.GetCurrentStore().Id);
-                var picsById = await _pictureService.GetPicturesByProductIdAsync(product.Id);
-                var model = new ProductOverviewApiModel
-                {
-                    Id = product.Id,
-                    Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
-                    ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
-                    FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
-                    SeName = await _urlRecordService.GetSeNameAsync(product),
-                    CategoryName = categoryName.TrimEnd(','),
-                    Price = await _priceFormatter.FormatPriceAsync(product.Price),
-                    PriceValue = product.Price,
-                    RatingSum = productReviews.Sum(pr => pr.Rating),
-                    TotalReviews = productReviews.Count,
-                    PopularityCount = popularity.Where(x => x.ProductId == product.Id).Any() ? popularity.Where(x => x.ProductId == product.Id).FirstOrDefault().TotalQuantity : 0,
-                    ImageUrl = await _pictureService.GetPictureUrlAsync(picsById.Any() ? picsById.FirstOrDefault().Id : 0, showDefaultPicture: true),
-                    RibbonEnable = product.RibbonEnable,
-                    RibbonText = product.RibbonText,
-                    VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
-                };
+                    var popularity = await _orderReportService.BestSellersReportAsync(showHidden: true, vendorId: (await _workContext.GetCurrentVendorAsync())?.Id ?? 0, orderBy: OrderByEnum.OrderByQuantity);
+                    var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: _storeContext.GetCurrentStore().Id);
+                    var picsById = await _pictureService.GetPicturesByProductIdAsync(product.Id);
+                    var model = new ProductOverviewApiModel
+                    {
+                        Id = product.Id,
+                        Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                        ShortDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription),
+                        FullDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription),
+                        SeName = await _urlRecordService.GetSeNameAsync(product),
+                        CategoryName = categoryName.TrimEnd(','),
+                        Price = await _priceFormatter.FormatPriceAsync(product.Price),
+                        PriceValue = product.Price,
+                        RatingSum = productReviews.Sum(pr => pr.Rating),
+                        TotalReviews = productReviews.Count,
+                        PopularityCount = popularity.Where(x => x.ProductId == product.Id).Any() ? popularity.Where(x => x.ProductId == product.Id).FirstOrDefault().TotalQuantity : 0,
+                        ImageUrl = await _pictureService.GetPictureUrlAsync(picsById.Any() ? picsById.FirstOrDefault().Id : 0, showDefaultPicture: true),
+                        RibbonEnable = product.RibbonEnable,
+                        RibbonText = product.RibbonText,
+                        VendorLogoPictureUrl = await _pictureService.GetPictureUrlAsync(vendor != null ? vendor.PictureId : 0, showDefaultPicture: true)
+                    };
 
-                models.Add(model);
-                model.ProductSpecificationModel = await PrepareProductSpecificationAttributeModelAsync(product);
+                    models.Add(model);
+                    model.ProductSpecificationModel = await PrepareProductSpecificationAttributeModelAsync(product);
+                }
             }
 
             return models;
@@ -457,7 +461,7 @@ namespace Nop.Web.Controllers.Api.Security
         [HttpGet("product-search")]
         public async Task<IActionResult> SearchProducts(SearchProductByFilters searchModel)
         {
-            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword, showHidden: true);
+            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword);
             if (!products.Any())
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
