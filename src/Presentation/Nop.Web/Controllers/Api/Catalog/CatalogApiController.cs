@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers.Api.Security
             foreach (var product in products)
             {
                 var specifications = await PrepareProductSpecificationAttributeModelAsync(product);
-                if (specifications != null)
+                if (specifications != null && specifications.ProductSpecificationAttribute.Where(x => x.Name == "Available On Weekday").Any() && product.Published)
                 {
                     var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                     var categoryName = "";
@@ -461,7 +461,7 @@ namespace Nop.Web.Controllers.Api.Security
         [HttpGet("product-search")]
         public async Task<IActionResult> SearchProducts(SearchProductByFilters searchModel)
         {
-            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword);
+            var products = await _productService.SearchProductsAsync(keywords: searchModel.Keyword, showHidden: true);
             if (!products.Any())
                 return Ok(new { success = true, message = await _localizationService.GetResourceAsync("Product.Not.Found") });
 
