@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers.Api.Security
             foreach (var product in products)
             {
                 var specifications = await PrepareProductSpecificationAttributeModelAsync(product);
-                if (specifications != null && specifications.ProductSpecificationAttribute.Where(x => x.Name == "Available On Weekday").Any() && product.Published)
+                if (specifications != null && specifications.ProductSpecificationAttribute.Count > 0 && product.Published)
                 {
                     var vendor = await _vendorService.GetVendorByProductIdAsync(product.Id);
                     var categoryName = "";
@@ -325,7 +325,7 @@ namespace Nop.Web.Controllers.Api.Security
                     };
 
                     models.Add(model);
-                    model.ProductSpecificationModel = await PrepareProductSpecificationAttributeModelAsync(product);
+                    model.ProductSpecificationModel = specifications;
                 }
             }
 
