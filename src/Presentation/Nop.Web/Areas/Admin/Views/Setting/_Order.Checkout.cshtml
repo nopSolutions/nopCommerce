@@ -1,21 +1,5 @@
 @model OrderSettingsModel
 
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.OnePageCheckoutEnabled)").click(toggleOnePageCheckoutEnabled);
-        toggleOnePageCheckoutEnabled();
-    });
-
-    function toggleOnePageCheckoutEnabled() {
-        if ($('#@Html.IdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
-            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').showElement();
-        }
-        else {
-            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hideElement();
-        }
-    }
-</script>
-
 <div class="card-body">
     <div class="form-group row advanced-setting">
         <div class="col-md-3">
@@ -48,7 +32,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="OnePageCheckoutEnabled">
-        <div class="form-group row advanced-setting" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore" asp-input="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                 <nop-label asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab"/>

@@ -12,7 +12,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="CompareProductsEnabled">
-        <div class="form-group row advanced-setting" id="pnlIncludeShortDescriptionInCompareProducts">
+        <div class="form-group row advanced-setting">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="IncludeShortDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeShortDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="IncludeShortDescriptionInCompareProducts" />
@@ -33,20 +33,4 @@
             </div>
         </div>
     </nop-nested-setting>
-    <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
-            toggleCompareProductsEnabled();
-        });
-
-        function toggleCompareProductsEnabled() {
-            if ($('#@Html.IdFor(model => model.CompareProductsEnabled)').is(':checked')) {
-                $('#pnlIncludeShortDescriptionInCompareProducts').showElement();
-                $('#IncludeFullDescriptionInCompareProducts').showElement();
-            } else {
-                $('#pnlIncludeShortDescriptionInCompareProducts').hideElement();
-                $('#IncludeFullDescriptionInCompareProducts').hideElement();
-            }
-        }
-    </script>
 </div>

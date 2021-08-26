@@ -121,7 +121,7 @@
             <span asp-validation-for="UsePercentage"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="UsePercentage">
+    <nop-nested-setting asp-for="UsePercentage" disable-auto-generation="true">
         <div class="form-group row" id="pnlDiscountPercentage">
             <div class="col-md-3">
                 <nop-label asp-for="DiscountPercentage" />
@@ -159,7 +159,7 @@
             <span asp-validation-for="RequiresCouponCode"></span>
         </div>
     </div>
-    <nop-nested-setting asp-for="RequiresCouponCode">
+    <nop-nested-setting asp-for="RequiresCouponCode" disable-auto-generation="true">
         <div class="form-group row" id="pnlCouponCode">
             <div class="col-md-3">
                 <nop-label asp-for="CouponCode" />
@@ -170,7 +170,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <nop-nested-setting asp-for="RequiresCouponCode">
+    <nop-nested-setting asp-for="RequiresCouponCode" disable-auto-generation="true">
         <div class="form-group row" id="pnlDiscountUrl">
             <div class="col-md-3">
                 <nop-label asp-for="DiscountUrl" />

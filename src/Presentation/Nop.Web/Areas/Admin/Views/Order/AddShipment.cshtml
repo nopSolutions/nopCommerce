@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             <nop-nested-setting asp-for="CanShip">
-                                <div class="form-group row" id="pnlHasDelivery">
+                                <div class="form-group row">
                                     <div class="col-md-3">
                                         <nop-label asp-for="CanDeliver" />
                                     </div>
@@ -102,21 +102,7 @@
                                     return validateWarehouseAvailability("continue");
                                 });;
 
-                                $("#@Html.IdFor(model => model.CanShip)").click(toggleDelivery);
-                                toggleDelivery();
-
                             });
-
-                            function toggleDelivery() {
-                                if ($('#@Html.IdFor(model => model.CanShip)').is(':checked'))
-                                {
-                                    $('#pnlHasDelivery').showElement();
-                                }
-                                else
-                                {
-                                    $('#pnlHasDelivery').hideElement();
-                                }
-                            }
 
                             function validateWarehouseAvailability(action) {
                                 @{

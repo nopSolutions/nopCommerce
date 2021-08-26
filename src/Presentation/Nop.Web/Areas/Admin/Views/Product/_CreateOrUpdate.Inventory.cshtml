@@ -235,7 +235,7 @@
                 <span asp-validation-for="DisplayStockAvailability"></span>
             </div>
         </div>
-        <nop-nested-setting asp-for="DisplayStockAvailability">
+        <nop-nested-setting asp-for="DisplayStockAvailability" disable-auto-generation="true">
             <div class="form-group row @(Model.ProductEditorSettingsModel.DisplayStockAvailability ? null : "advanced-setting")" id="pnlDisplayStockQuantity">
                 <div class="col-md-3">
                     <nop-label asp-for="DisplayStockQuantity" />

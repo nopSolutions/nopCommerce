@@ -32,39 +32,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.AllowPickupInStore)").click(toggleAllowPickupInStore);
-        $("#@Html.IdFor(model => model.DisplayPickupPointsOnMap)").click(toggleAllowPickupInStore);
-        $("#@Html.IdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
-        toggleAllowPickupInStore();
-        toggleFreeShippingOverX();
-    });
-
-    function toggleAllowPickupInStore() {
-        if ($('#@Html.IdFor(model => model.AllowPickupInStore)').is(':checked')) {
-            $('#pnlDisplayPickupPointsOnMap').showElement();
-            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').showElement();
-            if ($('#@Html.IdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
-                $('#pnlGoogleMapsApiKey').showElement();
-            } else {
-                $('#pnlGoogleMapsApiKey').hideElement();
-            }
-        } else {
-            $('#pnlDisplayPickupPointsOnMap').hideElement();
-            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').hideElement();
-            $('#pnlGoogleMapsApiKey').hideElement();
-        }
-    }
-
-    function toggleFreeShippingOverX() {
-        if ($('#@Html.IdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
-            $('#pnlValueOfX').showElement();
-            $('#pnlValueOfXincltax').showElement();
-        } else {
-            $('#pnlValueOfX').hideElement();
-            $('#pnlValueOfXincltax').hideElement();
-        }
-    }
-</script>

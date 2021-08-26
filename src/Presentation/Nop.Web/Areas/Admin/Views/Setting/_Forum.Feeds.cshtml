@@ -12,7 +12,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ForumFeedsEnabled">
-        <div class="form-group row" id="pnlForumFeedCount">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ForumFeedCount_OverrideForStore" asp-input="ForumFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ForumFeedCount" />
@@ -34,7 +34,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ActiveDiscussionsFeedEnabled">
-        <div class="form-group row" id="pnlActiveDiscussionsFeedCount">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="ActiveDiscussionsFeedCount_OverrideForStore" asp-input="ActiveDiscussionsFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="ActiveDiscussionsFeedCount" />
