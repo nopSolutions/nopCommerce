@@ -171,7 +171,7 @@ namespace Nop.Services.Media
         /// </returns>
         protected virtual Task<string> GetImagesPathUrlAsync(string storeLocation = null)
         {
-            var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty;
+            var pathBase = _httpContextAccessor.HttpContext.Request?.PathBase.Value ?? string.Empty;
             var imagesPathUrl = _mediaSettings.UseAbsoluteImagePath ? storeLocation : $"{pathBase}/";
             imagesPathUrl = string.IsNullOrEmpty(imagesPathUrl) ? _webHelper.GetStoreLocation() : imagesPathUrl;
             imagesPathUrl += "images/";
