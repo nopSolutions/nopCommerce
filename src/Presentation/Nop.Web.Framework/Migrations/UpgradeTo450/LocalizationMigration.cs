@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo450
@@ -31,6 +34,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 "Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint"
             }).Wait();
 
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
+            var languages = languageService.GetAllLanguagesAsync(true).Result;
+            var languageId = languages
+                .Where(lang => lang.UniqueSeoCode == new CultureInfo(NopCommonDefaults.DefaultLanguageCulture).TwoLetterISOLanguageName)
+                .Select(lang => lang.Id).FirstOrDefault();
+
             localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 //#5696
@@ -57,7 +66,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5532
                 ["Admin.Configuration.Languages.CLDR.Warning"] = "Please make sure the appropriate CLDR package is installed for this culture. You can set CLDR for the specified culture on the <a href=\"{0}\" target=\"_blank\">General Settings page, Localization tab</a>.",
-            }).Wait();
+            }, languageId).Wait();
 
             // rename locales
             var localesToRename = new[]
@@ -65,8 +74,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 new { Name = "", NewName = "" }
             };
 
-            var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var languages = languageService.GetAllLanguagesAsync(true).Result;
             foreach (var lang in languages)
             {
                 foreach (var locale in localesToRename)
