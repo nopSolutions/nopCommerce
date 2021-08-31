@@ -328,10 +328,14 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                         await companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
                         isApproved = true;
 
-                        var addresses = await customerService.GetAddressesByCustomerIdAsync(checkCustomerCompanyMappingExist.FirstOrDefault().CustomerId);
-                        foreach (var address in addresses)
+                        var companyCustomers = await companyService.GetCompanyCustomersByCompanyIdAsync(companyId);
+                        if (companyCustomers.Any())
                         {
-                            await customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
+                            var addresses = await customerService.GetAddressesByCustomerIdAsync(companyCustomers.FirstOrDefault().CustomerId);
+                            foreach (var address in addresses)
+                            {
+                                await customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
+                            }
                         }
                     }
                 }
