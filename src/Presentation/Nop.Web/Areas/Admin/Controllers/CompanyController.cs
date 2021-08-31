@@ -412,10 +412,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                         continue;
 
                     var addressId = 0;
-                    foreach (var existingCompanyCustomer in existingCompanyCustomers)
+                    //foreach (var existingCompanyCustomer in existingCompanyCustomers)
+                    //{
+                    if (existingCompanyCustomers.Any())
                     {
-                        var addresses = await _customerService.GetAddressesByCustomerIdAsync(existingCompanyCustomer.CustomerId);
-                        var customerAddresses = await _customerService.GetCustomerAddressesByCustomerIdAsync(existingCompanyCustomer.CustomerId);
+                        var addresses = await _customerService.GetAddressesByCustomerIdAsync(existingCompanyCustomers.FirstOrDefault().CustomerId);
+                        var customerAddresses = await _customerService.GetCustomerAddressesByCustomerIdAsync(existingCompanyCustomers.FirstOrDefault().CustomerId);
                         foreach (var address in addresses)
                         {
                             if (_customerService.FindCustomerAddressMapping(customerAddresses, customer.Id, address.Id) != null)
@@ -428,6 +430,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             addressId = address.Id;
                         }
                     }
+                    //}
                     await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = model.CompanyId, CustomerId = customer.Id });
                     if (addressId > 0)
                     {
