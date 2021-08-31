@@ -367,7 +367,7 @@ namespace Nop.Tests
                 .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
                 // set accessor for the connection string
                 .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
-                .AddScoped<IMigrationManager, MigrationManager>()
+                .AddScoped<IMigrationManager, TestMigrationManager>()
                 .AddSingleton<IConventionSet, NopTestConventionSet>()
                 .ConfigureRunner(rb =>
                     rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
