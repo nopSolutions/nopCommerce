@@ -327,6 +327,12 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                     {
                         await companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
                         isApproved = true;
+
+                        var addresses = await customerService.GetAddressesByCustomerIdAsync(checkCustomerCompanyMappingExist.FirstOrDefault().CustomerId);
+                        foreach (var address in addresses)
+                        {
+                            await customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
+                        }
                     }
                 }
                 email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value + "@" + authenticateResult.Principal.Identity.AuthenticationType + ".com";
