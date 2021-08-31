@@ -69,7 +69,7 @@ namespace Nop.Tests
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            Task.FromResult(ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;"));
+            ExecuteNonQueryAsync("PRAGMA journal_mode=WAL;").Wait();
         }
 
         /// <summary>
