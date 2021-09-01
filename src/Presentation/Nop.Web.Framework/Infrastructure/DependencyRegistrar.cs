@@ -38,13 +38,13 @@ using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Plugins.Marketplace;
 using Nop.Services.Polls;
+using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
-using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
@@ -266,6 +266,12 @@ namespace Nop.Web.Framework.Infrastructure
             //slug route transformer
             if (DataSettingsManager.IsDatabaseInstalled())
                 services.AddScoped<SlugRouteTransformer>();
+
+            //schedule tasks
+            services.AddSingleton<ITaskScheduler, TaskScheduler>();
+            services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
+            if (DataSettingsManager.IsDatabaseInstalled()) 
+                services.AddHostedService<ScheduleTaskHostedService>();
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();

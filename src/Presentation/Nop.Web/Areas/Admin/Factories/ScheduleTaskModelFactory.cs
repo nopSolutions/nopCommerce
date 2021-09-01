@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Services.Helpers;
-using Nop.Services.Tasks;
+using Nop.Services.ScheduleTasks;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Models.Extensions;

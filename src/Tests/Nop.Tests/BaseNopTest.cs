@@ -62,17 +62,18 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
 using Nop.Services.Polls;
+using Nop.Services.ScheduleTasks;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
-using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
+using Nop.Tests.Nop.Services.Tests.ScheduleTasks;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Factories;
@@ -83,6 +84,7 @@ using Nop.Web.Infrastructure.Installation;
 using SkiaSharp;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
 using Task = System.Threading.Tasks.Task;
+using TaskScheduler = Nop.Services.ScheduleTasks.TaskScheduler;
 
 namespace Nop.Tests
 {
@@ -130,6 +132,7 @@ namespace Nop.Tests
 
             var memoryCache = new MemoryCache(new MemoryCacheOptions());
             var typeFinder = new AppDomainTypeFinder();
+            Singleton<ITypeFinder>.Instance = typeFinder;
 
             Singleton<DataSettings>.Instance = new DataSettings
             {
@@ -379,6 +382,10 @@ namespace Nop.Tests
             services.AddTransient<IThemeContext, ThemeContext>();
 
             services.AddTransient<IPageHeadBuilder, PageHeadBuilder>();
+
+            //schedule tasks
+            services.AddSingleton<ITaskScheduler, TestTaskScheduler>();
+            services.AddTransient<IScheduleTaskRunner, ScheduleTaskRunner>();
 
             //common factories
             services.AddTransient<IAclSupportedModelFactory, AclSupportedModelFactory>();

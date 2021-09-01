@@ -17,6 +17,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.ScheduleTasks;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 
@@ -218,7 +219,7 @@ namespace Nop.Web.Framework
             {
                 //check whether request is made by a background (schedule) task
                 if (_httpContextAccessor.HttpContext?.Request
-                    ?.Path.Equals(new PathString($"/{Services.Tasks.NopTaskDefaults.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase)
+                    ?.Path.Equals(new PathString($"/{NopTaskDefaults.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase)
                     ?? true)
                 {
                     //in this case return built-in customer record for background task

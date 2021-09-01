@@ -54,10 +54,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //further actions are performed only when the database is installed
             if (DataSettingsManager.IsDatabaseInstalled())
             {
-                //initialize and start schedule tasks
-                Services.Tasks.TaskManager.Instance.Initialize();
-                Services.Tasks.TaskManager.Instance.Start();
-
                 //log application start
                 engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
 
