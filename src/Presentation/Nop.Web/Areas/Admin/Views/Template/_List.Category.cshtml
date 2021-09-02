@@ -1,7 +1,7 @@
 @model TemplatesModel
 
 <div class="card-body">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryTemplateListButtons })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryTemplateListButtons, additionalData = Model })
 
     @await Html.PartialAsync("Table", new DataTablesModel
     {

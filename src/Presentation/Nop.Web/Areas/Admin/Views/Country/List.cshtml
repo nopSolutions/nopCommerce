@@ -33,7 +33,7 @@
             <i class="fas fa-upload"></i>
             @T("Admin.Configuration.Countries.ImportFromCsv")
         </button>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryListButtons, additionalData = Model })
     </div>
 </div>
 

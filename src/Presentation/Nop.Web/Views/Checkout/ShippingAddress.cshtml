@@ -34,7 +34,7 @@
             @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
             {
                 <div class="shipping-addresses" id="shipping-addresses-form">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressTop })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressTop, additionalData = Model })
                     @if (Model.ExistingAddresses.Count > 0)
                     {
                         <div class="section select-shipping-address">
@@ -151,7 +151,7 @@
                             </div>
                         </div>
                     }
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressMiddle })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressMiddle, additionalData = Model })
                     <div class="section new-shipping-address">
                         <div class="title">
                             @if (Model.ExistingAddresses.Count > 0)
@@ -172,7 +172,7 @@
                             }
                         </div>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressBottom })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressBottom, additionalData = Model })
                 </div>
             }
             <div class="buttons">

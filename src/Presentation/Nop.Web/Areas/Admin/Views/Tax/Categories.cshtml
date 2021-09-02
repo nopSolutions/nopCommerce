@@ -17,7 +17,7 @@
     <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons, additionalData = Model })
             <div class="card card-default">
                 <div class="card-body">
                     <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.TaxManagement", Docs.TaxManagement + Utm.OnAdmin)" />

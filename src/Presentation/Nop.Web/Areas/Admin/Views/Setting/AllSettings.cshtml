@@ -21,7 +21,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingListButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingListButtons, additionalData = Model })
     </div>
 </div>
 
@@ -29,7 +29,7 @@
         <div class="container-fluid">
     <div class="form-horizontal">
         <div class="cards-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsTop })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsTop, additionalData = Model })
             <div class="card card-default card-search">
                 <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
@@ -205,7 +205,7 @@
                     </script>
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsBottom })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AllSettingsBottom, additionalData = Model })
         </div>
     </div>
 </div>

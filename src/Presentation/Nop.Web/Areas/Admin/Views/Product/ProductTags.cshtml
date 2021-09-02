@@ -19,7 +19,7 @@
         </h1>
         <div class="float-right">
             &nbsp;
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagListButtons })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagListButtons, additionalData = Model })
             <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="far fa-trash-alt"></i>
                 @T("Admin.Common.Delete.Selected")

@@ -27,7 +27,7 @@
         <form id="billing-form" asp-route="CheckoutBillingAddress" method="post">
             <div class="billing-addresses">
                 <div id="toggle-billing-address">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressTop })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressTop, additionalData = Model })
                     @if (Model.ShipToSameAddressAllowed)
                     {
                         <div class="section ship-to-same-address">
@@ -171,7 +171,7 @@
                         </div>
                     }
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle, additionalData = Model })
                 <div class="section new-billing-address" id="billingaddress-new-form">
                     <div class="title">
                         @if (Model.ExistingAddresses.Count > 0)
@@ -192,7 +192,7 @@
                         }
                     </div>
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom, additionalData = Model })
             </div>
             <div class="buttons">
                 <button id="billingaddress-save-button" type="button" class="button-1" style="display: none" onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;">@T("Common.Save")</button>
