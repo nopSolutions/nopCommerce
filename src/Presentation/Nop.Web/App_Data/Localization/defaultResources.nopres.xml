@@ -4158,6 +4158,9 @@
   <LocaleResource Name="Admin.Common.Alert.Add.Error">
     <Value>Failed to add record.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Alert.NothingSelected">
+    <Value>Please select at least one record.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Alert.Save.Error">
     <Value>Error while saving.</Value>
   </LocaleResource>

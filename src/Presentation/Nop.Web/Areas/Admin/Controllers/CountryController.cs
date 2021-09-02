@@ -303,8 +303,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             var countries = await _countryService.GetCountriesByIdsAsync(selectedIds.ToArray());
             foreach (var country in countries)
@@ -322,8 +322,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             var countries = await _countryService.GetCountriesByIdsAsync(selectedIds.ToArray());
             foreach (var country in countries)
