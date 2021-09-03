@@ -6,7 +6,7 @@
 @inject IWorkContext workContext
 @inject OrderSettings orderSettings
 <div class="order-summary-content">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore, additionalData = Model })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
     @if (Model.Items.Count > 0)
     {
