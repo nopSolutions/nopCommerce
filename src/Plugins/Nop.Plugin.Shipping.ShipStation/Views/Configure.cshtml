@@ -64,7 +64,7 @@
                         <nop-label asp-for="Password" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="Password" asp-value="@Model.Password" />
+                        <nop-editor asp-for="Password" html-attributes="@(new { value = Model.Password })" />
                         <span asp-validation-for="Password"></span>
                     </div>
                 </div>

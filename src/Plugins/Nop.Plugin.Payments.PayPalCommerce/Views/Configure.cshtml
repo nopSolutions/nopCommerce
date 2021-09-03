@@ -199,7 +199,7 @@
                             <nop-label asp-for="SecretKey" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="SecretKey" asp-required="true" asp-value="@Model.SecretKey" />
+                            <nop-editor asp-for="SecretKey" asp-required="true" html-attributes="@(new { value = Model.SecretKey })" />
                             <span asp-validation-for="SecretKey"></span>
                         </div>
                     </div>
