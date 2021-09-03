@@ -85,27 +85,43 @@
 
             <script>
                 $(document).ready(function() {
-                    //"delete selected" button
-                    $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                    $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
                         var postData = {
                             selectedIds: selectedIds
                         };
                         addAntiForgeryToken(postData);
                         $.ajax({
                             cache: false,
-                            type: "POST",
-                            url: "@(Url.Action("DeleteSelected", "TaxTransactionLog"))",
+                            type: 'POST',
+                            url: '@(Url.Action("DeleteSelected", "TaxTransactionLog"))',
                             data: postData,
-                            traditional: true,                            
+                            traditional: true,
                             error: function (jqXHR, textStatus, errorThrown) {
-                                $('#deleteSelectedFailed-info').text(errorThrown);
-                                $("#deleteSelectedFailed").click();
+                                $('#delete-selected-failed-info').text(errorThrown);
+                                $('#delete-selected-failed').click();
                             },
                             complete: function (jqXHR, textStatus) {
                                 updateTable('#log-grid');
                             }
                         });
                         $('#delete-selected-action-confirmation').modal('toggle');
+                        return false;
+                    });
+
+                    $('#clear-all-action-confirmation-submit-button').bind('click', function () {
+                        $.ajax({
+                            cache: false,
+                            type: 'GET',
+                            url: '@(Url.Action("ClearAll", "TaxTransactionLog"))',
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $('#clear-all-failed-info').text(errorThrown);
+                                $('#clear-all-failed').click();
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                updateTable('#log-grid');
+                            }
+                        });
+                        $('#clear-all-action-confirmation').modal('toggle');
                         return false;
                     });
                 });
@@ -117,7 +133,13 @@
                 @T("Admin.System.Log.DeleteSelected")
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />
+            <button type="button" id="clear-all" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.System.Log.ClearLog")
+            </button>
+            <nop-action-confirmation asp-button-id="clear-all" />
         </div>
     </div>
 </div>
-<nop-alert asp-alert-id="deleteSelectedFailed" />
+<nop-alert asp-alert-id="delete-selected-failed" />
+<nop-alert asp-alert-id="clear-all-failed" />

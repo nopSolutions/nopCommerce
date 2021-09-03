@@ -35,7 +35,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStoreContext _storeContext;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
@@ -51,7 +50,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
             ICustomerService customerService,
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
-            IStoreContext storeContext,
             ITaxPluginManager taxPluginManager,
             IWorkContext workContext,
             TaxSettings taxSettings)
@@ -63,7 +61,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
             _customerService = customerService;
             _localizationService = localizationService;
             _stateProvinceService = stateProvinceService;
-            _storeContext = storeContext;
             _taxPluginManager = taxPluginManager;
             _workContext = workContext;
             _taxSettings = taxSettings;
@@ -85,7 +82,8 @@ namespace Nop.Plugin.Tax.Avalara.Components
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             //ensure that Avalara tax provider is active
-            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName, customer))
                 return Content(string.Empty);
 
             //ensure that it's a proper widget zone
@@ -98,9 +96,9 @@ namespace Nop.Plugin.Tax.Avalara.Components
 
             //validate entered by customer addresses only
             var addressId = _taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress
-                ? (await _workContext.GetCurrentCustomerAsync()).BillingAddressId
+                ? customer.BillingAddressId
                 : _taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress
-                ? (await _workContext.GetCurrentCustomerAsync()).ShippingAddressId
+                ? customer.ShippingAddressId
                 : null;
 
             var address = await _addressService.GetAddressByIdAsync(addressId ?? 0);
@@ -143,7 +141,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             validatedAddress.StateProvinceId = (await _stateProvinceService.GetStateProvinceByAbbreviationAsync(validatedAddressInfo.region))?.Id;
 
             //try to find an existing address with the same values
-            var existingAddress = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id)).ToList(),
+            var existingAddress = _addressService.FindAddress((await _customerService.GetAddressesByCustomerIdAsync(customer.Id)).ToList(),
                 validatedAddress.FirstName, validatedAddress.LastName, validatedAddress.PhoneNumber,
                 validatedAddress.Email, validatedAddress.FaxNumber, validatedAddress.Company,
                 validatedAddress.Address1, validatedAddress.Address2, validatedAddress.City,

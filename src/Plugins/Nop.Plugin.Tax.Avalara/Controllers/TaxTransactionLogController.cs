@@ -51,8 +51,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Methods
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<IActionResult> LogList(TaxTransactionLogSearchModel searchModel)
+        public async Task<IActionResult> LogList(TaxTransactionLogSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return await AccessDeniedDataTablesJson();
@@ -86,8 +85,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
+        public async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -98,8 +96,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             return Json(new { Result = true });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<IActionResult> View(int id)
+        public async Task<IActionResult> View(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -125,8 +122,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         }
 
         [HttpPost]
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -140,6 +136,16 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             }
 
             return RedirectToAction("Configure", "Avalara");
+        }
+
+        public async Task<IActionResult> ClearAll()
+        {
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            await _taxTransactionLogService.ClearLogAsync();
+
+            return Json(new { Result = true });
         }
 
         #endregion

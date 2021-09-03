@@ -7,7 +7,7 @@ namespace Nop.Plugin.Tax.Avalara.Services.Caching
     /// <summary>
     /// Represents a customer cache event consumer
     /// </summary>
-    public partial class CustomerCacheEventConsumer : CacheEventConsumer<Customer>
+    public class CustomerCacheEventConsumer : CacheEventConsumer<Customer>
     {
         #region Methods
 
