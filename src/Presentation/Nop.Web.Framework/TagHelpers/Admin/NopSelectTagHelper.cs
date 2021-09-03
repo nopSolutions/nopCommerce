@@ -134,7 +134,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 IHtmlContent selectList;
                 if (multiple)
                 {
-                    selectList = _htmlHelper.Editor(tagName, "MultiSelect", new { htmlAttributes, SelectList = Items });
+                    var templateName = For.ModelExplorer.ModelType == typeof(List<string>) ? "MultiSelectString" : "MultiSelect";
+                    selectList = _htmlHelper.Editor(tagName, templateName, new { htmlAttributes, SelectList = Items });
                 }
                 else
                 {
