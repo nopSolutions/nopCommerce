@@ -33,6 +33,7 @@ namespace Nop.Tests.Nop.Services.Tests
             CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
             
             var dataSettingsFilePath = CommonHelper.DefaultFileProvider.MapPath(NopDataSettingsDefaults.FilePath);
+            CommonHelper.DefaultFileProvider.CreateDirectory(CommonHelper.DefaultFileProvider.GetDirectoryName(dataSettingsFilePath));
             CommonHelper.DefaultFileProvider.WriteAllText(dataSettingsFilePath,"{}", Encoding.UTF8);
 
             Environment.SetEnvironmentVariable(NopDataSettingsDefaults.EnvironmentVariableDataConnectionString,
