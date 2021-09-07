@@ -67,43 +67,40 @@ namespace Nop.Web
 				swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
 				{
 					{
-						  new OpenApiSecurityScheme
+						new OpenApiSecurityScheme
+						{
+							Reference = new OpenApiReference
 							{
-								Reference = new OpenApiReference
-								{
-									Type = ReferenceType.SecurityScheme,
-									Id = "Bearer"
-								}
-							},
-							new string[] {}
-
+								Type = ReferenceType.SecurityScheme,
+								Id = "Bearer"
+							}
+						},
+						new string[] {}
 					}
 				});
 			});
 
-			services.AddAuthentication(option =>
-			{
-				option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-			}).AddJwtBearer(options =>
-			{
-				options.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidateLifetime = false,
-					ValidateIssuerSigningKey = true,
-					ValidIssuer = _configuration["Jwt:Issuer"],
-					ValidAudience = _configuration["Jwt:Issuer"],
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])) //Configuration["JwtToken:SecretKey"]  
-				};
-			});
+			services
+                .AddAuthentication(option => {
+				    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options => {
+				    options.TokenValidationParameters = new TokenValidationParameters {
+					    ValidateIssuer = true,
+					    ValidateAudience = true,
+					    ValidateLifetime = false,
+					    ValidateIssuerSigningKey = true,
+					    ValidIssuer = _configuration["Jwt:Issuer"],
+					    ValidAudience = _configuration["Jwt:Issuer"],
+					    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+				    };
+			    });
 			services.AddTokenAuthentication(_configuration);
 
-			
 			// configure strongly typed settings object
-			services.Configure<JwtSettings>(_configuration.GetSection("JwtSettings"));		}
+			services.Configure<JwtSettings>(_configuration.GetSection("JwtSettings"));		
+        }
 
 		/// <summary>
 		/// Configure the application HTTP request pipeline

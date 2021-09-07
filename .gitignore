@@ -200,3 +200,5 @@ src/packages/*
 src/Presentation/Nop.Web/persistent/*
 *.old
 /src/Presentation/Nop.Web/persistent/plugins.json
+images
+.idea
