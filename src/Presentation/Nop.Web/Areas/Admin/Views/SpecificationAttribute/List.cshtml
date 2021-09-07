@@ -125,10 +125,14 @@
                             url: "@(Url.Action("DeleteSelectedSpecificationAttributes", "SpecificationAttribute"))",
                             data: postData,
                             error: function (jqXHR, textStatus, errorThrown) {
-                                $('#delete-selected-specification-attributes-alert-info').text(errorThrown);
-                                $('#delete-selected-specification-attributes-alert').click();
+                                showAlert('delete-selected-specification-attributes-alert', errorThrown);
                             },
                             complete: function (jqXHR, textStatus) {
+                                if (jqXHR.status === 204)
+                                {
+                                    showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                    return;
+                                }
                                 updateTable('#specificationattributegroups-grid');
                             }
                         });
@@ -138,6 +142,7 @@
                 });
                 </script>
                 <nop-alert asp-alert-id="delete-selected-specification-attributes-alert" />
+                <nop-alert asp-alert-id="nothingSelectedAlert" />
             </div>
         </div>
     </div>

@@ -176,10 +176,14 @@
                 data: postData,
                 traditional: true,
                 error: function (jqXHR, textStatus, errorThrown) {
-                    $('#deleteSelectedSeNamesFailed-info').text(errorThrown);
-                    $("#deleteSelectedSeNamesFailed").click();
+                    showAlert('deleteSelectedSeNamesFailed', errorThrown);
                 },
                 complete: function (jqXHR, textStatus) {
+                    if (jqXHR.status === 204)
+                    {
+                        showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                        return;
+                    }
                     updateTable('#sename-grid');
                 }
             });
@@ -189,3 +193,4 @@
     });
 </script>
 <nop-alert asp-alert-id="deleteSelectedSeNamesFailed" />
+<nop-alert asp-alert-id="nothingSelectedAlert" />

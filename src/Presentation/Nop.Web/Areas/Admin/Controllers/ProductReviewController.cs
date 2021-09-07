@@ -229,8 +229,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             //filter not approved reviews
             var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => !review.IsApproved);
@@ -262,8 +262,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             //filter approved reviews
             var productReviews = (await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray())).Where(review => review.IsApproved);
@@ -292,8 +292,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return RedirectToAction("List");
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             var productReviews = await _productService.GetProductReviewsByIdsAsync(selectedIds.ToArray());
             var products = await _productService.GetProductsByIdsAsync(productReviews.Select(p => p.ProductId).Distinct().ToArray());

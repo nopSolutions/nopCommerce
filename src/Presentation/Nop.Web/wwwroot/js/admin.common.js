@@ -319,6 +319,16 @@ function reloadAllDataTables(itemCount) {
   });
 }
 
+/**
+ * @param {string} alertId Unique identifier of alert
+ * @param {any} text Message text
+ */
+function showAlert(alertId, text)
+{
+    $('#' + alertId + '-info').text(text);
+    $('#' + alertId).click();
+}
+
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {

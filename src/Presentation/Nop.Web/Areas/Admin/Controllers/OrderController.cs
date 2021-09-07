@@ -2477,11 +2477,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var shipments = new List<Shipment>();
-            if (selectedIds != null)
-            {
-                shipments.AddRange(await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray()));
-            }
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
+
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
@@ -2509,11 +2509,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var shipments = new List<Shipment>();
-            if (selectedIds != null)
-            {
-                shipments.AddRange(await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray()));
-            }
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
+
+            var shipments = await _shipmentService.GetShipmentsByIdsAsync(selectedIds.ToArray());
+
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {

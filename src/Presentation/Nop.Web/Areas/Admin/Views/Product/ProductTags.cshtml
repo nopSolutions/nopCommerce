@@ -122,10 +122,14 @@
                                     url: "@(Url.Action("ProductTagsDelete", "Product"))",
                                     data: postData,
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        $('#deleteSelectedFailed-info').text(errorThrown);
-                                        $('#deleteSelectedFailed').click();
+                                        showAlert('deleteSelectedFailed', errorThrown);
                                     },
                                     complete: function (jqXHR, textStatus) {
+                                        if (jqXHR.status === 204)
+                                        {
+                                            showAlert('nothingSelectedAlert', '@T("Admin.Common.Alert.NothingSelected")');
+                                            return;
+                                        }
                                         updateTable('#product-tags-grid');
                                     }
                                 });
@@ -135,6 +139,7 @@
                         });
                             </script>
                             <nop-alert asp-alert-id="deleteSelectedFailed" />
+                            <nop-alert asp-alert-id="nothingSelectedAlert" />
                         </div>
                     </div>
                 </div>
