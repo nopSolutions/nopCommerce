@@ -10,8 +10,8 @@
 <script>
     $(document).ready(function() {
         $("#@Html.IdForModel()").kendoNumericTextBox({
-            min: @Html.Raw(int.MinValue),
-            max: @Html.Raw(int.MaxValue),
+            min: @int.MinValue.ToString(CultureInfo.InvariantCulture),
+            max: @int.MaxValue.ToString(CultureInfo.InvariantCulture),
             decimals: 0,
             restrictDecimals: true,
             format: "# @postfix"
