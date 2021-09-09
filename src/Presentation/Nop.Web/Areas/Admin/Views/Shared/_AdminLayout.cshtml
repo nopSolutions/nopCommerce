@@ -3,20 +3,16 @@
 @inject IPermissionService permissionService
 @inject ICustomerService customerService
 @inject IEventPublisher eventPublisher
-@inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject INopFileProvider fileProvider;
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
-@inject Nop.Services.Localization.ILanguageService languageService
-@using System.Globalization
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Common
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Security
-@using Nop.Web.Framework.UI
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
@@ -24,9 +20,8 @@
     //Kendo UI
     var kendoVersion = "2020.1.406";
 
-    var currentKendoCulture = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).LanguageCulture;
-
-    var currentCulture = CultureInfo.CurrentCulture;
+    var currentCultureName = CultureInfo.CurrentCulture.Name;
+    var currentUICultureName = CultureInfo.CurrentUICulture.Name;
 
     //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
     string GetDefaultLocale()
@@ -35,18 +30,18 @@
 
         var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
 
-        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
-            cultureToUse = currentCulture.Name;
-        else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
-            cultureToUse = currentCulture.TwoLetterISOLanguageName;
+        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCultureName))))
+            cultureToUse = currentCultureName;
+        else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, CultureInfo.CurrentCulture.TwoLetterISOLanguageName))))
+            cultureToUse = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
         return cultureToUse;
     }
 
-    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+    var dir = Html.GetUIDirection(localizationSettings.IgnoreRtlPropertyForAdminArea);
 
     //CSS resources
-    if (supportRtl)
+    if (dir == "rtl")
     {
         Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
         Html.AppendCssFileParts("~/lib/adminLTE/css/adminlte-rtl.min.css");
@@ -75,11 +70,11 @@
     Html.AppendScriptParts($"~/lib_npm/moment/min/moment-with-locales.min.js");
     Html.AppendScriptParts($"~/lib_npm/datatables.net-bs4/js/dataTables.bootstrap4.min.js");
     Html.AppendScriptParts($"~/lib_npm/datatables.net/js/jquery.dataTables.min.js");
-    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{currentKendoCulture}.min.js");
-    var fileInfo = fileProvider.GetFileInfo($"{WebHostEnvironment.WebRootPath}/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentKendoCulture}.min.js");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{currentCultureName}.min.js");
+    var fileInfo = fileProvider.GetFileInfo($"{WebHostEnvironment.WebRootPath}/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentUICultureName}.min.js");
     @if (fileInfo.Exists)
     {
-        Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentKendoCulture}.min.js");
+        Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentUICultureName}.min.js");
     }
     else
     {
@@ -133,7 +128,7 @@
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@dir">
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -156,14 +151,14 @@
 
             //load cldr for current culture
             $.when(
-                $.get("/lib_npm/cldr-data/supplemental/likelySubtags.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/numbers.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/currencies.json"),
-                $.get("/lib_npm/cldr-data/supplemental/numberingSystems.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/ca-gregorian.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/timeZoneNames.json"),
-                $.get("/lib_npm/cldr-data/supplemental/timeData.json"),
-                $.get("/lib_npm/cldr-data/supplemental/weekData.json"),
+                $.get({ url: "/lib_npm/cldr-data/supplemental/likelySubtags.json", dataType: "json"}),
+                $.get({ url: "/lib_npm/cldr-data/main/" + culture + "/numbers.json", dataType: "json"}),
+                $.get({ url: "/lib_npm/cldr-data/main/" + culture + "/currencies.json", dataType: "json"}),
+                $.get({ url: "/lib_npm/cldr-data/supplemental/numberingSystems.json", dataType: "json"}),
+                $.get({ url: "/lib_npm/cldr-data/main/" + culture + "/ca-gregorian.json", dataType: "json"}),
+                $.get({ url: "/lib_npm/cldr-data/main/" + culture + "/timeZoneNames.json", dataType: "json"}),
+                $.get({ url: "/lib_npm/cldr-data/supplemental/timeData.json", dataType: "json"}),
+                $.get({ url: "/lib_npm/cldr-data/supplemental/weekData.json", dataType: "json"}),
             ).then(function () {
                 // Normalize $.get results, we only need the JSON, not the request statuses.
                 return [].slice.apply(arguments, [0]).map(function (result) {
@@ -174,7 +169,7 @@
             });
     </script>
     <script>
-            kendo.culture("@(currentKendoCulture)");
+            kendo.culture("@(currentCultureName)");
     </script>
     <div class="throbber">
         <div class="curtain">
@@ -328,7 +323,7 @@
                                 <div class="col-md-4 col-xs-12"></div>
                             }
                             <div class="col-md-4 col-xs-12 text-center">
-                                @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", currentCulture))
+                                @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", CultureInfo.CurrentCulture))
                             </div>
                             <div class="col-md-4 col-xs-12 text-md-right text-center">
                                 <b>nopCommerce version @NopVersion.FULL_VERSION</b>

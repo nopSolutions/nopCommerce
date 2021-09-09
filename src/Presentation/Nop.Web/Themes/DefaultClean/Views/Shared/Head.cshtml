@@ -1,15 +1,9 @@
-﻿@using Nop.Core
-@using Nop.Services.Helpers
-@using Nop.Web.Framework.UI
-@inject IWorkContext workContext
-@inject IThemeContext themeContext
-@inject IUserAgentHelper userAgentHelper
+﻿@inject IThemeContext themeContext
 @{
-    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
     var themeName = await themeContext.GetWorkingThemeNameAsync();
 
     //add main CSS file
-    if (supportRtl)
+    if (await ShouldUseRtlThemeAsync())
     {
         Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css");
     }

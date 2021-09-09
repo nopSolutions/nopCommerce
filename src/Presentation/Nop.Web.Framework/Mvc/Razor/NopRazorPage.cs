@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Nop.Core;
+﻿using System.Globalization;
+using System.Threading.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Themes;
@@ -54,17 +54,14 @@ namespace Nop.Web.Framework.Mvc.Razor
         /// </returns>
         public async Task<bool> ShouldUseRtlThemeAsync()
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
-            if (supportRtl)
-            {
-                //ensure that the active theme also supports it
-                var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
-                var themeContext = EngineContext.Current.Resolve<IThemeContext>();
-                supportRtl = (await themeProvider.GetThemeBySystemNameAsync(await themeContext.GetWorkingThemeNameAsync()))?.SupportRtl ?? false;
-            }
+            if (!CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+                return false;
 
-            return supportRtl;
+            //ensure that the active theme also supports it
+            var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
+            var themeContext = EngineContext.Current.Resolve<IThemeContext>();
+
+            return (await themeProvider.GetThemeBySystemNameAsync(await themeContext.GetWorkingThemeNameAsync()))?.SupportRtl ?? false;
         }
     }
 

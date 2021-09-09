@@ -136,32 +136,6 @@ namespace Nop.Web.Framework
         }
 
         /// <summary>
-        /// Get language from the requested page URL
-        /// </summary>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the found language
-        /// </returns>
-        protected virtual async Task<Language> GetLanguageFromUrlAsync()
-        {
-            if (_httpContextAccessor.HttpContext?.Request == null)
-                return null;
-
-            //whether the requsted URL is localized
-            var path = _httpContextAccessor.HttpContext.Request.Path.Value;
-
-            var (isLocalized, language) = await path.IsLocalizedUrlAsync(_httpContextAccessor.HttpContext.Request.PathBase, false);
-            if (!isLocalized)
-                return null;
-
-            //check language availability
-            if (!await _storeMappingService.AuthorizeAsync(language))
-                return null;
-
-            return language;
-        }
-
-        /// <summary>
         /// Get language from the request
         /// </summary>
         /// <returns>
@@ -328,7 +302,24 @@ namespace Nop.Web.Framework
             //save passed language identifier
             var customer = await GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
+
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LanguageIdAttribute, language?.Id ?? 0, store.Id);
+
+            var response = _httpContextAccessor.HttpContext?.Response;
+
+            if (response is not null)
+            {
+                response.Cookies.Delete(CookieRequestCultureProvider.DefaultCookieName);
+
+                if (!string.IsNullOrEmpty(language?.LanguageCulture))
+                {
+                    response.Cookies.Append(
+                        CookieRequestCultureProvider.DefaultCookieName,
+                        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(language.LanguageCulture)),
+                        new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+                    );
+                }
+            }
 
             //then reset the cached value
             _cachedLanguage = null;
@@ -347,71 +338,41 @@ namespace Nop.Web.Framework
             var customer = await GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
 
-            Language detectedLanguage = null;
-
-            //localized URLs are enabled, so try to get language from the requested page URL
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                detectedLanguage = await GetLanguageFromUrlAsync();
-
             //whether we should detect the language from the request
-            if (detectedLanguage == null && _localizationSettings.AutomaticallyDetectLanguage)
-            {
-                //whether language already detected by this way
-                var alreadyDetected = await _genericAttributeService
-                    .GetAttributeAsync<bool>(customer, NopCustomerDefaults.LanguageAutomaticallyDetectedAttribute, store.Id);
+            var detectedLanguage = await GetLanguageFromRequestAsync();
 
-                //if not, try to get language from the request
-                if (!alreadyDetected)
-                {
-                    detectedLanguage = await GetLanguageFromRequestAsync();
-                    if (detectedLanguage != null)
-                    {
-                        //language already detected
-                        await _genericAttributeService
-                            .SaveAttributeAsync(customer, NopCustomerDefaults.LanguageAutomaticallyDetectedAttribute, true, store.Id);
-                    }
-                }
-            }
+            //get current saved language identifier
+            var currentLanguageId = await _genericAttributeService
+                .GetAttributeAsync<int>(customer, NopCustomerDefaults.LanguageIdAttribute, store.Id);
 
             //if the language is detected we need to save it
             if (detectedLanguage != null)
             {
-                //get current saved language identifier
-                var currentLanguageId = await _genericAttributeService
-                    .GetAttributeAsync<int>(customer, NopCustomerDefaults.LanguageIdAttribute, store.Id);
-
                 //save the detected language identifier if it differs from the current one
                 if (detectedLanguage.Id != currentLanguageId)
-                {
-                    await _genericAttributeService
-                        .SaveAttributeAsync(customer, NopCustomerDefaults.LanguageIdAttribute, detectedLanguage.Id, store.Id);
-                }
+                    await SetWorkingLanguageAsync(detectedLanguage);
             }
-
-            //get current customer language identifier
-            var customerLanguageId = await _genericAttributeService
-                .GetAttributeAsync<int>(customer, NopCustomerDefaults.LanguageIdAttribute, store.Id);
-
-            var allStoreLanguages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
-
-            //check customer language availability
-            var customerLanguage = allStoreLanguages.FirstOrDefault(language => language.Id == customerLanguageId);
-            if (customerLanguage == null)
+            else
             {
+                var allStoreLanguages = await _languageService.GetAllLanguagesAsync(storeId: store.Id);
+
+                //check customer language availability
+                detectedLanguage = allStoreLanguages.FirstOrDefault(language => language.Id == currentLanguageId);
+                
                 //it not found, then try to get the default language for the current store (if specified)
-                customerLanguage = allStoreLanguages.FirstOrDefault(language => language.Id == store.DefaultLanguageId);
+                detectedLanguage ??= allStoreLanguages.FirstOrDefault(language => language.Id == store.DefaultLanguageId);
+
+                //if the default language for the current store not found, then try to get the first one
+                detectedLanguage ??= allStoreLanguages.FirstOrDefault();
+
+                //if there are no languages for the current store try to get the first one regardless of the store
+                detectedLanguage ??= (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
+
+                await SetWorkingLanguageAsync(detectedLanguage);
             }
-
-            //if the default language for the current store not found, then try to get the first one
-            if (customerLanguage == null)
-                customerLanguage = allStoreLanguages.FirstOrDefault();
-
-            //if there are no languages for the current store try to get the first one regardless of the store
-            if (customerLanguage == null)
-                customerLanguage = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
 
             //cache the found language
-            _cachedLanguage = customerLanguage;
+            _cachedLanguage = detectedLanguage;
 
             return _cachedLanguage;
         }

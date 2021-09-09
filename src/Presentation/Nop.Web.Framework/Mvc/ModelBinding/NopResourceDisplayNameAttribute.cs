@@ -37,7 +37,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         public string ResourceKey { get; set; }
 
         /// <summary>
-        /// Getss the display name
+        /// Gets the display name
         /// </summary>
         public override string DisplayName
         {

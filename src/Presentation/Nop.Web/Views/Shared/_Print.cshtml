@@ -1,13 +1,11 @@
 ﻿@using Nop.Core
-@inject Nop.Services.Localization.ILanguageService languageService
 @inject Nop.Core.Domain.Common.CommonSettings commonSettings
 @inject IThemeContext themeContext
-@inject IWorkContext workContext;
 @{
     var themeName = await themeContext.GetWorkingThemeNameAsync();
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())" @Html.NopPageCssClasses()>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

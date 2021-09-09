@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -282,7 +283,7 @@ namespace Nop.Web.Extensions
         /// <param name="systemName">System name</param>
         /// <returns>
         /// A task that represents the asynchronous operation
-        /// The task result contains the opic SEO Name
+        /// The task result contains the topic SEO Name
         /// </returns>
         public static async Task<string> GetTopicSeNameAsync<TModel>(this IHtmlHelper<TModel> html, string systemName)
         {
@@ -297,6 +298,20 @@ namespace Nop.Web.Extensions
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
 
             return await urlRecordService.GetSeNameAsync(topic);
+        }
+
+        /// <summary>
+        /// Get a value of the text flow uses for the current UI culture
+        /// </summary>
+        /// <param name="html">HTML helper</param>
+        /// <param name="ignoreRtl">A value indicating whether to we should ignore RTL language property for admin area. False by default</param>
+        /// <returns>"rtl" if text flows from right to left; otherwise, "ltr".</returns>
+        public static string GetUIDirection(this IHtmlHelper html, bool ignoreRtl = false)
+        {
+            if(ignoreRtl)
+                return "ltr";
+
+            return CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
         }
     }
 }
