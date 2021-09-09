@@ -1609,43 +1609,38 @@ namespace Nop.Services.Orders
                                 scheduleDate = DateTime.UtcNow;
                                 if (scheduleDate.Value.Date == currentDate.Date)
                                 {
+                                    var time = dates[0].Split('-')[0].Split(':');
+                                    var firstTime = dates[0].Split('-')[1].Split(':');
+                                    var secondTime = dates[1].Split('-')[1].Split(':');
+                                    var thirdTime = dates[2].Split('-')[1].Split(':');
                                     //Get the first value of the first setting
-                                    var nextdayTime = TimeSpan.Parse(dates[0].Split('-')[0].Split(':')[0]);
+                                    var nextDayDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(time[0]), Convert.ToInt32(time[1]), Convert.ToInt32(time[2]), DateTimeKind.Utc);
                                     //Get the first value of the second setting
-                                    var firstTime = TimeSpan.Parse(dates[0].Split('-')[1].Split(':')[0]);
+                                    var firstDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(firstTime[0]), Convert.ToInt32(firstTime[1]), Convert.ToInt32(firstTime[2]), DateTimeKind.Utc);
                                     //Get the second value of the second setting
-                                    var secondTime = TimeSpan.Parse(dates[1].Split('-')[1].Split(':')[0]);
+                                    var secondDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(secondTime[0]), Convert.ToInt32(secondTime[1]), Convert.ToInt32(secondTime[2]), DateTimeKind.Utc);
                                     //Get the second value of the third setting
-                                    var thirdTime = TimeSpan.Parse(dates[2].Split('-')[1].Split(':')[0]);
-
-                                    //Taking tomorrow date for the orders which have passed today's schedule date
-                                    var nextDayDate = currentDate.AddDays(+1);
+                                    var thirdDateTime = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, Convert.ToInt32(thirdTime[0]), Convert.ToInt32(thirdTime[1]), Convert.ToInt32(thirdTime[2]), DateTimeKind.Utc);
 
                                     //check current date is less then first time of setting
-                                    if (currentDate.Ticks < firstTime.Ticks)
-                                    {
-                                        currentDate.AddTicks(firstTime.Ticks);
-                                        scheduleDate = currentDate;
-                                    }
+                                    if (currentDate < firstDateTime)
+                                        scheduleDate = firstDateTime;
+
                                     //check current date is equal to second time of setting
-                                    else if (currentDate.Ticks == secondTime.Ticks)
+                                    else if (currentDate == secondDateTime)
                                     {
-                                        currentDate.AddTicks(secondTime.Ticks);
-                                        scheduleDate = currentDate;
+                                        scheduleDate = secondDateTime;
                                     }
                                     //check current date is equal to third Time of setting
-                                    else if (currentDate.Ticks == thirdTime.Ticks)
+                                    else if (currentDate == thirdDateTime)
                                     {
-                                        currentDate.AddTicks(thirdTime.Ticks);
-                                        scheduleDate = currentDate;
+                                        scheduleDate = thirdDateTime;
                                     }
                                     //check current date is greater then nextday Time of setting
-                                    else if (currentDate.Ticks > nextdayTime.Ticks)
+                                    else if (currentDate > nextDayDateTime)
                                     {
-                                        nextDayDate.AddTicks(nextdayTime.Ticks);
-                                        scheduleDate = nextDayDate;
+                                        scheduleDate = nextDayDateTime;
                                     }
-
                                 }
                             }
                             orderScheduleDate = scheduleDate.Value;
