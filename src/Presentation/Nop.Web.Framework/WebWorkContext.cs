@@ -20,6 +20,7 @@ using Nop.Services.Localization;
 using Nop.Services.ScheduleTasks;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
+using Nop.Web.Framework.Globalization;
 
 namespace Nop.Web.Framework
 {
@@ -136,6 +137,28 @@ namespace Nop.Web.Framework
         }
 
         /// <summary>
+        /// Set language culture cookie
+        /// </summary>
+        /// <param name="language">Language</param>
+        protected virtual void SetLanguageCookie(Language language)
+        {
+            if (_httpContextAccessor.HttpContext?.Response?.HasStarted ?? true)
+                return;
+
+            //delete current cookie value
+            var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.CultureCookie}";
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookieName);
+
+            if (string.IsNullOrEmpty(language?.LanguageCulture))
+                return;
+
+            //set new cookie value
+            var value = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(language.LanguageCulture));
+            var options = new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) };
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, value, options);
+        }
+
+        /// <summary>
         /// Get language from the request
         /// </summary>
         /// <returns>
@@ -144,17 +167,21 @@ namespace Nop.Web.Framework
         /// </returns>
         protected virtual async Task<Language> GetLanguageFromRequestAsync()
         {
-            if (_httpContextAccessor.HttpContext?.Request == null)
+            var requestCultureFeature = _httpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>();
+            if (requestCultureFeature is null)
+                return null;
+
+            //whether we should detect the current language by customer settings
+            if (requestCultureFeature.Provider is not NopSeoUrlCultureProvider && !_localizationSettings.AutomaticallyDetectLanguage)
                 return null;
 
             //get request culture
-            var requestCulture = _httpContextAccessor.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture;
-            if (requestCulture == null)
+            if (requestCultureFeature.RequestCulture is null)
                 return null;
 
             //try to get language by culture name
             var requestLanguage = (await _languageService.GetAllLanguagesAsync()).FirstOrDefault(language =>
-                language.LanguageCulture.Equals(requestCulture.Culture.Name, StringComparison.InvariantCultureIgnoreCase));
+                language.LanguageCulture.Equals(requestCultureFeature.RequestCulture.Culture.Name, StringComparison.InvariantCultureIgnoreCase));
 
             //check language availability
             if (requestLanguage == null || !requestLanguage.Published || !await _storeMappingService.AuthorizeAsync(requestLanguage))
@@ -302,24 +329,10 @@ namespace Nop.Web.Framework
             //save passed language identifier
             var customer = await GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
-
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.LanguageIdAttribute, language?.Id ?? 0, store.Id);
 
-            var response = _httpContextAccessor.HttpContext?.Response;
-
-            if (response is not null)
-            {
-                response.Cookies.Delete(CookieRequestCultureProvider.DefaultCookieName);
-
-                if (!string.IsNullOrEmpty(language?.LanguageCulture))
-                {
-                    response.Cookies.Append(
-                        CookieRequestCultureProvider.DefaultCookieName,
-                        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(language.LanguageCulture)),
-                        new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
-                    );
-                }
-            }
+            //set cookie
+            SetLanguageCookie(language);
 
             //then reset the cached value
             _cachedLanguage = null;
@@ -358,7 +371,7 @@ namespace Nop.Web.Framework
 
                 //check customer language availability
                 detectedLanguage = allStoreLanguages.FirstOrDefault(language => language.Id == currentLanguageId);
-                
+
                 //it not found, then try to get the default language for the current store (if specified)
                 detectedLanguage ??= allStoreLanguages.FirstOrDefault(language => language.Id == store.DefaultLanguageId);
 
@@ -368,7 +381,7 @@ namespace Nop.Web.Framework
                 //if there are no languages for the current store try to get the first one regardless of the store
                 detectedLanguage ??= (await _languageService.GetAllLanguagesAsync()).FirstOrDefault();
 
-                await SetWorkingLanguageAsync(detectedLanguage);
+                SetLanguageCookie(detectedLanguage);
             }
 
             //cache the found language

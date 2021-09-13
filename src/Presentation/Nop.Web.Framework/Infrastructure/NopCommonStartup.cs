@@ -37,9 +37,6 @@ namespace Nop.Web.Framework.Infrastructure
             //add anti-forgery
             services.AddAntiForgery();
 
-            //add localization
-            services.AddLocalization();
-
             //add theme support
             services.AddThemes();
 

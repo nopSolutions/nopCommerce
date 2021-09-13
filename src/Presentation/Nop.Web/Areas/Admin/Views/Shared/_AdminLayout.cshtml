@@ -20,9 +20,6 @@
     //Kendo UI
     var kendoVersion = "2020.1.406";
 
-    var currentCultureName = CultureInfo.CurrentCulture.Name;
-    var currentUICultureName = CultureInfo.CurrentUICulture.Name;
-
     //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
     string GetDefaultLocale()
     {
@@ -30,8 +27,8 @@
 
         var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
 
-        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCultureName))))
-            cultureToUse = currentCultureName;
+        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, CultureInfo.CurrentCulture.Name))))
+            cultureToUse = CultureInfo.CurrentCulture.Name;
         else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, CultureInfo.CurrentCulture.TwoLetterISOLanguageName))))
             cultureToUse = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
@@ -70,11 +67,11 @@
     Html.AppendScriptParts($"~/lib_npm/moment/min/moment-with-locales.min.js");
     Html.AppendScriptParts($"~/lib_npm/datatables.net-bs4/js/dataTables.bootstrap4.min.js");
     Html.AppendScriptParts($"~/lib_npm/datatables.net/js/jquery.dataTables.min.js");
-    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{currentCultureName}.min.js");
-    var fileInfo = fileProvider.GetFileInfo($"{WebHostEnvironment.WebRootPath}/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentUICultureName}.min.js");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{CultureInfo.CurrentCulture.Name}.min.js");
+    var fileInfo = fileProvider.GetFileInfo($"{WebHostEnvironment.WebRootPath}/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{CultureInfo.CurrentUICulture.Name}.min.js");
     @if (fileInfo.Exists)
     {
-        Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentUICultureName}.min.js");
+        Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{CultureInfo.CurrentUICulture.Name}.min.js");
     }
     else
     {
@@ -169,7 +166,7 @@
             });
     </script>
     <script>
-            kendo.culture("@(currentCultureName)");
+            kendo.culture("@(CultureInfo.CurrentCulture.Name)");
     </script>
     <div class="throbber">
         <div class="curtain">

@@ -193,7 +193,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
                     i,
                     (SelectedMonth.HasValue && SelectedMonth.Value == i) ? " selected=\"selected\"" : null,
-                    CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
+                    CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i));
             }
 
             years.AppendFormat("<option value='{0}'>{1}</option>", "0", await _localizationService.GetResourceAsync("Common.Year"));

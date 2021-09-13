@@ -7,8 +7,10 @@ using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
+using Nop.Services.Themes;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
@@ -308,10 +310,31 @@ namespace Nop.Web.Extensions
         /// <returns>"rtl" if text flows from right to left; otherwise, "ltr".</returns>
         public static string GetUIDirection(this IHtmlHelper html, bool ignoreRtl = false)
         {
-            if(ignoreRtl)
+            if (ignoreRtl)
                 return "ltr";
 
             return CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+        }
+
+        /// <summary>
+        /// Return a value indicating whether the working language and theme support RTL (right-to-left)
+        /// </summary>
+        /// <param name="html">HTML helper</param>
+        /// <param name="themeName">Theme name</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the value
+        /// </returns>
+        public static async Task<bool> ShouldUseRtlThemeAsync(this IHtmlHelper html, string themeName = null)
+        {
+            if (!CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+                return false;
+
+            //ensure that the active theme also supports it
+            themeName ??= await EngineContext.Current.Resolve<IThemeContext>().GetWorkingThemeNameAsync();
+            var theme = await EngineContext.Current.Resolve<IThemeProvider>().GetThemeBySystemNameAsync(themeName);
+
+            return theme?.SupportRtl ?? false;
         }
     }
 }
