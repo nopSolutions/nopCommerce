@@ -316,6 +316,16 @@ namespace Nop.Services.Media.RoxyFileman
             await SavePictureByVirtualPathAsync(picture, maxWidth > maxHeight ? maxWidth : maxHeight);
         }
 
+        /// <summary>
+        /// Checks if a file is an image
+        /// </summary>
+        /// <param name="filePath">File path to check</param>
+        /// <returns>True, if a file is an image. False, in other case</returns>
+        protected virtual bool IsImage(string filePath)
+        {
+            return GetFileType($".{filePath.Split('.').Last()}") == "image";
+        }
+
         #endregion
 
         #region Methods
@@ -413,6 +423,13 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
+            if (!IsImage(sourcePath))
+            {
+                await base.CopyFileAsync(sourcePath, destinationPath);
+
+                return;
+            }
+
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
             var picture = await GetPictureByFileAsync(filePath);
 
@@ -433,6 +450,13 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task DeleteFileAsync(string sourcePath)
         {
+            if (!IsImage(sourcePath))
+            {
+                await base.DeleteFileAsync(sourcePath);
+
+                return;
+            }
+
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
             var picture = await GetPictureByFileAsync(filePath);
 
@@ -454,6 +478,9 @@ namespace Nop.Services.Media.RoxyFileman
         {
             await base.MoveFileAsync(sourcePath, destinationPath);
 
+            if (!IsImage(sourcePath)) 
+                return;
+
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
             var picture = await GetPictureByFileAsync(filePath);
 
@@ -472,6 +499,13 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task RenameFileAsync(string sourcePath, string newName)
         {
+            if (!IsImage(sourcePath))
+            {
+                await base.RenameFileAsync(sourcePath, newName);
+
+                return;
+            }
+                
             var filePath = _fileProvider.GetAbsolutePath(_fileProvider.GetVirtualPath(sourcePath));
             var picture = await GetPictureByFileAsync(filePath);
 
@@ -510,16 +544,12 @@ namespace Nop.Services.Media.RoxyFileman
                         var uniqueFileName = GetUniqueFileName(fullPath, _fileProvider.GetFileName(fileName));
                         var destinationFile = _fileProvider.Combine(fullPath, uniqueFileName);
 
-                        //A warning (SCS0018 - Path Traversal) from the "Security Code Scan" analyzer may appear at this point. 
-                        //In this case, it is not relevant. The input is not supplied by user.
-                        if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
+                        if (IsImage(uniqueFileName))
+                            await _pictureService.InsertPictureAsync(formFile, virtualPath: await GetVirtualPathAsync(directoryPath));
+                        else
                         {
                             await using var stream = new FileStream(destinationFile, FileMode.OpenOrCreate);
                             await formFile.CopyToAsync(stream);
-                        }
-                        else
-                        {
-                            await _pictureService.InsertPictureAsync(formFile, virtualPath: await GetVirtualPathAsync(directoryPath));
                         }
                     }
                     else
