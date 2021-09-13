@@ -68,7 +68,7 @@ namespace Nop.Tests.Nop.Services.Tests.ScheduleTasks
         }
 
         [Test]
-        public async Task ExecuteShouldRaiseExceptionIfThrowExceptionFlagSet()
+        public void ExecuteShouldRaiseExceptionIfThrowExceptionFlagSet()
         {
             _task.Enabled = true;
             Assert.Throws<AggregateException>(() =>
