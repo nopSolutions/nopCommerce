@@ -5,8 +5,7 @@ using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Data
 {
-    [SkipMigrationOnUpdate]
-    [NopMigration("2020/02/03 08:40:55:1687541", "Shipping.FixedByWeightByTotal base schema")]
+    [NopMigration("2020/02/03 08:40:55:1687541", "Shipping.FixedByWeightByTotal base schema", MigrationProcessType.Installation)]
     public class SchemaMigration : AutoReversingMigration
     {
         public override void Up()

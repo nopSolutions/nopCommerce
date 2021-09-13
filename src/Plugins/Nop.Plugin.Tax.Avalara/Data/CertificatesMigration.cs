@@ -10,8 +10,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Plugin.Tax.Avalara.Data
 {
-    [SkipMigrationOnInstall]
-    [NopMigration("2021-09-06 00:00:00", "Tax.Avalara 2.50. Add certificates feature")]
+    [NopMigration("2021-09-06 00:00:00", "Tax.Avalara 2.50. Add certificates feature", MigrationProcessType.Update)]
     public class CertificatesMigration : MigrationBase
     {
         #region Fields
