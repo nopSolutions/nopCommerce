@@ -26,10 +26,10 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Data.Extensions;
 
-namespace Nop.Data.Migrations
+namespace Nop.Data.Migrations.Installation
 {
-    [SkipMigrationOnUpdate]
     [NopMigration("2020/01/31 11:24:16:2551771", "Nop.Data base schema")]
+    [SkipMigrationOnUpdate]
     public class SchemaMigration : AutoReversingMigration
     {
         /// <summary>
