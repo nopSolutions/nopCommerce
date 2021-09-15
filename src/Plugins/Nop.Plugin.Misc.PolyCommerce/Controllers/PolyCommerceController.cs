@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Net.Http;
 using System.Text;
@@ -90,8 +89,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                         }
                     }
                 }
-
-
 
                 var primaryStoreCurrency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
 

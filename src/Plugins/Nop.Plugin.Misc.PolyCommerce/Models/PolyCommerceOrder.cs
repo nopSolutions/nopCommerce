@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.WindowsAzure.Storage.Blob.Protocol;
+﻿using System.Collections.Generic;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Models
 {

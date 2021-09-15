@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Menu;
@@ -10,15 +8,14 @@ namespace Nop.Plugin.Misc.MrPoly
 {
     public class MrPolyPlugin : BasePlugin, IAdminMenuPlugin
     {
-        public void ManageSiteMap(SiteMapNode rootNode)
+        public Task ManageSiteMapAsync(SiteMapNode rootNode)
         {
             // Create custom PolyCommerce menu item
-
             var menuItem = new SiteMapNode()
             {
                 SystemName = "MrPolyPlugin",
                 Title = "Mr. Poly",
-                IconClass = "fa-male",
+                IconClass = "fa fa-male",
                 Url = "/Admin/MrPoly/Index",
                 Visible = true,
                 RouteValues = new RouteValueDictionary() { { "area", null } },
@@ -29,6 +26,8 @@ namespace Nop.Plugin.Misc.MrPoly
             {
                 rootNode.ChildNodes.Add(menuItem);
             }
+
+            return Task.FromResult(0);
 
         }
     }

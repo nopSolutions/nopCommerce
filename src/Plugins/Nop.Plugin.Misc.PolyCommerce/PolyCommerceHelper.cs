@@ -1,15 +1,15 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Plugin.Misc.PolyCommerce.Models;
 
 namespace Nop.Plugin.Misc.PolyCommerce
 {
     public static class PolyCommerceHelper
     {
-        //public static string GetBaseUrl() => "https://localhost:44340";
-        public static string GetBaseUrl() => "https://portal.polycommerce.com";
+        public static string GetBaseUrl() => "https://localhost:44367";
+        //public static string GetBaseUrl() => "https://portal.polycommerce.com";
 
         public static async Task<PolyCommerceStore> GetPolyCommerceStoreByToken(string token)
         {
@@ -20,7 +20,7 @@ namespace Nop.Plugin.Misc.PolyCommerce
 
             var dataSettings = DataSettingsManager.LoadSettings();
 
-            using (var conn = new SqlConnection(dataSettings.DataConnectionString))
+            using (var conn = new SqlConnection(dataSettings.ConnectionString))
             {
                 using (var command = new SqlCommand())
                 {
@@ -69,7 +69,7 @@ namespace Nop.Plugin.Misc.PolyCommerce
         {
             var dataSettings = DataSettingsManager.LoadSettings();
 
-            using (var conn = new SqlConnection(dataSettings.DataConnectionString))
+            using (var conn = new SqlConnection(dataSettings.ConnectionString))
             {
                 using (var command = new SqlCommand())
                 {

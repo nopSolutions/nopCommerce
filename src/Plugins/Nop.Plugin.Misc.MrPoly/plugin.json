@@ -3,7 +3,7 @@
   "FriendlyName": "Mr. Poly",
   "SystemName": "Misc.MrPoly",
   "Version": "1.00",
-  "SupportedVersions": [ "4.20" ],
+  "SupportedVersions": [ "4.20", "4.40" ],
   "Author": "PolyCommerce Team",
   "DisplayOrder": 1,
   "FileName": "Nop.Plugin.Misc.MrPoly.dll",

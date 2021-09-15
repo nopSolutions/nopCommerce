@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -11,9 +11,9 @@ namespace Nop.Plugin.Misc.MrPoly.Infrastructure
     {
         public int Order => 2;
 
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
         {
-            builder.RegisterType<PolyProductService>().As<IProductService>().InstancePerLifetimeScope();
+            services.AddTransient<IProductService, PolyProductService>();
         }
     }
 }

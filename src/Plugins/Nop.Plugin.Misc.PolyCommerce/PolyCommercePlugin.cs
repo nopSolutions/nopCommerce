@@ -1,23 +1,25 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Nop.Data;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Menu;
+using System.Data.SqlClient;
+using Dapper;
 
 namespace Nop.Plugin.Misc.PolyCommerce
 {
     public class PolyCommercePlugin : BasePlugin, IAdminMenuPlugin
     {
-        private readonly IDbContext _dbContext;
+        public override async Task InstallAsync()
+        {
+            var dataSettings = DataSettingsManager.LoadSettings();
 
-        public PolyCommercePlugin(IDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-        public override void Install()
-        {
-            // Create custom PolyCommerceStore table
-            _dbContext.ExecuteSqlCommand(@"if not exists(select * from information_schema.tables where TABLE_NAME = 'PolyCommerceStore')
+            using (var conn = new SqlConnection(dataSettings.ConnectionString))
+            {
+                // Create custom PolyCommerceStore table
+
+                await conn.ExecuteAsync(@"if not exists(select * from information_schema.tables where TABLE_NAME = 'PolyCommerceStore')
                                                                     create table [dbo].[PolyCommerceStore]
                                                                     (
 	                                                                    Id INT NOT NULL IDENTITY(1,1),
@@ -28,11 +30,12 @@ namespace Nop.Plugin.Misc.PolyCommerce
 	                                                                    constraint PK_PolyCommerceStore primary key(Id),
 	                                                                    constraint FK_PolyCommerceStore_Store foreign key(StoreId) references Store(Id)
                                                                     )");
+            }
 
-            base.Install();
+            await base.InstallAsync();
         }
 
-        public void ManageSiteMap(SiteMapNode rootNode)
+        public Task ManageSiteMapAsync(SiteMapNode rootNode)
         {
             // Create custom PolyCommerce menu item
 
@@ -40,7 +43,7 @@ namespace Nop.Plugin.Misc.PolyCommerce
             {
                 SystemName = "PolyCommercePlugin",
                 Title = "PolyCommerce",
-                IconClass = "fa-cubes",
+                IconClass = "fa fa-cube",
                 Url = "/Admin/PolyCommerce/Dashboard",
                 Visible = true,
                 RouteValues = new RouteValueDictionary() { { "area", null } },
@@ -51,7 +54,8 @@ namespace Nop.Plugin.Misc.PolyCommerce
             {
                 rootNode.ChildNodes.Add(menuItem);
             }
-                
+
+            return Task.FromResult(0); 
         }
     }
 }

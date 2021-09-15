@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Plugin.Misc.PolyCommerce.Consumers;
 using Nop.Plugin.Misc.PolyCommerce.Factories;
-using Nop.Plugin.Misc.PolyCommerce.Services;
-using Nop.Services.Catalog;
 using Nop.Web.Areas.Admin.Factories;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Infrastructure
@@ -17,9 +11,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Infrastructure
     {
         public int Order => 2;
 
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
         {
-            builder.RegisterType<PolyCommerceProductModelFactory>().As<IProductModelFactory>().InstancePerLifetimeScope();
+            services.AddTransient<IProductModelFactory, PolyCommerceProductModelFactory>();
         }
     }
 }

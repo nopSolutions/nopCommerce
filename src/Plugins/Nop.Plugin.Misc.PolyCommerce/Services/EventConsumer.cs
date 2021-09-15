@@ -35,7 +35,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Services
 
                 client.DefaultRequestHeaders.Add("Token", token);
 
-                client.PostAsync($"{PolyCommerceHelper.GetBaseUrl()}/api/hooks/nopcommerce/delete_product/{eventMessage.Entity.Id}", content).GetAwaiter().GetResult();
+                await client.PostAsync($"{PolyCommerceHelper.GetBaseUrl()}/api/hooks/nopcommerce/delete_product/{eventMessage.Entity.Id}", content);
             }
         }
     }

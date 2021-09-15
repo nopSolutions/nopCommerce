@@ -46,7 +46,7 @@ namespace Nop.Data.Migrations
             ITypeFinder typeFinder)
         {
             _versionLoader = new Lazy<IVersionLoader>(() => EngineContext.Current.Resolve<IVersionLoader>());
-            
+
             _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>
             {
                 [typeof(int)] = c => c.AsInt32(),
@@ -89,7 +89,7 @@ namespace Nop.Data.Migrations
 
             if (!_typeMapping.ContainsKey(propType))
                 return;
-            
+
             if (type == typeof(string) || propType.FindInterfaces((t, o) => t.FullName?.Equals(o.ToString(), StringComparison.InvariantCultureIgnoreCase) ?? false, "System.Collections.IEnumerable").Any())
                 canBeNullable = true;
 
@@ -175,7 +175,7 @@ namespace Nop.Data.Migrations
         /// <param name="isUpdateProcess">Indicates whether the upgrade or installation process is ongoing. True - if an upgrade process</param>
         public void ApplyUpMigrations(Assembly assembly, bool isUpdateProcess = false)
         {
-            if(assembly is null)
+            if (assembly is null)
                 throw new ArgumentNullException(nameof(assembly));
 
             var migrations = GetMigrations(assembly);
@@ -190,7 +190,7 @@ namespace Nop.Data.Migrations
             }
 
             foreach (var migrationInfo in migrations.Where(needToExecute))
-                    _migrationRunner.MigrateUp(migrationInfo.Version);
+                _migrationRunner.MigrateUp(migrationInfo.Version);
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Nop.Data.Migrations
         /// <param name="assembly">Assembly to find the migration</param>
         public void ApplyDownMigrations(Assembly assembly)
         {
-            if(assembly is null)
+            if (assembly is null)
                 throw new ArgumentNullException(nameof(assembly));
 
             var migrations = GetMigrations(assembly).Reverse();

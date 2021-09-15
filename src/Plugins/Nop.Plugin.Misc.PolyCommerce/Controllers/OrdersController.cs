@@ -157,6 +157,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 // only english supported
                 var englishLanguage = _languageRepository.Table.First(x => x.Name == "English");
 
+
+
                 var customer = new Customer
                 {
                     Username = model.Email,
@@ -165,28 +167,32 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     Deleted = false,
                     LastActivityDateUtc = DateTime.UtcNow,
                     CreatedOnUtc = DateTime.UtcNow,
-                    IsSystemAccount = false,
-                    ShippingAddress = new Address
-                    {
-                        FirstName = model.Address.FirstName,
-                        LastName = model.Address.LastName,
-                        Address1 = model.Address.Address1,
-                        Address2 = model.Address.Address2,
-                        City = model.Address.City,
-                        PhoneNumber = model.Address.PhoneNumber,
-                        Email = model.Email,
-                        CountryId = country.Id,
-                        Company = model.Address.Company,
-                        ZipPostalCode = model.Address.ZipPostalCode
-                    }
+                    IsSystemAccount = false
                 };
 
                 // add new customer to system
                 await _customerService.InsertCustomerAsync(customer);
 
+                var shippingAddress = new Address
+                {
+                    FirstName = model.Address.FirstName,
+                    LastName = model.Address.LastName,
+                    Address1 = model.Address.Address1,
+                    Address2 = model.Address.Address2,
+                    City = model.Address.City,
+                    PhoneNumber = model.Address.PhoneNumber,
+                    Email = model.Email,
+                    CountryId = country.Id,
+                    Company = model.Address.Company,
+                    ZipPostalCode = model.Address.ZipPostalCode
+                };
+
+                await _customerService.InsertCustomerAddressAsync(customer, shippingAddress);
+
                 // assign guest role to newly added customer
                 var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
-                customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
+
+                await _customerService.AddCustomerRoleMappingAsync(new CustomerCustomerRoleMapping() { CustomerRoleId = guestRole.Id, CustomerId = customer.Id });
 
                 try
                 {
@@ -210,7 +216,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 {
                     StoreId = store.Id,
                     OrderGuid = Guid.NewGuid(),
-                    Customer = customer,
+                    CustomerId = customer.Id,
                     CustomerLanguageId = englishLanguage.Id,
                     CustomerIp = null,
                     OrderSubtotalInclTax = model.OrderSubtotalInclTax,
@@ -246,8 +252,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     SubscriptionTransactionId = string.Empty,
                     PaymentStatus = (PaymentStatus)model.PaymentStatusId,
                     PaidDateUtc = null,
-                    BillingAddress = (Address)customer.ShippingAddress.Clone(),
-                    ShippingAddress = (Address)customer.ShippingAddress.Clone(),
+                    BillingAddressId = shippingAddress.Id,
+                    ShippingAddressId = shippingAddress.Id,
                     ShippingStatus = ShippingStatus.NotYetShipped,
                     ShippingMethod = model.ShippingMethod,
                     PickupInStore = false,
@@ -284,7 +290,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     var newItem = new OrderItem
                     {
                         OrderItemGuid = Guid.NewGuid(),
-                        Order = order,
+                        OrderId = order.Id,
                         ProductId = product.Id,
                         UnitPriceInclTax = orderItem.UnitPriceInclTax,
                         UnitPriceExclTax = orderItem.UnitPriceExclTax,
@@ -316,7 +322,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                             {
                                 CreatedOnUtc = DateTime.UtcNow,
                                 Note = note,
-                                Order = order
+                                OrderId = order.Id
                             });
                         }
                     }

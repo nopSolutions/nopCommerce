@@ -9,9 +9,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Media;
 using Nop.Web.Framework;
@@ -40,7 +39,7 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View("~/Plugins/Misc.MrPoly/Views/Index.cshtml");
         }
@@ -218,7 +217,7 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
                     OrderMaximumQuantity = 10000
                 };
 
-                _productService.InsertProduct(product);
+                await _productService.InsertProductAsync(product);
 
                 for (int j = 0; j < imageUrls.Count; j++)
                 {
@@ -242,9 +241,9 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
                         Uri uri = new Uri(imageUrl);
                         string filename = System.IO.Path.GetFileName(uri.LocalPath);
 
-                        var seoName = _pictureService.GetPictureSeName(filename);
+                        var seoName = await _pictureService.GetPictureSeNameAsync(filename);
 
-                        var picture = _pictureService.InsertPicture(bytes, mimeType, seoName);
+                        var picture = await _pictureService.InsertPictureAsync(bytes, mimeType, seoName);
 
                         var productPicture = new ProductPicture
                         {
@@ -252,7 +251,7 @@ namespace Nop.Plugin.Misc.MrPoly.Controllers
                             ProductId = product.Id,
                             PictureId = picture.Id
                         };
-                        _productService.InsertProductPicture(productPicture);
+                        await _productService.InsertProductPictureAsync(productPicture);
                     }
                 }
 

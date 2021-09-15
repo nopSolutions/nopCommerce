@@ -1,10 +1,11 @@
-﻿using Nop.Core;
-using Nop.Core.Caching;
+﻿using System.Threading.Tasks;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -26,6 +27,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
         public PolyCommerceProductModelFactory(CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
+            IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICategoryService categoryService,
             ICurrencyService currencyService,
@@ -50,7 +52,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             ISpecificationAttributeService specificationAttributeService,
-            IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService,
             IUrlRecordService urlRecordService,
@@ -60,6 +61,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
             VendorSettings vendorSettings) : base(catalogSettings,
              currencySettings,
              aclSupportedModelFactory,
+             addressService,
              baseAdminModelFactory,
              categoryService,
              currencyService,
@@ -84,7 +86,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
              shippingService,
              shoppingCartService,
              specificationAttributeService,
-             cacheManager,
              storeMappingSupportedModelFactory,
              storeService,
              urlRecordService,
@@ -96,9 +97,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
 
         }
 
-        public override ProductModel PrepareProductModel(ProductModel model, Product product, bool excludeProperties = false)
+        public override async Task<ProductModel> PrepareProductModelAsync(ProductModel model, Product product, bool excludeProperties = false)
         {
-            var productModel = base.PrepareProductModel(model, product, excludeProperties);
+            var productModel = await base.PrepareProductModelAsync(model, product, excludeProperties);
 
             if (product == null)
             {
@@ -109,7 +110,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
                 productModel.DisplayStockQuantity = true;
                 productModel.DisplayStockAvailability = true;
             }
-            
+
             return productModel;
         }
     }
