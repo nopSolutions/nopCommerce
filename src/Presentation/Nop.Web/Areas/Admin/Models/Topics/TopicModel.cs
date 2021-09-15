@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Topics
     /// <summary>
     /// Represents a topic model
     /// </summary>
-    public partial class TopicModel : BaseNopEntityModel, IAclSupportedModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingSupportedModel
+    public partial record TopicModel : BaseNopEntityModel, IAclSupportedModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -101,10 +101,12 @@ namespace Nop.Web.Areas.Admin.Models.Topics
 
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
+        public string TopicName { get; set; }
+
         #endregion
     }
 
-    public partial class TopicLocalizedModel : ILocalizedLocaleModel
+    public partial record TopicLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

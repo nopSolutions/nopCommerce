@@ -3,7 +3,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.PrivateMessages
 {
-    public partial class PrivateMessageModel : BaseNopEntityModel
+    public partial record PrivateMessageModel : BaseNopEntityModel
     {
         public int FromCustomerId { get; set; }
         public string CustomerFromName { get; set; }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Nop.Core.Data;
 using Nop.Core.Domain.Vendors;
+using Nop.Data;
 using Nop.Plugin.Misc.PolyCommerce.Models;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers

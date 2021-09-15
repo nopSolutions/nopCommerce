@@ -1,10 +1,15 @@
-﻿namespace Nop.Services.Orders
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Orders;
+
+namespace Nop.Services.Orders
 {
     /// <summary>
     /// Represents default values related to orders services
     /// </summary>
     public static partial class NopOrderDefaults
     {
+        #region Caching defaults
+
         #region Checkout attributes
 
         /// <summary>
@@ -12,9 +17,9 @@
         /// </summary>
         /// <remarks>
         /// {0} : store ID
-        /// {1} : >A value indicating whether we should exclude shippable attributes
+        /// {1} : A value indicating whether we should exclude shippable attributes
         /// </remarks>
-        public static string CheckoutAttributesAllCacheKey => "Nop.checkoutattribute.all-{0}-{1}";
+        public static CacheKey CheckoutAttributesAllCacheKey => new CacheKey("Nop.checkoutattribute.all.{0}-{1}", NopEntityCacheDefaults<CheckoutAttribute>.AllPrefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -22,33 +27,35 @@
         /// <remarks>
         /// {0} : checkout attribute ID
         /// </remarks>
-        public static string CheckoutAttributesByIdCacheKey => "Nop.checkoutattribute.id-{0}";
+        public static CacheKey CheckoutAttributeValuesAllCacheKey => new CacheKey("Nop.checkoutattributevalue.byattribute.{0}");
+
+        #endregion
+
+        #region ShoppingCart
 
         /// <summary>
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : checkout attribute ID
+        /// {0} : customer ID
+        /// {1} : shopping cart type
+        /// {2} : store ID
+        /// {3} : product ID
+        /// {4} : created from date
+        /// {5} : created to date
         /// </remarks>
-        public static string CheckoutAttributeValuesAllCacheKey => "Nop.checkoutattributevalue.all-{0}";
+        public static CacheKey ShoppingCartItemsAllCacheKey => new CacheKey("Nop.shoppingcartitem.all.{0}-{1}-{2}-{3}-{4}-{5}", ShoppingCartItemsByCustomerPrefix, NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
 
         /// <summary>
-        /// Gets a key for caching
+        /// Gets a key pattern to clear cache
         /// </summary>
         /// <remarks>
-        /// {0} : checkout attribute value ID
+        /// {0} : customer identifier
         /// </remarks>
-        public static string CheckoutAttributeValuesByIdCacheKey => "Nop.checkoutattributevalue.id-{0}";
+        public static string ShoppingCartItemsByCustomerPrefix => "Nop.shoppingcartitem.all.{0}";
 
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string CheckoutAttributesPrefixCacheKey => "Nop.checkoutattribute.";
 
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string CheckoutAttributeValuesPrefixCacheKey => "Nop.checkoutattributevalue.";
+        #endregion
 
         #endregion
     }

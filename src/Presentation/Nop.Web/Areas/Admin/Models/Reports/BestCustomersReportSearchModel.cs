@@ -4,13 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Services.Orders;
 
 namespace Nop.Web.Areas.Admin.Models.Reports
 {
     /// <summary>
     /// Represents a best customers report search model
     /// </summary>
-    public partial class BestCustomersReportSearchModel : BaseSearchModel
+    public partial record BestCustomersReportSearchModel : BaseSearchModel
     {
         #region Ctor
 
@@ -25,9 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Reports
 
         #region Properties
 
-        //keep it synchronized to CustomerReportService class, GetBestCustomersReport() method, orderBy parameter
-        //TODO: move from int to enum
-        public int OrderBy { get; set; }
+        public OrderByEnum OrderBy { get; set; }
 
         [NopResourceDisplayName("Admin.Reports.Customers.BestBy.StartDate")]
         [UIHint("DateNullable")]

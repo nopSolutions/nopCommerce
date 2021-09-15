@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents an online customer model
     /// </summary>
-    public partial class OnlineCustomerModel : BaseNopEntityModel
+    public partial record OnlineCustomerModel : BaseNopEntityModel
     {
         #region Properties
 

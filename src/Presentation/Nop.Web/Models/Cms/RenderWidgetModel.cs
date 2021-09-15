@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Cms
 {
-    public partial class RenderWidgetModel : BaseNopModel
+    public partial record RenderWidgetModel : BaseNopModel
     {
         public string WidgetViewComponentName { get; set; }
         public object WidgetViewComponentArguments { get; set; }

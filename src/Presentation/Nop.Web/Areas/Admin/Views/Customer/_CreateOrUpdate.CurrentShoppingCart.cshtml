@@ -1,8 +1,8 @@
 ﻿@using Nop.Services.Stores
 @model CustomerModel
 @inject IStoreService storeService
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" />
         </div>
@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<div class="panel-body">
+<div class="card-body">
     @await Html.PartialAsync("Table", new DataTablesModel
     {
         Name = "currentshoppingcart-grid",
@@ -50,7 +50,7 @@
             {
                 Title = T("Admin.CurrentCarts.Store").Text,
                 Width = "200",
-                Visible = storeService.GetAllStores().Count > 1
+                Visible = (await storeService.GetAllStoresAsync()).Count > 1
             },
             new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
             {

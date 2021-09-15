@@ -1,10 +1,9 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CheckGiftCardBalanceModel : BaseNopModel
+    public partial record CheckGiftCardBalanceModel : BaseNopModel
     {
         public string Result { get; set; }
 

@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer model
     /// </summary>
-    public partial class CustomerModel : BaseNopEntityModel, IAclSupportedModel
+    public partial record CustomerModel : BaseNopEntityModel, IAclSupportedModel
     {
         #region Ctor
 
@@ -55,7 +55,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Password")]
         [DataType(DataType.Password)]
-        [NoTrim]
         public string Password { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Vendor")]
@@ -69,9 +68,11 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Gender")]
         public string Gender { get; set; }
 
+        public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
         public string FirstName { get; set; }
 
+        public bool LastNameEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
         public string LastName { get; set; }
 
@@ -176,6 +177,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public bool DisplayVatNumber { get; set; }
 
+        public bool DisplayRegisteredInStore { get; set; }
+
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
@@ -193,6 +196,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         //customer roles
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public string CustomerRoleNames { get; set; }
+
+        //binding with multi-factor authentication provider
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.MultiFactorAuthenticationProvider")]
+        public string MultiFactorAuthenticationProvider { get; set; }
 
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
@@ -218,6 +225,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         //send PM model
         public SendPmModel SendPm { get; set; }
+
+        //send a private message
+        public bool AllowSendingOfPrivateMessage { get; set; }
 
         //send the welcome message
         public bool AllowSendingOfWelcomeMessage { get; set; }
@@ -246,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         #region Nested classes
 
-        public partial class SendEmailModel : BaseNopModel
+        public partial record SendEmailModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
             public string Subject { get; set; }
@@ -262,7 +272,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             public DateTime? DontSendBeforeDate { get; set; }
         }
 
-        public partial class SendPmModel : BaseNopModel
+        public partial record SendPmModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.SendPM.Subject")]
             public string Subject { get; set; }
@@ -271,7 +281,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             public string Message { get; set; }
         }
 
-        public partial class CustomerAttributeModel : BaseNopEntityModel
+        public partial record CustomerAttributeModel : BaseNopEntityModel
         {
             public CustomerAttributeModel()
             {
@@ -292,7 +302,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             public IList<CustomerAttributeValueModel> Values { get; set; }
         }
 
-        public partial class CustomerAttributeValueModel : BaseNopEntityModel
+        public partial record CustomerAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,26 +18,21 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class NopEngine : IEngine
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets service provider
-        /// </summary>
-        private IServiceProvider _serviceProvider { get; set; }
-
-        #endregion
-
         #region Utilities
 
         /// <summary>
         /// Get IServiceProvider
         /// </summary>
         /// <returns>IServiceProvider</returns>
-        protected IServiceProvider GetServiceProvider()
+        protected IServiceProvider GetServiceProvider(IServiceScope scope = null)
         {
-            var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
-            var context = accessor.HttpContext;
-            return context?.RequestServices ?? ServiceProvider;
+            if (scope == null)
+            {
+                var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
+                var context = accessor?.HttpContext;
+                return context?.RequestServices ?? ServiceProvider;
+            }
+            return scope.ServiceProvider;
         }
 
         /// <summary>
@@ -60,27 +53,23 @@ namespace Nop.Core.Infrastructure
 
             //execute tasks
             foreach (var task in instances)
-                task.Execute();
+                task.ExecuteAsync().Wait();
         }
 
         /// <summary>
         /// Register dependencies
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="typeFinder">Type finder</param>
-        /// <param name="nopConfig">Nop configuration parameters</param>
-        protected virtual IServiceProvider RegisterDependencies(IServiceCollection services, ITypeFinder typeFinder, NopConfig nopConfig)
+        /// <param name="appSettings">App settings</param>
+        public virtual void RegisterDependencies(IServiceCollection services, AppSettings appSettings)
         {
-            var containerBuilder = new ContainerBuilder();
+            var typeFinder = new WebAppTypeFinder();
 
             //register engine
-            containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
+            services.AddSingleton<IEngine>(this);
 
             //register type finder
-            containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
-
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
+            services.AddSingleton<ITypeFinder>(typeFinder);
 
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
@@ -92,12 +81,9 @@ namespace Nop.Core.Infrastructure
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfig);
+                dependencyRegistrar.Register(services, typeFinder, appSettings);
 
-            //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
-
-            return _serviceProvider;
+            services.AddSingleton(services);
         }
 
         /// <summary>
@@ -136,8 +122,8 @@ namespace Nop.Core.Infrastructure
                 return assembly;
 
             //get assembly from TypeFinder
-            var tf = Resolve<ITypeFinder>();
-            assembly = tf.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            var tf = Resolve<ITypeFinder>();            
+            assembly = tf?.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
             return assembly;
         }
 
@@ -150,9 +136,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        /// <param name="nopConfig">Nop configuration parameters</param>
-        /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -170,16 +154,11 @@ namespace Nop.Core.Infrastructure
             //register mapper configurations
             AddAutoMapper(services, typeFinder);
 
-            //register dependencies
-            RegisterDependencies(services, typeFinder, nopConfig);
-
             //run startup tasks
             RunStartupTasks(typeFinder);
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
-            return _serviceProvider;
         }
 
         /// <summary>
@@ -188,6 +167,8 @@ namespace Nop.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
+            ServiceProvider = application.ApplicationServices;
+
             //find startup configurations provided by other assemblies
             var typeFinder = Resolve<ITypeFinder>();
             var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();
@@ -205,22 +186,24 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Resolve dependency
         /// </summary>
+        /// <param name="scope">Scope</param>
         /// <typeparam name="T">Type of resolved service</typeparam>
         /// <returns>Resolved service</returns>
-        public T Resolve<T>() where T : class
+        public T Resolve<T>(IServiceScope scope = null) where T : class
         {
-            return (T)Resolve(typeof(T));
+            return (T)Resolve(typeof(T), scope);
         }
 
         /// <summary>
         /// Resolve dependency
         /// </summary>
         /// <param name="type">Type of resolved service</param>
+        /// <param name="scope">Scope</param>
         /// <returns>Resolved service</returns>
-        public object Resolve(Type type)
+        public object Resolve(Type type, IServiceScope scope = null)
         {
-            return GetServiceProvider().GetService(type);
-        }
+            return GetServiceProvider(scope)?.GetService(type);
+        }        
 
         /// <summary>
         /// Resolve dependencies
@@ -272,7 +255,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Service provider
         /// </summary>
-        public virtual IServiceProvider ServiceProvider => _serviceProvider;
+        public virtual IServiceProvider ServiceProvider { get; protected set; }
 
         #endregion
     }

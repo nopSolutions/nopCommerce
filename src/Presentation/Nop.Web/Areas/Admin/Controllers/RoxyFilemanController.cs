@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Security;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -12,7 +12,6 @@ namespace Nop.Web.Areas.Admin.Controllers
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
     public class RoxyFilemanController : BaseAdminController
     {
         #region Fields
@@ -39,14 +38,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <summary>
         /// Create configuration file for RoxyFileman
         /// </summary>
-        public virtual void CreateConfiguration()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task CreateConfiguration()
         {
-            _roxyFilemanService.CreateConfiguration();
+            await _roxyFilemanService.CreateConfigurationAsync();
         }
 
         /// <summary>
         /// Process request
         /// </summary>
+        [IgnoreAntiforgeryToken]
         public virtual void ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
@@ -61,12 +62,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// Process the incoming request
         /// </summary>
         /// <returns>A task that represents the completion of the operation</returns>
+        [IgnoreAntiforgeryToken]
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessRequestAsync()
         {
             var action = "DIRLIST";
             try
             {
-                if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
                 if (!StringValues.IsNullOrEmpty(HttpContext.Request.Query["a"]))
@@ -114,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         await _roxyFilemanService.RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        _roxyFilemanService.CreateImageThumbnail(HttpContext.Request.Query["f"]);
+                        await _roxyFilemanService.CreateImageThumbnailAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "UPLOAD":
                         await _roxyFilemanService.UploadFilesAsync(HttpContext.Request.Form["d"]);
@@ -127,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 if (action == "UPLOAD" && !_roxyFilemanService.IsAjaxRequest())
-                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({_roxyFilemanService.GetErrorResponse(_roxyFilemanService.GetLanguageResource("E_UploadNoFiles"))});</script>");
+                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({_roxyFilemanService.GetErrorResponse(await _roxyFilemanService.GetLanguageResourceAsync("E_UploadNoFiles"))});</script>");
                 else
                     await HttpContext.Response.WriteAsync(_roxyFilemanService.GetErrorResponse(ex.Message));
             }

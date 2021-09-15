@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a manufacturer model to add to the discount
     /// </summary>
-    public partial class AddManufacturerToDiscountModel : BaseNopModel
+    public partial record AddManufacturerToDiscountModel : BaseNopModel
     {
         #region Ctor
 

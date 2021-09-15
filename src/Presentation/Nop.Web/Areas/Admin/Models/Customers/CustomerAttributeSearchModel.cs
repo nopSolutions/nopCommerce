@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer attribute search model
     /// </summary>
-    public partial class CustomerAttributeSearchModel : BaseSearchModel
+    public partial record CustomerAttributeSearchModel : BaseSearchModel
     {
     }
 }

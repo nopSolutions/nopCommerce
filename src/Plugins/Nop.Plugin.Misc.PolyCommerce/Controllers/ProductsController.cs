@@ -4,9 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
 using Nop.Plugin.Misc.PolyCommerce.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Media;
@@ -117,10 +116,10 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
         [Route("api/polycommerce/decrease_stock")]
         [HttpPost]
-        public IActionResult DecreaseStock([FromBody]PolyCommerceDecreaseStockModel model)
+        public async Task<IActionResult> DecreaseStock([FromBody]PolyCommerceDecreaseStockModel model)
         {
-            var product = _productRepository.GetById(model.ProductId);
-            _productService.AdjustInventory(product, model.Quantity * -1);
+            var product = await _productRepository.GetByIdAsync(model.ProductId);
+            await _productService.AdjustInventoryAsync(product, model.Quantity * -1);
             return Ok(new { Success = true });
         }
 

@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer address model
     /// </summary>
-    public partial class CustomerAddressModel : BaseNopModel
+    public partial record CustomerAddressModel : BaseNopModel
     {
         #region Ctor
 

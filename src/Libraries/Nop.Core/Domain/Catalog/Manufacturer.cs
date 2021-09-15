@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -12,10 +11,8 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a manufacturer
     /// </summary>
-    public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported
+    public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountManufacturerMapping>, ISoftDeletedEntity
     {
-        private ICollection<DiscountManufacturerMapping> _discountManufacturerMappings;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -67,11 +64,6 @@ namespace Nop.Core.Domain.Catalog
         public string PageSizeOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets the available price ranges
-        /// </summary>
-        public string PriceRanges { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
@@ -107,17 +99,23 @@ namespace Nop.Core.Domain.Catalog
         public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of applied discounts
+        /// Gets or sets a value indicating whether the price range filtering is enabled
         /// </summary>
-        public IList<Discount> AppliedDiscounts => DiscountManufacturerMappings.Select(mapping => mapping.Discount).ToList();
+        public bool PriceRangeFiltering { get; set; }
 
         /// <summary>
-        /// Gets or sets the discount-manufacturer mappings
+        /// Gets or sets the "from" price
         /// </summary>
-        public virtual ICollection<DiscountManufacturerMapping> DiscountManufacturerMappings
-        {
-            get => _discountManufacturerMappings ?? (_discountManufacturerMappings = new List<DiscountManufacturerMapping>());
-            set => _discountManufacturerMappings = value;
-        }
+        public decimal PriceFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "to" price
+        /// </summary>
+        public decimal PriceTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range should be entered manually
+        /// </summary>
+        public bool ManuallyPriceRange { get; set; }
     }
 }

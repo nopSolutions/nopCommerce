@@ -1,10 +1,10 @@
 ﻿@model ReturnRequestActionSearchModel
 
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card card-default">
+    <div class="card-header">
         @T("Admin.Configuration.Settings.Order.ReturnRequestActions")
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <p>
             <em>@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Hint")</em>
         </p>
@@ -37,9 +37,9 @@
             }
         })
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <a asp-action="ReturnRequestActionCreate" asp-controller="ReturnRequest" class="btn btn-primary">
-            <i class="fa fa-plus-square"></i>
+            <i class="fas fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
     </div>

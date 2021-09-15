@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Messages;
-using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -22,19 +18,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEmailAccountService _emailAccountService;
-        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
         public EmailAccountModelFactory(EmailAccountSettings emailAccountSettings,
-            IEmailAccountService emailAccountService,
-            ILocalizationService localizationService)
+            IEmailAccountService emailAccountService)
         {
             _emailAccountSettings = emailAccountSettings;
             _emailAccountService = emailAccountService;
-            _localizationService = localizationService;
         }
 
         #endregion
@@ -45,8 +38,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare email account search model
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
-        /// <returns>Email account search model</returns>
-        public virtual EmailAccountSearchModel PrepareEmailAccountSearchModel(EmailAccountSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account search model
+        /// </returns>
+        public virtual Task<EmailAccountSearchModel> PrepareEmailAccountSearchModelAsync(EmailAccountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -54,21 +50,24 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
         /// Prepare paged email account list model
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
-        /// <returns>Email account list model</returns>
-        public virtual EmailAccountListModel PrepareEmailAccountListModel(EmailAccountSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account list model
+        /// </returns>
+        public virtual async Task<EmailAccountListModel> PrepareEmailAccountListModelAsync(EmailAccountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get email accounts
-            var emailAccounts = _emailAccountService.GetAllEmailAccounts().ToPagedList(searchModel);
+            var emailAccounts = (await _emailAccountService.GetAllEmailAccountsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new EmailAccountListModel().PrepareToGrid(searchModel, emailAccounts, () =>
@@ -94,19 +93,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Email account model</param>
         /// <param name="emailAccount">Email account</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Email account model</returns>
-        public virtual EmailAccountModel PrepareEmailAccountModel(EmailAccountModel model,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the email account model
+        /// </returns>
+        public virtual Task<EmailAccountModel> PrepareEmailAccountModelAsync(EmailAccountModel model,
             EmailAccount emailAccount, bool excludeProperties = false)
         {
             //fill in model values from the entity
             if (emailAccount != null)
-                model = model ?? emailAccount.ToModel<EmailAccountModel>();
+                model ??= emailAccount.ToModel<EmailAccountModel>();
 
             //set default values for the new model
             if (emailAccount == null)
                 model.Port = 25;
 
-            return model;
+            return Task.FromResult(model);
         }
 
         #endregion

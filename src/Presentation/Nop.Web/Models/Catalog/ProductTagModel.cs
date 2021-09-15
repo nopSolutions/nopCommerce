@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class ProductTagModel : BaseNopEntityModel
+    public partial record ProductTagModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

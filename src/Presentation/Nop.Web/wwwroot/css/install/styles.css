@@ -48,24 +48,9 @@ hr {
     margin-top: 30px;
 }
 
-.margin-l-5 {
-    margin-left: 5px;
-}
-
 .wrapper {
     width: 960px; 
     margin: 0 auto;
-}
-
-.content-header{
-    color: #ffffff;
-    padding: 0;
-}
-
-.content-header > h1 {
-    margin-bottom: 15px;
-    text-align: center;
-    font-size: 35px;
 }
 
 .logo-wrapper {
@@ -89,36 +74,6 @@ hr {
 
 .form-horizontal {
     padding: 0 60px;
-}
-
-.form-horizontal .control-label {
-    float: right;
-    color: #8a8a8a;
-    margin-right: 5px;
-}
-
-.form-group input[type=checkbox] {
-    margin-top: 11px;
-}
-
-.form-group .checkbox input[type=checkbox] {
-    margin-top: 4px;
-}
-
-.panel {
-    box-shadow: none;
-    margin-bottom: 0;
-}
-
-.panel>.panel-heading {
-    background-color: #fff;
-    font-size: 23px;
-    padding: 0;
-    margin-bottom: 10px;
-}
-
-.panel-body {
-    padding: 10px;
 }
 
 .credentials {

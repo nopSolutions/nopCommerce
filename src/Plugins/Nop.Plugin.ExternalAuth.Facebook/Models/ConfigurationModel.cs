@@ -6,7 +6,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Models
     /// <summary>
     /// Represents plugin configuration model
     /// </summary>
-    public class ConfigurationModel : BaseNopModel
+    public record ConfigurationModel : BaseNopModel
     {
         [NopResourceDisplayName("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier")]
         public string ClientId { get; set; }

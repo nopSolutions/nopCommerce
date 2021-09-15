@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Forums
     /// <summary>
     /// Represents a forum list model
     /// </summary>
-    public partial class ForumModel : BaseNopEntityModel
+    public partial record ForumModel : BaseNopEntityModel
     {
         #region Ctor
 

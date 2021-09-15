@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer back in stock subscription model
     /// </summary>
-    public partial class CustomerBackInStockSubscriptionModel : BaseNopEntityModel
+    public partial record CustomerBackInStockSubscriptionModel : BaseNopEntityModel
     {
         #region Properties
 

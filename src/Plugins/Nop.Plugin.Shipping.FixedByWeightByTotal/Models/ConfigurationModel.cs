@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 {
-    public class ConfigurationModel : BaseSearchModel
+    public record ConfigurationModel : BaseSearchModel
     {
         [NopResourceDisplayName("Plugins.Shipping.FixedByWeightByTotal.Fields.LimitMethodsToCreated")]
         public bool LimitMethodsToCreated { get; set; }

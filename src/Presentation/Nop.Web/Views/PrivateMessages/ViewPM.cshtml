@@ -33,9 +33,11 @@
             </div>
         </div>
         <div class="buttons">
-            <input type="button" class="button-1 reply-pm-button" value="@T("PrivateMessages.View.ReplyButton")" onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')" />
-            <input type="button" class="button-2 delete-pm-button" value="@T("PrivateMessages.View.DeleteButton")" onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })')" />
-            <input type="button" class="button-2 back-pm-button" value="@T("PrivateMessages.View.BackButton")" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
+            <button type="button" class="button-1 reply-pm-button" onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')">@T("PrivateMessages.View.ReplyButton")</button>
+
+            <button type="button" class="button-2 delete-pm-button" onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })')">@T("PrivateMessages.View.DeleteButton")</button>
+
+            <button type="button" class="button-2 back-pm-button" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')">@T("PrivateMessages.View.BackButton")</button>
         </div>
     </div>
 </div>

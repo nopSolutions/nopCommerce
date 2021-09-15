@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -49,20 +50,18 @@ namespace Nop.Services.Plugins
         /// <returns>List of an uploaded item</returns>
         protected virtual IList<UploadedItem> GetUploadedItems(string archivePath)
         {
-            using (var archive = ZipFile.OpenRead(archivePath))
-            {
-                //try to get the entry containing information about the uploaded items 
-                var uploadedItemsFileEntry = archive.Entries
-                    .FirstOrDefault(entry => entry.Name.Equals(NopPluginDefaults.UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
-                        && string.IsNullOrEmpty(_fileProvider.GetDirectoryName(entry.FullName)));
-                if (uploadedItemsFileEntry == null)
-                    return null;
+            using var archive = ZipFile.OpenRead(archivePath);
+            //try to get the entry containing information about the uploaded items 
+            var uploadedItemsFileEntry = archive.Entries
+                .FirstOrDefault(entry => entry.Name.Equals(NopPluginDefaults.UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
+                    && string.IsNullOrEmpty(_fileProvider.GetDirectoryName(entry.FullName)));
+            if (uploadedItemsFileEntry == null)
+                return null;
 
-                //read the content of this entry if exists
-                using (var unzippedEntryStream = uploadedItemsFileEntry.Open())
-                using (var reader = new StreamReader(unzippedEntryStream))
-                    return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
-            }
+            //read the content of this entry if exists
+            using var unzippedEntryStream = uploadedItemsFileEntry.Open();
+            using var reader = new StreamReader(unzippedEntryStream);
+            return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
         }
 
         /// <summary>
@@ -111,27 +110,23 @@ namespace Nop.Services.Plugins
                     if (!isPluginDescriptor && !isThemeDescriptor)
                         continue;
 
-                    using (var unzippedEntryStream = entry.Open())
+                    using var unzippedEntryStream = entry.Open();
+                    using var reader = new StreamReader(unzippedEntryStream);
+                    //whether a plugin is upload 
+                    if (isPluginDescriptor)
                     {
-                        using (var reader = new StreamReader(unzippedEntryStream))
-                        {
-                            //whether a plugin is upload 
-                            if (isPluginDescriptor)
-                            {
-                                descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
+                        descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
 
-                                //ensure that the plugin current version is supported
-                                if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
-                                    throw new Exception($"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
-                            }
-
-                            //or whether a theme is upload 
-                            if (isThemeDescriptor)
-                                descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
-
-                            break;
-                        }
+                        //ensure that the plugin current version is supported
+                        if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CURRENT_VERSION))
+                            throw new Exception($"This plugin doesn't support the current version - {NopVersion.CURRENT_VERSION}");
                     }
+
+                    //or whether a theme is upload 
+                    if (isThemeDescriptor)
+                        descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+
+                    break;
                 }
             }
 
@@ -183,7 +178,7 @@ namespace Nop.Services.Plugins
                         continue;
 
                     //ensure that the current version of nopCommerce is supported
-                    if (!item.SupportedVersions?.Contains(NopVersion.CurrentVersion) ?? true)
+                    if (!item.SupportedVersions?.Contains(NopVersion.CURRENT_VERSION) ?? true)
                         continue;
 
                     //the item path should end with a slash
@@ -206,23 +201,21 @@ namespace Nop.Services.Plugins
                     IDescriptor descriptor = null;
                     using (var unzippedEntryStream = descriptorEntry.Open())
                     {
-                        using (var reader = new StreamReader(unzippedEntryStream))
-                        {
-                            //whether a plugin is upload 
-                            if (item.Type == UploadedItemType.Plugin)
-                                descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
+                        using var reader = new StreamReader(unzippedEntryStream);
+                        //whether a plugin is upload 
+                        if (item.Type == UploadedItemType.Plugin)
+                            descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
 
-                            //or whether a theme is upload 
-                            if (item.Type == UploadedItemType.Theme)
-                                descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
-                        }
+                        //or whether a theme is upload 
+                        if (item.Type == UploadedItemType.Theme)
+                            descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
                     }
 
                     if (descriptor == null)
                         continue;
 
                     //ensure that the plugin current version is supported
-                    if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion))
+                    if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION))
                         continue;
 
                     //get path to upload
@@ -240,10 +233,10 @@ namespace Nop.Services.Plugins
                     foreach (var entry in entries)
                     {
                         //get name of the file
-                        var fileName = entry.FullName.Substring(itemPath.Length);
+                        var fileName = entry.FullName[itemPath.Length..];
                         if (string.IsNullOrEmpty(fileName))
                             continue;
-                        
+
                         var filePath = _fileProvider.Combine(pathToUpload, fileName);
 
                         //if it's a folder, we need to create it
@@ -270,6 +263,25 @@ namespace Nop.Services.Plugins
             }
 
             return descriptors;
+        }
+
+        /// <summary>
+        /// Creates the directory if not exist; otherwise deletes and creates directory 
+        /// </summary>
+        /// <param name="path"></param>
+        protected virtual void CreateDirectory(string path)
+        {
+            //if the folder does not exist, create it
+            //if the folder is already there - we delete it (since the pictures in the folder are in the unpacked version, there will be many files and it is easier for us to delete the folder than to delete all the files one by one) and create a new
+            if (!_fileProvider.DirectoryExists(path))
+            {
+                _fileProvider.CreateDirectory(path);
+            }
+            else
+            {
+                _fileProvider.DeleteDirectory(path);
+                _fileProvider.CreateDirectory(path);
+            }
         }
 
         #endregion
@@ -338,22 +350,12 @@ namespace Nop.Services.Plugins
             {
                 //only zip archives are supported
                 if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
-                    throw new Exception("Only zip archives are supported");
+                    throw new Exception("Only zip archives are supported (*.zip)");
 
                 //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
-                //if the folder does not exist, create it
-                //if the folder is already there - we delete it (since the pictures in the folder are in the unpacked version, there will be many files and it is easier for us to delete the folder than to delete all the files one by one) and create anew
-                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
+                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
 
-                if (!_fileProvider.DirectoryExists(storeIconsPath))
-                {
-                    _fileProvider.CreateDirectory(storeIconsPath);
-                }
-                else
-                {
-                    _fileProvider.DeleteDirectory(storeIconsPath);
-                    _fileProvider.CreateDirectory(storeIconsPath);
-                }
+                CreateDirectory(storeIconsPath);
 
                 zipFilePath = _fileProvider.Combine(storeIconsPath, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
@@ -366,6 +368,99 @@ namespace Nop.Services.Plugins
                 //delete the zip file and leave only unpacked files in the folder
                 if (!string.IsNullOrEmpty(zipFilePath))
                     _fileProvider.DeleteFile(zipFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Upload single favicon
+        /// </summary>
+        /// <param name="favicon">Favicon</param>
+        public virtual void UploadFavicon(IFormFile favicon)
+        {
+            if (favicon == null)
+                throw new ArgumentNullException(nameof(favicon));
+
+            //only icons are supported
+            if (!_fileProvider.GetFileExtension(favicon.FileName)?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                throw new Exception("Only icons are supported (*.ico)");
+
+            //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
+            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
+
+            CreateDirectory(storeFaviconPath);
+
+            var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
+            using var fileStream = new FileStream(faviconPath, FileMode.Create);
+            favicon.CopyTo(fileStream);
+        }
+
+        /// <summary>
+        /// Upload locale pattern for current culture
+        /// </summary>
+        /// <param name="cultureInfo">CultureInfo</param>
+        public virtual void UploadLocalePattern(CultureInfo cultureInfo = null)
+        {
+            string getPath(string dirPath, string dirName)
+            {
+                return _fileProvider.GetAbsolutePath(string.Format(dirPath, dirName));
+            }
+
+            bool checkDirectoryExists(string dirPath, string dirName)
+            {
+                return _fileProvider.DirectoryExists(getPath(dirPath, dirName));
+            }
+
+            var tempFolder = "temp";
+            try
+            {
+                //1. check if the archive with localization of templates is in its place
+                var ziplocalePatternPath = getPath(NopCommonDefaults.LocalePatternPath, NopCommonDefaults.LocalePatternArchiveName);
+                if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                    throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
+
+                var currentCulture = (cultureInfo is CultureInfo) ? cultureInfo : CultureInfo.CurrentCulture;
+
+                //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
+                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) ||
+                    checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.TwoLetterISOLanguageName)))
+                {
+                    var cultureToUse = string.Empty;
+
+                    //3. Unpack the archive into a temporary folder
+                    ZipFile.ExtractToDirectory(ziplocalePatternPath, getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
+
+                    //4. Search in the temp unpacked archive a folder with locales by culture
+                    var sourcelocalePath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
+                    if (_fileProvider.DirectoryExists(sourcelocalePath))
+                    {
+                        cultureToUse = currentCulture.Name;
+                    }
+
+                    var sourcelocaleISOPath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
+                    if (_fileProvider.DirectoryExists(sourcelocaleISOPath))
+                    {
+                        cultureToUse = currentCulture.TwoLetterISOLanguageName;
+                        sourcelocalePath = sourcelocaleISOPath;
+                    }
+
+                    //5. Copy locales to destination folder
+                    if (!string.IsNullOrEmpty(cultureToUse))
+                    {
+                        var destlocalePath = getPath(NopCommonDefaults.LocalePatternPath, cultureToUse);
+                        if (_fileProvider.DirectoryExists(destlocalePath))
+                        {
+                            _fileProvider.DeleteDirectory(destlocalePath);
+                        }
+
+                        _fileProvider.DirectoryMove(sourcelocalePath, destlocalePath);
+                    }
+                }
+            }
+            finally
+            {
+                //6. delete the zip file and leave only unpacked files in the folder
+                if (checkDirectoryExists(NopCommonDefaults.LocalePatternPath, tempFolder))
+                    _fileProvider.DeleteDirectory(getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
             }
         }
 

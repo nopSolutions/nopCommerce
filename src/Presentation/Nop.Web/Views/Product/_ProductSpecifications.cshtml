@@ -1,6 +1,8 @@
-﻿@model IList<ProductSpecificationModel>
+﻿@model ProductSpecificationModel
+
 @using Nop.Core.Domain.Catalog;
-@if (Model.Count > 0)
+
+@if (Model.Groups.SelectMany(g => g.Attributes).ToList().Count > 0)
 {
     <div class="product-specs-box">
         <div class="title">
@@ -15,28 +17,54 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (var i = 0; i < Model.Count; i++)
+                    @foreach (var group in Model.Groups)
                     {
-                        var item = Model[i];
-                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                            <td class="spec-name">
-                                @item.SpecificationAttributeName
-                            </td>
-                            <td class="spec-value">
-                                @if (!string.IsNullOrEmpty(item.ColorSquaresRgb) && (item.AttributeTypeId == (int)SpecificationAttributeType.Option) )
-                                {
-                                    <div class="attribute-squares color-squares">
-                                        <span class="attribute-square-container" title="@Html.Raw(item.ValueRaw)">
-                                            <span class="attribute-square" style="background-color: @(item.ColorSquaresRgb);">&nbsp;</span>
-                                        </span>
-                                    </div>
-                                }
-                                else
-                                {
-                                    @Html.Raw(item.ValueRaw)
-                                }
-                            </td>
-                        </tr>
+                        @if (group.Attributes.Count > 0)
+                        {
+                            @if (group.Id > 0)
+                            {
+                                <tr>
+                                    <td class="spec-group-name">
+                                        @group.Name
+                                    </td>
+                                </tr>
+                            }
+
+                            @for (int i = 0; i < group.Attributes.Count; i++)
+                            {
+                                var attr = group.Attributes[i];
+
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="spec-name">
+                                        @attr.Name
+                                    </td>
+                                    <td class="spec-value">
+                                        @for (int j = 0; j < attr.Values.Count; j++)
+                                        {
+                                            var value = attr.Values[j];
+
+                                            @if (!string.IsNullOrEmpty(value.ColorSquaresRgb) && (value.AttributeTypeId == (int)SpecificationAttributeType.Option))
+                                            {
+                                                <div class="attribute-squares color-squares">
+                                                    <span class="attribute-square-container" title="@Html.Raw(value.ValueRaw)">
+                                                        <span class="attribute-square" style="background-color: @(value.ColorSquaresRgb);">&nbsp;</span>
+                                                    </span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(value.ValueRaw)
+                                            }
+
+                                            if (j != attr.Values.Count - 1)
+                                            {
+                                                <text>,&nbsp;</text>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
                     }
                 </tbody>
             </table>

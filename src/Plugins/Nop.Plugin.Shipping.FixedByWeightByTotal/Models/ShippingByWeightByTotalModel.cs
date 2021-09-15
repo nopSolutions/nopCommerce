@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
 {
-    public class ShippingByWeightByTotalModel : BaseNopEntityModel
+    public record ShippingByWeightByTotalModel : BaseNopEntityModel
     {
         public ShippingByWeightByTotalModel()
         {
@@ -43,6 +44,10 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Models
         public int ShippingMethodId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod")]
         public string ShippingMethodName { get; set; }
+
+        [UIHint("Int32Nullable")]
+        [NopResourceDisplayName("Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays")]
+        public int? TransitDays { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom")]
         public decimal WeightFrom { get; set; }

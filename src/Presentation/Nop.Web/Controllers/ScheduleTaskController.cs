@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Tasks;
+using Task = Nop.Services.Tasks.Task;
 
 namespace Nop.Web.Controllers
 {
@@ -15,15 +17,16 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult RunTask(string taskType)
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> RunTask(string taskType)
         {
-            var scheduleTask = _scheduleTaskService.GetTaskByType(taskType);
+            var scheduleTask = await _scheduleTaskService.GetTaskByTypeAsync(taskType);
             if (scheduleTask == null)
                 //schedule task cannot be loaded
                 return NoContent();
 
             var task = new Task(scheduleTask);
-            task.Execute();
+            await task.ExecuteAsync();
 
             return NoContent();
         }

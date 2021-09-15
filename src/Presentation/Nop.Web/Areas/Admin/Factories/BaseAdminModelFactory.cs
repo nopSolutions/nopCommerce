@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -26,7 +27,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
-using Nop.Web.Areas.Admin.Helpers;
+using Nop.Web.Areas.Admin.Infrastructure.Cache;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -52,9 +53,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IPluginService _pluginService;
         private readonly IProductTemplateService _productTemplateService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITopicTemplateService _topicTemplateService;
@@ -79,9 +81,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IManufacturerTemplateService manufacturerTemplateService,
             IPluginService pluginService,
             IProductTemplateService productTemplateService,
+            ISpecificationAttributeService specificationAttributeService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             ITopicTemplateService topicTemplateService,
@@ -102,9 +105,10 @@ namespace Nop.Web.Areas.Admin.Factories
             _manufacturerTemplateService = manufacturerTemplateService;
             _pluginService = pluginService;
             _productTemplateService = productTemplateService;
+            _specificationAttributeService = specificationAttributeService;
             _shippingService = shippingService;
             _stateProvinceService = stateProvinceService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeService = storeService;
             _taxCategoryService = taxCategoryService;
             _topicTemplateService = topicTemplateService;
@@ -121,7 +125,9 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Available items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use "All" text</param>
-        protected virtual void PrepareDefaultItem(IList<SelectListItem> items, bool withSpecialDefaultItem, string defaultItemText = null)
+        /// <param name="defaultItemValue">Default item value; defaults 0</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task PrepareDefaultItemAsync(IList<SelectListItem> items, bool withSpecialDefaultItem, string defaultItemText = null, string defaultItemValue = "0")
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -130,14 +136,116 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!withSpecialDefaultItem)
                 return;
 
-            //at now we use "0" as the default value
-            const string value = "0";
-
             //prepare item text
-            defaultItemText = defaultItemText ?? _localizationService.GetResource("Admin.Common.All");
+            defaultItemText ??= await _localizationService.GetResourceAsync("Admin.Common.All");
 
             //insert this default item at first
-            items.Insert(0, new SelectListItem { Text = defaultItemText, Value = value });
+            items.Insert(0, new SelectListItem { Text = defaultItemText, Value = defaultItemValue });
+        }
+
+        /// <summary>
+        /// Get category list
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the category list
+        /// </returns>
+        protected virtual async Task<List<SelectListItem>> GetCategoryListAsync(bool showHidden = true)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoriesListKey, showHidden);
+            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var categories = await _categoryService.GetAllCategoriesAsync(showHidden: showHidden);
+                return await categories.SelectAwait(async c => new SelectListItem
+                {
+                    Text = await _categoryService.GetFormattedBreadCrumbAsync(c, categories),
+                    Value = c.Id.ToString()
+                }).ToListAsync();
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get manufacturer list
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the manufacturer list
+        /// </returns>
+        protected virtual async Task<List<SelectListItem>> GetManufacturerListAsync(bool showHidden = true)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturersListKey, showHidden);
+            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: showHidden);
+                return manufacturers.Select(m => new SelectListItem
+                {
+                    Text = m.Name,
+                    Value = m.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get vendor list
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor list
+        /// </returns>
+        protected virtual async Task<List<SelectListItem>> GetVendorListAsync(bool showHidden = true)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorsListKey, showHidden);
+            var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                var vendors = await _vendorService.GetAllVendorsAsync(showHidden: showHidden);
+                return vendors.Select(v => new SelectListItem
+                {
+                    Text = v.Name,
+                    Value = v.Id.ToString()
+                });
+            });
+
+            var result = new List<SelectListItem>();
+            //clone the list to ensure that "selected" property is not set
+            foreach (var item in listItems)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value
+                });
+            }
+
+            return result;
         }
 
         #endregion
@@ -150,20 +258,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Activity log type items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareActivityLogTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareActivityLogTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available activity log types
-            var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
+            var availableActivityTypes = await _customerActivityService.GetAllActivityTypesAsync();
             foreach (var activityType in availableActivityTypes)
             {
                 items.Add(new SelectListItem { Value = activityType.Id.ToString(), Text = activityType.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -172,20 +281,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Order status items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareOrderStatuses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareOrderStatusesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available order statuses
-            var availableStatusItems = OrderStatus.Pending.ToSelectList(false);
+            var availableStatusItems = await OrderStatus.Pending.ToSelectListAsync(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -194,20 +304,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Payment status items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PreparePaymentStatuses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PreparePaymentStatusesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available payment statuses
-            var availableStatusItems = PaymentStatus.Pending.ToSelectList(false);
+            var availableStatusItems = await PaymentStatus.Pending.ToSelectListAsync(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -216,20 +327,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Shipping status items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareShippingStatuses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareShippingStatusesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available shipping statuses
-            var availableStatusItems = ShippingStatus.NotYetShipped.ToSelectList(false);
+            var availableStatusItems = await ShippingStatus.NotYetShipped.ToSelectListAsync(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -238,20 +350,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Country items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareCountries(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareCountriesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available countries
-            var availableCountries = _countryService.GetAllCountries(showHidden: true);
+            var availableCountries = await _countryService.GetAllCountriesAsync(showHidden: true);
             foreach (var country in availableCountries)
             {
                 items.Add(new SelectListItem { Value = country.Id.ToString(), Text = country.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.SelectCountry"));
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"));
         }
 
         /// <summary>
@@ -261,7 +374,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="countryId">Country identifier; pass null to don't load states and provinces</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareStatesAndProvinces(IList<SelectListItem> items, int? countryId,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareStatesAndProvincesAsync(IList<SelectListItem> items, int? countryId,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
@@ -270,20 +384,20 @@ namespace Nop.Web.Areas.Admin.Factories
             if (countryId.HasValue)
             {
                 //prepare available states and provinces of the country
-                var availableStates = _stateProvinceService.GetStateProvincesByCountryId(countryId.Value, showHidden: true);
+                var availableStates = await _stateProvinceService.GetStateProvincesByCountryIdAsync(countryId.Value, showHidden: true);
                 foreach (var state in availableStates)
                 {
                     items.Add(new SelectListItem { Value = state.Id.ToString(), Text = state.Name });
                 }
 
                 //insert special item for the default value
-                if (items.Any())
-                    PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.SelectState"));
+                if (items.Count > 1)
+                    await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.SelectState"));
             }
 
             //insert special item for the default value
             if (!items.Any())
-                PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.OtherNonUS"));
+                await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Address.Other"));
         }
 
         /// <summary>
@@ -292,20 +406,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Language items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareLanguages(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareLanguagesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available languages
-            var availableLanguages = _languageService.GetAllLanguages(showHidden: true);
+            var availableLanguages = await _languageService.GetAllLanguagesAsync(showHidden: true);
             foreach (var language in availableLanguages)
             {
                 items.Add(new SelectListItem { Value = language.Id.ToString(), Text = language.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -314,20 +429,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Store items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareStores(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareStoresAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available stores
-            var availableStores = _storeService.GetAllStores();
+            var availableStores = await _storeService.GetAllStoresAsync();
             foreach (var store in availableStores)
             {
                 items.Add(new SelectListItem { Value = store.Id.ToString(), Text = store.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -336,20 +452,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Customer role items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareCustomerRoles(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareCustomerRolesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available customer roles
-            var availableCustomerRoles = _customerService.GetAllCustomerRoles();
+            var availableCustomerRoles = await _customerService.GetAllCustomerRolesAsync();
             foreach (var customerRole in availableCustomerRoles)
             {
                 items.Add(new SelectListItem { Value = customerRole.Id.ToString(), Text = customerRole.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -358,20 +475,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Email account items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareEmailAccounts(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareEmailAccountsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available email accounts
-            var availableEmailAccounts = _emailAccountService.GetAllEmailAccounts();
+            var availableEmailAccounts = await _emailAccountService.GetAllEmailAccountsAsync();
             foreach (var emailAccount in availableEmailAccounts)
             {
                 items.Add(new SelectListItem { Value = emailAccount.Id.ToString(), Text = $"{emailAccount.DisplayName} ({emailAccount.Email})" });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -380,21 +498,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Tax category items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareTaxCategories(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareTaxCategoriesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available tax categories
-            var availableTaxCategories = _taxCategoryService.GetAllTaxCategories();
+            var availableTaxCategories = await _taxCategoryService.GetAllTaxCategoriesAsync();
             foreach (var taxCategory in availableTaxCategories)
             {
                 items.Add(new SelectListItem { Value = taxCategory.Id.ToString(), Text = taxCategory.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem,
-                defaultItemText ?? _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"));
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem,
+                defaultItemText ?? await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Tax.TaxCategories.None"));
         }
 
         /// <summary>
@@ -403,20 +522,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Category items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareCategories(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareCategoriesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available categories
-            var availableCategoryItems = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
+            var availableCategoryItems = await GetCategoryListAsync();
             foreach (var categoryItem in availableCategoryItems)
             {
                 items.Add(categoryItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -425,20 +545,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Manufacturer items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareManufacturers(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareManufacturersAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available manufacturers
-            var availableManufacturerItems = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
+            var availableManufacturerItems = await GetManufacturerListAsync();
             foreach (var manufacturerItem in availableManufacturerItems)
             {
                 items.Add(manufacturerItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -447,20 +568,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Vendor items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareVendors(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareVendorsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available vendors
-            var availableVendorItems = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
+            var availableVendorItems = await GetVendorListAsync();
             foreach (var vendorItem in availableVendorItems)
             {
                 items.Add(vendorItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -469,20 +591,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Product type items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareProductTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareProductTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available product types
-            var availableProductTypeItems = ProductType.SimpleProduct.ToSelectList(false);
+            var availableProductTypeItems = await ProductType.SimpleProduct.ToSelectListAsync(false);
             foreach (var productTypeItem in availableProductTypeItems)
             {
                 items.Add(productTypeItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -491,20 +614,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Category template items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareCategoryTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareCategoryTemplatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available category templates
-            var availableTemplates = _categoryTemplateService.GetAllCategoryTemplates();
+            var availableTemplates = await _categoryTemplateService.GetAllCategoryTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -513,7 +637,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Time zone items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareTimeZones(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareTimeZonesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -526,7 +651,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -535,20 +660,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Shopping cart type items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareShoppingCartTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareShoppingCartTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available shopping cart types
-            var availableShoppingCartTypeItems = ShoppingCartType.ShoppingCart.ToSelectList(false);
+            var availableShoppingCartTypeItems = await ShoppingCartType.ShoppingCart.ToSelectListAsync(false);
             foreach (var shoppingCartTypeItem in availableShoppingCartTypeItems)
             {
                 items.Add(shoppingCartTypeItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -557,20 +683,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Tax display type items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareTaxDisplayTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareTaxDisplayTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available tax display types
-            var availableTaxDisplayTypeItems = TaxDisplayType.ExcludingTax.ToSelectList(false);
+            var availableTaxDisplayTypeItems = await TaxDisplayType.ExcludingTax.ToSelectListAsync(false);
             foreach (var taxDisplayTypeItem in availableTaxDisplayTypeItems)
             {
                 items.Add(taxDisplayTypeItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -579,20 +706,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Currency items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareCurrencies(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareCurrenciesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available currencies
-            var availableCurrencies = _currencyService.GetAllCurrencies(true);
+            var availableCurrencies = await _currencyService.GetAllCurrenciesAsync(true);
             foreach (var currency in availableCurrencies)
             {
                 items.Add(new SelectListItem { Value = currency.Id.ToString(), Text = currency.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -601,20 +729,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Discount type items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareDiscountTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareDiscountTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available discount types
-            var availableDiscountTypeItems = DiscountType.AssignedToOrderTotal.ToSelectList(false);
+            var availableDiscountTypeItems = await DiscountType.AssignedToOrderTotal.ToSelectListAsync(false);
             foreach (var discountTypeItem in availableDiscountTypeItems)
             {
                 items.Add(discountTypeItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -623,20 +752,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Log level items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareLogLevels(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareLogLevelsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available log levels
-            var availableLogLevelItems = LogLevel.Debug.ToSelectList(false);
+            var availableLogLevelItems = await LogLevel.Debug.ToSelectListAsync(false);
             foreach (var logLevelItem in availableLogLevelItems)
             {
                 items.Add(logLevelItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -645,21 +775,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Manufacturer template items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareManufacturerTemplates(IList<SelectListItem> items,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareManufacturerTemplatesAsync(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available manufacturer templates
-            var availableTemplates = _manufacturerTemplateService.GetAllManufacturerTemplates();
+            var availableTemplates = await _manufacturerTemplateService.GetAllManufacturerTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -668,20 +799,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Load plugin mode items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareLoadPluginModes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareLoadPluginModesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available load plugin modes
-            var availableLoadPluginModeItems = LoadPluginsMode.All.ToSelectList(false);
+            var availableLoadPluginModeItems = await LoadPluginsMode.All.ToSelectListAsync(false);
             foreach (var loadPluginModeItem in availableLoadPluginModeItems)
             {
                 items.Add(loadPluginModeItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -690,21 +822,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Plugin group items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PreparePluginGroups(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PreparePluginGroupsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available plugin groups
-            var availablePluginGroups = _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.All)
+            var availablePluginGroups = (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                 .Select(plugin => plugin.Group).Distinct().OrderBy(groupName => groupName).ToList();
             foreach (var group in availablePluginGroups)
-            {
-                items.Add(new SelectListItem { Value = group, Text = group });
-            }
+                items.Add(new SelectListItem { Value = @group, Text = @group });
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -713,21 +844,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Return request status items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareReturnRequestStatuses(IList<SelectListItem> items,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareReturnRequestStatusesAsync(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available return request statuses
-            var availableStatusItems = ReturnRequestStatus.Pending.ToSelectList(false);
+            var availableStatusItems = await ReturnRequestStatus.Pending.ToSelectListAsync(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -736,20 +868,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Product template items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareProductTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareProductTemplatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available product templates
-            var availableTemplates = _productTemplateService.GetAllProductTemplates();
+            var availableTemplates = await _productTemplateService.GetAllProductTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -758,20 +891,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Topic template items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareTopicTemplates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareTopicTemplatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available topic templates
-            var availableTemplates = _topicTemplateService.GetAllTopicTemplates();
+            var availableTemplates = await _topicTemplateService.GetAllTopicTemplatesAsync();
             foreach (var template in availableTemplates)
             {
                 items.Add(new SelectListItem { Value = template.Id.ToString(), Text = template.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -780,20 +914,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Warehouse items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareWarehouses(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareWarehousesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available warehouses
-            var availableWarehouses = _shippingService.GetAllWarehouses();
+            var availableWarehouses = await _shippingService.GetAllWarehousesAsync();
             foreach (var warehouse in availableWarehouses)
             {
                 items.Add(new SelectListItem { Value = warehouse.Id.ToString(), Text = warehouse.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -802,20 +937,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Delivery date items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareDeliveryDates(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareDeliveryDatesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available delivery dates
-            var availableDeliveryDates = _dateRangeService.GetAllDeliveryDates();
+            var availableDeliveryDates = await _dateRangeService.GetAllDeliveryDatesAsync();
             foreach (var date in availableDeliveryDates)
             {
                 items.Add(new SelectListItem { Value = date.Id.ToString(), Text = date.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -824,21 +960,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Product availability range items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareProductAvailabilityRanges(IList<SelectListItem> items,
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareProductAvailabilityRangesAsync(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available product availability ranges
-            var availableProductAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges();
+            var availableProductAvailabilityRanges = await _dateRangeService.GetAllProductAvailabilityRangesAsync();
             foreach (var range in availableProductAvailabilityRanges)
             {
                 items.Add(new SelectListItem { Value = range.Id.ToString(), Text = range.Name });
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
 
         /// <summary>
@@ -847,21 +984,49 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Request type items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareGdprRequestTypes(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareGdprRequestTypesAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available request types
-            var gdprRequestTypeItems = GdprRequestType.ConsentAgree.ToSelectList(false);
+            var gdprRequestTypeItems = await GdprRequestType.ConsentAgree.ToSelectListAsync(false);
             foreach (var gdprRequestTypeItem in gdprRequestTypeItems)
             {
                 items.Add(gdprRequestTypeItem);
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
         }
+
+        /// <summary>
+        /// Prepare available specification attribute groups
+        /// </summary>
+        /// <param name="items">Specification attributes</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareSpecificationAttributeGroupsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available specification attribute groups
+            var availableSpecificationAttributeGroups = await _specificationAttributeService.GetSpecificationAttributeGroupsAsync();
+            foreach (var group in availableSpecificationAttributeGroups)
+            {
+                items.Add(new SelectListItem { Value = group.Id.ToString(), Text = group.Name });
+            }
+
+            // use empty string for nullable field
+            var defaultItemValue = string.Empty;
+
+            //insert special item for the default value
+            await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText, defaultItemValue);
+        }
+
         #endregion
     }
 }

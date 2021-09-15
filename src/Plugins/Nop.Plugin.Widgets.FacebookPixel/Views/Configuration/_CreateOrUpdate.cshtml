@@ -1,0 +1,338 @@
+@model FacebookPixelModel
+
+<div asp-validation-summary="All"></div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <p>
+            To configure the Facebook Pixel you will need your pixel's ID, which you can find in the <a href="https://business.facebook.com/events_manager" target="_blank">Ads Manager &gt; Events Manager</a>. If you have not created a pixel, <a href="https://www.facebook.com/business/help/952192354843755" target="_blank">follow these instructions</a> to create one - all you will need is the pixel's ID.<br />
+            <br />
+            Standard events are predefined visitor actions that correspond to common, conversion-related activities, such as searching for a product, viewing a product, or purchasing a product.<br />
+            You can configure tracking of these events by enabling the appropriate settings below.<br />
+            <em>Note: As an additional parameter, some events include product SKU or product combination SKU; make sure that they are filled out correctly in your catalog.</em><br />
+            <br />
+            If predefined standard events aren't suitable for your needs, you can track your own custom events, which also can be used to define custom audiences for ad optimization.<br />
+            You can configure them below. Specify the name and choose widget zones in which the custom event will be tracked. If you don't know which zone to use for your custom event, you can ask about it in <a href="@Nop.Services.Common.NopLinksDefaults.OfficialSite.Boards" target="_blank">our forums</a>.<br />
+            <br />
+            The General Data Protection Regulation (GDPR) took effect on May 25, 2018, and creates consistent data protection rules across Europe. Businesses who advertise with the Facebook companies can continue to use Facebook platforms and solutions in the same way they do today.<br />
+            If you already enabled the <a href="@Url.Action("GeneralCommon", "Setting", new { area = AreaNames.Admin })" target="_blank">settings</a> to display Cookie Consent for users, you can pause sending pixel fires to Facebook for users who have not accepted Cookie Consent by enabling the appropriate settings below.<br />
+            See also <a href="https://developers.facebook.com/docs/facebook-pixel/support#pixelcollect" target="_blank">What data does the Facebook pixel collect?</a><br />
+        </p>
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Enabled" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Enabled" />
+                            <span asp-validation-for="Enabled"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PixelId" />
+                        </div>
+                        <div class="col-md-9">
+                            @if (string.IsNullOrEmpty(Model.PixelId))
+                            {
+                                <nop-editor asp-for="PixelId" asp-required="true" />
+                            }
+                            else
+                            {
+                                <nop-editor asp-for="PixelId" asp-required="true" asp-disabled="true" asp-value="@Model.PixelId" />
+                                <input asp-for="PixelId" type="hidden" />
+                            }
+                            <span asp-validation-for="PixelId"></span>
+                        </div>
+                    </div>
+                    @if (!Model.HideStoresList)
+                    {
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StoreId" />
+                            </div>
+                            <div class="col-md-9">
+                                @if (string.IsNullOrEmpty(Model.PixelId))
+                                {
+                                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                                }
+                                else
+                                {
+                                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" disabled="disabled" />
+                                    <input asp-for="StoreId" type="hidden" />
+                                }
+                                <span asp-validation-for="StoreId"></span>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="UseAdvancedMatching" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseAdvancedMatching" />
+                            <span asp-validation-for="UseAdvancedMatching"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PassUserProperties" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PassUserProperties" />
+                            <span asp-validation-for="PassUserProperties"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackPageView" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackPageView" />
+                            <span asp-validation-for="TrackPageView"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackAddToCart" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackAddToCart" />
+                            <span asp-validation-for="TrackAddToCart"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackPurchase" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackPurchase" />
+                            <span asp-validation-for="TrackPurchase"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackViewContent" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackViewContent" />
+                            <span asp-validation-for="TrackViewContent"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackAddToWishlist" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackAddToWishlist" />
+                            <span asp-validation-for="TrackAddToWishlist"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackInitiateCheckout" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackInitiateCheckout" />
+                            <span asp-validation-for="TrackInitiateCheckout"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackSearch" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackSearch" />
+                            <span asp-validation-for="TrackSearch"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackContact" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackContact" />
+                            <span asp-validation-for="TrackContact"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="TrackCompleteRegistration" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="TrackCompleteRegistration" />
+                            <span asp-validation-for="TrackCompleteRegistration"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DisableForUsersNotAcceptingCookieConsent" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DisableForUsersNotAcceptingCookieConsent" />
+                            <span asp-validation-for="DisableForUsersNotAcceptingCookieConsent"></span>
+                        </div>
+                        <script>
+	                        $(document).ready(function () {
+                                $("#@Html.IdFor(model => model.DisableForUsersNotAcceptingCookieConsent)").click(toggleCheckbox);
+	                            toggleCheckbox();
+	                        });
+
+                            function toggleCheckbox() {
+                                warningValidation('@Url.Action("CookieSettingsWarning", "FacebookPixel")', '@Html.NameFor(model => model.DisableForUsersNotAcceptingCookieConsent)',
+                                    { disableForUsersNotAcceptingCookieConsent: $('#@Html.IdFor(model => model.DisableForUsersNotAcceptingCookieConsent)').is(':checked') });
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-header">
+                    @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents")
+                </div>
+                @if (Model.Id > 0)
+                {
+                    <div class="card-body">
+                        @if (!Model.HideCustomEventsSearch)
+                        {
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-3">
+                                            <nop-label asp-for="@Model.CustomEventSearchModel.WidgetZone" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <nop-editor asp-for="@Model.CustomEventSearchModel.WidgetZone" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 offset-md-4">
+                                            <button type="button" id="search" class="btn btn-primary btn-search">
+                                                <i class="fas fa-search"></i>
+                                                @T("Admin.Common.Search")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "grid",
+                            UrlRead = new DataUrl("CustomEventList", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
+                            UrlDelete = new DataUrl("CustomEventDelete", "FacebookPixel", new RouteValueDictionary { [nameof(Model.CustomEventSearchModel.ConfigurationId)] = Model.Id }),
+                            SearchButtonId = "search",
+                            Length = Model.CustomEventSearchModel.PageSize,
+                            LengthMenu = Model.CustomEventSearchModel.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.CustomEventSearchModel.WidgetZone), nameof(CustomEventSearchModel))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(CustomEventModel.EventName))
+                                {
+                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(CustomEventModel.WidgetZonesName))
+                                {
+                                    Title = T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones").Text
+                                },
+                                new ColumnProperty(nameof(CustomEventModel.EventName))
+                                {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                }
+                            }
+                        })
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.CustomEventSearchModel.AddCustomEvent.EventName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.CustomEventSearchModel.AddCustomEvent.EventName" />
+                                <span asp-validation-for="@Model.CustomEventSearchModel.AddCustomEvent.EventName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="@Model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds" asp-items="@Model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones" asp-multiple="true" />
+                                <script>
+                                    $(document).ready(function() {
+                                        var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').data("kendoMultiSelect");
+                                        input.setOptions({
+                                            autoClose: false,
+                                            filter: "contains"
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="button" id="add" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $('#add').click(function () {
+                                    $('#add').attr('disabled', true);
+                                    var postData = {
+                                        EventName: $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val(),
+                                        WidgetZones: $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)").val()
+                                    };
+                                    addAntiForgeryToken(postData);
+
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@Html.Raw(Url.Action("CustomEventAdd", "FacebookPixel", new { configurationId = Model.Id }))",
+                                        data: postData,
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (data.Result) {
+                                                //reload grid
+                                                updateTable('#grid');
+
+                                                //clear input value
+                                                $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val('');
+                                                var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').data("kendoMultiSelect");
+                                                input.value("");
+                                                input.trigger("change");
+                                            } else {
+                                                //display errors if returned
+                                                display_nop_error(data);
+                                            }
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            $('#add').attr('disabled', false);
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    </div>
+                }
+                else
+                {
+                    <div class="card-body">
+                        @T("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.SaveBeforeEdit")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

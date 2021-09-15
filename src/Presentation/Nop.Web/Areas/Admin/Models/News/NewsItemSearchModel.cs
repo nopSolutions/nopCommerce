@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.News
     /// <summary>
     /// Represents a news item search model
     /// </summary>
-    public partial class NewsItemSearchModel : BaseSearchModel
+    public partial record NewsItemSearchModel : BaseSearchModel
     {
         #region Ctor
 
@@ -25,6 +25,8 @@ namespace Nop.Web.Areas.Admin.Models.News
         public int SearchStoreId { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        public string SearchTitle { get; set; }
 
         public bool HideStoresList { get; set; }
 

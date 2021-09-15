@@ -1,43 +1,62 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
     /// <summary>
-    /// label tag helper
+    /// "label" tag helper
     /// </summary>
-    [HtmlTargetElement("label", Attributes = ForAttributeName)]
+    [HtmlTargetElement("label", Attributes = FOR_ATTRIBUTE_NAME)]
     public class LabelTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper
     {
-        private const string ForAttributeName = "asp-for";
-        private const string PostfixAttributeName = "asp-postfix";
+        #region Constants
+
+        private const string FOR_ATTRIBUTE_NAME = "asp-for";
+        private const string POSTFIX_ATTRIBUTE_NAME = "asp-postfix";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Indicates whether the input is disabled
         /// </summary>
-        [HtmlAttributeName(PostfixAttributeName)]
+        [HtmlAttributeName(POSTFIX_ATTRIBUTE_NAME)]
         public string Postfix { get; set; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="generator">HTML generator</param>
+        #endregion
+
+        #region Ctor
+
         public LabelTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        /// <returns>Task</returns>
-        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (output == null)
+                throw new ArgumentNullException(nameof(output));
+
             output.Content.Append(Postfix);
 
-            return base.ProcessAsync(context, output);
+            await base.ProcessAsync(context, output);
         }
+
+        #endregion
     }
 }

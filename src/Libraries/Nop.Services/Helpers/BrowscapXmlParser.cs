@@ -14,8 +14,8 @@ namespace Nop.Services.Helpers
     /// </summary>
     public class BrowscapXmlHelper
     {
-        private Regex _crawlerUserAgentsRegexp;
         private readonly INopFileProvider _fileProvider;
+        private Regex _crawlerUserAgentsRegexp;
 
         /// <summary>
         /// Ctor
@@ -52,29 +52,24 @@ namespace Nop.Services.Helpers
             if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath))
             {
                 //try to load crawler list from crawlers only file
-                using (var sr = new StreamReader(crawlerOnlyUserAgentStringsPath))
-                {
-                    crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
-                }
+                using var sr = new StreamReader(crawlerOnlyUserAgentStringsPath);
+                crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
             }
 
             if (crawlerItems == null || !crawlerItems.Any())
             {
                 //try to load crawler list from full user agents file
-                using (var sr = new StreamReader(userAgentStringsPath))
-                {
-                    crawlerItems = XDocument.Load(sr).Root?.Element("browsercapitems")?.Elements("browscapitem")
-                        //only crawlers
-                        .Where(IsBrowscapItemIsCrawler).ToList();
-                    needSaveCrawlerOnly = true;
-                }
+                using var sr = new StreamReader(userAgentStringsPath);
+                crawlerItems = XDocument.Load(sr).Root?.Element("browsercapitems")?.Elements("browscapitem")
+                    //only crawlers
+                    .Where(IsBrowscapItemIsCrawler).ToList();
+                needSaveCrawlerOnly = true;
             }
 
             if (crawlerItems == null || !crawlerItems.Any())
                 throw new Exception("Incorrect file format");
 
-            var crawlerRegexpPattern = string.Join("|",
-                crawlerItems
+            var crawlerRegexpPattern = string.Join("|", crawlerItems
                 //get only user agent names
                 .Select(e => e.Attribute("name"))
                 .Where(e => !string.IsNullOrEmpty(e?.Value))
@@ -87,24 +82,22 @@ namespace Nop.Services.Helpers
                 return;
 
             //try to write crawlers file
-            using (var sw = new StreamWriter(crawlerOnlyUserAgentStringsPath))
+            using var sw = new StreamWriter(crawlerOnlyUserAgentStringsPath);
+            var root = new XElement("browsercapitems");
+
+            foreach (var crawler in crawlerItems)
             {
-                var root = new XElement("browsercapitems");
-
-                foreach (var crawler in crawlerItems)
+                foreach (var element in crawler.Elements().ToList())
                 {
-                    foreach (var element in crawler.Elements().ToList())
-                    {
-                        if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
-                            continue;
-                        element.Remove();
-                    }
-
-                    root.Add(crawler);
+                    if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
+                        continue;
+                    element.Remove();
                 }
 
-                root.Save(sw);
+                root.Add(crawler);
             }
+
+            root.Save(sw);
         }
         
         /// <summary>

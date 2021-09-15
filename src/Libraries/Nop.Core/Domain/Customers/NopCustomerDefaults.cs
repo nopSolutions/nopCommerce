@@ -1,5 +1,4 @@
-
-namespace Nop.Core.Domain.Customers
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents default values related to customers data
@@ -270,6 +269,26 @@ namespace Nop.Core.Domain.Customers
         /// Gets a name of generic attribute to store the value of 'EuCookieLawAccepted'
         /// </summary>
         public static string EuCookieLawAcceptedAttribute => "EuCookieLaw.Accepted";
+
+        /// <summary>
+        /// Gets a name of generic attribute to store the value of 'SelectedMultiFactorAuthProvider'
+        /// </summary>
+        public static string SelectedMultiFactorAuthenticationProviderAttribute => "SelectedMultiFactorAuthProvider";
+
+        /// <summary>
+        /// Gets a name of session key
+        /// </summary>
+        public static string CustomerMultiFactorAuthenticationInfo => "CustomerMultiFactorAuthenticationInfo";
+
+        /// <summary>
+        /// Gets a name of generic attribute to store the value of 'HideConfigurationSteps'
+        /// </summary>
+        public static string HideConfigurationStepsAttribute => "HideConfigurationSteps";
+
+        /// <summary>
+        /// Gets a name of generic attribute to store the value of 'CloseConfigurationSteps'
+        /// </summary>
+        public static string CloseConfigurationStepsAttribute => "CloseConfigurationSteps";
 
         #endregion
     }

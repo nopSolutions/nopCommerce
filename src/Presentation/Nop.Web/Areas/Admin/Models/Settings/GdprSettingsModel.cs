@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -7,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a GDPR settings model
     /// </summary>
-    public partial class GdprSettingsModel : BaseNopModel, ISettingsModel
+    public partial record GdprSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 

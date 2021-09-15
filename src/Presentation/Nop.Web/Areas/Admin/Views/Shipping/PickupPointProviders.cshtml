@@ -8,20 +8,23 @@
 }
 
 <div class="content-header clearfix">
-    <h1 class="pull-left">
+    <h1 class="float-left">
         @T("Admin.Configuration.Shipping.PickupPointProviders")
     </h1>
-    <div class="pull-right">
+    <div class="float-right">
         &nbsp;
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PickupPointProviderListButtons })
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.PickupPoints", Docs.PickupPoints + Utm.OnAdmin)" />
+
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "pickup-point-providers-grid",
@@ -33,19 +36,12 @@
                             {
                                 new ColumnProperty(nameof(PickupPointProviderModel.FriendlyName))
                                 {
-                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName").Text,
-                                    Width = "250"
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName").Text
                                 },
                                 new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName").Text,
                                     Width = "250"
-                                },
-                                new ColumnProperty(nameof(PickupPointProviderModel.LogoUrl))
-                                {
-                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo").Text,
-                                    Width = "100",
-                                    Render = new RenderPicture()
                                 },
                                 new ColumnProperty(nameof(PickupPointProviderModel.DisplayOrder))
                                 {
@@ -67,14 +63,14 @@
                                 new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text,
-                                    Width = "150",
+                                    Width = "200",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 },
                                 new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
-                                    Width = "200",
+                                    Width = "150",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }
@@ -84,7 +80,7 @@
                     <script>
                         function renderColumnConfigure(data, type, row, meta) {
                             if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")</a>';
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fas fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text</a>';
                             } else {
                                 return '';
                             }
@@ -95,3 +91,4 @@
         </div>
     </div>
 </div>
+</section>

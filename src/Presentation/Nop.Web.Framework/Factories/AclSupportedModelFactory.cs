@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Security;
@@ -39,13 +40,14 @@ namespace Nop.Web.Framework.Factories
         /// </summary>
         /// <typeparam name="TModel">ACL supported model type</typeparam>
         /// <param name="model">Model</param>
-        public virtual void PrepareModelCustomerRoles<TModel>(TModel model) where TModel : IAclSupportedModel
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareModelCustomerRolesAsync<TModel>(TModel model) where TModel : IAclSupportedModel
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available customer roles
-            var availableRoles = _customerService.GetAllCustomerRoles(showHidden: true);
+            var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
             model.AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
             {
                 Text = role.Name,
@@ -62,7 +64,8 @@ namespace Nop.Web.Framework.Factories
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
         /// <param name="ignoreAclMappings">Whether to ignore existing ACL mappings</param>
-        public virtual void PrepareModelCustomerRoles<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareModelCustomerRolesAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
             where TModel : IAclSupportedModel where TEntity : BaseEntity, IAclSupported
         {
             if (model == null)
@@ -70,9 +73,9 @@ namespace Nop.Web.Framework.Factories
 
             //prepare customer roles with granted access
             if (!ignoreAclMappings && entity != null)
-                model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(entity).ToList();
+                model.SelectedCustomerRoleIds = (await _aclService.GetCustomerRoleIdsWithAccessAsync(entity)).ToList();
 
-            PrepareModelCustomerRoles(model);
+            await PrepareModelCustomerRolesAsync(model);
         }
 
         #endregion

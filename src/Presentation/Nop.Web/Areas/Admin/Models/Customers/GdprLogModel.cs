@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a GDPR log (request) model
     /// </summary>
-    public partial class GdprLogModel : BaseNopEntityModel
+    public partial record GdprLogModel : BaseNopEntityModel
     {
         #region Properties
 

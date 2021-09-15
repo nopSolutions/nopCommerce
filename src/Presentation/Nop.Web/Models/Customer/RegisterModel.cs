@@ -7,7 +7,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class RegisterModel : BaseNopModel
+    public partial record RegisterModel : BaseNopModel
     {
         public RegisterModel()
         {
@@ -34,12 +34,10 @@ namespace Nop.Web.Models.Customer
         public bool CheckUsernameAvailabilityEnabled { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [NopResourceDisplayName("Account.Fields.Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [NopResourceDisplayName("Account.Fields.ConfirmPassword")]
         public string ConfirmPassword { get; set; }
 
@@ -48,10 +46,14 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Gender")]
         public string Gender { get; set; }
 
+        public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.FirstName")]
         public string FirstName { get; set; }
+        public bool FirstNameRequired { get; set; }
+        public bool LastNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.LastName")]
         public string LastName { get; set; }
+        public bool LastNameRequired { get; set; }
 
         public bool DateOfBirthEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.DateOfBirth")]

@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
     /// <summary>
     /// Represents a blog post search model
     /// </summary>
-    public partial class BlogPostSearchModel : BaseSearchModel
+    public partial record BlogPostSearchModel : BaseSearchModel
     {
         #region Ctor
 
@@ -24,6 +24,8 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.List.SearchStore")]
         public int SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        public string SearchTitle { get; set; }
 
         public bool HideStoresList { get; set; }
 

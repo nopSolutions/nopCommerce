@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a gift card search model
     /// </summary>
-    public partial class GiftCardSearchModel : BaseSearchModel
+    public partial record GiftCardSearchModel : BaseSearchModel
     {
         #region Ctor
 

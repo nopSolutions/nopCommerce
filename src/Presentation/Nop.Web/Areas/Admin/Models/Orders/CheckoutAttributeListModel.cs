@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a checkout attribute list model
     /// </summary>
-    public class CheckoutAttributeListModel : BasePagedListModel<CheckoutAttributeModel>
+    public record CheckoutAttributeListModel : BasePagedListModel<CheckoutAttributeModel>
     {
     }
 }

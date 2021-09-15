@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
     /// <summary>
     /// Represents a blog post model
     /// </summary>
-    public partial class BlogPostModel : BaseNopEntityModel, IStoreMappingSupportedModel
+    public partial record BlogPostModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
         #region Ctor
 
@@ -50,6 +50,8 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags")]
         public string Tags { get; set; }
+
+        public string InitialBlogTags { get; set; }
 
         public int ApprovedComments { get; set; }
 

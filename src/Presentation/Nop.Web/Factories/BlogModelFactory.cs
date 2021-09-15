@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -33,7 +34,7 @@ namespace Nop.Web.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPictureService _pictureService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -51,7 +52,7 @@ namespace Nop.Web.Factories
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
             IPictureService pictureService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
@@ -65,7 +66,7 @@ namespace Nop.Web.Factories
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
             _pictureService = pictureService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
@@ -73,37 +74,8 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
+        
         #region Methods
-
-        /// <summary>
-        /// Prepare blog comment model
-        /// </summary>
-        /// <param name="blogComment">Blog comment entity</param>
-        /// <returns>Blog comment model</returns>
-        public virtual BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment)
-        {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
-
-            var model = new BlogCommentModel
-            {
-                Id = blogComment.Id,
-                CustomerId = blogComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(blogComment.Customer),
-                CommentText = blogComment.CommentText,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
-            };
-            if (_customerSettings.AllowCustomersToUploadAvatars)
-            {
-                model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<int>(blogComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
-                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
-            }
-
-            return model;
-        }
 
         /// <summary>
         /// Prepare blog post model
@@ -111,7 +83,8 @@ namespace Nop.Web.Factories
         /// <param name="model">Blog post model</param>
         /// <param name="blogPost">Blog post entity</param>
         /// <param name="prepareComments">Whether to prepare blog comments</param>
-        public virtual void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -123,29 +96,30 @@ namespace Nop.Web.Factories
             model.MetaTitle = blogPost.MetaTitle;
             model.MetaDescription = blogPost.MetaDescription;
             model.MetaKeywords = blogPost.MetaKeywords;
-            model.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
-            model.Tags = _blogService.ParseTags(blogPost);
+            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
+            model.Tags = await _blogService.ParseTagsAsync(blogPost);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
-            var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
+            var storeId = _blogSettings.ShowBlogCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0;
+
+            model.NumberOfComments = await _blogService.GetBlogCommentsCountAsync(blogPost, storeId, true);
 
             if (prepareComments)
             {
-                var blogComments = blogPost.BlogComments.Where(comment => comment.IsApproved);
-                if (_blogSettings.ShowBlogCommentsPerStore)
-                    blogComments = blogComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+                var blogComments = await _blogService.GetAllCommentsAsync(
+                    blogPostId: blogPost.Id,
+                    approved: true,
+                    storeId: storeId);
 
-                foreach (var bc in blogComments.OrderBy(comment => comment.CreatedOnUtc))
+                foreach (var bc in blogComments)
                 {
-                    var commentModel = PrepareBlogPostCommentModel(bc);
+                    var commentModel = await PrepareBlogPostCommentModelAsync(bc);
                     model.Comments.Add(commentModel);
                 }
             }
@@ -155,46 +129,41 @@ namespace Nop.Web.Factories
         /// Prepare blog post list model
         /// </summary>
         /// <param name="command">Blog paging filtering model</param>
-        /// <returns>Blog post list model</returns>
-        public virtual BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog post list model
+        /// </returns>
+        public virtual async Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPagingFilteringModel command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new BlogPostListModel();
-            model.PagingFilteringContext.Tag = command.Tag;
-            model.PagingFilteringContext.Month = command.Month;
-            model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
-
-            if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (command.PageSize <= 0)
+                command.PageSize = _blogSettings.PostsPageSize;
+            if (command.PageNumber <= 0)
+                command.PageNumber = 1;
 
             var dateFrom = command.GetFromMonth();
             var dateTo = command.GetToMonth();
 
-            IPagedList<BlogPost> blogPosts;
-            if (string.IsNullOrEmpty(command.Tag))
-            {
-                blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
-                    _workContext.WorkingLanguage.Id,
-                    dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
-            }
-            else
-            {
-                blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
-                    _workContext.WorkingLanguage.Id,
-                    command.Tag, command.PageNumber - 1, command.PageSize);
-            }
-            model.PagingFilteringContext.LoadPagedList(blogPosts);
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var blogPosts = string.IsNullOrEmpty(command.Tag)
+                ? await _blogService.GetAllBlogPostsAsync(store.Id, language.Id, dateFrom, dateTo, command.PageNumber - 1, command.PageSize)
+                : await _blogService.GetAllBlogPostsByTagAsync(store.Id, language.Id, command.Tag, command.PageNumber - 1, command.PageSize);
 
-            model.BlogPosts = blogPosts
-                .Select(x =>
+            var model = new BlogPostListModel
+            {
+                PagingFilteringContext = { Tag = command.Tag, Month = command.Month },
+                WorkingLanguageId = language.Id,
+                BlogPosts = await blogPosts.SelectAwait(async blogPost =>
                 {
                     var blogPostModel = new BlogPostModel();
-                    PrepareBlogPostModel(blogPostModel, x, false);
+                    await PrepareBlogPostModelAsync(blogPostModel, blogPost, false);
                     return blogPostModel;
-                })
-                .ToList();
+                }).ToListAsync()
+            };
+            model.PagingFilteringContext.LoadPagedList(blogPosts);
 
             return model;
         }
@@ -202,47 +171,46 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare blog post tag list model
         /// </summary>
-        /// <returns>Blog post tag list model</returns>
-        public virtual BlogPostTagListModel PrepareBlogPostTagListModel()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog post tag list model
+        /// </returns>
+        public virtual async Task<BlogPostTagListModel> PrepareBlogPostTagListModelAsync()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogTagsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var model = new BlogPostTagListModel();
+
+            //get tags
+            var tags = (await _blogService
+                .GetAllBlogPostTagsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetWorkingLanguageAsync()).Id))
+                .OrderByDescending(x => x.BlogPostCount)
+                .Take(_blogSettings.NumberOfTags);
+
+            //sorting and setting into the model
+            model.Tags.AddRange(tags.OrderBy(x => x.Name).Select(tag => new BlogPostTagModel
             {
-                var model = new BlogPostTagListModel();
+                Name = tag.Name,
+                BlogPostCount = tag.BlogPostCount
+            }));
 
-                //get tags
-                var tags = _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id)
-                    .OrderByDescending(x => x.BlogPostCount)
-                    .Take(_blogSettings.NumberOfTags)
-                    .ToList();
-                //sorting
-                tags = tags.OrderBy(x => x.Name).ToList();
-
-                foreach (var tag in tags)
-                    model.Tags.Add(new BlogPostTagModel
-                    {
-                        Name = tag.Name,
-                        BlogPostCount = tag.BlogPostCount
-                    });
-                return model;
-            });
-
-            return cachedModel;
+            return model;
         }
 
         /// <summary>
         /// Prepare blog post year models
         /// </summary>
-        /// <returns>List of blog post year model</returns>
-        public virtual List<BlogPostYearModel> PrepareBlogPostYearModel()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of blog post year model
+        /// </returns>
+        public virtual async Task<List<BlogPostYearModel>> PrepareBlogPostYearModelAsync()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogMonthsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
+            var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
-                    _workContext.WorkingLanguage.Id);
+                var blogPosts = await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                    (await _workContext.GetWorkingLanguageAsync()).Id);
                 if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
@@ -251,7 +219,7 @@ namespace Nop.Web.Factories
                     var first = blogPost.StartDateUtc ?? blogPost.CreatedOnUtc;
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
-                        var list = _blogService.GetPostsByDate(blogPosts, new DateTime(first.Year, first.Month, 1),
+                        var list = await _blogService.GetPostsByDateAsync(blogPosts, new DateTime(first.Year, first.Month, 1),
                             new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
                         if (list.Any())
                         {
@@ -261,7 +229,6 @@ namespace Nop.Web.Factories
 
                         first = first.AddMonths(1);
                     }
-
 
                     var current = 0;
                     foreach (var kvp in months)
@@ -289,9 +256,46 @@ namespace Nop.Web.Factories
                         current = date.Year;
                     }
                 }
+
                 return model;
             });
+
             return cachedModel;
+        }
+        
+        /// <summary>
+        /// Prepare blog comment model
+        /// </summary>
+        /// <param name="blogComment">Blog comment entity</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog comment model
+        /// </returns>
+        public virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException(nameof(blogComment));
+
+            var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
+
+            var model = new BlogCommentModel
+            {
+                Id = blogComment.Id,
+                CustomerId = blogComment.CustomerId,
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
+                CommentText = blogComment.CommentText,
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(blogComment.CreatedOnUtc, DateTimeKind.Utc),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer)
+            };
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                    await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+            }
+
+            return model;
         }
 
         #endregion

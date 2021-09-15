@@ -7,7 +7,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents an order settings model
     /// </summary>
-    public partial class OrderSettingsModel : BaseNopModel, ISettingsModel
+    public partial record OrderSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 
@@ -74,6 +74,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DisableOrderCompletedPage")]
         public bool DisableOrderCompletedPage { get; set; }
         public bool DisableOrderCompletedPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DisplayPickupInStoreOnShippingMethodPage")]
+        public bool DisplayPickupInStoreOnShippingMethodPage { get; set; }
+        public bool DisplayPickupInStoreOnShippingMethodPage_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail")]
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }

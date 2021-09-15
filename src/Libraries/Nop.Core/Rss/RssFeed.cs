@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -85,12 +84,15 @@ namespace Nop.Core.Rss
         /// Load RSS feed from the passed stream
         /// </summary>
         /// <param name="stream">Stream</param>
-        /// <returns>The asynchronous task whose result contains the RSS feed</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the asynchronous task whose result contains the RSS feed
+        /// </returns>
         public static async Task<RssFeed> LoadAsync(Stream stream)
         {
             try
             {
-                var document = await XDocument.LoadAsync(stream, LoadOptions.None, default(CancellationToken));
+                var document = await XDocument.LoadAsync(stream, LoadOptions.None, default);
 
                 var channel = document.Root?.Element(NopRssDefaults.Channel);
 
@@ -111,7 +113,6 @@ namespace Nop.Core.Rss
                 }
 
                 return feed;
-
             }
             catch
             {

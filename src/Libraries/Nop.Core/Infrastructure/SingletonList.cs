@@ -16,6 +16,6 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// The singleton instance for the specified type T. Only one instance (at the time) of this list for each type of T.
         /// </summary>
-        public new static IList<T> Instance => Singleton<IList<T>>.Instance;
+        public static new IList<T> Instance => Singleton<IList<T>>.Instance;
     }
 }

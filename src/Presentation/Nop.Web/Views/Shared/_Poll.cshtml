@@ -25,8 +25,8 @@
             }
         </ul>
         <div class="buttons">
-            <input type="button" value="@T("Polls.Vote")" id="vote-poll-@(Model.Id)" class="button-2 vote-poll-button" />
-            <span id="poll-voting-progress-@(Model.Id)" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            <button type="button" id="vote-poll-@(Model.Id)" class="button-2 vote-poll-button">@T("Polls.Vote")</button>
+            <span id="poll-voting-progress-@(Model.Id)" style="display: none;" class="please-wait">@T("Common.Wait")</span>
         </div>
         <div class="poll-vote-error" id="block-poll-vote-error-@(Model.Id)" style="display:none">
         </div>

@@ -44,18 +44,30 @@
                             </div>
                         </div>
                     }
-                    <div class="inputs">
-                        <label asp-for="FirstName" asp-postfix=":"></label>
-                        <input asp-for="FirstName" />
-                        <nop-required />
-                        <span asp-validation-for="FirstName"></span>
-                    </div>
-                    <div class="inputs">
-                        <label asp-for="LastName" asp-postfix=":"></label>
-                        <input asp-for="LastName" />
-                        <nop-required />
-                        <span asp-validation-for="LastName"></span>
-                    </div>
+                    @if (Model.FirstNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="FirstName" asp-postfix=":"></label>
+                            <input asp-for="FirstName" />
+                            @if (Model.FirstNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="FirstName"></span>
+                        </div>
+                    }
+                    @if (Model.LastNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="LastName" asp-postfix=":"></label>
+                            <input asp-for="LastName" />
+                            @if (Model.LastNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="LastName"></span>
+                        </div>
+                    }
                     @if (Model.DateOfBirthEnabled)
                     {
                         <div class="inputs date-of-birth">
@@ -248,7 +260,7 @@
                                 {
                                     <nop-required />
                                 }
-                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
                                 <span asp-validation-for="StateProvinceId"></span>
                             </div>
                         }
@@ -399,7 +411,7 @@
                     @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
                     {
                         //we can add more external records
-                        var loginUrl = Url.RouteUrl("Login", null, webHelper.CurrentRequestProtocol);
+                        var loginUrl = Url.RouteUrl("Login", null, webHelper.GetCurrentRequestProtocol());
                         <div class="form-fields add-more-external-records">
                             @T("Account.AssociatedExternalAuth.AddMoreRecords")
                             <a href="@loginUrl">@loginUrl</a>
@@ -443,7 +455,7 @@
                 </div>
             }
             <div class="buttons">
-                <input type="submit" id="save-info-button" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
+                <button type="submit" id="save-info-button" name="save-info-button" class="button-1 save-customer-info-button">@T("Common.Save")</button>
             </div>
         </form>
     </div>

@@ -86,6 +86,8 @@ namespace Nop.Plugin.Misc.MrPoly.Catalog
             _productRepository = productRepository;
         }
 
+        public override IList<Product> G
+
         public override IList<Product> GetAllProductsDisplayedOnHomepage()
         {
             var query = from p in _productRepository.Table

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Nop.Core.Domain.Gdpr
 {
@@ -42,14 +42,8 @@ namespace Nop.Core.Domain.Gdpr
         /// </summary>
         public GdprRequestType RequestType
         {
-            get
-            {
-                return (GdprRequestType)RequestTypeId;
-            }
-            set
-            {
-                RequestTypeId = (int)value;
-            }
+            get => (GdprRequestType)RequestTypeId;
+            set => RequestTypeId = (int)value;
         }
     }
 }

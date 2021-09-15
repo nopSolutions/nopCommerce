@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     /// <summary>
     /// Represents a store information settings model
     /// </summary>
-    public partial class StoreInformationSettingsModel : BaseNopModel, ISettingsModel
+    public partial record StoreInformationSettingsModel : BaseNopModel, ISettingsModel
     {
         #region Ctor
 
@@ -73,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         #region Nested classes
 
-        public partial class ThemeModel
+        public partial record ThemeModel
         {
             public string SystemName { get; set; }
             public string FriendlyName { get; set; }

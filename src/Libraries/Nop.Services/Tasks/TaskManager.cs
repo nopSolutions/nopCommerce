@@ -9,6 +9,7 @@ namespace Nop.Services.Tasks
     /// <summary>
     /// Represents task manager
     /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
     public partial class TaskManager
     {
         #region Fields
@@ -19,6 +20,7 @@ namespace Nop.Services.Tasks
 
         #region Ctor
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private TaskManager()
         {
         }
@@ -35,12 +37,12 @@ namespace Nop.Services.Tasks
             _taskThreads.Clear();
 
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-            
+
             var scheduleTasks = taskService
-                .GetAllTasks()
+                .GetAllTasksAsync().Result
                 .OrderBy(x => x.Seconds)
                 .ToList();
-            
+
             foreach (var scheduleTask in scheduleTasks)
             {
                 var taskThread = new TaskThread
@@ -55,11 +57,11 @@ namespace Nop.Services.Tasks
                 {
                     //seconds left since the last start
                     var secondsLeft = (DateTime.UtcNow - scheduleTask.LastStartUtc).Value.TotalSeconds;
-                    
+
                     if (secondsLeft >= scheduleTask.Seconds)
                         //run now (immediately)
                         taskThread.InitSeconds = 0;
-                    else 
+                    else
                         //calculate start time
                         //and round it (so "ensureRunOncePerPeriod" parameter was fine)
                         taskThread.InitSeconds = (int)(scheduleTask.Seconds - secondsLeft) + 1;
@@ -104,11 +106,13 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Gets the task manger instance
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public static TaskManager Instance { get; } = new TaskManager();
 
         /// <summary>
         /// Gets a list of task threads of this task manager
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public IList<TaskThread> TaskThreads => new ReadOnlyCollection<TaskThread>(_taskThreads);
 
         #endregion

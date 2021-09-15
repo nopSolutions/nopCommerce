@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
 using Nop.Services.Stores;
@@ -14,6 +15,7 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IPollModelFactory _pollModelFactory;
         private readonly IPollService _pollService;
@@ -24,12 +26,14 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public PollController(ILocalizationService localizationService, 
+        public PollController(ICustomerService customerService, 
+            ILocalizationService localizationService, 
             IPollModelFactory pollModelFactory,
             IPollService pollService,
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
+            _customerService = customerService;
             _localizationService = localizationService;
             _pollModelFactory = pollModelFactory;
             _pollService = pollService;
@@ -42,38 +46,41 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [HttpPost]
-        public virtual IActionResult Vote(int pollAnswerId)
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> Vote(int pollAnswerId)
         {
-            var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
+            var pollAnswer = await _pollService.GetPollAnswerByIdAsync(pollAnswerId);
             if (pollAnswer == null)
                 return Json(new { error = "No poll answer found with the specified id" });
 
-            var poll = pollAnswer.Poll;
-            if (!poll.Published || !_storeMappingService.Authorize(poll))
+            var poll = await _pollService.GetPollByIdAsync(pollAnswer.PollId);
+
+            if (!poll.Published || !await _storeMappingService.AuthorizeAsync(poll))
                 return Json(new { error = "Poll is not available" });
 
-            if (_workContext.CurrentCustomer.IsGuest() && !poll.AllowGuestsToVote)
-                return Json(new { error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote") });
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !poll.AllowGuestsToVote)
+                return Json(new { error = await _localizationService.GetResourceAsync("Polls.OnlyRegisteredUsersVote") });
 
-            var alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
+            var alreadyVoted = await _pollService.AlreadyVotedAsync(poll.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
             if (!alreadyVoted)
             {
                 //vote
-                pollAnswer.PollVotingRecords.Add(new PollVotingRecord
+                await _pollService.InsertPollVotingRecordAsync(new PollVotingRecord
                 {
                     PollAnswerId = pollAnswer.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
                 //update totals
-                pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
-                _pollService.UpdatePoll(poll);
+                pollAnswer.NumberOfVotes = (await _pollService.GetPollVotingRecordsByPollAnswerAsync(pollAnswer.Id)).Count;
+                await _pollService.UpdatePollAnswerAsync(pollAnswer);
+                await _pollService.UpdatePollAsync(poll);
             }
 
             return Json(new
             {
-                html = RenderPartialViewToString("_Poll", _pollModelFactory.PreparePollModel(poll, true)),
+                html = await RenderPartialViewToStringAsync("_Poll", await _pollModelFactory.PreparePollModelAsync(poll, true)),
             });
         }
 

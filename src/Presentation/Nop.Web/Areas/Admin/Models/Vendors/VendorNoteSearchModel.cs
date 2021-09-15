@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
     /// <summary>
     /// Represents a vendor note search model
     /// </summary>
-    public partial class VendorNoteSearchModel : BaseSearchModel
+    public partial record VendorNoteSearchModel : BaseSearchModel
     {
         #region Properties
 

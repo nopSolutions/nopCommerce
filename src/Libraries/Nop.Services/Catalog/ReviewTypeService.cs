@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Catalog
 {
@@ -15,24 +14,21 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
         private readonly IRepository<ReviewType> _reviewTypeRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public ReviewTypeService(IEventPublisher eventPublisher,
-            IRepository<ProductReviewReviewTypeMapping> productReviewReviewTypeMappingRepository,
+        public ReviewTypeService(IRepository<ProductReviewReviewTypeMapping> productReviewReviewTypeMappingRepository,
             IRepository<ReviewType> reviewTypeRepository,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
             _productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
             _reviewTypeRepository = reviewTypeRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -44,77 +40,58 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all review types
         /// </summary>
-        /// <returns>Review types</returns>
-        public virtual IList<ReviewType> GetAllReviewTypes()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review types
+        /// </returns>
+        public virtual async Task<IList<ReviewType>> GetAllReviewTypesAsync()
         {
-            return _cacheManager.Get(NopCatalogDefaults.ReviewTypeAllKey, () =>
-            {
-                return _reviewTypeRepository.Table
-                    .OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id)
-                    .ToList();
-            });
+            return await _reviewTypeRepository.GetAllAsync(
+                query => query.OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id),
+                cache => default);
         }
 
         /// <summary>
         /// Gets a review type 
         /// </summary>
         /// <param name="reviewTypeId">Review type identifier</param>
-        /// <returns>Review type</returns>
-        public virtual ReviewType GetReviewTypeById(int reviewTypeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the review type
+        /// </returns>
+        public virtual async Task<ReviewType> GetReviewTypeByIdAsync(int reviewTypeId)
         {
-            if (reviewTypeId == 0)
-                return null;
-
-            var key = string.Format(NopCatalogDefaults.ReviewTypeByIdKey, reviewTypeId);
-            return _cacheManager.Get(key, () => _reviewTypeRepository.GetById(reviewTypeId));
+            return await _reviewTypeRepository.GetByIdAsync(reviewTypeId, cache => default);
         }
 
         /// <summary>
         /// Inserts a review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
-        public virtual void InsertReviewType(ReviewType reviewType)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertReviewTypeAsync(ReviewType reviewType)
         {
-            if (reviewType == null)
-                throw new ArgumentNullException(nameof(reviewType));
-
-            _reviewTypeRepository.Insert(reviewType);
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(reviewType);
+            await _reviewTypeRepository.InsertAsync(reviewType);
         }
 
         /// <summary>
         /// Updates a review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
-        public virtual void UpdateReviewType(ReviewType reviewType)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateReviewTypeAsync(ReviewType reviewType)
         {
-            if (reviewType == null)
-                throw new ArgumentNullException(nameof(reviewType));
-
-            _reviewTypeRepository.Update(reviewType);
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(reviewType);
+            await _reviewTypeRepository.UpdateAsync(reviewType);
         }
 
         /// <summary>
         /// Delete review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
-        public virtual void DeleteReiewType(ReviewType reviewType)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteReviewTypeAsync(ReviewType reviewType)
         {
-            if (reviewType == null)
-                throw new ArgumentNullException(nameof(reviewType));
-
-            _reviewTypeRepository.Delete(reviewType);
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(reviewType);
+            await _reviewTypeRepository.DeleteAsync(reviewType);
         }
 
         #endregion
@@ -125,20 +102,33 @@ namespace Nop.Services.Catalog
         /// Gets product review and review type mappings by product review identifier
         /// </summary>
         /// <param name="productReviewId">The product review identifier</param>
-        /// <returns>Product review and review type mapping collection</returns>
-        public IList<ProductReviewReviewTypeMapping> GetProductReviewReviewTypeMappingsByProductReviewId(int productReviewId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review and review type mapping collection
+        /// </returns>
+        public async Task<IList<ProductReviewReviewTypeMapping>> GetProductReviewReviewTypeMappingsByProductReviewIdAsync(
+            int productReviewId)
         {
-            var key = string.Format(NopCatalogDefaults.ProductReviewReviewTypeMappingAllKey, productReviewId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewTypeMappingByReviewTypeCacheKey, productReviewId);
 
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from pam in _productReviewReviewTypeMappingRepository.Table
-                            orderby pam.Id
-                            where pam.ProductReviewId == productReviewId
-                            select pam;
-                var productReviewReviewTypeMappings = query.ToList();
-                return productReviewReviewTypeMappings;
-            });
+            var query = from pam in _productReviewReviewTypeMappingRepository.Table
+                orderby pam.Id
+                where pam.ProductReviewId == productReviewId
+                select pam;
+
+            var productReviewReviewTypeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
+
+            return productReviewReviewTypeMappings;
+        }
+
+        /// <summary>
+        /// Inserts a product review and review type mapping
+        /// </summary>
+        /// <param name="productReviewReviewType">Product review and review type mapping</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertProductReviewReviewTypeMappingsAsync(ProductReviewReviewTypeMapping productReviewReviewType)
+        {
+            await _productReviewReviewTypeMappingRepository.InsertAsync(productReviewReviewType);
         }
 
         #endregion

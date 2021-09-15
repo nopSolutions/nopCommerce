@@ -1,24 +1,21 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Events;
 using Nop.Services.Events;
-using Nop.Services.Logging;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Services
 {
     public class EventConsumer : IConsumer<EntityDeletedEvent<Product>>
     {
         private readonly IStoreContext _storeContext;
-        private readonly ILogger _logger;
 
-        public EventConsumer(IStoreContext storeContext, ILogger logger)
+        public EventConsumer(IStoreContext storeContext)
         {
             _storeContext = storeContext;
-            _logger = logger;
-
         }
-        public void HandleEvent(EntityDeletedEvent<Product> eventMessage)
+        public async Task HandleEventAsync(EntityDeletedEvent<Product> eventMessage)
         {
 
             if (eventMessage.Entity == null)
@@ -26,7 +23,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Services
                 return;
             }
 
-            var storeId = _storeContext.CurrentStore.Id;
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+            var storeId = currentStore.Id;
 
             var token = PolyCommerceHelper.GetTokenByStoreId(storeId);
 

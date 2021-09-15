@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
@@ -17,29 +18,25 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <summary>
         /// Key for caching all records
         /// </summary>
-        /// <remarks>
-        /// {0} : page index
-        /// {1} : page size
-        /// </remarks>
-        private const string SHIPPINGBYWEIGHTBYTOTAL_ALL_KEY = "Nop.shippingbyweightbytotal.all-{0}-{1}";
+        private readonly CacheKey _shippingByWeightByTotalAllKey = new CacheKey("Nop.shippingbyweightbytotal.all", SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         private const string SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY = "Nop.shippingbyweightbytotal.";
 
         #endregion
 
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
         private readonly IRepository<ShippingByWeightByTotalRecord> _sbwtRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
         public ShippingByWeightByTotalService(IRepository<ShippingByWeightByTotalRecord> sbwtRepository,
-            ICacheManager cacheManager)
+            IStaticCacheManager staticCacheManager)
         {
             _sbwtRepository = sbwtRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -51,19 +48,23 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// </summary>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of the shipping by weight record</returns>
-        public virtual IPagedList<ShippingByWeightByTotalRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the shipping by weight record
+        /// </returns>
+        public virtual async Task<IPagedList<ShippingByWeightByTotalRecord>> GetAllAsync(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(SHIPPINGBYWEIGHTBYTOTAL_ALL_KEY, pageIndex, pageSize);
-            return _cacheManager.Get(key, () =>
+            var rez = await _sbwtRepository.GetAllAsync(query =>
             {
-                var query = from sbw in _sbwtRepository.Table
-                            orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.WeightFrom, sbw.OrderSubtotalFrom
-                            select sbw;
+                return from sbw in query
+                    orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId,
+                        sbw.WeightFrom, sbw.OrderSubtotalFrom
+                    select sbw;
+            }, cache => cache.PrepareKeyForShortTermCache(_shippingByWeightByTotalAllKey));
 
-                var records = new PagedList<ShippingByWeightByTotalRecord>(query, pageIndex, pageSize);
-                return records;
-            });
+            var records = new PagedList<ShippingByWeightByTotalRecord>(rez, pageIndex, pageSize);
+
+            return records;
         }
 
         /// <summary>
@@ -79,14 +80,17 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="orderSubtotal">Order subtotal</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>List of the shipping by weight record</returns>
-        public virtual IPagedList<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId, int warehouseId,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the shipping by weight record
+        /// </returns>
+        public virtual async Task<IPagedList<ShippingByWeightByTotalRecord>> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal? weight, decimal? orderSubtotal, int pageIndex, int pageSize)
         {
             zip = zip?.Trim() ?? string.Empty;
 
             //filter by weight and shipping method
-            var existingRates = GetAll()
+            var existingRates = (await GetAllAsync())
                 .Where(sbw => sbw.ShippingMethodId == shippingMethodId && (!weight.HasValue || weight >= sbw.WeightFrom && weight <= sbw.WeightTo))
                 .ToList();
 
@@ -124,7 +128,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
                 .ThenBy(r => r.CountryId == 0).ThenBy(r => r.StateProvinceId == 0)
                 .ThenBy(r => string.IsNullOrEmpty(r.Zip));
 
-            var records = new PagedList<ShippingByWeightByTotalRecord>(foundRecords.AsQueryable(), pageIndex, pageSize);
+            var records = new PagedList<ShippingByWeightByTotalRecord>(foundRecords.ToList(), pageIndex, pageSize);
+            
             return records;
         }
 
@@ -139,11 +144,14 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="zip">Zip postal code</param>
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
-        /// <returns>Shipping by weight record</returns>
-        public virtual ShippingByWeightByTotalRecord FindRecords(int shippingMethodId, int storeId, int warehouseId, 
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping by weight record
+        /// </returns>
+        public virtual async Task<ShippingByWeightByTotalRecord> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId, 
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal)
         {
-            var foundRecords = FindRecords(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip, weight, orderSubtotal, 0, int.MaxValue);
+            var foundRecords = await FindRecordsAsync(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip, weight, orderSubtotal, 0, int.MaxValue);
 
             return foundRecords.FirstOrDefault();
         }
@@ -152,55 +160,49 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// Get a shipping by weight record by identifier
         /// </summary>
         /// <param name="shippingByWeightRecordId">Record identifier</param>
-        /// <returns>Shipping by weight record</returns>
-        public virtual ShippingByWeightByTotalRecord GetById(int shippingByWeightRecordId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping by weight record
+        /// </returns>
+        public virtual async Task<ShippingByWeightByTotalRecord> GetByIdAsync(int shippingByWeightRecordId)
         {
-            if (shippingByWeightRecordId == 0)
-                return null;
-
-            return _sbwtRepository.GetById(shippingByWeightRecordId);
+            return await _sbwtRepository.GetByIdAsync(shippingByWeightRecordId);
         }
 
         /// <summary>
         /// Insert the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
-        public virtual void InsertShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord)
         {
-            if (shippingByWeightRecord == null)
-                throw new ArgumentNullException(nameof(shippingByWeightRecord));
+            await _sbwtRepository.InsertAsync(shippingByWeightRecord, false);
 
-            _sbwtRepository.Insert(shippingByWeightRecord);
-
-            _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         }
 
         /// <summary>
         /// Update the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
-        public virtual void UpdateShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord)
         {
-            if (shippingByWeightRecord == null)
-                throw new ArgumentNullException(nameof(shippingByWeightRecord));
+            await _sbwtRepository.UpdateAsync(shippingByWeightRecord, false);
 
-            _sbwtRepository.Update(shippingByWeightRecord);
-
-            _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         }
 
         /// <summary>
         /// Delete the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
-        public virtual void DeleteShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord)
         {
-            if (shippingByWeightRecord == null)
-                throw new ArgumentNullException(nameof(shippingByWeightRecord));
+            await _sbwtRepository.DeleteAsync(shippingByWeightRecord, false);
 
-            _sbwtRepository.Delete(shippingByWeightRecord);
-
-            _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         }
 
         #endregion

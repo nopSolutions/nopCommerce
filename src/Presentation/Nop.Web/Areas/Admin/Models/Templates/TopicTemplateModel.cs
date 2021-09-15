@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Templates
     /// <summary>
     /// Represents a topic template model
     /// </summary>
-    public partial class TopicTemplateModel : BaseNopEntityModel
+    public partial record TopicTemplateModel : BaseNopEntityModel
     {
         #region Properties
 

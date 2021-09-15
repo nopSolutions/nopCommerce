@@ -11,6 +11,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
+        private readonly IEmailAccountService _emailAccountService;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly IQueuedEmailService _queuedEmailService;
@@ -19,10 +20,12 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public QueuedMessagesSendTask(IEmailSender emailSender,
+        public QueuedMessagesSendTask(IEmailAccountService emailAccountService,
+            IEmailSender emailSender,
             ILogger logger,
             IQueuedEmailService queuedEmailService)
         {
+            _emailAccountService = emailAccountService;
             _emailSender = emailSender;
             _logger = logger;
             _queuedEmailService = queuedEmailService;
@@ -35,10 +38,10 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Executes a task
         /// </summary>
-        public virtual void Execute()
+        public virtual async System.Threading.Tasks.Task ExecuteAsync()
         {
             var maxTries = 3;
-            var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null,
+            var queuedEmails = await _queuedEmailService.SearchEmailsAsync(null, null, null, null,
                 true, true, maxTries, false, 0, 500);
             foreach (var queuedEmail in queuedEmails)
             {
@@ -51,7 +54,7 @@ namespace Nop.Services.Messages
 
                 try
                 {
-                    _emailSender.SendEmail(queuedEmail.EmailAccount,
+                    await _emailSender.SendEmailAsync(await _emailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId),
                         queuedEmail.Subject,
                         queuedEmail.Body,
                        queuedEmail.From,
@@ -70,12 +73,12 @@ namespace Nop.Services.Messages
                 }
                 catch (Exception exc)
                 {
-                    _logger.Error($"Error sending e-mail. {exc.Message}", exc);
+                    await _logger.ErrorAsync($"Error sending e-mail. {exc.Message}", exc);
                 }
                 finally
                 {
-                    queuedEmail.SentTries = queuedEmail.SentTries + 1;
-                    _queuedEmailService.UpdateQueuedEmail(queuedEmail);
+                    queuedEmail.SentTries += 1;
+                    await _queuedEmailService.UpdateQueuedEmailAsync(queuedEmail);
                 }
             }
         }

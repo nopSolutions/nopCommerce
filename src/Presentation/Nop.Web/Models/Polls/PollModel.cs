@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Polls
 {
-    public partial class PollModel : BaseNopEntityModel, ICloneable
+    public partial record PollModel : BaseNopEntityModel
     {
         public PollModel()
         {
@@ -18,15 +17,9 @@ namespace Nop.Web.Models.Polls
         public int TotalVotes { get; set; }
         
         public IList<PollAnswerModel> Answers { get; set; }
-
-        public object Clone()
-        {
-            //we use a shallow copy (deep clone is not required here)
-            return MemberwiseClone();
-        }
     }
 
-    public partial class PollAnswerModel : BaseNopEntityModel
+    public partial record PollAnswerModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

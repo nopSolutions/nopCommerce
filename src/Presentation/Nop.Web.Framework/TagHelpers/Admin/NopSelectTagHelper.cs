@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -9,47 +10,51 @@ using Nop.Web.Framework.Extensions;
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// nop-select tag helper
+    /// "nop-select" tag helper
     /// </summary>
     [HtmlTargetElement("nop-select", TagStructure = TagStructure.WithoutEndTag)]
     public class NopSelectTagHelper : TagHelper
     {
-        private const string ForAttributeName = "asp-for";
-        private const string NameAttributeName = "asp-for-name";
-        private const string ItemsAttributeName = "asp-items";
-        private const string DisabledAttributeName = "asp-multiple";
-        private const string RequiredAttributeName = "asp-required";
+        #region Constants
 
-        private readonly IHtmlHelper _htmlHelper;
+        private const string FOR_ATTRIBUTE_NAME = "asp-for";
+        private const string NAME_ATTRIBUTE_NAME = "asp-for-name";
+        private const string ITEMS_ATTRIBUTE_NAME = "asp-items";
+        private const string DISABLED_ATTRIBUTE_NAME = "asp-multiple";
+        private const string REQUIRED_ATTRIBUTE_NAME = "asp-required";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// An expression to be evaluated against the current model
         /// </summary>
-        [HtmlAttributeName(ForAttributeName)]
+        [HtmlAttributeName(FOR_ATTRIBUTE_NAME)]
         public ModelExpression For { get; set; }
 
         /// <summary>
         /// Name for a dropdown list
         /// </summary>
-        [HtmlAttributeName(NameAttributeName)]
+        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
         public string Name { get; set; }
 
         /// <summary>
         /// Items for a dropdown list
         /// </summary>
-        [HtmlAttributeName(ItemsAttributeName)]
+        [HtmlAttributeName(ITEMS_ATTRIBUTE_NAME)]
         public IEnumerable<SelectListItem> Items { set; get; } = new List<SelectListItem>();
 
         /// <summary>
         /// Indicates whether the field is required
         /// </summary>
-        [HtmlAttributeName(RequiredAttributeName)]
+        [HtmlAttributeName(REQUIRED_ATTRIBUTE_NAME)]
         public string IsRequired { set; get; }
 
         /// <summary>
         /// Indicates whether the input is multiple
         /// </summary>
-        [HtmlAttributeName(DisabledAttributeName)]
+        [HtmlAttributeName(DISABLED_ATTRIBUTE_NAME)]
         public string IsMultiple { set; get; }
 
         /// <summary>
@@ -59,38 +64,44 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="htmlHelper">HTML helper</param>
+        #endregion
+
+        #region Fields
+
+        private readonly IHtmlHelper _htmlHelper;
+
+        #endregion
+
+        #region Ctor
+
         public NopSelectTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             if (output == null)
-            {
                 throw new ArgumentNullException(nameof(output));
-            }
 
             //clear the output
             output.SuppressOutput();
 
             //required asterisk
-            bool.TryParse(IsRequired, out bool required);
-            if (required)
+            if (bool.TryParse(IsRequired, out var required) && required)
             {
                 output.PreElement.SetHtmlContent("<div class='input-group input-group-required'>");
                 output.PostElement.SetHtmlContent("<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>");
@@ -105,11 +116,11 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var attributes = context.AllAttributes;
             foreach (var attribute in attributes)
             {
-                if (!attribute.Name.Equals(ForAttributeName) &&
-                    !attribute.Name.Equals(NameAttributeName) &&
-                    !attribute.Name.Equals(ItemsAttributeName) &&
-                    !attribute.Name.Equals(DisabledAttributeName) &&
-                    !attribute.Name.Equals(RequiredAttributeName))
+                if (!attribute.Name.Equals(FOR_ATTRIBUTE_NAME) &&
+                    !attribute.Name.Equals(NAME_ATTRIBUTE_NAME) &&
+                    !attribute.Name.Equals(ITEMS_ATTRIBUTE_NAME) &&
+                    !attribute.Name.Equals(DISABLED_ATTRIBUTE_NAME) &&
+                    !attribute.Name.Equals(REQUIRED_ATTRIBUTE_NAME))
                 {
                     htmlAttributes.Add(attribute.Name, attribute.Value);
                 }
@@ -117,13 +128,13 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //generate editor
             var tagName = For != null ? For.Name : Name;
-            bool.TryParse(IsMultiple, out bool multiple);
+            bool.TryParse(IsMultiple, out var multiple);
             if (!string.IsNullOrEmpty(tagName))
             {
                 IHtmlContent selectList;
                 if (multiple)
                 {
-                    selectList = _htmlHelper.Editor(tagName, "MultiSelect", new {htmlAttributes, SelectList = Items});
+                    selectList = _htmlHelper.Editor(tagName, "MultiSelect", new { htmlAttributes, SelectList = Items });
                 }
                 else
                 {
@@ -134,8 +145,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
                     selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
                 }
-                output.Content.SetHtmlContent(selectList.RenderHtmlContent());
+                output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
             }
         }
+
+        #endregion
     }
 }

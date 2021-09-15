@@ -1,12 +1,9 @@
 ﻿@{
     Layout = "_Root";
 }
-@if (IsSectionDefined("Breadcrumb"))
-{
-    @section Breadcrumb {
-        @RenderSection("Breadcrumb")
-    }
-}
+
+@await RenderSectionAsync("Breadcrumb", false)
+
 <div class="center-1">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MainColumnBefore })
     @RenderBody()

@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Vendors;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Vendors
 {
@@ -15,24 +14,21 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<VendorAttribute> _vendorAttributeRepository;
         private readonly IRepository<VendorAttributeValue> _vendorAttributeValueRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public VendorAttributeService(ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
-            IRepository<VendorAttribute> vendorAttributeRepository,
-            IRepository<VendorAttributeValue> vendorAttributeValueRepository)
+        public VendorAttributeService(IRepository<VendorAttribute> vendorAttributeRepository,
+            IRepository<VendorAttributeValue> vendorAttributeValueRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheManager = cacheManager;
-            _eventPublisher = eventPublisher;
             _vendorAttributeRepository = vendorAttributeRepository;
             _vendorAttributeValueRepository = vendorAttributeValueRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -44,83 +40,58 @@ namespace Nop.Services.Vendors
         /// <summary>
         /// Gets all vendor attributes
         /// </summary>
-        /// <returns>Vendor attributes</returns>
-        public virtual IList<VendorAttribute> GetAllVendorAttributes()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attributes
+        /// </returns>
+        public virtual async Task<IList<VendorAttribute>> GetAllVendorAttributesAsync()
         {
-            return _cacheManager.Get(NopVendorsServiceDefaults.VendorAttributesAllCacheKey, () =>
-            {
-                return _vendorAttributeRepository.Table
-                    .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
-                    .ToList();
-            });
+            return await _vendorAttributeRepository.GetAllAsync(
+                query => query.OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id),
+                cache => default);
         }
 
         /// <summary>
         /// Gets a vendor attribute 
         /// </summary>
         /// <param name="vendorAttributeId">Vendor attribute identifier</param>
-        /// <returns>Vendor attribute</returns>
-        public virtual VendorAttribute GetVendorAttributeById(int vendorAttributeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute
+        /// </returns>
+        public virtual async Task<VendorAttribute> GetVendorAttributeByIdAsync(int vendorAttributeId)
         {
-            if (vendorAttributeId == 0)
-                return null;
-
-            var key = string.Format(NopVendorsServiceDefaults.VendorAttributesByIdCacheKey, vendorAttributeId);
-            return _cacheManager.Get(key, () => _vendorAttributeRepository.GetById(vendorAttributeId));
+            return await _vendorAttributeRepository.GetByIdAsync(vendorAttributeId, cache => default);
         }
 
         /// <summary>
         /// Inserts a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void InsertVendorAttribute(VendorAttribute vendorAttribute)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
-
-            _vendorAttributeRepository.Insert(vendorAttribute);
-
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(vendorAttribute);
+            await _vendorAttributeRepository.InsertAsync(vendorAttribute);
         }
 
         /// <summary>
         /// Updates a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void UpdateVendorAttribute(VendorAttribute vendorAttribute)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
-
-            _vendorAttributeRepository.Update(vendorAttribute);
-
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(vendorAttribute);
+            await _vendorAttributeRepository.UpdateAsync(vendorAttribute);
         }
 
         /// <summary>
         /// Deletes a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void DeleteVendorAttribute(VendorAttribute vendorAttribute)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteVendorAttributeAsync(VendorAttribute vendorAttribute)
         {
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
-
-            _vendorAttributeRepository.Delete(vendorAttribute);
-
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(vendorAttribute);
+            await _vendorAttributeRepository.DeleteAsync(vendorAttribute);
         }
 
         #endregion
@@ -131,85 +102,63 @@ namespace Nop.Services.Vendors
         /// Gets vendor attribute values by vendor attribute identifier
         /// </summary>
         /// <param name="vendorAttributeId">The vendor attribute identifier</param>
-        /// <returns>Vendor attribute values</returns>
-        public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute values
+        /// </returns>
+        public virtual async Task<IList<VendorAttributeValue>> GetVendorAttributeValuesAsync(int vendorAttributeId)
         {
-            var key = string.Format(NopVendorsServiceDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
-            return _cacheManager.Get(key, () =>
-            {
-                return _vendorAttributeValueRepository.Table
-                    .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder).ThenBy(vendorAttributeValue => vendorAttributeValue.Id)
-                    .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
-                    .ToList();
-            });
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, vendorAttributeId);
+
+            var query = _vendorAttributeValueRepository.Table
+                .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
+                .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder)
+                .ThenBy(vendorAttributeValue => vendorAttributeValue.Id);
+
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         /// <summary>
         /// Gets a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValueId">Vendor attribute value identifier</param>
-        /// <returns>Vendor attribute value</returns>
-        public virtual VendorAttributeValue GetVendorAttributeValueById(int vendorAttributeValueId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor attribute value
+        /// </returns>
+        public virtual async Task<VendorAttributeValue> GetVendorAttributeValueByIdAsync(int vendorAttributeValueId)
         {
-            if (vendorAttributeValueId == 0)
-                return null;
-
-            var key = string.Format(NopVendorsServiceDefaults.VendorAttributeValuesByIdCacheKey, vendorAttributeValueId);
-            return _cacheManager.Get(key, () => _vendorAttributeValueRepository.GetById(vendorAttributeValueId));
+            return await _vendorAttributeValueRepository.GetByIdAsync(vendorAttributeValueId, cache => default);
         }
 
         /// <summary>
         /// Inserts a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            if (vendorAttributeValue == null)
-                throw new ArgumentNullException(nameof(vendorAttributeValue));
-
-            _vendorAttributeValueRepository.Insert(vendorAttributeValue);
-
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(vendorAttributeValue);
+            await _vendorAttributeValueRepository.InsertAsync(vendorAttributeValue);
         }
 
         /// <summary>
         /// Updates the vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void UpdateVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            if (vendorAttributeValue == null)
-                throw new ArgumentNullException(nameof(vendorAttributeValue));
-
-            _vendorAttributeValueRepository.Update(vendorAttributeValue);
-
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(vendorAttributeValue);
+            await _vendorAttributeValueRepository.UpdateAsync(vendorAttributeValue);
         }
 
         /// <summary>
         /// Deletes a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void DeleteVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteVendorAttributeValueAsync(VendorAttributeValue vendorAttributeValue)
         {
-            if (vendorAttributeValue == null)
-                throw new ArgumentNullException(nameof(vendorAttributeValue));
-
-            _vendorAttributeValueRepository.Delete(vendorAttributeValue);
-
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(vendorAttributeValue);
+            await _vendorAttributeValueRepository.DeleteAsync(vendorAttributeValue);
         }
 
         #endregion

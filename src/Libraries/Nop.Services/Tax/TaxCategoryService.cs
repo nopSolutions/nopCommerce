@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
-using Nop.Core.Data;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Tax
 {
@@ -15,20 +13,14 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
 
         #endregion
 
         #region Ctor
 
-        public TaxCategoryService(ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
-            IRepository<TaxCategory> taxCategoryRepository)
+        public TaxCategoryService(IRepository<TaxCategory> taxCategoryRepository)
         {
-            _cacheManager = cacheManager;
-            _eventPublisher = eventPublisher;
             _taxCategoryRepository = taxCategoryRepository;
         }
 
@@ -40,81 +32,62 @@ namespace Nop.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void DeleteTaxCategory(TaxCategory taxCategory)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteTaxCategoryAsync(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
-            _taxCategoryRepository.Delete(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(taxCategory);
+            await _taxCategoryRepository.DeleteAsync(taxCategory);
         }
 
         /// <summary>
         /// Gets all tax categories
         /// </summary>
-        /// <returns>Tax categories</returns>
-        public virtual IList<TaxCategory> GetAllTaxCategories()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax categories
+        /// </returns>
+        public virtual async Task<IList<TaxCategory>> GetAllTaxCategoriesAsync()
         {
-            return _cacheManager.Get(NopTaxDefaults.TaxCategoriesAllCacheKey, () =>
+            var taxCategories = await _taxCategoryRepository.GetAllAsync(query=>
             {
-                var query = from tc in _taxCategoryRepository.Table
-                            orderby tc.DisplayOrder, tc.Id
-                            select tc;
-                var taxCategories = query.ToList();
-                return taxCategories;
-            });
+                return from tc in query
+                    orderby tc.DisplayOrder, tc.Id
+                    select tc;
+            }, cache => default);
+
+            return taxCategories;
         }
 
         /// <summary>
         /// Gets a tax category
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <returns>Tax category</returns>
-        public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax category
+        /// </returns>
+        public virtual async Task<TaxCategory> GetTaxCategoryByIdAsync(int taxCategoryId)
         {
-            if (taxCategoryId == 0)
-                return null;
-
-            var key = string.Format(NopTaxDefaults.TaxCategoriesByIdCacheKey, taxCategoryId);
-            return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
+            return await _taxCategoryRepository.GetByIdAsync(taxCategoryId, cache => default);
         }
 
         /// <summary>
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void InsertTaxCategory(TaxCategory taxCategory)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertTaxCategoryAsync(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
-            _taxCategoryRepository.Insert(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(taxCategory);
+            await _taxCategoryRepository.InsertAsync(taxCategory);
         }
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void UpdateTaxCategory(TaxCategory taxCategory)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateTaxCategoryAsync(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
-            _taxCategoryRepository.Update(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(taxCategory);
+            await _taxCategoryRepository.UpdateAsync(taxCategory);
         }
 
         #endregion

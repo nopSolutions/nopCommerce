@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Tax
@@ -18,8 +20,9 @@ namespace Nop.Services.Tax
 
         #region Ctor
 
-        public TaxPluginManager(IPluginService pluginService,
-            TaxSettings taxSettings) : base(pluginService)
+        public TaxPluginManager(ICustomerService customerService,
+            IPluginService pluginService,
+            TaxSettings taxSettings) : base(customerService, pluginService)
         {
             _taxSettings = taxSettings;
         }
@@ -33,10 +36,13 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Tax provider</returns>
-        public virtual ITaxProvider LoadPrimaryPlugin(Customer customer = null, int storeId = 0)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax provider
+        /// </returns>
+        public virtual async Task<ITaxProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
         {
-            return LoadPrimaryPlugin(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
+            return await LoadPrimaryPluginAsync(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
         }
 
         /// <summary>
@@ -55,10 +61,13 @@ namespace Nop.Services.Tax
         /// <param name="systemName">System name of tax provider to check</param>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
-        /// <returns>Result</returns>
-        public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> IsPluginActiveAsync(string systemName, Customer customer = null, int storeId = 0)
         {
-            var taxProvider = LoadPluginBySystemName(systemName, customer, storeId);
+            var taxProvider = await LoadPluginBySystemNameAsync(systemName, customer, storeId);
             return IsPluginActive(taxProvider);
         }
 

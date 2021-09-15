@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class PopularProductTagsModel : BaseNopModel
+    public partial record PopularProductTagsModel : BaseNopModel
     {
         public PopularProductTagsModel()
         {
@@ -83,7 +83,7 @@ namespace Nop.Web.Models.Catalog
 
         public int TotalTags { get; set; }
 
-        public IList<ProductTagModel> Tags { get; set; }
+        public List<ProductTagModel> Tags { get; set; }
 
         #endregion
     }

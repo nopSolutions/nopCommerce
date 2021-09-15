@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a model of products that use the specification attribute
     /// </summary>
-    public partial class SpecificationAttributeProductModel : BaseNopEntityModel
+    public partial record SpecificationAttributeProductModel : BaseNopEntityModel
     {
         #region Properties
 
@@ -14,10 +14,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public int ProductId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product")]
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product")]
         public string ProductName { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published")]
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published")]
         public bool Published { get; set; }
 
         #endregion

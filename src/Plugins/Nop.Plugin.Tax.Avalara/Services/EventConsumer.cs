@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
-using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
-using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Orders;
@@ -16,14 +15,13 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Tax.Avalara.Services
 {
     /// <summary>
-    /// Represents event consumer of Avalara tax provider
+    /// Represents plugin event consumer
     /// </summary>
     public class EventConsumer :
         IConsumer<EntityDeletedEvent<Order>>,
@@ -35,75 +33,66 @@ namespace Nop.Plugin.Tax.Avalara.Services
     {
         #region Fields
 
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
+        private readonly AvalaraTaxManager _avalaraTaxManager;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
-        private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
         private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public EventConsumer(AvalaraTaxSettings avalaraTaxSettings,
+        public EventConsumer(AvalaraTaxManager avalaraTaxManager,
             ICheckoutAttributeService checkoutAttributeService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             IPermissionService permissionService,
             IProductService productService,
-            ISettingService settingService,
-            IStoreContext storeContext,
-            ITaxPluginManager taxPluginManager,
-            IWorkContext workContext)
+            ITaxPluginManager taxPluginManager)
         {
-            _avalaraTaxSettings = avalaraTaxSettings;
+            _avalaraTaxManager = avalaraTaxManager;
             _checkoutAttributeService = checkoutAttributeService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _permissionService = permissionService;
             _productService = productService;
-            _settingService = settingService;
-            _storeContext = storeContext;
             _taxPluginManager = taxPluginManager;
-            _workContext = workContext;
         }
 
         #endregion
 
-        #region Utilities
+        #region Methods
 
         /// <summary>
-        /// Save entity use code
+        /// Handle model received event
         /// </summary>
-        /// <param name="model">Base Nop entity model</param>
-        private void SaveEntityUseCode(BaseNopEntityModel model)
+        /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(ModelReceivedEvent<BaseNopModel> eventMessage)
         {
-            //ensure that received model is BaseNopEntityModel
-            if (model == null)
-                return;
-
             //get entity by received model
-            var entity = model is CustomerModel ? _customerService.GetCustomerById(model.Id)
-                : model is CustomerRoleModel ? _customerService.GetCustomerRoleById(model.Id)
-                : model is ProductModel ? _productService.GetProductById(model.Id)
-                : model is CheckoutAttributeModel ? (BaseEntity)_checkoutAttributeService.GetCheckoutAttributeById(model.Id)
-                : null;
+            var entity = eventMessage.Model switch
+            {
+                CustomerModel customerModel => (BaseEntity)await _customerService.GetCustomerByIdAsync(customerModel.Id),
+                CustomerRoleModel customerRoleModel => await _customerService.GetCustomerRoleByIdAsync(customerRoleModel.Id),
+                ProductModel productModel => await _productService.GetProductByIdAsync(productModel.Id),
+                CheckoutAttributeModel checkoutAttributeModel => await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(checkoutAttributeModel.Id),
+                _ => null
+            };
             if (entity == null)
                 return;
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            //ensure that Avalara tax provider is active
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
-            //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return;
 
             //whether there is a form value for the entity use code
@@ -112,141 +101,99 @@ namespace Nop.Plugin.Tax.Avalara.Services
             {
                 //save attribute
                 var entityUseCode = !entityUseCodeValue.ToString().Equals(Guid.Empty.ToString()) ? entityUseCodeValue.ToString() : null;
-                _genericAttributeService.SaveAttribute(entity, AvalaraTaxDefaults.EntityUseCodeAttribute, entityUseCode);
+                await _genericAttributeService.SaveAttributeAsync(entity, AvalaraTaxDefaults.EntityUseCodeAttribute, entityUseCode);
             }
-        }
-
-        /// <summary>
-        /// Save tax origin address type
-        /// </summary>
-        /// <param name="model">Tax settings model</param>
-        private void SaveTaxOriginAddressType(TaxSettingsModel model)
-        {
-            //ensure that received model is TaxSettingsModel
-            if (model == null)
-                return;
-
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return;
-
-            //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
-                return;
-
-            //whether there is a form value for the tax origin address type 
-            if (_httpContextAccessor.HttpContext.Request.Form.TryGetValue(AvalaraTaxDefaults.TaxOriginField, out var taxOriginValue)
-                && int.TryParse(taxOriginValue, out var taxOriginType))
-            {
-                //save settings
-                _avalaraTaxSettings.TaxOriginAddressType = (TaxOriginAddressType)taxOriginType;
-                _settingService.SaveSetting(_avalaraTaxSettings);
-            }
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Handle order deleted event
-        /// </summary>
-        /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityDeletedEvent<Order> eventMessage)
-        {
-            if (eventMessage.Entity == null)
-                return;
-
-            //ensure that Avalara tax provider is active
-            var taxProvider = _taxPluginManager.LoadPluginBySystemName(AvalaraTaxDefaults.SystemName) as AvalaraTaxProvider;
-            if (!_taxPluginManager.IsPluginActive(taxProvider))
-                return;
-
-            //delete tax transaction
-            taxProvider.DeleteTaxTransaction(eventMessage.Entity);
-        }
-
-        /// <summary>
-        /// Handle model received event
-        /// </summary>
-        /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(ModelReceivedEvent<BaseNopModel> eventMessage)
-        {
-            SaveEntityUseCode(eventMessage?.Model as BaseNopEntityModel);
-            SaveTaxOriginAddressType(eventMessage?.Model as TaxSettingsModel);
-        }
-
-        /// <summary>
-        /// Handle order cancelled event
-        /// </summary>
-        /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(OrderCancelledEvent eventMessage)
-        {
-            if (eventMessage.Order == null)
-                return;
-
-            //ensure that Avalara tax provider is active
-            var taxProvider = _taxPluginManager.LoadPluginBySystemName(AvalaraTaxDefaults.SystemName) as AvalaraTaxProvider;
-            if (!_taxPluginManager.IsPluginActive(taxProvider))
-                return;
-
-            //void tax transaction
-            taxProvider.VoidTaxTransaction(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order placed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(OrderPlacedEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             if (eventMessage.Order == null)
                 return;
 
             //ensure that Avalara tax provider is active
-            var taxProvider = _taxPluginManager
-                .LoadPluginBySystemName(AvalaraTaxDefaults.SystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
-                as AvalaraTaxProvider;
-            if (!_taxPluginManager.IsPluginActive(taxProvider))
+            var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName, customer, eventMessage.Order.StoreId))
                 return;
 
             //create tax transaction
-            taxProvider.CreateOrderTaxTransaction(eventMessage.Order, true);
+            await _avalaraTaxManager.CreateOrderTaxTransactionAsync(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order refunded event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(OrderRefundedEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(OrderRefundedEvent eventMessage)
         {
             if (eventMessage.Order == null)
                 return;
 
             //ensure that Avalara tax provider is active
-            var taxProvider = _taxPluginManager.LoadPluginBySystemName(AvalaraTaxDefaults.SystemName) as AvalaraTaxProvider;
-            if (!_taxPluginManager.IsPluginActive(taxProvider))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
             //refund tax transaction
-            taxProvider.RefundTaxTransaction(eventMessage.Order, eventMessage.Amount);
+            await _avalaraTaxManager.RefundTaxTransactionAsync(eventMessage.Order, eventMessage.Amount);
         }
 
         /// <summary>
-        /// Handle order voided event
+        /// Handle order async Tasked event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(OrderVoidedEvent eventMessage)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(OrderVoidedEvent eventMessage)
         {
             if (eventMessage.Order == null)
                 return;
 
             //ensure that Avalara tax provider is active
-            var taxProvider = _taxPluginManager.LoadPluginBySystemName(AvalaraTaxDefaults.SystemName) as AvalaraTaxProvider;
-            if (!_taxPluginManager.IsPluginActive(taxProvider))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
-            //void tax transaction
-            taxProvider.VoidTaxTransaction(eventMessage.Order);
+            //async Task tax transaction
+            await _avalaraTaxManager.VoidTaxTransactionAsync(eventMessage.Order);
+        }
+
+        /// <summary>
+        /// Handle order cancelled event
+        /// </summary>
+        /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
+        {
+            if (eventMessage.Order == null)
+                return;
+
+            //ensure that Avalara tax provider is active
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
+                return;
+
+            //async Task tax transaction
+            await _avalaraTaxManager.VoidTaxTransactionAsync(eventMessage.Order);
+        }
+
+        /// <summary>
+        /// Handle order deleted event
+        /// </summary>
+        /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
+        {
+            if (eventMessage.Entity == null)
+                return;
+
+            //ensure that Avalara tax provider is active
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
+                return;
+
+            //delete tax transaction
+            await _avalaraTaxManager.DeleteTaxTransactionAsync(eventMessage.Entity);
         }
 
         #endregion

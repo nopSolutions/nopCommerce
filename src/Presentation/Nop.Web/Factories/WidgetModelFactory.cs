@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Cms;
+using Nop.Services.Customers;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Cms;
@@ -17,7 +19,8 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
         private readonly IWidgetPluginManager _widgetPluginManager;
@@ -27,13 +30,15 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public WidgetModelFactory(IStaticCacheManager cacheManager,
+        public WidgetModelFactory(ICustomerService customerService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext)
         {
-            _cacheManager = cacheManager;
+            _customerService = customerService;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _themeContext = themeContext;
             _widgetPluginManager = widgetPluginManager;
@@ -49,14 +54,22 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="widgetZone">Name of widget zone</param>
         /// <param name="additionalData">Additional data object</param>
-        /// <returns>List of the render widget models</returns>
-        public virtual List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of the render widget models
+        /// </returns>
+        public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidgetModelAsync(string widgetZone, object additionalData = null)
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.WidgetModelKey,
-                _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
+            var theme = await _themeContext.GetWorkingThemeNameAsync();
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var store = await _storeContext.GetCurrentStoreAsync();
 
-            var cachedModels = _cacheManager.Get(cacheKey, () =>
-                _widgetPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, widgetZone)
+            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
+                customerRoleIds, store, widgetZone, theme);
+
+            var cachedModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
+                (await _widgetPluginManager.LoadActivePluginsAsync(customer, store.Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
                     WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),

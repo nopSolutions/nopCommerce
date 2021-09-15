@@ -1,10 +1,8 @@
 @model ProductModel
 
-<div class="panel-body">
+<div class="card-body">
     @if (Model.Id > 0)
     {
-    <div class="sub-panel">
-
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "productpictures-grid",
@@ -64,13 +62,12 @@
                 return '<a href="' + row.PictureUrl + '" target="_blank"><img alt="' + row.PictureId + '" src="' + row.PictureUrl + '" width="150" /></a>';
             }
         </script>
-    </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card card-default">
+            <div class="card-header">
                 @T("Admin.Catalog.Products.Pictures.AddNew")
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <script>
                     $(document).ready(function() {
                         $('#addProductPicture').click(function() {
@@ -116,7 +113,7 @@
                         });
                     });
                 </script>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="AddPictureModel.PictureId" />
                     </div>
@@ -125,7 +122,7 @@
                         <span asp-validation-for="AddPictureModel.PictureId"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="AddPictureModel.OverrideAltAttribute" />
                     </div>
@@ -134,7 +131,7 @@
                         <span asp-validation-for="AddPictureModel.OverrideAltAttribute"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="AddPictureModel.OverrideTitleAttribute" />
                     </div>
@@ -143,7 +140,7 @@
                         <span asp-validation-for="AddPictureModel.OverrideTitleAttribute"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="AddPictureModel.DisplayOrder" />
                     </div>
@@ -152,8 +149,8 @@
                         <span asp-validation-for="AddPictureModel.DisplayOrder"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-9 col-md-offset-3">
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
                         <button type="button" id="addProductPicture" class="btn btn-primary">@T("Admin.Catalog.Products.Pictures.AddButton")</button>
                     </div>
                 </div>
@@ -162,8 +159,8 @@
     }
     else
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body" id="product-pictures-area">
                 @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
             </div>
         </div>

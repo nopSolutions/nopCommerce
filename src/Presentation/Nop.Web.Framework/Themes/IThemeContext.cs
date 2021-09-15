@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace Nop.Web.Framework.Themes
 {
     /// <summary>
@@ -7,8 +9,15 @@ namespace Nop.Web.Framework.Themes
     public interface IThemeContext
     {
         /// <summary>
-        /// Get or set current theme system name
+        /// Get current theme system name
         /// </summary>
-        string WorkingThemeName { get; set; }
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task<string> GetWorkingThemeNameAsync();
+
+        /// <summary>
+        /// Set current theme system name
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task SetWorkingThemeNameAsync(string workingThemeName);
     }
 }

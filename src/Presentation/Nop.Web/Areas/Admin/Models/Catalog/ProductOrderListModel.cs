@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a product order list model
     /// </summary>
-    public partial class ProductOrderListModel : BasePagedListModel<OrderModel>
+    public partial record ProductOrderListModel : BasePagedListModel<OrderModel>
     {
     }
 }

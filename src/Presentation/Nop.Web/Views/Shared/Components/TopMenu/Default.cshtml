@@ -1,4 +1,49 @@
 ﻿@model TopMenuModel
+
+@functions {
+    async Task CategoryLine(TopMenuModel.CategoryLineModel lineModel)
+    {
+        <li>
+            <a href="@Url.RouteUrl("Category", new { SeName = lineModel.Category.SeName })">@lineModel.Category.Name
+                @if (lineModel.Category.NumberOfProducts.HasValue)
+                {
+                    <text> </text>@T("Categories.TotalProducts", lineModel.Category.NumberOfProducts.Value)
+                }
+            </a>
+            @{
+                //subcategories
+                var subCategories = lineModel.ResponsiveMobileMenu ?
+                    //responsive (all categories)
+                    lineModel.Category.SubCategories :
+                    //standard design (only categories with "IncludeInTopMenu")
+                    lineModel.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
+
+                var levelClass = "";
+                if (lineModel.Level == 0)
+                {
+                    levelClass = "first-level";
+                }
+                if (subCategories.Count > 0)
+                {
+                    <div class="sublist-toggle"></div>
+                    <ul class="sublist @levelClass">
+                        @foreach (var subCategory in subCategories)
+                        {
+                            var categoryLineModel = new TopMenuModel.CategoryLineModel
+                            {
+                                Category = subCategory,
+                                Level = lineModel.Level + 1,
+                                ResponsiveMobileMenu = lineModel.ResponsiveMobileMenu
+                            };
+                            await CategoryLine(categoryLineModel);
+                        }
+                    </ul>
+                }
+            }
+        </li>
+    }
+}
+
 <ul class="top-menu notmobile">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMenuBefore })
     @if (Model.DisplayHomepageMenuItem)
@@ -14,9 +59,8 @@
             {
                 Category = category
             };
-            @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+            await CategoryLine(categoryLineModel);
         }
-
 
     }
     @foreach (var topic in Model.Topics)
@@ -69,7 +113,7 @@
                     Category = category,
                     ResponsiveMobileMenu = true
                 };
-                @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                await CategoryLine(categoryLineModel);
             }
 
         }
@@ -104,8 +148,6 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter })
     </ul>
 
-
-
     @if (Model.UseAjaxMenu)
     {
         <script asp-location="Footer">
@@ -116,7 +158,7 @@
             var localized_data = {
                 AjaxFailure: "@T("MainMenu.AjaxFailure")"
             };
-            mainMenu.init('@Url.Action("GetCatalogRoot", "Catalog")', '@Url.Action("GetCatalogSubCategories", "Catalog")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
+            mainMenu.init('@Url.RouteUrl("GetCatalogRoot")', '@Url.RouteUrl("GetCatalogSubCategories")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
         });
         </script>
 

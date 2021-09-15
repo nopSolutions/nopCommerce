@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
 
@@ -29,11 +30,14 @@ namespace Nop.Web.Areas.Admin.Components
         /// <summary>
         /// Invoke view component
         /// </summary>
-        /// <returns>View component result</returns>
-        public IViewComponentResult Invoke()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             //prepare model
-            var model = _commonModelFactory.PrepareLanguageSelectorModel();
+            var model = await _commonModelFactory.PrepareLanguageSelectorModelAsync();
 
             return View(model);
         }

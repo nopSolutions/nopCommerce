@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using Nop.Core.Data;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Events;
+using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 
@@ -17,7 +18,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Consumers
             _logger = logger;
         }
 
-        public void HandleEvent(EntityUpdatedEvent<Product> eventMessage)
+        public async Task HandleEventAsync(EntityUpdatedEvent<Product> eventMessage)
         {
             try
             {
@@ -26,7 +27,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Consumers
                 var dataSettings = DataSettingsManager.LoadSettings();
 
                 // directly update entity with ado.net instead of expensive calls using repository to fetch & save entire product
-                using (var conn = new SqlConnection(dataSettings.DataConnectionString))
+                using (var conn = new SqlConnection(dataSettings.ConnectionString))
                 {
                     using (var command = new SqlCommand())
                     {
@@ -46,14 +47,14 @@ namespace Nop.Plugin.Misc.PolyCommerce.Consumers
 
                         if (affectedRecords != 1)
                         {
-                            _logger.Error($"Handle product update event failed. Expected 1 affected record from transaction but instead saw {affectedRecords} affected records.");
+                            await _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Error, "ProductUpdatedConsumer error", $"Handle product update event failed. Expected 1 affected record from transaction but instead saw {affectedRecords} affected records.");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error("Handle product update event failed", ex);
+                await _logger.ErrorAsync("Handle product update event failed", ex);
             }
         }
     }

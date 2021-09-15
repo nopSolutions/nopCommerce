@@ -7,7 +7,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CustomerInfoModel : BaseNopModel
+    public partial record CustomerInfoModel : BaseNopModel
     {
         public CustomerInfoModel()
         {
@@ -37,10 +37,14 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Gender")]
         public string Gender { get; set; }
 
+        public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.FirstName")]
         public string FirstName { get; set; }
+        public bool FirstNameRequired { get; set; }
+        public bool LastNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.LastName")]
         public string LastName { get; set; }
+        public bool LastNameRequired { get; set; }
 
         public bool DateOfBirthEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.DateOfBirth")]
@@ -151,7 +155,7 @@ namespace Nop.Web.Models.Customer
 
         #region Nested classes
 
-        public partial class AssociatedExternalAuthModel : BaseNopEntityModel
+        public partial record AssociatedExternalAuthModel : BaseNopEntityModel
         {
             public string Email { get; set; }
 

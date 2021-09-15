@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 
 namespace Nop.Services.Common
 {
@@ -33,15 +33,15 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="context">HTTP context</param>
         /// <param name="webHelper">Web helper</param>
-        /// <returns>Task</returns>
-        public async Task Invoke(HttpContext context, IWebHelper webHelper)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task InvokeAsync(HttpContext context, IWebHelper webHelper)
         {
             //whether database is installed
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
             {
                 //keep alive page requested (we ignore it to prevent creating a guest customer records)
                 var keepAliveUrl = $"{webHelper.GetStoreLocation()}{NopCommonDefaults.KeepAlivePath}";
-                if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
+                if ((webHelper.GetThisPageUrl(false)).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                     return;
             }
 

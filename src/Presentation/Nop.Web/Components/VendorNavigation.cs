@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Factories;
@@ -18,12 +19,13 @@ namespace Nop.Web.Components
             _vendorSettings = vendorSettings;
         }
 
-        public IViewComponentResult Invoke()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = _catalogModelFactory.PrepareVendorNavigationModel();
+            var model = await _catalogModelFactory.PrepareVendorNavigationModelAsync();
             if (!model.Vendors.Any())
                 return Content("");
 

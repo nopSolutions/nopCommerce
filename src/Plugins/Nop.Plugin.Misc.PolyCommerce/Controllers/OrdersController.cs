@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -18,10 +17,10 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Core.Events;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 {
@@ -99,14 +98,14 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     return Unauthorized();
                 }
 
-                var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
                 return Ok(new { CurrencyCode = primaryStoreCurrency.CurrencyCode });
 
             }
             catch (Exception ex)
             {
-                _logger.Error("Error while fetching Store Currency", ex);
+                await _logger.ErrorAsync("Error while fetching Store Currency", ex);
                 return BadRequest(ex.Message);
             }
         }
@@ -126,7 +125,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     return Unauthorized();
                 }
 
-                var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                var primaryStoreCurrency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
 
                 if (model == null)
                 {
@@ -153,7 +152,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     throw new Exception($"OrderStatusId: {model.OrderStatusId} not recognised");
                 }
 
-                var country = _countryService.GetCountryByTwoLetterIsoCode(model.Address.TwoLetterCountryCode);
+                var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(model.Address.TwoLetterCountryCode);
 
                 // only english supported
                 var englishLanguage = _languageRepository.Table.First(x => x.Name == "English");
@@ -183,10 +182,10 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 };
 
                 // add new customer to system
-                _customerService.InsertCustomer(customer);
+                await _customerService.InsertCustomerAsync(customer);
 
                 // assign guest role to newly added customer
-                var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+                var guestRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
                 customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
 
                 try
@@ -194,17 +193,17 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     // save FirstName and LastName to user.
                     if (!string.IsNullOrEmpty(model.Address.FirstName))
                     {
-                        _genericAttributeService.SaveAttribute(customer, "FirstName", model.Address.FirstName);
+                        await _genericAttributeService.SaveAttributeAsync(customer, "FirstName", model.Address.FirstName);
                     }
 
                     if (!string.IsNullOrEmpty(model.Address.LastName))
                     {
-                        _genericAttributeService.SaveAttribute(customer, "LastName", model.Address.LastName);
+                        await _genericAttributeService.SaveAttributeAsync(customer, "LastName", model.Address.LastName);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Warning("Could not save generic attributes: FirstName, LastName", ex);
+                    await _logger.WarningAsync("Could not save generic attributes: FirstName, LastName", ex);
                 }
 
                 order = new Order
@@ -261,11 +260,11 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     OrderShippingExclTax = model.OrderShippingTotalExclTax
                 };
 
-                _orderService.InsertOrder(order);
+                await _orderService.InsertOrderAsync(order);
 
                 //generate and set custom order number
                 order.CustomOrderNumber = _customNumberFormatter.GenerateOrderCustomNumber(order);
-                _orderService.UpdateOrder(order);
+                await _orderService.UpdateOrderAsync(order);
 
                 // insert order items...
                 foreach (var orderItem in model.OrderItems)
@@ -275,12 +274,12 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     // if product is a variant, ExternalProductId will be ProductCombination.Id. If product is not a variant, ExternalProductId will be Product.Id
                     if (orderItem.IsVariant)
                     {
-                        productCombination = _productAttributeService.GetProductAttributeCombinationById((int)orderItem.ExternalProductId);
+                        productCombination = await _productAttributeService.GetProductAttributeCombinationByIdAsync((int)orderItem.ExternalProductId);
                     }
 
                     var productId = productCombination?.ProductId ?? (int)orderItem.ExternalProductId;
 
-                    var product = _productRepository.GetById(productId);
+                    var product = await _productRepository.GetByIdAsync(productId);
 
                     var newItem = new OrderItem
                     {
@@ -302,8 +301,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                         ItemWeight = orderItem.ItemWeight
                     };
 
-                    _orderItemRepository.Insert(newItem);
-                    _productService.AdjustInventory(product, orderItem.Quantity * -1, productCombination?.AttributesXml ?? string.Empty);
+                    await _orderItemRepository.InsertAsync(newItem);
+                    await _productService.AdjustInventoryAsync(product, orderItem.Quantity * -1, productCombination?.AttributesXml ?? string.Empty);
                 }
 
                 try
@@ -313,7 +312,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     {
                         foreach (var note in model.Notes)
                         {
-                            _orderNoteRepository.Insert(new OrderNote
+                            await _orderNoteRepository.InsertAsync(new OrderNote
                             {
                                 CreatedOnUtc = DateTime.UtcNow,
                                 Note = note,
@@ -324,28 +323,28 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.Warning("Could not save order notes", ex);
+                    await _logger.WarningAsync("Could not save order notes", ex);
                 }
 
                 try
                 {
-                    _customerActivityService.InsertActivity("PublicStore.PlaceOrder", string.Format(_localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
-                    _eventPublisher.Publish(new OrderPlacedEvent(order));
+                    await _customerActivityService.InsertActivityAsync("PublicStore.PlaceOrder", string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
+                    await _eventPublisher.PublishAsync(new OrderPlacedEvent(order));
                 }
                 catch (Exception ex)
                 {
-                    _logger.Warning("Could not publish order events", ex);
+                    await _logger.WarningAsync("Could not publish order events", ex);
                 }
 
                 return Ok(new { OrderId = order.Id });
             }
             catch (Exception ex)
             {
-                _logger.Error($"Error saving PolyCommerce order. {(model != null ? Environment.NewLine + JsonConvert.SerializeObject(model) : string.Empty)}", ex);
+                await _logger.ErrorAsync($"Error saving PolyCommerce order. {(model != null ? Environment.NewLine + JsonConvert.SerializeObject(model) : string.Empty)}", ex);
 
                 if (order != null && order.Id > 0)
                 {
-                    _orderService.DeleteOrder(order);
+                    await _orderService.DeleteOrderAsync(order);
                 }
 
                 return BadRequest(ex.ToString());

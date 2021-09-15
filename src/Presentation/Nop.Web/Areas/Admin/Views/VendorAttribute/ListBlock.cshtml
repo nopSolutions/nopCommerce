@@ -1,6 +1,6 @@
 ﻿@model VendorAttributeSearchModel
 
-<div class="panel-body">
+<div class="card-body">
     <p>
         <em>@T("Admin.Vendors.VendorAttributes.Description")</em>
     </p>
@@ -45,9 +45,9 @@
         }
     })
 </div>
-<div class="panel-footer">
+<div class="card-footer">
     <a class="btn btn-primary" href="@Url.Action("Create", "VendorAttribute")">
-        <i class="fa fa-plus-square"></i>
+        <i class="fas fa-plus-square"></i>
         @T("Admin.Common.AddNew")
     </a>
 </div>

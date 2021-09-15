@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -12,10 +11,8 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a category
     /// </summary>
-    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported
+    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountCategoryMapping>, ISoftDeletedEntity
     {
-        private ICollection<DiscountCategoryMapping> _discountCategoryMappings;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -72,11 +69,6 @@ namespace Nop.Core.Domain.Catalog
         public string PageSizeOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets the available price ranges
-        /// </summary>
-        public string PriceRanges { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to show the category on home page
         /// </summary>
         public bool ShowOnHomepage { get; set; }
@@ -122,17 +114,23 @@ namespace Nop.Core.Domain.Catalog
         public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of applied discounts
+        /// Gets or sets a value indicating whether the price range filtering is enabled
         /// </summary>
-        public virtual IList<Discount> AppliedDiscounts => DiscountCategoryMappings.Select(mapping => mapping.Discount).ToList();
+        public bool PriceRangeFiltering { get; set; }
 
         /// <summary>
-        /// Gets or sets the discount-category mappings
+        /// Gets or sets the "from" price
         /// </summary>
-        public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
-        {
-            get => _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>());
-            set => _discountCategoryMappings = value;
-        }
+        public decimal PriceFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the "to" price
+        /// </summary>
+        public decimal PriceTo { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the price range should be entered manually
+        /// </summary>
+        public bool ManuallyPriceRange { get; set; }
     }
 }

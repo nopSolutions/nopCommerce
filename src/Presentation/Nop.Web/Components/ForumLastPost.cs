@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Forums;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
@@ -16,10 +17,11 @@ namespace Nop.Web.Components
             _forumService = forumService;
         }
 
-        public IViewComponentResult Invoke(int forumPostId, bool showTopic)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task<IViewComponentResult> InvokeAsync(int forumPostId, bool showTopic)
         {
-            var forumPost = _forumService.GetPostById(forumPostId);
-            var model = _forumModelFactory.PrepareLastPostModel(forumPost, showTopic);
+            var forumPost = await _forumService.GetPostByIdAsync(forumPostId);
+            var model = await _forumModelFactory.PrepareLastPostModelAsync(forumPost, showTopic);
 
             return View(model);
         }

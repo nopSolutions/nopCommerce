@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
@@ -18,15 +20,13 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
-        /// <param name="hostingEnvironment">Hosting environment</param>
-        public NopFileProvider(IHostingEnvironment hostingEnvironment)
-            : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
+        /// <param name="webHostEnvironment">Hosting environment</param>
+        public NopFileProvider(IWebHostEnvironment webHostEnvironment)
+            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) : webHostEnvironment.ContentRootPath)
         {
-            var path = hostingEnvironment.ContentRootPath ?? string.Empty;
-            if (File.Exists(path))
-                path = Path.GetDirectoryName(path);
-
-            BaseDirectory = path;
+            WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
+                ? Path.GetDirectoryName(webHostEnvironment.WebRootPath)
+                : webHostEnvironment.WebRootPath;
         }
 
         #region Utilities
@@ -258,7 +258,11 @@ namespace Nop.Core.Infrastructure
         /// <returns>The absolute path to the directory</returns>
         public virtual string GetAbsolutePath(params string[] paths)
         {
-            var allPaths = new List<string> { Root };
+            var allPaths = new List<string>();
+
+            if(paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+                allPaths.Add(WebRootPath);
+
             allPaths.AddRange(paths);
 
             return Combine(allPaths.ToArray());
@@ -269,6 +273,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="path">The path to a directory containing a System.Security.AccessControl.DirectorySecurity object that describes the file's access control list (ACL) information</param>
         /// <returns>An object that encapsulates the access control rules for the file described by the path parameter</returns>
+        [SupportedOSPlatform("windows")]
         public virtual DirectorySecurity GetAccessControl(string path)
         {
             return new DirectoryInfo(path).GetAccessControl();
@@ -390,8 +395,14 @@ namespace Nop.Core.Infrastructure
             if (string.IsNullOrEmpty(searchPattern))
                 searchPattern = "*.*";
 
-            return Directory.GetFiles(directoryPath, searchPattern,
-                topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
+            return Directory.GetFileSystemEntries(directoryPath, searchPattern, 
+                new EnumerationOptions 
+                { 
+                    IgnoreInaccessible = true,
+                    MatchCasing = MatchCasing.CaseInsensitive,
+                    RecurseSubdirectories = !topDirectoryOnly,
+
+                });
         }
 
         /// <summary>
@@ -454,9 +465,9 @@ namespace Nop.Core.Infrastructure
             if (!IsDirectory(path) && FileExists(path))
                 path = new FileInfo(path).DirectoryName;
 
-            path = path?.Replace(Root, "").Replace('\\', '/').Trim('/').TrimStart('~', '/');
+            path = path?.Replace(WebRootPath, string.Empty).Replace('\\', '/').Trim('/').TrimStart('~', '/');
 
-            return $"~/{path ?? ""}";
+            return $"~/{path ?? string.Empty}";
         }
 
         /// <summary>
@@ -481,17 +492,37 @@ namespace Nop.Core.Infrastructure
             //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
             var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
 
-            return Combine(BaseDirectory ?? string.Empty, path) + pathEnd;
+            return Combine(Root ?? string.Empty, path) + pathEnd;
         }
 
         /// <summary>
         /// Reads the contents of the file into a byte array
         /// </summary>
         /// <param name="filePath">The file for reading</param>
-        /// <returns>A byte array containing the contents of the file</returns>
-        public virtual byte[] ReadAllBytes(string filePath)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a byte array containing the contents of the file
+        /// </returns>
+        public virtual async Task<byte[]> ReadAllBytesAsync(string filePath)
         {
-            return File.Exists(filePath) ? File.ReadAllBytes(filePath) : new byte[0];
+            return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
+        }
+
+        /// <summary>
+        /// Opens a file, reads all lines of the file with the specified encoding, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading</param>
+        /// <param name="encoding">The encoding applied to the contents of the file</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a string containing all lines of the file
+        /// </returns>
+        public virtual async Task<string> ReadAllTextAsync(string path, Encoding encoding)
+        {
+            await using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var streamReader = new StreamReader(fileStream, encoding);
+            
+            return await streamReader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -502,36 +533,34 @@ namespace Nop.Core.Infrastructure
         /// <returns>A string containing all lines of the file</returns>
         public virtual string ReadAllText(string path, Encoding encoding)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (var streamReader = new StreamReader(fileStream, encoding))
-                {
-                    return streamReader.ReadToEnd();
-                }
-            }
-        }
+            using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var streamReader = new StreamReader(fileStream, encoding);
 
-        /// <summary>
-        /// Sets the date and time, in coordinated universal time (UTC), that the specified file was last written to
-        /// </summary>
-        /// <param name="path">The file for which to set the date and time information</param>
-        /// <param name="lastWriteTimeUtc">
-        /// A System.DateTime containing the value to set for the last write date and time of path.
-        /// This value is expressed in UTC time
-        /// </param>
-        public virtual void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
-        {
-            File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
+            return streamReader.ReadToEnd();
         }
-
+        
         /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>
         /// <param name="filePath">The file to write to</param>
         /// <param name="bytes">The bytes to write to the file</param>
-        public virtual void WriteAllBytes(string filePath, byte[] bytes)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task WriteAllBytesAsync(string filePath, byte[] bytes)
         {
-            File.WriteAllBytes(filePath, bytes);
+            await File.WriteAllBytesAsync(filePath, bytes);
+        }
+
+        /// <summary>
+        /// Creates a new file, writes the specified string to the file using the specified encoding,
+        /// and then closes the file. If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="path">The file to write to</param>
+        /// <param name="contents">The string to write to the file</param>
+        /// <param name="encoding">The encoding to apply to the string</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task WriteAllTextAsync(string path, string contents, Encoding encoding)
+        {
+            await File.WriteAllTextAsync(path, contents, encoding);
         }
 
         /// <summary>
@@ -546,8 +575,18 @@ namespace Nop.Core.Infrastructure
             File.WriteAllText(path, contents, encoding);
         }
 
+        /// <summary>Locate a file at the given path.</summary>
+        /// <param name="subpath">Relative path that identifies the file.</param>
+        /// <returns>The file information. Caller must check Exists property.</returns>
+        public new IFileInfo GetFileInfo(string subpath)
+        {
+            subpath = subpath.Replace(Root, string.Empty);
+
+            return base.GetFileInfo(subpath);
+        }
+
         #endregion
 
-        protected string BaseDirectory { get; }
+        protected string WebRootPath { get; }
     }
 }

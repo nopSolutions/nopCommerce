@@ -1,4 +1,4 @@
-#region Copyright � 2001-2003 Jean-Claude Manoli [jc@manoli.net]
+﻿#region Copyright © 2001-2003 Jean-Claude Manoli [jc@manoli.net]
 /*
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the author(s) be held liable for any damages arising from
@@ -72,10 +72,8 @@ namespace Nop.Core.Html.CodeFormatter
         /// <returns>A string containing the CSS definitions.</returns>
         public static string GetCssString()
         {
-            using (var reader = new StreamReader(GetCssStream()))
-            {
-                return reader.ReadToEnd();
-            }
+            using var reader = new StreamReader(GetCssStream());
+            return reader.ReadToEnd();
         }
 
         /// <summary>
@@ -116,11 +114,9 @@ namespace Nop.Core.Html.CodeFormatter
         /// <returns>A string containing the HTML formatted code.</returns>
         public string FormatCode(Stream source)
         {
-            using (var reader = new StreamReader(source))
-            { 
-                var s = reader.ReadToEnd();            
-                return FormatCode(s, LineNumbers, Alternate, EmbedStyleSheet, false);
-            }
+            using var reader = new StreamReader(source);
+            var s = reader.ReadToEnd();
+            return FormatCode(s, LineNumbers, Alternate, EmbedStyleSheet, false);
         }
 
         /// <summary>
@@ -207,7 +203,7 @@ namespace Nop.Core.Html.CodeFormatter
                     {
                         var order = (int)Math.Log10(i);
                         sb.Append("<span class=\"lnum\">" 
-                            + spaces.Substring(0, 3 - order) + i 
+                            + spaces[0..(3 - order)] + i 
                             + ":  </span>");
                     }
 

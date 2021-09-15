@@ -10,7 +10,7 @@ using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Core.Redis;
+using Nop.Data.Mapping;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -175,11 +175,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="applicationPartManager">Application part manager</param>
         /// <param name="assemblyFile">Path to the plugin assembly file</param>
         /// <param name="shadowCopyDirectory">Path to the shadow copy directory</param>
-        /// <param name="config">Nop config</param>
+        /// <param name="appSettings">App settings</param>
         /// <param name="fileProvider">Nop file provider</param>
         /// <returns>Assembly</returns>
         private static Assembly PerformFileDeploy(this ApplicationPartManager applicationPartManager,
-            string assemblyFile, string shadowCopyDirectory, NopConfig config, INopFileProvider fileProvider)
+            string assemblyFile, string shadowCopyDirectory, AppSettings appSettings, INopFileProvider fileProvider)
         {
             //ensure for proper directory structure
             if (string.IsNullOrEmpty(assemblyFile) || string.IsNullOrEmpty(fileProvider.GetParentDirectory(assemblyFile)))
@@ -188,14 +188,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
 
             //whether to copy plugins assemblies to the bin directory, if not load assembly from the original file
-            if (!config.UsePluginsShadowCopy)
+            if (!appSettings.PluginConfig.UsePluginsShadowCopy)
             {
-                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, config.UseUnsafeLoadAssembly);
+                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, appSettings.PluginConfig.UseUnsafeLoadAssembly);
 
                 // delete the .deps file
                 if (assemblyFile.EndsWith(".dll"))
                 {
-                    _fileProvider.DeleteFile(assemblyFile.Substring(0, assemblyFile.Length - 4) + ".deps.json");
+                    _fileProvider.DeleteFile(assemblyFile[0..^4] + ".deps.json");
                 }
 
                 return assembly;
@@ -209,12 +209,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             try
             {
                 //and load assembly from the shadow copy
-                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, config.UseUnsafeLoadAssembly);
+                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, appSettings.PluginConfig.UseUnsafeLoadAssembly);
             }
             catch (UnauthorizedAccessException)
             {
                 //suppress exceptions for "locked" assemblies, try load them from another directory
-                if (!config.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
+                if (!appSettings.PluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
                     !shadowCopyDirectory.Equals(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath)))
                 {
                     throw;
@@ -223,7 +223,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             catch (FileLoadException)
             {
                 //suppress exceptions for "locked" assemblies, try load them from another directory
-                if (!config.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
+                if (!appSettings.PluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
                     !shadowCopyDirectory.Equals(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath)))
                 {
                     throw;
@@ -237,7 +237,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var reserveDirectory = fileProvider.Combine(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath),
                 $"{NopPluginDefaults.ReserveShadowCopyPathName}{DateTime.Now.ToFileTimeUtc()}");
 
-            return PerformFileDeploy(applicationPartManager, assemblyFile, reserveDirectory, config, fileProvider);
+            return PerformFileDeploy(applicationPartManager, assemblyFile, reserveDirectory, appSettings, fileProvider);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    //compare assemblies by filenames
+                    //compare assemblies by file names
                     var assemblyName = assembly.FullName.Split(',').FirstOrDefault();
                     if (!fileNameWithoutExtension.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
                         continue;
@@ -348,36 +348,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             return true;
         }
 
-        /// <summary>
-        /// Load plugins info (names of already installed, going to be installed, going to be uninstalled and going to be deleted plugins)
-        /// </summary>
-        /// <param name="config"></param>
-        private static void LoadPluginsInfo(NopConfig config)
-        {
-            var useRedisToStorePluginsInfo = config.RedisEnabled && config.UseRedisToStorePluginsInfo;
-
-            //we use the main IRedisConnectionWrapper implementation since the DI isn't initialized yet
-            PluginsInfo = useRedisToStorePluginsInfo
-                ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config)
-                : new PluginsInfo(_fileProvider);
-
-            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled)
-                return;
-
-            var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
-
-            if (!redisPluginsInfo.LoadPluginInfo())
-                return;
-
-            //copy plugins info data from redis 
-            PluginsInfo.CopyFrom(redisPluginsInfo);
-            PluginsInfo.Save();
-
-            //clear redis plugins info data
-            redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
-            redisPluginsInfo.Save();
-        }
-
         #endregion
 
         #region Methods
@@ -386,16 +356,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Initialize plugins system
         /// </summary>
         /// <param name="applicationPartManager">Application part manager</param>
-        /// <param name="config">Config</param>
-        public static void InitializePlugins(this ApplicationPartManager applicationPartManager, NopConfig config)
+        /// <param name="appSettings">App settings</param>
+        public static void InitializePlugins(this ApplicationPartManager applicationPartManager, AppSettings appSettings)
         {
             if (applicationPartManager == null)
                 throw new ArgumentNullException(nameof(applicationPartManager));
 
-            if (config == null)
-                throw new ArgumentNullException(nameof(config));
+            if (appSettings == null)
+                throw new ArgumentNullException(nameof(appSettings));
 
-            LoadPluginsInfo(config);
+            PluginsInfo = new PluginsInfo(_fileProvider);
+            PluginsInfo.LoadPluginInfoAsync().Wait();
 
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))
@@ -416,7 +387,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     var binFiles = _fileProvider.GetFiles(shadowCopyDirectory, "*", false);
 
                     //whether to clear shadow copied files
-                    if (config.ClearPluginShadowDirectoryOnStartup)
+                    if (appSettings.PluginConfig.ClearPluginShadowDirectoryOnStartup)
                     {
                         //skip placeholder files
                         var placeholderFileNames = new List<string> { "placeholder.txt", "index.htm" };
@@ -463,7 +434,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var pluginDescriptor = item.PluginDescriptor;
 
                         //ensure that plugin is compatible with the current version
-                        if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
+                        if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION, StringComparer.InvariantCultureIgnoreCase))
                         {
                             incompatiblePlugins.Add(pluginDescriptor.SystemName);
                             continue;
@@ -479,7 +450,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             throw new Exception($"A plugin with '{pluginDescriptor.SystemName}' system name is already defined");
 
                         //set 'Installed' property
-                        pluginDescriptor.Installed = PluginsInfo.InstalledPluginNames
+                        pluginDescriptor.Installed = PluginsInfo.InstalledPlugins.Select(pd => pd.SystemName)
                             .Any(pluginName => pluginName.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase));
 
                         try
@@ -517,7 +488,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
                             //need to deploy if plugin is already installed
-                            var needToDeploy = PluginsInfo.InstalledPluginNames.Contains(pluginName);
+                            var needToDeploy = PluginsInfo.InstalledPlugins.Select(pd => pd.SystemName).Contains(pluginName);
 
                             //also, deploy if the plugin is only going to be installed now
                             needToDeploy = needToDeploy || PluginsInfo.PluginNamesToInstall.Any(pluginInfo => pluginInfo.SystemName.Equals(pluginName));
@@ -529,7 +500,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             if (needToDeploy)
                             {
                                 //try to deploy main plugin assembly 
-                                pluginDescriptor.ReferencedAssembly = applicationPartManager.PerformFileDeploy(mainPluginFile, shadowCopyDirectory, config, _fileProvider);
+                                pluginDescriptor.ReferencedAssembly = applicationPartManager.PerformFileDeploy(mainPluginFile, shadowCopyDirectory, appSettings, _fileProvider);
 
                                 //and then deploy all other referenced assemblies
                                 var filesToDeploy = pluginFiles.Where(file =>
@@ -537,13 +508,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                     !IsAlreadyLoaded(file, pluginName)).ToList();
                                 foreach (var file in filesToDeploy)
                                 {
-                                    applicationPartManager.PerformFileDeploy(file, shadowCopyDirectory, config, _fileProvider);
+                                    applicationPartManager.PerformFileDeploy(file, shadowCopyDirectory, appSettings, _fileProvider);
                                 }
 
                                 //determine a plugin type (only one plugin per assembly is allowed)
                                 var pluginType = pluginDescriptor.ReferencedAssembly.GetTypes().FirstOrDefault(type =>
                                     typeof(IPlugin).IsAssignableFrom(type) && !type.IsInterface && type.IsClass && !type.IsAbstract);
-                                if (pluginType != default(Type))
+                                if (pluginType != default)
                                     pluginDescriptor.PluginType = pluginType;
                             }
 
@@ -586,6 +557,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 PluginsInfo.IncompatiblePlugins = incompatiblePlugins;
                 PluginsInfo.AssemblyLoadedCollision = _loadedAssemblies.Select(item => item.Value)
                     .Where(loadedAssemblyInfo => loadedAssemblyInfo.Collisions.Any()).ToList();
+
+                //add name compatibility types from plugins
+                var nameCompatibilityList = pluginDescriptors.Where(pd => pd.Installed).SelectMany(pd => pd
+                    .ReferencedAssembly.GetTypes().Where(type =>
+                        typeof(INameCompatibility).IsAssignableFrom(type) && !type.IsInterface && type.IsClass &&
+                        !type.IsAbstract));
+                NameCompatibilityManager.AdditionalNameCompatibilities.AddRange(nameCompatibilityList);
             }
         }
 

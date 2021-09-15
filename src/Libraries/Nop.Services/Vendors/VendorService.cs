@@ -1,11 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
-using Nop.Services.Events;
+using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Vendors
 {
@@ -16,7 +19,8 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<VendorNote> _vendorNoteRepository;
 
@@ -24,11 +28,13 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        public VendorService(IEventPublisher eventPublisher,
+        public VendorService(IRepository<Customer> customerRepository,
+            IRepository<Product> productRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<VendorNote> vendorNoteRepository)
         {
-            _eventPublisher = eventPublisher;
+            _customerRepository = customerRepository;
+            _productRepository = productRepository;
             _vendorRepository = vendorRepository;
             _vendorNoteRepository = vendorNoteRepository;
         }
@@ -41,124 +47,186 @@ namespace Nop.Services.Vendors
         /// Gets a vendor by vendor identifier
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <returns>Vendor</returns>
-        public virtual Vendor GetVendorById(int vendorId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor
+        /// </returns>
+        public virtual async Task<Vendor> GetVendorByIdAsync(int vendorId)
         {
-            if (vendorId == 0)
+            return await _vendorRepository.GetByIdAsync(vendorId, cache => default);
+        }
+
+        /// <summary>
+        /// Gets a vendor by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor
+        /// </returns>
+        public virtual async Task<Vendor> GetVendorByProductIdAsync(int productId)
+        {
+            if (productId == 0)
                 return null;
 
-            return _vendorRepository.GetById(vendorId);
+            return await (from v in _vendorRepository.Table
+                    join p in _productRepository.Table on v.Id equals p.VendorId
+                    where p.Id == productId
+                    select v).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Gets vendors by product identifiers
+        /// </summary>
+        /// <param name="productIds">Array of product identifiers</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendors
+        /// </returns>
+        public virtual async Task<IList<Vendor>> GetVendorsByProductIdsAsync(int[] productIds)
+        {
+            if (productIds is null)
+                throw new ArgumentNullException(nameof(productIds));
+
+            return await (from v in _vendorRepository.Table
+                    join p in _productRepository.Table on v.Id equals p.VendorId
+                    where productIds.Contains(p.Id) && !v.Deleted && v.Active
+                    select v).Distinct().ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets a vendors by customers identifiers
+        /// </summary>
+        /// <param name="customerIds">Array of customer identifiers</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendors
+        /// </returns>
+        public virtual async Task<IList<Vendor>> GetVendorsByCustomerIdsAsync(int[] customerIds)
+        {
+            if (customerIds is null)
+                throw new ArgumentNullException(nameof(customerIds));
+
+            return await (from v in _vendorRepository.Table
+                join c in _customerRepository.Table on v.Id equals c.VendorId
+                where customerIds.Contains(c.Id) && !v.Deleted && v.Active
+                select v).Distinct().ToListAsync();
         }
 
         /// <summary>
         /// Delete a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void DeleteVendor(Vendor vendor)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteVendorAsync(Vendor vendor)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
-
-            vendor.Deleted = true;
-            UpdateVendor(vendor);
-
-            //event notification
-            _eventPublisher.EntityDeleted(vendor);
+            await _vendorRepository.DeleteAsync(vendor);
         }
 
         /// <summary>
         /// Gets all vendors
         /// </summary>
         /// <param name="name">Vendor name</param>
+        /// <param name="email">Vendor email</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Vendors</returns>
-        public virtual IPagedList<Vendor> GetAllVendors(string name = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendors
+        /// </returns>
+        public virtual async Task<IPagedList<Vendor>> GetAllVendorsAsync(string name = "", string email = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            var query = _vendorRepository.Table;
-            if (!string.IsNullOrWhiteSpace(name))
-                query = query.Where(v => v.Name.Contains(name));
-            if (!showHidden)
-                query = query.Where(v => v.Active);
+            var vendors = await _vendorRepository.GetAllPagedAsync(query =>
+            {
+                if (!string.IsNullOrWhiteSpace(name))
+                    query = query.Where(v => v.Name.Contains(name));
 
-            query = query.Where(v => !v.Deleted);
-            query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name);
+                if (!string.IsNullOrWhiteSpace(email))
+                    query = query.Where(v => v.Email.Contains(email));
 
-            var vendors = new PagedList<Vendor>(query, pageIndex, pageSize);
+                if (!showHidden)
+                    query = query.Where(v => v.Active);
+
+                query = query.Where(v => !v.Deleted);
+                query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name).ThenBy(v => v.Email);
+
+                return query;
+            }, pageIndex, pageSize);
+
             return vendors;
-        }
-
-        /// <summary>
-        /// Gets vendors
-        /// </summary>
-        /// <param name="vendorIds">Vendor identifiers</param>
-        /// <returns>Vendors</returns>
-        public virtual IList<Vendor> GetVendorsByIds(int[] vendorIds)
-        {
-            var query = _vendorRepository.Table;
-            if (vendorIds != null)
-                query = query.Where(v => vendorIds.Contains(v.Id));
-
-            return query.ToList();
         }
 
         /// <summary>
         /// Inserts a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void InsertVendor(Vendor vendor)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertVendorAsync(Vendor vendor)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
-
-            _vendorRepository.Insert(vendor);
-
-            //event notification
-            _eventPublisher.EntityInserted(vendor);
+            await _vendorRepository.InsertAsync(vendor);
         }
 
         /// <summary>
         /// Updates the vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void UpdateVendor(Vendor vendor)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateVendorAsync(Vendor vendor)
         {
-            if (vendor == null)
-                throw new ArgumentNullException(nameof(vendor));
-
-            _vendorRepository.Update(vendor);
-
-            //event notification
-            _eventPublisher.EntityUpdated(vendor);
+            await _vendorRepository.UpdateAsync(vendor);
         }
 
         /// <summary>
         /// Gets a vendor note
         /// </summary>
         /// <param name="vendorNoteId">The vendor note identifier</param>
-        /// <returns>Vendor note</returns>
-        public virtual VendorNote GetVendorNoteById(int vendorNoteId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor note
+        /// </returns>
+        public virtual async Task<VendorNote> GetVendorNoteByIdAsync(int vendorNoteId)
         {
-            if (vendorNoteId == 0)
-                return null;
+            return await _vendorNoteRepository.GetByIdAsync(vendorNoteId, cache => default);
+        }
 
-            return _vendorNoteRepository.GetById(vendorNoteId);
+        /// <summary>
+        /// Gets all vendor notes
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor notes
+        /// </returns>
+        public virtual async Task<IPagedList<VendorNote>> GetVendorNotesByVendorAsync(int vendorId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _vendorNoteRepository.Table.Where(vn => vn.VendorId == vendorId);
+
+            query = query.OrderBy(v => v.CreatedOnUtc).ThenBy(v => v.Id);
+
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
         /// Deletes a vendor note
         /// </summary>
         /// <param name="vendorNote">The vendor note</param>
-        public virtual void DeleteVendorNote(VendorNote vendorNote)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteVendorNoteAsync(VendorNote vendorNote)
         {
-            if (vendorNote == null)
-                throw new ArgumentNullException(nameof(vendorNote));
+            await _vendorNoteRepository.DeleteAsync(vendorNote);
+        }
 
-            _vendorNoteRepository.Delete(vendorNote);
-
-            //event notification
-            _eventPublisher.EntityDeleted(vendorNote);
+        /// <summary>
+        /// Inserts a vendor note
+        /// </summary>
+        /// <param name="vendorNote">Vendor note</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertVendorNoteAsync(VendorNote vendorNote)
+        {
+            await _vendorNoteRepository.InsertAsync(vendorNote);
         }
 
         /// <summary>

@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Blogs
 {
-    public partial class BlogPostTagListModel : BaseNopModel
+    public partial record BlogPostTagListModel : BaseNopModel
     {
         public BlogPostTagListModel()
         {
@@ -20,7 +20,7 @@ namespace Nop.Web.Models.Blogs
             foreach (var tag in Tags)
                 itemWeights.Add(tag.BlogPostCount);
 
-            var stdDev = StdDev(itemWeights, out double mean);
+            var stdDev = StdDev(itemWeights, out var mean);
             return GetFontSize(blogPostTag.BlogPostCount, mean, stdDev);
         }
 
@@ -82,6 +82,6 @@ namespace Nop.Web.Models.Blogs
         }
 
 
-        public IList<BlogPostTagModel> Tags { get; set; }
+        public List<BlogPostTagModel> Tags { get; set; }
     }
 }

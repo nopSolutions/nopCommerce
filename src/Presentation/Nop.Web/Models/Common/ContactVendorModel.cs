@@ -4,7 +4,7 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
-    public partial class ContactVendorModel : BaseNopModel
+    public partial record ContactVendorModel : BaseNopModel
     {
         public int VendorId { get; set; }
         public string VendorName { get; set; }

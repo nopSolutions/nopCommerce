@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Services.Cms;
@@ -39,8 +40,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare widget search model
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
-        /// <returns>Widget search model</returns>
-        public virtual WidgetSearchModel PrepareWidgetSearchModel(WidgetSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget search model
+        /// </returns>
+        public virtual Task<WidgetSearchModel> PrepareWidgetSearchModelAsync(WidgetSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -48,21 +52,24 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
         /// Prepare paged widget list model
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
-        /// <returns>Widget list model</returns>
-        public virtual WidgetListModel PrepareWidgetListModel(WidgetSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the widget list model
+        /// </returns>
+        public virtual async Task<WidgetListModel> PrepareWidgetListModelAsync(WidgetSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get widgets
-            var widgets = _widgetPluginManager.LoadAllPlugins()
+            var widgets = (await _widgetPluginManager.LoadAllPluginsAsync())
                 .Where(widget => !widget.HideInWidgetList).ToList()
                 .ToPagedList(searchModel);
 
@@ -90,11 +97,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
-        /// <returns>List of render widget models</returns>
-        public virtual IList<RenderWidgetModel> PrepareRenderWidgetModels(string widgetZone, object additionalData = null)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of render widget models
+        /// </returns>
+        public virtual async Task<IList<RenderWidgetModel>> PrepareRenderWidgetModelsAsync(string widgetZone, object additionalData = null)
         {
             //get active widgets by widget zone
-            var widgets = _widgetPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, widgetZone: widgetZone);
+            var widgets = await _widgetPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), widgetZone: widgetZone);
 
             //prepare models
             var models = widgets.Select(widget => new RenderWidgetModel

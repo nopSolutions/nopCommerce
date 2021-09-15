@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -38,12 +38,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult DownloadFile(Guid downloadGuid)
+        public virtual async Task<IActionResult> DownloadFile(Guid downloadGuid)
         {
-            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
             if (download == null)
                 return Content("No download record found with the specified id");
 
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
@@ -63,8 +65,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
-        public virtual IActionResult SaveDownloadUrl(string downloadUrl)
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> SaveDownloadUrl(string downloadUrl)
         {
             //don't allow to save empty download object
             if (string.IsNullOrEmpty(downloadUrl))
@@ -84,15 +86,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DownloadUrl = downloadUrl,
                 IsNew = true
             };
-            _downloadService.InsertDownload(download);
+            await _downloadService.InsertDownloadAsync(download);
 
             return Json(new { success = true, downloadId = download.Id });
         }
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
-        public virtual IActionResult AsyncUpload()
+        [IgnoreAntiforgeryToken]
+        public virtual async Task<IActionResult> AsyncUpload()
         {
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
@@ -104,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-            var fileBinary = _downloadService.GetDownloadBits(httpPostedFile);
+            var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -134,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _downloadService.InsertDownload(download);
+                await _downloadService.InsertDownloadAsync(download);
 
                 //when returning JSON the mime-type must be set to text/plain
                 //otherwise some browsers will pop-up a "Save As" dialog.
@@ -147,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _logger.Error(exc.Message, exc, _workContext.CurrentCustomer);
+                await _logger.ErrorAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
 
                 return Json(new
                 {

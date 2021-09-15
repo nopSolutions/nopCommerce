@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
     /// <summary>
     /// Represents model attribute that specifies the display name by passed key of the locale resource
     /// </summary>
-    public class NopResourceDisplayNameAttribute : DisplayNameAttribute, IModelAttribute
+    public sealed class NopResourceDisplayNameAttribute : DisplayNameAttribute, IModelAttribute
     {
         #region Fields
 
@@ -44,10 +44,10 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
             get
             {
                 //get working language identifier
-                var workingLanguageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
+                var workingLanguageId = EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync().Result.Id;
 
                 //get locale resource value
-                _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResource(ResourceKey, workingLanguageId, true, ResourceKey);
+                _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync(ResourceKey, workingLanguageId, true, ResourceKey).Result;
 
                 return _resourceValue;
             }
@@ -56,10 +56,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         /// <summary>
         /// Gets name of the attribute
         /// </summary>
-        public string Name
-        {
-            get { return nameof(NopResourceDisplayNameAttribute); }
-        }
+        public string Name => nameof(NopResourceDisplayNameAttribute);
 
         #endregion
     }

@@ -4,7 +4,7 @@ using Nop.Plugin.Tax.Avalara.Domain;
 namespace Nop.Plugin.Tax.Avalara
 {
     /// <summary>
-    /// Represents settings of the Avalara tax provider 
+    /// Represents plugin settings
     /// </summary>
     public class AvalaraTaxSettings : ISettings
     {
@@ -42,5 +42,20 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets or sets a type of the tax origin address
         /// </summary>
         public TaxOriginAddressType TaxOriginAddressType { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable logging of all requests
+        /// </summary>
+        public bool EnableLogging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to get the tax rate by address only. 
+        /// </summary>
+        public bool GetTaxRateByAddressOnly { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tax rate (by address) cache time in minutes
+        /// </summary>
+        public int TaxRateByAddressCacheTime { get; set; }
     }
 }

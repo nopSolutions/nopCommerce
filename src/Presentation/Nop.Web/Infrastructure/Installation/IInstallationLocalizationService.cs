@@ -15,6 +15,12 @@ namespace Nop.Web.Infrastructure.Installation
         string GetResource(string resourceName);
 
         /// <summary>
+        /// Get current browser culture
+        /// </summary>
+        /// <returns>Current culture</returns>
+        string GetBrowserCulture();
+
+        /// <summary>
         /// Get current language for the installation page
         /// </summary>
         /// <returns>Current language</returns>
@@ -31,5 +37,13 @@ namespace Nop.Web.Infrastructure.Installation
         /// </summary>
         /// <returns>Available installation languages</returns>
         IList<InstallationLanguage> GetAvailableLanguages();
+
+        /// <summary>
+        /// Get a list of available data provider types
+        /// </summary>
+        /// <param name="valuesToExclude">Values to exclude</param>
+        /// <param name="useLocalization">Localize</param>
+        /// <returns>SelectList</returns>
+        Dictionary<int, string> GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true);
     }
 }

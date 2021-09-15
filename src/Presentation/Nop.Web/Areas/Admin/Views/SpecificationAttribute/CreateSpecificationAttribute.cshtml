@@ -1,0 +1,32 @@
+@model SpecificationAttributeModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Specification attributes");
+}
+
+<form asp-controller="SpecificationAttribute" asp-action="CreateSpecificationAttribute" method="post" id="specificationattribute-form">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsButtons })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute", Model)
+</form>

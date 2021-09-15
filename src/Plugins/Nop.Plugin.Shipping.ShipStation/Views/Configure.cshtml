@@ -1,0 +1,147 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+
+@using Nop.Plugin.Shipping.ShipStation
+@model Nop.Plugin.Shipping.ShipStation.Models.ShipStationModel
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="ShipStation" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+
+                <h3>Setup Instructions</h3>
+                <ul>
+                    <li>Register or login on the <strong><a href="https://www.shipstation.com/?ref=partner-nopcommerce&utm_campaign=partner-referrals&utm_source=nopcommerce&utm_medium=partner-referral" target="_blank">ShipStation</a></strong> site</li>
+                    <li>Go to the "Settings » API Settings" page and get the <strong>API Key</strong> and the <strong>API Secret</strong> and copy them on the plugin settings</li>
+                    <li>Select <strong>Selling Channels</strong> from the left-hand sidebar, then choose <strong>Store Setup</strong>.</li>
+                    <li>Click <strong>+ Connect a Store or Marketplace</strong>.</li>
+                    <li>Choose the <strong>Custom Store</strong> option</li>
+                    <li>Enter the "@Model.WebhookURL" to the <strong>URL to Custom XML Page</strong> setting</li>
+                    <li>Create a <strong>Username</strong> and <strong>Password</strong>, enter them into the settings forms (the ShipStation form and the nopCommerce form). <em style="color: red">Do not use the ShipStation or nopCommerce user credentials for this</em>.</li>
+                    <li>Don't change the <strong>Statuses</strong> section</li>
+                    <li>Save the nopCommerce settings by pressing the <strong>Save</strong> button.</li>
+                    <li>On the ShipStation form press Test your connection using the <strong>Test Connection</strong> button</li>
+                    <li>Save the settings using the <strong>Connect</strong> button</li>
+                </ul>
+                <hr />
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiKey_OverrideForStore" asp-input="ApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ApiKey" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiKey" />
+                        <span asp-validation-for="ApiKey"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="ApiSecret_OverrideForStore" asp-input="ApiSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ApiSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApiSecret" />
+                        <span asp-validation-for="ApiSecret"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="UserName_OverrideForStore" asp-input="UserName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UserName" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UserName" />
+                        <span asp-validation-for="UserName"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="Password_OverrideForStore" asp-input="Password" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="Password" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Password" asp-value="@Model.Password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="PassDimensions_OverrideForStore" asp-input="PassDimensions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PassDimensions" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PassDimensions" />
+                        <span asp-validation-for="PassDimensions"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="PassDimensions">
+                    <div class="form-group row" id="pnlPackingType">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PackingType_OverrideForStore" asp-input="PackingType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="PackingTypeValues" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="PackingType" asp-items="Model.PackingTypeValues" />
+                        </div>
+                    </div>
+                <nop-nested-setting asp-for="PackingTypeValues">
+                    <div class="form-group row" id="pnlPackingPackageVolume">
+                        <div class="col-md-3">
+                            <nop-override-store-checkbox asp-for="PackingPackageVolume_OverrideForStore" asp-input="PackingPackageVolume" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                            <nop-label asp-for="PackingPackageVolume" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="PackingPackageVolume" />
+                            <span asp-validation-for="PackingPackageVolume"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+                </nop-nested-setting>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-md-9">
+                            <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $("#PackingType").change(togglePackingType);
+
+        $(@Html.IdFor(model => model.PassDimensions)).change(togglePassDimensions);
+
+        togglePassDimensions();
+    });
+
+    function togglePackingType() {
+        var selectedPackingTypeId = $("#PackingType").val();
+        if (selectedPackingTypeId == @(((int) PackingType.PackByDimensions).ToString())) {
+            $('#pnlPackingPackageVolume').hideElement();
+        } else if (selectedPackingTypeId == @(((int) PackingType.PackByVolume).ToString())) {
+            $('#pnlPackingPackageVolume').showElement();
+        }
+    }
+
+    function togglePassDimensions() {
+        togglePackingType();
+        if ($(@Html.IdFor(model => model.PassDimensions)).is(':checked')) {
+            $('#pnlPackingType').showElement();
+        } else {
+            $('#pnlPackingType').hideElement();
+            $('#pnlPackingPackageVolume').hideElement();
+        }
+    }
+</script>

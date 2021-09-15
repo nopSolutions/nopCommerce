@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Gdpr
+﻿namespace Nop.Core.Domain.Gdpr
 {
     /// <summary>
     /// Represents a GDPR request type
@@ -29,6 +29,5 @@ namespace Nop.Core.Domain.Gdpr
         /// User changed profile
         /// </summary>
         ProfileChanged = 20
-
     }
 }

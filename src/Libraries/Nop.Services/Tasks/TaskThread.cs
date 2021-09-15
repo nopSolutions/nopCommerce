@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
-using Nop.Core.Domain.Common;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
@@ -17,6 +17,7 @@ namespace Nop.Services.Tasks
     /// <summary>
     /// Represents task thread
     /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
     public partial class TaskThread : IDisposable
     {
         #region Fields
@@ -34,8 +35,8 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
-            _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.Url.TrimEnd('/')}/{NopTaskDefaults.ScheduleTaskPath}";
+            _timeout = EngineContext.Current.Resolve<AppSettings>().CommonConfig.ScheduleTaskRunTimeout;
         }
 
         internal TaskThread()
@@ -48,13 +49,14 @@ namespace Nop.Services.Tasks
 
         #region Utilities
 
-        private void Run()
+        private async System.Threading.Tasks.Task RunAsync()
         {
             if (Seconds <= 0)
                 return;
 
             StartedUtc = DateTime.UtcNow;
             IsRunning = true;
+            HttpClient client = null;
 
             foreach (var taskName in _tasks.Keys)
             {
@@ -62,30 +64,36 @@ namespace Nop.Services.Tasks
                 try
                 {
                     //create and configure client
-                    var client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
+                    client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
                     if (_timeout.HasValue)
                         client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
 
                     //send post data
                     var data = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>(nameof(taskType), taskType) });
-                    client.PostAsync(_scheduleTaskUrl, data).Wait();
+                    await client.PostAsync(_scheduleTaskUrl, data);
                 }
                 catch (Exception ex)
                 {
-                    var _serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
-                    using (var scope = _serviceScopeFactory.CreateScope())
+                    var serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
+                    using var scope = serviceScopeFactory.CreateScope();
+                    // Resolve
+                    var logger = EngineContext.Current.Resolve<ILogger>(scope);
+                    var localizationService = EngineContext.Current.Resolve<ILocalizationService>(scope);
+                    var storeContext = EngineContext.Current.Resolve<IStoreContext>(scope);
+
+                    var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResourceAsync("ScheduleTasks.TimeoutError") : ex.Message;
+
+                    message = string.Format(await localizationService.GetResourceAsync("ScheduleTasks.Error"), taskName,
+                        message, taskType, (await storeContext.GetCurrentStoreAsync()).Name, _scheduleTaskUrl);
+
+                    await logger.ErrorAsync(message, ex);
+                }
+                finally
+                {
+                    if (client != null)
                     {
-                        // Resolve
-                        var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
-                        var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-                        var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
-
-                        var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
-
-                        message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName,
-                            message, taskType, storeContext.CurrentStore.Name, _scheduleTaskUrl);
-
-                        logger.Error(message, ex);
+                        client.Dispose();
+                        client = null;
                     }
                 }
             }
@@ -98,16 +106,19 @@ namespace Nop.Services.Tasks
             try
             {
                 _timer.Change(-1, -1);
-                Run();
 
-                if (RunOnlyOnce)
-                    Dispose();
-                else
-                    _timer.Change(Interval, Interval);
+                RunAsync().Wait();
             }
             catch
             {
                 // ignore
+            }
+            finally
+            {
+                if (RunOnlyOnce)
+                    Dispose();
+                else
+                    _timer.Change(Interval, Interval);
             }
         }
 
@@ -120,15 +131,21 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Dispose()
         {
-            if (_timer == null || _disposed)
+            Dispose(true);
+            GC.SuppressFinalize(this);            
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
                 return;
 
-            lock (this)
-            {
-                _timer.Dispose();
-                _timer = null;
-                _disposed = true;
-            }
+            if (disposing)
+                lock (this)
+                    _timer?.Dispose();
+
+            _disposed = true;
         }
 
         /// <summary>

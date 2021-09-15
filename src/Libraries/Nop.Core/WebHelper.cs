@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 
@@ -26,29 +26,26 @@ namespace Nop.Core
     {
         #region Fields 
 
-        private readonly HostingConfig _hostingConfig;
+        private readonly AppSettings _appSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IApplicationLifetime _applicationLifetime;
+        private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
         private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
 
         #region Ctor
 
-        public WebHelper(HostingConfig hostingConfig,
+        public WebHelper(AppSettings appSettings,
             IActionContextAccessor actionContextAccessor,
-            IApplicationLifetime applicationLifetime,
+            IHostApplicationLifetime hostApplicationLifetime,
             IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider,
             IUrlHelperFactory urlHelperFactory)
         {
-            _hostingConfig = hostingConfig;
+            _appSettings = appSettings;
             _actionContextAccessor = actionContextAccessor;
-            _applicationLifetime = applicationLifetime;
+            _hostApplicationLifetime = hostApplicationLifetime;
             _httpContextAccessor = httpContextAccessor;
-            _fileProvider = fileProvider;
             _urlHelperFactory = urlHelperFactory;
         }
 
@@ -85,24 +82,9 @@ namespace Nop.Core
         /// <returns>Result</returns>
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
-            return address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
-        }
+            var rez =  address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
 
-        /// <summary>
-        /// Try to write web.config file
-        /// </summary>
-        /// <returns></returns>
-        protected virtual bool TryWriteWebConfig()
-        {
-            try
-            {
-                _fileProvider.SetLastWriteTimeUtc(_fileProvider.MapPath(NopInfrastructureDefaults.WebConfigPath), DateTime.UtcNow);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return rez;
         }
 
         #endregion
@@ -140,11 +122,11 @@ namespace Nop.Core
                     //the X-Forwarded-For (XFF) HTTP header field is a de facto standard for identifying the originating IP address of a client
                     //connecting to a web server through an HTTP proxy or load balancer
                     var forwardedHttpHeaderKey = NopHttpDefaults.XForwardedForHeader;
-                    if (!string.IsNullOrEmpty(_hostingConfig.ForwardedHttpHeader))
+                    if (!string.IsNullOrEmpty(_appSettings.HostingConfig.ForwardedHttpHeader))
                     {
                         //but in some cases server use other HTTP header
                         //in these cases an administrator can specify a custom Forwarded HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc)
-                        forwardedHttpHeaderKey = _hostingConfig.ForwardedHttpHeader;
+                        forwardedHttpHeaderKey = _appSettings.HostingConfig.ForwardedHttpHeader;
                     }
 
                     var forwardedHeader = _httpContextAccessor.HttpContext.Request.Headers[forwardedHttpHeaderKey];
@@ -216,11 +198,11 @@ namespace Nop.Core
 
             //check whether hosting uses a load balancer
             //use HTTP_CLUSTER_HTTPS?
-            if (_hostingConfig.UseHttpClusterHttps)
+            if (_appSettings.HostingConfig.UseHttpClusterHttps)
                 return _httpContextAccessor.HttpContext.Request.Headers[NopHttpDefaults.HttpClusterHttpsHeader].ToString().Equals("on", StringComparison.OrdinalIgnoreCase);
 
             //use HTTP_X_FORWARDED_PROTO?
-            if (_hostingConfig.UseHttpXForwardedProto)
+            if (_appSettings.HostingConfig.UseHttpXForwardedProto)
                 return _httpContextAccessor.HttpContext.Request.Headers[NopHttpDefaults.HttpXForwardedProtoHeader].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
 
             return _httpContextAccessor.HttpContext.Request.IsHttps;
@@ -268,10 +250,10 @@ namespace Nop.Core
             }
 
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
-            if (string.IsNullOrEmpty(storeHost) && DataSettingsManager.DatabaseIsInstalled)
+            if (string.IsNullOrEmpty(storeHost))
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
-                storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
+                storeLocation = EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result?.Url
                     ?? throw new Exception("Current store cannot be loaded");
             }
 
@@ -317,7 +299,15 @@ namespace Nop.Core
             //prepare URI object
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var isLocalUrl = urlHelper.IsLocalUrl(url);
-            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+
+            var uriStr = url;
+            if (isLocalUrl)
+            {
+                var pathBase = _httpContextAccessor.HttpContext.Request.PathBase;
+                uriStr = $"{GetStoreLocation().TrimEnd('/')}{(url.StartsWith(pathBase) ? url.Replace(pathBase, "") : url)}";
+            }
+
+            var uri = new Uri(uriStr, UriKind.Absolute);
 
             //get current query parameters
             var queryParameters = QueryHelpers.ParseQuery(uri.Query);
@@ -393,10 +383,10 @@ namespace Nop.Core
         public virtual T QueryString<T>(string name)
         {
             if (!IsRequestAvailable())
-                return default(T);
+                return default;
 
             if (StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Query[name]))
-                return default(T);
+                return default;
 
             return CommonHelper.To<T>(_httpContextAccessor.HttpContext.Request.Query[name].ToString());
         }
@@ -404,22 +394,9 @@ namespace Nop.Core
         /// <summary>
         /// Restart application domain
         /// </summary>
-        /// <param name="makeRedirect">A value indicating whether we should made redirection after restart</param>
-        public virtual void RestartAppDomain(bool makeRedirect = false)
+        public virtual void RestartAppDomain()
         {
-            //the site will be restarted during the next request automatically
-            //"touch" web.config to force restart
-            var success = TryWriteWebConfig();
-            if (!success)
-            {
-                throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
-                    "To prevent this issue in the future, a change to the web server configuration is required:" + Environment.NewLine +
-                    "- run the application in a full trust environment, or" + Environment.NewLine +
-                    "- give the application write access to the 'web.config' file.");
-            }
-
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-                _applicationLifetime.StopApplication();
+            _hostApplicationLifetime.StopApplication();
         }
 
         /// <summary>
@@ -432,6 +409,7 @@ namespace Nop.Core
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
+                
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }
@@ -455,7 +433,10 @@ namespace Nop.Core
         /// <summary>
         /// Gets current HTTP request protocol
         /// </summary>
-        public virtual string CurrentRequestProtocol => IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        public virtual string GetCurrentRequestProtocol()
+        {
+            return IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        }
 
         /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.

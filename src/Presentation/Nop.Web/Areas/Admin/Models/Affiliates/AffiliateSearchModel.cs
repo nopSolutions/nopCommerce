@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Affiliates
     /// <summary>
     /// Represents an affiliate search model
     /// </summary>
-    public partial class AffiliateSearchModel : BaseSearchModel
+    public partial record AffiliateSearchModel : BaseSearchModel
     {
         #region Properties
 

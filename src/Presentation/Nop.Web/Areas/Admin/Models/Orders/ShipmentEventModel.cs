@@ -6,7 +6,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a shipment event model
     /// </summary>
-    public partial class ShipmentStatusEventModel : BaseNopModel
+    public partial record ShipmentStatusEventModel : BaseNopModel
     {
         #region Properties
 

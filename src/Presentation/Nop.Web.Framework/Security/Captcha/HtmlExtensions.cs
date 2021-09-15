@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -15,16 +16,18 @@ namespace Nop.Web.Framework.Security.Captcha
     /// </summary>
     public static class HtmlExtensions
     {
-        /// <summary>
-        /// Generate reCAPTCHA Control
-        /// </summary>
-        /// <param name="helper">HTML helper</param>
-        /// <returns>Result</returns>
-        public static IHtmlContent GenerateCaptcha(this IHtmlHelper helper)
-        {
-            var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
+        #region Utilities
 
-            //prepare language
+        /// <summary>
+        /// Get the reCAPTCHA language
+        /// </summary>
+        /// <param name="captchaSettings">Captcha settings</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language code
+        /// </returns>
+        private static async Task<string> GetReCaptchaLanguageAsync(CaptchaSettings captchaSettings)
+        {
             var language = (captchaSettings.ReCaptchaDefaultLanguage ?? string.Empty).ToLower();
             if (captchaSettings.AutomaticallyChooseLanguage)
             {
@@ -34,30 +37,66 @@ namespace Nop.Web.Framework.Security.Captcha
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var twoLetterIsoCode = workContext.WorkingLanguage != null
-                    ? languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage).ToLower()
+
+                var currentLanguage = await workContext.GetWorkingLanguageAsync();
+                var twoLetterIsoCode = currentLanguage != null
+                    ? languageService.GetTwoLetterIsoLanguageName(currentLanguage).ToLower()
                     : string.Empty;
 
                 language = supportedLanguageCodes.Contains(twoLetterIsoCode) ? twoLetterIsoCode : language;
             }
 
+            return language;
+        }
+
+        /// <summary>
+        /// Generate API script tag
+        /// </summary>
+        /// <param name="captchaSettings">Captcha settings</param>
+        /// <param name="captchaId">Captcha ID</param>
+        /// <param name="render">Render</param>
+        /// <param name="language">Language</param>
+        /// <returns>Script tag</returns>
+        private static TagBuilder GenerateLoadApiScriptTag(CaptchaSettings captchaSettings, string captchaId, string render, string language)
+        {
+            var hl = !string.IsNullOrEmpty(language)
+                ? $"&hl={language}"
+                : string.Empty;
+            var url = string.Format($"{captchaSettings.ReCaptchaApiUrl}{NopSecurityDefaults.RecaptchaScriptPath}", captchaId, render, hl);
+            var scriptLoadApiTag = new TagBuilder("script") { TagRenderMode = TagRenderMode.Normal };
+            scriptLoadApiTag.Attributes.Add("src", url);
+            scriptLoadApiTag.Attributes.Add("async", null);
+            scriptLoadApiTag.Attributes.Add("defer", null);
+
+            return scriptLoadApiTag;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Generate reCAPTCHA Control
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="captchaSettings">Captcha settings</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public static async Task<IHtmlContent> GenerateCheckBoxReCaptchaV2Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
+        {
+            //prepare language
+            var language = await GetReCaptchaLanguageAsync(captchaSettings);
+
             //prepare theme
             var theme = (captchaSettings.ReCaptchaTheme ?? string.Empty).ToLower();
-            switch (theme)
+            theme = theme switch
             {
-                case "blackglass":
-                case "dark":
-                    theme = "dark";
-                    break;
-
-                case "clean":
-                case "red":
-                case "white":
-                case "light":
-                default:
-                    theme = "light";
-                    break;
-            }
+                "blackglass" or "dark" => "dark",
+                "clean" or "red" or "white" or "light" => "light",
+                _ => "light",
+            };
 
             //prepare identifier
             var id = $"captcha_{CommonHelper.GenerateRandomInteger()}";
@@ -73,14 +112,67 @@ namespace Nop.Web.Framework.Security.Captcha
             var captchaTag = new TagBuilder("div") { TagRenderMode = TagRenderMode.Normal };
             captchaTag.Attributes.Add("id", id);
 
-            var url = string.Format($"{captchaSettings.ReCaptchaApiUrl}{NopSecurityDefaults.RecaptchaScriptPath}", id,
-                !string.IsNullOrEmpty(language) ? $"&hl={language}" : string.Empty);
-            var scriptLoadApiTag = new TagBuilder("script") { TagRenderMode = TagRenderMode.Normal };
-            scriptLoadApiTag.Attributes.Add("src", url);
-            scriptLoadApiTag.Attributes.Add("async", null);
-            scriptLoadApiTag.Attributes.Add("defer", null);
+            var scriptLoadApiTag = GenerateLoadApiScriptTag(captchaSettings, id, "explicit", language);
 
-            return new HtmlString(scriptCallbackTag.RenderHtmlContent() + captchaTag.RenderHtmlContent() + scriptLoadApiTag.RenderHtmlContent());
+            return new HtmlString(await scriptCallbackTag.RenderHtmlContentAsync() + await captchaTag.RenderHtmlContentAsync() + await scriptLoadApiTag.RenderHtmlContentAsync());
         }
+
+        /// <summary>
+        /// Generate reCAPTCHA v3 Control
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="captchaSettings">Captcha settings</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public static async Task<IHtmlContent> GenerateReCaptchaV3Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
+        {
+            //prepare language
+            var language = await GetReCaptchaLanguageAsync(captchaSettings);
+
+            //prepare identifier
+            var id = $"captcha_{CommonHelper.GenerateRandomInteger()}";
+
+            //prepare public key
+            var publicKey = captchaSettings.ReCaptchaPublicKey ?? string.Empty;
+
+            //prepare reCAPTCHA script
+            var actionName = helper.ViewContext.RouteData.Values["action"].ToString();
+            var scriptCallback = $@"
+                var onloadCallback{id} = function() {{
+                    var form = $('input[id=""g-recaptcha-response_{id}""]').closest('form');
+                    var btn = $(form.find(':submit')[0]);
+
+                    var loaded = false;
+                    var isBusy = false;
+                    btn.on('click', function (e) {{
+                        if (!isBusy) {{
+                            isBusy = true;
+                            grecaptcha.execute('{publicKey}', {{ 'action': '{actionName}' }}).then(function(token) {{
+                                $('#g-recaptcha-response_{id}', form).val(token);
+                                loaded = true;
+                                btn.click();
+                            }});
+                        }}
+                        return loaded;
+                    }});
+                }}
+            ";
+            var scriptCallbackTag = new TagBuilder("script") { TagRenderMode = TagRenderMode.Normal };
+            scriptCallbackTag.InnerHtml.AppendHtml(scriptCallback);
+
+            //prepare reCAPTCHA token input
+            var captchaTokenInput = new TagBuilder("input") { TagRenderMode = TagRenderMode.Normal };
+            captchaTokenInput.Attributes.Add("type", "hidden");
+            captchaTokenInput.Attributes.Add("id", $"g-recaptcha-response_{id}");
+            captchaTokenInput.Attributes.Add("name", "g-recaptcha-response");
+
+            var scriptLoadApiTag = GenerateLoadApiScriptTag(captchaSettings, id, publicKey, language);
+
+            return new HtmlString(await captchaTokenInput.RenderHtmlContentAsync() + await scriptCallbackTag.RenderHtmlContentAsync() + await scriptLoadApiTag.RenderHtmlContentAsync());
+        }
+
+        #endregion
     }
 }

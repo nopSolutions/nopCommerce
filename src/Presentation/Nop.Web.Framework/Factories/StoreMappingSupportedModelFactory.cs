@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Stores;
@@ -38,13 +39,14 @@ namespace Nop.Web.Framework.Factories
         /// </summary>
         /// <typeparam name="TModel">Store mapping supported model type</typeparam>
         /// <param name="model">Model</param>
-        public virtual void PrepareModelStores<TModel>(TModel model) where TModel : IStoreMappingSupportedModel
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareModelStoresAsync<TModel>(TModel model) where TModel : IStoreMappingSupportedModel
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available stores
-            var availableStores = _storeService.GetAllStores();
+            var availableStores = await _storeService.GetAllStoresAsync();
             model.AvailableStores = availableStores.Select(store => new SelectListItem
             {
                 Text = store.Name,
@@ -61,7 +63,8 @@ namespace Nop.Web.Framework.Factories
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
         /// <param name="ignoreStoreMappings">Whether to ignore existing store mappings</param>
-        public virtual void PrepareModelStores<TModel, TEntity>(TModel model, TEntity entity, bool ignoreStoreMappings)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task PrepareModelStoresAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreStoreMappings)
             where TModel : IStoreMappingSupportedModel where TEntity : BaseEntity, IStoreMappingSupported
         {
             if (model == null)
@@ -69,9 +72,9 @@ namespace Nop.Web.Framework.Factories
 
             //prepare stores with granted access
             if (!ignoreStoreMappings && entity != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(entity).ToList();
+                model.SelectedStoreIds = (await _storeMappingService.GetStoresIdsWithAccessAsync(entity)).ToList();
 
-            PrepareModelStores(model);
+            await PrepareModelStoresAsync(model);
         }
         
         #endregion

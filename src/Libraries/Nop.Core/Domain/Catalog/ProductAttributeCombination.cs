@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product attribute combination
@@ -56,8 +56,8 @@ namespace Nop.Core.Domain.Catalog
         public int PictureId { get; set; }
 
         /// <summary>
-        /// Gets the product
+        /// Gets or sets the minimum stock quantity
         /// </summary>
-        public virtual Product Product { get; set; }
+        public int MinStockQuantity { get; set; }
     }
 }

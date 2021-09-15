@@ -5,7 +5,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a recurring payment search model
     /// </summary>
-    public partial class RecurringPaymentSearchModel : BaseSearchModel
+    public partial record RecurringPaymentSearchModel : BaseSearchModel
     {
     }
 }

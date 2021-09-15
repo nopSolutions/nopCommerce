@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
+using Nop.Data;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {
@@ -19,9 +19,7 @@ namespace Nop.Services.Common
         private readonly AddressSettings _addressSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly ICacheManager _cacheManager;
         private readonly ICountryService _countryService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Address> _addressRepository;
         private readonly IStateProvinceService _stateProvinceService;
 
@@ -32,18 +30,14 @@ namespace Nop.Services.Common
         public AddressService(AddressSettings addressSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            ICacheManager cacheManager,
             ICountryService countryService,
-            IEventPublisher eventPublisher,
             IRepository<Address> addressRepository,
             IStateProvinceService stateProvinceService)
         {
             _addressSettings = addressSettings;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
-            _cacheManager = cacheManager;
             _countryService = countryService;
-            _eventPublisher = eventPublisher;
             _addressRepository = addressRepository;
             _stateProvinceService = stateProvinceService;
         }
@@ -56,26 +50,21 @@ namespace Nop.Services.Common
         /// Deletes an address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void DeleteAddress(Address address)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteAddressAsync(Address address)
         {
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
-
-            _addressRepository.Delete(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(address);
+            await _addressRepository.DeleteAsync(address);
         }
 
         /// <summary>
         /// Gets total number of addresses by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
-        /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByCountryId(int countryId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of addresses
+        /// </returns>
+        public virtual async Task<int> GetAddressTotalByCountryIdAsync(int countryId)
         {
             if (countryId == 0)
                 return 0;
@@ -83,15 +72,19 @@ namespace Nop.Services.Common
             var query = from a in _addressRepository.Table
                         where a.CountryId == countryId
                         select a;
-            return query.Count();
+
+            return await query.CountAsync();
         }
 
         /// <summary>
         /// Gets total number of addresses by state/province identifier
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
-        /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByStateProvinceId(int stateProvinceId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of addresses
+        /// </returns>
+        public virtual async Task<int> GetAddressTotalByStateProvinceIdAsync(int stateProvinceId)
         {
             if (stateProvinceId == 0)
                 return 0;
@@ -99,28 +92,30 @@ namespace Nop.Services.Common
             var query = from a in _addressRepository.Table
                         where a.StateProvinceId == stateProvinceId
                         select a;
-            return query.Count();
+
+            return await query.CountAsync();
         }
 
         /// <summary>
         /// Gets an address by address identifier
         /// </summary>
         /// <param name="addressId">Address identifier</param>
-        /// <returns>Address</returns>
-        public virtual Address GetAddressById(int addressId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address
+        /// </returns>
+        public virtual async Task<Address> GetAddressByIdAsync(int addressId)
         {
-            if (addressId == 0)
-                return null;
-
-            var key = string.Format(NopCommonDefaults.AddressesByIdCacheKey, addressId);
-            return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
+            return await _addressRepository.GetByIdAsync(addressId,
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Address>.ByIdCacheKey, addressId));
         }
 
         /// <summary>
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void InsertAddress(Address address)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task InsertAddressAsync(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
@@ -133,20 +128,15 @@ namespace Nop.Services.Common
             if (address.StateProvinceId == 0)
                 address.StateProvinceId = null;
 
-            _addressRepository.Insert(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(address);
+            await _addressRepository.InsertAsync(address);
         }
 
         /// <summary>
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void UpdateAddress(Address address)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateAddressAsync(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
@@ -157,21 +147,18 @@ namespace Nop.Services.Common
             if (address.StateProvinceId == 0)
                 address.StateProvinceId = null;
 
-            _addressRepository.Update(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(address);
+            await _addressRepository.UpdateAsync(address);
         }
 
         /// <summary>
         /// Gets a value indicating whether address is valid (can be saved)
         /// </summary>
         /// <param name="address">Address to validate</param>
-        /// <returns>Result</returns>
-        public virtual bool IsAddressValid(Address address)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
+        public virtual async Task<bool> IsAddressValidAsync(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
@@ -207,16 +194,13 @@ namespace Nop.Services.Common
 
             if (_addressSettings.CountryEnabled)
             {
-                if (address.CountryId == null || address.CountryId.Value == 0)
-                    return false;
-
-                var country = _countryService.GetCountryById(address.CountryId.Value);
+                var country = await _countryService.GetCountryByAddressAsync(address);
                 if (country == null)
                     return false;
 
                 if (_addressSettings.StateProvinceEnabled)
                 {
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
+                    var states = await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id);
                     if (states.Any())
                     {
                         if (address.StateProvinceId == null || address.StateProvinceId.Value == 0)
@@ -249,13 +233,13 @@ namespace Nop.Services.Common
                 string.IsNullOrWhiteSpace(address.FaxNumber))
                 return false;
 
-            var requiredAttributes = _addressAttributeService.GetAllAddressAttributes().Where(x => x.IsRequired);
+            var requiredAttributes = (await _addressAttributeService.GetAllAddressAttributesAsync()).Where(x => x.IsRequired);
 
             foreach (var requiredAttribute in requiredAttributes)
-            { 
-                var value  = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
+            {
+                var value = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
 
-                if (!value.Any() || (string.IsNullOrEmpty(value[0])))
+                if (!value.Any() || string.IsNullOrEmpty(value[0]))
                     return false;
             }
 
@@ -297,10 +281,38 @@ namespace Nop.Services.Common
             ((string.IsNullOrEmpty(a.County) && string.IsNullOrEmpty(county)) || a.County == county) &&
             ((a.StateProvinceId == null && (stateProvinceId == null || stateProvinceId == 0)) || (a.StateProvinceId != null && a.StateProvinceId == stateProvinceId)) &&
             ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-            ((a.CountryId == null && countryId == null) || (a.CountryId !=null && a.CountryId == countryId)) &&
+            ((a.CountryId == null && countryId == null) || (a.CountryId != null && a.CountryId == countryId)) &&
             //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare
             //bu we simplify this process and simply compare their values in XML
             ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
+        }
+
+        /// <summary>
+        /// Clone address
+        /// </summary>
+        /// <returns>A deep copy of address</returns>
+        public virtual Address CloneAddress(Address address)
+        {
+            var addr = new Address
+            {
+                FirstName = address.FirstName,
+                LastName = address.LastName,
+                Email = address.Email,
+                Company = address.Company,
+                CountryId = address.CountryId,
+                StateProvinceId = address.StateProvinceId,
+                County = address.County,
+                City = address.City,
+                Address1 = address.Address1,
+                Address2 = address.Address2,
+                ZipPostalCode = address.ZipPostalCode,
+                PhoneNumber = address.PhoneNumber,
+                FaxNumber = address.FaxNumber,
+                CustomAttributes = address.CustomAttributes,
+                CreatedOnUtc = address.CreatedOnUtc
+            };
+
+            return addr;
         }
 
         #endregion

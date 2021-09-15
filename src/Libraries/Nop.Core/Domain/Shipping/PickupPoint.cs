@@ -79,5 +79,10 @@
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets a transit days
+        /// </summary>
+        public int? TransitDays { get; set; }
     }
 }

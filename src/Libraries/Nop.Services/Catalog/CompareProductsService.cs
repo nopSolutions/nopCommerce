@@ -1,9 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Http;
+using Nop.Core.Security;
 
 namespace Nop.Services.Catalog
 {
@@ -15,20 +18,26 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly CookieSettings _cookieSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductService _productService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
         public CompareProductsService(CatalogSettings catalogSettings,
+            CookieSettings cookieSettings,
             IHttpContextAccessor httpContextAccessor,
-            IProductService productService)
+            IProductService productService,
+            IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
+            _cookieSettings = cookieSettings;
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -71,11 +80,12 @@ namespace Nop.Services.Catalog
             var comparedProductIdsCookie = string.Join(",", comparedProductIds);
 
             //create cookie options 
-            var cookieExpires = 24 * 10; //TODO make configurable
+            var cookieExpires = _cookieSettings.CompareProductsCookieExpires;
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
-                HttpOnly = true
+                HttpOnly = true,
+                Secure =  _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie
@@ -102,14 +112,17 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a "compare products" list
         /// </summary>
-        /// <returns>"Compare products" list</returns>
-        public virtual IList<Product> GetComparedProducts()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the "Compare products" list
+        /// </returns>
+        public virtual async Task<IList<Product>> GetComparedProductsAsync()
         {
             //get list of compared product identifiers
             var productIds = GetComparedProductIds();
 
             //return list of product
-            return _productService.GetProductsByIds(productIds.ToArray())
+            return (await _productService.GetProductsByIdsAsync(productIds.ToArray()))
                 .Where(product => product.Published && !product.Deleted).ToList();
         }
 
@@ -117,33 +130,37 @@ namespace Nop.Services.Catalog
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void RemoveProductFromCompareList(int productId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual Task RemoveProductFromCompareListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
-                return;
+                return Task.CompletedTask;
 
             //get list of compared product identifiers
             var comparedProductIds = GetComparedProductIds();
 
             //whether product identifier to remove exists
             if (!comparedProductIds.Contains(productId))
-                return;
+                return Task.CompletedTask;
 
             //it exists, so remove it from list
             comparedProductIds.Remove(productId);
 
             //set cookie
             AddCompareProductsCookie(comparedProductIds);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void AddProductToCompareList(int productId)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual Task AddProductToCompareListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
-                return;
+                return Task.CompletedTask;
 
             //get list of compared product identifiers
             var comparedProductIds = GetComparedProductIds();
@@ -157,6 +174,8 @@ namespace Nop.Services.Catalog
 
             //set cookie
             AddCompareProductsCookie(comparedProductIds);
+
+            return Task.CompletedTask;
         }
 
         #endregion

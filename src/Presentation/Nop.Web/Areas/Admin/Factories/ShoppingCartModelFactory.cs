@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -32,9 +33,9 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
@@ -49,9 +50,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
+            IProductService productService,
             IShoppingCartService shoppingCartService,
             IStoreService storeService,
             ITaxService taxService)
@@ -62,9 +63,9 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
+            _productService = productService;
             _shoppingCartService = shoppingCartService;
             _storeService = storeService;
             _taxService = taxService;
@@ -98,25 +99,28 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shopping cart search model
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
-        /// <returns>Shopping cart search model</returns>
-        public virtual ShoppingCartSearchModel PrepareShoppingCartSearchModel(ShoppingCartSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart search model
+        /// </returns>
+        public virtual async Task<ShoppingCartSearchModel> PrepareShoppingCartSearchModelAsync(ShoppingCartSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available shopping cart types
-            _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
+            await _baseAdminModelFactory.PrepareShoppingCartTypesAsync(searchModel.AvailableShoppingCartTypes, false);
 
             //set default search values
             searchModel.ShoppingCartType = ShoppingCartType.ShoppingCart;
 
             //prepare available billing countries
-            searchModel.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+            searchModel.AvailableCountries = (await _countryService.GetAllCountriesForBillingAsync(showHidden: true))
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
@@ -133,14 +137,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged shopping cart list model
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
-        /// <returns>Shopping cart list model</returns>
-        public virtual ShoppingCartListModel PrepareShoppingCartListModel(ShoppingCartSearchModel searchModel)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart list model
+        /// </returns>
+        public virtual async Task<ShoppingCartListModel> PrepareShoppingCartListModelAsync(ShoppingCartSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customers with shopping carts
-            var customers = _customerService.GetCustomersWithShoppingCarts(searchModel.ShoppingCartType,
+            var customers = await _customerService.GetCustomersWithShoppingCartsAsync(searchModel.ShoppingCartType,
                 storeId: searchModel.StoreId,
                 productId: searchModel.ProductId,
                 createdFromUtc: searchModel.StartDate,
@@ -149,9 +156,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ShoppingCartListModel().PrepareToGrid(searchModel, customers, () =>
+            var model = await new ShoppingCartListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.Select(customer =>
+                return customers.SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var shoppingCartModel = new ShoppingCartModel
@@ -160,10 +167,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    shoppingCartModel.CustomerEmail = customer.IsRegistered()
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    shoppingCartModel.TotalItems = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
-                        searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Sum(item => item.Quantity);
+                    shoppingCartModel.CustomerEmail = (await _customerService.IsRegisteredAsync(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                    shoppingCartModel.TotalItems = (await _shoppingCartService
+                        .GetShoppingCartAsync(customer, searchModel.ShoppingCartType,
+                            searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate))
+                        .Sum(item => item.Quantity);
 
                     return shoppingCartModel;
                 });
@@ -177,8 +187,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shopping cart item search model</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Shopping cart item list model</returns>
-        public virtual ShoppingCartItemListModel PrepareShoppingCartItemListModel(ShoppingCartItemSearchModel searchModel, Customer customer)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart item list model
+        /// </returns>
+        public virtual async Task<ShoppingCartItemListModel> PrepareShoppingCartItemListModelAsync(ShoppingCartItemSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -187,30 +200,44 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get shopping cart items
-            var items = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
-                searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).ToPagedList(searchModel);
+            var items = (await _shoppingCartService.GetShoppingCartAsync(customer, searchModel.ShoppingCartType,
+                searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate)).ToPagedList(searchModel);
+
+            var isSearchProduct = searchModel.ProductId > 0;
+
+            Product product = null;
+
+            if (isSearchProduct)
+            {
+                product = await _productService.GetProductByIdAsync(searchModel.ProductId) ?? throw new Exception("Product is not found");
+            }
 
             //prepare list model
-            var model = new ShoppingCartItemListModel().PrepareToGrid(searchModel, items, () =>
+            var model = await new ShoppingCartItemListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.Select(item =>
+                return items
+                .OrderByDescending(item => item.CreatedOnUtc)
+                .SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
 
+                    if (!isSearchProduct)
+                        product = await _productService.GetProductByIdAsync(item.ProductId);
+
                     //convert dates to the user time
-                    itemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
+                    itemModel.UpdatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    itemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Deleted";
-                    itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml, item.Customer);
-                    var unitPrice = _priceCalculationService.GetUnitPrice(item);
-                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out var _));
-                    var subTotal = _priceCalculationService.GetSubTotal(item);
-                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));
+                    itemModel.Store = (await _storeService.GetStoreByIdAsync(item.StoreId))?.Name ?? "Deleted";
+                    itemModel.AttributeInfo = await _productAttributeFormatter.FormatAttributesAsync(product, item.AttributesXml, customer);
+                    var (unitPrice, _, _) = await _shoppingCartService.GetUnitPriceAsync(item, true);
+                    itemModel.UnitPrice = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, unitPrice)).price);
+                    var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotalAsync(item, true);
+                    itemModel.Total = await _priceFormatter.FormatPriceAsync((await _taxService.GetProductPriceAsync(product, subTotal)).price);
 
                     //set product name since it does not survive mapping
-                    itemModel.ProductName = item?.Product?.Name;
+                    itemModel.ProductName = product.Name;
 
                     return itemModel;
                 });

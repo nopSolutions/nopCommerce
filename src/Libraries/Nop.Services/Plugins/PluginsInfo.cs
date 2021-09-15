@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
@@ -11,9 +12,13 @@ namespace Nop.Services.Plugins
     /// <summary>
     /// Represents an information about plugins
     /// </summary>
-    public partial class PluginsInfo: IPluginsInfo
+    public partial class PluginsInfo : IPluginsInfo
     {
         #region Fields
+
+        private const string OBSOLETE_FIELD = "Obsolete field, using only for compatibility";
+        private List<string> _installedPluginNames = new List<string>();
+        private IList<PluginDescriptorBaseInfo> _installedPlugins = new List<PluginDescriptorBaseInfo>();
 
         protected readonly INopFileProvider _fileProvider;
 
@@ -24,8 +29,11 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Get system names of installed plugins from obsolete file
         /// </summary>
-        /// <returns>List of plugin system names</returns>
-        protected virtual IList<string> GetObsoleteInstalledPluginNames()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of plugin system names
+        /// </returns>
+        protected virtual async Task<IList<string>> GetObsoleteInstalledPluginNamesAsync()
         {
             //check whether file exists
             var filePath = _fileProvider.MapPath(NopPluginDefaults.InstalledPluginsFilePath);
@@ -38,14 +46,12 @@ namespace Nop.Services.Plugins
 
                 //get plugin system names from the old txt file
                 var pluginSystemNames = new List<string>();
-                using (var reader = new StringReader(_fileProvider.ReadAllText(filePath, Encoding.UTF8)))
+                using (var reader = new StringReader(await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8)))
                 {
                     string pluginName;
-                    while ((pluginName = reader.ReadLine()) != null)
-                    {
+                    while ((pluginName = await reader.ReadLineAsync()) != null)
                         if (!string.IsNullOrWhiteSpace(pluginName))
                             pluginSystemNames.Add(pluginName.Trim());
-                    }
                 }
 
                 //and delete the old one
@@ -54,7 +60,7 @@ namespace Nop.Services.Plugins
                 return pluginSystemNames;
             }
 
-            var text = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
+            var text = await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8);
             if (string.IsNullOrEmpty(text))
                 return new List<string>();
 
@@ -75,11 +81,12 @@ namespace Nop.Services.Plugins
             var pluginsInfo = JsonConvert.DeserializeObject<PluginsInfo>(json);
 
             InstalledPluginNames = pluginsInfo.InstalledPluginNames;
+            InstalledPlugins = pluginsInfo.InstalledPlugins;
             PluginNamesToUninstall = pluginsInfo.PluginNamesToUninstall;
             PluginNamesToDelete = pluginsInfo.PluginNamesToDelete;
             PluginNamesToInstall = pluginsInfo.PluginNamesToInstall;
 
-            return InstalledPluginNames.Any() || PluginNamesToUninstall.Any() || PluginNamesToDelete.Any() ||
+            return InstalledPlugins.Any() || PluginNamesToUninstall.Any() || PluginNamesToDelete.Any() ||
                    PluginNamesToInstall.Any();
         }
 
@@ -99,6 +106,18 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Save plugins info to the file
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task SaveAsync()
+        {
+            //save the file
+            var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
+            var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+            await _fileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Save plugins info to the file
+        /// </summary>
         public virtual void Save()
         {
             //save the file
@@ -110,23 +129,28 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Get plugins info
         /// </summary>
-        /// <returns>True if data are loaded, otherwise False</returns>
-        public virtual bool LoadPluginInfo()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if data are loaded, otherwise False
+        /// </returns>
+        public virtual async Task<bool> LoadPluginInfoAsync()
         {
             //check whether plugins info file exists
             var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
             if (!_fileProvider.FileExists(filePath))
             {
                 //file doesn't exist, so try to get only installed plugin names from the obsolete file
-                InstalledPluginNames = GetObsoleteInstalledPluginNames();
+                _installedPluginNames.AddRange(await GetObsoleteInstalledPluginNamesAsync());
 
                 //and save info into a new file if need
-                if(InstalledPluginNames.Any())
-                    Save();
+                if (_installedPluginNames.Any())
+                    await SaveAsync();
             }
 
             //try to get plugin info from the JSON file
-            var text = _fileProvider.FileExists(filePath) ? _fileProvider.ReadAllText(filePath, Encoding.UTF8) : string.Empty;
+            var text = _fileProvider.FileExists(filePath)
+                ? await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8)
+                : string.Empty;
             return !string.IsNullOrEmpty(text) && DeserializePluginInfo(text);
         }
 
@@ -136,10 +160,11 @@ namespace Nop.Services.Plugins
         /// <param name="pluginsInfo">Plugins info</param>
         public virtual void CopyFrom(IPluginsInfo pluginsInfo)
         {
-            InstalledPluginNames = pluginsInfo.InstalledPluginNames?.ToList() ?? new List<string>();
+            InstalledPlugins = pluginsInfo.InstalledPlugins?.ToList() ?? new List<PluginDescriptorBaseInfo>();
             PluginNamesToUninstall = pluginsInfo.PluginNamesToUninstall?.ToList() ?? new List<string>();
             PluginNamesToDelete = pluginsInfo.PluginNamesToDelete?.ToList() ?? new List<string>();
-            PluginNamesToInstall = pluginsInfo.PluginNamesToInstall?.ToList() ?? new List<(string SystemName, Guid? CustomerGuid)>();
+            PluginNamesToInstall = pluginsInfo.PluginNamesToInstall?.ToList() ??
+                                   new List<(string SystemName, Guid? CustomerGuid)>();
             AssemblyLoadedCollision = pluginsInfo.AssemblyLoadedCollision?.ToList();
             PluginDescriptors = pluginsInfo.PluginDescriptors?.ToList();
             IncompatiblePlugins = pluginsInfo.IncompatiblePlugins?.ToList();
@@ -152,7 +177,46 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets or sets the list of all installed plugin names
         /// </summary>
-        public virtual IList<string> InstalledPluginNames { get; set; } = new List<string>();
+        public virtual IList<string> InstalledPluginNames
+        {
+            get
+            {
+                if (_installedPlugins.Any())
+                    _installedPluginNames.Clear();
+
+                return _installedPluginNames.Any() ? _installedPluginNames : new List<string> { OBSOLETE_FIELD };
+            }
+            set
+            {
+                if (value?.Any() ?? false)
+                    _installedPluginNames = value.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the list of all installed plugin
+        /// </summary>
+        public virtual IList<PluginDescriptorBaseInfo> InstalledPlugins
+        {
+            get
+            {
+                if ((_installedPlugins?.Any() ?? false) || !_installedPluginNames.Any())
+                    return _installedPlugins;
+
+                if (PluginDescriptors?.Any() ?? false)
+                    _installedPlugins = PluginDescriptors
+                        .Where(pd => _installedPluginNames.Any(pn =>
+                            pn.Equals(pd.SystemName, StringComparison.InvariantCultureIgnoreCase)))
+                        .Select(pd => pd as PluginDescriptorBaseInfo).ToList();
+                else
+                    return _installedPluginNames
+                        .Where(name => !name.Equals(OBSOLETE_FIELD, StringComparison.InvariantCultureIgnoreCase))
+                        .Select(systemName => new PluginDescriptorBaseInfo { SystemName = systemName }).ToList();
+
+                return _installedPlugins;
+            }
+            set => _installedPlugins = value;
+        }
 
         /// <summary>
         /// Gets or sets the list of plugin names which will be uninstalled
@@ -167,7 +231,8 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets or sets the list of plugin names which will be installed
         /// </summary>
-        public virtual IList<(string SystemName, Guid? CustomerGuid)> PluginNamesToInstall { get; set; } = new List<(string SystemName, Guid? CustomerGuid)>();
+        public virtual IList<(string SystemName, Guid? CustomerGuid)> PluginNamesToInstall { get; set; } =
+            new List<(string SystemName, Guid? CustomerGuid)>();
 
         /// <summary>
         /// Gets or sets the list of plugin names which are not compatible with the current version
@@ -185,7 +250,7 @@ namespace Nop.Services.Plugins
         /// Gets or sets a collection of plugin descriptors of all deployed plugins
         /// </summary>
         [JsonIgnore]
-        public virtual IEnumerable<PluginDescriptor> PluginDescriptors { get; set; }
+        public virtual IList<PluginDescriptor> PluginDescriptors { get; set; }
 
         #endregion
     }

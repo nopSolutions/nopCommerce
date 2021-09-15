@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a currency exchange rate provider model
     /// </summary>
-    public partial class CurrencyExchangeRateProviderModel : BaseNopModel
+    public partial record CurrencyExchangeRateProviderModel : BaseNopModel
     {
         #region Ctor
 

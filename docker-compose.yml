@@ -8,7 +8,7 @@ services:
         depends_on:
             - nopcommerce_database
     nopcommerce_database:
-        image: "mcr.microsoft.com/mssql/server:2017-latest"
+        image: "mcr.microsoft.com/mssql/server:2019-latest"
         container_name: nopcommerce_mssql_server
         environment:
             SA_PASSWORD: "nopCommerce_db_password"
