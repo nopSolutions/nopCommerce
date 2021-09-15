@@ -16,6 +16,12 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
 {
     public class EcbExchangeRateProvider : BasePlugin, IExchangeRateProvider
     {
+        #region Constants
+
+        private readonly string EcbLink = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
+
+        #endregion
+        
         #region Fields
 
         private readonly IHttpClientFactory _httpClientFactory;
@@ -67,7 +73,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             try
             {
                 var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                var stream = await httpClient.GetStreamAsync("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml");
+                var stream = await httpClient.GetStreamAsync(EcbLink);
 
                 //load XML document
                 var document = new XmlDocument();
