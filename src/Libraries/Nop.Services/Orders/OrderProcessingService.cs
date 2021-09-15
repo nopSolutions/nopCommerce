@@ -1549,6 +1549,7 @@ namespace Nop.Services.Orders
                 if (processPaymentResult.Success)
                 {
                     var order = SaveOrderDetails(processPaymentRequest, processPaymentResult, details);
+
                     result.PlacedOrder = order;
 
                     //move shopping cart items to order items

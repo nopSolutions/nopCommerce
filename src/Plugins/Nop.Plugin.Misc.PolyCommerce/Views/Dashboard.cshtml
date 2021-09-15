@@ -1,0 +1,51 @@
+﻿@model ConfigureViewModel
+
+@using Nop.Plugin.Misc.PolyCommerce.Models
+
+@{
+  Layout = "_AdminLayout";
+}
+
+<style>
+  body, .wrapper {
+    overflow-y: hidden !important;
+  }
+
+  iframe, object, embed {
+    max-width: 100%;
+  }
+</style>
+
+<iframe id="poly-frame" style="width: 100%; height: 100%; border: none" frameborder="0" noresize="noresize" src="@(Model.PolyCommerceBaseUrl)/account/login?token=@(Model.UserToken)"></iframe>
+
+<script>
+
+  $(document).ready(function () {
+
+
+
+    (function () {
+      orig = $.fn.css;
+      $.fn.css = function () {
+        var result = orig.apply(this, arguments);
+        $(this).trigger('stylechanged');
+        return result;
+      }
+    })();
+
+    function handleResize() {
+      setTimeout(function () {
+        var height = parseInt($(".content-wrapper").css("min-height"));
+        $("#poly-frame").height(height - 5);
+      }, 0);
+    }
+
+    handleResize();
+
+    // resize iframe when content-wrapper changes height
+    $(".content-wrapper").on('stylechanged', function () {
+      handleResize();
+    });
+
+  });
+</script>
