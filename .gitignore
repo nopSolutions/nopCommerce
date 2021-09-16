@@ -19,9 +19,6 @@ x64/
 [Bb]in/
 [Oo]bj/
 
-#Rider
-.idea/
-
 # Build scripts folder
 [Aa]pp[Bb]uild/
 [Oo]ut/
