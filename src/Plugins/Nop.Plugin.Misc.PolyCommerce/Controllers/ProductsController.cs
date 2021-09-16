@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +11,11 @@ using Nop.Plugin.Misc.PolyCommerce.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Media;
 using Nop.Services.Seo;
+using Dapper;
+using Nop.Plugin.Misc.PolyCommerce.Models.Dto;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 {
-
     public class ProductsController : Controller
     {
         private readonly IRepository<Product> _productRepository;
@@ -49,7 +51,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 100, string minModifiedDateStr = null, string maxModifiedDateStr = null)
         {
-
+            var dataSettings = await DataSettingsManager.LoadSettingsAsync();
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
 
             var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
@@ -110,13 +112,33 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 count = await _productRepository.Table
                 .CountAsync(x => !x.Deleted && x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct);
             }
+
+            var productIds = products.Select(x => x.Id);
+
+            Dictionary<int, List<SpecificationAttributeMappingDto>> specificationAttributeMappings = new Dictionary<int, List<SpecificationAttributeMappingDto>>();
+
+            using (var conn = new SqlConnection(dataSettings.ConnectionString))
+            {
+                var attributeMappings = await conn.QueryAsync<SpecificationAttributeMappingDto>(@"select 
+                                                                                                p.Id as ProductId,
+                                                                                                sa.[Name] as [Label], 
+                                                                                                sao.[Name] as [Value]
+                                                                                                from Product p
+                                                                                                join [dbo].[Product_SpecificationAttribute_Mapping] psm on psm.ProductId = p.Id
+                                                                                                join SpecificationAttributeOption sao on sao.Id = psm.SpecificationAttributeOptionId
+                                                                                                join SpecificationAttribute sa on sa.Id = sao.SpecificationAttributeId
+                                                                                                where p.Id in @ProductIds", new { ProductIds = productIds });
+
+                specificationAttributeMappings = attributeMappings.GroupBy(x => x.ProductId).ToDictionary(x => x.Key, v => v.ToList());
+            }
+
             List<PolyCommerceProduct> mappedProducts = new List<PolyCommerceProduct>();
 
             foreach(var product in products)
             {
-                var model = await PreparePolyCommerceModel(product);
+                var model = await PreparePolyCommerceModel(product, specificationAttributeMappings);
                 mappedProducts.Add(model);
-            } 
+            }
 
             var response = new PolyCommerceApiResponse<PolyCommerceProduct>
             {
@@ -138,15 +160,13 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             return Ok(new { Success = true });
         }
 
-        private async Task<PolyCommerceProduct> PreparePolyCommerceModel(Product product)
+        private async Task<PolyCommerceProduct> PreparePolyCommerceModel(Product product, Dictionary<int, List<SpecificationAttributeMappingDto>> specificationAttributeMappings)
         {
             var categories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
             var productPictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
             var productAttributeCombinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
-            //var productAttributes = await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id);
-            //var productAttributeOptions = await _productAttributeService.GetProductAttributeByIdsAsync(productAttributes.Select(x => x.Id).ToArray());
 
-            //var productAttributeOptions2 = await _specificationAttributeService.GetProductSpecificationAttributeGroupsAsync(product.Id);
+            var specificationAttributes = specificationAttributeMappings.TryGetValue(product.Id, out var vals) ? vals : new List<SpecificationAttributeMappingDto>();
 
             List<string> images = new List<string>();
 
@@ -179,7 +199,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 Condition = "NEW",
                 Gtin = product.Gtin,
                 Images = string.Join(",", images),
-                //ProductAttributes = productAttributeOptions2.Select(x => new PolyCommerceProductAttribute { Name = x.SpecificationAttributeOption.SpecificationAttribute.Name, Value = x.SpecificationAttributeOption.Name }).ToList()
+                ProductAttributes = specificationAttributes.Select(x => new PolyCommerceProductAttribute { Name = x.Label, Value = x.Value }).ToList()
             };
 
             if (productAttributeCombinations != null && productAttributeCombinations.Any())
@@ -205,6 +225,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                             ProductVariationOptionValues = new List<PolyCommerceProductVariationOptionValue>(),
                             Images = imageUrl
                         };
+
+                        var attributeIds = attributes.Select(x => x.ProductAttributeId);
+                        var attributeLookup = await _productAttributeService.GetProductAttributeByIdsAsync(attributeIds.ToArray());
 
                         foreach (var attribute in attributes)
                         {
@@ -237,26 +260,20 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                                 AddProductVariationError(mappedProduct, "attributeValueId could not be parsed as an int. Please contact PolyCommerce support.");
                                 return mappedProduct;
                             }
+                            
+                            var values = await _productAttributeParser.ParseProductAttributeValuesAsync(productAttrComb.AttributesXml);
+                            var value = values.FirstOrDefault(x => x.Id == attributeValueIdVal);
 
-                            //if (attribute.ProductAttributeValues == null || !attribute.ProductAttributeValues.Any())
-                            //{
-                            //    AddProductVariationError(mappedProduct, $"ProductAttributeValues can't be null or empty. Please contact PolyCommerce support.");
-                            //    return mappedProduct;
-                            //}
+                            var option = attributeLookup.FirstOrDefault(x => x.Id == attribute.ProductAttributeId);
 
-                            //var combinationValue = attribute.ProductAttributeValues.FirstOrDefault(x => x.Id == attributeValueIdVal);
-
-                            //if (combinationValue == null)
-                            //{
-                            //    AddProductVariationError(mappedProduct, $"combinationValue could not be found via AttributeValueTypeId {attributeValueIdVal}. Please contact PolyCommerce support.");
-                            //    return mappedProduct;
-                            //}
-
-                            //variation.ProductVariationOptionValues.Add(new PolyCommerceProductVariationOptionValue
-                            //{
-                            //    Option = attribute.ProductAttribute.Name,
-                            //    Value = combinationValue.Name
-                            //});
+                            if (option != null && value != null)
+                            {
+                                variation.ProductVariationOptionValues.Add(new PolyCommerceProductVariationOptionValue
+                                {
+                                    Option = option.Name,
+                                    Value = value.Name
+                                });
+                            }
                         }
 
                         mappedProduct.ProductVariations.Add(variation);
@@ -268,7 +285,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     return mappedProduct;
                 }
             }
-
 
             if (product.ParentGroupedProductId > 0 && string.IsNullOrWhiteSpace(mappedProduct.Description))
             {
