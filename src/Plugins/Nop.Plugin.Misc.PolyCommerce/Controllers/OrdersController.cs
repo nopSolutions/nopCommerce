@@ -21,6 +21,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Core.Events;
+using System.Data.SqlClient;
+using Dapper;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 {
@@ -361,6 +363,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         [Route("api/polycommerce/orders/check_for_shipped_orders")]
         public async Task<IActionResult> CheckForShippedOrders([FromBody] PolyCommerceCheckForShippedOrdersModel model)
         {
+            var dataSettings = DataSettingsManager.LoadSettings();
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
 
             var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
@@ -380,12 +383,17 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 throw new Exception("Expected at least one OrderIds element.");
             }
 
-            var orders = await _orderRepository.Table
-                .Where(x => model.OrderIds.Any(y => y == x.Id) && x.ShippingStatusId > (int)ShippingStatus.NotYetShipped)
-                .Select(x => new PolyCommerceCheckForShippedOrdersResult { OrderId = x.Id, Shipped = true })
-                .ToListAsync();
+            var orderQuery = @"select Id as OrderId,
+                               1 as Shipped
+                               from dbo.[Order]
+                               where Id in @OrderIds
+                               and ShippingStatusId > @ShippingStatusId";
 
-            return Ok(orders);
+            using (var conn = new SqlConnection(dataSettings.ConnectionString))
+            {
+                var orders = await conn.QueryAsync<PolyCommerceCheckForShippedOrdersResult>(orderQuery, new { OrderIds = model.OrderIds, ShippingStatusId = (int)ShippingStatus.NotYetShipped });
+                return Ok(orders);
+            }
         }
 
     }
