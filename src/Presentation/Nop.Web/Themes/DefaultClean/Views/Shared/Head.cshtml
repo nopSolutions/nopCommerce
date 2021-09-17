@@ -6,11 +6,11 @@
     //add main CSS file
     if (await Html.ShouldUseRtlThemeAsync(themeName))
     {
-        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css?v=1.0");
     }
     else
     {
-        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css");
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css?v=1.0");
     }
 
     //add jQuery UI css file
