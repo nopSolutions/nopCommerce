@@ -1,9 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Data;
 using Nop.Data.Migrations;
-using Nop.Plugin.ExchangeRate.EcbExchange;
 using Nop.Services.Configuration;
-using Nop.Services.Localization;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
 { 
@@ -14,8 +12,6 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
         #region Fields
 
         private readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -23,13 +19,9 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
         #region Ctor
 
         public ExchangeEcbMigration(EcbExchangeRateSettings ecbExchangeRateSettings,
-            ILanguageService languageService,
-            ILocalizationService localizationService,
             ISettingService settingService)
         {
             _ecbExchangeRateSettings = ecbExchangeRateSettings;
-            _languageService = languageService;
-            _localizationService = localizationService;
             _settingService = settingService;
         }
 

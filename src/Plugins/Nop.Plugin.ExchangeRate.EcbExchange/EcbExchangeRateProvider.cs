@@ -19,11 +19,11 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
     {
         #region Fields
 
+        private readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly ISettingService _settingService;
-        private readonly EcbExchangeRateSettings _ecbExchangeRateSettings;
 
         #endregion
 
@@ -35,11 +35,11 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             ILogger logger,
             ISettingService settingService)
         {
+            _ecbExchangeRateSettings = ecbExchangeRateSettings;
             _httpClientFactory = httpClientFactory;
             _localizationService = localizationService;
             _logger = logger;
             _settingService = settingService;
-            _ecbExchangeRateSettings = ecbExchangeRateSettings;
         }
 
         #endregion
