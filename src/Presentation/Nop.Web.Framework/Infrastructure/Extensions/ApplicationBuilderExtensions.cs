@@ -66,15 +66,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //update nopCommerce core and db
                 var migrationManager = engine.Resolve<IMigrationManager>();
                 var assembly = Assembly.GetAssembly(typeof(ApplicationBuilderExtensions));
-                migrationManager.ApplyUpMigrations(assembly, true);
+                migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
                 assembly = Assembly.GetAssembly(typeof(IMigrationManager));
-                migrationManager.ApplyUpMigrations(assembly, true);
-
-#if DEBUG
-                //prevent save the update migrations into the DB during the developing process  
-                var versions = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
-                versions.DeleteAsync(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
-#endif
+                migrationManager.ApplyUpMigrations(assembly, MigrationProcessType.Update);
             }
         }
 

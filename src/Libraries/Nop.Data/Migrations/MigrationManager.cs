@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 using FluentMigrator;
-using FluentMigrator.Builders.Create;
-using FluentMigrator.Builders.Create.Table;
-using FluentMigrator.Builders.IfDatabase;
-using FluentMigrator.Expressions;
 using FluentMigrator.Infrastructure;
-using FluentMigrator.Model;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Data.Mapping;
-using Nop.Data.Mapping.Builders;
 
 namespace Nop.Data.Migrations
 {
@@ -50,17 +42,35 @@ namespace Nop.Data.Migrations
         #endregion
 
         #region Utils
-
+        
         /// <summary>
         /// Returns the instances for found types implementing FluentMigrator.IMigration
         /// </summary>
-        /// <param name="assembly"></param>
+        /// <param name="assembly">Assembly to find migrations</param>
+        /// <param name="migrationProcessType">Type of migration process; pass null to load all migrations</param>
         /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
-        private IEnumerable<IMigrationInfo> GetMigrations(Assembly assembly)
+        protected virtual IEnumerable<IMigrationInfo> GetMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.NoMatter)
         {
-            var migrations = _filteringMigrationSource.GetMigrations(t => assembly == null || t.Assembly == assembly) ?? Enumerable.Empty<IMigration>();
+            var migrations = _filteringMigrationSource
+                .GetMigrations(t =>
+                {
+                    var migrationAttribute = t.GetCustomAttribute<NopMigrationAttribute>();
+                    if (migrationAttribute is null || _versionLoader.Value.VersionInfo.HasAppliedMigration(migrationAttribute.Version))
+                        return false;
 
-            return migrations.Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m)).OrderBy(migration => migration.Version);
+                    if (migrationAttribute.TargetMigrationProcess != MigrationProcessType.NoMatter &&
+                        migrationProcessType != MigrationProcessType.NoMatter &&
+                        migrationProcessType != migrationAttribute.TargetMigrationProcess)
+                        return false;
+
+                    return assembly == null || t.Assembly == assembly;
+                }) ?? Enumerable.Empty<IMigration>();
+
+            return migrations
+                .Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m))
+                //.OrderBy(m => m.Migration.GetType().GetCustomAttribute<NopMigrationAttribute>().MigrationTarget)
+                //.ThenBy(migration => migration.Version);
+                .OrderBy(migration => migration.Version);
         }
 
         #endregion
@@ -68,30 +78,29 @@ namespace Nop.Data.Migrations
         #region Methods
 
         /// <summary>
-        /// Executes all found (and unapplied) migrations
+        /// Executes an Up for all found unapplied migrations
         /// </summary>
-        /// <param name="assembly">Assembly to find the migration</param>
-        /// <param name="isUpdateProcess">Indicates whether the upgrade or installation process is ongoing. True - if an upgrade process</param>
-        public void ApplyUpMigrations(Assembly assembly, bool isUpdateProcess = false)
+        /// <param name="assembly">Assembly to find migrations</param>
+        /// <param name="migrationProcessType">Type of migration process</param>
+        public virtual void ApplyUpMigrations(Assembly assembly, MigrationProcessType migrationProcessType = MigrationProcessType.Installation)
         {
-            if(assembly is null)
+            if (assembly is null)
                 throw new ArgumentNullException(nameof(assembly));
 
-            var migrations = GetMigrations(assembly);
-
-            bool needToExecute(IMigrationInfo migrationInfo1)
+            foreach (var migrationInfo in GetMigrations(assembly, migrationProcessType))
             {
-                var skip = migrationInfo1.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any() || isUpdateProcess && migrationInfo1.Migration.GetType()
-                    .GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any() || !isUpdateProcess && migrationInfo1.Migration.GetType()
-                    .GetCustomAttributes(typeof(SkipMigrationOnInstallAttribute)).Any();
+                _migrationRunner.Up(migrationInfo.Migration);
 
-                return !skip;
+#if DEBUG
+                if (!string.IsNullOrEmpty(migrationInfo.Description) &&
+                    migrationInfo.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)))
+                    continue;
+#endif
+                _versionLoader.Value
+                    .UpdateVersionInfo(migrationInfo.Version, migrationInfo.Description ?? migrationInfo.Migration.GetType().Name);
             }
-
-            foreach (var migrationInfo in migrations.Where(needToExecute))
-                    _migrationRunner.MigrateUp(migrationInfo.Version);
         }
-
+        
         /// <summary>
         /// Executes all found (and unapplied) migrations
         /// </summary>
@@ -105,9 +114,6 @@ namespace Nop.Data.Migrations
 
             foreach (var migrationInfo in migrations)
             {
-                if (migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any())
-                    continue;
-
                 _migrationRunner.Down(migrationInfo.Migration);
                 _versionLoader.Value.DeleteVersion(migrationInfo.Version);
             }

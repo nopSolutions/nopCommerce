@@ -5,8 +5,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange.Data
 { 
-    [NopMigration("2021-09-16 00:00:00", "ExchangeRate.EcbExchange 1.30. Add setting for url for ECB")]
-    [SkipMigrationOnInstall]
+    [NopMigration("2021-09-16 00:00:00", "ExchangeRate.EcbExchange 1.30. Add setting for url for ECB", MigrationProcessType.Update)]
     public class ExchangeEcbMigration : MigrationBase
     {
         #region Fields

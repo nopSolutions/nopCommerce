@@ -10,8 +10,7 @@ using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Migrations.Installation
 {
-    [NopMigration("2020/03/17 11:26:08:9037680")]
-    [SkipMigrationOnUpdate]
+    [NopMigration("2020/03/17 11:26:08:9037680", MigrationProcessType.Installation)]
     public class AddOrderRewardPointsHistoryFK : AutoReversingMigration
     {
         #region Methods          
