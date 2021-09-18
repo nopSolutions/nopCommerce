@@ -62,15 +62,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
-            //add configuration parameters
-            var appSettings = new AppSettings();
-            configuration.Bind(appSettings);
-            services.AddSingleton(appSettings);
-            AppSettingsHelper.SaveAppSettings(appSettings);
-
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
-            mvcCoreBuilder.PartManager.InitializePlugins(appSettings);
+            var pluginConfig = new PluginConfig();
+            configuration.GetSection(nameof(PluginConfig)).Bind(pluginConfig, options => options.BindNonPublicProperties = true);
+            mvcCoreBuilder.PartManager.InitializePlugins(pluginConfig);
+
+            //add configuration parameters
+            var typeFinder = new WebAppTypeFinder();
+            var configurations = typeFinder
+                .FindClassesOfType<IConfig>()
+                .Select(configType => (IConfig)Activator.CreateInstance(configType))
+                .ToList();
+            foreach (var config in configurations)
+            {
+                configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
+            }
+            var appSettings = AppSettingsHelper.SaveAppSettings(configurations);
+            services.AddSingleton(appSettings);
 
             //create engine and configure service provider
             var engine = EngineContext.Create();
@@ -163,7 +172,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddDistributedCache(this IServiceCollection services)
         {
             var appSettings = Singleton<AppSettings>.Instance;
-            var distributedCacheConfig = appSettings.DistributedCacheConfig;
+            var distributedCacheConfig = appSettings.Get<DistributedCacheConfig>();
 
             if (!distributedCacheConfig.Enabled)
                 return;
@@ -199,18 +208,18 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopDataProtection(this IServiceCollection services)
         {
             var appSettings = Singleton<AppSettings>.Instance;
-            if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
+            if (appSettings.Get<AzureBlobConfig>().Enabled && appSettings.Get<AzureBlobConfig>().StoreDataProtectionKeys)
             {
-                var blobServiceClient = new BlobServiceClient(appSettings.AzureBlobConfig.ConnectionString);
-                var blobContainerClient = blobServiceClient.GetBlobContainerClient(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);
+                var blobServiceClient = new BlobServiceClient(appSettings.Get<AzureBlobConfig>().ConnectionString);
+                var blobContainerClient = blobServiceClient.GetBlobContainerClient(appSettings.Get<AzureBlobConfig>().DataProtectionKeysContainerName);
                 var blobClient = blobContainerClient.GetBlobClient(NopDataProtectionDefaults.AzureDataProtectionKeyFile);
 
                 var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(blobClient);
 
-                if (!appSettings.AzureBlobConfig.DataProtectionKeysEncryptWithVault)
+                if (!appSettings.Get<AzureBlobConfig>().DataProtectionKeysEncryptWithVault)
                     return;
 
-                var keyIdentifier = appSettings.AzureBlobConfig.DataProtectionKeysVaultId;
+                var keyIdentifier = appSettings.Get<AzureBlobConfig>().DataProtectionKeysVaultId;
                 var credentialOptions = new DefaultAzureCredentialOptions();
                 var tokenCredential = new DefaultAzureCredential(credentialOptions);
 
@@ -283,7 +292,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             mvcBuilder.AddRazorRuntimeCompilation();
 
             var appSettings = Singleton<AppSettings>.Instance;
-            if (appSettings.CommonConfig.UseSessionStateTempDataProvider)
+            if (appSettings.Get<CommonConfig>().UseSessionStateTempDataProvider)
             {
                 //use session-based temp data provider
                 mvcBuilder.AddSessionStateTempDataProvider();
@@ -355,12 +364,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 return;
 
             var appSettings = Singleton<AppSettings>.Instance;
-            if (appSettings.CommonConfig.MiniProfilerEnabled)
+            if (appSettings.Get<CommonConfig>().MiniProfilerEnabled)
             {
                 services.AddMiniProfiler(miniProfilerOptions =>
                 {
                     //use memory cache provider for storing each result
-                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.CacheConfig.DefaultCacheTime);
+                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.Get<CacheConfig>().DefaultCacheTime);
 
                     //determine who can access the MiniProfiler results
                     miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().AuthorizeAsync(StandardPermissionProvider.AccessProfiling).Result;

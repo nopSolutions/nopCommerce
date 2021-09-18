@@ -754,13 +754,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var currentStaticCacheManagerName = _staticCacheManager.GetType().Name;
 
-            if (_appSettings.DistributedCacheConfig.Enabled)
+            if (_appSettings.Get<DistributedCacheConfig>().Enabled)
                 currentStaticCacheManagerName +=
-                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.DistributedCacheConfig.DistributedCacheType)})";
+                    $"({await _localizationService.GetLocalizedEnumAsync(_appSettings.Get<DistributedCacheConfig>().DistributedCacheType)})";
 
             model.CurrentStaticCacheManager = currentStaticCacheManagerName;
 
-            model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
+            model.AzureBlobStorageEnabled = _appSettings.Get<AzureBlobConfig>().Enabled;
 
             return model;
         }

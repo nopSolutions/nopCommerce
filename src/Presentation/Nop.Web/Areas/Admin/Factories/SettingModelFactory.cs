@@ -779,16 +779,16 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             model ??= new AppSettingsModel
             {
-                CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
-                HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
-                DistributedCacheConfigModel = _appSettings.DistributedCacheConfig.ToConfigModel<DistributedCacheConfigModel>(),
-                AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
-                InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
-                PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
-                CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
+                CacheConfigModel = _appSettings.Get<CacheConfig>().ToConfigModel<CacheConfigModel>(),
+                HostingConfigModel = _appSettings.Get<HostingConfig>().ToConfigModel<HostingConfigModel>(),
+                DistributedCacheConfigModel = _appSettings.Get<DistributedCacheConfig>().ToConfigModel<DistributedCacheConfigModel>(),
+                AzureBlobConfigModel = _appSettings.Get<AzureBlobConfig>().ToConfigModel<AzureBlobConfigModel>(),
+                InstallationConfigModel = _appSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
+                PluginConfigModel = _appSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
+                CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>()
             };
 
-            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.DistributedCacheConfig.DistributedCacheType.ToSelectListAsync();
+            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.Get<DistributedCacheConfig>().DistributedCacheType.ToSelectListAsync();
 
             model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
                                                 where property.Name != nameof(AppSettingsModel.EnvironmentVariables)

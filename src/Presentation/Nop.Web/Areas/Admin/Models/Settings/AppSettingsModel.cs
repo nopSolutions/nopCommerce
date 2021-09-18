@@ -1,6 +1,4 @@
-﻿using Azure.Storage.Blobs.Models;
-using Nop.Core.Configuration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -31,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public CacheConfigModel CacheConfigModel { get; set; }
 
         public HostingConfigModel HostingConfigModel { get; set; }
-        
+
         public DistributedCacheConfigModel DistributedCacheConfigModel { get; set; }
 
         public AzureBlobConfigModel AzureBlobConfigModel { get; set; }

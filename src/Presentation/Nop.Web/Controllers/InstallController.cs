@@ -114,8 +114,8 @@ namespace Nop.Web.Controllers
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                InstallRegionalResources = _appSettings.InstallationConfig.InstallRegionalResources,
-                DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData,
+                InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources,
+                DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
                 DataProvider = DataProviderType.SqlServer
@@ -135,8 +135,8 @@ namespace Nop.Web.Controllers
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
-            model.DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData;
-            model.InstallRegionalResources = _appSettings.InstallationConfig.InstallRegionalResources;
+            model.DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData;
+            model.InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources;
 
             PrepareAvailableDataProviders(model);
             PrepareLanguageList(model);
@@ -256,9 +256,9 @@ namespace Nop.Web.Controllers
                 pluginService.ClearInstalledPluginsList();
 
                 var pluginsIgnoredDuringInstallation = new List<string>();
-                if (!string.IsNullOrEmpty(_appSettings.InstallationConfig.DisabledPlugins))
+                if (!string.IsNullOrEmpty(_appSettings.Get<InstallationConfig>().DisabledPlugins))
                 {
-                    pluginsIgnoredDuringInstallation = _appSettings.InstallationConfig.DisabledPlugins
+                    pluginsIgnoredDuringInstallation = _appSettings.Get<InstallationConfig>().DisabledPlugins
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 

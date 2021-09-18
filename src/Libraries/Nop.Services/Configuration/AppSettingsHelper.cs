@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
@@ -16,52 +17,40 @@ namespace Nop.Services.Configuration
         #region Methods
 
         /// <summary>
-        /// Save app settings to the file
+        /// Create app settings with the passed configurations and save it to the file
         /// </summary>
-        /// <param name="appSettings">App settings</param>
+        /// <param name="configurations">Configurations to save</param>
         /// <param name="fileProvider">File provider</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public static async Task SaveAppSettingsAsync(AppSettings appSettings, INopFileProvider fileProvider = null)
+        /// <returns>App settings</returns>
+        public static AppSettings SaveAppSettings(IList<IConfig> configurations, INopFileProvider fileProvider = null)
         {
-            Singleton<AppSettings>.Instance = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
+            if (configurations is null)
+                throw new ArgumentNullException(nameof(configurations));
 
-            fileProvider ??= CommonHelper.DefaultFileProvider;
+            //create app settings
+            var appSettings = new AppSettings(configurations);
+            Singleton<AppSettings>.Instance = appSettings;
 
             //create file if not exists
+            fileProvider ??= CommonHelper.DefaultFileProvider;
             var filePath = fileProvider.MapPath(NopConfigurationDefaults.AppSettingsFilePath);
             fileProvider.CreateFile(filePath);
 
-            //check additional configuration parameters
-            var additionalData = JsonConvert.DeserializeObject<AppSettings>(await fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8))?.AdditionalData;
-            appSettings.AdditionalData = additionalData;
-
-            //save app settings to the file
-            var text = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
-            await fileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
-        }
-
-        /// <summary>
-        /// Save app settings to the file
-        /// </summary>
-        /// <param name="appSettings">App settings</param>
-        /// <param name="fileProvider">File provider</param>
-        public static void SaveAppSettings(AppSettings appSettings, INopFileProvider fileProvider = null)
-        {
-            Singleton<AppSettings>.Instance = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
-
-            fileProvider ??= CommonHelper.DefaultFileProvider;
-
-            //create file if not exists
-            var filePath = fileProvider.MapPath(NopConfigurationDefaults.AppSettingsFilePath);
-            fileProvider.CreateFile(filePath);
-
-            //check additional configuration parameters
-            var additionalData = JsonConvert.DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))?.AdditionalData;
-            appSettings.AdditionalData = additionalData;
+            //get raw configuration parameters
+            var configuration = JsonConvert.DeserializeObject<AppSettings>(fileProvider.ReadAllText(filePath, Encoding.UTF8))
+                ?.Configuration
+                ?? new();
+            foreach (var config in configurations)
+            {
+                configuration[config.Name] = JToken.FromObject(config);
+            }
+            appSettings.Configuration = configuration;
 
             //save app settings to the file
             var text = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
             fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+
+            return appSettings;
         }
 
         #endregion

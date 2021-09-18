@@ -25,6 +25,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication.MultiFactor;
@@ -63,6 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
         private readonly IEncryptionService _encryptionService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -92,6 +94,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             INopDataProvider dataProvider,
             IEncryptionService encryptionService,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IGdprService gdprService,
             ILocalizedEntityService localizedEntityService,
@@ -117,6 +120,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerService = customerService;
             _dataProvider = dataProvider;
             _encryptionService = encryptionService;
+            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _gdprService = gdprService;
             _localizedEntityService = localizedEntityService;
@@ -200,16 +204,20 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var appSettings = _appSettings;
-                appSettings.CacheConfig = model.CacheConfigModel.ToConfig(appSettings.CacheConfig);
-                appSettings.HostingConfig = model.HostingConfigModel.ToConfig(appSettings.HostingConfig);
-                appSettings.DistributedCacheConfig =
-                    model.DistributedCacheConfigModel.ToConfig(appSettings.DistributedCacheConfig);
-                appSettings.AzureBlobConfig = model.AzureBlobConfigModel.ToConfig(appSettings.AzureBlobConfig);
-                appSettings.InstallationConfig = model.InstallationConfigModel.ToConfig(appSettings.InstallationConfig);
-                appSettings.PluginConfig = model.PluginConfigModel.ToConfig(appSettings.PluginConfig);
-                appSettings.CommonConfig = model.CommonConfigModel.ToConfig(appSettings.CommonConfig);
-                await AppSettingsHelper.SaveAppSettingsAsync(appSettings, _fileProvider);
+                var configurations = new List<IConfig>
+                {
+                    model.CacheConfigModel.ToConfig(_appSettings.Get<CacheConfig>()),
+                    model.HostingConfigModel.ToConfig(_appSettings.Get<HostingConfig>()),
+                    model.DistributedCacheConfigModel.ToConfig(_appSettings.Get<DistributedCacheConfig>()),
+                    model.AzureBlobConfigModel.ToConfig(_appSettings.Get<AzureBlobConfig>()),
+                    model.InstallationConfigModel.ToConfig(_appSettings.Get<InstallationConfig>()),
+                    model.PluginConfigModel.ToConfig(_appSettings.Get<PluginConfig>()),
+                    model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>())
+                };
+
+                await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));
+
+                AppSettingsHelper.SaveAppSettings(configurations, _fileProvider);
 
                 await _customerActivityService.InsertActivityAsync("EditSettings",
                     await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
@@ -1998,7 +2006,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DistributedCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and distributed cache is used, so display warning
-            if (_appSettings.DistributedCacheConfig.Enabled && _appSettings.DistributedCacheConfig.DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
+            if (_appSettings.Get<DistributedCacheConfig>().Enabled && _appSettings.Get<DistributedCacheConfig>().DistributedCacheType != DistributedCacheType.Memory && loadAllLocaleRecordsOnStartup)
             {
                 return Json(new
                 {

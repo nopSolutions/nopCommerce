@@ -145,7 +145,11 @@ namespace Nop.Tests
                 .ToArray();
 
             //add configuration parameters
-            var appSettings = new AppSettings();
+            var configurations = typeFinder
+                .FindClassesOfType<IConfig>()
+                .Select(configType => (IConfig)Activator.CreateInstance(configType))
+                .ToList();
+            var appSettings = new AppSettings(configurations);
             services.AddSingleton(appSettings);
             Singleton<AppSettings>.Instance = appSettings;
 

@@ -71,6 +71,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5316
                 ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in to another account.",
+
+                //#5511
+                ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a different configuration providers (e.g. external appsettings.json configuration file, environment variables, etc). These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"{0}\" target=\"_blank\">our documentation</a>. Please note that changing the values here will overwrite the external appsettings.json file, settings from other configuration providers will not be affected.",
             }, languageId).Wait();
 
             // rename locales
