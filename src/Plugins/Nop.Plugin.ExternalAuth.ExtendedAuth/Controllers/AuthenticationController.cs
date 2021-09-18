@@ -307,7 +307,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
 
             bool isApproved = false;
             string email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
-            if (string.IsNullOrEmpty(email))
+            if (!string.IsNullOrEmpty(email))
             {
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
                 var customerService = EngineContext.Current.Resolve<ICustomerService>();
