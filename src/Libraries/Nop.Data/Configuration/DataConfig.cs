@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using System.Configuration;
+using FluentMigrator.Runner.Initialization;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nop.Core.Configuration;
 
-namespace Nop.Data
+namespace Nop.Data.Configuration
 {
-    public partial class DataConfig : IConfig
+    public partial class DataConfig : IConfig, IConnectionStringAccessor
     {
         /// <summary>
         /// Gets or sets a connection string
@@ -23,5 +25,17 @@ namespace Nop.Data
         /// Set 0 to use infinite timeout.
         /// </summary>
         public int? SQLCommandTimeout { get; set; } = null;
+
+        /// <summary>
+        /// Gets a section name to load configuration
+        /// </summary>
+        [JsonIgnore]
+        public string Name => nameof(ConfigurationManager.ConnectionStrings);
+
+        /// <summary>
+        /// Gets an order of configuration
+        /// </summary>
+        /// <returns>Order</returns>
+        public int GetOrder() => 0; //display first
     }
 }

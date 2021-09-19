@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Nop.Core;
-using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Services.Configuration
+namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents the app settings helper
@@ -21,19 +20,21 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="configurations">Configurations to save</param>
         /// <param name="fileProvider">File provider</param>
+        /// <param name="overwrite">Whether to overwrite appsettings file</param>
         /// <returns>App settings</returns>
-        public static AppSettings SaveAppSettings(IList<IConfig> configurations, INopFileProvider fileProvider = null)
+        public static AppSettings SaveAppSettings(IList<IConfig> configurations, INopFileProvider fileProvider, bool overwrite = true)
         {
             if (configurations is null)
                 throw new ArgumentNullException(nameof(configurations));
 
             //create app settings
-            var appSettings = new AppSettings(configurations);
+            var appSettings = Singleton<AppSettings>.Instance ?? new AppSettings();
+            appSettings.Update(configurations);
             Singleton<AppSettings>.Instance = appSettings;
 
             //create file if not exists
-            fileProvider ??= CommonHelper.DefaultFileProvider;
             var filePath = fileProvider.MapPath(NopConfigurationDefaults.AppSettingsFilePath);
+            var fileExists = fileProvider.FileExists(filePath);
             fileProvider.CreateFile(filePath);
 
             //get raw configuration parameters
@@ -44,11 +45,21 @@ namespace Nop.Services.Configuration
             {
                 configuration[config.Name] = JToken.FromObject(config);
             }
-            appSettings.Configuration = configuration;
+
+            //sort configurations for display by order (e.g. data configuration with 0 will be the first)
+            appSettings.Configuration = configuration
+                .SelectMany(outConfig => configurations.Where(inConfig => inConfig.Name == outConfig.Key).DefaultIfEmpty(),
+                    (outConfig, inConfig) => new { OutConfig = outConfig, InConfig = inConfig })
+                .OrderBy(config => config.InConfig?.GetOrder() ?? int.MaxValue)
+                .Select(config => config.OutConfig)
+                .ToDictionary(config => config.Key, config => config.Value);
 
             //save app settings to the file
-            var text = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
-            fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            if (!fileExists || overwrite)
+            {
+                var text = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
+                fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            }
 
             return appSettings;
         }

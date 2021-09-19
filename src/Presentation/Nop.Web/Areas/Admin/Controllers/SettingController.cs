@@ -28,6 +28,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -213,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.InstallationConfigModel.ToConfig(_appSettings.Get<InstallationConfig>()),
                     model.PluginConfigModel.ToConfig(_appSettings.Get<PluginConfig>()),
                     model.CommonConfigModel.ToConfig(_appSettings.Get<CommonConfig>()),
-                    model.DataConfigModel.ToConfig(appSettings.Get<DataConfig>())
+                    model.DataConfigModel.ToConfig(_appSettings.Get<DataConfig>())
                 };
 
                 await _eventPublisher.PublishAsync(new AppSettingsSavingEvent(configurations));

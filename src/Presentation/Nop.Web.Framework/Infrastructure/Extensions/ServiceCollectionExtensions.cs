@@ -24,7 +24,6 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
-using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
@@ -78,7 +77,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 configuration.GetSection(config.Name).Bind(config, options => options.BindNonPublicProperties = true);
             }
-            var appSettings = AppSettingsHelper.SaveAppSettings(configurations);
+            var appSettings = AppSettingsHelper.SaveAppSettings(configurations, CommonHelper.DefaultFileProvider, false);
             services.AddSingleton(appSettings);
 
             //create engine and configure service provider
@@ -88,28 +87,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             engine.RegisterDependencies(services, appSettings);
 
             return (engine, appSettings);
-        }
-
-        /// <summary>
-        /// Create, bind and register as service the specified configuration parameters 
-        /// </summary>
-        /// <typeparam name="TConfig">Configuration parameters</typeparam>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Set of key/value application configuration properties</param>
-        /// <returns>Instance of configuration parameters</returns>
-        public static TConfig AddConfig<TConfig>(this IServiceCollection services, IConfiguration configuration)
-            where TConfig : class, IConfig, new()
-        {
-            //create instance of config
-            var config = new TConfig();
-
-            //bind it to the appropriate section of configuration
-            configuration.Bind(config.Name, config);
-
-            //and register it as a service
-            services.AddSingleton(config);
-
-            return config;
         }
 
         /// <summary>

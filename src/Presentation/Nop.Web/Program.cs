@@ -3,7 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Nop.Services.Configuration;
+using Nop.Core.Configuration;
 
 namespace Nop.Web
 {

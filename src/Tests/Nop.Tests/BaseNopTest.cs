@@ -34,6 +34,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
@@ -84,7 +85,6 @@ using Nop.Web.Infrastructure.Installation;
 using SkiaSharp;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
 using Task = System.Threading.Tasks.Task;
-using TaskScheduler = Nop.Services.ScheduleTasks.TaskScheduler;
 
 namespace Nop.Tests
 {
@@ -144,14 +144,15 @@ namespace Nop.Tests
                 .Distinct()
                 .ToArray();
 
-            //add configuration parameters
+            //create app settings
             var configurations = typeFinder
                 .FindClassesOfType<IConfig>()
                 .Select(configType => (IConfig)Activator.CreateInstance(configType))
                 .ToList();
             var appSettings = new AppSettings(configurations);
-            services.AddSingleton(appSettings);
+            appSettings.Update(new List<IConfig> { Singleton<DataConfig>.Instance });
             Singleton<AppSettings>.Instance = appSettings;
+            services.AddSingleton(appSettings);
 
             var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
             services.AddSingleton(hostApplicationLifetime.Object);
@@ -372,11 +373,12 @@ namespace Nop.Tests
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
                 .AddScoped<IProcessorAccessor, TestProcessorAccessor>()
+                // set accessor for the connection string
+                .AddScoped<IConnectionStringAccessor>(_ => DataSettingsManager.LoadSettings())
                 .AddScoped<IMigrationManager, TestMigrationManager>()
                 .AddSingleton<IConventionSet, NopTestConventionSet>()
-                .ConfigureRunner(rb => rb
-                    .WithGlobalConnectionString(DataSettingsManager.LoadSettings().ConnectionString)
-                    .WithVersionTable(new MigrationVersionInfo()).AddSQLite()
+                .ConfigureRunner(rb =>
+                    rb.WithVersionTable(new MigrationVersionInfo()).AddSQLite()
                         // define the assembly containing the migrations
                         .ScanIn(mAssemblies).For.Migrations());
 

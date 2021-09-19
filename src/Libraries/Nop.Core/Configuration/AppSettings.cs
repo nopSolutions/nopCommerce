@@ -19,9 +19,10 @@ namespace Nop.Core.Configuration
 
         #region Ctor
 
-        public AppSettings(IList<IConfig> configurations)
+        public AppSettings(IList<IConfig> configurations = null)
         {
             _configurations = configurations
+                ?.OrderBy(config => config.GetOrder())
                 ?.ToDictionary(config => config.GetType(), config => config)
                 ?? new Dictionary<Type, IConfig>();
         }
@@ -51,6 +52,18 @@ namespace Nop.Core.Configuration
                 throw new NopException($"No configuration with type '{typeof(TConfig)}' found");
 
             return config;
+        }
+
+        /// <summary>
+        /// Update app settings
+        /// </summary>
+        /// <param name="configurations">Configurations to update</param>
+        public void Update(IList<IConfig> configurations)
+        {
+            foreach (var config in configurations)
+            {
+                _configurations[config.GetType()] = config;
+            }
         }
 
         #endregion

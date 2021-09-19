@@ -4,9 +4,9 @@ using Nop.Core.Domain.Configuration;
 namespace Nop.Services.Configuration
 {
     /// <summary>
-    /// Represents default values related to configuration services
+    /// Represents default values related to settings
     /// </summary>
-    public static partial class NopConfigurationDefaults
+    public static partial class NopSettingsDefaults
     {
         #region Caching defaults
 
@@ -16,10 +16,5 @@ namespace Nop.Services.Configuration
         public static CacheKey SettingsAllAsDictionaryCacheKey => new CacheKey("Nop.setting.all.dictionary.", NopEntityCacheDefaults<Setting>.Prefix);
 
         #endregion
-
-        /// <summary>
-        /// Gets the path to file that contains app settings
-        /// </summary>
-        public static string AppSettingsFilePath => "App_Data/appsettings.json";
     }
 }

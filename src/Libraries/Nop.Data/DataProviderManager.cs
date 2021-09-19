@@ -1,5 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data.Configuration;
 using Nop.Data.DataProviders;
 
 namespace Nop.Data

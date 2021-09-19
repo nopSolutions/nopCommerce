@@ -11,6 +11,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Plugins;
@@ -177,13 +178,11 @@ namespace Nop.Web.Controllers
                 if (string.IsNullOrEmpty(connectionString))
                     throw new Exception(_locService.GetResource("ConnectionStringWrongFormat"));
 
-                await DataSettingsManager.SaveSettingsAsync(new DataConfig
+                DataSettingsManager.SaveSettings(new DataConfig
                 {
                     DataProvider = model.DataProvider,
                     ConnectionString = connectionString
                 }, _fileProvider);
-
-                await DataSettingsManager.LoadSettingsAsync(reloadSettings: true);
 
                 if (model.CreateDatabaseIfNotExists)
                 {
@@ -234,7 +233,7 @@ namespace Nop.Web.Controllers
                                 languagePackInfo.DownloadUrl = result.LanguagePack.DownloadLink;
                                 languagePackInfo.Progress = result.LanguagePack.Progress;
                             }
-                                
+
                         }
                         catch { }
                     }
@@ -286,14 +285,11 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exception)
             {
-                //reset cache
-                DataSettingsManager.ResetCache();
-
                 var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                 await staticCacheManager.ClearAsync();
 
                 //clear provider settings if something got wrong
-                await DataSettingsManager.SaveSettingsAsync(new DataConfig(), _fileProvider);
+                DataSettingsManager.SaveSettings(new DataConfig(), _fileProvider);
 
                 ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
             }
