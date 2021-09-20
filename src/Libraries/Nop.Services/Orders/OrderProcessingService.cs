@@ -1647,11 +1647,11 @@ namespace Nop.Services.Orders
 
                             var ordersAccordingToScheduleDate = orders.Where(x => x.ScheduleDate.Date == scheduleDate.Value.Date).ToList();
                             var todayOrderTotal = ordersAccordingToScheduleDate.Sum(x => x.OrderTotal) + cartTotal.shoppingCartTotal;
-                            if (todayOrderTotal > company.AmountLimit)
+                            if (todayOrderTotal > company.AmountLimit && !(await IsAccountLimitatioIgnoredAsync(details.Customer.Id)))
                                 result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), todayOrderTotal));
                         }
                         //if there are no previous orders found then checks for company limit
-                        else if (cartTotal.shoppingCartTotal > company.AmountLimit)
+                        else if (cartTotal.shoppingCartTotal > company.AmountLimit && !(await IsAccountLimitatioIgnoredAsync(details.Customer.Id)))
                             result.Errors.Add(string.Format(await _localizationService.GetResourceAsync("Order.Company.AmountLimit"), company.AmountLimit, await _localizationService.GetResourceAsync("Customer.Company.OrderTotal"), cartTotal.shoppingCartTotal));
                     }
                     else
@@ -3236,6 +3236,24 @@ namespace Nop.Services.Orders
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether amount limitation is ignored
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a value indicating whether limitation is ignored
+        /// </returns>
+        public virtual async Task<bool> IsAccountLimitatioIgnoredAsync(int customerId)
+        {
+            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            if (customer != null && (await _customerService.GetCustomerRolesAsync(customer))
+                .Any(role => role.SystemName.Equals(NopCustomerDefaults.UnlimitedAccountRoleName)))
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
