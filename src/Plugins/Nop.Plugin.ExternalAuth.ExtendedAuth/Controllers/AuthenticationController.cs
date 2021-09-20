@@ -322,12 +322,12 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             string email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
             if (!string.IsNullOrEmpty(email))
             {
-                _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "Email Found = " + email);
+                _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "Email Found = " + email);
                 //get current logged-in user
                 var currentLoggedInUser = await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) ? await _workContext.GetCurrentCustomerAsync() : null;
                 if(currentLoggedInUser != null)
                 {
-                    _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "User Found" +currentLoggedInUser.Id);
+                    _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "User Found" +currentLoggedInUser.Id);
                     var companies = await _companyService.GetAllCompaniesAsync(email: email.Split('@')[1]);
                     if (companies.Any())
                     {
@@ -337,7 +337,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                         var checkCustomerCompanyMappingExist = await _companyService.GetCompanyCustomersByCustomerIdAsync(currentLoggedInUser.Id);
                         if (!checkCustomerCompanyMappingExist.Any())
                         {
-                           _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "Company Matched");
+                           _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "Company Matched");
                             await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
                             isApproved = true;
 
