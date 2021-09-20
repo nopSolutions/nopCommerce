@@ -44,7 +44,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly INotificationService _notificationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+        private readonly IWorkContext _workContext;
+        private readonly ICustomerService _customerService;
+         private readonly ICompanyService _companyService;
+         private readonly ILogger _logger;
+        
         #endregion
 
         #region Ctor
@@ -61,7 +65,11 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             IOptionsMonitorCache<MicrosoftAccountOptions> optionsMicrosoftCache,
             IAuthenticationPluginManager authenticationPluginManager,
             INotificationService notificationService,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IWorkContext workContext,
+            ICustomerService customerService,
+            ICompanyService companyService,
+            ILogger logger
             )
         {
             _externalAuthenticationService = externalAuthenticationService;
@@ -76,6 +84,10 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             _authenticationPluginManager = authenticationPluginManager;
             _notificationService = notificationService;
             _httpContextAccessor = httpContextAccessor;
+            _workContext = workContext;
+            _customerService = customerService;
+            _companyService = companyService;
+            _logger = logger;
         }
 
         #endregion
@@ -309,32 +321,33 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             string email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
             if (!string.IsNullOrEmpty(email))
             {
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                var companyService = EngineContext.Current.Resolve<ICompanyService>();
-
+                _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "Email Found = " + email);
                 //get current logged-in user
-                var currentLoggedInUser = await customerService.IsRegisteredAsync(await workContext.GetCurrentCustomerAsync()) ? await workContext.GetCurrentCustomerAsync() : null;
-
-                var companies = await companyService.GetAllCompaniesAsync(email: email.Split('@')[1]);
-                if (companies.Any())
+                var currentLoggedInUser = await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) ? await _workContext.GetCurrentCustomerAsync() : null;
+                if(currentLoggedInUser != null)
                 {
-                    var companyId = companies.FirstOrDefault().Id;
-
-                    //whether product Company with such parameters already exists
-                    var checkCustomerCompanyMappingExist = await companyService.GetCompanyCustomersByCustomerIdAsync(currentLoggedInUser.Id);
-                    if (!checkCustomerCompanyMappingExist.Any())
+                    _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "User Found" +currentLoggedInUser.Id);
+                    var companies = await _companyService.GetAllCompaniesAsync(email: email.Split('@')[1]);
+                    if (companies.Any())
                     {
-                        await companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
-                        isApproved = true;
+                        var companyId = companies.FirstOrDefault().Id;
 
-                        var companyCustomers = await companyService.GetCompanyCustomersByCompanyIdAsync(companyId);
-                        if (companyCustomers.Any())
+                        //whether product Company with such parameters already exists
+                        var checkCustomerCompanyMappingExist = await _companyService.GetCompanyCustomersByCustomerIdAsync(currentLoggedInUser.Id);
+                        if (!checkCustomerCompanyMappingExist.Any())
                         {
-                            var addresses = await customerService.GetAddressesByCustomerIdAsync(companyCustomers.FirstOrDefault().CustomerId);
-                            foreach (var address in addresses)
+                           _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "Company Matched");
+                            await companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
+                            isApproved = true;
+
+                            var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(companyId);
+                            if (companyCustomers.Any())
                             {
-                                await customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
+                                var addresses = await _customerService.GetAddressesByCustomerIdAsync(companyCustomers.FirstOrDefault().CustomerId);
+                                foreach (var address in addresses)
+                                {
+                                    await _customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
+                                }
                             }
                         }
                     }
