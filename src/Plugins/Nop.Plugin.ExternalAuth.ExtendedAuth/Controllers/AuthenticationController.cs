@@ -26,6 +26,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
 {
@@ -337,7 +338,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                         if (!checkCustomerCompanyMappingExist.Any())
                         {
                            _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "Company Matched");
-                            await companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
+                            await _companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
                             isApproved = true;
 
                             var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(companyId);
