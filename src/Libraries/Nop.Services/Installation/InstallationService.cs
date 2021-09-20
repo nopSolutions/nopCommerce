@@ -1174,13 +1174,21 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = NopCustomerDefaults.VendorsRoleName
             };
+            var crIgnoreCompanyLimit = new CustomerRole
+            {
+                Name = "Unlimited Account",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = NopCustomerDefaults.UnlimitedAccountRoleName
+            };
             var customerRoles = new List<CustomerRole>
             {
                 crAdministrators,
                 crForumModerators,
                 crRegistered,
                 crGuests,
-                crVendors
+                crVendors,
+                crIgnoreCompanyLimit
             };
 
             await InsertInstallationDataAsync(customerRoles);
