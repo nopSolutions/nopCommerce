@@ -271,13 +271,13 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             var userObject = FormatEventObject(new List<(string Name, object Value)>
             {
                 ("$account_created_time", createdOn),
-                ("$city", JavaScriptEncoder.Default.Encode(city)),
+                ("$city", JavaScriptEncoder.Default.Encode(city ?? string.Empty)),
                 ("$country", countryName),
                 ("$currency", currency),
                 ("$gender", gender?.FirstOrDefault().ToString()),
                 ("$language", language),
                 ("$state", stateName),
-                ("$zipcode", JavaScriptEncoder.Default.Encode(zipcode))
+                ("$zipcode", JavaScriptEncoder.Default.Encode(zipcode ?? string.Empty))
             });
 
             //prepare script
@@ -737,7 +737,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 //prepare event object
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
                 {
-                    ("search_string", JavaScriptEncoder.Default.Encode(searchTerm))
+                    ("search_string", JavaScriptEncoder.Default.Encode(searchTerm ?? string.Empty))
                 });
 
                 //prepare event script
