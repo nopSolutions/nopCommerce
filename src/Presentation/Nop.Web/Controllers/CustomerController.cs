@@ -420,6 +420,12 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Login(bool? checkoutAsGuest)
         {
             var model = await _customerModelFactory.PrepareLoginModelAsync(checkoutAsGuest);
+            var user = await _authenticationService.GetAuthenticatedCustomerAsync();
+
+            if (user != null)
+            {
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.Login.AlreadyLogin"));
+            }
 
             return View(model);
         }

@@ -534,6 +534,9 @@
   <LocaleResource Name="Account.Login.WrongCredentials.NotRegistered">
     <Value>Account is not registered</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.AlreadyLogin">
+    <Value>You already login. You can relogin to other account</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Logout">
     <Value>Log out</Value>
   </LocaleResource>
