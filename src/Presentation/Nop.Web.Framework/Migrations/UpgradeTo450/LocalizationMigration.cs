@@ -70,7 +70,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
                 ["Admin.Common.Alert.NothingSelected"] = "Please select at least one record.",
 
                 //#5316
-                ["Account.Login.AlreadyLogin"] = "You already login. You can relogin to other account.",
+                ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in to another account.",
             }, languageId).Wait();
 
             // rename locales
