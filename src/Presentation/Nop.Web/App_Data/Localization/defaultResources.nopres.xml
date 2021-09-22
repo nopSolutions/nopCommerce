@@ -474,6 +474,9 @@
   <LocaleResource Name="Account.Login">
     <Value>Log in</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.AlreadyLogin">
+      <Value>You are already logged in as {0}. You may log in to another account.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Login.CheckoutAsGuest">
     <Value>Checkout as Guest</Value>
   </LocaleResource>
