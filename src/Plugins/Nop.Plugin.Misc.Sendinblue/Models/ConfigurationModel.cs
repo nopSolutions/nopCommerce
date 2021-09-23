@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -56,6 +57,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Models
         public string SmsSenderName { get; set; }
         public bool SmsSenderName_OverrideForStore { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Plugins.Misc.Sendinblue.Fields.StoreOwnerPhoneNumber")]
         public string StoreOwnerPhoneNumber { get; set; }
 
