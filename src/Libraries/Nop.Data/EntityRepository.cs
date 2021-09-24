@@ -480,7 +480,9 @@ namespace Nop.Data
             }
             else
             {
+                using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
                 await _dataProvider.BulkDeleteEntitiesAsync(entities);
+                transaction.Complete();
             }
 
             //event notification
@@ -504,7 +506,11 @@ namespace Nop.Data
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            return await _dataProvider.BulkDeleteEntitiesAsync(predicate);
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var countDeletedRecords = await _dataProvider.BulkDeleteEntitiesAsync(predicate);
+            transaction.Complete();
+
+            return countDeletedRecords;
         }
 
         /// <summary>
