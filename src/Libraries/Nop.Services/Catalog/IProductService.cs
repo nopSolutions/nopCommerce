@@ -186,7 +186,7 @@ namespace Nop.Services.Catalog
         /// A task that represents the asynchronous operation
         /// The task result contains the products
         /// </returns>
-        Task<IPagedList<Product>> GetProductsByProductAttributeIdAsync(int productAttributeId,
+        Task<IPagedList<Product>> GetProductsByProductAtributeIdAsync(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
