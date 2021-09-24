@@ -117,7 +117,6 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IsMinimumOrderPlacementIntervalValidAsync(Customer customer)
         {
             //prevent 2 orders being placed within an X seconds time frame
@@ -155,7 +154,6 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="form">The form</param>
         /// <returns>
-        /// A task that represents the asynchronous operation
         /// The task result contains the pickup option
         /// </returns>
         protected virtual async Task<PickupPoint> ParsePickupOptionAsync(IFormCollection form)
@@ -175,7 +173,6 @@ namespace Nop.Web.Controllers
         /// Saves the pickup option
         /// </summary>
         /// <param name="pickupPoint">The pickup option</param>
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SavePickupOptionAsync(PickupPoint pickupPoint)
         {
             var name = !string.IsNullOrEmpty(pickupPoint.Name) ?
@@ -307,10 +304,6 @@ namespace Nop.Web.Controllers
         /// Get specified Address by addresId
         /// </summary>
         /// <param name="addressId"></param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the 
-        /// </returns>
         public virtual async Task<IActionResult> GetAddressById(int addressId)
         {
             var address = await _customerService.GetCustomerAddressAsync((await _workContext.GetCurrentCustomerAsync()).Id, addressId);
@@ -384,10 +377,6 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="addressId"></param>
         /// <param name="opc"></param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the 
-        /// </returns>
         public virtual async Task<IActionResult> DeleteEditAddress(int addressId, bool opc = false)
         {
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
@@ -1154,7 +1143,6 @@ namespace Nop.Web.Controllers
 
         #region Methods (one page checkout)
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<JsonResult> OpcLoadStepAfterShippingAddress(IList<ShoppingCartItem> cart)
         {
             var shippingMethodModel = await _checkoutModelFactory.PrepareShippingMethodModelAsync(cart, await _customerService.GetCustomerShippingAddressAsync(await _workContext.GetCurrentCustomerAsync()));
@@ -1182,7 +1170,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<JsonResult> OpcLoadStepAfterShippingMethod(IList<ShoppingCartItem> cart)
         {
             //Check whether payment workflow is required
@@ -1247,7 +1234,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<JsonResult> OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, IList<ShoppingCartItem> cart)
         {
             if (paymentMethod.SkipPaymentInfo ||

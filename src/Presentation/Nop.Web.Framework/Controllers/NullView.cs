@@ -11,7 +11,6 @@ namespace Nop.Web.Framework
 
         public string Path => string.Empty;
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public Task RenderAsync(ViewContext context)
         {
             if (context == null)

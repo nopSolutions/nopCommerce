@@ -38,7 +38,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <summary>
         /// Create configuration file for RoxyFileman
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task CreateConfiguration()
         {
             await _roxyFilemanService.CreateConfigurationAsync();
@@ -63,7 +62,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// </summary>
         /// <returns>A task that represents the completion of the operation</returns>
         [IgnoreAntiforgeryToken]
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ProcessRequestAsync()
         {
             var action = "DIRLIST";

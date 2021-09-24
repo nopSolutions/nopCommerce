@@ -55,7 +55,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(Poll poll, PollModel model)
         {
             poll.LimitedToStores = model.SelectedStoreIds.Any();

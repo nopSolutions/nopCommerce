@@ -22,7 +22,6 @@ namespace Nop.Web.Components
             _shoppingCartSettings = shoppingCartSettings;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)

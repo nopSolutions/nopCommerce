@@ -15,7 +15,6 @@ namespace Nop.Web.Components
             _widgetModelFactory = widgetModelFactory;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             var model = await _widgetModelFactory.PrepareRenderWidgetModelAsync(widgetZone, additionalData);

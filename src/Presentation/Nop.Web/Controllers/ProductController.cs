@@ -125,7 +125,6 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();

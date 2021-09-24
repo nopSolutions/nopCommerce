@@ -18,7 +18,6 @@ namespace Nop.Web.Components
             _catalogModelFactory = catalogModelFactory;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(int currentManufacturerId)
         {
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)

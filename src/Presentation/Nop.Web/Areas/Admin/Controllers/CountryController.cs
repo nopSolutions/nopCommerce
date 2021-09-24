@@ -78,7 +78,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(Country country, CountryModel model)
         {
             foreach (var localized in model.Locales)
@@ -90,7 +89,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(StateProvince stateProvince, StateProvinceModel model)
         {
             foreach (var localized in model.Locales)
@@ -102,7 +100,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(Country country, CountryModel model)
         {
             country.LimitedToStores = model.SelectedStoreIds.Any();

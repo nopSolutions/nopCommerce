@@ -14,7 +14,6 @@ namespace Nop.Web.Components
             _topicModelFactory = topicModelFactory;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(string systemName)
         {
             var model = await _topicModelFactory.PrepareTopicModelBySystemNameAsync(systemName);

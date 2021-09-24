@@ -102,7 +102,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(Category category, CategoryModel model)
         {
             foreach (var localized in model.Locales)
@@ -138,7 +137,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdatePictureSeoNamesAsync(Category category)
         {
             var picture = await _pictureService.GetPictureByIdAsync(category.PictureId);
@@ -146,7 +144,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(category.Name));
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveCategoryAclAsync(Category category, CategoryModel model)
         {
             category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -172,7 +169,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(Category category, CategoryModel model)
         {
             category.LimitedToStores = model.SelectedStoreIds.Any();

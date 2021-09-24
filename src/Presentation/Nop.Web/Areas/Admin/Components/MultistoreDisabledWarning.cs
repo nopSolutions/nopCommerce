@@ -22,7 +22,6 @@ namespace Nop.Web.Areas.Admin.Components
             _storeService = storeService;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
 

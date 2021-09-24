@@ -208,7 +208,6 @@ namespace Nop.Web.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> ParseSelectedProviderAsync(IFormCollection form)
         {
             if (form == null)
@@ -232,7 +231,6 @@ namespace Nop.Web.Controllers
             return string.Empty;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<string> ParseCustomCustomerAttributesAsync(IFormCollection form)
         {
             if (form == null)
@@ -312,7 +310,6 @@ namespace Nop.Web.Controllers
             return attributesXml;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task LogGdprAsync(Customer customer, CustomerInfoModel oldCustomerInfoModel,
             CustomerInfoModel newCustomerInfoModel, IFormCollection form)
         {

@@ -79,7 +79,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(Topic topic, TopicModel model)
         {
             foreach (var localized in model.Locales)
@@ -115,7 +114,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveTopicAclAsync(Topic topic, TopicModel model)
         {
             topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -141,7 +139,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(Topic topic, TopicModel model)
         {
             topic.LimitedToStores = model.SelectedStoreIds.Any();

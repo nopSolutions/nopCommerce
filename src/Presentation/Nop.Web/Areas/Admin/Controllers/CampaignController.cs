@@ -70,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<EmailAccount> GetEmailAccountAsync(int emailAccountId)
         {
             return await _emailAccountService.GetEmailAccountByIdAsync(emailAccountId)

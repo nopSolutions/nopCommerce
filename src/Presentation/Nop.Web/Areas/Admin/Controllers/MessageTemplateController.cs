@@ -64,7 +64,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task UpdateLocalesAsync(MessageTemplate mt, MessageTemplateModel model)
         {
             foreach (var localized in model.Locales)
@@ -91,7 +90,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task SaveStoreMappingsAsync(MessageTemplate messageTemplate, MessageTemplateModel model)
         {
             messageTemplate.LimitedToStores = model.SelectedStoreIds.Any();

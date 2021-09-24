@@ -17,7 +17,6 @@ namespace Nop.Web.Components
             _forumService = forumService;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync(int forumPostId, bool showTopic)
         {
             var forumPost = await _forumService.GetPostByIdAsync(forumPostId);

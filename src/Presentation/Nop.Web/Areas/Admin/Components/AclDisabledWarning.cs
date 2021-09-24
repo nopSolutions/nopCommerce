@@ -22,7 +22,6 @@ namespace Nop.Web.Areas.Admin.Components
             _storeService = storeService;
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
             //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored

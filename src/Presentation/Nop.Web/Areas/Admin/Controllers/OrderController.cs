@@ -139,7 +139,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return order != null && await HasAccessToOrderAsync(order.Id);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> HasAccessToOrderAsync(int orderId)
         {
             if (orderId == 0)
@@ -181,7 +180,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return await HasAccessToOrderAsync(shipment.OrderId);
         }
 
-        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task LogEditOrderAsync(int orderId)
         {
             var order = await _orderService.GetOrderByIdAsync(orderId);
