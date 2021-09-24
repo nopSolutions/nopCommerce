@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -18,6 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
         public int CustomerId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.ActivityLog.Fields.CustomerEmail")]
+        [DataType(DataType.EmailAddress)]
         public string CustomerEmail { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.ActivityLog.Fields.Comment")]
