@@ -156,14 +156,14 @@
 
             //load cldr for current culture
             $.when(
-                $.get("/lib_npm/cldr-data/supplemental/likelySubtags.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/numbers.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/currencies.json"),
-                $.get("/lib_npm/cldr-data/supplemental/numberingSystems.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/ca-gregorian.json"),
-                $.get("/lib_npm/cldr-data/main/" + culture + "/timeZoneNames.json"),
-                $.get("/lib_npm/cldr-data/supplemental/timeData.json"),
-                $.get("/lib_npm/cldr-data/supplemental/weekData.json"),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/supplemental/likelySubtags.json", dataType: "json"}),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/main/" + culture + "/numbers.json", dataType: "json"}),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/main/" + culture + "/currencies.json", dataType: "json"}),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/supplemental/numberingSystems.json", dataType: "json"}),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/main/" + culture + "/ca-gregorian.json", dataType: "json"}),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/main/" + culture + "/timeZoneNames.json", dataType: "json"}),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/supplemental/timeData.json", dataType: "json"}),
+                $.get({ url: rootAppPath + "lib_npm/cldr-data/supplemental/weekData.json", dataType: "json"}),
             ).then(function () {
                 // Normalize $.get results, we only need the JSON, not the request statuses.
                 return [].slice.apply(arguments, [0]).map(function (result) {
