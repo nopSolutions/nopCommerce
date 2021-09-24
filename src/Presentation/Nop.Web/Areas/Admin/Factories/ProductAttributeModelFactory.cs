@@ -281,7 +281,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             //get products
-            var products = await _productService.GetProductsByProductAtributeIdAsync(productAttributeId: productAttribute.Id,
+            var products = await _productService.GetProductsByProductAttributeIdAsync(productAttributeId: productAttribute.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
