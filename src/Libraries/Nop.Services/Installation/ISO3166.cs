@@ -289,7 +289,7 @@ namespace Nop.Services.Installation
                 new ISO3166Country("Uzbekistan", "UZ", "UZB", 860, new[] { "998" }),
                 new ISO3166Country("Vanuatu", "VU", "VUT", 548, new[] { "678" }),
                 new ISO3166Country("Venezuela (Bolivarian Republic of)", "VE", "VEN", 862, new[] { "58" }, localizationInfo: new[] { new LocalizationInfo("es-VE", "Spanish") }),
-                new ISO3166Country("Viet Nam", "VN", "VNM", 704, new[] { "84" }, localizationInfo: new[] { new LocalizationInfo("vi-VN", "Vietnamese") }),
+                new ISO3166Country("Vietnam", "VN", "VNM", 704, new[] { "84" }, localizationInfo: new[] { new LocalizationInfo("vi-VN", "Vietnamese") }),
                 new ISO3166Country("Virgin Islands (British)", "VG", "VGB", 92, new[] { "1 284" }),
                 new ISO3166Country("Virgin Islands (U.S.)", "VI", "VIR", 850, new[] { "1 340" }),
                 new ISO3166Country("Wallis and Futuna", "WF", "WLF", 876, new[] { "681" }),
