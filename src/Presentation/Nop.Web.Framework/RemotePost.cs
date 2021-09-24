@@ -130,19 +130,14 @@ namespace Nop.Web.Framework
             var httpContext = _httpContextAccessor.HttpContext;
             var response = httpContext.Response;
 
-            //change headers before the content is written to body
-            response.OnStarting(() =>
-            {
-                response.ContentType = "text/html; charset=utf-8";
-                response.ContentLength = data.Length;
-
-                return Task.CompletedTask;
-            });
-
+            //post
             response.Clear();
+            response.ContentType = "text/html; charset=utf-8";
+            response.ContentLength = data.Length;
+
             response.Body
-                .WriteAsync(data, 0, data.Length)
-                .Wait();
+                 .WriteAsync(data, 0, data.Length)
+                 .Wait();
 
             //store a value indicating whether POST has been done
             _webHelper.IsPostBeingDone = true;
