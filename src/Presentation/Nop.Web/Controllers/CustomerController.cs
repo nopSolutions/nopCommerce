@@ -1003,13 +1003,14 @@ namespace Nop.Web.Controllers
 
                     //raise event       
                     await _eventPublisher.PublishAsync(new CustomerRegisteredEvent(customer));
+                    var currentLanguage = await _workContext.GetWorkingLanguageAsync();
 
                     switch (_customerSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:
                             //email validation message
                             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                            await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                            await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, currentLanguage.Id);
 
                             //result
                             return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
@@ -1019,7 +1020,7 @@ namespace Nop.Web.Controllers
 
                         case UserRegistrationType.Standard:
                             //send customer welcome message
-                            await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                            await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, currentLanguage.Id);
 
                             //raise event       
                             await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));

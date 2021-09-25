@@ -144,10 +144,10 @@ namespace Nop.Web.Factories
         public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguageAsync(), store);
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, language, store);
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var language = await _workContext.GetWorkingLanguageAsync();
                 var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, 0, _newsSettings.MainPageNewsCount);
 
                 return new HomepageNewsItemsModel

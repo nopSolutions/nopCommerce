@@ -1491,6 +1491,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     productSpecificationAttributeModel.AttributeId = specAttribute.Id;
                     productSpecificationAttributeModel.AttributeName = await GetSpecificationAttributeNameAsync(specAttribute);
+                    var currentLanguage = await _workContext.GetWorkingLanguageAsync();
 
                     switch (attribute.AttributeType)
                     {
@@ -1499,11 +1500,11 @@ namespace Nop.Web.Areas.Admin.Factories
                             productSpecificationAttributeModel.SpecificationAttributeOptionId = specAttributeOption.Id;
                             break;
                         case SpecificationAttributeType.CustomText:
-                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(attribute, x => x.CustomValue, (await _workContext.GetWorkingLanguageAsync())?.Id));
+                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(attribute, x => x.CustomValue, currentLanguage?.Id));
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
                             productSpecificationAttributeModel.ValueRaw = await _localizationService
-                                .GetLocalizedAsync(attribute, x => x.CustomValue, (await _workContext.GetWorkingLanguageAsync())?.Id);
+                                .GetLocalizedAsync(attribute, x => x.CustomValue, currentLanguage?.Id);
                             break;
                         case SpecificationAttributeType.Hyperlink:
                             productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;

@@ -773,7 +773,8 @@ namespace Nop.Web.Factories
                     Value = "0"
                 });
 
-                foreach (var c in await _countryService.GetAllCountriesForShippingAsync((await _workContext.GetWorkingLanguageAsync()).Id))
+                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+                foreach (var c in await _countryService.GetAllCountriesForShippingAsync(currentLanguage.Id))
                     model.AvailableCountries.Add(new SelectListItem
                     {
                         Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
@@ -786,7 +787,7 @@ namespace Nop.Web.Factories
                     ? shippingAddress.StateProvinceId
                     : model.StateProvinceId;
                 var states = defaultEstimateCountryId.HasValue
-                    ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultEstimateCountryId.Value, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList()
+                    ? (await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultEstimateCountryId.Value, currentLanguage.Id)).ToList()
                     : new List<StateProvince>();
                 if (states.Any())
                 {
@@ -1133,12 +1134,13 @@ namespace Nop.Web.Factories
                 var subtotalBase = subTotalWithoutDiscountBase;
                 var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
                 var subtotal = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(subtotalBase, currentCurrency);
-                model.SubTotal = await _priceFormatter.FormatPriceAsync(subtotal, true, currentCurrency, (await _workContext.GetWorkingLanguageAsync()).Id, subTotalIncludingTax);
+                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+                model.SubTotal = await _priceFormatter.FormatPriceAsync(subtotal, true, currentCurrency, currentLanguage.Id, subTotalIncludingTax);
 
                 if (orderSubTotalDiscountAmountBase > decimal.Zero)
                 {
                     var orderSubTotalDiscountAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(orderSubTotalDiscountAmountBase, currentCurrency);
-                    model.SubTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderSubTotalDiscountAmount, true, currentCurrency, (await _workContext.GetWorkingLanguageAsync()).Id, subTotalIncludingTax);
+                    model.SubTotalDiscount = await _priceFormatter.FormatPriceAsync(-orderSubTotalDiscountAmount, true, currentCurrency, currentLanguage.Id, subTotalIncludingTax);
                 }
 
                 //shipping info

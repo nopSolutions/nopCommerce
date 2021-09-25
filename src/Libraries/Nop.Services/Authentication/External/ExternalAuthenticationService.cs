@@ -176,9 +176,10 @@ namespace Nop.Services.Authentication.External
             await AssociateExternalAccountWithUserAsync(customer, parameters);
 
             //authenticate
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             if (registrationIsApproved)
             {
-                await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, currentLanguage.Id);
 
                 //raise event       
                 await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
@@ -191,7 +192,7 @@ namespace Nop.Services.Authentication.External
             {
                 //email validation message
                 await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, currentLanguage.Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
             }

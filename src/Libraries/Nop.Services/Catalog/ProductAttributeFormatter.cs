@@ -103,14 +103,14 @@ namespace Nop.Services.Catalog
             bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
-
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             //attributes
             if (renderProductAttributes)
             {
                 foreach (var attribute in await _productAttributeParser.ParseProductAttributeMappingsAsync(attributesXml))
                 {
                     var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(attribute.ProductAttributeId);
-                    var attributeName = await _localizationService.GetLocalizedAsync(productAttribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id);
+                    var attributeName = await _localizationService.GetLocalizedAsync(productAttribute, a => a.Name, currentLanguage.Id);
 
                     //attributes without values
                     if (!attribute.ShouldHaveValues())
@@ -173,7 +173,7 @@ namespace Nop.Services.Catalog
                     {
                         foreach (var attributeValue in await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml, attribute.Id))
                         {
-                            var formattedAttribute = $"{attributeName}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}";
+                            var formattedAttribute = $"{attributeName}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, currentLanguage.Id)}";
 
                             if (renderPrices)
                             {

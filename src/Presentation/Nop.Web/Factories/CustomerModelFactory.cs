@@ -251,11 +251,12 @@ namespace Nop.Web.Factories
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
                 model.EmailToRevalidate = customer.EmailToRevalidate;
 
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
+                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -268,7 +269,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
@@ -347,7 +348,7 @@ namespace Nop.Web.Factories
                     Email = record.Email,
                     ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
-                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, (await _workContext.GetWorkingLanguageAsync()).Id)
+                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, currentLanguage.Id)
                 });
             }
 
@@ -438,8 +439,8 @@ namespace Nop.Web.Factories
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
-
-                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
+                var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+                foreach (var c in await _countryService.GetAllCountriesAsync(currentLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -452,7 +453,7 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, currentLanguage.Id)).ToList();
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });

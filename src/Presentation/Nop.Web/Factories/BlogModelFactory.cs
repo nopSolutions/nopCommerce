@@ -210,13 +210,14 @@ namespace Nop.Web.Factories
         public virtual async Task<List<BlogPostYearModel>> PrepareBlogPostYearModelAsync()
         {
             var store = await _storeContext.GetCurrentStoreAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, await _workContext.GetWorkingLanguageAsync(), store);
+            var currentLanguage = await _workContext.GetWorkingLanguageAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, currentLanguage, store);
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
 
                 var blogPosts = await _blogService.GetAllBlogPostsAsync(store.Id,
-                    (await _workContext.GetWorkingLanguageAsync()).Id);
+                    currentLanguage.Id);
                 if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
