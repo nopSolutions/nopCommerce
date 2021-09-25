@@ -597,8 +597,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var quantity = product != null ? (int?)item.Quantity : null;
                 var (productPrice, _, _, _) = await _priceCalculationService.GetFinalPriceAsync(product, customer, includeDiscounts: false);
                 var (price, _) = await _taxService.GetProductPriceAsync(product, productPrice);
-                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, await _workContext.GetWorkingCurrencyAsync());
-                var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
+                var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price, currentCurrency);
+                var currency = currentCurrency?.CurrencyCode;
 
                 var contentsProperties = new List<(string Name, object Value)> { ("id", sku), ("quantity", quantity) };
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
@@ -704,8 +705,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var cart = await _shoppingCartService
                     .GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
                 var (price, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false, false);
-                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price ?? 0, await _workContext.GetWorkingCurrencyAsync());
-                var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
+                var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
+                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price ?? 0, currentCurrency);
+                var currency = currentCurrency?.CurrencyCode;
 
                 var contentsProperties = await cart.SelectAwait(async item =>
                 {

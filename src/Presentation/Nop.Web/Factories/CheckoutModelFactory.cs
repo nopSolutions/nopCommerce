@@ -178,18 +178,19 @@ namespace Nop.Web.Factories
 
                         var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
                         var amount = await _orderTotalCalculationService.IsFreeShippingAsync(cart) ? 0 : point.PickupFee;
+                        var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
 
                         if (amount > 0)
                         {
                             (amount, _) = await _taxService.GetShippingPriceAsync(amount, customer);
-                            amount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(amount, await _workContext.GetWorkingCurrencyAsync());
+                            amount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(amount, currentCurrency);
                             pickupPointModel.PickupFee = await _priceFormatter.FormatShippingPriceAsync(amount, true);
                         }
 
                         //adjust rate
                         var (shippingTotal, _) = await _orderTotalCalculationService.AdjustShippingRateAsync(point.PickupFee, cart, true);
                         var (rateBase, _) = await _taxService.GetShippingPriceAsync(shippingTotal, customer);
-                        var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
+                        var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, currentCurrency);
                         pickupPointModel.PickupFee = await _priceFormatter.FormatShippingPriceAsync(rate, true);
 
                         return pickupPointModel;
@@ -456,6 +457,7 @@ namespace Nop.Web.Factories
             var model = new CheckoutPaymentMethodModel();
             var customer = await _workContext.GetCurrentCustomerAsync();
             var store = await _storeContext.GetCurrentStoreAsync();
+            var currentCurrency = await _workContext.GetWorkingCurrencyAsync();
             //reward points
             if (_rewardPointsSettings.Enabled && !await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
             {
@@ -463,7 +465,7 @@ namespace Nop.Web.Factories
                 rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
 
                 var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
-                var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
+                var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, currentCurrency);
                 if (rewardPointsAmount > decimal.Zero &&
                     _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
@@ -497,7 +499,7 @@ namespace Nop.Web.Factories
                 //payment method additional fee
                 var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(cart, pm.PluginDescriptor.SystemName);
                 var (rateBase, _) = await _taxService.GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, customer);
-                var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, await _workContext.GetWorkingCurrencyAsync());
+                var rate = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rateBase, currentCurrency);
                 if (rate > decimal.Zero)
                     pmModel.Fee = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(rate, true);
 
