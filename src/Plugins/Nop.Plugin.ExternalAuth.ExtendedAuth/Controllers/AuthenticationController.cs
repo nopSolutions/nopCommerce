@@ -47,9 +47,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
-         private readonly ICompanyService _companyService;
-         private readonly ILogger _logger;
-        
+        private readonly ICompanyService _companyService;
+        private readonly ILogger _logger;
+
         #endregion
 
         #region Ctor
@@ -319,15 +319,27 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                 return RedirectToRoute("Login");
 
             bool isApproved = false;
+            //create external authentication parameters
             string email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
+            var authenticationParameters = new ExternalAuthenticationParameters
+            {
+                ProviderSystemName = AuthenticationDefaults.PluginSystemName,
+                AccessToken = await this.HttpContext.GetTokenAsync(authenticationName, "access_token"),
+                Email = email,
+                IsApproved = !isApproved ? RefactorMe_IsGoogleEmailDomainWhitelisted(authenticationName, email) : isApproved,
+                ExternalIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,
+                ExternalDisplayIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,
+                Claims = authenticateResult.Principal.Claims.Select(claim => new ExternalAuthenticationClaim(claim.Type, claim.Value)).ToList()
+            };
+            var result = await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
             if (!string.IsNullOrEmpty(email))
             {
-               await _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "Email Found = " + email);
+                await _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "Email Found = " + email);
                 //get current logged-in user
                 var currentLoggedInUser = await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()) ? await _workContext.GetCurrentCustomerAsync() : null;
-                if(currentLoggedInUser != null)
+                if (currentLoggedInUser != null)
                 {
-                    await _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "User Found" +currentLoggedInUser.Id);
+                    await _logger.InsertLogAsync(Nop.Core.Domain.Logging.LogLevel.Debug, "User Found" + currentLoggedInUser.Id);
                     var companies = await _companyService.GetAllCompaniesAsync(email: email.Split('@')[1]);
                     if (companies.Any())
                     {
@@ -355,23 +367,9 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                 }
                 email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value + "@" + authenticateResult.Principal.Identity.AuthenticationType + ".com";
             }
-
-            //create external authentication parameters
-            var authenticationParameters = new ExternalAuthenticationParameters
-            {
-                ProviderSystemName = AuthenticationDefaults.PluginSystemName,
-                AccessToken = await this.HttpContext.GetTokenAsync(authenticationName, "access_token"),
-                Email = email,
-                IsApproved = !isApproved ? RefactorMe_IsGoogleEmailDomainWhitelisted(authenticationName, email) : isApproved,
-                ExternalIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,
-                ExternalDisplayIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,
-                Claims = authenticateResult.Principal.Claims.Select(claim => new ExternalAuthenticationClaim(claim.Type, claim.Value)).ToList()
-            };
-
             //authenticate Nop user
-            return await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
+            return result;
         }
-
         #endregion
     }
 }
