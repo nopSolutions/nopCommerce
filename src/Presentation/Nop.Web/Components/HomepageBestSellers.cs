@@ -50,11 +50,12 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
+            var store = await _storeContext.GetCurrentStoreAsync();
             var report = await _staticCacheManager.GetAsync(
                 _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey,
-                    await _storeContext.GetCurrentStoreAsync()),
+                    store),
                 async () => await (await _orderReportService.BestSellersReportAsync(
-                    storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                    storeId: store.Id,
                     pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)).ToListAsync());
 
             //load products

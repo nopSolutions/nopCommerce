@@ -779,7 +779,8 @@ namespace Nop.Web.Controllers
                 await _workContext.SetCurrentCustomerAsync(await _customerService.InsertGuestCustomerAsync());
             }
 
-            customer.RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var store = await _storeContext.GetCurrentStoreAsync();
+            customer.RegisteredInStoreId = store.Id;
 
             //custom customer attributes
             var customerAttributesXml = await ParseCustomCustomerAttributesAsync(form);
@@ -815,7 +816,7 @@ namespace Nop.Web.Controllers
                     _customerSettings.UsernamesEnabled ? customerUserName : customerEmail,
                     model.Password,
                     _customerSettings.DefaultPasswordFormat,
-                    (await _storeContext.GetCurrentStoreAsync()).Id,
+                    store.Id,
                     isApproved);
                 var registrationResult = await _customerRegistrationService.RegisterCustomerAsync(registrationRequest);
                 if (registrationResult.Success)
@@ -877,7 +878,7 @@ namespace Nop.Web.Controllers
                         var isNewsletterActive = _customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation;
 
                         //save newsletter value
-                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customerEmail, store.Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -906,7 +907,7 @@ namespace Nop.Web.Controllers
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customerEmail,
                                     Active = isNewsletterActive,
-                                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                                    StoreId = store.Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
 
@@ -1279,7 +1280,8 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.NewsletterEnabled)
                     {
                         //save newsletter value
-                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var store = await _storeContext.GetCurrentStoreAsync();
+                        var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -1301,7 +1303,7 @@ namespace Nop.Web.Controllers
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
                                     Active = true,
-                                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                                    StoreId = store.Id,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
                             }

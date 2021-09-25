@@ -195,13 +195,14 @@ namespace Nop.Services.Tax
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             var taxRateRequest = new TaxRateRequest
             {
                 Customer = customer,
                 Product = product,
                 Price = price,
                 TaxCategoryId = taxCategoryId > 0 ? taxCategoryId : product?.TaxCategoryId ?? 0,
-                CurrentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id
+                CurrentStoreId = store.Id
             };
 
             var basedOn = _taxSettings.TaxBasedOn;
@@ -227,7 +228,7 @@ namespace Nop.Services.Tax
             if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
             {
                 var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer,
-                    NopCustomerDefaults.SelectedPickupPointAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    NopCustomerDefaults.SelectedPickupPointAttribute, store.Id);
                 if (pickupPoint != null)
                 {
                     taxRateRequest.Address = await LoadPickupPointTaxAddressAsync(pickupPoint);
@@ -813,7 +814,8 @@ namespace Nop.Services.Tax
         public virtual async Task<TaxTotalResult> GetTaxTotalAsync(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
         {
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
-            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, store.Id);
             if (activeTaxProvider == null)
                 return null;
 
@@ -822,7 +824,7 @@ namespace Nop.Services.Tax
             {
                 ShoppingCart = cart,
                 Customer = customer,
-                StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                StoreId = store.Id,
                 UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
             };
             var taxTotalResult = await activeTaxProvider.GetTaxTotalAsync(taxTotalRequest);

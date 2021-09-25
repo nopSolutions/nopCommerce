@@ -97,8 +97,9 @@ namespace Nop.Web.Controllers
             var feedTitle = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedDescription");
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             var feed = new RssFeed(
-                string.Format(feedTitle, await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name)),
+                string.Format(feedTitle, await _localizationService.GetLocalizedAsync(store, x => x.Name)),
                 feedDescription,
                 new Uri(url),
                 DateTime.UtcNow);
@@ -114,7 +115,7 @@ namespace Nop.Web.Controllers
                 var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
-                    $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:activeDiscussions:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
+                    $"urn:store:{store.Id}:activeDiscussions:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
             }
             feed.Items = items;
 
@@ -171,8 +172,9 @@ namespace Nop.Web.Controllers
                 var feedTitle = await _localizationService.GetResourceAsync("Forum.ForumFeedTitle");
                 var feedDescription = await _localizationService.GetResourceAsync("Forum.ForumFeedDescription");
 
+                var store = await _storeContext.GetCurrentStoreAsync();
                 var feed = new RssFeed(
-                    string.Format(feedTitle, await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name), forum.Name),
+                    string.Format(feedTitle, await _localizationService.GetLocalizedAsync(store, x => x.Name), forum.Name),
                     feedDescription,
                     new Uri(url),
                     DateTime.UtcNow);
@@ -187,7 +189,7 @@ namespace Nop.Web.Controllers
                     var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
                     var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
-                    items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
+                    items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{store.Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
                 }
 
                 feed.Items = items;

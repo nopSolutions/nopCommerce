@@ -208,6 +208,7 @@ namespace Nop.Web.Factories
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == (await _dateTimeHelper.GetCurrentTimeZoneAsync()).Id) });
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             if (!excludeProperties)
             {
                 model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
@@ -233,7 +234,7 @@ namespace Nop.Web.Factories
                 model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
                 model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
@@ -331,12 +332,12 @@ namespace Nop.Web.Factories
             var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = (await _authenticationPluginManager
-                .LoadActivePluginsAsync(currentCustomer, (await _storeContext.GetCurrentStoreAsync()).Id))
+                .LoadActivePluginsAsync(currentCustomer, store.Id))
                 .Count;
             foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
                 var authMethod = await _authenticationPluginManager
-                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, currentCustomer, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, currentCustomer, store.Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 

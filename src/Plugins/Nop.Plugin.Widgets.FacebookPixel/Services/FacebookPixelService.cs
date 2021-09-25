@@ -509,7 +509,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             return await HandleFunctionAsync(async () =>
             {
                 //get the enabled configurations
-                var configurations = await (await GetConfigurationsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).WhereAwait(async configuration =>
+                var store = _storeContext.GetCurrentStoreAsync();
+                var configurations = await (await GetConfigurationsAsync(store.Id)).WhereAwait(async configuration =>
                 {
                     if (!configuration.Enabled)
                         return false;
@@ -519,7 +520,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
                     //don't display Pixel for users who not accepted Cookie Consent
                     var cookieConsentAccepted = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(),
-                            NopCustomerDefaults.EuCookieLawAcceptedAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                            NopCustomerDefaults.EuCookieLawAcceptedAttribute, store.Id);
                     return cookieConsentAccepted;
                 }).ToListAsync();
                 if (!configurations.Any())

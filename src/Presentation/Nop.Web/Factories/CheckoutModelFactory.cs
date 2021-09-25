@@ -146,12 +146,13 @@ namespace Nop.Web.Factories
             model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
             model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var pickupPointProviders = await _pickupPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var pickupPointProviders = await _pickupPluginManager.LoadActivePluginsAsync(customer, store.Id);
             if (pickupPointProviders.Any())
             {
                 var languageId = (await _workContext.GetWorkingLanguageAsync()).Id;
                 var pickupPointsResponse = await _shippingService.GetPickupPointsAsync(customer.BillingAddressId ?? 0,
-                    customer, storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    customer, storeId: store.Id);
                 if (pickupPointsResponse.Success)
                     model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
                     {
@@ -175,7 +176,7 @@ namespace Nop.Web.Factories
                             OpeningHours = point.OpeningHours
                         };
 
-                        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        var cart = await _shoppingCartService.GetShoppingCartAsync(customer, ShoppingCartType.ShoppingCart, store.Id);
                         var amount = await _orderTotalCalculationService.IsFreeShippingAsync(cart) ? 0 : point.PickupFee;
 
                         if (amount > 0)
@@ -199,7 +200,7 @@ namespace Nop.Web.Factories
             }
 
             //only available pickup points
-            var shippingProviders = await _shippingPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var shippingProviders = await _shippingPluginManager.LoadActivePluginsAsync(customer, store.Id);
             if (!shippingProviders.Any())
             {
                 if (!pickupPointProviders.Any())
@@ -369,7 +370,8 @@ namespace Nop.Web.Factories
                 model.PickupPointsModel = await PrepareCheckoutPickupPointsModelAsync(cart);
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var getShippingOptionResponse = await _shippingService.GetShippingOptionsAsync(cart, shippingAddress, customer, storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var getShippingOptionResponse = await _shippingService.GetShippingOptionsAsync(cart, shippingAddress, customer, storeId: store.Id);
             if (getShippingOptionResponse.Success)
             {
                 //performance optimization. cache returned shipping options.
@@ -377,7 +379,7 @@ namespace Nop.Web.Factories
                 await _genericAttributeService.SaveAttributeAsync(customer,
                                                        NopCustomerDefaults.OfferedShippingOptionsAttribute,
                                                        getShippingOptionResponse.ShippingOptions,
-                                                       (await _storeContext.GetCurrentStoreAsync()).Id);
+                                                       store.Id);
 
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
@@ -401,7 +403,7 @@ namespace Nop.Web.Factories
 
                 //find a selected (previously) shipping method
                 var selectedShippingOption = await _genericAttributeService.GetAttributeAsync<ShippingOption>(customer,
-                        NopCustomerDefaults.SelectedShippingOptionAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                        NopCustomerDefaults.SelectedShippingOptionAttribute, store.Id);
                 if (selectedShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
@@ -453,10 +455,11 @@ namespace Nop.Web.Factories
         {
             var model = new CheckoutPaymentMethodModel();
             var customer = await _workContext.GetCurrentCustomerAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
             //reward points
             if (_rewardPointsSettings.Enabled && !await _shoppingCartService.ShoppingCartIsRecurringAsync(cart))
             {
-                var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+                var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
                 rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
 
                 var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
@@ -475,7 +478,7 @@ namespace Nop.Web.Factories
 
             //filter by country
             var paymentMethods = await (await _paymentPluginManager
-                .LoadActivePluginsAsyncAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id, filterByCountryId))
+                .LoadActivePluginsAsyncAsync(customer, store.Id, filterByCountryId))
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
                 .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart))
                 .ToListAsync();
@@ -503,7 +506,7 @@ namespace Nop.Web.Factories
 
             //find a selected (previously) payment method
             var selectedPaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(customer,
-                NopCustomerDefaults.SelectedPaymentMethodAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
+                NopCustomerDefaults.SelectedPaymentMethodAttribute, store.Id);
             if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()

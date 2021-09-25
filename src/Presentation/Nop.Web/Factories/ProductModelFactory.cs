@@ -1375,12 +1375,13 @@ namespace Nop.Web.Factories
                 }
             }
 
+            var store = await _storeContext.GetCurrentStoreAsync();
             //email a friend
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
             //compare products
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
-            model.CurrentStoreName = await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name);
+            model.CurrentStoreName = await _localizationService.GetLocalizedAsync(store, x => x.Name);
 
             //vendor details
             if (_vendorSettings.ShowVendorOnProductDetailsPage)
@@ -1518,7 +1519,7 @@ namespace Nop.Web.Factories
             {
                 var wrappedProduct = new ShoppingCartItem
                 {
-                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
+                    StoreId = store.Id,
                     ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart,
                     CustomerId = customer.Id,
                     ProductId = product.Id,
@@ -1545,7 +1546,7 @@ namespace Nop.Web.Factories
                 //ensure no circular references
                 if (!isAssociatedProduct)
                 {
-                    var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id, store.Id);
                     foreach (var associatedProduct in associatedProducts)
                         model.AssociatedProducts.Add(await PrepareProductDetailsModelAsync(associatedProduct, null, true));
                 }

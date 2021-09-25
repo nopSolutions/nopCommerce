@@ -146,7 +146,8 @@ namespace Nop.Web.Factories
         {
             var model = new CustomerOrderListModel();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var orders = await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var orders = await _orderService.SearchOrdersAsync(storeId: store.Id,
                 customerId: customer.Id);
             foreach (var order in orders)
             {
@@ -167,7 +168,7 @@ namespace Nop.Web.Factories
                 model.Orders.Add(orderModel);
             }
 
-            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(store.Id,
                 customer.Id);
             foreach (var recurringPayment in recurringPayments)
             {
@@ -627,7 +628,7 @@ namespace Nop.Web.Factories
             };
 
             //current amount/balance
-            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var rewardPointsBalance = await _rewardPointService.GetRewardPointsBalanceAsync(customer.Id, store.Id);
             var rewardPointsAmountBase = await _orderTotalCalculationService.ConvertRewardPointsToAmountAsync(rewardPointsBalance);
             var rewardPointsAmount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(rewardPointsAmountBase, await _workContext.GetWorkingCurrencyAsync());
             model.RewardPointsBalance = rewardPointsBalance;
