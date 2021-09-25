@@ -213,7 +213,8 @@ namespace Nop.Web.Controllers
                 await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
             {
                 //a vendor should have access only to his products
-                if (await _workContext.GetCurrentVendorAsync() == null || (await _workContext.GetCurrentVendorAsync()).Id == product.VendorId)
+                var currentVendor = await _workContext.GetCurrentVendorAsync();
+                if (currentVendor == null || currentVendor.Id == product.VendorId)
                 {
                     DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = AreaNames.Admin }));
                 }

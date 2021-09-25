@@ -301,7 +301,8 @@ namespace Nop.Web.Controllers
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            if (await _workContext.GetCurrentVendorAsync() == null || !_vendorSettings.AllowVendorsToEditInfo)
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
             Picture picture = null;
@@ -320,7 +321,6 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
             var prevPicture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
             //vendor attributes
@@ -372,10 +372,10 @@ namespace Nop.Web.Controllers
             if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            if (await _workContext.GetCurrentVendorAsync() == null || !_vendorSettings.AllowVendorsToEditInfo)
+            var vendor = await _workContext.GetCurrentVendorAsync();
+            if (vendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
 
-            var vendor = await _workContext.GetCurrentVendorAsync();
             var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
 
             if (picture != null)

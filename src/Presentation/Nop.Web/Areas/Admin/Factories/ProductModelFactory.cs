@@ -717,8 +717,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter comments
             var overridePublished = searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1);
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.SearchVendorId = currentVendor.Id;
             var categoryIds = new List<int> { searchModel.SearchCategoryId };
             if (searchModel.SearchIncludeSubCategories && searchModel.SearchCategoryId > 0)
             {
@@ -1014,8 +1015,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,
@@ -1131,8 +1133,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,
@@ -1253,8 +1256,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,
@@ -1369,8 +1373,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,
@@ -1553,7 +1558,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && (await _productService.GetProductByIdAsync(attribute.ProductId)).VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await _productService.GetProductByIdAsync(attribute.ProductId)).VendorId != currentVendor.Id)
                 throw new UnauthorizedAccessException("This is not your product");
 
             var specAttributeOption = await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(attribute.SpecificationAttributeOptionId);
@@ -2224,8 +2230,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null)
+                searchModel.SearchVendorId = currentVendor.Id;
 
             //get products
             var products = await _productService.SearchProductsAsync(showHidden: true,

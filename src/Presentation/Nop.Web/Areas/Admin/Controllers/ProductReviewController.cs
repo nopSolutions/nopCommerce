@@ -107,7 +107,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             //prepare model
@@ -128,7 +129,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != (await _workContext.GetCurrentVendorAsync()).Id)
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
+            if (currentVendor != null && (await _productService.GetProductByIdAsync(productReview.ProductId)).VendorId != currentVendor.Id)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -136,7 +138,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var previousIsApproved = productReview.IsApproved;
 
                 //vendor can edit "Reply text" only
-                var isLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
+                var isLoggedInAsVendor = currentVendor != null;
                 if (!isLoggedInAsVendor)
                 {
                     productReview.Title = model.Title;
