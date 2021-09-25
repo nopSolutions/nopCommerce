@@ -103,8 +103,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
             //whether to include customer identifier
             var customerIdCode = string.Empty;
-            if (_googleAnalyticsSettings.IncludeCustomerId && !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
-                customerIdCode = $"gtag('set', {{'user_id': '{(await _workContext.GetCurrentCustomerAsync()).Id}'}});{Environment.NewLine}";
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (_googleAnalyticsSettings.IncludeCustomerId && !await _customerService.IsGuestAsync(customer))
+                customerIdCode = $"gtag('set', {{'user_id': '{customer.Id}'}});{Environment.NewLine}";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{CUSTOMER_TRACKING}", customerIdCode);
 
             //ecommerce info

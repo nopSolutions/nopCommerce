@@ -328,14 +328,15 @@ namespace Nop.Web.Factories
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = (await _authenticationPluginManager
-                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+                .LoadActivePluginsAsync(currentCustomer, (await _storeContext.GetCurrentStoreAsync()).Id))
                 .Count;
             foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
                 var authMethod = await _authenticationPluginManager
-                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, currentCustomer, (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
@@ -360,7 +361,7 @@ namespace Nop.Web.Factories
                 var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
                 foreach (var consent in consents)
                 {
-                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, currentCustomer.Id);
                     model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, accepted.HasValue && accepted.Value));
                 }
             }

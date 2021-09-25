@@ -5,28 +5,29 @@
 
 @{
     const string hideInfoBlockAttributeName = "CustomerPage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideOrdersBlockAttributeName = "CustomerPage.HideOrdersBlock";
-    var hideOrdersBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideOrdersBlockAttributeName, defaultValue: true);
+    var hideOrdersBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideOrdersBlockAttributeName, defaultValue: true);
 
     const string hideAddressesBlockAttributeName = "CustomerPage.HideAddressesBlock";
-    var hideAddressesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAddressesBlockAttributeName, defaultValue: true);
+    var hideAddressesBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideAddressesBlockAttributeName, defaultValue: true);
 
     const string hideShoppingCartAndWishlistBlockAttributeName = "CustomerPage.HideShoppingCartAndWishlistBlock";
-    var hideShoppingCartAndWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideShoppingCartAndWishlistBlockAttributeName, defaultValue: true);
+    var hideShoppingCartAndWishlistBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideShoppingCartAndWishlistBlockAttributeName, defaultValue: true);
 
     const string hideActivityLogBlockAttributeName = "CustomerPage.HideActivityLogBlock";
-    var hideActivityLogBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideActivityLogBlockAttributeName, defaultValue: true);
+    var hideActivityLogBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideActivityLogBlockAttributeName, defaultValue: true);
 
     const string hidePlaceOrderBlockAttributeName = "CustomerPage.HidePlaceOrderBlock";
-    var hidePlaceOrderBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePlaceOrderBlockAttributeName, defaultValue: true);
+    var hidePlaceOrderBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hidePlaceOrderBlockAttributeName, defaultValue: true);
 
     const string hideBackInStockSubscriptionsBlockAttributeName = "CustomerPage.HideBackInStockSubscriptionsBlock";
-    var hideBackInStockSubscriptionsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideBackInStockSubscriptionsBlockAttributeName, defaultValue: true);
+    var hideBackInStockSubscriptionsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideBackInStockSubscriptionsBlockAttributeName, defaultValue: true);
 
     const string hideRewardPointsBlockAttributeName = "CustomerPage.HideRewardPointsBlock";
-    var hideRewardPointsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideRewardPointsBlockAttributeName, defaultValue: true);
+    var hideRewardPointsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideRewardPointsBlockAttributeName, defaultValue: true);
 }
 
 <section class="content">

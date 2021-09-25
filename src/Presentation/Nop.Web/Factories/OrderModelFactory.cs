@@ -145,8 +145,9 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync()
         {
             var model = new CustomerOrderListModel();
+            var customer = await _workContext.GetCurrentCustomerAsync();
             var orders = await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
-                customerId: (await _workContext.GetCurrentCustomerAsync()).Id);
+                customerId: customer.Id);
             foreach (var order in orders)
             {
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel
@@ -167,7 +168,7 @@ namespace Nop.Web.Factories
             }
 
             var recurringPayments = await _orderService.SearchRecurringPaymentsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                (await _workContext.GetCurrentCustomerAsync()).Id);
+                customer.Id);
             foreach (var recurringPayment in recurringPayments)
             {
                 var order = await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId);
@@ -182,8 +183,8 @@ namespace Nop.Web.Factories
                     CyclesRemaining = await _orderProcessingService.GetCyclesRemainingAsync(recurringPayment),
                     InitialOrderId = order.Id,
                     InitialOrderNumber = order.CustomOrderNumber,
-                    CanCancel = await _orderProcessingService.CanCancelRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment),
-                    CanRetryLastPayment = await _orderProcessingService.CanRetryLastRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment)
+                    CanCancel = await _orderProcessingService.CanCancelRecurringPaymentAsync(customer, recurringPayment),
+                    CanRetryLastPayment = await _orderProcessingService.CanRetryLastRecurringPaymentAsync(customer, recurringPayment)
                 };
 
                 model.RecurringOrders.Add(recurringPaymentModel);

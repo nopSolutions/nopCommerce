@@ -183,7 +183,8 @@ namespace Nop.Web.Controllers
             if (blogPost == null || !blogPost.AllowComments)
                 return RedirectToRoute("Homepage");
 
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
             }
@@ -199,7 +200,7 @@ namespace Nop.Web.Controllers
                 var comment = new BlogComment
                 {
                     BlogPostId = blogPost.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    CustomerId = customer.Id,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_blogSettings.BlogCommentsMustBeApproved,
                     StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,

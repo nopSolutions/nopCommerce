@@ -514,8 +514,9 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.Email = (await _workContext.GetCurrentCustomerAsync()).Email;
-                model.FullName = await _customerService.GetCustomerFullNameAsync(await _workContext.GetCurrentCustomerAsync());
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                model.Email = customer.Email;
+                model.FullName = await _customerService.GetCustomerFullNameAsync(customer);
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
@@ -544,8 +545,9 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.Email = (await _workContext.GetCurrentCustomerAsync()).Email;
-                model.FullName = await _customerService.GetCustomerFullNameAsync(await _workContext.GetCurrentCustomerAsync());
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                model.Email = customer.Email;
+                model.FullName = await _customerService.GetCustomerFullNameAsync(customer);
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;

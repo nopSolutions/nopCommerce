@@ -172,7 +172,8 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("News.Comments.OnlyRegisteredUsersLeaveComments"));
             }
@@ -182,7 +183,7 @@ namespace Nop.Web.Controllers
                 var comment = new NewsComment
                 {
                     NewsItemId = newsItem.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                    CustomerId = customer.Id,
                     CommentTitle = model.AddNewComment.CommentTitle,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_newsSettings.NewsCommentsMustBeApproved,

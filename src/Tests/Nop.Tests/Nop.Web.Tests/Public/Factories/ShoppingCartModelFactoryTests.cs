@@ -62,8 +62,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
 
             await shoppingCartRepo.InsertAsync(new List<ShoppingCartItem> {_shoppingCartItem, _wishlistItem});
 
-            (await _workContext.GetCurrentCustomerAsync()).HasShoppingCartItems = true;
-            await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
+            currentCustomer.HasShoppingCartItems = true;
+            await _customerService.UpdateCustomerAsync(currentCustomer);
         }
 
         [OneTimeTearDown]
@@ -72,8 +73,9 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             await _shoppingCartService.DeleteShoppingCartItemAsync(_shoppingCartItem);
             await _shoppingCartService.DeleteShoppingCartItemAsync(_wishlistItem);
 
-            (await _workContext.GetCurrentCustomerAsync()).HasShoppingCartItems = false;
-            await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            customer.HasShoppingCartItems = false;
+            await _customerService.UpdateCustomerAsync(customer);
         }
 
         [Test]

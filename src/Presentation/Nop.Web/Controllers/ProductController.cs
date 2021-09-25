@@ -503,7 +503,8 @@ namespace Nop.Web.Controllers
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id");
 
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
             {
                 return Json(new
                 {
@@ -514,7 +515,7 @@ namespace Nop.Web.Controllers
             }
 
             //customers aren't allowed to vote for their own reviews
-            if (productReview.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
+            if (productReview.CustomerId == customer.Id)
             {
                 return Json(new
                 {
@@ -583,7 +584,8 @@ namespace Nop.Web.Controllers
             }
 
             //check whether the current customer is guest and ia allowed to email a friend
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
             {
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Products.EmailAFriend.OnlyRegisteredUsers"));
             }
@@ -591,7 +593,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 //email
-                await _workflowMessageService.SendProductEmailAFriendMessageAsync(await _workContext.GetCurrentCustomerAsync(),
+                await _workflowMessageService.SendProductEmailAFriendMessageAsync(customer,
                         (await _workContext.GetWorkingLanguageAsync()).Id, product,
                         model.YourEmailAddress, model.FriendEmail,
                         Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
