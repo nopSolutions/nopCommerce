@@ -539,7 +539,7 @@ namespace Nop.Web.Factories
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             var model = new EditForumPostModel
             {
                 ForumTopicId = forumTopic.Id,
@@ -548,7 +548,7 @@ namespace Nop.Web.Factories
                 ForumName = forum.Name,
                 ForumTopicSubject = forumTopic.Subject,
                 ForumTopicSeName = await _forumService.GetTopicSeNameAsync(forumTopic),
-                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(customer),
+                IsCustomerAllowedToSubscribe = await _forumService.IsCustomerAllowedToSubscribeAsync(currentCustomer),
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum
             };
 
@@ -557,7 +557,7 @@ namespace Nop.Web.Factories
                 //subscription            
                 if (model.IsCustomerAllowedToSubscribe)
                 {
-                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(customer.Id,
+                    var forumSubscription = (await _forumService.GetAllSubscriptionsAsync(currentCustomer.Id,
                         0, forumTopic.Id, 0, 1)).FirstOrDefault();
                     model.Subscribed = forumSubscription != null;
                 }
