@@ -5160,6 +5160,12 @@
   <LocaleResource Name="Admin.Configuration.Languages.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.NeedRestart.AfterAdded">
+    <Value>Please, restart the app because the new language is added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.NeedRestart.AfterRemoved">
+    <Value>Please, restart the app because the language is deleted.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.PublishedLanguageRequired">
     <Value>At least one published language is required</Value>
   </LocaleResource>
