@@ -7,11 +7,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Nop.Core;
+using Nop.Core.Domain.Companies;
+using Nop.Core.Infrastructure;
 using Nop.Plugin.ExternalAuth.ExtendedAuth.Domain;
 using Nop.Plugin.ExternalAuth.ExtendedAuthentication.Infrastructure;
 using Nop.Plugin.ExternalAuth.ExtendedAuthentication.Models;
 using Nop.Services.Authentication.External;
+using Nop.Services.Companies;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -39,7 +43,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
         private readonly IOptionsMonitorCache<MicrosoftAccountOptions> _optionsMicrosoftCache;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly INotificationService _notificationService;
-        private readonly IHttpContextAccessor _httpContextAccessor;       
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -158,7 +162,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
             return View("~/Plugins/ExternalAuth.ExtendedAuth/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]        
+        [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> Configure(ConfigurationModel model)
@@ -264,12 +268,12 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
 
             var authenticationProperties = new AuthenticationProperties
             {
-                RedirectUri = "/"+ socialMediaList.SocialMedias.Where(x => x.Name.ToLower() == authentication.ToLower()).Select(x => x.CallBackPath.ToLower()).FirstOrDefault() + "?returnUrl="+ returnUrl  //Url.Action("LoginCallback", "Authentication", new { returnUrl = returnUrl })
+                RedirectUri = "/" + socialMediaList.SocialMedias.Where(x => x.Name.ToLower() == authentication.ToLower()).Select(x => x.CallBackPath.ToLower()).FirstOrDefault() + "?returnUrl=" + returnUrl  //Url.Action("LoginCallback", "Authentication", new { returnUrl = returnUrl })
             };
-            
+
 
             authenticationProperties.SetString(AuthenticationDefaults.ErrorCallback, Url.RouteUrl("Login", new { returnUrl }));
-                       
+
 
             return Challenge(authenticationProperties, authentication);
         }
@@ -277,8 +281,8 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
         // TODO: allow configurable whitelisting for Google
         private bool RefactorMe_IsGoogleEmailDomainWhitelisted(string authenticationName, string email)
         {
-            if(authenticationName.Equals(AuthenticationDefaults.GoogleAuthenticationScheme, 
-                StringComparison.InvariantCultureIgnoreCase) && 
+            if (authenticationName.Equals(AuthenticationDefaults.GoogleAuthenticationScheme,
+                StringComparison.InvariantCultureIgnoreCase) &&
                 email.EndsWith("@servicetitan.com"))
             {
                 return true;
@@ -295,15 +299,48 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                 var socialMediaList = new SocialMediaList();
                 authenticationName = socialMediaList.SocialMedias.Where(x => "/" + x.CallBackPath.ToLower() == urlPath.Value).Select(x => x.Name).FirstOrDefault();
             }
-            
+
             //authenticate social user
             var authenticateResult = await this.HttpContext.AuthenticateAsync(authenticationName);
             if (!authenticateResult.Succeeded || !authenticateResult.Principal.Claims.Any())
                 return RedirectToRoute("Login");
 
+            bool isApproved = false;
             string email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email))
+            {
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                var customerService = EngineContext.Current.Resolve<ICustomerService>();
+                var companyService = EngineContext.Current.Resolve<ICompanyService>();
+
+                //get current logged-in user
+                var currentLoggedInUser = await customerService.IsRegisteredAsync(await workContext.GetCurrentCustomerAsync()) ? await workContext.GetCurrentCustomerAsync() : null;
+
+                var companies = await companyService.GetAllCompaniesAsync(email: email.Split('@')[1]);
+                if (companies.Any())
+                {
+                    var companyId = companies.FirstOrDefault().Id;
+
+                    //whether product Company with such parameters already exists
+                    var checkCustomerCompanyMappingExist = await companyService.GetCompanyCustomersByCustomerIdAsync(currentLoggedInUser.Id);
+                    if (!checkCustomerCompanyMappingExist.Any())
+                    {
+                        await companyService.InsertCompanyCustomerAsync(new CompanyCustomer { CompanyId = companyId, CustomerId = currentLoggedInUser.Id });
+                        isApproved = true;
+
+                        var companyCustomers = await companyService.GetCompanyCustomersByCompanyIdAsync(companyId);
+                        if (companyCustomers.Any())
+                        {
+                            var addresses = await customerService.GetAddressesByCustomerIdAsync(companyCustomers.FirstOrDefault().CustomerId);
+                            foreach (var address in addresses)
+                            {
+                                await customerService.InsertCustomerAddressAsync(currentLoggedInUser, address);
+                            }
+                        }
+                    }
+                }
                 email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value + "@" + authenticateResult.Principal.Identity.AuthenticationType + ".com";
+            }
 
             //create external authentication parameters
             var authenticationParameters = new ExternalAuthenticationParameters
@@ -311,7 +348,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuthentication.Controllers
                 ProviderSystemName = AuthenticationDefaults.PluginSystemName,
                 AccessToken = await this.HttpContext.GetTokenAsync(authenticationName, "access_token"),
                 Email = email,
-                IsApproved = RefactorMe_IsGoogleEmailDomainWhitelisted(authenticationName, email),
+                IsApproved = !isApproved ? RefactorMe_IsGoogleEmailDomainWhitelisted(authenticationName, email) : isApproved,
                 ExternalIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,
                 ExternalDisplayIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,
                 Claims = authenticateResult.Principal.Claims.Select(claim => new ExternalAuthenticationClaim(claim.Type, claim.Value)).ToList()

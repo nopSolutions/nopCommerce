@@ -33,11 +33,7 @@ namespace Nop.Plugin.ExternalAuth.ExtendedAuth.Infrastructure
         /// <param name="config">Config</param>
         public void Register(IServiceCollection services, ITypeFinder typeFinder, AppSettings appSettings)
         {
-            //services.AddScoped<IExternalAuthenticationService, ExternalAuthenticationService_Override>();
-            //services.AddSingleton<WeekdayProductRotation>();
-
-            services.AddSingleton<ITelegramBotClient, TelegramBotClient>(ctx => 
-                new TelegramBotClient(appSettings.ExtendedAuthSettings.TelegramBotSecret));
+            
         }
     }
 }

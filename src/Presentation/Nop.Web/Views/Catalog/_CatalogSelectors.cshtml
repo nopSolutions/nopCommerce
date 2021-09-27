@@ -65,26 +65,4 @@
             });
         </script>
     }
-
-    @if (Model.AllowCustomersToSelectPageSize)
-    {
-        <div class="product-page-size">
-            <span>@T("Catalog.PageSize")</span>
-            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { aria_label = T("Catalog.PageSize.Label") })
-            <span>@T("Catalog.PageSize.PerPage")</span>
-        </div>
-        <script asp-location="Footer">
-            $(document).ready(function () {
-                var $pageSizeEl = $('#products-pagesize');
-                $pageSizeEl.on('change', function () {
-                    CatalogProducts.getProducts();
-                });
-
-                $(CatalogProducts).on('before', function (e) {
-                    e.payload.urlBuilder
-                        .addParameter('pagesize', $pageSizeEl.val());
-                });
-            });
-        </script>
-    }
 </div>

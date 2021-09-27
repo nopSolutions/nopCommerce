@@ -4,6 +4,8 @@
 
 trigger:
 - staging
+- old-4.30
+- master
 
 resources:
 - repo: self

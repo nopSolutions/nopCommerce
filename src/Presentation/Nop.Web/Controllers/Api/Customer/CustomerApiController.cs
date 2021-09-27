@@ -161,23 +161,17 @@ namespace Nop.Web.Controllers.Api.Customer
             {
                 companyDetails.CompanyName = company.Name;
                 companyDetails.AmoutLimit = company.AmountLimit;
-                var companyCustomerIds = await _companyService.GetCompanyCustomersByCompanyIdAsync(company.Id);
-                if (companyCustomerIds.Any())
+                var companyCustomers = await _companyService.GetCompanyCustomersByCompanyIdAsync(company.Id);
+                if (companyCustomers.Any())
                 {
-                    var customers = await _customerService.GetCustomersByIdsAsync(companyCustomerIds.Select(x => x.CustomerId).ToArray());
-                    if (customers.Any())
+                    var customerId = companyCustomers.FirstOrDefault().CustomerId;
+                    var addresses = new List<Address>();
+                    foreach (var address in await _customerService.GetAddressesByCustomerIdAsync(customerId))
                     {
-                        var addresses = new List<Address>();
-                        foreach (var customer in customers)
-                        {
-                            foreach (var address in await _customerService.GetAddressesByCustomerIdAsync(customer.Id))
-                            {
-                                if (!addresses.Where(x => x.Id == address.Id).Any())
-                                    addresses.Add(address);
-                            }
-                        }
-                        companyDetails.Adresses = addresses;
+                        if (!addresses.Where(x => x.Id == address.Id).Any())
+                            addresses.Add(address);
                     }
+                    companyDetails.Adresses = addresses;
                 }
                 return Ok(new { success = true, companyDetails });
             }

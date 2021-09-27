@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets a path to the file that contains data settings
         /// </summary>
-        public static string FilePath => "~/App_Data/dataSettings.json";
+        public static string FilePath => "~/persistent/dataSettings.json";
 
         /// <summary>
         /// Gets the name of an environment variable with connection string settings

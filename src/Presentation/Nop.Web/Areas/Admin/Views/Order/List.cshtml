@@ -1,18 +1,18 @@
-﻿@model OrderSearchModel
+@model OrderSearchModel
 
 @inject IStoreService storeService
 @using Nop.Services.Stores
 
 @{
-  //page title
-  ViewBag.PageTitle = T("Admin.Orders").Text;
-  //active menu item (system name)
-  Html.SetActiveMenuItemSystemName("Orders");
+    //page title
+    ViewBag.PageTitle = T("Admin.Orders").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
 }
 
 @{
-  const string hideSearchBlockAttributeName = "OrdersPage.HideSearchBlock";
-  var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+    const string hideSearchBlockAttributeName = "OrdersPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Order" asp-action="List" method="post">
@@ -21,6 +21,30 @@
             @T("Admin.Orders")
         </h1>
         <div class="float-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary">
+                    <i class="fas fa-truck"></i>
+                    @T("Admin.Common.ShippingStatus")
+                </button>
+                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                    <span class="sr-only">&nbsp;</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-item">
+                        <button type="button" id="mark-as-shipped">
+                            <i class="fa fa-truck" aria-hidden="true"></i>
+                            @T("Admin.Common.MarkAsShipped")
+                        </button>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li class="dropdown-item">
+                        <button type="button" id="mark-as-delivered">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            @T("Admin.Common.MarkAsDelivered")
+                        </button>
+                    </li>
+                </ul>
+            </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-success">
                     <i class="fas fa-download"></i>
@@ -163,14 +187,6 @@
                                                 <nop-select asp-for="OrderStatusIds" asp-items="Model.AvailableOrderStatuses" asp-multiple="true" />
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-4">
-                                                <nop-label asp-for="PaymentStatusIds" />
-                                            </div>
-                                            <div class="col-md-8">
-                                                <nop-select asp-for="PaymentStatusIds" asp-items="Model.AvailablePaymentStatuses" asp-multiple="true" />
-                                            </div>
-                                        </div>
                                         <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                             <div class="col-md-4">
                                                 <nop-label asp-for="ShippingStatusIds" />
@@ -190,32 +206,32 @@
                                             </div>
                                         </div>
                                         <div class="form-group row" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                            <div class="col-md-4">
-                                                <nop-label asp-for="VendorId" />
-                                            </div>
-                                            <div class="col-md-8">
-                                                <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
-                                            </div>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="VendorId" />
                                         </div>
-                                        @if (Model.BillingPhoneEnabled)
-                                        {
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                                        </div>
+                                    </div>
+                                    @*@if (Model.BillingPhoneEnabled)
+                                    {
                                             <div class="form-group row">
-                                                <div class="col-md-4">
-                                                    <nop-label asp-for="BillingPhone" />
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <nop-editor asp-for="BillingPhone" />
-                                                </div>
-                                            </div>
-                                        }
-                                        <div class="form-group row">
                                             <div class="col-md-4">
-                                                <nop-label asp-for="BillingEmail" />
+                                                <nop-label asp-for="BillingPhone" />
                                             </div>
                                             <div class="col-md-8">
-                                                <nop-editor asp-for="BillingEmail" />
+                                                <nop-editor asp-for="BillingPhone" />
                                             </div>
                                         </div>
+                                    }*@
+                                        @*<div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="BillingEmail" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="BillingEmail" />
+                                        </div>
+                                    </div>
                                         <div class="form-group row">
                                             <div class="col-md-4">
                                                 <nop-label asp-for="BillingLastName" />
@@ -225,13 +241,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group row" @(Model.AvailableCountries.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                            <div class="col-md-4">
-                                                <nop-label asp-for="BillingCountryId" />
-                                            </div>
-                                            <div class="col-md-8">
-                                                <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
-                                            </div>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="BillingCountryId" />
                                         </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
+                                        </div>
+                                    </div>*@
                                         <div class="form-group row" @(Model.AvailablePaymentMethods.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                             <div class="col-md-4">
                                                 <nop-label asp-for="PaymentMethodSystemName" />
@@ -281,129 +297,124 @@
                         <div class="card-body">
                             <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.Orders", Docs.Orders + Utm.OnAdmin)" />
 
-                            @{
-                              var gridModel = new DataTablesModel
-                              {
-                                Name = "orders-grid",
-                                UrlRead = new DataUrl("OrderList", "Order", null),
-                                SearchButtonId = "search-orders",
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
-                                FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
-                                Filters = new List<FilterParameter>
-                                                        {
-                                        new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
-                                        new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
-                                        new FilterParameter(nameof(Model.OrderStatusIds)),
-                                        new FilterParameter(nameof(Model.PaymentStatusIds)),
-                                        new FilterParameter(nameof(Model.ShippingStatusIds)),
-                                        new FilterParameter(nameof(Model.StoreId)),
-                                        new FilterParameter(nameof(Model.VendorId)),
-                                        new FilterParameter(nameof(Model.WarehouseId)),
-                                        new FilterParameter(nameof(Model.BillingEmail)),
-                                        new FilterParameter(nameof(Model.BillingPhone)),
-                                        new FilterParameter(nameof(Model.BillingLastName)),
-                                        new FilterParameter(nameof(Model.BillingCountryId)),
-                                        new FilterParameter(nameof(Model.PaymentMethodSystemName)),
-                                        new FilterParameter(nameof(Model.ProductId)),
-                                        new FilterParameter(nameof(Model.OrderNotes))
-                                    }
-                              };
-                              gridModel.ColumnCollection = new List<ColumnProperty>
-                                                    {
-                                    new ColumnProperty(nameof(OrderModel.Id))
-                                    {
-                                        IsMasterCheckBox = true,
-                                        Render = new RenderCheckBox("checkbox_orders"),
-                                        ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50"
-                                    },
-                                    new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
-                                    {
-                                        Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
-                                        Width = "80"
-                                    }
-                                };
-                              //a vendor does not have access to this functionality
-                              if (!Model.IsLoggedInAsVendor)
-                              {
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
+                        @{
+                          var gridModel = new DataTablesModel
+                          {
+                            Name = "orders-grid",
+                            UrlRead = new DataUrl("OrderList", "Order", null),
+                            SearchButtonId = "search-orders",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
+                            FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
+                            Filters = new List<FilterParameter>
+                                                {
+                                                    new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                                    new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                                    new FilterParameter(nameof(Model.OrderStatusIds)),
+                                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
+                                                    new FilterParameter(nameof(Model.StoreId)),
+                                                    new FilterParameter(nameof(Model.VendorId)),
+                                                    //new FilterParameter(nameof(Model.WarehouseId)),
+                                                    //new FilterParameter(nameof(Model.BillingEmail)),
+                                                    //new FilterParameter(nameof(Model.BillingPhone)),
+                                                    //new FilterParameter(nameof(Model.BillingLastName)),
+                                                    //new FilterParameter(nameof(Model.BillingCountryId)),
+                                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
+                                                    new FilterParameter(nameof(Model.ProductId)),
+                                                    new FilterParameter(nameof(Model.OrderNotes))
+                                                }
+                          };
+                          gridModel.ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(OrderModel.Id))
                                 {
-                                  Title = T("Admin.Orders.Fields.OrderStatus").Text,
-                                  Width = "100",
-                                  Render = new RenderCustom("renderColumnOrderStatus")
-                                });
-                              }
-                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
-                              {
-                                Title = T("Admin.Orders.Fields.PaymentStatus").Text,
-                                Width = "150"
-                              });
-                              //a vendor does not have access to this functionality
-                              if (!Model.IsLoggedInAsVendor)
-                              {
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_orders"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
                                 {
-                                  Title = T("Admin.Orders.Fields.ShippingStatus").Text,
-                                  Width = "150"
-                                });
-                              }
-                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
-                              {
-                                Title = T("Admin.Orders.Fields.Customer").Text,
-                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
-                              });
-
-                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
-                              {
-                                Title = T("Admin.Orders.Fields.Customer").Text,
-                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
-                              });
-                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
-                              {
-                                Title = T("Admin.Orders.Fields.Store").Text,
-                                Width = "100",
-                                Visible = storeService.GetAllStoresAsync().Result.Count > 1
-                              });
-                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
-                              {
-                                Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                                Width = "120",
-                                Render = new RenderDate()
-                              });
-                              //a vendor does not have access to this functionality
-                              if (!Model.IsLoggedInAsVendor)
-                              {
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
-                                {
-                                  Title = T("Admin.Orders.Fields.Store").Text,
-                                  Width = "100",
-                                  Visible = (await storeService.GetAllStoresAsync()).Count > 1
-                                });
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
-                                {
-                                  Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                                  Width = "120",
-                                  Render = new RenderDate()
-                                });
-                                //a vendor does not have access to this functionality
-                                if (!Model.IsLoggedInAsVendor)
-                                {
-                                  gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
-                                  {
-                                    Title = T("Admin.Orders.Fields.OrderTotal").Text,
-                                    Width = "100",
-                                  });
+                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
+                                    Width = "80"
                                 }
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
-                                {
-                                  Title = T("Admin.Common.View").Text,
-                                  Width = "50",
-                                  ClassName = NopColumnClassDefaults.Button,
-                                  Render = new RenderButtonView(new DataUrl("Edit"))
-                                });
-                              }
+                            };
+                          //a vendor does not have access to this functionality
+                          if (!Model.IsLoggedInAsVendor)
+                          {
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
+                            {
+                              Title = T("Admin.Orders.Fields.OrderStatus").Text,
+                              Width = "100",
+                              Render = new RenderCustom("renderColumnOrderStatus")
+                            });
+                          }
+                          //a vendor does not have access to this functionality
+                          if (!Model.IsLoggedInAsVendor)
+                          {
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
+                            {
+                              Title = T("Admin.Orders.Fields.ShippingStatus").Text,
+                              Width = "150"
+                            });
+                          }
+
+                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerFullName))
+                          {
+                            Title = T("Admin.Orders.Fields.Customer").Text,
+                            Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                          });
+                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
+                          {
+                            Title = T("Admin.Orders.Fields.Store").Text,
+                            Width = "100",
+                            Visible = storeService.GetAllStoresAsync().Result.Count > 1
+                          });
+                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                          {
+                            Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                            Width = "120",
+                            Render = new RenderDate()
+                          });
+                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingAddress))
+                          {
+                            Title = "Shipping address",
+                            Width = "120",
+                            Render = new RenderCustom("renderShippingAddress")
+                          });
+                          //a vendor does not have access to this functionality
+                          if (!Model.IsLoggedInAsVendor)
+                          {
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                            {
+                              Title = T("Admin.Orders.Fields.Store").Text,
+                              Width = "100",
+                              Visible = (await storeService.GetAllStoresAsync()).Count > 1
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                            {
+                              Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                              Width = "120",
+                              Render = new RenderDate()
+                            });
+                            //a vendor does not have access to this functionality
+                            if (!Model.IsLoggedInAsVendor)
+                            {
+                              gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                              {
+                                Title = T("Admin.Orders.Fields.OrderTotal").Text,
+                                Width = "100",
+                              });
+                            }
+                          }
+                          gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
+                          {
+                            Title = T("Admin.Common.View").Text,
+                            Width = "50",
+                            ClassName = NopColumnClassDefaults.Button,
+                            Render = new RenderButtonView(new DataUrl("Edit"))
+                          });
                             }
 
                             @await Html.PartialAsync("Table", gridModel)
@@ -426,7 +437,11 @@
                                     break;
                                 }
                                 return '<span class="grid-report-item ' + color + '">' + data + '</span >';
-                            }
+                          }
+
+                          function renderShippingAddress(data, type, row, meta) {
+                            return data.Address1 + ', ' + data.Address2;
+                          }
 
                             $(document).ready(function() {
                                 $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(
@@ -448,10 +463,10 @@
                                     StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
                                     VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
                                     WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
-                                    BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
+                                    @*BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
                                     BillingPhone: $('#@Html.IdFor(model => model.BillingPhone)').val(),
                                     BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
-                                    BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
+                                    BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),*@
                                     PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
                                     ProductId: $('#@Html.IdFor(model => model.ProductId)').val(),
                                     OrderNotes: $('#@Html.IdFor(model => model.OrderNotes)').val()
@@ -477,7 +492,7 @@
                                         }
                                     }
                                 });
-                              }
+                            }
 
                             </script>
                         </div>
@@ -487,6 +502,46 @@
         </div>
     </section>
 </form>
+
+@*mark as delivery or shipped *@
+<form asp-controller="Order" asp-action="UpdateShippingStatus" method="post" id="set-shipping-status-form">
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+    <input type="hidden" id="shippingStatus" name="shippingStatus" value="" />
+</form>
+<script>
+    $(document).ready(function () {
+        $('#mark-as-delivered').click(function (e) {
+            e.preventDefault();
+            let deliveredStatus = 40;
+            setShippingStatus(deliveredStatus);
+        });
+    });
+
+    $(document).ready(function () {
+            $('#mark-as-shipped').click(function (e) {
+                e.preventDefault();
+                let shippingStatus = 30;
+                setShippingStatus(shippingStatus);
+            });
+    });
+
+    function setShippingStatus(status) {
+                    var ids = selectedIds.join(",");
+            if (!ids) {
+                $('#setShippingStatus-info').text("@T("Admin.Orders.NoOrders")");
+                $("#setShippingStatus").click();
+            }
+            else {
+                $('#set-shipping-status-form #selectedIds').val(ids);
+                $('#set-shipping-status-form #shippingStatus').val(status);
+                $('#set-shipping-status-form').submit();
+                updateTable('#orders-grid');
+            }
+            return false
+    }
+</script>
+<nop-alert asp-alert-id="setShippingStatus" />
+@*mark as delivery or shipped *@
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
@@ -523,7 +578,7 @@
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-             if (!ids) {
+            if (!ids) {
                 $('#exportExcelSelected-info').text("@T("Admin.Orders.NoOrders")");
                 $("#exportExcelSelected").click();
             }
@@ -548,7 +603,7 @@
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-           if (!ids) {
+            if (!ids) {
                 $('#pdfInvoiceSelected-info').text("@T("Admin.Orders.NoOrders")");
                 $("#pdfInvoiceSelected").click();
             }

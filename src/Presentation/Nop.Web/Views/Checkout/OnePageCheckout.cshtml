@@ -95,10 +95,10 @@
                             </div>
                         </form>
                         <script asp-location="Footer">
-                            Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
-                            if ($("#shipping-address-select").length > 0) {
-                                Shipping.newAddress(!$('#shipping-address-select').val());
-                            }
+                          Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
+                          if ($("#shipping-address-select").length > 0) {
+                            Shipping.newAddress($('#shipping-address-select').selectedOptions[0].id == 'checkout-newaddress');
+                          }
                         </script>
                         <div class="buttons" id="shipping-buttons-container">
                             @if (!Model.DisableBillingAddressCheckoutStep)

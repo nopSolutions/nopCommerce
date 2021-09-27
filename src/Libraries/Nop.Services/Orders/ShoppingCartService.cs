@@ -321,10 +321,10 @@ namespace Nop.Services.Orders
             }
 
             //published
-            if (!product.Published)
-            {
-                warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
-            }
+            //if (!product.Published)
+            //{
+            //    warnings.Add(await _localizationService.GetResourceAsync("ShoppingCart.ProductUnpublished"));
+            //}
 
             //we can add only simple products
             if (product.ProductType != ProductType.SimpleProduct)
