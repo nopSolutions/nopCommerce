@@ -1,3 +1,9 @@
 ﻿@{
     Layout = "_AdminLayout";
 }
+
+@inject IWorkContext workContext
+
+@{
+    ViewBag.CurrentCustomer = await workContext.GetCurrentCustomerAsync();
+}

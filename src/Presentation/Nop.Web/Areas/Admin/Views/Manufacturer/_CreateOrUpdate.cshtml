@@ -5,19 +5,19 @@
 
 @{
 	const string hideInfoBlockAttributeName = "ManufacturerPage.HideInfoBlock";
-	var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+	var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideInfoBlockAttributeName);
 
 	const string hideDisplayBlockAttributeName = "ManufacturerPage.HideDisplayBlock";
-	var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideDisplayBlockAttributeName, defaultValue: true);
+	var hideDisplayBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideDisplayBlockAttributeName, defaultValue: true);
 
 	const string hideMappingsBlockAttributeName = "ManufacturerPage.HideMappingsBlock";
-	var hideMappingsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideMappingsBlockAttributeName, defaultValue: true);
+	var hideMappingsBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideMappingsBlockAttributeName, defaultValue: true);
 
 	const string hideSeoBlockAttributeName = "ManufacturerPage.HideSEOBlock";
-	var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSeoBlockAttributeName, defaultValue: true);
+	var hideSeoBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
 
 	const string hideProductsBlockAttributeName = "ManufacturerPage.HideProductsBlock";
-	var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProductsBlockAttributeName, defaultValue: true);
+	var hideProductsBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideProductsBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

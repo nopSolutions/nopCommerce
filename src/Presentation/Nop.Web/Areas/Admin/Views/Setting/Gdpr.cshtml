@@ -9,10 +9,10 @@
 
 @{
     const string hideCommonBlockAttributeName = "GdprSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideConsentsBlockAttributeName = "GdprSettingsPage.HideConsentsBlock";
-    var hideConsentsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideConsentsBlockAttributeName);
+    var hideConsentsBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideConsentsBlockAttributeName);
 }
 
 

@@ -14,7 +14,7 @@
 
     //close configuration steps value
     const string closeCardAttributeName = "CloseConfigurationSteps";
-    var closeConfigurationStepsCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), closeCardAttributeName);
+    var closeConfigurationStepsCard = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, closeCardAttributeName);
 
      //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Dashboard");
@@ -125,4 +125,4 @@
     </div>
 </section>
     <nop-alert asp-alert-id="loadOrderStatisticsAlert" asp-alert-message="@T("Admin.SalesReport.OrderStatistics.Alert.FailedLoad")" />
-    <nop-alert asp-alert-id="loadCustomerStatisticsAlert" asp-alert-message="@T("Admin.Reports.Customers.CustomerStatistics.Alert.FailedLoad")" />
+<nop-alert asp-alert-id="loadCustomerStatisticsAlert" asp-alert-message="@T("Admin.Reports.Customers.CustomerStatistics.Alert.FailedLoad")" />

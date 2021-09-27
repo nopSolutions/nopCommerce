@@ -6,7 +6,7 @@
 
 <ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu">
     @{
-        var customer = await workContext.GetCurrentCustomerAsync();
+        var customer = ViewBag.CurrentCustomer;
 
         //load sitemap
         var siteMap = new XmlSiteMap();

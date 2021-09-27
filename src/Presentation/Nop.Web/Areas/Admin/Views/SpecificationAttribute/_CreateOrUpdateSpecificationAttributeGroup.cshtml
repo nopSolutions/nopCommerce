@@ -2,7 +2,7 @@
 
 @{
     const string hideInfoBlockAttributeGroupName = "SpecificationAttributeGroupPage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeGroupName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideInfoBlockAttributeGroupName);
 }
 
 <div asp-validation-summary="All"></div>

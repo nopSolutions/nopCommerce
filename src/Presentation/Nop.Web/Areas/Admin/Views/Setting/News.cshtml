@@ -10,10 +10,10 @@
 
 @{
     const string hideCommonBlockAttributeName = "NewsSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideCommentsBlockAttributeName = "NewsSettingsPage.HideCommentsBlock";
-    var hideCommentsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommentsBlockAttributeName);
+    var hideCommentsBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideCommentsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="News" method="post">

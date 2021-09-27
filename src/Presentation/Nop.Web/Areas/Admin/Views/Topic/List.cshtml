@@ -18,7 +18,7 @@
     }
 
     const string hideSearchBlockAttributeName = "TopicsPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
 @await Html.PartialAsync("_AdminTour")

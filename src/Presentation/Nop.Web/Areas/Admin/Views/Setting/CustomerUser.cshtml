@@ -9,22 +9,22 @@
 
 @{
     const string hideCommonBlockAttributeName = "CustomerUserSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideSecurityBlockAttributeName = "CustomerUserSettingsPage.HideSecurityBlock";
-    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSecurityBlockAttributeName);
+    var hideSecurityBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideSecurityBlockAttributeName);
 
     const string hideAccountBlockAttributeName = "CustomerUserSettingsPage.HideAccountBlock";
-    var hideAccountBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAccountBlockAttributeName);
+    var hideAccountBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideAccountBlockAttributeName);
 
     const string hideProfileBlockAttributeName = "CustomerUserSettingsPage.HideProfileBlock";
-    var hideProfileBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideProfileBlockAttributeName);
+    var hideProfileBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideProfileBlockAttributeName);
 
     const string hideCustomerFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideCustomerFormFieldsBlock";
-    var hideCustomerFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCustomerFormFieldsBlockAttributeName);
+    var hideCustomerFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideCustomerFormFieldsBlockAttributeName);
 
     const string hideAddressFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideAddressFormFieldsBlock";
-    var hideAddressFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAddressFormFieldsBlockAttributeName);
+    var hideAddressFormFieldsBlock = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, hideAddressFormFieldsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="CustomerUser" method="post">

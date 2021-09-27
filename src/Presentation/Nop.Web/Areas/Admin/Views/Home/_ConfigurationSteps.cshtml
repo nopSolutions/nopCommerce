@@ -8,10 +8,10 @@
     const string cardId = "configuration-steps-card";
 
     //hide value
-    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+    var hideCard = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, NopCustomerDefaults.HideConfigurationStepsAttribute);
 
     //close value
-    var closeCard = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+    var closeCard = await genericAttributeService.GetAttributeAsync<bool>(ViewBag.CurrentCustomer, NopCustomerDefaults.CloseConfigurationStepsAttribute);
 
     var defaultStoreId = (await storeService.GetAllStoresAsync()).FirstOrDefault()?.Id ?? 0;
 }

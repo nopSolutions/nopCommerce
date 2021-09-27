@@ -117,7 +117,7 @@
     var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance);
 
     //avatar
-    var currentCustomer = await workContext.GetCurrentCustomerAsync();
+    var currentCustomer = ViewBag.CurrentCustomer;
 
     //event
     await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
