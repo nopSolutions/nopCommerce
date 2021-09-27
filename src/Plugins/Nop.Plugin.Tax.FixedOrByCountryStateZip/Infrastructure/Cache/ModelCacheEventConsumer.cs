@@ -60,6 +60,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<TaxRate> eventMessage)
         {
             //clear cache
@@ -70,6 +71,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate updated event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<TaxRate> eventMessage)
         {
             //clear cache
@@ -80,6 +82,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<TaxRate> eventMessage)
         {
             //clear cache
@@ -90,6 +93,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax category deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<TaxCategory> eventMessage)
         {
             var taxCategory = eventMessage?.Entity;

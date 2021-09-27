@@ -23,6 +23,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -133,6 +134,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare store theme models
         /// </summary>
         /// <param name="models">List of store theme models</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareStoreThemeModelsAsync(IList<StoreInformationSettingsModel.ThemeModel> models)
         {
             if (models == null)
@@ -162,7 +164,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare sort option search model
         /// </summary>
         /// <param name="searchModel">Sort option search model</param>
-        /// <returns>Sort option search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sort option search model
+        /// </returns>
         protected virtual Task<SortOptionSearchModel> PrepareSortOptionSearchModelAsync(SortOptionSearchModel searchModel)
         {
             if (searchModel == null)
@@ -178,7 +183,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare GDPR consent search model
         /// </summary>
         /// <param name="searchModel">GDPR consent search model</param>
-        /// <returns>GDPR consent search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR consent search model
+        /// </returns>
         protected virtual Task<GdprConsentSearchModel> PrepareGdprConsentSearchModelAsync(GdprConsentSearchModel searchModel)
         {
             if (searchModel == null)
@@ -193,7 +201,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare address settings model
         /// </summary>
-        /// <returns>Address settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address settings model
+        /// </returns>
         protected virtual async Task<AddressSettingsModel> PrepareAddressSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -209,7 +220,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare customer settings model
         /// </summary>
-        /// <returns>Customer settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer settings model
+        /// </returns>
         protected virtual async Task<CustomerSettingsModel> PrepareCustomerSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -225,7 +239,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare multi-factor authentication settings model
         /// </summary>
-        /// <returns>MultiFactorAuthenticationSettingsModel</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the multiFactorAuthenticationSettingsModel
+        /// </returns>
         protected virtual async Task<MultiFactorAuthenticationSettingsModel> PrepareMultiFactorAuthenticationSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -242,7 +259,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare date time settings model
         /// </summary>
-        /// <returns>Date time settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the date time settings model
+        /// </returns>
         protected virtual async Task<DateTimeSettingsModel> PrepareDateTimeSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -267,7 +287,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare external authentication settings model
         /// </summary>
-        /// <returns>External authentication settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the external authentication settings model
+        /// </returns>
         protected virtual async Task<ExternalAuthenticationSettingsModel> PrepareExternalAuthenticationSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -286,7 +309,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare store information settings model
         /// </summary>
-        /// <returns>Store information settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store information settings model
+        /// </returns>
         protected virtual async Task<StoreInformationSettingsModel> PrepareStoreInformationSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -335,7 +361,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare Sitemap settings model
         /// </summary>
-        /// <returns>Sitemap settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sitemap settings model
+        /// </returns>
         protected virtual async Task<SitemapSettingsModel> PrepareSitemapSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -376,7 +405,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare minification settings model
         /// </summary>
-        /// <returns>Minification settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the minification settings model
+        /// </returns>
         protected virtual async Task<MinificationSettingsModel> PrepareMinificationSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -407,7 +439,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare SEO settings model
         /// </summary>
-        /// <returns>SEO settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sEO settings model
+        /// </returns>
         protected virtual async Task<SeoSettingsModel> PrepareSeoSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -463,7 +498,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare security settings model
         /// </summary>
-        /// <returns>Security settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the security settings model
+        /// </returns>
         protected virtual async Task<SecuritySettingsModel> PrepareSecuritySettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -487,7 +525,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare captcha settings model
         /// </summary>
-        /// <returns>Captcha settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the captcha settings model
+        /// </returns>
         protected virtual async Task<CaptchaSettingsModel> PrepareCaptchaSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -525,7 +566,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare PDF settings model
         /// </summary>
-        /// <returns>PDF settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pDF settings model
+        /// </returns>
         protected virtual async Task<PdfSettingsModel> PreparePdfSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -558,7 +602,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare localization settings model
         /// </summary>
-        /// <returns>Localization settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the localization settings model
+        /// </returns>
         protected virtual async Task<LocalizationSettingsModel> PrepareLocalizationSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -582,7 +629,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare admin area settings model
         /// </summary>
-        /// <returns>Admin area settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the admin area settings model
+        /// </returns>
         protected virtual async Task<AdminAreaSettingsModel> PrepareAdminAreaSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -607,7 +657,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare display default menu item settings model
         /// </summary>
-        /// <returns>Display default menu item settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the display default menu item settings model
+        /// </returns>
         protected virtual async Task<DisplayDefaultMenuItemSettingsModel> PrepareDisplayDefaultMenuItemSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -644,7 +697,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare display default footer item settings model
         /// </summary>
-        /// <returns>Display default footer item settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the display default footer item settings model
+        /// </returns>
         protected virtual async Task<DisplayDefaultFooterItemSettingsModel> PrepareDisplayDefaultFooterItemSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -698,6 +754,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare setting model to add
         /// </summary>
         /// <param name="model">Setting model to add</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareAddSettingModelAsync(SettingModel model)
         {
             if (model == null)
@@ -715,26 +772,34 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare app settings model
         /// </summary>
         /// <param name="model">AppSettings model</param>
-        /// <returns>App settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the app settings model
+        /// </returns>
         public virtual async Task<AppSettingsModel> PrepareAppSettingsModel(AppSettingsModel model = null)
         {
             model ??= new AppSettingsModel
             {
-                CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
-                HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
-                DistributedCacheConfigModel = _appSettings.DistributedCacheConfig.ToConfigModel<DistributedCacheConfigModel>(),
-                AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
-                InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
-                PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
-                CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
+                CacheConfigModel = _appSettings.Get<CacheConfig>().ToConfigModel<CacheConfigModel>(),
+                HostingConfigModel = _appSettings.Get<HostingConfig>().ToConfigModel<HostingConfigModel>(),
+                DistributedCacheConfigModel = _appSettings.Get<DistributedCacheConfig>().ToConfigModel<DistributedCacheConfigModel>(),
+                AzureBlobConfigModel = _appSettings.Get<AzureBlobConfig>().ToConfigModel<AzureBlobConfigModel>(),
+                InstallationConfigModel = _appSettings.Get<InstallationConfig>().ToConfigModel<InstallationConfigModel>(),
+                PluginConfigModel = _appSettings.Get<PluginConfig>().ToConfigModel<PluginConfigModel>(),
+                CommonConfigModel = _appSettings.Get<CommonConfig>().ToConfigModel<CommonConfigModel>(),
+                DataConfigModel = _appSettings.Get<DataConfig>().ToConfigModel<DataConfigModel>()
             };
 
-            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.DistributedCacheConfig.DistributedCacheType.ToSelectListAsync();
+            model.DistributedCacheConfigModel.DistributedCacheTypeValues = await _appSettings.Get<DistributedCacheConfig>().DistributedCacheType.ToSelectListAsync();
 
+            model.DataConfigModel.DataProviderTypeValues = await _appSettings.Get<DataConfig>().DataProvider.ToSelectListAsync();
+
+            //Since we decided to use the naming of the DB connections section as in the .net core - "ConnectionStrings",
+            //we are forced to adjust our internal model naming to this convention in this check.
             model.EnvironmentVariables.AddRange(from property in model.GetType().GetProperties()
                                                 where property.Name != nameof(AppSettingsModel.EnvironmentVariables)
                                                 from pp in property.PropertyType.GetProperties()
-                                                where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "")}__{pp.Name}")
+                                                where Environment.GetEnvironmentVariables().Contains($"{property.Name.Replace("Model", "").Replace("DataConfig", "ConnectionStrings")}__{pp.Name}")
                                                 select $"{property.Name}_{pp.Name}");
             return model;
         }
@@ -743,7 +808,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare blog settings model
         /// </summary>
         /// <param name="model">Blog settings model</param>
-        /// <returns>Blog settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the blog settings model
+        /// </returns>
         public virtual async Task<BlogSettingsModel> PrepareBlogSettingsModelAsync(BlogSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -775,7 +843,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare vendor settings model
         /// </summary>
         /// <param name="model">Vendor settings model</param>
-        /// <returns>Vendor settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the vendor settings model
+        /// </returns>
         public virtual async Task<VendorSettingsModel> PrepareVendorSettingsModelAsync(VendorSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -814,7 +885,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare forum settings model
         /// </summary>
         /// <param name="model">Forum settings model</param>
-        /// <returns>Forum settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the forum settings model
+        /// </returns>
         public virtual async Task<ForumSettingsModel> PrepareForumSettingsModelAsync(ForumSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -863,7 +937,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare news settings model
         /// </summary>
         /// <param name="model">News settings model</param>
-        /// <returns>News settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the news settings model
+        /// </returns>
         public virtual async Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -896,7 +973,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shipping settings model
         /// </summary>
         /// <param name="model">Shipping settings model</param>
-        /// <returns>Shipping settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shipping settings model
+        /// </returns>
         public virtual async Task<ShippingSettingsModel> PrepareShippingSettingsModelAsync(ShippingSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -925,6 +1005,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.FreeShippingOverXIncludingTax_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeId);
                 model.EstimateShippingCartPageEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingCartPageEnabled, storeId);
                 model.EstimateShippingProductPageEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingProductPageEnabled, storeId);
+                model.EstimateShippingCityNameEnabled_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.EstimateShippingCityNameEnabled, storeId);
                 model.DisplayShipmentEventsToCustomers_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeId);
                 model.DisplayShipmentEventsToStoreOwner_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeId);
                 model.HideShippingTotal_OverrideForStore = await _settingService.SettingExistsAsync(shippingSettings, x => x.HideShippingTotal, storeId);
@@ -947,7 +1028,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare tax settings model
         /// </summary>
         /// <param name="model">Tax settings model</param>
-        /// <returns>Tax settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the ax settings model
+        /// </returns>
         public virtual async Task<TaxSettingsModel> PrepareTaxSettingsModelAsync(TaxSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -1011,7 +1095,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare catalog settings model
         /// </summary>
         /// <param name="model">Catalog settings model</param>
-        /// <returns>Catalog settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the catalog settings model
+        /// </returns>
         public virtual async Task<CatalogSettingsModel> PrepareCatalogSettingsModelAsync(CatalogSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -1024,6 +1111,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.AttributeValueOutOfStockDisplayTypes = await catalogSettings.AttributeValueOutOfStockDisplayType.ToSelectListAsync();
             model.AvailableViewModes.Add(new SelectListItem
             {
                 Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.Grid"),
@@ -1034,8 +1122,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = await _localizationService.GetResourceAsync("Admin.Catalog.ViewMode.List"),
                 Value = "list"
             });
-
-            model.AttributeValueOutOfStockDisplayTypes = await catalogSettings.AttributeValueOutOfStockDisplayType.ToSelectListAsync();
 
             //fill in overridden values
             if (storeId > 0)
@@ -1076,7 +1162,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.SearchPagePriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceRangeFiltering, storeId);
                 model.SearchPagePriceFrom_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceFrom, storeId);
                 model.SearchPagePriceTo_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePriceTo, storeId);
-                model.SearchPageAutomaticallyCalculatePriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageAutomaticallyCalculatePriceRange, storeId);
+                model.SearchPageManuallyPriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPageManuallyPriceRange, storeId);
                 model.SearchPagePageSizeOptions_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.SearchPagePageSizeOptions, storeId);
                 model.ProductSearchAutoCompleteEnabled_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, storeId);
                 model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, storeId);
@@ -1092,7 +1178,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductsByTagPriceRangeFiltering_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceRangeFiltering, storeId);
                 model.ProductsByTagPriceFrom_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceFrom, storeId);
                 model.ProductsByTagPriceTo_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagPriceTo, storeId);
-                model.ProductsByTagAutomaticallyCalculatePriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagAutomaticallyCalculatePriceRange, storeId);
+                model.ProductsByTagManuallyPriceRange_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ProductsByTagManuallyPriceRange, storeId);
                 model.IncludeShortDescriptionInCompareProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.IncludeShortDescriptionInCompareProducts, storeId);
                 model.IncludeFullDescriptionInCompareProducts_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeId);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = await _settingService.SettingExistsAsync(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeId);
@@ -1133,7 +1219,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged sort option list model
         /// </summary>
         /// <param name="searchModel">Sort option search model</param>
-        /// <returns>Sort option list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the sort option list model
+        /// </returns>
         public virtual async Task<SortOptionListModel> PrepareSortOptionListModelAsync(SortOptionSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1170,7 +1259,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare reward points settings model
         /// </summary>
         /// <param name="model">Reward points settings model</param>
-        /// <returns>Reward points settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the reward points settings model
+        /// </returns>
         public virtual async Task<RewardPointsSettingsModel> PrepareRewardPointsSettingsModelAsync(RewardPointsSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -1210,7 +1302,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare order settings model
         /// </summary>
         /// <param name="model">Order settings model</param>
-        /// <returns>Order settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the order settings model
+        /// </returns>
         public virtual async Task<OrderSettingsModel> PrepareOrderSettingsModelAsync(OrderSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -1266,7 +1361,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare shopping cart settings model
         /// </summary>
         /// <param name="model">Shopping cart settings model</param>
-        /// <returns>Shopping cart settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the shopping cart settings model
+        /// </returns>
         public virtual async Task<ShoppingCartSettingsModel> PrepareShoppingCartSettingsModelAsync(ShoppingCartSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -1310,7 +1408,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare media settings model
         /// </summary>
         /// <param name="model">Media settings model</param>
-        /// <returns>Media settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the media settings model
+        /// </returns>
         public virtual async Task<MediaSettingsModel> PrepareMediaSettingsModelAsync(MediaSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -1351,7 +1452,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare customer user settings model
         /// </summary>
         /// <param name="model">Customer user settings model</param>
-        /// <returns>Customer user settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer user settings model
+        /// </returns>
         public virtual async Task<CustomerUserSettingsModel> PrepareCustomerUserSettingsModelAsync(CustomerUserSettingsModel model = null)
         {
             model ??= new CustomerUserSettingsModel
@@ -1385,7 +1489,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare GDPR settings model
         /// </summary>
         /// <param name="model">Gdpr settings model</param>
-        /// <returns>GDPR settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR settings model
+        /// </returns>
         public virtual async Task<GdprSettingsModel> PrepareGdprSettingsModelAsync(GdprSettingsModel model = null)
         {
             //load settings for a chosen store scope
@@ -1417,7 +1524,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged GDPR consent list model
         /// </summary>
         /// <param name="searchModel">GDPR search model</param>
-        /// <returns>GDPR consent list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR consent list model
+        /// </returns>
         public virtual async Task<GdprConsentListModel> PrepareGdprConsentListModelAsync(GdprConsentSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1450,7 +1560,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">GDPR consent model</param>
         /// <param name="gdprConsent">GDPR consent</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>GDPR consent model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the gDPR consent model
+        /// </returns>
         public virtual async Task<GdprConsentModel> PrepareGdprConsentModelAsync(GdprConsentModel model, GdprConsent gdprConsent, bool excludeProperties = false)
         {
             Action<GdprConsentLocalizedModel, int> localizedModelConfiguration = null;
@@ -1483,7 +1596,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare general and common settings model
         /// </summary>
         /// <param name="model">General common settings model</param>
-        /// <returns>General and common settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the general and common settings model
+        /// </returns>
         public virtual async Task<GeneralCommonSettingsModel> PrepareGeneralCommonSettingsModelAsync(GeneralCommonSettingsModel model = null)
         {
             model ??= new GeneralCommonSettingsModel
@@ -1530,7 +1646,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare product editor settings model
         /// </summary>
-        /// <returns>Product editor settings model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product editor settings model
+        /// </returns>
         public virtual async Task<ProductEditorSettingsModel> PrepareProductEditorSettingsModelAsync()
         {
             //load settings for a chosen store scope
@@ -1547,7 +1666,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare setting search model
         /// </summary>
         /// <param name="searchModel">Setting search model</param>
-        /// <returns>Setting search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the setting search model
+        /// </returns>
         public virtual async Task<SettingSearchModel> PrepareSettingSearchModelAsync(SettingSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1566,7 +1688,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged setting list model
         /// </summary>
         /// <param name="searchModel">Setting search model</param>
-        /// <returns>Setting list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the setting list model
+        /// </returns>
         public virtual async Task<SettingListModel> PrepareSettingListModelAsync(SettingSearchModel searchModel)
         {
             if (searchModel == null)
@@ -1607,7 +1732,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare setting mode model
         /// </summary>
         /// <param name="modeName">Mode name</param>
-        /// <returns>Setting mode model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the setting mode model
+        /// </returns>
         public virtual async Task<SettingModeModel> PrepareSettingModeModelAsync(string modeName)
         {
             var model = new SettingModeModel
@@ -1622,7 +1750,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare store scope configuration model
         /// </summary>
-        /// <returns>Store scope configuration model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the store scope configuration model
+        /// </returns>
         public virtual async Task<StoreScopeConfigurationModel> PrepareStoreScopeConfigurationModelAsync()
         {
             var model = new StoreScopeConfigurationModel

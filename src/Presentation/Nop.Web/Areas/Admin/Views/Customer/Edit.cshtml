@@ -176,9 +176,9 @@
 
     function sendImmediately() {
         if ($('#@Html.IdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
-            $('#pnl-send-date').hide();
+            $('#pnl-send-date').hideElement();
         else
-            $('#pnl-send-date').showField();
+            $('#pnl-send-date').showElement();
     }
 </script>
 

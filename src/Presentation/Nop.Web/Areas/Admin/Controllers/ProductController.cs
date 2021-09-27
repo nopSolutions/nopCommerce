@@ -1116,11 +1116,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                await _productService.DeleteProductsAsync(await (await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
-                    .WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null || p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync());
-            }
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
+
+            await _productService.DeleteProductsAsync(await (await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
+                .WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null || p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync());
 
             return Json(new { Result = true });
         }
@@ -2028,11 +2028,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                var tags = await _productTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
-                await _productTagService.DeleteProductTagsAsync(tags);
-            }
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
+
+            var tags = await _productTagService.GetProductTagsByIdsAsync(selectedIds.ToArray());
+            await _productTagService.DeleteProductTagsAsync(tags);
 
             return Json(new { Result = true });
         }

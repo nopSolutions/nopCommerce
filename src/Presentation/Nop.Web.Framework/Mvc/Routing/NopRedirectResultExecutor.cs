@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// </summary>
         /// <param name="context">Action context</param>
         /// <param name="result">Redirect result</param>
-        /// <returns>Task that represents the asynchronous operation</returns>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override Task ExecuteAsync(ActionContext context, RedirectResult result)
         {
             if (result == null)

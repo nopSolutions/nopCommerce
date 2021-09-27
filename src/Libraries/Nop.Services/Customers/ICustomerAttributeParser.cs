@@ -13,14 +13,20 @@ namespace Nop.Services.Customers
         /// Gets selected customer attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected customer attributes</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected customer attributes
+        /// </returns>
         Task<IList<CustomerAttribute>> ParseCustomerAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Get customer attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Customer attribute values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer attribute values
+        /// </returns>
         Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValuesAsync(string attributesXml);
 
         //TODO: migrate to an extension method
@@ -46,7 +52,10 @@ namespace Nop.Services.Customers
         /// Validates customer attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Warnings</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the warnings
+        /// </returns>
         Task<IList<string>> GetAttributeWarningsAsync(string attributesXml);
     }
 }

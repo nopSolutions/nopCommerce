@@ -19,6 +19,7 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="propertyName">Property name</param>
         /// <param name="func">Feature property access</param>
         /// <param name="ignore">Specifies whether the property should be exported</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public PropertyByName(string propertyName, Func<T, Task<object>> func, bool ignore = false)
         {
             PropertyName = propertyName;
@@ -52,6 +53,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Feature property access
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public Func<T, Task<object>> GetProperty { get; }
 
         /// <summary>
@@ -141,7 +143,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to DateTime?
         /// </summary>
-        public DateTime? DateTimeNullable => PropertyValue == null ? null : DateTime.FromOADate(DoubleValue) as DateTime?;
+        public DateTime? DateTimeNullable => !string.IsNullOrWhiteSpace(StringValue) ? null : PropertyValue as DateTime?;
 
         /// <summary>
         /// To string

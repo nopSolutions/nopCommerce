@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Plugin.Tax.Avalara.Domain;
 
 namespace Nop.Plugin.Tax.Avalara.Services
@@ -38,8 +37,11 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="createdToUtc">Log item creation to; pass null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Paged list of tax transaction log items</returns>
-        public virtual async Task<IPagedList<TaxTransactionLog>> GetTaxTransactionLogAsync(int? customerId = null,
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paged list of tax transaction log items
+        /// </returns>
+        public async Task<IPagedList<TaxTransactionLog>> GetTaxTransactionLogAsync(int? customerId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -67,8 +69,11 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Get a log item by the identifier
         /// </summary>
         /// <param name="logItemId">Log item identifier</param>
-        /// <returns>Log item</returns>
-        public virtual async Task<TaxTransactionLog> GetTaxTransactionLogByIdAsync(int logItemId)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the log item
+        /// </returns>
+        public async Task<TaxTransactionLog> GetTaxTransactionLogByIdAsync(int logItemId)
         {
             return await _taxTransactionLogRepository.GetByIdAsync(logItemId);
         }
@@ -77,7 +82,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Insert the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual async Task InsertTaxTransactionLogAsync(TaxTransactionLog logItem)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task InsertTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
@@ -89,7 +95,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Update the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual async Task UpdateTaxTransactionLogAsync(TaxTransactionLog logItem)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task UpdateTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
@@ -101,7 +108,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Delete the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual async Task DeleteTaxTransactionLogAsync(TaxTransactionLog logItem)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task DeleteTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
             await _taxTransactionLogRepository.DeleteAsync(logItem, false);
         }
@@ -110,9 +118,19 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Delete log items
         /// </summary>
         /// <param name="ids">Log items identifiers</param>
-        public virtual async Task DeleteTaxTransactionLogAsync(int[] ids)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task DeleteTaxTransactionLogAsync(int[] ids)
         {
             await _taxTransactionLogRepository.DeleteAsync(logItem => ids.Contains(logItem.Id));
+        }
+
+        /// <summary>
+        /// Clear the log
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task ClearLogAsync()
+        {
+            await _taxTransactionLogRepository.TruncateAsync();
         }
 
         #endregion

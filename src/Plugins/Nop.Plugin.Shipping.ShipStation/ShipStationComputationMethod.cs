@@ -52,7 +52,10 @@ namespace Nop.Plugin.Shipping.ShipStation
         ///  Gets available shipping options
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
-        /// <returns>Represents a response of getting shipping rate options</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the represents a response of getting shipping rate options
+        /// </returns>
         public async Task<GetShippingOptionResponse> GetShippingOptionsAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
@@ -96,13 +99,16 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// Gets fixed shipping rate (if shipping rate computation method allows it and the rate can be calculated before checkout).
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
-        /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the fixed shipping rate; or null in case there's no fixed shipping rate
+        /// </returns>
         public Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
-            return null;
+            return Task.FromResult<decimal?>(null);
         }
 
         /// <summary>
@@ -116,6 +122,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// <summary>
         /// Install plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //settings
@@ -152,6 +159,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// <summary>
         /// Uninstall plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //settings

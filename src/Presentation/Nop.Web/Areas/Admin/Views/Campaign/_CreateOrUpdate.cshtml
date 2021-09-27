@@ -113,8 +113,8 @@
                         <div class="form-group row">
                             <script>
                             function toggleLoadedAllowedTokens() {
-                                $('#pnlAllowedTokens').toggle();
-                                if ($('#pnlAllowedTokens').css('display') == 'none') {
+                                $('#pnlAllowedTokens').toggleClass('d-none');
+                                if ($('#pnlAllowedTokens').hasClass('d-none')) {
                                     $('#allowedTokensShowHide').text('@T("Admin.Common.Show")');
                                 } else {
                                     $('#allowedTokensShowHide').text('@T("Admin.Common.Hide")');
@@ -127,7 +127,7 @@
                             </div>
                             <div class="col-md-9">
                                 <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
-                                <div id="pnlAllowedTokens" style="display: none">
+                                <div id="pnlAllowedTokens" class="d-none">
                                     <div class="form-text-row">@Model.AllowedTokens</div>
                                 </div>
                             </div>

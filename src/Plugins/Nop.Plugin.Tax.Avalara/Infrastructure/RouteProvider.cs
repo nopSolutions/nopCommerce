@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc.Routing;
+using Nop.Web.Infrastructure;
 
 namespace Nop.Plugin.Tax.Avalara.Infrastructure
 {
     /// <summary>
     /// Represents plugin route provider
     /// </summary>
-    public class RouteProvider : IRouteProvider
+    public class RouteProvider : BaseRouteProvider, IRouteProvider
     {
         /// <summary>
         /// Register routes
@@ -16,12 +17,24 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            endpointRouteBuilder.MapControllerRoute(AvalaraTaxDefaults.ConfigurationRouteName, "Plugins/Avalara/Configure",
-                new { controller = "Avalara", action = "Configure", area = AreaNames.Admin });
+            var lang = GetLanguageRoutePattern();
+
+            endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.ConfigurationRouteName,
+                pattern: "Admin/Avalara/Configure",
+                defaults: new { controller = "Avalara", action = "Configure" });
 
             //override some of default routes in Admin area
-            endpointRouteBuilder.MapControllerRoute("Plugin.Tax.Avalara.Tax.Categories", "Admin/Tax/Categories",
-                new { controller = "AvalaraTax", action = "Categories", area = AreaNames.Admin });
+            endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.TaxCategoriesRouteName,
+                pattern: "Admin/Tax/Categories",
+                defaults: new { controller = "AvalaraTax", action = "Categories", area = AreaNames.Admin });
+
+            endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.ExemptionCertificatesRouteName,
+                pattern: $"{lang}/customer/exemption-certificates",
+                defaults: new { controller = "AvalaraPublic", action = "ExemptionCertificates" });
+
+            endpointRouteBuilder.MapControllerRoute(name: AvalaraTaxDefaults.DownloadCertificateRouteName,
+                pattern: "download-tax-exemption-certificate/{id:min(0)}",
+                defaults: new { controller = "AvalaraPublic", action = "DownloadCertificate" });
         }
 
         /// <summary>

@@ -23,8 +23,7 @@ var selectedIds = [];
 
 
 function clearMasterCheckbox(tableSelector) {
-  var selector = '.mastercheckbox';
-  $(selector, tableSelector).prop('checked', false).change();
+  $($(tableSelector).parents('.dataTables_scroll').find('input.mastercheckbox')).prop('checked', false).change();
   selectedIds = [];
 }
 

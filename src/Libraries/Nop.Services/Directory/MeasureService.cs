@@ -33,60 +33,7 @@ namespace Nop.Services.Directory
         }
 
         #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Converts to primary measure dimension
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureDimension">Source dimension</param>
-        /// <returns>Converted value</returns>
-        protected virtual async Task<decimal> ConvertToPrimaryMeasureDimensionAsync(decimal value,
-            MeasureDimension sourceMeasureDimension)
-        {
-            if (sourceMeasureDimension == null)
-                throw new ArgumentNullException(nameof(sourceMeasureDimension));
-
-            var result = value;
-            var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
-            if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id)
-                return result;
-
-            var exchangeRatio = sourceMeasureDimension.Ratio;
-            if (exchangeRatio == decimal.Zero)
-                throw new NopException($"Exchange ratio not set for dimension [{sourceMeasureDimension.Name}]");
-            result = result / exchangeRatio;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Converts to primary measure weight
-        /// </summary>
-        /// <param name="value">Value to convert</param>
-        /// <param name="sourceMeasureWeight">Source weight</param>
-        /// <returns>Converted value</returns>
-        protected virtual async Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight)
-        {
-            if (sourceMeasureWeight == null)
-                throw new ArgumentNullException(nameof(sourceMeasureWeight));
-
-            var result = value;
-            var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
-            if (result == decimal.Zero || sourceMeasureWeight.Id == baseWeightIn.Id)
-                return result;
-
-            var exchangeRatio = sourceMeasureWeight.Ratio;
-            if (exchangeRatio == decimal.Zero)
-                throw new NopException($"Exchange ratio not set for weight [{sourceMeasureWeight.Name}]");
-            result = result / exchangeRatio;
-
-            return result;
-        }
-
-        #endregion
-
+        
         #region Methods
 
         #region Dimensions
@@ -95,6 +42,7 @@ namespace Nop.Services.Directory
         /// Deletes measure dimension
         /// </summary>
         /// <param name="measureDimension">Measure dimension</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteMeasureDimensionAsync(MeasureDimension measureDimension)
         {
             await _measureDimensionRepository.DeleteAsync(measureDimension);
@@ -104,7 +52,10 @@ namespace Nop.Services.Directory
         /// Gets a measure dimension by identifier
         /// </summary>
         /// <param name="measureDimensionId">Measure dimension identifier</param>
-        /// <returns>Measure dimension</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure dimension
+        /// </returns>
         public virtual async Task<MeasureDimension> GetMeasureDimensionByIdAsync(int measureDimensionId)
         {
             return await _measureDimensionRepository.GetByIdAsync(measureDimensionId, cache => default);
@@ -114,7 +65,10 @@ namespace Nop.Services.Directory
         /// Gets a measure dimension by system keyword
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
-        /// <returns>Measure dimension</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure dimension
+        /// </returns>
         public virtual async Task<MeasureDimension> GetMeasureDimensionBySystemKeywordAsync(string systemKeyword)
         {
             if (string.IsNullOrEmpty(systemKeyword))
@@ -130,7 +84,10 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all measure dimensions
         /// </summary>
-        /// <returns>Measure dimensions</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure dimensions
+        /// </returns>
         public virtual async Task<IList<MeasureDimension>> GetAllMeasureDimensionsAsync()
         {
             var measureDimensions = await _measureDimensionRepository.GetAllAsync(query =>
@@ -147,6 +104,7 @@ namespace Nop.Services.Directory
         /// Inserts a measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertMeasureDimensionAsync(MeasureDimension measure)
         {
             await _measureDimensionRepository.InsertAsync(measure);
@@ -156,6 +114,7 @@ namespace Nop.Services.Directory
         /// Updates the measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateMeasureDimensionAsync(MeasureDimension measure)
         {
             await _measureDimensionRepository.UpdateAsync(measure);
@@ -168,7 +127,10 @@ namespace Nop.Services.Directory
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertDimensionAsync(decimal value,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
@@ -196,7 +158,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertFromPrimaryMeasureDimensionAsync(decimal value,
             MeasureDimension targetMeasureDimension)
         {
@@ -215,6 +180,35 @@ namespace Nop.Services.Directory
 
             return result;
         }
+        
+        /// <summary>
+        /// Converts to primary measure dimension
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="sourceMeasureDimension">Source dimension</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
+        public virtual async Task<decimal> ConvertToPrimaryMeasureDimensionAsync(decimal value,
+            MeasureDimension sourceMeasureDimension)
+        {
+            if (sourceMeasureDimension == null)
+                throw new ArgumentNullException(nameof(sourceMeasureDimension));
+
+            var result = value;
+            var baseDimensionIn = await GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId);
+            if (result == decimal.Zero || sourceMeasureDimension.Id == baseDimensionIn.Id)
+                return result;
+
+            var exchangeRatio = sourceMeasureDimension.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for dimension [{sourceMeasureDimension.Name}]");
+            result = result / exchangeRatio;
+
+            return result;
+        }
+
 
         #endregion
 
@@ -224,6 +218,7 @@ namespace Nop.Services.Directory
         /// Deletes measure weight
         /// </summary>
         /// <param name="measureWeight">Measure weight</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteMeasureWeightAsync(MeasureWeight measureWeight)
         {
             await _measureWeightRepository.DeleteAsync(measureWeight);
@@ -233,7 +228,10 @@ namespace Nop.Services.Directory
         /// Gets a measure weight by identifier
         /// </summary>
         /// <param name="measureWeightId">Measure weight identifier</param>
-        /// <returns>Measure weight</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure weight
+        /// </returns>
         public virtual async Task<MeasureWeight> GetMeasureWeightByIdAsync(int measureWeightId)
         {
             return await _measureWeightRepository.GetByIdAsync(measureWeightId, cache => default);
@@ -243,7 +241,10 @@ namespace Nop.Services.Directory
         /// Gets a measure weight by system keyword
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
-        /// <returns>Measure weight</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure weight
+        /// </returns>
         public virtual async Task<MeasureWeight> GetMeasureWeightBySystemKeywordAsync(string systemKeyword)
         {
             if (string.IsNullOrEmpty(systemKeyword))
@@ -259,7 +260,10 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all measure weights
         /// </summary>
-        /// <returns>Measure weights</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the measure weights
+        /// </returns>
         public virtual async Task<IList<MeasureWeight>> GetAllMeasureWeightsAsync()
         {
             var measureWeights = await _measureWeightRepository.GetAllAsync(query =>
@@ -276,6 +280,7 @@ namespace Nop.Services.Directory
         /// Inserts a measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertMeasureWeightAsync(MeasureWeight measure)
         {
             await _measureWeightRepository.InsertAsync(measure);
@@ -285,6 +290,7 @@ namespace Nop.Services.Directory
         /// Updates the measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateMeasureWeightAsync(MeasureWeight measure)
         {
             await _measureWeightRepository.UpdateAsync(measure);
@@ -297,7 +303,10 @@ namespace Nop.Services.Directory
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertWeightAsync(decimal value,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true)
         {
@@ -325,7 +334,10 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureWeight">Target weight</param>
-        /// <returns>Converted value</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
         public virtual async Task<decimal> ConvertFromPrimaryMeasureWeightAsync(decimal value,
             MeasureWeight targetMeasureWeight)
         {
@@ -341,6 +353,33 @@ namespace Nop.Services.Directory
             if (exchangeRatio == decimal.Zero)
                 throw new NopException($"Exchange ratio not set for weight [{targetMeasureWeight.Name}]");
             result *= exchangeRatio;
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Converts to primary measure weight
+        /// </summary>
+        /// <param name="value">Value to convert</param>
+        /// <param name="sourceMeasureWeight">Source weight</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the converted value
+        /// </returns>
+        public virtual async Task<decimal> ConvertToPrimaryMeasureWeightAsync(decimal value, MeasureWeight sourceMeasureWeight)
+        {
+            if (sourceMeasureWeight == null)
+                throw new ArgumentNullException(nameof(sourceMeasureWeight));
+
+            var result = value;
+            var baseWeightIn = await GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId);
+            if (result == decimal.Zero || sourceMeasureWeight.Id == baseWeightIn.Id)
+                return result;
+
+            var exchangeRatio = sourceMeasureWeight.Ratio;
+            if (exchangeRatio == decimal.Zero)
+                throw new NopException($"Exchange ratio not set for weight [{sourceMeasureWeight.Name}]");
+            result = result / exchangeRatio;
 
             return result;
         }

@@ -34,6 +34,20 @@ namespace Nop.Services.Discounts
         public static CacheKey DiscountAllCacheKey => new CacheKey("Nop.discount.all.{0}-{1}-{2}", NopEntityCacheDefaults<Discount>.AllPrefix);
 
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} - entity type
+        /// {1} - entity id
+        /// </remarks>
+        public static CacheKey AppliedDiscountsCacheKey => new CacheKey("Nop.discount.applied.{0}-{1}", AppliedDiscountsCachePrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string AppliedDiscountsCachePrefix => "Nop.discount.applied.";
+
+        /// <summary>
         /// Key for category IDs of a discount
         /// </summary>
         /// <remarks>

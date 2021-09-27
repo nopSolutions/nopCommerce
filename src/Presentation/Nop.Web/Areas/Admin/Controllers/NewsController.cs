@@ -339,8 +339,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             var comments = await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray());
 
@@ -362,8 +362,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             //filter not approved comments
             var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
@@ -391,8 +391,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            if (selectedIds == null)
-                return Json(new { Result = true });
+            if (selectedIds == null || selectedIds.Count() == 0)
+                return NoContent();
 
             //filter approved comments
             var newsComments = (await _newsService.GetNewsCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);

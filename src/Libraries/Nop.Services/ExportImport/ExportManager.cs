@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using ClosedXML.Excel;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -37,7 +38,6 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
-using OfficeOpenXml;
 
 namespace Nop.Services.ExportImport
 {
@@ -177,6 +177,7 @@ namespace Nop.Services.ExportImport
 
         #region Utilities
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task WriteCategoriesAsync(XmlWriter xmlWriter, int parentCategoryId)
         {
             var categories = await _categoryService.GetAllCategoriesByParentCategoryIdAsync(parentCategoryId, true);
@@ -204,7 +205,7 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteStringAsync("PriceRangeFiltering", category.PriceRangeFiltering, await IgnoreExportCategoryPropertyAsync());
                 await xmlWriter.WriteStringAsync("PriceFrom", category.PriceFrom, await IgnoreExportCategoryPropertyAsync());
                 await xmlWriter.WriteStringAsync("PriceTo", category.PriceTo, await IgnoreExportCategoryPropertyAsync());
-                await xmlWriter.WriteStringAsync("AutomaticallyCalculatePriceRange", category.AutomaticallyCalculatePriceRange, await IgnoreExportCategoryPropertyAsync());
+                await xmlWriter.WriteStringAsync("ManuallyPriceRange", category.ManuallyPriceRange, await IgnoreExportCategoryPropertyAsync());
                 await xmlWriter.WriteStringAsync("ShowOnHomepage", category.ShowOnHomepage, await IgnoreExportCategoryPropertyAsync());
                 await xmlWriter.WriteStringAsync("IncludeInTopMenu", category.IncludeInTopMenu, await IgnoreExportCategoryPropertyAsync());
                 await xmlWriter.WriteStringAsync("Published", category.Published, await IgnoreExportCategoryPropertyAsync());
@@ -243,7 +244,10 @@ namespace Nop.Services.ExportImport
         /// Returns the path to the image file by ID
         /// </summary>
         /// <param name="pictureId">Picture ID</param>
-        /// <returns>Path to the image file</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the path to the image file
+        /// </returns>
         protected virtual async Task<string> GetPicturesAsync(int pictureId)
         {
             var picture = await _pictureService.GetPictureByIdAsync(pictureId);
@@ -255,7 +259,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of categories for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of categories</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of categories
+        /// </returns>
         protected virtual async Task<object> GetCategoriesAsync(Product product)
         {
             string categoryNames = null;
@@ -283,7 +290,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of manufacturer for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of manufacturer</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of manufacturer
+        /// </returns>
         protected virtual async Task<object> GetManufacturersAsync(Product product)
         {
             string manufacturerNames = null;
@@ -309,7 +319,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of limited to stores for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of store</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of store
+        /// </returns>
         protected virtual async Task<object> GetLimitedToStoresAsync(Product product)
         {
             string limitedToStores = null;
@@ -329,7 +342,10 @@ namespace Nop.Services.ExportImport
         /// Returns the list of product tag for a product separated by a ";"
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of product tag</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of product tag
+        /// </returns>
         protected virtual async Task<object> GetProductTagsAsync(Product product)
         {
             string productTagNames = null;
@@ -356,7 +372,10 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="pictureIndex">Picture index to get</param>
-        /// <returns>image thumb local path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the image thumb local path
+        /// </returns>
         protected virtual async Task<string> GetPictureAsync(Product product, short pictureIndex)
         {
             // we need only the picture at a specific index, no need to get more pictures than that
@@ -366,6 +385,7 @@ namespace Nop.Services.ExportImport
             return pictures.Count > pictureIndex ? await _pictureService.GetThumbLocalPathAsync(pictures[pictureIndex]) : null;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportProductPropertyAsync(Func<ProductEditorSettings, bool> func)
         {
             var productAdvancedMode = true;
@@ -380,6 +400,7 @@ namespace Nop.Services.ExportImport
             return !productAdvancedMode && !func(_productEditorSettings);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportCategoryPropertyAsync()
         {
             try
@@ -392,6 +413,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportManufacturerPropertyAsync()
         {
             try
@@ -404,6 +426,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task<bool> IgnoreExportLimitedToStoreAsync()
         {
             return _catalogSettings.IgnoreStoreLimitations ||
@@ -411,6 +434,7 @@ namespace Nop.Services.ExportImport
                    (await _storeService.GetAllStoresAsync()).Count == 1;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManagerAsync()
         {
             var attributeProperties = new[]
@@ -447,6 +471,7 @@ namespace Nop.Services.ExportImport
             return new PropertyManager<ExportProductAttribute>(attributeProperties, _catalogSettings);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<PropertyManager<ExportSpecificationAttribute>> GetSpecificationAttributeManagerAsync()
         {
             var attributeProperties = new[]
@@ -469,6 +494,7 @@ namespace Nop.Services.ExportImport
             return new PropertyManager<ExportSpecificationAttribute>(attributeProperties, _catalogSettings);
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
         {
             var productAttributeManager = await GetProductAttributeManagerAsync();
@@ -476,19 +502,20 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                var fbaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductAttributesFilters");
-                fbaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                var fsaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForSpecificationAttributesFilters");
-                fsaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var worksheet = workbook.Worksheets.Add(typeof(Product).Name);
+                var fpWorksheet = workbook.Worksheets.Add("ProductsFilters");
+                fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+                var fbaWorksheet = workbook.Worksheets.Add("ProductAttributesFilters");
+                fbaWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
+                var fsaWorksheet = workbook.Worksheets.Add("SpecificationAttributesFilters");
+                fsaWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
                 var manager = new PropertyManager<Product>(properties, _catalogSettings);
@@ -507,13 +534,14 @@ namespace Nop.Services.ExportImport
                         row = await ExportSpecificationAttributesAsync(item, specificationAttributeManager, worksheet, row, fsaWorksheet);
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();
         }
 
-        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
                 .SelectManyAwait(async pam =>
@@ -575,7 +603,7 @@ namespace Nop.Services.ExportImport
 
             attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
-            worksheet.Row(row).Collapsed = true;
+            worksheet.Row(row).Collapse();
 
             foreach (var exportProductAttribute in attributes)
             {
@@ -583,13 +611,14 @@ namespace Nop.Services.ExportImport
                 attributeManager.CurrentObject = exportProductAttribute;
                 await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
-                worksheet.Row(row).Collapsed = true;
+                worksheet.Row(row).Collapse();
             }
 
             return row + 1;
         }
 
-        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, IXLWorksheet worksheet, int row, IXLWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
                 .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
@@ -609,7 +638,7 @@ namespace Nop.Services.ExportImport
 
             attributeManager.WriteCaption(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset);
             worksheet.Row(row).OutlineLevel = 1;
-            worksheet.Row(row).Collapsed = true;
+            worksheet.Row(row).Collapse();
 
             foreach (var exportProductAttribute in attributes)
             {
@@ -617,12 +646,13 @@ namespace Nop.Services.ExportImport
                 attributeManager.CurrentObject = exportProductAttribute;
                 await attributeManager.WriteToXlsxAsync(worksheet, row, ExportProductAttribute.ProducAttributeCellOffset, faWorksheet);
                 worksheet.Row(row).OutlineLevel = 1;
-                worksheet.Row(row).Collapsed = true;
+                worksheet.Row(row).Collapse();
             }
 
             return row + 1;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<byte[]> ExportOrderToXlsxWithProductsAsync(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
         {
             var orderItemProperties = new[]
@@ -642,15 +672,16 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Order).Name);
-                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var worksheet = workbook.Worksheets.Add(typeof(Order).Name);
+                var fpWorksheet = workbook.Worksheets.Add("DataForProductsFilters");
+                fpWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //create Headers and format them 
                 var manager = new PropertyManager<Order>(properties, _catalogSettings);
@@ -670,7 +701,7 @@ namespace Nop.Services.ExportImport
 
                     orderItemsManager.WriteCaption(worksheet, row, 2);
                     worksheet.Row(row).OutlineLevel = 1;
-                    worksheet.Row(row).Collapsed = true;
+                    worksheet.Row(row).Collapse();
 
                     foreach (var orderItem in orderItems)
                     {
@@ -678,18 +709,19 @@ namespace Nop.Services.ExportImport
                         orderItemsManager.CurrentObject = orderItem;
                         await orderItemsManager.WriteToXlsxAsync(worksheet, row, 2, fpWorksheet);
                         worksheet.Row(row).OutlineLevel = 1;
-                        worksheet.Row(row).Collapsed = true;
+                        worksheet.Row(row).Collapse();
                     }
 
                     row++;
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private async Task<object> GetCustomCustomerAttributesAsync(Customer customer)
         {
             var selectedCustomerAttributes = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
@@ -705,7 +737,10 @@ namespace Nop.Services.ExportImport
         /// Export manufacturer list to XML
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportManufacturersToXmlAsync(IList<Manufacturer> manufacturers)
         {
             var settings = new XmlWriterSettings
@@ -740,7 +775,7 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteStringAsync("PriceRangeFiltering", manufacturer.PriceRangeFiltering, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("PriceFrom", manufacturer.PriceFrom, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("PriceTo", manufacturer.PriceTo, await IgnoreExportManufacturerPropertyAsync());
-                await xmlWriter.WriteStringAsync("AutomaticallyCalculatePriceRange", manufacturer.AutomaticallyCalculatePriceRange, await IgnoreExportManufacturerPropertyAsync());
+                await xmlWriter.WriteStringAsync("ManuallyPriceRange", manufacturer.ManuallyPriceRange, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("Published", manufacturer.Published, await IgnoreExportManufacturerPropertyAsync());
                 await xmlWriter.WriteStringAsync("Deleted", manufacturer.Deleted, true);
                 await xmlWriter.WriteStringAsync("DisplayOrder", manufacturer.DisplayOrder);
@@ -782,6 +817,7 @@ namespace Nop.Services.ExportImport
         /// Export manufacturers to XLSX
         /// </summary>
         /// <param name="manufacturers">Manufactures</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportManufacturersToXlsxAsync(IEnumerable<Manufacturer> manufacturers)
         {
             //property manager 
@@ -802,7 +838,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Manufacturer>("PriceRangeFiltering", p => p.PriceRangeFiltering, await IgnoreExportManufacturerPropertyAsync()),
                 new PropertyByName<Manufacturer>("PriceFrom", p => p.PriceFrom, await IgnoreExportManufacturerPropertyAsync()),
                 new PropertyByName<Manufacturer>("PriceTo", p => p.PriceTo, await IgnoreExportManufacturerPropertyAsync()),
-                new PropertyByName<Manufacturer>("AutomaticallyCalculatePriceRange", p => p.AutomaticallyCalculatePriceRange, await IgnoreExportManufacturerPropertyAsync()),
+                new PropertyByName<Manufacturer>("ManuallyPriceRange", p => p.ManuallyPriceRange, await IgnoreExportManufacturerPropertyAsync()),
                 new PropertyByName<Manufacturer>("Published", p => p.Published, await IgnoreExportManufacturerPropertyAsync()),
                 new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
             }, _catalogSettings);
@@ -813,7 +849,10 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export category list to XML
         /// </summary>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportCategoriesToXmlAsync()
         {
             var settings = new XmlWriterSettings
@@ -840,6 +879,7 @@ namespace Nop.Services.ExportImport
         /// Export categories to XLSX
         /// </summary>
         /// <param name="categories">Categories</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportCategoriesToXlsxAsync(IList<Category> categories)
         {
             var parentCategories = new List<Category>();
@@ -870,7 +910,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("PriceRangeFiltering", p => p.PriceRangeFiltering, await IgnoreExportCategoryPropertyAsync()),
                 new PropertyByName<Category>("PriceFrom", p => p.PriceFrom, await IgnoreExportCategoryPropertyAsync()),
                 new PropertyByName<Category>("PriceTo", p => p.PriceTo, await IgnoreExportCategoryPropertyAsync()),
-                new PropertyByName<Category>("AutomaticallyCalculatePriceRange", p => p.AutomaticallyCalculatePriceRange, await IgnoreExportCategoryPropertyAsync()),
+                new PropertyByName<Category>("ManuallyPriceRange", p => p.ManuallyPriceRange, await IgnoreExportCategoryPropertyAsync()),
                 new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize, await IgnoreExportCategoryPropertyAsync()),
                 new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions, await IgnoreExportCategoryPropertyAsync()),
                 new PropertyByName<Category>("ShowOnHomepage", p => p.ShowOnHomepage, await IgnoreExportCategoryPropertyAsync()),
@@ -886,7 +926,10 @@ namespace Nop.Services.ExportImport
         /// Export product list to XML
         /// </summary>
         /// <param name="products">Products</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportProductsToXmlAsync(IList<Product> products)
         {
             var settings = new XmlWriterSettings
@@ -1132,7 +1175,7 @@ namespace Nop.Services.ExportImport
                 await xmlWriter.WriteEndElementAsync();
 
                 await xmlWriter.WriteStartElementAsync("ProductCategories");
-                var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id);
+                var productCategories = await _categoryService.GetProductCategoriesByProductIdAsync(product.Id, true);
                 if (productCategories != null)
                 {
                     foreach (var productCategory in productCategories)
@@ -1216,6 +1259,7 @@ namespace Nop.Services.ExportImport
         /// Export products to XLSX
         /// </summary>
         /// <param name="products">Products</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportProductsToXlsxAsync(IEnumerable<Product> products)
         {
             var properties = new[]
@@ -1400,7 +1444,10 @@ namespace Nop.Services.ExportImport
         /// Export order list to XML
         /// </summary>
         /// <param name="orders">Orders</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportOrdersToXmlAsync(IList<Order> orders)
         {
             //a vendor should have access only to part of order information
@@ -1537,6 +1584,7 @@ namespace Nop.Services.ExportImport
         /// Export orders to XLSX
         /// </summary>
         /// <param name="orders">Orders</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders)
         {
             //a vendor should have access only to part of order information
@@ -1578,7 +1626,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p => p.ShippingRateComputationMethodSystemName, ignore),
                 new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
                 new PropertyByName<Order>("VatNumber", p => p.VatNumber, ignore),
-                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc.ToOADate()),
+                new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc),
                 new PropertyByName<Order>("BillingFirstName", async p => (await orderBillingAddress(p))?.FirstName ?? string.Empty),
                 new PropertyByName<Order>("BillingLastName", async p => (await orderBillingAddress(p))?.LastName ?? string.Empty),
                 new PropertyByName<Order>("BillingEmail", async p => (await orderBillingAddress(p))?.Email ?? string.Empty),
@@ -1616,6 +1664,7 @@ namespace Nop.Services.ExportImport
         /// Export customer list to XLSX
         /// </summary>
         /// <param name="customers">Customers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<byte[]> ExportCustomersToXlsxAsync(IList<Customer> customers)
         {
             async Task<object> getPasswordFormat(Customer customer)
@@ -1726,7 +1775,10 @@ namespace Nop.Services.ExportImport
         /// Export customer list to XML
         /// </summary>
         /// <param name="customers">Customers</param>
-        /// <returns>Result in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in XML format
+        /// </returns>
         public virtual async Task<string> ExportCustomersToXmlAsync(IList<Customer> customers)
         {
             var settings = new XmlWriterSettings
@@ -1818,7 +1870,10 @@ namespace Nop.Services.ExportImport
         /// Export newsletter subscribers to TXT
         /// </summary>
         /// <param name="subscriptions">Subscriptions</param>
-        /// <returns>Result in TXT (string) format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in TXT (string) format
+        /// </returns>
         public virtual async Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
         {
             if (subscriptions == null)
@@ -1851,7 +1906,10 @@ namespace Nop.Services.ExportImport
         /// Export states to TXT
         /// </summary>
         /// <param name="states">States</param>
-        /// <returns>Result in TXT (string) format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result in TXT (string) format
+        /// </returns>
         public virtual async Task<string> ExportStatesToTxtAsync(IList<StateProvince> states)
         {
             if (states == null)
@@ -1881,7 +1939,10 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Customer GDPR info</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer GDPR info
+        /// </returns>
         public virtual async Task<byte[]> ExportCustomerGdprInfoToXlsxAsync(Customer customer, int storeId)
         {
             if (customer == null)
@@ -2010,15 +2071,16 @@ namespace Nop.Services.ExportImport
 
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            using (var workbook = new XLWorkbook())
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
 
                 // get handles to the worksheets
-                var customerInfoWorksheet = xlPackage.Workbook.Worksheets.Add("Customer info");
-                var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
-                fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                // Worksheet names cannot be more than 31 characters
+                var customerInfoWorksheet = workbook.Worksheets.Add("Customer info");
+                var fWorksheet = workbook.Worksheets.Add("DataForFilters");
+                fWorksheet.Visibility = XLWorksheetVisibility.VeryHidden;
 
                 //customer info and customer attributes
                 var customerInfoRow = 2;
@@ -2031,7 +2093,7 @@ namespace Nop.Services.ExportImport
                 {
                     customerInfoRow += 2;
 
-                    var cell = customerInfoWorksheet.Cells[customerInfoRow, 1];
+                    var cell = customerInfoWorksheet.Row(customerInfoRow).Cell(1);
                     cell.Value = "Address List";
                     customerInfoRow += 1;
                     addressManager.SetCaptionStyle(cell);
@@ -2048,7 +2110,7 @@ namespace Nop.Services.ExportImport
                 //customer orders
                 if (orders.Any())
                 {
-                    var ordersWorksheet = xlPackage.Workbook.Worksheets.Add("Orders");
+                    var ordersWorksheet = workbook.Worksheets.Add("Orders");
 
                     orderManager.WriteCaption(ordersWorksheet);
 
@@ -2070,7 +2132,7 @@ namespace Nop.Services.ExportImport
 
                         orderItemsManager.WriteCaption(ordersWorksheet, orderRow, 2);
                         ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                        ordersWorksheet.Row(orderRow).Collapsed = true;
+                        ordersWorksheet.Row(orderRow).Collapse();
 
                         foreach (var orederItem in orederItems)
                         {
@@ -2078,7 +2140,7 @@ namespace Nop.Services.ExportImport
                             orderItemsManager.CurrentObject = orederItem;
                             await orderItemsManager.WriteToXlsxAsync(ordersWorksheet, orderRow, 2, fWorksheet);
                             ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                            ordersWorksheet.Row(orderRow).Collapsed = true;
+                            ordersWorksheet.Row(orderRow).Collapse();
                         }
                     }
                 }
@@ -2086,7 +2148,7 @@ namespace Nop.Services.ExportImport
                 //customer private messages
                 if (pmList?.Any() ?? false)
                 {
-                    var privateMessageWorksheet = xlPackage.Workbook.Worksheets.Add("Private messages");
+                    var privateMessageWorksheet = workbook.Worksheets.Add("Private messages");
                     privateMessageManager.WriteCaption(privateMessageWorksheet);
 
                     var privateMessageRow = 1;
@@ -2103,7 +2165,7 @@ namespace Nop.Services.ExportImport
                 //customer GDPR logs
                 if (gdprLog.Any())
                 {
-                    var gdprLogWorksheet = xlPackage.Workbook.Worksheets.Add("GDPR requests (log)");
+                    var gdprLogWorksheet = workbook.Worksheets.Add("GDPR requests (log)");
                     gdprLogManager.WriteCaption(gdprLogWorksheet);
 
                     var gdprLogRow = 1;
@@ -2117,7 +2179,7 @@ namespace Nop.Services.ExportImport
                     }
                 }
 
-                xlPackage.Save();
+                workbook.SaveAs(stream);
             }
 
             return stream.ToArray();

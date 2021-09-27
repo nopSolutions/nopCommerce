@@ -120,7 +120,7 @@ namespace Nop.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if ((await returnUrl.IsLocalizedUrlAsync(Request.PathBase, true)).Item1)
+                if ((await returnUrl.IsLocalizedUrlAsync(Request.PathBase, true)).IsLocalized)
                     returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(Request.PathBase, true);
 
                 //and add code of passed language

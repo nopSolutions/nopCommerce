@@ -47,6 +47,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
 
         #region Methods
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
         {
             //clear models which depend on settings
@@ -54,42 +55,51 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         }
 
         //categories
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
         }
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Category> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
         }
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Category> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
         }
 
         //manufacturers
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
         }
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
         }
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Manufacturer> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
         }
 
         //vendors
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityInsertedEvent<Vendor> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorsListPrefixCacheKey);
         }
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityUpdatedEvent<Vendor> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorsListPrefixCacheKey);
         }
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(EntityDeletedEvent<Vendor> eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.VendorsListPrefixCacheKey);
@@ -99,6 +109,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         /// Handle plugin updated event
         /// </summary>
         /// <param name="eventMessage">Event</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task HandleEventAsync(PluginUpdatedEvent eventMessage)
         {
             await _staticCacheManager.RemoveByPrefixAsync(NopPluginDefaults.AdminNavigationPluginsPrefix);

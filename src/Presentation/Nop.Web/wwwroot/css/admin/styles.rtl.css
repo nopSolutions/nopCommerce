@@ -889,7 +889,12 @@ table .btn {
   border: none;
   height: 38px;
   padding-left: 23px;
+  padding-right: 0;
   background: #fff;
+}
+
+.k-numeric-wrap.k-state-default {
+  padding-right: 20px;
 }
 
 .k-picker-wrap.k-state-hover {
@@ -916,6 +921,9 @@ table .btn {
   height: 36px;
   width: 4.5em;
   padding-right: 1px;
+  left: 0;
+  right: unset;
+  box-sizing: content-box;
   -moz-box-sizing: content-box;
 }
 
@@ -1318,6 +1326,10 @@ input[type="text"].k-input {
   max-height: 45px;
 }
 
+.layout-fixed .brand-link {
+  width: auto;
+}
+
 .nav-sidebar .nav-link p {
   white-space: normal;
   display: inline-flex;
@@ -1654,7 +1666,7 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   max-width: 100%;
   border-radius: 0;
   border-color: #d2d6de;
-  height: 34px;
+  height: 38px;
 }
 
 .tag-editor {
@@ -2033,6 +2045,10 @@ span.grid-report-item.red {
 .parent-setting.opened + .nested-setting .form-group {
   margin-bottom: 0;
   position: relative;
+}
+
+.parent-setting.opened + .nested-setting .card .card-body .form-group {
+  padding-bottom: 5px;
 }
 
 .parent-setting.opened + .nested-setting .form-group > div[class^="col-md-"]:first-child {

@@ -72,7 +72,10 @@ namespace Nop.Services.Discounts
         /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
         /// <param name="customer">Customer</param>
         /// <param name="errors">Errors</param>
-        /// <returns>True if result is valid; otherwise false</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the rue if result is valid; otherwise false
+        /// </returns>
         protected async Task<bool> GetValidationResultAsync(IEnumerable<DiscountRequirement> requirements,
             RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
         {
@@ -136,6 +139,7 @@ namespace Nop.Services.Discounts
         /// Delete discount
         /// </summary>
         /// <param name="discount">Discount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDiscountAsync(Discount discount)
         {
             //first, delete related discount requirements
@@ -149,7 +153,10 @@ namespace Nop.Services.Discounts
         /// Gets a discount
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
-        /// <returns>Discount</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount
+        /// </returns>
         public virtual async Task<Discount> GetDiscountByIdAsync(int discountId)
         {
             return await _discountRepository.GetByIdAsync(discountId, cache => default);
@@ -164,7 +171,10 @@ namespace Nop.Services.Discounts
         /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
         /// <param name="startDateUtc">Discount start date; pass null to load all records</param>
         /// <param name="endDateUtc">Discount end date; pass null to load all records</param>
-        /// <returns>Discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discounts
+        /// </returns>
         public virtual async Task<IList<Discount>> GetAllDiscountsAsync(DiscountType? discountType = null,
             string couponCode = null, string discountName = null, bool showHidden = false,
             DateTime? startDateUtc = null, DateTime? endDateUtc = null)
@@ -215,21 +225,33 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <typeparam name="T">Type based on <see cref="DiscountMapping" /></typeparam>
         /// <param name="entity">Entity which supports discounts (<see cref="IDiscountSupported{T}" />)</param>
-        /// <returns>List of discounts</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of discounts
+        /// </returns>
         public virtual async Task<IList<Discount>> GetAppliedDiscountsAsync<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
             var discountMappingRepository = EngineContext.Current.Resolve<IRepository<T>>();
 
-            return await (from d in _discountRepository.Table
-                    join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
-                    where ad.EntityId == entity.Id
-                    select d).ToListAsync();
+            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopDiscountDefaults.AppliedDiscountsCacheKey, entity.GetType().Name, entity);
+
+            var appliedDiscounts= await _staticCacheManager.GetAsync(cacheKey,
+                async () =>
+                {
+                    return await (from d in _discountRepository.Table
+                        join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
+                        where ad.EntityId == entity.Id
+                        select d).ToListAsync();
+                });
+
+            return appliedDiscounts;
         }
 
         /// <summary>
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDiscountAsync(Discount discount)
         {
             await _discountRepository.InsertAsync(discount);
@@ -239,6 +261,7 @@ namespace Nop.Services.Discounts
         /// Updates the discount
         /// </summary>
         /// <param name="discount">Discount</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateDiscountAsync(Discount discount)
         {
             await _discountRepository.UpdateAsync(discount);
@@ -353,7 +376,10 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
         /// <param name="topLevelOnly">Whether to load top-level requirements only (without parent identifier)</param>
-        /// <returns>Requirements</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the requirements
+        /// </returns>
         public virtual async Task<IList<DiscountRequirement>> GetAllDiscountRequirementsAsync(int discountId = 0, bool topLevelOnly = false)
         {
             return await _discountRequirementRepository.GetAllAsync(query =>
@@ -376,6 +402,7 @@ namespace Nop.Services.Discounts
         /// Get a discount requirement
         /// </summary>
         /// <param name="discountRequirementId">Discount requirement identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<DiscountRequirement> GetDiscountRequirementByIdAsync(int discountRequirementId)
         {
             return await _discountRequirementRepository.GetByIdAsync(discountRequirementId, cache => default);
@@ -385,6 +412,7 @@ namespace Nop.Services.Discounts
         /// Gets child discount requirements
         /// </summary>
         /// <param name="discountRequirement">Parent discount requirement</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task<IList<DiscountRequirement>> GetDiscountRequirementsByParentAsync(DiscountRequirement discountRequirement)
         {
             if (discountRequirement is null)
@@ -400,6 +428,7 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
         /// <param name="recursive">A value indicating whether to recursively delete child requirements</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDiscountRequirementAsync(DiscountRequirement discountRequirement, bool recursive = false)
         {
             if (discountRequirement == null)
@@ -416,6 +445,7 @@ namespace Nop.Services.Discounts
         /// Inserts a discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDiscountRequirementAsync(DiscountRequirement discountRequirement)
         {
             await _discountRequirementRepository.InsertAsync(discountRequirement);
@@ -425,6 +455,7 @@ namespace Nop.Services.Discounts
         /// Updates a discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateDiscountRequirementAsync(DiscountRequirement discountRequirement)
         {
             await _discountRequirementRepository.UpdateAsync(discountRequirement);
@@ -439,7 +470,10 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Discount validation result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount validation result
+        /// </returns>
         public virtual async Task<DiscountValidationResult> ValidateDiscountAsync(Discount discount, Customer customer)
         {
             if (discount == null)
@@ -459,7 +493,10 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <param name="couponCodesToValidate">Coupon codes to validate</param>
-        /// <returns>Discount validation result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount validation result
+        /// </returns>
         public virtual async Task<DiscountValidationResult> ValidateDiscountAsync(Discount discount, Customer customer, string[] couponCodesToValidate)
         {
             if (discount == null)
@@ -591,7 +628,10 @@ namespace Nop.Services.Discounts
         /// Gets a discount usage history record
         /// </summary>
         /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>
-        /// <returns>Discount usage history</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount usage history
+        /// </returns>
         public virtual async Task<DiscountUsageHistory> GetDiscountUsageHistoryByIdAsync(int discountUsageHistoryId)
         {
             return await _discountUsageHistoryRepository.GetByIdAsync(discountUsageHistoryId);
@@ -605,7 +645,10 @@ namespace Nop.Services.Discounts
         /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Discount usage history records</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the discount usage history records
+        /// </returns>
         public virtual async Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistoryAsync(int? discountId = null,
             int? customerId = null, int? orderId = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -644,6 +687,7 @@ namespace Nop.Services.Discounts
         /// Insert discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task InsertDiscountUsageHistoryAsync(DiscountUsageHistory discountUsageHistory)
         {
             await _discountUsageHistoryRepository.InsertAsync(discountUsageHistory);
@@ -653,6 +697,7 @@ namespace Nop.Services.Discounts
         /// Delete discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteDiscountUsageHistoryAsync(DiscountUsageHistory discountUsageHistory)
         {
             await _discountUsageHistoryRepository.DeleteAsync(discountUsageHistory);

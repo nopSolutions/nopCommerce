@@ -85,8 +85,8 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         [NopResourceDisplayName("Admin.Vendors.Fields.PriceTo")]
         public decimal PriceTo { get; set; }
 
-        [NopResourceDisplayName("Admin.Vendors.Fields.AutomaticallyCalculatePriceRange")]
-        public bool AutomaticallyCalculatePriceRange { get; set; }
+        [NopResourceDisplayName("Admin.Vendors.Fields.ManuallyPriceRange")]
+        public bool ManuallyPriceRange { get; set; }
 
         public List<VendorAttributeModel> VendorAttributes { get; set; }
 

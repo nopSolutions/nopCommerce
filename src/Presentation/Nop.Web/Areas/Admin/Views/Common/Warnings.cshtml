@@ -13,7 +13,7 @@
     </h1>
     <div class="float-right">
         &nbsp;
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsButtons })
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsButtons, additionalData = Model })
     </div>
 </div>
 
@@ -21,7 +21,7 @@
     <div class="container-fluid">
         <div class="form-horizontal">
             <div class="cards-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsTop })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsTop, additionalData = Model })
                 <div class="card card-default">
                     <div class="card-body">
                         @foreach (var warning in Model)
@@ -79,7 +79,7 @@
                         }
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsBottom })
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsBottom, additionalData = Model })
             </div>
         </div>
     </div>

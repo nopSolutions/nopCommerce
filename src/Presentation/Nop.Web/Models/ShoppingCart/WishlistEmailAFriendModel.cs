@@ -9,7 +9,8 @@ namespace Nop.Web.Models.ShoppingCart
         [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Wishlist.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }
-        
+
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Wishlist.EmailAFriend.YourEmailAddress")]
         public string YourEmailAddress { get; set; }
         

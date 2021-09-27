@@ -266,9 +266,9 @@ namespace Nop.Core.Domain.Catalog
         public decimal SearchPagePriceTo { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the price range should be calculated automatically on search page
+        /// Gets or sets a value indicating whether the price range should be entered manually on search page
         /// </summary>
-        public bool SearchPageAutomaticallyCalculatePriceRange { get; set; }
+        public bool SearchPageManuallyPriceRange { get; set; }
 
         /// <summary>
         /// Gets or sets "List of products purchased by other customers who purchased the above" option is enable
@@ -321,9 +321,9 @@ namespace Nop.Core.Domain.Catalog
         public decimal ProductsByTagPriceTo { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the price range should be calculated automatically on 'products by tag' page
+        /// Gets or sets a value indicating whether the price range should be entered manually on 'products by tag' page
         /// </summary>
-        public bool ProductsByTagAutomaticallyCalculatePriceRange { get; set; }
+        public bool ProductsByTagManuallyPriceRange { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to include "Short description" in compare products

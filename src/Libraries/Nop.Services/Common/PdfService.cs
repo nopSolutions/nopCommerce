@@ -205,7 +205,10 @@ namespace Nop.Services.Common
         /// <param name="resourceKey">Locale</param>
         /// <param name="lang">Language</param>
         /// <param name="font">Font</param>
-        /// <returns>PDF cell</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the pDF cell
+        /// </returns>
         protected virtual async Task<PdfPCell> GetPdfCellAsync(string resourceKey, Language lang, Font font)
         {
             return new PdfPCell(new Phrase(await _localizationService.GetResourceAsync(resourceKey, lang.Id), font));
@@ -229,7 +232,10 @@ namespace Nop.Services.Common
         /// <param name="lang">Language</param>
         /// <param name="font">Font</param>
         /// <param name="args">Locale arguments</param>
-        /// <returns>Paragraph</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paragraph
+        /// </returns>
         protected virtual async Task<Paragraph> GetParagraphAsync(string resourceKey, Language lang, Font font, params object[] args)
         {
             return await GetParagraphAsync(resourceKey, string.Empty, lang, font, args);
@@ -243,7 +249,10 @@ namespace Nop.Services.Common
         /// <param name="lang">Language</param>
         /// <param name="font">Font</param>
         /// <param name="args">Locale arguments</param>
-        /// <returns>Paragraph</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the paragraph
+        /// </returns>
         protected virtual async Task<Paragraph> GetParagraphAsync(string resourceKey, string indent, Language lang, Font font, params object[] args)
         {
             var formatText = await _localizationService.GetResourceAsync(resourceKey, lang.Id);
@@ -352,6 +361,7 @@ namespace Nop.Services.Common
         /// <param name="titleFont">Title font</param>
         /// <param name="doc">Document</param>
         /// <param name="font">Font</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrintOrderNotesAsync(PdfSettings pdfSettingsByStore, Order order, Language lang, Font titleFont, Document doc, Font font)
         {
             if (!pdfSettingsByStore.RenderOrderNotes)
@@ -421,6 +431,7 @@ namespace Nop.Services.Common
         /// <param name="font">Text font</param>
         /// <param name="titleFont">Title font</param>
         /// <param name="doc">PDF document</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrintTotalsAsync(int vendorId, Language lang, Order order, Font font, Font titleFont, Document doc)
         {
             //vendors cannot see totals
@@ -713,6 +724,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="font">Text font</param>
         /// <param name="attributesFont">Product attributes font</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrintProductsAsync(int vendorId, Language lang, Font titleFont, Document doc, Order order, Font font, Font attributesFont)
         {
             var productsHeader = new PdfPTable(1)
@@ -911,6 +923,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="font">Text font</param>
         /// <param name="doc">Document</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrintAddressesAsync(int vendorId, Language lang, Font titleFont, Order order, Font font, Document doc)
         {
             var addressTable = new PdfPTable(2) { RunDirection = GetDirection(lang) };
@@ -936,6 +949,7 @@ namespace Nop.Services.Common
         /// <param name="titleFont">Title font</param>
         /// <param name="font">Text font</param>
         /// <param name="addressTable">PDF table for address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrintShippingInfoAsync(Language lang, Order order, Font titleFont, Font font, PdfPTable addressTable)
         {
             var shippingAddressPdf = new PdfPTable(1)
@@ -1039,6 +1053,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="font">Text font</param>
         /// <param name="addressTable">Address PDF table</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrintBillingInfoAsync(int vendorId, Language lang, Font titleFont, Order order, Font font, PdfPTable addressTable)
         {
             const string indent = "   ";
@@ -1132,6 +1147,7 @@ namespace Nop.Services.Common
         /// <param name="font">Text font</param>
         /// <param name="titleFont">Title font</param>
         /// <param name="doc">Document</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrintHeaderAsync(PdfSettings pdfSettingsByStore, Language lang, Order order, Font font, Font titleFont, Document doc)
         {
             //logo
@@ -1194,7 +1210,10 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <param name="vendorId">Vendor identifier to limit products; 0 to print all products. If specified, then totals won't be printed</param>
-        /// <returns>A path of generated file</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains a path of generated file
+        /// </returns>
         public virtual async Task<string> PrintOrderToPdfAsync(Order order, int languageId = 0, int vendorId = 0)
         {
             if (order == null)
@@ -1218,6 +1237,7 @@ namespace Nop.Services.Common
         /// <param name="orders">Orders</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <param name="vendorId">Vendor identifier to limit products; 0 to print all products. If specified, then totals won't be printed</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintOrdersToPdfAsync(Stream stream, IList<Order> orders, int languageId = 0, int vendorId = 0)
         {
             if (stream == null)
@@ -1292,6 +1312,7 @@ namespace Nop.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintPackagingSlipsToPdfAsync(Stream stream, IList<Shipment> shipments, int languageId = 0)
         {
             if (stream == null)
@@ -1500,6 +1521,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrintProductsToPdfAsync(Stream stream, IList<Product> products)
         {
             if (stream == null)

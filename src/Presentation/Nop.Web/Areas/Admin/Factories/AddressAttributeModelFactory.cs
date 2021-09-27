@@ -74,7 +74,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare address attribute search model
         /// </summary>
         /// <param name="searchModel">Address attribute search model</param>
-        /// <returns>Address attribute search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute search model
+        /// </returns>
         public virtual Task<AddressAttributeSearchModel> PrepareAddressAttributeSearchModelAsync(AddressAttributeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -90,7 +93,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged address attribute list model
         /// </summary>
         /// <param name="searchModel">Address attribute search model</param>
-        /// <returns>Address attribute list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute list model
+        /// </returns>
         public virtual async Task<AddressAttributeListModel> PrepareAddressAttributeListModelAsync(AddressAttributeSearchModel searchModel)
         {
             if (searchModel == null)
@@ -123,7 +129,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Address attribute model</param>
         /// <param name="addressAttribute">Address attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Address attribute model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute model
+        /// </returns>
         public virtual async Task<AddressAttributeModel> PrepareAddressAttributeModelAsync(AddressAttributeModel model,
             AddressAttribute addressAttribute, bool excludeProperties = false)
         {
@@ -156,7 +165,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Address attribute value search model</param>
         /// <param name="addressAttribute">Address attribute</param>
-        /// <returns>Address attribute value list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute value list model
+        /// </returns>
         public virtual async Task<AddressAttributeValueListModel> PrepareAddressAttributeValueListModelAsync(AddressAttributeValueSearchModel searchModel,
             AddressAttribute addressAttribute)
         {
@@ -186,7 +198,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="addressAttribute">Address attribute</param>
         /// <param name="addressAttributeValue">Address attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Address attribute value model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the address attribute value model
+        /// </returns>
         public virtual async Task<AddressAttributeValueModel> PrepareAddressAttributeValueModelAsync(AddressAttributeValueModel model,
             AddressAttribute addressAttribute, AddressAttributeValue addressAttributeValue, bool excludeProperties = false)
         {
@@ -221,6 +236,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of address attribute models</param>
         /// <param name="address">Address</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task PrepareCustomAddressAttributesAsync(IList<AddressModel.AddressAttributeModel> models, Address address)
         {
             if (models == null)

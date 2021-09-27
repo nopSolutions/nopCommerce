@@ -75,7 +75,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare language search model
         /// </summary>
         /// <param name="searchModel">Language search model</param>
-        /// <returns>Language search model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language search model
+        /// </returns>
         public virtual Task<LanguageSearchModel> PrepareLanguageSearchModelAsync(LanguageSearchModel searchModel)
         {
             if (searchModel == null)
@@ -91,7 +94,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare paged language list model
         /// </summary>
         /// <param name="searchModel">Language search model</param>
-        /// <returns>Language list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language list model
+        /// </returns>
         public virtual async Task<LanguageListModel> PrepareLanguageListModelAsync(LanguageSearchModel searchModel)
         {
             if (searchModel == null)
@@ -115,7 +121,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="model">Language model</param>
         /// <param name="language">Language</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
-        /// <returns>Language model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the language model
+        /// </returns>
         public virtual async Task<LanguageModel> PrepareLanguageModelAsync(LanguageModel model, Language language, bool excludeProperties = false)
         {
             if (language != null)
@@ -149,7 +158,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Locale resource search model</param>
         /// <param name="language">Language</param>
-        /// <returns>Locale resource list model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the locale resource list model
+        /// </returns>
         public virtual async Task<LocaleResourceListModel> PrepareLocaleResourceListModelAsync(LocaleResourceSearchModel searchModel, Language language)
         {
             if (searchModel == null)

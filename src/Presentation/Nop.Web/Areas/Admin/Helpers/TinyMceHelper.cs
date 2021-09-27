@@ -13,7 +13,10 @@ namespace Nop.Web.Areas.Admin.Helpers
         /// <summary>
         /// Get tinyMCE language name for current language 
         /// </summary>
-        /// <returns>tinyMCE language name</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the inyMCE language name
+        /// </returns>
         public static async Task<string> GetTinyMceLanguageAsync()
         {
             //nopCommerce supports TinyMCE's localization for 10 languages:
@@ -27,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Helpers
             var languageCulture = (await workContext.GetWorkingLanguageAsync()).LanguageCulture;
 
             var langFile = $"{languageCulture}.js";
-            var directoryPath = fileProvider.Combine(webHostEnvironment.WebRootPath, @"lib\tinymce\langs");
+            var directoryPath = fileProvider.Combine(webHostEnvironment.WebRootPath, @"lib_npm\tinymce\langs");
             var fileExists = fileProvider.FileExists($"{directoryPath}\\{langFile}");
 
             if (!fileExists)

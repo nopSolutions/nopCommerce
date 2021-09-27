@@ -11,11 +11,11 @@
 
     function toggleGiftCard() {
         if ($('#@Html.IdFor(model => model.IsGiftCard)').is(':checked')) {
-            $('#pnlGiftCardType').showField();
-            $('#pnlOverriddenGiftCardAmount').showField();
+            $('#pnlGiftCardType').showElement();
+            $('#pnlOverriddenGiftCardAmount').showElement();
         } else {
-            $('#pnlGiftCardType').hide();
-            $('#pnlOverriddenGiftCardAmount').hide();
+            $('#pnlGiftCardType').hideElement();
+            $('#pnlOverriddenGiftCardAmount').hideElement();
         }
     }
 </script>

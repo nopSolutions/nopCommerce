@@ -80,6 +80,7 @@ namespace Nop.Web.Controllers
         private readonly ILogger _logger;
         private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
@@ -128,6 +129,7 @@ namespace Nop.Web.Controllers
             ILogger logger,
             IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INotificationService notificationService,
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
@@ -172,6 +174,7 @@ namespace Nop.Web.Controllers
             _logger = logger;
             _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
@@ -414,6 +417,14 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Login(bool? checkoutAsGuest)
         {
             var model = await _customerModelFactory.PrepareLoginModelAsync(checkoutAsGuest);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+
+            if (await _customerService.IsRegisteredAsync(customer))
+            {
+                var fullName = await _customerService.GetCustomerFullNameAsync(customer);
+                var message = await _localizationService.GetResourceAsync("Account.Login.AlreadyLogin");
+                _notificationService.SuccessNotification(string.Format(message, fullName));
+            }
 
             return View(model);
         }
@@ -490,7 +501,10 @@ namespace Nop.Web.Controllers
         /// <summary>
         /// The entry point for injecting a plugin component of type "MultiFactorAuth"
         /// </summary>
-        /// <returns>User verification page for Multi-factor authentication. Served by an authentication provider.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the user verification page for Multi-factor authentication. Served by an authentication provider.
+        /// </returns>
         public virtual async Task<IActionResult> MultiFactorVerification()
         {
             if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
@@ -615,11 +629,11 @@ namespace Nop.Web.Controllers
                     await _workflowMessageService.SendCustomerPasswordRecoveryMessageAsync(customer,
                         (await _workContext.GetWorkingLanguageAsync()).Id);
 
-                    model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent");
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailHasBeenSent"));
                 }
                 else
                 {
-                    model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailNotFound");
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Account.PasswordRecovery.EmailNotFound"));
                 }
             }
 
@@ -1620,7 +1634,7 @@ namespace Nop.Web.Controllers
                 var changePasswordResult = await _customerRegistrationService.ChangePasswordAsync(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
-                    model.Result = await _localizationService.GetResourceAsync("Account.ChangePassword.Success");
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Account.ChangePassword.Success"));
                     return View(model);
                 }
 

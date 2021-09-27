@@ -221,7 +221,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
         /// <param name="errors">Errors</param>
-        /// <returns>Attributes in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attributes in XML format
+        /// </returns>
         protected virtual async Task<string> GetProductAttributesXmlAsync(Product product, IFormCollection form, List<string> errors)
         {
             var attributesXml = string.Empty;
@@ -364,7 +367,10 @@ namespace Nop.Services.Catalog
         /// Gets selected product attribute mappings
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product attribute mappings</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the selected product attribute mappings
+        /// </returns>
         public virtual async Task<IList<ProductAttributeMapping>> ParseProductAttributeMappingsAsync(string attributesXml)
         {
             var result = new List<ProductAttributeMapping>();
@@ -387,7 +393,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier; pass 0 to load all values</param>
-        /// <returns>Product attribute values</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product attribute values
+        /// </returns>
         public virtual async Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(string attributesXml, int productAttributeMappingId = 0)
         {
             var values = new List<ProductAttributeValue>();
@@ -622,7 +631,10 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml2">The attributes of the second product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreQuantity">A value indicating whether we should ignore the quantity of attribute value entered by the customer</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool> AreProductAttributesEqualAsync(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true)
         {
             var attributes1 = await ParseProductAttributeMappingsAsync(attributesXml1);
@@ -693,7 +705,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="pam">Product attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         public virtual async Task<bool?> IsConditionMetAsync(ProductAttributeMapping pam, string selectedAttributesXml)
         {
             if (pam == null)
@@ -741,7 +756,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
-        /// <returns>Found product attribute combination</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the found product attribute combination
+        /// </returns>
         public virtual async Task<ProductAttributeCombination> FindProductAttributeCombinationAsync(Product product,
             string attributesXml, bool ignoreNonCombinableAttributes = true)
         {
@@ -763,7 +781,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
-        /// <returns>Attribute combinations in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attribute combinations in XML format
+        /// </returns>
         public virtual async Task<IList<string>> GenerateAllCombinationsAsync(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null)
         {
             if (product == null)
@@ -862,7 +883,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
-        /// <returns>Customer entered price of the product</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer entered price of the product
+        /// </returns>
         public virtual async Task<decimal> ParseCustomerEnteredPriceAsync(Product product, IFormCollection form)
         {
             if (product == null)
@@ -952,7 +976,10 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="form">Form values</param>
         /// <param name="errors">Errors</param>
-        /// <returns>Attributes in XML format</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the attributes in XML format
+        /// </returns>
         public virtual async Task<string> ParseProductAttributesAsync(Product product, IFormCollection form, List<string> errors)
         {
             if (product == null)

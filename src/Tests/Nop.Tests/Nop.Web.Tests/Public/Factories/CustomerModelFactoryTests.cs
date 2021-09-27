@@ -127,7 +127,6 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             var model = await _customerModelFactory.PreparePasswordRecoveryModelAsync(new PasswordRecoveryModel{Email = "test@email.com"});
             model.DisplayCaptcha.Should().BeFalse();
             model.Email.Should().Be("test@email.com");
-            model.Result.Should().BeNull();
         }
         
         [Test]
@@ -143,6 +142,14 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             model.Result.Should().Be("Your registration completed");
             model = await _customerModelFactory.PrepareRegisterResultModelAsync(400, string.Empty);
             model.Result.Should().BeNullOrEmpty();
+        }
+
+        [Test]
+        public async Task CanPrepareCustomCustomerAttributes()
+        {
+            var model = await _customerModelFactory.PrepareCustomCustomerAttributesAsync(_customer);
+            model.Any().Should().BeTrue();
+            model.Count.Should().Be(10);
         }
 
         [Test]

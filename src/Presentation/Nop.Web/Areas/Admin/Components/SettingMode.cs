@@ -31,7 +31,10 @@ namespace Nop.Web.Areas.Admin.Components
         /// Invoke view component
         /// </summary>
         /// <param name="modeName">Setting mode name</param>
-        /// <returns>View component result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view component result
+        /// </returns>
         public async Task<IViewComponentResult> InvokeAsync(string modeName = "settings-advanced-mode")
         {
             //prepare model

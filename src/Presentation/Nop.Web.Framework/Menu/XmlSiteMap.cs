@@ -35,6 +35,7 @@ namespace Nop.Web.Framework.Menu
         /// Load sitemap
         /// </summary>
         /// <param name="physicalPath">Filepath to load a sitemap</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task LoadFromAsync(string physicalPath)
         {
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
@@ -66,6 +67,7 @@ namespace Nop.Web.Framework.Menu
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private static async Task IterateAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
             await PopulateNodeAsync(siteMapNode, xmlNode);
@@ -82,6 +84,7 @@ namespace Nop.Web.Framework.Menu
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         private static async Task PopulateNodeAsync(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
             //system name

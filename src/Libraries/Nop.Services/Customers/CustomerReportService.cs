@@ -55,7 +55,10 @@ namespace Nop.Services.Customers
         /// <param name="orderBy">1 - order by order total, 2 - order by number of orders</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Report</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the report
+        /// </returns>
         public virtual async Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReportAsync(DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364)
@@ -110,7 +113,10 @@ namespace Nop.Services.Customers
         /// Gets a report of customers registered in the last days
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
-        /// <returns>Number of registered customers</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of registered customers
+        /// </returns>
         public virtual async Task<int> GetRegisteredCustomersReportAsync(int days)
         {
             var date = (await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).AddDays(-days);

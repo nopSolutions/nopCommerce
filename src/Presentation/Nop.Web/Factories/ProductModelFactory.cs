@@ -167,7 +167,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="group">Specification attribute group</param>
-        /// <returns>List of product specification model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of product specification model
+        /// </returns>
         protected virtual async Task<IList<ProductSpecificationAttributeModel>> PrepareProductSpecificationAttributeModelAsync(Product product, SpecificationAttributeGroup group)
         {
             if (product == null)
@@ -218,18 +221,22 @@ namespace Nop.Web.Factories
         /// Prepare the product review overview model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Product review overview model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product review overview model
+        /// </returns>
         protected virtual async Task<ProductReviewOverviewModel> PrepareProductReviewOverviewModelAsync(Product product)
         {
             ProductReviewOverviewModel productReview;
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             if (_catalogSettings.ShowProductReviewsPerStore)
             {
-                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductReviewsModelKey, product, await _storeContext.GetCurrentStoreAsync());
+                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductReviewsModelKey, product, currentStore);
 
                 productReview = await _staticCacheManager.GetAsync(cacheKey, async () =>
                 {
-                    var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var productReviews = await _productService.GetAllProductReviewsAsync(productId: product.Id, approved: true, storeId: currentStore.Id);
                     
                     return new ProductReviewOverviewModel
                     {
@@ -251,7 +258,7 @@ namespace Nop.Web.Factories
             {
                 productReview.ProductId = product.Id;
                 productReview.AllowCustomerReviews = product.AllowCustomerReviews;
-                productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+                productReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
             }
 
             return productReview;
@@ -262,7 +269,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="forceRedirectionAfterAddingToCart">Whether to force redirection after adding to cart</param>
-        /// <returns>Product overview price model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product overview price model
+        /// </returns>
         protected virtual async Task<ProductOverviewModel.ProductPriceModel> PrepareProductOverviewPriceModelAsync(Product product, bool forceRedirectionAfterAddingToCart = false)
         {
             if (product == null)
@@ -291,6 +301,7 @@ namespace Nop.Web.Factories
             return priceModel;
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareSimpleProductOverviewPriceModelAsync(Product product, ProductOverviewModel.ProductPriceModel priceModel)
         {
             //add to cart button
@@ -409,6 +420,7 @@ namespace Nop.Web.Factories
             }
         }
 
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual async Task PrepareGroupedProductOverviewPriceModelAsync(Product product, ProductOverviewModel.ProductPriceModel priceModel)
         {
             var associatedProducts = await _productService.GetAssociatedProductsAsync(product.Id,
@@ -443,7 +455,7 @@ namespace Nop.Web.Factories
                     {
                         //calculate price for the maximum quantity if we have tier prices, and choose minimal
                         tmpMinPossiblePrice = Math.Min(tmpMinPossiblePrice,
-                            (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync(), quantity: int.MaxValue)).Item1);
+                            (await _priceCalculationService.GetFinalPriceAsync(associatedProduct, await _workContext.GetCurrentCustomerAsync(), quantity: int.MaxValue)).priceWithoutDiscounts);
                     }
 
                     if (minPossiblePrice.HasValue && tmpMinPossiblePrice >= minPossiblePrice.Value)
@@ -490,7 +502,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
-        /// <returns>Picture model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture model
+        /// </returns>
         protected virtual async Task<PictureModel> PrepareProductOverviewPictureModelAsync(Product product, int? productThumbPictureSize = null)
         {
             if (product == null)
@@ -538,7 +553,10 @@ namespace Nop.Web.Factories
         /// Prepare the product breadcrumb model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Product breadcrumb model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product breadcrumb model
+        /// </returns>
         protected virtual async Task<ProductDetailsModel.ProductBreadcrumbModel> PrepareProductBreadcrumbModelAsync(Product product)
         {
             if (product == null)
@@ -577,7 +595,10 @@ namespace Nop.Web.Factories
         /// Prepare the product tag models
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of product tag model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of product tag model
+        /// </returns>
         protected virtual async Task<IList<ProductTagModel>> PrepareProductTagModelsAsync(Product product)
         {
             if (product == null)
@@ -604,7 +625,10 @@ namespace Nop.Web.Factories
         /// Prepare the product price model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Product price model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product price model
+        /// </returns>
         protected virtual async Task<ProductDetailsModel.ProductPriceModel> PrepareProductPriceModelAsync(Product product)
         {
             if (product == null)
@@ -633,8 +657,8 @@ namespace Nop.Web.Factories
                     else
                     {
                         var (oldPriceBase, _) = await _taxService.GetProductPriceAsync(product, product.OldPrice);
-                        var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false)).Item1);
-                        var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync())).Item1);
+                        var (finalPriceWithoutDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync(), includeDiscounts: false)).finalPrice);
+                        var (finalPriceWithDiscountBase, _) = await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product, await _workContext.GetCurrentCustomerAsync())).finalPrice);
 
                         var oldPrice = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(oldPriceBase, await _workContext.GetWorkingCurrencyAsync());
                         var finalPriceWithoutDiscount = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(finalPriceWithoutDiscountBase, await _workContext.GetWorkingCurrencyAsync());
@@ -687,7 +711,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="updatecartitem">Updated shopping cart item</param>
-        /// <returns>Product add to cart model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product add to cart model
+        /// </returns>
         protected virtual async Task<ProductDetailsModel.AddToCartModel> PrepareProductAddToCartModelAsync(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
@@ -738,7 +765,9 @@ namespace Nop.Web.Factories
                     product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
                 model.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
 
-                if (model.PreOrderAvailabilityStartDateTimeUtc.HasValue && _catalogSettings.DisplayDatePreOrderAvailability)
+                if (model.AvailableForPreOrder &&
+                    model.PreOrderAvailabilityStartDateTimeUtc.HasValue &&
+                    _catalogSettings.DisplayDatePreOrderAvailability)
                 {
                     model.PreOrderAvailabilityStartDateTimeUserTime =
                         (await _dateTimeHelper.ConvertToUserTimeAsync(model.PreOrderAvailabilityStartDateTimeUtc.Value)).ToString("D");
@@ -768,7 +797,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="updatecartitem">Updated shopping cart item</param>
-        /// <returns>List of product attribute model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of product attribute model
+        /// </returns>
         protected virtual async Task<IList<ProductDetailsModel.ProductAttributeModel>> PrepareProductAttributeModelsAsync(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
@@ -985,7 +1017,10 @@ namespace Nop.Web.Factories
         /// Prepare the product tier price models
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of tier price model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of tier price model
+        /// </returns>
         protected virtual async Task<IList<ProductDetailsModel.TierPriceModel>> PrepareProductTierPriceModelsAsync(Product product)
         {
             if (product == null)
@@ -996,7 +1031,7 @@ namespace Nop.Web.Factories
                 {
                     var priceBase = (await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product,
                         await _workContext.GetCurrentCustomerAsync(), decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
-                        tierPrice.Quantity)).Item1)).price;
+                        tierPrice.Quantity)).priceWithoutDiscounts)).price;
 
                        var price = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceBase, await _workContext.GetWorkingCurrencyAsync());
 
@@ -1014,7 +1049,10 @@ namespace Nop.Web.Factories
         /// Prepare the product manufacturer models
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of manufacturer brief info model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of manufacturer brief info model
+        /// </returns>
         protected virtual async Task<IList<ManufacturerBriefInfoModel>> PrepareProductManufacturerModelsAsync(Product product)
         {
             if (product == null)
@@ -1042,7 +1080,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="isAssociatedProduct">Whether the product is associated</param>
-        /// <returns>Picture model for the default picture; All picture models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the picture model for the default picture; All picture models
+        /// </returns>
         protected virtual async Task<(PictureModel pictureModel, IList<PictureModel> allPictureModels)> PrepareProductDetailsPictureModelAsync(Product product, bool isAssociatedProduct)
         {
             if (product == null)
@@ -1127,7 +1168,10 @@ namespace Nop.Web.Factories
         /// Get the product template view path
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>View path</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the view path
+        /// </returns>
         public virtual async Task<string> PrepareProductTemplateViewPathAsync(Product product)
         {
             if (product == null)
@@ -1151,7 +1195,10 @@ namespace Nop.Web.Factories
         /// <param name="productThumbPictureSize">Product thumb picture size (longest side); pass null to use the default value of media settings</param>
         /// <param name="prepareSpecificationAttributes">Whether to prepare the specification attribute models</param>
         /// <param name="forceRedirectionAfterAddingToCart">Whether to force redirection after adding to cart</param>
-        /// <returns>Collection of product overview model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of product overview model
+        /// </returns>
         public virtual async Task<IEnumerable<ProductOverviewModel>> PrepareProductOverviewModelsAsync(IEnumerable<Product> products,
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
@@ -1208,7 +1255,10 @@ namespace Nop.Web.Factories
         /// Prepare the product combination models
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Product combination models</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product combination models
+        /// </returns>
         public virtual async Task<IList<ProductCombinationModel>> PrepareProductCombinationModelsAsync(Product product)
         {
             if (product == null)
@@ -1263,7 +1313,10 @@ namespace Nop.Web.Factories
         /// <param name="product">Product</param>
         /// <param name="updatecartitem">Updated shopping cart item</param>
         /// <param name="isAssociatedProduct">Whether the product is associated</param>
-        /// <returns>Product details model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product details model
+        /// </returns>
         public virtual async Task<ProductDetailsModel> PrepareProductDetailsModelAsync(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
@@ -1476,6 +1529,8 @@ namespace Nop.Web.Factories
                 model.ProductEstimateShipping.CountryId = estimateShippingModel.CountryId;
                 model.ProductEstimateShipping.StateProvinceId = estimateShippingModel.StateProvinceId;
                 model.ProductEstimateShipping.ZipPostalCode = estimateShippingModel.ZipPostalCode;
+                model.ProductEstimateShipping.UseCity = estimateShippingModel.UseCity;
+                model.ProductEstimateShipping.City = estimateShippingModel.City;
                 model.ProductEstimateShipping.AvailableCountries = estimateShippingModel.AvailableCountries;
                 model.ProductEstimateShipping.AvailableStates = estimateShippingModel.AvailableStates;
             }
@@ -1500,7 +1555,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Product reviews model</param>
         /// <param name="product">Product</param>
-        /// <returns>Product reviews model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product reviews model
+        /// </returns>
         public virtual async Task<ProductReviewsModel> PrepareProductReviewsModelAsync(ProductReviewsModel model, Product product)
         {
             if (model == null)
@@ -1513,14 +1571,12 @@ namespace Nop.Web.Factories
             model.ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
             model.ProductSeName = await _urlRecordService.GetSeNameAsync(product);
 
-            var productReviews = (await _productService.GetAllProductReviewsAsync(
+            var currentStore = await _storeContext.GetCurrentStoreAsync();
+
+            var productReviews = await _productService.GetAllProductReviewsAsync(
                 approved: true, 
                 productId: product.Id,
-                storeId: _catalogSettings.ShowProductReviewsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0)).AsEnumerable();
-
-            productReviews = _catalogSettings.ProductReviewsSortByCreatedDateAscending
-                ? productReviews.OrderBy(pr => pr.CreatedOnUtc)
-                : productReviews.OrderByDescending(pr => pr.CreatedOnUtc);
+                storeId: _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 
             //get all review types
             foreach (var reviewType in await _reviewTypeService.GetAllReviewTypesAsync())
@@ -1620,7 +1676,7 @@ namespace Nop.Web.Factories
 
             model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync());
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
-            model.AddProductReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
+            model.AddProductReview.CanAddNewReview = await _productService.CanAddReviewAsync(product.Id, _catalogSettings.ShowProductReviewsPerStore ? currentStore.Id : 0);
 
             return model;
         }
@@ -1629,7 +1685,10 @@ namespace Nop.Web.Factories
         /// Prepare the customer product reviews model
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
-        /// <returns>Customer product reviews model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the customer product reviews model
+        /// </returns>
         public virtual async Task<CustomerProductReviewsModel> PrepareCustomerProductReviewsModelAsync(int? page)
         {
             var pageSize = _catalogSettings.ProductReviewsPageSizeOnAccountPage;
@@ -1640,9 +1699,10 @@ namespace Nop.Web.Factories
                 pageIndex = page.Value - 1;
             }
 
-            var list = await _productService.GetAllProductReviewsAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
+            var list = await _productService.GetAllProductReviewsAsync(
+                customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
                 approved: null,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                storeId: _catalogSettings.ShowProductReviewsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0,
                 pageIndex: pageIndex,
                 pageSize: pageSize);
 
@@ -1713,7 +1773,10 @@ namespace Nop.Web.Factories
         /// <param name="model">Product email a friend model</param>
         /// <param name="product">Product</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
-        /// <returns>product email a friend model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product email a friend model
+        /// </returns>
         public virtual async Task<ProductEmailAFriendModel> PrepareProductEmailAFriendModelAsync(ProductEmailAFriendModel model, Product product, bool excludeProperties)
         {
             if (model == null)
@@ -1738,7 +1801,10 @@ namespace Nop.Web.Factories
         /// Prepare the product specification model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>The product specification model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the product specification model
+        /// </returns>
         public virtual async Task<ProductSpecificationModel> PrepareProductSpecificationModelAsync(Product product)
         {
             if (product == null)

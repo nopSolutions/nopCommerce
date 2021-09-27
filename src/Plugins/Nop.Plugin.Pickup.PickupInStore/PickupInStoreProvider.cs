@@ -66,7 +66,10 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// Get pickup points for the address
         /// </summary>
         /// <param name="address">Address</param>
-        /// <returns>Represents a response of getting pickup points</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the represents a response of getting pickup points
+        /// </returns>
         public async Task<GetPickupPointsResponse> GetPickupPointsAsync(Address address)
         {
             var result = new GetPickupPointsResponse();
@@ -115,6 +118,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// <summary>
         /// Install the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task InstallAsync()
         {
             //sample pickup point
@@ -178,6 +182,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public override async Task UninstallAsync()
         {
             //locales

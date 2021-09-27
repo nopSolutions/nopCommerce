@@ -1307,12 +1307,21 @@ input[type="text"].k-input {
 }
 
 /* SIDE BAR */
+
+.sidebar {
+  overflow:hidden;
+}
+
 .nav-sidebar {
   padding-bottom: 40px;
 }
 
 .brand-link .brand-image-xl {
   max-height: 45px;
+}
+
+.layout-fixed .brand-link {
+  width: auto;
 }
 
 .nav-sidebar .nav-link p {
@@ -1646,7 +1655,7 @@ div.dataTables_wrapper div.dataTables_processing .fa {
   max-width: 100%;
   border-radius: 0;
   border-color: #d2d6de;
-  height: 34px;
+  height: 38px;
 }
 
 .tag-editor {
@@ -1972,6 +1981,10 @@ span.grid-report-item.red {
 .parent-setting.opened + .nested-setting .form-group {
   margin-bottom: 0;
   position: relative;
+}
+
+.parent-setting.opened + .nested-setting .card .card-body .form-group {
+  padding-bottom: 5px;
 }
 
 .parent-setting.opened + .nested-setting .form-group > div[class^="col-md-"]:first-child {

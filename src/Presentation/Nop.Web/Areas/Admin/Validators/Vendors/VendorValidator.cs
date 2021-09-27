@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Vendors;
-using Nop.Data;
+using Nop.Data.Mapping;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Vendors;
@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
 {
     public partial class VendorValidator : BaseNopValidator<VendorModel>
     {
-        public VendorValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
+        public VendorValidator(ILocalizationService localizationService, IMappingEntityAccessor mappingEntityAccessor)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.Name.Required"));
 
@@ -30,14 +30,14 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
             RuleFor(x => x.PriceFrom)
                 .GreaterThanOrEqualTo(0)
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceFrom.GreaterThanOrEqualZero"))
-                .When(x => x.PriceRangeFiltering && !x.AutomaticallyCalculatePriceRange);
+                .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
             RuleFor(x => x.PriceTo)
                 .GreaterThan(x => x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero)
                 .WithMessage(x => string.Format(localizationService.GetResourceAsync("Admin.Vendors.Fields.PriceTo.GreaterThanZeroOrPriceFrom").Result, x.PriceFrom > decimal.Zero ? x.PriceFrom : decimal.Zero))
-                .When(x => x.PriceRangeFiltering && !x.AutomaticallyCalculatePriceRange);
+                .When(x => x.PriceRangeFiltering && x.ManuallyPriceRange);
 
-            SetDatabaseValidationRules<Vendor>(dataProvider);
+            SetDatabaseValidationRules<Vendor>(mappingEntityAccessor);
         }
     }
 }

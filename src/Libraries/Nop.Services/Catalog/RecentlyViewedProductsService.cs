@@ -80,6 +80,7 @@ namespace Nop.Services.Catalog
         /// Add cookie value for the recently viewed products
         /// </summary>
         /// <param name="recentlyViewedProductIds">Collection of the recently viewed products identifiers</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         protected virtual Task AddRecentlyViewedProductsCookieAsync(IEnumerable<int> recentlyViewedProductIds)
         {
             //delete current cookie if exists
@@ -112,7 +113,10 @@ namespace Nop.Services.Catalog
         /// Gets a "recently viewed products" list
         /// </summary>
         /// <param name="number">Number of products to load</param>
-        /// <returns>"recently viewed products" list</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the "recently viewed products" list
+        /// </returns>
         public virtual async Task<IList<Product>> GetRecentlyViewedProductsAsync(int number)
         {
             //get list of recently viewed product identifiers
@@ -127,6 +131,7 @@ namespace Nop.Services.Catalog
         /// Adds a product to a recently viewed products list
         /// </summary>
         /// <param name="productId">Product identifier</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task AddProductToRecentlyViewedListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)

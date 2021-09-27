@@ -654,12 +654,12 @@
                     $(document).ready(function () {
                         $('input[type=checkbox].select-all-fields').each(function (index, value) {
                             if ($('input[type=checkbox]:checked', $(this).closest('.card')).length > 0) {
-                                $(this).attr('checked', true);
+                                $(this).prop('checked', true);
                             }
                         });
 
                         $('input[type=checkbox].select-all-fields').on('click', function () {
-                            $('input[type=checkbox]', $(this).closest('.card')).attr('checked', $(this).is(':checked'));
+                            $('input[type=checkbox]', $(this).closest('.card')).prop('checked', $(this).is(':checked'));
                         });
                     });
                 </script>

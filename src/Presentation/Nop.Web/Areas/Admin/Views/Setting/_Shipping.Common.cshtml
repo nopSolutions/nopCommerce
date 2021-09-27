@@ -22,6 +22,16 @@
 			</div>
 		</div>
         <div class="form-group row">
+			<div class="col-md-3">
+				<nop-override-store-checkbox asp-for="EstimateShippingCityNameEnabled_OverrideForStore" asp-input="EstimateShippingCityNameEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+				<nop-label asp-for="EstimateShippingCityNameEnabled" />
+			</div>
+			<div class="col-md-9">
+				<nop-editor asp-for="EstimateShippingCityNameEnabled" />
+				<span asp-validation-for="EstimateShippingCityNameEnabled"></span>
+			</div>
+		</div>
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="AllowPickupInStore_OverrideForStore" asp-input="AllowPickupInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="AllowPickupInStore" />

@@ -23,8 +23,8 @@
                         {
                             @if (group.Id > 0)
                             {
-                                <tr>
-                                    <td class="spec-group-name">
+                                <tr class="spec-header">
+                                    <td class="spec-group-name" colspan="2">
                                         @group.Name
                                     </td>
                                 </tr>
@@ -45,7 +45,7 @@
 
                                             @if (!string.IsNullOrEmpty(value.ColorSquaresRgb) && (value.AttributeTypeId == (int)SpecificationAttributeType.Option))
                                             {
-                                                <div class="attribute-squares color-squares">
+                                                <div class="attribute-squares color-squares attribute-squares-padding">
                                                     <span class="attribute-square-container" title="@Html.Raw(value.ValueRaw)">
                                                         <span class="attribute-square" style="background-color: @(value.ColorSquaresRgb);">&nbsp;</span>
                                                     </span>
@@ -54,11 +54,10 @@
                                             else
                                             {
                                                 @Html.Raw(value.ValueRaw)
-                                            }
-
-                                            if (j != attr.Values.Count - 1)
-                                            {
-                                                <text>,&nbsp;</text>
+                                                if (j != attr.Values.Count - 1)
+                                                {
+                                                    <text>,&nbsp;</text>
+                                                }
                                             }
                                         }
                                     </td>

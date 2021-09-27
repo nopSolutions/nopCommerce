@@ -16,7 +16,7 @@
     <div class="page-body checkout-data">
         <div class="section shipping-method">
             <form asp-route="CheckoutShippingMethod" method="post">
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop, additionalData = Model })
 
                 @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
                 {
@@ -78,7 +78,7 @@
                     }
                 }
 
-                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom })
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom, additionalData = Model })
             </form>
         </div>
         <div class="section order-summary">

@@ -11,9 +11,9 @@
 
         function toggleEnableCondition() {
             if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
-                $('#pnlAttributes').show();
+                $('#pnlAttributes').showElement();
             } else {
-                $('#pnlAttributes').hide();
+                $('#pnlAttributes').hideElement();
             }
         }
     </script>
@@ -49,8 +49,8 @@
                             function toggleConditionAttributes() {
                                 var selectedCheckoutAttributeId =
                                     $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)").val();
-                                $('[id^="pnl_attribute_values_"]').hide();
-                                $('#pnl_attribute_values_' + selectedCheckoutAttributeId).showField();
+                                $('[id^="pnl_attribute_values_"]').hideElement();
+                                $('#pnl_attribute_values_' + selectedCheckoutAttributeId).showElement();
                             }
                         </script>
                     </div>

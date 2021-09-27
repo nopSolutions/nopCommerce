@@ -100,8 +100,8 @@ namespace Nop.Core.Domain.Vendors
         public decimal PriceTo { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the price range should be calculated automatically
+        /// Gets or sets a value indicating whether the price range should be entered manually
         /// </summary>
-        public bool AutomaticallyCalculatePriceRange { get; set; }
+        public bool ManuallyPriceRange { get; set; }
     }
 }

@@ -45,7 +45,10 @@ namespace Nop.Plugin.Widgets.AccessiBe.Services
         /// </summary>
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="function">Function to execute</param>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         private async Task<TResult> HandleFunctionAsync<TResult>(Func<Task<TResult>> function)
         {
             try
@@ -78,7 +81,10 @@ namespace Nop.Plugin.Widgets.AccessiBe.Services
         /// <summary>
         /// Check whether the plugin is active for the current customer and the current store
         /// </summary>
-        /// <returns>Result</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the result
+        /// </returns>
         private async Task<bool> PluginActiveAsync()
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
@@ -93,7 +99,10 @@ namespace Nop.Plugin.Widgets.AccessiBe.Services
         /// <summary>
         /// Prepare installation script
         /// </summary>
-        /// <returns>Installation script</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the installation script
+        /// </returns>
         public async Task<string> PrepareScriptAsync()
         {
             return await HandleFunctionAsync(() => Task.FromResult(_accessiBeSettings.Script));

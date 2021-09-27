@@ -33,7 +33,10 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the newsletter box model
         /// </summary>
-        /// <returns>Newsletter box model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the newsletter box model
+        /// </returns>
         public virtual Task<NewsletterBoxModel> PrepareNewsletterBoxModelAsync()
         {
             var model = new NewsletterBoxModel
@@ -48,7 +51,10 @@ namespace Nop.Web.Factories
         /// Prepare the subscription activation model
         /// </summary>
         /// <param name="active">Whether the subscription has been activated</param>
-        /// <returns>Subscription activation model</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the subscription activation model
+        /// </returns>
         public virtual async Task<SubscriptionActivationModel> PrepareSubscriptionActivationModelAsync(bool active)
         {
             var model = new SubscriptionActivationModel

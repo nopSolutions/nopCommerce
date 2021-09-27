@@ -5,7 +5,9 @@ using FluentAssertions;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
 using Nop.Web.Models.ShoppingCart;
@@ -19,6 +21,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         private IShoppingCartModelFactory _shoppingCartModelFactory;
         private IShoppingCartService _shoppingCartService;
         private IWorkContext _workContext;
+        private IProductService _producService;
+        private ILocalizationService _localizationService;
         private ShoppingCartItem _shoppingCartItem;
         private ShoppingCartItem _wishlistItem;
         private ICustomerService _customerService;
@@ -29,6 +33,8 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
             _shoppingCartModelFactory = GetService<IShoppingCartModelFactory>();
             _shoppingCartService = GetService<IShoppingCartService>();
             _workContext = GetService<IWorkContext>();
+            _producService = GetService<IProductService>();
+            _localizationService = GetService<ILocalizationService>();
             _customerService = GetService<ICustomerService>();
 
             var store = await GetService<IStoreContext>().GetCurrentStoreAsync();
@@ -141,7 +147,7 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
         [Test]
         public async Task CanPrepareEstimateShippingResultModel()
         {
-            var model = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new List<ShoppingCartItem> { _shoppingCartItem }, null, null, string.Empty, true);
+            var model = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new List<ShoppingCartItem> { _shoppingCartItem }, new EstimateShippingModel(), true);
             model.Errors.Any().Should().BeFalse();
         }
 
@@ -152,6 +158,22 @@ namespace Nop.Tests.Nop.Web.Tests.Public.Factories
                 false);
 
             model.YourEmailAddress.Should().Be(NopTestsDefaults.AdminEmail);
+        }
+
+        [Test]
+        public async Task CanPrepareCartItemPictureModel()
+        {
+            var product = await _producService.GetProductByIdAsync(_shoppingCartItem.ProductId);
+
+            var model = await _shoppingCartModelFactory.PrepareCartItemPictureModelAsync(_shoppingCartItem, 100, true, await _localizationService.GetLocalizedAsync(product, x => x.Name));
+
+            model.AlternateText.Should().Be("Picture of Build your own computer");
+            model.ImageUrl.Should()
+                .Be($"http://{NopTestsDefaults.HostIpAddress}/images/thumbs/0000020_build-your-own-computer_100.jpeg");
+            model.Title.Should().Be("Show details for Build your own computer");
+
+            model.FullSizeImageUrl.Should().BeNull();
+            model.ThumbImageUrl.Should().BeNull();
         }
     }
 }
