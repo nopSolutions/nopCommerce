@@ -47,7 +47,7 @@ namespace Nop.Services.Configuration
         /// </returns>
         protected virtual async Task<IDictionary<string, IList<Setting>>> GetAllSettingsDictionaryAsync()
         {
-            return await _staticCacheManager.GetAsync(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, async () =>
+            return await _staticCacheManager.GetAsync(NopSettingsDefaults.SettingsAllAsDictionaryCacheKey, async () =>
             {
                 var settings = await GetAllSettingsAsync();
 

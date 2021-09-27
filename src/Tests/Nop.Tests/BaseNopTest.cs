@@ -34,6 +34,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
@@ -84,7 +85,6 @@ using Nop.Web.Infrastructure.Installation;
 using SkiaSharp;
 using IAuthenticationService = Nop.Services.Authentication.IAuthenticationService;
 using Task = System.Threading.Tasks.Task;
-using TaskScheduler = Nop.Services.ScheduleTasks.TaskScheduler;
 
 namespace Nop.Tests
 {
@@ -134,7 +134,7 @@ namespace Nop.Tests
             var typeFinder = new AppDomainTypeFinder();
             Singleton<ITypeFinder>.Instance = typeFinder;
 
-            Singleton<DataSettings>.Instance = new DataSettings
+            Singleton<DataConfig>.Instance = new DataConfig
             {
                 ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared"
             };
@@ -144,10 +144,15 @@ namespace Nop.Tests
                 .Distinct()
                 .ToArray();
 
-            //add configuration parameters
-            var appSettings = new AppSettings();
-            services.AddSingleton(appSettings);
+            //create app settings
+            var configurations = typeFinder
+                .FindClassesOfType<IConfig>()
+                .Select(configType => (IConfig)Activator.CreateInstance(configType))
+                .ToList();
+            var appSettings = new AppSettings(configurations);
+            appSettings.Update(new List<IConfig> { Singleton<DataConfig>.Instance });
             Singleton<AppSettings>.Instance = appSettings;
+            services.AddSingleton(appSettings);
 
             var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
             services.AddSingleton(hostApplicationLifetime.Object);

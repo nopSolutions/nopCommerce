@@ -71,6 +71,20 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo450
 
                 //#5316
                 ["Account.Login.AlreadyLogin"] = "You are already logged in as {0}. You may log in to another account.",
+
+                //#5511
+                ["Admin.Configuration.AppSettings.Data"] = "Data configuration",
+                ["Admin.Configuration.AppSettings.Data.ConnectionString"] = "Connection string",
+                ["Admin.Configuration.AppSettings.Data.ConnectionString.Hint"] = "Sets a connection string.",
+                ["Admin.Configuration.AppSettings.Data.DataProvider"] = "Data provider",
+                ["Admin.Configuration.AppSettings.Data.DataProvider.Hint"] = "Sets a data provider.",
+                ["Admin.Configuration.AppSettings.Data.SQLCommandTimeout"] = "SQL command timeout",
+                ["Admin.Configuration.AppSettings.Data.SQLCommandTimeout.Hint"] = "Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error. By default, timeout isn't set and a default value for the current provider used. Set 0 to use infinite timeout.",
+                ["Admin.Configuration.AppSettings.Description"] = "Configuration in ASP.NET Core is performed using a different configuration providers (e.g. external appsettings.json configuration file, environment variables, etc). These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"{0}\" target=\"_blank\">our documentation</a>. Please note that changing the values here will overwrite the external appsettings.json file, settings from other configuration providers will not be affected.",
+                ["Enums.Nop.Data.DataProviderType.Unknown"] = "Unknown",
+                ["Enums.Nop.Data.DataProviderType.SqlServer"] = "Microsoft SQL Server",
+                ["Enums.Nop.Data.DataProviderType.MySql"] = "MySQL",
+                ["Enums.Nop.Data.DataProviderType.PostgreSQL"] = "PostgreSQL",
             }, languageId).Wait();
 
             // rename locales

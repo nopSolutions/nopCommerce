@@ -515,7 +515,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Gets or sets a value that indicates whether should use MiniProfiler for the current connection
         /// </summary>
-        protected static bool MiniProfillerEnabled => Singleton<AppSettings>.Instance.CommonConfig.MiniProfilerEnabled;
+        protected static bool MiniProfillerEnabled => Singleton<AppSettings>.Instance.Get<CommonConfig>().MiniProfilerEnabled;
 
         /// <summary>
         /// Database connection string

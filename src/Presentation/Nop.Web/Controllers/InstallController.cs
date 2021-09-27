@@ -11,6 +11,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Configuration;
 using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Plugins;
@@ -114,8 +115,8 @@ namespace Nop.Web.Controllers
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
-                InstallRegionalResources = _appSettings.InstallationConfig.InstallRegionalResources,
-                DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData,
+                InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources,
+                DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
                 DataProvider = DataProviderType.SqlServer
@@ -135,8 +136,8 @@ namespace Nop.Web.Controllers
             if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
-            model.DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData;
-            model.InstallRegionalResources = _appSettings.InstallationConfig.InstallRegionalResources;
+            model.DisableSampleDataOption = _appSettings.Get<InstallationConfig>().DisableSampleData;
+            model.InstallRegionalResources = _appSettings.Get<InstallationConfig>().InstallRegionalResources;
 
             PrepareAvailableDataProviders(model);
             PrepareLanguageList(model);
@@ -177,13 +178,11 @@ namespace Nop.Web.Controllers
                 if (string.IsNullOrEmpty(connectionString))
                     throw new Exception(_locService.GetResource("ConnectionStringWrongFormat"));
 
-                await DataSettingsManager.SaveSettingsAsync(new DataSettings
+                DataSettingsManager.SaveSettings(new DataConfig
                 {
                     DataProvider = model.DataProvider,
                     ConnectionString = connectionString
                 }, _fileProvider);
-
-                await DataSettingsManager.LoadSettingsAsync(reloadSettings: true);
 
                 if (model.CreateDatabaseIfNotExists)
                 {
@@ -234,7 +233,7 @@ namespace Nop.Web.Controllers
                                 languagePackInfo.DownloadUrl = result.LanguagePack.DownloadLink;
                                 languagePackInfo.Progress = result.LanguagePack.Progress;
                             }
-                                
+
                         }
                         catch { }
                     }
@@ -256,9 +255,9 @@ namespace Nop.Web.Controllers
                 pluginService.ClearInstalledPluginsList();
 
                 var pluginsIgnoredDuringInstallation = new List<string>();
-                if (!string.IsNullOrEmpty(_appSettings.InstallationConfig.DisabledPlugins))
+                if (!string.IsNullOrEmpty(_appSettings.Get<InstallationConfig>().DisabledPlugins))
                 {
-                    pluginsIgnoredDuringInstallation = _appSettings.InstallationConfig.DisabledPlugins
+                    pluginsIgnoredDuringInstallation = _appSettings.Get<InstallationConfig>().DisabledPlugins
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 
@@ -286,14 +285,11 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exception)
             {
-                //reset cache
-                DataSettingsManager.ResetCache();
-
                 var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                 await staticCacheManager.ClearAsync();
 
                 //clear provider settings if something got wrong
-                await DataSettingsManager.SaveSettingsAsync(new DataSettings(), _fileProvider);
+                DataSettingsManager.SaveSettings(new DataConfig(), _fileProvider);
 
                 ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
             }

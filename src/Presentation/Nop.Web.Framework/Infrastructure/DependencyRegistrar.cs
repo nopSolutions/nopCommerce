@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddScoped<OfficialFeedManager>();
 
             //static cache manager
-            if (appSettings.DistributedCacheConfig.Enabled)
+            if (appSettings.Get<DistributedCacheConfig>().Enabled)
             {
                 services.AddScoped<ILocker, DistributedCacheManager>();
                 services.AddScoped<IStaticCacheManager, DistributedCacheManager>();
@@ -243,7 +243,7 @@ namespace Nop.Web.Framework.Infrastructure
             }
 
             //picture service
-            if (appSettings.AzureBlobConfig.Enabled)
+            if (appSettings.Get<AzureBlobConfig>().Enabled)
                 services.AddScoped<IPictureService, AzurePictureService>();
             else
                 services.AddScoped<IPictureService, PictureService>();
